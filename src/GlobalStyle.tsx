@@ -3,7 +3,9 @@ import { css, Global } from '@emotion/react';
 const GlobalStyle = () => (
   <Global
     styles={css`
-      /* reset */
+      /* Pretendard 웹폰트 import */
+      @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
       * {
         margin: 0;
         padding: 0;
@@ -12,6 +14,9 @@ const GlobalStyle = () => (
 
       html,
       body {
+        font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui,
+          Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR',
+          'Malgun Gothic', sans-serif;
         background-color: #ffffff;
         color: #000000;
       }
