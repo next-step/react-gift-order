@@ -6,7 +6,6 @@
 ### 1. 기본 설정
 
 - 불필요한 파일 및 코드 정리
-- reset.css 적용
 - README 작성
 
 ### 2. Alias 설정
@@ -21,7 +20,11 @@
 ### 4. Emotion 스타일 라이브러리 적용
 
 - `@emotion/react`, `@emotion/styled` 설치
+- 전역 스타일(GlobalStyle) 적용
 
 ### 5. 기본 폰트 설정
 
 - Pretendard 폰트를 기본 폰트로 적용
+
+### 6. reset.css 적용
+- 전역 스타일(GlobalStyle) 에 포함시키기
