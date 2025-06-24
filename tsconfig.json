@@ -2,9 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".", // 기준 경로
     "paths": {
-      "#/*": [
-        "src/*"
-      ]
+      "#/*": ["src/*"]
     }
   },
   "files": [],
