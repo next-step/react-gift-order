@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "baseUrl": ".", // 기준 경로
+    "baseUrl": ".", 
     "paths": {
-      "#/*": ["src/*"]
+      "@/*": ["src/*"]
     }
   },
   "files": [],
