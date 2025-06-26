@@ -1,7 +1,11 @@
 
 # react-gift-login
 
-## 📌 구현할 기능 목록
+<details>
+<summary>1단계 구현기능 목록 보기</summary>
+<div markdown="1">
+
+## 📌 1단계 - 구현할 기능 목록
 
 ### 1. 기본 설정
 
@@ -38,3 +42,7 @@
 
 ### 리팩토링 3 : 빌드
 - 프로젝트 빌드 결과물(dist) 추가
+
+</div>
+</details>
+
