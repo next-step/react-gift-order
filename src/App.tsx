@@ -1,10 +1,13 @@
 import GlobalStyle from '@/styles/GlobalStyle';
+import NavigationBar from '@/components/NavigationBar';
+
 
 function App() {
   return (
     <>
       <GlobalStyle />
-      <div>스타일 확인용!</div>
+      <NavigationBar />
+      <main>콘텐츠 영역</main>
     </>
   );
 }
