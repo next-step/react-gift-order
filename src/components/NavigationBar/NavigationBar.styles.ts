@@ -2,10 +2,10 @@
 import styled from '@emotion/styled';
 
 export const Wrapper = styled.header`
-  max-width: 720px;
+  max-width: 700px;
   width: 100%;
   height: 44px;
-  padding: 0 16px;
+  padding: 0 10px;
 
   display: flex;
   align-items: center;
