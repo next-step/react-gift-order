@@ -12,7 +12,7 @@ const Layout = ({ children }: LayoutProps) => {
 export default Layout;
 
 const Container = styled.div`
-  max-width: 720px;  // 모바일
+  max-width: 720px; // 모바일
   margin: 0 auto;
   padding: 0 16px;
   background-color: ${({ theme }) => theme.color.background.default};

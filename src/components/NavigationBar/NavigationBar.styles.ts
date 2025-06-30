@@ -21,5 +21,3 @@ export const Title = styled.h1`
   flex: 1;
   text-align: center;
 `;
-
-

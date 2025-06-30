@@ -4,7 +4,7 @@ import App from '@/App.tsx';
 import { ThemeProvider } from '@emotion/react';
 import { theme } from '@/styles/theme';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import LoginPage from '@/pages/LoginPage.tsx';
+import LoginPage from '@/pages/LoginPage/LoginPage';
 import NotFoundPage from '@/pages/NotFoundPage.tsx';
 
 const router = createBrowserRouter([

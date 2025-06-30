@@ -6,7 +6,6 @@ import GiftReceiverSelect from './components/GiftReceiverSelect/GiftReceiverSele
 import GiftRankingSection from './components/GiftRanking/GiftRankingSection';
 import Layout from './components/Layout';
 
-
 function App() {
   return (
     <>

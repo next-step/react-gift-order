@@ -15,7 +15,7 @@ export const Card = styled.div`
 export const Title = styled.h2`
   ${({ theme }) => theme.typography.title2Bold};
   color: ${({ theme }) => theme.color.text.default};
-    display: flex;
+  display: flex;
   align-items: center;
   gap: ${({ theme }) => theme.spacing.spacing2};
 `;

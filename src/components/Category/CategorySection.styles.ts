@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 
-
 export const Wrapper = styled.section`
   display: grid;
   grid-template-columns: repeat(5, minmax(80px, 1fr));
