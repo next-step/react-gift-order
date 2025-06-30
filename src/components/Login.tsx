@@ -13,7 +13,7 @@ const mainStyle = css`
 `;
 
 const logoStyle = css`
-  background-color: ${theme.colors.gray100};
+  background-color: ${theme.colors.gray00};
   width: 5.5rem;
 `;
 
