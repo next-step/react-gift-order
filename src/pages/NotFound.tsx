@@ -10,8 +10,8 @@ const mainStyle = css`
   flex-direction: column;
   align-items: center;
   padding: 5rem 1.25rem;
-  height: 100vh;
   box-sizing: border-box;
+  height: calc(100vh - 2.75rem);
 `;
 const imgStyle = css`
   width: 150px;
