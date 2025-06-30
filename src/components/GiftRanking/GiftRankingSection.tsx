@@ -2,6 +2,8 @@ import { productList } from '@/data/products';
 import * as S from './GiftRankingSection.styles';
 import ProductItem from './ProductItem';
 import { useState } from 'react';
+import FilterGroup from './FilterGroup';
+
 const GiftRankingSection = () => {
   // 목데이터 반복
   const repeatedProducts = Array(9).fill(productList[0]);
@@ -15,29 +17,8 @@ const GiftRankingSection = () => {
 
   return (
     <S.Section>
-      <S.FilterRow>
-        {receivers.map((item) => (
-          <S.FilterButton
-            key={item}
-            isActive={selectedReceiver === item}
-            onClick={() => setSelectedReceiver(item)}
-          >
-            {item}
-          </S.FilterButton>
-        ))}
-      </S.FilterRow>
-
-      <S.FilterRow>
-        {sorts.map((item) => (
-          <S.FilterButton
-            key={item}
-            isActive={selectedSort === item}
-            onClick={() => setSelectedSort(item)}
-          >
-            {item}
-          </S.FilterButton>
-        ))}
-      </S.FilterRow>
+      <FilterGroup items={receivers} selected={selectedReceiver} onSelect={setSelectedReceiver} />
+      <FilterGroup items={sorts} selected={selectedSort} onSelect={setSelectedSort} />
       <S.Grid>
         {repeatedProducts.map((product) => (
           <ProductItem
