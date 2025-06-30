@@ -1,6 +1,6 @@
 import type { Product } from './products.types';
 
-export const productList: Product[]  = [
+export const productList: Product[] = [
   {
     id: 123,
     name: 'BBQ 양념치킨+크림치즈볼+콜라1.25L',
