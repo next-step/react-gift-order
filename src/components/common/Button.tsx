@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type ComponentPropsWithoutRef } from 'react';
 import styled from '@emotion/styled';
 
 type ButtonVariant =
@@ -10,16 +10,11 @@ type ButtonVariant =
   | 'category';
 type ButtonSize = 'sm' | 'md' | 'lg';
 
-interface ButtonProps {
+interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   active?: boolean; // toggle 버튼용
   fullWidth?: boolean;
-  children: React.ReactNode;
-  onClick?: () => void;
-  disabled?: boolean;
-  type?: 'button' | 'submit' | 'reset';
-  'aria-label'?: string;
 }
 
 const StyledButton = styled.button<{
@@ -191,11 +186,8 @@ const Button: React.FC<ButtonProps> = ({
   size = 'md',
   active = false,
   fullWidth = false,
-  children,
-  onClick,
-  disabled = false,
   type = 'button',
-  'aria-label': ariaLabel,
+  ...rest
 }) => {
   return (
     <StyledButton
@@ -203,12 +195,10 @@ const Button: React.FC<ButtonProps> = ({
       size={size}
       active={active}
       fullWidth={fullWidth}
-      onClick={onClick}
-      disabled={disabled}
       type={type}
-      aria-label={ariaLabel}
+      {...rest}
     >
-      {children}
+      {rest.children}
     </StyledButton>
   );
 };
