@@ -1,19 +1,22 @@
 import Login from '@/pages/Login';
 import Main from '@/pages/Main';
 import NotFound from '@/pages/NotFound';
-import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-const Router = () => {
+export const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Main />}></Route>
-        <Route path="/login" element={<Login />}></Route>
-        <Route path="*" element={<NotFound />} />
+        <Route path={ROUTE_PATH.HOME} element={<Main />}></Route>
+        <Route path={ROUTE_PATH.LOGIN} element={<Login />}></Route>
+        <Route path={ROUTE_PATH.NOT_FOUND} element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
 };
+export const ROUTE_PATH={
+  HOME:'/',
+  LOGIN:'/login',
+  NOT_FOUND: '*',
+}
 
-export default Router;
