@@ -6,8 +6,8 @@ export default function useQueryState<T extends string>(
   defaultValue: T
 ) {
   const [params, setParams] = useSearchParams()
-  const init = (params.get(key) as T | null) ?? defaultValue
-  const [state, setState] = useState<T>(init)
+  const initValue = (params.get(key) as T | null) ?? defaultValue
+  const [state, setState] = useState<T>(initValue)
 
   useEffect(() => {
     params.set(key, state)

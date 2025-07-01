@@ -2,7 +2,7 @@ import Home from "@/Home"
 import Login from "@/pages/Login"
 import Categories from "@/pages/Categories"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
-import PresentProvider from "@/context/PresentThemeProvider"
+import PresentProvider from "@/context/PresentProvider"
 import PresentThemeProvider from "@/context/PresentThemeProvider"
 import NotFound from "@/pages/NotFound"
 

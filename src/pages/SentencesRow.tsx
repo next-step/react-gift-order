@@ -18,9 +18,10 @@ const sentences: SentenceItem[] = [
 ]
 
 const SentencesRow = () => {
-  const [rankType, setRankType] = useQueryState<
-    "MANY_WISH_RECEIVE" | "MANY_GIFT" | "MANY_WISH"
-  >("rankType", "MANY_WISH_RECEIVE")
+  const [rankType, setRankType] = useQueryState<RankType>(
+    "rankType",
+    "MANY_WISH_RECEIVE"
+  )
   return (
     <Row>
       {sentences.map((s) => (
