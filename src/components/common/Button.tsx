@@ -39,6 +39,14 @@ const StyledButton = styled.button<ButtonProps>(
       color: theme.color.gray[900],
       border: "1px solid rgb(220,222,227)",
     }),
+
+    "&:disabled": {
+      cursor: "not-allowed",
+      opacity: 0.5,
+      "&:hover": {
+        cursor: "not-allowed",
+      },
+    },
   }),
 );
 
@@ -46,11 +54,18 @@ export const Button = ({
   variant = "primary",
   size = "medium",
   width = "auto",
+  disabled,
   children,
   ...props
 }: ButtonProps) => {
   return (
-    <StyledButton variant={variant} size={size} width={width} {...props}>
+    <StyledButton
+      variant={variant}
+      size={size}
+      width={width}
+      disabled={disabled}
+      {...props}
+    >
       {children}
     </StyledButton>
   );
