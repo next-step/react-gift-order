@@ -1,0 +1,6 @@
+# 프로젝트 루트에 추가
+root = true
+
+[*]
+end_of_line = lf
+charset = utf-8
