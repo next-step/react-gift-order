@@ -29,12 +29,14 @@ export const InputContainer = styled.div`
   flex-direction: column;
 `;
 
-export const Input = styled.input`
+export const Input = styled.input<{ hasError?: boolean }>`
   width: 100%;
   padding: ${({ theme }) => theme.spacing.spacing4};
+  ${({ theme }) => theme.typography.body1Regular};
   padding-left: 0;
   border: none;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.gray[400]};
+  border-bottom: 1px solid ${({ theme, hasError }) => 
+    hasError ? theme.colors.red[700] : theme.colors.gray[400]};
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.gray[600]};
@@ -42,7 +44,6 @@ export const Input = styled.input`
   
   &:focus {
     outline: none;
-    border-bottom-color: ${({ theme }) => theme.colors.gray[600]};
   }
 `;
 
@@ -67,4 +68,10 @@ export const LoginButton = styled.button`
   &:active {
     background-color: ${({ theme }) => theme.semantic.brand.kakaoYellowActive};
   }
+`;
+
+export const ErrorMessage = styled.span`
+  color: ${({ theme }) => theme.colors.red[700]};
+  font-size: 12px;
+  margin-top: ${({ theme }) => theme.spacing.spacing1};
 `; 

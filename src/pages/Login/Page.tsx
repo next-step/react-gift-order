@@ -5,8 +5,33 @@ import * as S from './styles';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [emailError, setEmailError] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
+
+  const validateEmail = (email:string) => {
+    if (!email) {
+      return 'ID를 입력해주세요.';
+    }
+    const emailPattern = /^.+@.+\..+$/;
+    if (!emailPattern.test(email)) {
+      return 'ID는 이메일 형식으로 입력해주세요.';
+    }
+    return '';
+  };
+
+  const handleEmailBlur = () => {
+    const error = validateEmail(email);
+    setEmailError(error);
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const email = e.target.value;
+    setEmail(email);
+    //에러 상태에서 입력값을 변경해서 정상이되면 에러 메세지 없애기
+    const error = validateEmail(email);
+    setEmailError(error);
+  };
 
   const handleLogin = () => {
     const from = location.state?.from || '/';
@@ -32,8 +57,11 @@ const Login = () => {
               type="email"
               placeholder="이메일"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleEmailChange}
+              onBlur={handleEmailBlur}
+              hasError={!!emailError}
             />
+            {emailError && <S.ErrorMessage>{emailError}</S.ErrorMessage>}
           </S.InputContainer>
           
           <S.Spacer />
