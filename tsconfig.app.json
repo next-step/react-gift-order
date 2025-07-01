@@ -21,7 +21,14 @@
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    /* Alias */
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": {
+      "@src/*": ["./src/*"]
+    }
   },
   "include": ["src"]
 }
