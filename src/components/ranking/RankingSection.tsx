@@ -23,23 +23,18 @@ const rankOptions = [
 type TargetType = (typeof targetOptions)[number]['value'];
 type RankType = (typeof rankOptions)[number]['value'];
 
-const getValidTargetType = (
+// Generic validation 함수로 통합
+const getValidValue = <T extends string>(
   param: string | null,
-  validValues: readonly string[]
-): TargetType => {
-  return validValues.includes(param as TargetType)
-    ? (param as TargetType)
-    : 'ALL';
+  validValues: readonly string[],
+  defaultValue: T
+): T => {
+  return validValues.includes(param as T) ? (param as T) : defaultValue;
 };
 
-const getValidRankType = (
-  param: string | null,
-  validValues: readonly string[]
-): RankType => {
-  return validValues.includes(param as RankType)
-    ? (param as RankType)
-    : 'MANY_WISH';
-};
+// Helper 함수로 valid values 생성
+const getValidValues = (options: readonly { value: string }[]) =>
+  options.map((option) => option.value);
 
 // TODO: 실제 랭킹 API에서 데이터 가져오도록 구현 (현재는 BBQ 데이터 21개 복제)
 const generateRankingProducts = (): Product[] => {
@@ -67,14 +62,22 @@ const RankingSection = () => {
   const [showMore, setShowMore] = useState(false); // 더보기는 URL에 저장하지 않음 (UX 고려)
 
   // URL 쿼리 파라미터에서 필터 상태 읽기 및 유효성 검증
-  const targetValidValues = targetOptions.map((option) => option.value);
-  const rankValidValues = rankOptions.map((option) => option.value);
+  const targetValidValues = getValidValues(targetOptions);
+  const rankValidValues = getValidValues(rankOptions);
 
   const targetParam = searchParams.get('target');
   const rankParam = searchParams.get('rank');
 
-  const targetType = getValidTargetType(targetParam, targetValidValues);
-  const rankType = getValidRankType(rankParam, rankValidValues);
+  const targetType = getValidValue(
+    targetParam,
+    targetValidValues,
+    'ALL' as TargetType
+  );
+  const rankType = getValidValue(
+    rankParam,
+    rankValidValues,
+    'MANY_WISH' as RankType
+  );
 
   // 유효하지 않은 URL 파라미터가 있으면 기본값으로 수정
   useEffect(() => {
@@ -102,20 +105,11 @@ const RankingSection = () => {
   // 랭킹 데이터 생성 최적화 - 매번 재생성 방지
   const rankingProducts = useMemo(() => generateRankingProducts(), []);
 
-  const handleTargetChange = (value: string) => {
-    // URL 쿼리 파라미터 업데이트: ?target=value&rank=기존값
+  // 공통 Parameter Handler로 통합
+  const handleParamChange = (key: string, value: string) => {
     setSearchParams((prev) => {
       const newParams = new URLSearchParams(prev);
-      newParams.set('target', value);
-      return newParams;
-    });
-  };
-
-  const handleRankChange = (value: string) => {
-    // URL 쿼리 파라미터 업데이트: ?target=기존값&rank=value
-    setSearchParams((prev) => {
-      const newParams = new URLSearchParams(prev);
-      newParams.set('rank', value);
+      newParams.set(key, value);
       return newParams;
     });
   };
@@ -126,14 +120,14 @@ const RankingSection = () => {
         type="target"
         options={targetOptions}
         selected={targetType}
-        onChange={handleTargetChange}
+        onChange={(value) => handleParamChange('target', value)}
       />
 
       <FilterButtonGroup
         type="rank"
         options={rankOptions}
         selected={rankType}
-        onChange={handleRankChange}
+        onChange={(value) => handleParamChange('rank', value)}
       />
 
       <ProductGrid products={rankingProducts} showMore={showMore} />
