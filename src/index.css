@@ -23,11 +23,15 @@ a:hover {
 }
 
 body {
+  background-color: #f5f6fa;
   margin: 0;
   display: flex;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  font-family:
+    'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', '맑은 고딕',
+    sans-serif;
 }
 
 h1 {

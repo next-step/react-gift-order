@@ -3,5 +3,12 @@
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
-  ]
+  ],
+  "compilerOptions": {
+    // TypeScript에서도 alias 인식을 위해 옵션 추가
+    "baseUrl": ".", // 프로젝트 루트 기준으로 경로 설정
+    "paths": {
+      "@/*": ["src/*"] // @를 쓰면 src 폴더를 가리키게 됨
+    }
+  }
 }
