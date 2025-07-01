@@ -3,7 +3,6 @@ import { css, Global } from '@emotion/react';
 const GlobalStyle = () => (
   <Global
     styles={css`
-
       /* reset */
       html,
       body,
