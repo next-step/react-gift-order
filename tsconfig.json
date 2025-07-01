@@ -3,5 +3,12 @@
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
-  ]
+  ],
+  "compilerOptions": {
+    "baseUrl": ".", // 프로젝트 루트를 기준으로 설정
+    "paths": {
+      "@styles/*": ["src/styles/*"], // 상대 경로로 수정
+      "@/*": ["src/*"] // 상대 경로로 수정
+    }
+  }
 }
