@@ -1,5 +1,5 @@
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
-import { MobileLayout, Main } from '@/components/layout';
+import { MobileLayout } from '@/components/layout';
 import { NavigationBar } from '@/components/navigation';
 import { HomePage, LoginPage, NotFoundPage } from '@/pages';
 
@@ -57,13 +57,11 @@ function App() {
         onProfileClick={handleProfileClick}
       />
 
-      <Main>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </Main>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
     </MobileLayout>
   );
 }
