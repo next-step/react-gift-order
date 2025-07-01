@@ -30,6 +30,10 @@ const Input = styled.input`
   font-size: ${({ theme }) => theme.typography.body1Regular.fontSize};
   color: ${({ theme }) => theme.colors.semantic.textDefault};
   background: transparent;
+  background-color: ${({ theme }) => theme.colors.semantic.backgroundDefault};
+  caret-color: ${({ theme }) => theme.colors.semantic.textDefault};
+  outline: none;
+
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.semantic.textPlaceholder};
@@ -67,8 +71,8 @@ const LoginPage = () => {
     <>
       <Wrapper>
         <Title>kakao</Title>
-        <Input placeholder="이메일" />
-        <Input placeholder="비밀번호" type="password" />
+        <Input name="email" placeholder="이메일" />
+        <Input name="password" placeholder="비밀번호" type="password" />
         <Button onClick={handleLogin}>로그인</Button>
       </Wrapper>
     </>

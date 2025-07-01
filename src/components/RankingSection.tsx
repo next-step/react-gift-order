@@ -3,7 +3,8 @@ import { useState } from 'react'
 import { productMockData } from '@/mocks/products'
 import { useSearchParams } from 'react-router-dom'
 
-const genderTabs = ['전체', '여성이', '남성이', '청소년이']
+const genderTabs = ['전체', '여성이', '남성이', '청소년이'] as const
+type GenderType = typeof genderTabs[number]
 const rankTabs = ['받고 싶어한', '많이 선물한', '위시로 받은']
 // TODO : 임시 하드코딩. 추후 개수 변경 가능
 const initCount = 6
@@ -136,20 +137,20 @@ const RankingSection = () => {
     setIsExpanded((prev) => !prev)
   }
 
-  const handleGenderClick = (gender: string) => {
+  const updateSearchParam = (key: string, value: string) => {
     setSearchParams(prev => {
       const next = new URLSearchParams(prev)
-      next.set('gender', gender)
+      next.set(key, value)
       return next
     })
   }
 
+  const handleGenderClick = (gender: GenderType) => {
+    updateSearchParam('gender', gender)
+  }
+
   const handleRankClick = (rank: string) => {
-    setSearchParams(prev => {
-      const next = new URLSearchParams(prev)
-      next.set('rank', rank)
-      return next
-    })
+    updateSearchParam('rank', rank)
   }
 
   const visibleCount = isExpanded ? fullCount : initCount
@@ -163,7 +164,7 @@ const RankingSection = () => {
       <Title>실시간 급상승 선물랭킹</Title>
 
       <UserGroupTab>
-        {genderTabs.map((tab) => (
+        {genderTabs.map((tab : GenderType) => (
           <UserTab
             key={tab}
             isSelected={selectedGender === tab}
