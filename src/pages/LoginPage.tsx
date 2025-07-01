@@ -11,6 +11,9 @@ export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [emailError, setEmailError] = useState('')
 
+  const [password, setPassword] = useState('')
+  const [passwordError, setPasswordError] = useState('')
+
   const validEmail = (value: string) => {
     if (!value.trim()) {
       return 'ID를 입력해주세요.'
@@ -29,8 +32,29 @@ export default function LoginPage() {
 
   const changeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value
-  setEmail(newValue)
-  setEmailError(validEmail(newValue))
+    setEmail(newValue)
+    setEmailError(validEmail(newValue))
+  }
+
+  const validPassword = (value: string) => {
+    if (!value.trim()) {
+      return 'PW를 입력해주세요.'
+    }
+    if (value.length < 8) {
+      return 'PW는 최소 8글자 이상이어야 합니다.'
+    }
+    return ''
+  }
+
+  const notFocuspassword = () => {
+    const error = validPassword(password)
+    setPasswordError(error)
+  }
+
+  const changePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value
+    setPassword(newValue)
+    setPasswordError(validPassword(newValue))
   }
 
   const goToLogin = () => {
@@ -57,7 +81,14 @@ export default function LoginPage() {
           />
           {emailError && <ErrorText>{emailError}</ErrorText>}
             <Spacing />
-            <Input type="password" placeholder="비밀번호" />
+            <Input 
+            type="password" 
+            placeholder="비밀번호" 
+            value={password}
+            onChange={changePassword}
+            onBlur={notFocuspassword}
+            hasError={!!passwordError}/>
+            {passwordError && <ErrorText>{passwordError}</ErrorText>}
             <Spacing height="48px" />
             <LoginButton onClick={goToLogin}>로그인</LoginButton>
           </FormBox>
