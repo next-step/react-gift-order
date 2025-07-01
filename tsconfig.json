@@ -1,4 +1,12 @@
 {
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@styles/*": ["./src/styles/*"]
+    },
+    "typeRoots": ["./node_modules/@types", "./src/augmentations"]
+  },
   "files": [],
   "references": [
     { "path": "./tsconfig.app.json" },
