@@ -1,16 +1,12 @@
-import CategorySection from "@/components/CategorySection";
-import FriendSelectBox from "@/components/FriendSelectBox";
-import SupportBanner from "@/components/SupportBanner";
-import RankingSection from "@/components/RankingSection/RankingSection";
+import Router from "@/routes/Router";
+import GlobalStyles from "@/styles/GlobalStyles";
 
 function App() {
   return (
-    <div>
-      <FriendSelectBox />
-      <CategorySection />
-      <SupportBanner />
-      <RankingSection />
-    </div>
+    <>
+      <GlobalStyles />
+      <Router />
+    </>
   );
 }
 
