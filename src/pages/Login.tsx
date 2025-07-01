@@ -1,4 +1,5 @@
 import { ROUTE_PATH } from "@/App";
+import Button from "@/components/common/Button";
 import Container from "@/components/Container";
 import Divider from "@/components/Divider";
 import styled from "@emotion/styled";
@@ -42,7 +43,9 @@ const Login = () => {
           <Input type="email" placeholder="이메일" onChange={handleIdChange} />
           <Input type="password" placeholder="비밀번호" onChange={handlePasswordChange} />
           <Divider />
-          <LoginBtn type="submit">로그인</LoginBtn>
+          <Button fullWidth={true} type="submit">
+            로그인
+          </Button>
         </Form>
       </Content>
     </Container>
@@ -84,14 +87,6 @@ const Input = styled.input`
   &:focus {
     border-bottom: 1px solid ${({ theme }) => theme.color.gray600};
   }
-`;
-const LoginBtn = styled.button`
-  background-color: ${({ theme }) => theme.color.kakaoYellow};
-  width: 100%;
-  min-height: 2.75rem;
-  border: none;
-  border-radius: 4px;
-  font: ${({ theme }) => theme.typography.subtitle2Regular};
 `;
 
 export default Login;

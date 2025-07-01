@@ -3,6 +3,7 @@ import LeftArrow from "@/components/icons/LeftArrow";
 import Profile from "@/components/icons/Profile";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ROUTE_PATH } from "@/App";
+import Button from "@/components/common/Button";
 
 const Navigation = () => {
   const location = useLocation();
@@ -28,17 +29,19 @@ const Navigation = () => {
     <Container>
       <Nav>
         <NavLeft>
-          <LinkBtn onClick={handleBackClick}>
+          <Button variant="icon" onClick={handleBackClick}>
             <LeftArrow />
-          </LinkBtn>
+          </Button>
         </NavLeft>
         <NavCenter>
-          <LinkBtn onClick={handleHomeClick}>선물하기</LinkBtn>
+          <Button variant="icon" onClick={handleHomeClick}>
+            선물하기
+          </Button>
         </NavCenter>
         <NavRight>
-          <LinkBtn onClick={handleLoginClick} disabled={location.pathname === ROUTE_PATH.LOGIN}>
+          <Button variant="icon" onClick={handleLoginClick} disabled={location.pathname === ROUTE_PATH.LOGIN}>
             <Profile />
-          </LinkBtn>
+          </Button>
         </NavRight>
       </Nav>
     </Container>
@@ -75,13 +78,6 @@ const NavCenter = styled.div`
 `;
 const NavRight = styled.div`
   margin-left: auto;
-`;
-const LinkBtn = styled.button<{ disabled?: boolean }>`
-  background-color: transparent;
-  border: none;
-  font: ${({ theme }) => theme.typography.body1Bold};
-  color: ${({ theme }) => theme.color.textColor.default};
-  cursor: ${({ disabled = false }) => (disabled ? "default" : "pointer")};
 `;
 
 export default Navigation;

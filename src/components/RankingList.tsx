@@ -4,6 +4,7 @@ import Divider from "@/components/Divider";
 import { useState } from "react";
 import type { ThemeType } from "@/types/ThemeType";
 import { useTheme } from "@emotion/react";
+import Button from "@/components/common/Button";
 
 const RANKING_LIST_ITEM_VIEW_COUNT = 6;
 
@@ -35,14 +36,15 @@ const RankingList = () => {
       </Content>
       <Divider />
       <ItemContent>
-        <MoreBtn
+        <Button
+          variant="secondary"
           onClick={() => {
             const rankingListItemViewMaxCount = isClosed() ? rankingItemMock.length : RANKING_LIST_ITEM_VIEW_COUNT;
             setViewCount(rankingListItemViewMaxCount);
           }}
         >
           {isClosed() ? "더보기" : "접기"}
-        </MoreBtn>
+        </Button>
       </ItemContent>
       <Divider />
     </Container>
@@ -112,15 +114,6 @@ const ItemContentPrice = styled.p`
   color: ${({ theme }) => theme.color.textColor.default};
   margin-right: auto;
   word-break: break-word;
-`;
-const MoreBtn = styled.button`
-  max-width: 30rem;
-  width: 100%;
-  padding: ${({ theme }) => theme.spacing.spacing3};
-  border-radius: 4px;
-  border: 1px solid ${({ theme }) => theme.color.gray400};
-  background-color: ${({ theme }) => theme.color.gray00};
-  cursor: pointer;
 `;
 
 export default RankingList;

@@ -2,6 +2,7 @@ import Container from "@/components/Container";
 import styled from "@emotion/styled";
 import { useNavigate } from "react-router-dom";
 import { ROUTE_PATH } from "@/App";
+import Button from "@/components/common/Button";
 
 const NOT_FOUND_IMG_URL = "https://gift-s.kakaocdn.net/dn/gift/webapp/images/m640/img_not_found.png";
 
@@ -18,7 +19,7 @@ const NotFound = () => {
           <Title>잘못된 접근입니다.</Title>
           <Msg>찾으시는 페이지가 존재하지 않습니다.</Msg>
         </Wrapper>
-        <Btn onClick={handleBtnClick}>홈으로</Btn>
+        <Button onClick={handleBtnClick}>홈으로</Button>
       </Content>
     </Container>
   );
@@ -53,14 +54,5 @@ const Msg = styled.p`
   font: ${({ theme }) => theme.typography.body1Regular};
   color: ${({ theme }) => theme.color.gray700};
 `;
-const Btn = styled.button`
-  background-color: ${({ theme }) => theme.color.kakaoYellow};
-  font: ${({ theme }) => theme.typography.body1Regular};
-  border: none;
-  width: 160px;
-  height: 48px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+
 export default NotFound;
