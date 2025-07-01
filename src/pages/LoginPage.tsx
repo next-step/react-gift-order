@@ -7,7 +7,7 @@ export default function LoginPage() {
   const location = useLocation()
   const from = (location.state as { from?: string })?.from || '/'
 
-  const handleLogin = () => {
+  const goToLogin = () => {
     navigate(from, { replace: true })
   }
 
@@ -20,7 +20,7 @@ export default function LoginPage() {
             <Spacing />
             <Input type="password" placeholder="비밀번호" />
             <Spacing height="48px" />
-            <LoginButton onClick={handleLogin}>로그인</LoginButton>
+            <LoginButton onClick={goToLogin}>로그인</LoginButton>
           </FormBox>
         </Form>
       </Wrapper>

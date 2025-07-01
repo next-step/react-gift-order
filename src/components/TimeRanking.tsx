@@ -19,13 +19,13 @@ export default function TimeRanking() {
   const [selectedRankType, setSelectedRankType] = useState(() => searchParams.get('rankType') || '받고 싶어한')
   const [showAll, setShowAll] = useState(false)
 
-  const handleGenderChange = (value: string) => {
+  const changeGender = (value: string) => {
     setSelectedGender(value)
     searchParams.set('gender', value)
     setSearchParams(searchParams)
   }
 
-  const handleRankTypeChange = (value: string) => {
+  const changeRankType = (value: string) => {
     setSelectedRankType(value)
     searchParams.set('rankType', value)
     setSearchParams(searchParams)
@@ -45,7 +45,7 @@ export default function TimeRanking() {
           <GenderTab key={value}>
             <GenderButton
               isSelected={selectedGender === value}
-              onClick={() => handleGenderChange(value)}
+              onClick={() => changeGender(value)}
             >
               {icon}
             </GenderButton>
@@ -61,7 +61,7 @@ export default function TimeRanking() {
           <RankingTab
             key={tab}
             isSelected={selectedRankType === tab}
-            onClick={() => handleRankTypeChange(tab)}
+            onClick={() => changeRankType(tab)}
           >
             {tab}
           </RankingTab>
