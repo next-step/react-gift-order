@@ -1,5 +1,10 @@
 import React from 'react';
+import styled from '@emotion/styled';
 import { Button } from '@/components/common';
+
+const Container = styled.div`
+  margin-top: ${(props) => props.theme.spacing.spacing2};
+`;
 
 interface MoreButtonProps {
   onClick: () => void;
@@ -8,11 +13,11 @@ interface MoreButtonProps {
 
 const MoreButton: React.FC<MoreButtonProps> = ({ onClick, children }) => {
   return (
-    <div style={{ marginTop: '8px' }}>
+    <Container>
       <Button variant="secondary" fullWidth onClick={onClick}>
         {children}
       </Button>
-    </div>
+    </Container>
   );
 };
 
