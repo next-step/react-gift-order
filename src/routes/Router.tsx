@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LoginPage from "@/pages/LoginPage";
 import NotFoundPage from "@/pages/NotFoundPage";
-import Header from "@/components/Header";
 import HomePage from "@/pages/HomePage";
+import Header from "@/components/layout/Header";
 
 const ROUTES = {
   ROOT: "/",
