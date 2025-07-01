@@ -23,7 +23,10 @@ export const validators = {
 
   password: (value: string) =>
     validateField(value, [
-      { condition: val => !val, message: ERROR_MESSAGE.PASSWORD.REQUIRED },
+      {
+        condition: val => !val.trim(),
+        message: ERROR_MESSAGE.PASSWORD.REQUIRED,
+      },
       {
         condition: val => val.length < 8,
         message: ERROR_MESSAGE.PASSWORD.MIN_LENGTH,
