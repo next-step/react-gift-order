@@ -1,6 +1,18 @@
 import styled from '@emotion/styled'
 import { theme } from '@/styles/theme'
+import { typographyMixin } from './Typography'
 import type { ReactNode, ButtonHTMLAttributes } from 'react'
+
+// * 버튼 컴포넌트
+// ? shadcn ui 에서의 버튼 컴포넌트를 참고하여 작성 (+ size 옵션 추가)
+// ? https://ui.shadcn.com/docs/components/button
+export const Button = ({ children, variant = 'kakao', size = 'medium', ...props }: ButtonProps) => {
+  return (
+    <StyledButton variant={variant} size={size} {...props}>
+      {children}
+    </StyledButton>
+  )
+}
 
 // * 버튼 변형 타입
 type ButtonVariant = 'kakao' | 'outline' | 'ghost'
@@ -36,27 +48,21 @@ const StyledButton = styled.button<{
         return `
           width: fit-content;
           padding: ${theme.spacing.spacing3} ${theme.spacing.spacing4};
-          font-size: ${theme.typography.body.body2Regular.fontSize};
-          font-weight: ${theme.typography.body.body2Regular.fontWeight};
-          line-height: ${theme.typography.body.body2Regular.lineHeight};
+          ${typographyMixin('body2Regular')}
         `
       case 'medium': // * 중간 버튼
         return `
           max-width: 480px;
           width: 100%;
           padding: ${theme.spacing.spacing3} ${theme.spacing.spacing5};
-          font-size: ${theme.typography.body.body2Regular.fontSize};
-          font-weight: ${theme.typography.body.body2Regular.fontWeight};
-          line-height: ${theme.typography.body.body2Regular.lineHeight};
+          ${typographyMixin('body2Regular')}
         `
       case 'large': // * 큰 버튼
         return `
           max-width: 720px;
           width: 100%;
           padding: ${theme.spacing.spacing3} ${theme.spacing.spacing5};
-          font-size: ${theme.typography.subtitle.subtitle1Regular.fontSize};
-          font-weight: ${theme.typography.subtitle.subtitle1Regular.fontWeight};
-          line-height: ${theme.typography.subtitle.subtitle1Regular.lineHeight};
+          ${typographyMixin('subtitle1Regular')}
         `
     }
   }}
@@ -126,13 +132,3 @@ const StyledButton = styled.button<{
     }
   }}
 `
-// * 버튼 컴포넌트
-// ? shadcn ui 에서의 버튼 컴포넌트를 참고하여 작성 (+ size 옵션 추가)
-// ? https://ui.shadcn.com/docs/components/button
-export const Button = ({ children, variant = 'kakao', size = 'medium', ...props }: ButtonProps) => {
-  return (
-    <StyledButton variant={variant} size={size} {...props}>
-      {children}
-    </StyledButton>
-  )
-}

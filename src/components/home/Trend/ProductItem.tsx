@@ -1,6 +1,35 @@
 import { theme } from '@/styles/theme'
+import { typographyMixin } from '@/components/common'
 import styled from '@emotion/styled'
 import type { Product } from './types'
+
+// * 실시간 급상승 상품 아이템 컴포넌트
+export const ProductItem = ({ product, index }: { product: Product; index: number }) => {
+  return (
+    <ProductItemContainer>
+      <ProductRank rank={index + 1}>{index + 1}</ProductRank>
+      <ProductImage src={product.imageURL} alt={product.name} />
+      <ProductTitleContainer>
+        <ProductBrand>{product.brandInfo.name}</ProductBrand>
+        <ProductName>{product.name}</ProductName>
+      </ProductTitleContainer>
+      <ProductPrice>
+        {/* 할인되는 경우만 할인율 & 원래 가격(중간 줄) 추가 표시 */}
+        {product.price.discountRate > 0 && (
+          <>
+            <ProductDiscountRate>{product.price.discountRate}%</ProductDiscountRate>
+            <ProductBasicPrice style={{ textDecoration: 'line-through' }}>
+              {product.price.basicPrice}
+            </ProductBasicPrice>
+          </>
+        )}
+        <ProductSellingPrice>
+          <span css={theme.typography.body.body1Bold}>{product.price.sellingPrice}</span> 원
+        </ProductSellingPrice>
+      </ProductPrice>
+    </ProductItemContainer>
+  )
+}
 
 // * 실시간 급상승 상품 아이템 컨테이너
 const ProductItemContainer = styled.div`
@@ -41,9 +70,7 @@ const ProductRank = styled.span<{ rank: number }>`
 
   border-radius: ${theme.spacing.spacing1};
 
-  font-size: ${theme.typography.label.label2Bold.fontSize};
-  font-weight: ${theme.typography.label.label2Bold.fontWeight};
-  line-height: ${theme.typography.label.label2Bold.lineHeight};
+  ${typographyMixin('label2Bold')}
 
   display: flex;
   align-items: center;
@@ -67,9 +94,7 @@ const ProductTitleContainer = styled.div`
   justify-content: flex-start;
   gap: ${theme.spacing.spacing0};
 
-  font-size: ${theme.typography.label.label1Regular.fontSize};
-  font-weight: ${theme.typography.label.label1Regular.fontWeight};
-  line-height: ${theme.typography.label.label1Regular.lineHeight};
+  ${typographyMixin('label1Regular')}
 `
 
 // * 실시간 급상승 상품 브랜드
@@ -89,9 +114,7 @@ const ProductPrice = styled.div`
   justify-content: flex-start;
   gap: ${theme.spacing.spacing1};
 
-  font-size: ${theme.typography.body.body1Regular.fontSize};
-  font-weight: ${theme.typography.body.body1Regular.fontWeight};
-  line-height: ${theme.typography.body.body1Regular.lineHeight};
+  ${typographyMixin('body1Regular')}
 
   /* 화면 축소 시 원치 않는 찌그러짐 방지 */
   flex-wrap: wrap;
@@ -108,31 +131,3 @@ const ProductBasicPrice = styled.span``
 
 // * 실시간 급상승 상품 판매가
 const ProductSellingPrice = styled.span``
-
-// * 실시간 급상승 상품 아이템 컴포넌트
-export const ProductItem = ({ product, index }: { product: Product; index: number }) => {
-  return (
-    <ProductItemContainer>
-      <ProductRank rank={index + 1}>{index + 1}</ProductRank>
-      <ProductImage src={product.imageURL} alt={product.name} />
-      <ProductTitleContainer>
-        <ProductBrand>{product.brandInfo.name}</ProductBrand>
-        <ProductName>{product.name}</ProductName>
-      </ProductTitleContainer>
-      <ProductPrice>
-        {/* 할인되는 경우만 할인율 & 원래 가격(중간 줄) 추가 표시 */}
-        {product.price.discountRate > 0 && (
-          <>
-            <ProductDiscountRate>{product.price.discountRate}%</ProductDiscountRate>
-            <ProductBasicPrice style={{ textDecoration: 'line-through' }}>
-              {product.price.basicPrice}
-            </ProductBasicPrice>
-          </>
-        )}
-        <ProductSellingPrice>
-          <span css={theme.typography.body.body1Bold}>{product.price.sellingPrice}</span> 원
-        </ProductSellingPrice>
-      </ProductPrice>
-    </ProductItemContainer>
-  )
-}

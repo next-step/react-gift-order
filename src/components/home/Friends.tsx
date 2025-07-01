@@ -1,5 +1,22 @@
 import styled from '@emotion/styled'
 import { theme } from '@/styles/theme'
+import { typographyMixin } from '@/components/common'
+import { Plus } from 'lucide-react'
+
+// * 선물할 친구 섹션
+export const Friends = () => {
+  return (
+    <Container>
+      <AddFriendButton>
+        <AddFriendButtonIconContainer>
+          {/* 추가 아이콘 */}
+          <Plus size={24} color={theme.colors.gray.gray900} />
+        </AddFriendButtonIconContainer>
+        <AddFriendButtonText>선물할 친구를 선택해 주세요.</AddFriendButtonText>
+      </AddFriendButton>
+    </Container>
+  )
+}
 
 // * 선물할 친구 컨테이너
 const Container = styled.div`
@@ -27,9 +44,7 @@ const AddFriendButton = styled.button`
   border: none;
   border-radius: ${theme.spacing.spacing4};
 
-  font-size: ${theme.typography.body.body2Regular.fontSize};
-  font-weight: ${theme.typography.body.body2Regular.fontWeight};
-  line-height: ${theme.typography.body.body2Regular.lineHeight};
+  ${typographyMixin('body2Regular')}
 
   cursor: pointer;
   transition: all 0.2s ease;
@@ -38,12 +53,14 @@ const AddFriendButton = styled.button`
   align-items: center;
   justify-content: flex-start;
   gap: ${theme.spacing.spacing3};
+
+  &:hover {
+    background-color: ${theme.colors.gray.gray100};
+  }
 `
 
-// * 선물할 친구 추가 버튼 아이콘
-const AddFriendButtonIcon = styled.span`
-  font-family: 'Material Icons Outlined';
-
+// * 선물할 친구 추가 버튼 아이콘 컨테이너
+const AddFriendButtonIconContainer = styled.div`
   width: 44px;
   height: 44px;
 
@@ -52,10 +69,6 @@ const AddFriendButtonIcon = styled.span`
   border: none;
   border-radius: ${theme.spacing.spacing4};
 
-  font-size: 30px;
-  font-weight: ${theme.typography.title.title2Regular.fontWeight};
-  line-height: ${theme.typography.title.title2Regular.lineHeight};
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -63,19 +76,5 @@ const AddFriendButtonIcon = styled.span`
 
 // * 선물할 친구 추가 버튼 텍스트
 const AddFriendButtonText = styled.span`
-  font-size: ${theme.typography.subtitle.subtitle1Bold.fontSize};
-  font-weight: ${theme.typography.subtitle.subtitle1Bold.fontWeight};
-  line-height: ${theme.typography.subtitle.subtitle1Bold.lineHeight};
+  ${typographyMixin('subtitle1Bold')}
 `
-
-// * 선물할 친구 섹션
-export const Friends = () => {
-  return (
-    <Container>
-      <AddFriendButton>
-        <AddFriendButtonIcon>add</AddFriendButtonIcon>
-        <AddFriendButtonText>선물할 친구를 선택해 주세요.</AddFriendButtonText>
-      </AddFriendButton>
-    </Container>
-  )
-}

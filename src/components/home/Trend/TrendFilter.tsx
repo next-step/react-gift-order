@@ -1,7 +1,44 @@
 import { theme } from '@/styles/theme'
+import { typographyMixin } from '@/components/common'
 import styled from '@emotion/styled'
 import type { TargetType, RankType } from './types'
 import { FilterItems, RankItems } from './filterList'
+
+// * 실시간 급상승 필터 컴포넌트
+export const TrendFilter = ({
+  targetType,
+  rankType,
+  onTargetTypeChange,
+  onRankTypeChange,
+}: {
+  targetType: TargetType
+  rankType: RankType
+  onTargetTypeChange: (type: TargetType) => void
+  onRankTypeChange: (type: RankType) => void
+}) => {
+  return (
+    <FilterContainer>
+      {/* 대상 필터 */}
+      <FilterGroupContainer>
+        {FilterItems.map((item) => (
+          <FilterButton key={item.id} onClick={() => onTargetTypeChange(item.value)}>
+            <FilterButtonIcon isSelected={targetType === item.value}>{item.icon}</FilterButtonIcon>
+            <FilterButtonText isSelected={targetType === item.value}>{item.label}</FilterButtonText>
+          </FilterButton>
+        ))}
+      </FilterGroupContainer>
+
+      {/* 랭킹 필터 */}
+      <RankGroupContainer>
+        {RankItems.map((item) => (
+          <RankButton key={item.id} onClick={() => onRankTypeChange(item.value)}>
+            <RankButtonText isSelected={rankType === item.value}>{item.label}</RankButtonText>
+          </RankButton>
+        ))}
+      </RankGroupContainer>
+    </FilterContainer>
+  )
+}
 
 // * 실시간 급상승 필터 컨테이너
 const FilterContainer = styled.div`
@@ -46,9 +83,7 @@ const FilterButton = styled.button`
   border: none;
   background-color: transparent;
 
-  font-size: ${theme.typography.body.body2Regular.fontSize};
-  font-weight: ${theme.typography.body.body2Regular.fontWeight};
-  line-height: ${theme.typography.body.body2Regular.lineHeight};
+  ${typographyMixin('body2Regular')}
 
   cursor: pointer;
   transition: all 0.2s ease;
@@ -66,9 +101,7 @@ const RankButton = styled.button`
   border: none;
   background-color: transparent;
 
-  font-size: ${theme.typography.body.body2Regular.fontSize};
-  font-weight: ${theme.typography.body.body2Regular.fontWeight};
-  line-height: ${theme.typography.body.body2Regular.lineHeight};
+  ${typographyMixin('body2Regular')}
 
   cursor: pointer;
   transition: all 0.2s ease;
@@ -80,9 +113,7 @@ const RankButton = styled.button`
 
 // * 필터 버튼 텍스트
 const FilterButtonText = styled.span<{ isSelected: boolean }>`
-  font-size: ${theme.typography.body.body2Regular.fontSize};
-  font-weight: ${theme.typography.body.body2Regular.fontWeight};
-  line-height: ${theme.typography.body.body2Regular.lineHeight};
+  ${typographyMixin('body2Regular')}
 
   ${({ isSelected }) =>
     isSelected
@@ -97,9 +128,7 @@ const FilterButtonText = styled.span<{ isSelected: boolean }>`
 
 // * 랭크 필터 버튼 텍스트
 const RankButtonText = styled.span<{ isSelected: boolean }>`
-  font-size: ${theme.typography.body.body2Regular.fontSize};
-  font-weight: ${theme.typography.body.body2Regular.fontWeight};
-  line-height: ${theme.typography.body.body2Regular.lineHeight};
+  ${typographyMixin('body2Regular')}
 
   ${({ isSelected }) =>
     isSelected
@@ -119,9 +148,7 @@ const FilterButtonIcon = styled.span<{ isSelected: boolean }>`
 
   border-radius: ${theme.spacing.spacing4};
 
-  font-size: ${theme.typography.body.body2Bold.fontSize};
-  font-weight: ${theme.typography.body.body2Bold.fontWeight};
-  line-height: ${theme.typography.body.body2Bold.lineHeight};
+  ${typographyMixin('body2Bold')}
 
   display: flex;
   align-items: center;
@@ -146,39 +173,3 @@ const FilterButtonIcon = styled.span<{ isSelected: boolean }>`
         }
       `}
 `
-
-// * 실시간 급상승 필터 컴포넌트
-export const TrendFilter = ({
-  targetType,
-  rankType,
-  onTargetTypeChange,
-  onRankTypeChange,
-}: {
-  targetType: TargetType
-  rankType: RankType
-  onTargetTypeChange: (type: TargetType) => void
-  onRankTypeChange: (type: RankType) => void
-}) => {
-  return (
-    <FilterContainer>
-      {/* 대상 필터 */}
-      <FilterGroupContainer>
-        {FilterItems.map((item) => (
-          <FilterButton key={item.id} onClick={() => onTargetTypeChange(item.value)}>
-            <FilterButtonIcon isSelected={targetType === item.value}>{item.icon}</FilterButtonIcon>
-            <FilterButtonText isSelected={targetType === item.value}>{item.label}</FilterButtonText>
-          </FilterButton>
-        ))}
-      </FilterGroupContainer>
-
-      {/* 랭킹 필터 */}
-      <RankGroupContainer>
-        {RankItems.map((item) => (
-          <RankButton key={item.id} onClick={() => onRankTypeChange(item.value)}>
-            <RankButtonText isSelected={rankType === item.value}>{item.label}</RankButtonText>
-          </RankButton>
-        ))}
-      </RankGroupContainer>
-    </FilterContainer>
-  )
-}

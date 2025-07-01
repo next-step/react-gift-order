@@ -5,12 +5,6 @@ import { Banner } from '@/components/home/Banner'
 import { Friends } from '@/components/home/Friends'
 import { PageContainer } from '@/components/common/PageContainer'
 
-// * 홈 컨테이너 스타일 확장
-const HomeContainer = styled(PageContainer)`
-  /* 홈 페이지의 경우 위쪽으로 정렬 */
-  justify-content: flex-start;
-`
-
 // * 메인
 export const Home = () => {
   return (
@@ -26,3 +20,9 @@ export const Home = () => {
     </HomeContainer>
   )
 }
+
+// * 홈 컨테이너 스타일 확장
+const HomeContainer = styled(PageContainer)`
+  /* 홈 페이지의 경우 위쪽으로 정렬 */
+  justify-content: flex-start;
+`
