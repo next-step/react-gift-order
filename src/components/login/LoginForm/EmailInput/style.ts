@@ -12,3 +12,9 @@ export const emailInputStyle = css`
   border-bottom: 1px solid ${colors.gray.gray300};
   font-size: ${fontSizes.body1Regular};
 `;
+
+export const errorTextStyle = css`
+  color: ${colors.red.red300};
+  font-size: ${fontSizes.body1Bold};
+  margin-top: ${spacing.spacing1};
+`;
