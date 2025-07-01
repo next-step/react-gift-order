@@ -1,13 +1,10 @@
 {
   "compilerOptions": {
-<<<<<<< HEAD
-=======
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
     },
     "jsx": "react-jsx",
->>>>>>> a030a13 (feat: 초기설정)
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2020",
     "useDefineForClassFields": true,
@@ -21,10 +18,6 @@
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
     "noEmit": true,
-<<<<<<< HEAD
-    "jsx": "react-jsx",
-=======
->>>>>>> a030a13 (feat: 초기설정)
 
     /* Linting */
     "strict": true,

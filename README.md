@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# react-gift-order
-=======
 # react-gift-login
 ## 프로젝트 세팅
 
@@ -20,4 +17,3 @@ emotion 스타일 라이브러리를 추가하고, reset css를 적용
 
 기능 단위로 나누어 커밋
 
->>>>>>> a030a13 (feat: 초기설정)
