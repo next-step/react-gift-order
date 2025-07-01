@@ -1,6 +1,10 @@
 import styled from "@emotion/styled";
 
-const KakaoLogo = ({ size }: { size: string }) => {
+type KakaoLogoProps = {
+  size: string;
+};
+
+const KakaoLogo = ({ size }: KakaoLogoProps) => {
   return (
     <Img
       size={size}

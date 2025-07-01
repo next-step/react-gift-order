@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import GiftPersonType from "./GiftPersonType";
 import { personType, presentType } from "@/data/giftType";
 import { gifts } from "@/data/gift";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import GiftsList from "./GiftsList";
 
@@ -13,7 +13,7 @@ const GiftsRanking = () => {
 
   const [selectedTypes, setSelectedTypes] = useState({
     personType: query.get("personType") ?? personType[0].id,
-    presentType: query.get("presentType") ?? personType[0].id,
+    presentType: query.get("presentType") ?? presentType[0].id,
   });
 
   const handleFilterChange = (key: string, selectedType: string) => {
@@ -23,17 +23,6 @@ const GiftsRanking = () => {
     const searchParams = new URLSearchParams(newSelectedTypes).toString();
     navigate(`?${searchParams}`, { replace: true });
   };
-
-  useEffect(() => {
-    const query = new URLSearchParams(location.search);
-    const personQueryType = query.get("personType") ?? personType[0].id;
-    const presentQueryType = query.get("presentType") ?? presentType[0].id;
-
-    setSelectedTypes(() => ({
-      personType: personQueryType,
-      presentType: presentQueryType,
-    }));
-  }, [location.search]);
 
   const duplicatedMockGifts = Array(21)
     .fill(null)

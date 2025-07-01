@@ -1,6 +1,10 @@
 import styled from "@emotion/styled";
 
-const Plus = ({ size }: { size: string }) => {
+type PlusProps = {
+  size: string;
+};
+
+const Plus = ({ size }: PlusProps) => {
   return (
     <PlusSvg
       xmlns="http://www.w3.org/2000/svg"

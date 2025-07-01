@@ -2,11 +2,12 @@ import styled from "@emotion/styled";
 import { useNavigate } from "react-router";
 import TheHeader from "@/components/layout/TheHeader";
 import Wrong from "@/components/UI/Wrong";
+import { ROUTE_PATH } from "@/routes/paths";
 
 const NotFoundPage = () => {
   const navigate = useNavigate();
   const handleGoHome = () => {
-    navigate("/");
+    navigate(ROUTE_PATH.HOME);
   };
 
   return (

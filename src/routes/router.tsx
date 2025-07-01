@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router";
+import { ROUTE_PATH } from "./paths";
 import MainPage from "@/pages/MainPage";
 import LoginPage from "@/pages/LoginPage";
 import NotFoundPage from "@/pages/NotFoundPage";
@@ -6,9 +7,9 @@ import NotFoundPage from "@/pages/NotFoundPage";
 const Router = () => {
   return (
     <Routes>
-      <Route path="/" element={<MainPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="*" element={<NotFoundPage />} />
+      <Route path={ROUTE_PATH.HOME} element={<MainPage />} />
+      <Route path={ROUTE_PATH.LOGIN} element={<LoginPage />} />
+      <Route path={ROUTE_PATH.NOT_FOUND} element={<NotFoundPage />} />
     </Routes>
   );
 };

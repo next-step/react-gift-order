@@ -1,12 +1,14 @@
+import { ROUTE_PATH } from "@/routes/paths";
 import styled from "@emotion/styled";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 const LoginForm = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    navigate(-1);
+    navigate(location.state?.from || ROUTE_PATH.HOME);
   };
 
   return (

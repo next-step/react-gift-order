@@ -2,10 +2,9 @@ import styled from "@emotion/styled";
 
 type UserProps = {
   size: string;
-  onClick?: () => void;
 };
 
-const User = ({ size, onClick }: UserProps) => {
+const User = ({ size }: UserProps) => {
   return (
     <UserSvg
       xmlns="http://www.w3.org/2000/svg"
@@ -18,7 +17,6 @@ const User = ({ size, onClick }: UserProps) => {
       stroke-linecap="round"
       stroke-linejoin="round"
       aria-hidden="true"
-      onClick={onClick}
     >
       <circle cx="12" cy="8" r="5"></circle>
       <path d="M20 21a8 8 0 0 0-16 0"></path>
