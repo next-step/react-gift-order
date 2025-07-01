@@ -129,8 +129,10 @@ export default function GiftRankingSection() {
     updateParams(selectedFilter, value);
   };
 
-  const repeatedData = [...giftRankingData, ...giftRankingData, ...giftRankingData, ...giftRankingData, ...giftRankingData, ...giftRankingData, ...giftRankingData, ...giftRankingData, ...giftRankingData, ...giftRankingData, ...giftRankingData, ...giftRankingData].slice(0, 12);
-  const visibleData = showAll ? repeatedData : repeatedData.slice(0, 6);
+  const DEFAULT_VISIBLE_COUNT = 6;
+  const MAX_VISIBLE_COUNT = 12;
+  const repeatedData = Array(12).fill(null).flatMap(() => giftRankingData).slice(0, MAX_VISIBLE_COUNT);  
+  const visibleData = showAll ? repeatedData : repeatedData.slice(0, DEFAULT_VISIBLE_COUNT);
 
   return (
     <Wrapper>
