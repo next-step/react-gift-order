@@ -3,25 +3,22 @@ import GiftPersonType from "./GiftPersonType";
 import { personType, presentType } from "@/data/giftType";
 import { gifts } from "@/data/gift";
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useSearchParams } from "react-router";
 import GiftsList from "./GiftsList";
 
 const GiftsRanking = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const query = new URLSearchParams(location.search);
-
+  const [searchParams, setSearchParams] = useSearchParams();
   const [selectedTypes, setSelectedTypes] = useState({
-    personType: query.get("personType") ?? personType[0].id,
-    presentType: query.get("presentType") ?? presentType[0].id,
+    personType: searchParams.get("personType") ?? personType[0].id,
+    presentType: searchParams.get("presentType") ?? presentType[0].id,
   });
 
   const handleFilterChange = (key: string, selectedType: string) => {
     const newSelectedTypes = { ...selectedTypes, [key]: selectedType };
     setSelectedTypes(newSelectedTypes);
 
-    const searchParams = new URLSearchParams(newSelectedTypes).toString();
-    navigate(`?${searchParams}`, { replace: true });
+    const searchParams = new URLSearchParams(newSelectedTypes);
+    setSearchParams(searchParams, { replace: true });
   };
 
   const duplicatedMockGifts = Array(21)
