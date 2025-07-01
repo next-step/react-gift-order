@@ -1,0 +1,119 @@
+/** @jsxImportSource @emotion/react */
+import styled from '@emotion/styled';
+import { FiArrowLeft, FiUser } from 'react-icons/fi';
+import { useLocation, useNavigate } from 'react-router-dom';
+
+const PageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+`;
+
+const MainContent = styled.main`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const HeaderContainer = styled.header`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid
+    ${({ theme }) => theme.colors.borderDefault};
+  background-color: ${({ theme }) => theme.colors.backgroundDefault};
+`;
+
+const Title = styled.h1`
+  ${({ theme }) => theme.typography.title2Bold};
+`;
+
+const LoginContainer = styled.div`
+  width: 100%;
+  max-width: 26.25rem;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+const InputStyle = styled.input`
+  width: 100%;
+  padding: 12px 0;
+  margin-bottom: 24px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  outline: none;
+  font-size: 16px;
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.gray600};
+  }
+
+  &:focus {
+    border-bottom: 2px solid #333;
+  }
+`;
+
+const LoginButton = styled.button`
+  background-color: ${({ theme }) => theme.colors.kakaoYellow};
+  font-size: ${({ theme }) => theme.typography.body2Regular.fontSize};
+  font-weight: ${({ theme }) =>
+    theme.typography.body2Regular.fontWeight};
+  line-height: ${({ theme }) =>
+    theme.typography.body2Regular.lineHeight};
+  width: 100%;
+  height: 2.75rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: ${({ theme }) => theme.colors.gray900};
+`;
+
+const Login = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleLogin = () => {
+    const redirectPath = location.state?.from?.pathname;
+
+    if (redirectPath) {
+      navigate(redirectPath, { replace: true });
+    } else {
+      window.location.replace('/');
+    }
+  };
+
+  return (
+    <>
+      <PageWrapper>
+        <HeaderContainer>
+          <FiArrowLeft size={20} onClick={() => navigate('/')} />
+          <Title>선물하기</Title>
+          <FiUser size={20} />
+        </HeaderContainer>
+        <MainContent>
+          <LoginContainer>
+            <img
+              alt="카카오 로고"
+              src="./kakao_logo.svg"
+              width="88px"
+              height="88px"
+            />
+            <br />
+            <InputStyle type="text" placeholder="이메일" />
+            <br />
+            <InputStyle type="password" placeholder="비밀번호" />
+            <br />
+            <LoginButton onClick={handleLogin}>로그인</LoginButton>
+          </LoginContainer>
+        </MainContent>
+      </PageWrapper>
+    </>
+  );
+};
+
+export default Login;
