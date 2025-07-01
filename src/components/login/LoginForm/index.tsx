@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { buttonStyle } from "./style.ts";
 import EmailInput from "./EmailInput/index.tsx";
@@ -8,15 +9,22 @@ export default function LoginForm() {
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
 
+  const [isEmailValid, setIsEmailValid] = useState(false);
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
+
   const handleLogin = () => {
     navigate(from, { replace: true });
   };
 
   return (
     <>
-      <EmailInput />
-      <PasswordInput />
-      <button onClick={handleLogin} css={buttonStyle}>
+      <EmailInput onValidityChange={setIsEmailValid} />
+      <PasswordInput onValidityChange={setIsPasswordValid} />
+      <button
+        onClick={handleLogin}
+        css={buttonStyle}
+        disabled={!(isEmailValid && isPasswordValid)}
+      >
         로그인
       </button>
     </>
