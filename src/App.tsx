@@ -1,34 +1,21 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import Layout from '@/Layout'
+import logo from '@/assets/logo.png'
+import FriendSelector from '@/components/FriendSelector'
+import CategorySection from '@/components/CategorySection'
+import CampusBanner from '@/components/CampusBanner'
+import RankingFilterBar from '@/components/RankingFilterBar'
+import RankingList, { fetchMoreProducts } from '@/components/RankingList'
 
+const friends = ['라이언', '무지', '콘']
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Layout logoSrc={logo}>
+      <FriendSelector friends={friends} />
+      <CategorySection />
+      <CampusBanner />
+      <RankingFilterBar />
+      <RankingList fetchMore={fetchMoreProducts} />
+    </Layout>
   )
 }
 
