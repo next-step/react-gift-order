@@ -3,7 +3,7 @@ import { ThemeProvider, Global } from '@emotion/react'
 import { resetStyle } from '@/styles/reset'
 import theme from '@/styles/theme'
 import HomePage from '@/pages/HomePage'
-import LoginPage from '@/pages/LoginPage'
+import LoginPage from '@/pages/Login/LoginPage'
 import NotFoundPage from '@/pages/NotfoundPage'
 import { MainLayout } from './components/MainLayout'
 

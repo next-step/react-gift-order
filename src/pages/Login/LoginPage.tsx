@@ -1,72 +1,27 @@
-import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "@emotion/styled";
 import Spacing from "@/components/Spacing";
+import { useLoginForm } from "./useLoginForm";
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const from = (location.state as { from?: string })?.from || "/";
 
-  const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState("");
-
-  const [password, setPassword] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-
-  const validEmail = (value: string) => {
-    if (!value.trim()) {
-      return "ID를 입력해주세요.";
-    }
-    const emailExpression = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailExpression.test(value)) {
-      return "ID는 이메일 형식으로 입력해주세요.";
-    }
-    return "";
-  };
-
-  const notFocusemail = () => {
-    const error = validEmail(email);
-    setEmailError(error);
-  };
-
-  const changeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    setEmail(newValue);
-    setEmailError(validEmail(newValue));
-  };
-
-  const validPassword = (value: string) => {
-    if (!value.trim()) {
-      return "PW를 입력해주세요.";
-    }
-    if (value.length < 8) {
-      return "PW는 최소 8글자 이상이어야 합니다.";
-    }
-    return "";
-  };
-
-  const notFocuspassword = () => {
-    const error = validPassword(password);
-    setPasswordError(error);
-  };
-
-  const changePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    setPassword(newValue);
-    setPasswordError(validPassword(newValue));
-  };
-
-  const isEmailValid = validEmail(email) === "";
-  const isPasswordValid = validPassword(password) === "";
-  const isFormValid = isEmailValid && isPasswordValid;
+  const {
+    email,
+    emailError,
+    password,
+    passwordError,
+    handleEmailChange,
+    handleEmailBlur,
+    handlePasswordChange,
+    handlePasswordBlur,
+    isFormValid,
+  } = useLoginForm();
 
   const goToLogin = () => {
-    const error = validEmail(email);
-    if (error) {
-      setEmailError(error);
-      return;
-    }
+    if (!isFormValid) return;
     navigate(from, { replace: true });
   };
 
@@ -79,8 +34,8 @@ export default function LoginPage() {
             type="email"
             placeholder="이메일"
             value={email}
-            onChange={changeEmail}
-            onBlur={notFocusemail}
+            onChange={handleEmailChange}
+            onBlur={handleEmailBlur}
             hasError={!!emailError}
           />
           {emailError && <ErrorText>{emailError}</ErrorText>}
@@ -89,16 +44,13 @@ export default function LoginPage() {
             type="password"
             placeholder="비밀번호"
             value={password}
-            onChange={changePassword}
-            onBlur={notFocuspassword}
+            onChange={handlePasswordChange}
+            onBlur={handlePasswordBlur}
             hasError={!!passwordError}
           />
           {passwordError && <ErrorText>{passwordError}</ErrorText>}
           <Spacing height="48px" />
-          <LoginButton
-            onClick={goToLogin}
-            disabled={!isFormValid}
-          >
+          <LoginButton onClick={goToLogin} disabled={!isFormValid}>
             로그인
           </LoginButton>
         </FormBox>
@@ -111,7 +63,7 @@ const Wrapper = styled.div`
   max-width: 720px;
   width: 100%;
   margin: 0 auto;
-  min-height: calc(100vh - 56px); // Header 높이 제외
+  min-height: calc(100vh - 56px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -164,17 +116,21 @@ const LoginButton = styled.button<{ disabled: boolean }>`
   background-color: ${({ theme }) => theme.colors.kakao.yellow.default};
   color: ${({ theme }) => theme.colors.gray[900]};
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
-  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
   ${({ theme }) => theme.typography.body2Regular};
   transition: background-color 200ms;
 
   &:hover {
     background-color: ${({ theme, disabled }) =>
-      disabled ? theme.colors.kakao.yellow.default : theme.colors.kakao.yellow.hover};
+      disabled
+        ? theme.colors.kakao.yellow.default
+        : theme.colors.kakao.yellow.hover};
   }
 
   &:active {
     background-color: ${({ theme, disabled }) =>
-      disabled ? theme.colors.kakao.yellow.default : theme.colors.kakao.yellow.pressed};
+      disabled
+        ? theme.colors.kakao.yellow.default
+        : theme.colors.kakao.yellow.pressed};
   }
-`
+`;
