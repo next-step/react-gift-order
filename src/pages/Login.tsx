@@ -1,58 +1,60 @@
 import styled from '@emotion/styled';
-import { useLoginForm } from '../hooks/useLoginForm';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLoginForm } from '../hooks/useLoginForm';
 import NavigationBar from '@/common/NavigationBar';
 import Input from '@/common/Input';
 import LoginButton from '@/components/login/LoginButton';
-import { useState } from 'react';
 
 const LoginForm = () => {
   const { form, handleChange } = useLoginForm();
-  const [emailError, setEmailError] = useState<string | null>(null);
-  const [passwordError, setPasswordError] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  const [errors, setErrors] = useState<{ [key: string]: string | null }>({});
 
   const loginRedirect = () => {
     navigate('/');
   };
 
-  const isValidEmail = (email: string): boolean => {
-    return email.includes('@') && email.includes('.');
+  const validators: Record<string, (value: string) => string | null> = {
+    id: (value: string) => {
+      if (value.trim() === '') return 'ID를 입력해주세요.';
+      if (!value.includes('@') || !value.includes('.'))
+        return 'ID는 이메일 형식으로 입력해주세요.';
+      return null;
+    },
+    password: (value: string) => {
+      if (value.trim() === '') return 'PW를 입력해주세요.';
+      if (value.length < 8) return 'PW는 최소 8글자 이상이어야 합니다.';
+      return null;
+    },
   };
 
-  const handleEmailBlur = () => {
-    if (form.id.trim() === '') setEmailError('ID를 입력해주세요.');
-    else if (!isValidEmail(form.id))
-      setEmailError('ID는 이메일 형식으로 입력해주세요.');
-    else setEmailError(null);
-  };
-
-  const isValidPassword = (password: string): boolean => {
-    return password.length >= 8;
-  };
-
-  const handlePasswordBlur = () => {
-    if (form.password.trim() === '') setPasswordError('PW를 입력해주세요.');
-    else if (!isValidPassword(form.password))
-      setPasswordError('PW는 최소 8글자 이상이어야 합니다.');
-    else setPasswordError(null);
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    const validator = validators[name];
+    if (!validator) return;
+    const errorMessage = validator(value);
+    setErrors((prev) => ({ ...prev, [name]: errorMessage }));
   };
 
   return (
     <Layout>
       <NavigationBar />
       <Logo>kakao</Logo>
+
       <FormWrapper>
         <Input
           name="id"
           placeholder="이메일"
           value={form.id}
           onChange={handleChange}
-          onBlur={handleEmailBlur}
-          hasError={!!emailError}
+          onBlur={handleBlur}
+          hasError={!!errors.id}
         />
-        {emailError && <ErrorText>{emailError}</ErrorText>}
+        {errors.id && <ErrorText>{errors.id}</ErrorText>}
       </FormWrapper>
+
       <FormWrapper>
         <Input
           name="password"
@@ -60,22 +62,18 @@ const LoginForm = () => {
           placeholder="비밀번호"
           value={form.password}
           onChange={handleChange}
-          onBlur={handlePasswordBlur}
-          hasError={!!passwordError}
+          onBlur={handleBlur}
+          hasError={!!errors.password}
         />
-        {passwordError && <ErrorText>{passwordError}</ErrorText>}
+        {errors.password && <ErrorText>{errors.password}</ErrorText>}
       </FormWrapper>
+
       <LoginButton onClick={loginRedirect} />
     </Layout>
   );
 };
 
 export default LoginForm;
-
-const Logo = styled.div`
-  font-size: 40px;
-  margin-bottom: 40px;
-`;
 
 const Layout = styled.div`
   display: flex;
@@ -86,6 +84,12 @@ const Layout = styled.div`
   height: 100vh;
   gap: ${({ theme }) => theme.spacing.spacing2};
 `;
+
+const Logo = styled.div`
+  font-size: 40px;
+  margin-bottom: 40px;
+`;
+
 const FormWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -93,6 +97,7 @@ const FormWrapper = styled.div`
   max-width: 388px;
   width: 100%;
 `;
+
 const ErrorText = styled.div`
   color: ${({ theme }) => theme.colors.red700};
   font-size: ${({ theme }) => theme.typography.fontSizes.label2};
