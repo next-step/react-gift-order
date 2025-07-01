@@ -38,12 +38,7 @@ function App() {
   const navConfig = getNavigationConfig();
 
   const handleBackClick = () => {
-    if (window.history.length > 1) {
-      // 브라우저 히스토리가 있으면
-      navigate(-1); // 브라우저 뒤로가기
-    } else {
-      navigate('/'); // 홈(/)으로
-    }
+    navigate(ROUTE_HOME); // 항상 홈으로 이동
   };
 
   const handleProfileClick = () => {
