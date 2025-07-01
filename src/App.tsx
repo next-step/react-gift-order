@@ -1,35 +1,44 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { ThemeProvider } from '@emotion/react';
+import { theme } from '@/styles/ResetStyles';
+import { AppWrapper } from '@/styles/App.styles';
+import { Routes, Route } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import WithHeaderLayout from '@/Layout/WithHeaderLayout';
+import ResetStyles from '@/styles/ResetStyles';
+import MainLayout from '@/Layout/MainLayout';
+import Login from '@/pages/Login';
+import NotFound from '@/NotFound';
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  const navigate = useNavigate();
+  const location = useLocation();
+  function handleBackClick() {
+    if (location.pathname !== '/') navigate(-1);
+  }
+  function handleLoginClick() {
+    navigate('/login');
+  }
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <ThemeProvider theme={theme}>
+      <AppWrapper>
+        <ResetStyles />
+        <Routes>
+          <Route
+            element={
+              <WithHeaderLayout
+                handleBackClick={handleBackClick}
+                handleLoginClick={handleLoginClick}
+              />
+            }
+          >
+            <Route path="/" element={<MainLayout />} />
+            <Route path="/login" element={<Login onLogin={handleBackClick} />} />
+          </Route>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </AppWrapper>
+    </ThemeProvider>
+  );
 }
 
-export default App
+export default App;
