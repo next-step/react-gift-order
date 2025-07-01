@@ -9,6 +9,7 @@ import { useState } from 'react';
 const LoginForm = () => {
   const { form, handleChange } = useLoginForm();
   const [emailError, setEmailError] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const loginRedirect = () => {
@@ -26,6 +27,17 @@ const LoginForm = () => {
     else setEmailError(null);
   };
 
+  const isValidPassword = (password: string): boolean => {
+    return password.length >= 8;
+  };
+
+  const handlePasswordBlur = () => {
+    if (form.password.trim() === '') setPasswordError('PW를 입력해주세요.');
+    else if (!isValidPassword(form.password))
+      setPasswordError('PW는 최소 8글자 이상이어야 합니다.');
+    else setPasswordError(null);
+  };
+
   return (
     <Layout>
       <NavigationBar />
@@ -41,13 +53,18 @@ const LoginForm = () => {
         />
         {emailError && <ErrorText>{emailError}</ErrorText>}
       </FormWrapper>
-      <Input
-        name="password"
-        type="password"
-        placeholder="비밀번호"
-        value={form.password}
-        onChange={handleChange}
-      />
+      <FormWrapper>
+        <Input
+          name="password"
+          type="password"
+          placeholder="비밀번호"
+          value={form.password}
+          onChange={handleChange}
+          onBlur={handlePasswordBlur}
+          hasError={!!passwordError}
+        />
+        {passwordError && <ErrorText>{passwordError}</ErrorText>}
+      </FormWrapper>
       <LoginButton onClick={loginRedirect} />
     </Layout>
   );
