@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Section } from '@/components/layout';
 import FilterButtonGroup from './FilterButtonGroup';
@@ -22,6 +22,24 @@ const rankOptions = [
 
 type TargetType = (typeof targetOptions)[number]['value'];
 type RankType = (typeof rankOptions)[number]['value'];
+
+const getValidTargetType = (
+  param: string | null,
+  validValues: readonly string[]
+): TargetType => {
+  return validValues.includes(param as TargetType)
+    ? (param as TargetType)
+    : 'ALL';
+};
+
+const getValidRankType = (
+  param: string | null,
+  validValues: readonly string[]
+): RankType => {
+  return validValues.includes(param as RankType)
+    ? (param as RankType)
+    : 'MANY_WISH';
+};
 
 // TODO: 실제 랭킹 API에서 데이터 가져오도록 구현 (현재는 BBQ 데이터 21개 복제)
 const generateRankingProducts = (): Product[] => {
@@ -49,24 +67,40 @@ const RankingSection = () => {
   const [showMore, setShowMore] = useState(false); // 더보기는 URL에 저장하지 않음 (UX 고려)
 
   // URL 쿼리 파라미터에서 필터 상태 읽기 및 유효성 검증
-  const getValidTargetType = (param: string | null): TargetType => {
-    const validValues = targetOptions.map((option) => option.value);
-    return validValues.includes(param as TargetType)
-      ? (param as TargetType)
-      : 'ALL';
-  };
+  const targetValidValues = targetOptions.map((option) => option.value);
+  const rankValidValues = rankOptions.map((option) => option.value);
 
-  const getValidRankType = (param: string | null): RankType => {
-    const validValues = rankOptions.map((option) => option.value);
-    return validValues.includes(param as RankType)
-      ? (param as RankType)
-      : 'MANY_WISH';
-  };
+  const targetParam = searchParams.get('target');
+  const rankParam = searchParams.get('rank');
 
-  const targetType = getValidTargetType(searchParams.get('target'));
-  const rankType = getValidRankType(searchParams.get('rank'));
+  const targetType = getValidTargetType(targetParam, targetValidValues);
+  const rankType = getValidRankType(rankParam, rankValidValues);
 
-  const rankingProducts = generateRankingProducts();
+  // 유효하지 않은 URL 파라미터가 있으면 기본값으로 수정
+  useEffect(() => {
+    const needsUpdate =
+      (targetParam && targetParam !== targetType) ||
+      (rankParam && rankParam !== rankType);
+
+    if (needsUpdate) {
+      setSearchParams(
+        (prev) => {
+          const newParams = new URLSearchParams(prev);
+          if (targetParam && targetParam !== targetType) {
+            newParams.set('target', targetType);
+          }
+          if (rankParam && rankParam !== rankType) {
+            newParams.set('rank', rankType);
+          }
+          return newParams;
+        },
+        { replace: true }
+      ); // replace로 히스토리에 남기지 않음
+    }
+  }, [targetParam, rankParam, targetType, rankType, setSearchParams]);
+
+  // 랭킹 데이터 생성 최적화 - 매번 재생성 방지
+  const rankingProducts = useMemo(() => generateRankingProducts(), []);
 
   const handleTargetChange = (value: string) => {
     // URL 쿼리 파라미터 업데이트: ?target=value&rank=기존값
