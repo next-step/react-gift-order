@@ -1,0 +1,9 @@
+export { CheerUpSection } from "@/components/main/CheerUpSection";
+export { Header } from "@/components/main/Header";
+export { HotGiftRanking } from "@/components/main/HotGiftRanking";
+export { HotGiftRankingGrid } from "@/components/main/HotGiftRankingGrid";
+export { HotGiftRankingTab } from "@/components/main/HotGiftRankingTab";
+export { HotGiftRankingTag } from "@/components/main/HotGiftRankingTag";
+export { PresentTheme } from "@/components/main/PresentTheme";
+export { SelectFriendSection } from "@/components/main/SelectFriendSection";
+export { ThemeItem } from "@/components/main/ThemeItem";
