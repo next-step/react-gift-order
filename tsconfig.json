@@ -1,4 +1,12 @@
 {
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "jsx": "react-jsx",
+    "jsxImportSource": "@emotion/react"
+  },
   "files": [],
   "references": [
     { "path": "./tsconfig.app.json" },
