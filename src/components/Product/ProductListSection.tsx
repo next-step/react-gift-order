@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { ProductItem } from '@/components/Product/ProductItem'
 
 const productMock = Array(21).fill({
@@ -49,7 +49,9 @@ export function ProductListSection() {
     localStorage.setItem('selectedTopic', option)
   }
 
-  const displayedProducts = showAll ? productMock : productMock.slice(0, 6)
+  const displayedProducts = useMemo(() => {
+    return showAll ? productMock : productMock.slice(0, 6)
+  }, [showAll])
 
   return (
     <SectionWrapper>

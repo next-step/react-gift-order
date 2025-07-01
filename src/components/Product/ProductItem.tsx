@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { memo } from 'react'
 
 interface Product {
   id: number
@@ -21,7 +22,7 @@ interface Props {
   rank: number
 }
 
-export function ProductItem({ product, rank }: Props) {
+export const ProductItem = memo(function ProductItem({ product, rank }: Props) {
   return (
     <Wrapper>
       <ImageWrapper>
@@ -33,7 +34,7 @@ export function ProductItem({ product, rank }: Props) {
       <Price>{product.price.sellingPrice.toLocaleString()}원</Price>
     </Wrapper>
   )
-}
+})
 
 const Wrapper = styled.div`
   display: flex;
