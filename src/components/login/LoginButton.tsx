@@ -6,12 +6,18 @@ const StyledLoginButton = styled.div(({ theme }) => ({
   marginTop: `${theme.spacing11}`,
 }));
 
-export const LoginButton = () => {
+interface LoginButtonProps {
+  isDisabled: boolean;
+}
+
+export const LoginButton = ({ isDisabled }: LoginButtonProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
 
   const handleLoginSuccess = () => {
+    if (isDisabled) return;
+
     const previousPage = location.state?.from;
     const redirectPath = previousPage || searchParams.get("redirect") || "/";
     navigate(redirectPath);
@@ -24,6 +30,7 @@ export const LoginButton = () => {
         size="large"
         width="390px"
         onClick={handleLoginSuccess}
+        disabled={isDisabled}
       >
         로그인
       </Button>
