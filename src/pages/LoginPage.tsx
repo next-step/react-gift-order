@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import styled from '@emotion/styled'
 import Spacing from '@/components/Spacing'
@@ -7,7 +8,37 @@ export default function LoginPage() {
   const location = useLocation()
   const from = (location.state as { from?: string })?.from || '/'
 
+  const [email, setEmail] = useState('')
+  const [emailError, setEmailError] = useState('')
+
+  const validEmail = (value: string) => {
+    if (!value.trim()) {
+      return 'ID를 입력해주세요.'
+    }
+    const emailExpression = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailExpression.test(value)) {
+      return 'ID는 이메일 형식으로 입력해주세요.'
+    }
+    return ''
+  }
+
+  const notFocusemail = () => {
+    const error = validEmail(email)
+    setEmailError(error)
+  }
+
+  const changeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value
+  setEmail(newValue)
+  setEmailError(validEmail(newValue))
+  }
+
   const goToLogin = () => {
+    const error = validEmail(email)
+    if (error) {
+      setEmailError(error)
+      return
+    }
     navigate(from, { replace: true })
   }
 
@@ -16,7 +47,15 @@ export default function LoginPage() {
         <Form>
           <Logo src="/loginlogo.svg" alt="kakao logo" />
           <FormBox>
-            <Input type="email" placeholder="이메일" />
+            <Input
+            type="email"
+            placeholder="이메일"
+            value={email}
+            onChange={changeEmail}
+            onBlur={notFocusemail}
+            hasError={!!emailError}
+          />
+          {emailError && <ErrorText>{emailError}</ErrorText>}
             <Spacing />
             <Input type="password" placeholder="비밀번호" />
             <Spacing height="48px" />
@@ -55,10 +94,11 @@ const FormBox = styled.div`
   width: 100%;
 `
 
-const Input = styled.input`
+const Input = styled.input<{ hasError?: boolean }>`
   width: 100%;
   border: none;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.gray[400]};
+  border-bottom: 1px solid ${({ hasError, theme }) => 
+    hasError ? theme.colors.state.critical : theme.colors.gray[400]};
   padding: 8px 0;
   margin-bottom: 0.5rem;
   font-size: 1rem;
@@ -69,7 +109,12 @@ const Input = styled.input`
   }
 `
 
-const LoginButton = styled.button`
+const ErrorText = styled.p`
+  color: ${({ theme }) => theme.colors.state.critical};
+  ${({ theme }) => theme.typography.label2Regular};
+`
+
+const LoginButton = styled.button<{ hasError?: boolean }>`
   width: 100%;
   height: 2.75rem;
   border: none;
