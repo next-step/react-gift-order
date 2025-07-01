@@ -38,6 +38,10 @@ const LoginForm = () => {
     setErrors((prev) => ({ ...prev, [name]: errorMessage }));
   };
 
+  const isFormValid = (): boolean => {
+    return !validators.id(form.id) && !validators.password(form.password);
+  };
+
   return (
     <Layout>
       <NavigationBar />
@@ -68,7 +72,7 @@ const LoginForm = () => {
         {errors.password && <ErrorText>{errors.password}</ErrorText>}
       </FormWrapper>
 
-      <LoginButton onClick={loginRedirect} />
+      <LoginButton onClick={loginRedirect} disabled={!isFormValid()} />
     </Layout>
   );
 };
