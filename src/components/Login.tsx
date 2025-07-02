@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import theme from '@src/styles/tokens/index';
 import kakao_logo from '@src/assets/icons/kakao_logo.svg';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import useLoginForm from '@src/hooks/useLoginForm';
 
 const mainStyle = css`
   width: 100%;
@@ -103,50 +103,28 @@ const spacer48 = css`
 `;
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [emailFocused, setEmailFocused] = useState(false);
-  const [emailTouched, setEmailTouched] = useState(false);
-  const [emailError, setEmailError] = useState('');
+  const {
+    email,
+    setEmail,
+    emailFocused,
+    setEmailFocused,
+    emailTouched,
+    emailError,
+    handleEmailBlur,
 
-  const [pw, setPw] = useState('');
-  const [pwFocused, setPwFocused] = useState(false);
-  const [pwTouched, setPwTouched] = useState(false);
-  const [pwError, setPwError] = useState('');
+    pw,
+    setPw,
+    pwFocused,
+    setPwFocused,
+    pwTouched,
+    pwError,
+    handlePwBlur,
 
-  const [loginActivated, setLoginActivated] = useState(false);
+    loginActivated,
+  } = useLoginForm();
 
   const navigate = useNavigate();
   const location = useLocation();
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  const validateEmail = (value: string) => {
-    if (!value) return 'ID를 입력해주세요.';
-    if (!emailRegex.test(value)) return 'ID는 이메일 형식으로 입력해주세요.';
-    return '';
-  };
-
-  const validatePassword = (value: string) => {
-    if (!value) return 'PW를 입력해주세요.';
-    if (value.length < 8) return 'PW는 최소 8글자 이상이어야 합니다.';
-    return '';
-  };
-
-  useEffect(() => {
-    setEmailError(validateEmail(email));
-  }, [email, emailTouched]);
-
-  useEffect(() => {
-    if (pwTouched) {
-      setPwError(validatePassword(pw));
-    }
-  }, [pw, pwTouched]);
-
-  useEffect(() => {
-    const emailValid = validateEmail(email) === '';
-    const pwValid = validatePassword(pw) === '';
-    setLoginActivated(emailValid && pwValid);
-  }, [email, pw]);
 
   const loginClicked = () => {
     const from = location.state?.from?.pathname || '/';
@@ -165,11 +143,7 @@ const Login = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             onFocus={() => setEmailFocused(true)}
-            onBlur={() => {
-              setEmailFocused(false);
-              setEmailTouched(true);
-              setEmailError(validateEmail(email));
-            }}
+            onBlur={handleEmailBlur}
           />
           {emailTouched && emailError && (
             <p css={errorMessageStyle}>{emailError}</p>
@@ -186,11 +160,7 @@ const Login = () => {
             value={pw}
             onChange={(e) => setPw(e.target.value)}
             onFocus={() => setPwFocused(true)}
-            onBlur={() => {
-              setPwFocused(false);
-              setPwTouched(true);
-              setPwError(validatePassword(pw));
-            }}
+            onBlur={handlePwBlur}
           />
           {pwTouched && pwError && <p css={errorMessageStyle}>{pwError}</p>}
         </div>
