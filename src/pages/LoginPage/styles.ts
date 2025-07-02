@@ -13,8 +13,19 @@ export const Logo = styled.img`
     height: auto;
 `;
 export const ErrorMessage = styled.p`
-  
+  font: ${({ theme }) => theme.typography.label2Regular};
+  color: ${({ theme }) => theme.colors.semantic.critical};
+  margin-top: -${({ theme }) => theme.spacing.spacing4};
 `;
+
+export const InputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 360px;
+  margin-bottom: ${({ theme }) => theme.spacing.spacing6};
+`;
+
 export const Input = styled.input`
   width: 360px;
   padding: ${({ theme }) => theme.spacing.spacing3};
