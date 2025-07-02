@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { rankingItems, genderItems, actionItems } from '../../data/ranking';
-import ItemCard from '../common/ItemCard';
+import { rankingItems, genderItems, actionItems } from '../../../../data/ranking';
+import ItemCard from '../../../../components/common/ItemCard';
 import * as S from './styles';
 
 const RankingSection = () => {

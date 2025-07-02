@@ -1,5 +1,5 @@
-import { categories } from '../../data/categories';
-import ItemCard from '../common/ItemCard';
+import { categories } from '../../../../data/categories';
+import ItemCard from '../../../../components/common/ItemCard';
 import * as S from './styles';
 
 const CategorySection = () => {
