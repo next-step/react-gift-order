@@ -1,6 +1,6 @@
-// pages/LoginPage.tsx
 import styled from '@emotion/styled'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { useState } from 'react'
 
 const Wrapper = styled.section`
   display: flex;
@@ -55,9 +55,41 @@ const Button = styled.button`
   cursor: pointer;
 `
 
+const ErrorMsg = styled.div`
+  color: ${({ theme }) => theme.colors.red.red500};
+  font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
+  margin-bottom: ${({ theme }) => theme.spacing.spacing3};
+  max-width: 320px;
+  width: 100%;
+`
+
 const LoginPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
+
+  const [email, setEmail] = useState('')
+  const [emailError, setEmailError] = useState('')
+  const [emailTouched, setEmailTouched] = useState(false)
+
+  const validateEmail = (value: string): string => {
+    if (!value.trim()) return 'ID를 입력해주세요.'
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(value)) return 'ID는 이메일 형식으로 입력해주세요.'
+    return ''
+  }
+
+  const handleEmailBlur = () => {
+    setEmailTouched(true)
+    const error = validateEmail(email)
+    setEmailError(error)
+  }
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value)
+    if (emailTouched) {
+      setEmailError(validateEmail(e.target.value))
+    }
+  }
 
   const handleLogin = () => {
     if (location.key !== 'default') {
@@ -68,14 +100,21 @@ const LoginPage = () => {
   }
 
   return (
-    <>
-      <Wrapper>
-        <Title>kakao</Title>
-        <Input name="email" placeholder="이메일" />
-        <Input name="password" placeholder="비밀번호" type="password" />
-        <Button onClick={handleLogin}>로그인</Button>
-      </Wrapper>
-    </>
+    <Wrapper>
+      <Title>kakao</Title>
+
+      <Input
+        name="email"
+        placeholder="이메일"
+        value={email}
+        onChange={handleEmailChange}
+        onBlur={handleEmailBlur}
+      />
+      {emailError && <ErrorMsg>{emailError}</ErrorMsg>}
+
+      <Input name="password" placeholder="비밀번호" type="password" />
+      <Button onClick={handleLogin}>로그인</Button>
+    </Wrapper>
   )
 }
 
