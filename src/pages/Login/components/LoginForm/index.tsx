@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLoginForm } from '../../../../hooks/useLoginForm';
 import InputField from '../../../../components/Form/inputField';
+import Button from '../../../../components/common/Button';
 import * as S from './sytles';
 
 const LoginForm: React.FC = () => {
@@ -29,9 +30,9 @@ const LoginForm: React.FC = () => {
           error={password.error}
         />       
         <S.Spacer />      
-        <S.LoginButton type="submit" disabled={!isFormValid}>
+        <Button type="submit" disabled={!isFormValid}>
           로그인
-        </S.LoginButton>
+        </Button>
       </form>
     </S.LoginSection>
   );
