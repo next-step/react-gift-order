@@ -15,10 +15,7 @@ function IDField({
 
   const handleEmailChange = (value: string) => {
     handleChange(value);
-
-    if (isEmailBlurredRef.current) {
-      validateEmail(value);
-    }
+    validateEmail(value);
   };
 
   const handleBlur = (email: string) => {
@@ -36,8 +33,11 @@ function IDField({
         onBlur={(e) => handleBlur(e.target.value)}
         required
         isError={hasError}
+        isBlurred={isEmailBlurredRef.current}
       />
-      <FormErrorMessage errorMessage={getFormErrorMessage()} />
+      {isEmailBlurredRef.current && (
+        <FormErrorMessage errorMessage={getFormErrorMessage()} />
+      )}
     </>
   );
 }

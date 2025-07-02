@@ -15,10 +15,7 @@ function PasswordField({
 
   const handlePasswordChange = (value: string) => {
     handleChange(value);
-
-    if (isPasswordBlurredRef.current) {
-      validatePassword(value);
-    }
+    validatePassword(value);
   };
 
   const handlePasswordBlur = (value: string) => {
@@ -36,8 +33,11 @@ function PasswordField({
         required
         isError={hasError}
         onBlur={(e) => handlePasswordBlur(e.target.value)}
+        isBlurred={isPasswordBlurredRef.current}
       />
-      <FormErrorMessage errorMessage={getFormErrorMessage()} />
+      {isPasswordBlurredRef.current && (
+        <FormErrorMessage errorMessage={getFormErrorMessage()} />
+      )}
     </>
   );
 }
