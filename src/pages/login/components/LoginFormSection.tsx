@@ -13,10 +13,8 @@ export default function LoginFormSection({ onLogin }: Props) {
     emailError,
     passwordError,
     isButtonEnabled,
-    setEmail,
-    setPassword,
-    handleEmailBlur,
-    handlePasswordBlur,
+    handleEmailChange,
+    handlePasswordChange,
   } = useLoginForm();
 
   return (
@@ -25,16 +23,15 @@ export default function LoginFormSection({ onLogin }: Props) {
         type="email"
         placeholder="이메일"
         value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        onBlur={handleEmailBlur}
+        onChange={(e) => handleEmailChange(e.target.value)}
         error={emailError}
       />
+
       <LoginInput
         type="password"
         placeholder="비밀번호"
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        onBlur={handlePasswordBlur}
+        onChange={(e) => handlePasswordChange(e.target.value)}
         error={passwordError}
       />
       <LoginButton onClick={onLogin} disabled={!isButtonEnabled}>

@@ -23,12 +23,14 @@ export const useLoginForm = () => {
     return "";
   };
 
-  const handleEmailBlur = () => {
-    setEmailError(validateEmail(email));
+  const handleEmailChange = (value: string) => {
+    setEmail(value);
+    setEmailError(validateEmail(value));
   };
 
-  const handlePasswordBlur = () => {
-    setPasswordError(validatePassword(password));
+  const handlePasswordChange = (value: string) => {
+    setPassword(value);
+    setPasswordError(validatePassword(value));
   };
 
   useEffect(() => {
@@ -44,9 +46,7 @@ export const useLoginForm = () => {
     emailError,
     passwordError,
     isButtonEnabled,
-    setEmail,
-    setPassword,
-    handleEmailBlur,
-    handlePasswordBlur,
+    handleEmailChange,
+    handlePasswordChange,
   };
 };
