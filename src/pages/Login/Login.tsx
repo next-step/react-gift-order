@@ -14,8 +14,8 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const handleLoginClick = () => {
-    const hasPrev = window.history.state;
-    if (hasPrev > 0) {
+    const hasPrev = window.history.length;
+    if (hasPrev > 1) {
       navigate(-1);
     } else {
       navigate(RouterPath.HOME);
