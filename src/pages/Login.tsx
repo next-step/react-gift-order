@@ -63,6 +63,11 @@ const LoginButton = styled.button`
   &:hover {
     background: #ffe14a;
   }
+  &:disabled {
+    background: #f0f0f0;
+    color: #b0b3ba;
+    cursor: not-allowed;
+  }
 `;
 
 const Login: React.FC = () => {
@@ -110,6 +115,8 @@ const Login: React.FC = () => {
     }
   };
 
+  const isFormValid = validateEmail(email) === "" && validatePassword(password) === "";
+
   return (
     <LoginWrapper>
       <Logo>kakao</Logo>
@@ -132,7 +139,9 @@ const Login: React.FC = () => {
           onBlur={handlePasswordBlur}
         />
         <ErrorMessage>{passwordError}</ErrorMessage>
-        <LoginButton type="submit">로그인</LoginButton>
+        <LoginButton type="submit" disabled={!isFormValid}>
+          로그인
+        </LoginButton>
       </Form>
     </LoginWrapper>
   );
