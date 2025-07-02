@@ -31,14 +31,16 @@ const LoginFormTitle = styled.h1`
 `;
 
 interface InputProps {
-  hasError?: string;
+  hasIdError?: string;
+  hasPwError?: string;
+  hasEnabled?: boolean;
 }
 
 const LoginFormId = styled.input<InputProps>`
   border-top: none;
   border-left: none;
   border-right: none;
-  border-bottom: 1px solid ${({ theme ,hasError}) => hasError ? theme.colors.red[400] : theme.colors.gray[400]};
+  border-bottom: 1px solid ${({ theme ,hasIdError}) => hasIdError ? theme.colors.red[400] : theme.colors.gray[400]};
   height: 40px;
   font-size: ${({ theme }) => theme.typography.title2Regular.fontSize};
   font-weight: ${({ theme }) => theme.typography.title2Regular.fontWeight};
@@ -56,11 +58,11 @@ const LoginFormErrorText = styled.p`
     font-size: 14px;
 `
 
-const LoginFormPw = styled.input`
+const LoginFormPw = styled.input<InputProps>`
   border-top: none;
   border-left: none;
   border-right: none;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.gray[400]};
+  border-bottom: 1px solid ${({ theme ,hasPwError}) => hasPwError ? theme.colors.red[400] : theme.colors.gray[400]};
   margin-top: 25px;
   height: 40px;
   font-size: ${({ theme }) => theme.typography.title2Regular.fontSize};
@@ -73,12 +75,14 @@ const LoginFormPw = styled.input`
   }
 `;
 
-const LoginFormBtn = styled.button`
-  background-color: ${({ theme }) => theme.colors.semantic.kakaoYellow};
+const LoginFormBtn = styled.button<InputProps>`
+  background-color: ${({ theme ,hasEnabled}) => hasEnabled ? theme.colors.semantic.kakaoYellow : '#fff19b'};
+  cursor: ${({hasEnabled}) => hasEnabled ? 'pointer' : 'not-allowed'};
   border: none;
   border-radius: 5px;
   height: 40px;
   margin-top: 25px;
+  
 `;
 
 function Login() {
@@ -94,39 +98,33 @@ function Login() {
   const handleIdBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const value = e.target.value.trim();
 
-    // 값이 비었는지 체크
     if(!value) {
         setIdError('ID를 입력해주세요.');
         return;
     } 
 
-    // 이메일 형식 체크
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if(!emailRegex.test(value)) {
         setIdError('ID는 이메일 형식으로 입력해주세요.');
         return;
     }
 
-    // 통과 케이스
     setIdError('');
   }
 
   const handlePwBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const value = e.target.value.trim();
 
-    // 값이 비었는지 체크
     if(!value) {
         setPwError('PW를 입력해주세요.');
         return;
     } 
 
-    // 비밀번호 8글자 이상인지 체크
     if(value.length < 8) {
         setPwError('PW는 최소 8글자 이상이어야 합니다.');
         return;
     }
 
-    // 통과 케이스
     setPwError('');
   }
 
@@ -146,12 +144,11 @@ function Login() {
         <LoginFormWrapper>
           <LoginForm>
             <LoginFormTitle>KAKAO</LoginFormTitle>
-            <LoginFormId placeholder='이메일' type='email' value={userId} onChange={e => setUserId(e.target.value)} onBlur={handleIdBlur} hasError={idError}></LoginFormId>
+            <LoginFormId placeholder='이메일' type='email' value={userId} onChange={e => setUserId(e.target.value)} onBlur={handleIdBlur} hasIdError={idError}></LoginFormId>
             {idError && <LoginFormErrorText>{idError}</LoginFormErrorText>}
-            <LoginFormPw placeholder='비밀번호' type='password' value={userPw} onChange={e => setUserPw(e.target.value)} onBlur={handlePwBlur}></LoginFormPw>
+            <LoginFormPw placeholder='비밀번호' type='password' value={userPw} onChange={e => setUserPw(e.target.value)} onBlur={handlePwBlur} hasPwError={pwError}></LoginFormPw>
             {pwError && <LoginFormErrorText>{pwError}</LoginFormErrorText>}
-            <LoginFormBtn onClick={handleLogin}>로그인</LoginFormBtn>
-            
+            <LoginFormBtn onClick={handleLogin} hasEnabled={((idError === '') && (pwError === '')) && (userId.length > 0 && userPw.length > 7)}>로그인</LoginFormBtn>
           </LoginForm>
         </LoginFormWrapper>
       </Layout>
@@ -159,3 +156,5 @@ function Login() {
   );
 }
 export default Login;
+
+//에러면 문자열이 들어가있고 에러가 아니면 문자열이 없음 즉 두개다 빈 문자열일때
