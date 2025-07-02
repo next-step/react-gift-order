@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { useState } from 'react'
+import { useInput } from '@/hooks/useInput'
 
 const Wrapper = styled.section`
   display: flex;
@@ -63,64 +63,33 @@ const ErrorMsg = styled.div`
   max-width: 320px;
   width: 100%;
 `
+const emailValidator = (value: string): string => {
+  if (!value.trim()) return 'ID를 입력해주세요.'
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!emailRegex.test(value)) return 'ID는 이메일 형식으로 입력해주세요.'
+  return ''
+}
+
+const passwordValidator = (value: string): string => {
+  if (!value.trim()) return 'PW를 입력해주세요.'
+  if (value.length < 8) return 'PW는 최소 8글자 이상이어야 합니다.'
+  return ''
+}
 
 const LoginPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
-
-  const [email, setEmail] = useState('')
-  const [emailError, setEmailError] = useState('')
-  const [emailTouched, setEmailTouched] = useState(false)
-
-  const [password, setPassword] = useState('')
-  const [passwordError, setPasswordError] = useState('')
-  const [passwordTouched, setPasswordTouched] = useState(false)
-
-  const isValid = emailError === '' && passwordError === '' && emailTouched && passwordTouched
-
-  const validateEmail = (value: string): string => {
-    if (!value.trim()) return 'ID를 입력해주세요.'
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(value)) return 'ID는 이메일 형식으로 입력해주세요.'
-    return ''
-  }
-
-  const validatePassword = (pw: string) => {
-    if (!pw) return 'PW를 입력해주세요.'
-    if (pw.length < 8) return 'PW는 최소 8글자 이상이어야 합니다.'
-    return ''
-  }
-
-  const handleEmailBlur = () => {
-    setEmailTouched(true)
-    const error = validateEmail(email)
-    setEmailError(error)
-  }
-
-  const handlePasswordBlur = () => {
-    setPasswordTouched(true)
-    setPasswordError(validatePassword(password))
-  }
-
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value)
-    if (emailTouched) {
-      setEmailError(validateEmail(e.target.value))
-    }
-  }
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value)
-    if (passwordTouched) {
-      setPasswordError(validatePassword(e.target.value))
-    }
-  }
+  const emailInput = useInput('', emailValidator)
+  const passwordInput = useInput('', passwordValidator)
+  const isFormValid = emailInput.isValid && passwordInput.isValid
 
   const handleLogin = () => {
-    if (location.key !== 'default') {
-      navigate(-1)
-    } else {
-      navigate('/')
+    if (isFormValid) {
+      if (location.key !== 'default') {
+        navigate(-1)
+      } else {
+        navigate('/')
+      }
     }
   }
 
@@ -131,21 +100,21 @@ const LoginPage = () => {
       <Input
         name="email"
         placeholder="이메일"
-        value={email}
-        onChange={handleEmailChange}
-        onBlur={handleEmailBlur}
+        value={emailInput.value}
+        onChange={emailInput.onChange}
+        onBlur={emailInput.onBlur}
       />
-      {emailError && <ErrorMsg>{emailError}</ErrorMsg>}
+      {emailInput.error && <ErrorMsg>{emailInput.error}</ErrorMsg>}
 
       <Input
         name="password"
         placeholder="비밀번호"
-        value={password}
-        onChange={handlePasswordChange}
-        onBlur={handlePasswordBlur}
+        value={passwordInput.value}
+        onChange={passwordInput.onChange}
+        onBlur={passwordInput.onBlur}
       />
-      {passwordError && <ErrorMsg>{passwordError}</ErrorMsg>}
-      <Button onClick={handleLogin} disabled={!isValid}>로그인</Button>
+      {passwordInput.error && <ErrorMsg>{passwordInput.error}</ErrorMsg>}
+      <Button onClick={handleLogin} disabled={!isFormValid}>로그인</Button>
     </Wrapper>
   )
 }
