@@ -52,7 +52,8 @@ const Button = styled.button`
   line-height: ${({ theme }) => theme.typography.body1Bold.lineHeight};
   color: ${({ theme }) => theme.colors.gray.gray1000};
   text-align: center;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+  opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
 `
 
 const ErrorMsg = styled.div`
@@ -74,6 +75,8 @@ const LoginPage = () => {
   const [password, setPassword] = useState('')
   const [passwordError, setPasswordError] = useState('')
   const [passwordTouched, setPasswordTouched] = useState(false)
+
+  const isValid = emailError === '' && passwordError === '' && emailTouched && passwordTouched
 
   const validateEmail = (value: string): string => {
     if (!value.trim()) return 'ID를 입력해주세요.'
@@ -142,7 +145,7 @@ const LoginPage = () => {
         onBlur={handlePasswordBlur}
       />
       {passwordError && <ErrorMsg>{passwordError}</ErrorMsg>}
-      <Button onClick={handleLogin}>로그인</Button>
+      <Button onClick={handleLogin} disabled={!isValid}>로그인</Button>
     </Wrapper>
   )
 }
