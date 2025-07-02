@@ -12,7 +12,7 @@ const LogoImage = styled.img`
   margin-bottom: ${({ theme }) => theme.spacing.spacing6};
 `;
 
-const Button = styled.button`
+const Button = styled.button<{ disabled?: boolean }>`
   ${({ theme }) => theme.typography.body.body2Regular};
   width: 100%;
   max-width: 320px;
@@ -27,6 +27,12 @@ const Button = styled.button`
   &:active {
     background-color: ${({ theme }) => theme.color.semantic.kakaoYellowPressed};
     border: none;
+  }
+  
+  &:disabled {
+    background-color: ${({ theme }) => theme.color.yellow.yellow300};
+    color: ${({ theme }) => theme.color.semantic.textDisabled};
+    cursor: not-allowed;
   }
 `;
 
@@ -76,7 +82,7 @@ export default function LoginPage() {
         onBlur={onPasswordBlur}
         error={passwordError}
       />
-      <Button onClick={handleLogin}>로그인</Button>
+      <Button onClick={handleLogin} disabled={!isEmailValid || !isPasswordValid}>로그인</Button>
     </PageContainer>
   );
 }
