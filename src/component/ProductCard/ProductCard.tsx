@@ -35,7 +35,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           </ProductItem>
         ))}
       </ProductTab>
-      <MyButton buttonType="More" onClick={onToggleView}>
+      <MyButton buttonType="more" onClick={onToggleView}>
         {isExpanded ? '접기' : '더보기'}
       </MyButton>
     </>
