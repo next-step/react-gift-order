@@ -5,7 +5,8 @@ export const colors = {
   text: '#333',
   accent: '#fee500',
   footer: '#999',
-  kakaomain: '#fee500'
+  kakaomain: '#fee500',
+  error: '#fa342c'
 };
 export const fontSizes = { h1: '32px', h2: '24px', body: '16px' };
 export const spaces = { sm: '8px', md: '16px', lg: '24px' };
