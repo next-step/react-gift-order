@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { useLocation, useNavigate } from "react-router-dom";
-import LoginFormSection from "./components/LoginFormSection";
+import LoginFormSection from "@/pages/login/components/LoginFormSection";
 
 export default function LoginPage() {
   const navigate = useNavigate();
