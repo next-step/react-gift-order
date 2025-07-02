@@ -25,8 +25,6 @@ export const LoginPage = () => (
       >
         kakao
       </h1>
-
-      {/* 로그인 입력 섹션 */}
       <LoginFormSection />
     </div>
   </Layout>
