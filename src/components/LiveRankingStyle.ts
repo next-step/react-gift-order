@@ -27,13 +27,13 @@ export const GenderButton = styled.div<{ isActive: boolean }>`
   height: ${theme.spacing[13]};
   border-radius: ${theme.spacing[4]};
   background: ${({ isActive }) =>
-        isActive
-            ? theme.colors.colorScale.blue[700]
-            : theme.colors.colorScale.blue[100]};
+    isActive
+      ? theme.colors.colorScale.blue[700]
+      : theme.colors.colorScale.blue[100]};
   color: ${({ isActive }) =>
-        isActive
-            ? theme.colors.colorScale.blue[0]
-            : theme.colors.colorScale.blue[500]};
+    isActive
+      ? theme.colors.colorScale.blue[0]
+      : theme.colors.colorScale.blue[500]};
   transition: background-color 0.2s ease;
   ${theme.typography.subtitle1Bold};
   user-select: none;
@@ -43,12 +43,12 @@ export const GenderLabel = styled.div<{ isActive: boolean }>`
   margin-top: ${theme.spacing[2]};
   font-size: ${theme.spacing[4]};
   color: ${({ isActive }) =>
-        isActive
-            ? theme.colors.colorScale.blue[700]
-            : theme.colors.semanticColor.textColor.default};
+    isActive
+      ? theme.colors.colorScale.blue[700]
+      : theme.colors.semanticColor.textColor.default};
   transition: color 0.2s ease;
   ${({ isActive }) =>
-        isActive ? theme.typography.label1Bold : theme.typography.label1Regular};
+    isActive ? theme.typography.label1Bold : theme.typography.label1Regular};
   user-select: none;
 `;
 
@@ -68,12 +68,12 @@ export const TypeButton = styled.button<{ isActive: boolean }>`
   cursor: pointer;
   background-color: ${theme.colors.colorScale.blue[100]};
   color: ${({ isActive }) =>
-        isActive
-            ? theme.colors.colorScale.blue[700]
-            : theme.colors.colorScale.blue[400]};
+    isActive
+      ? theme.colors.colorScale.blue[700]
+      : theme.colors.colorScale.blue[400]};
   transition: color 0.3s ease;
   ${({ isActive }) =>
-        isActive ? theme.typography.label1Bold : theme.typography.label1Regular};
+    isActive ? theme.typography.label1Bold : theme.typography.label1Regular};
   user-select: none;
 `;
 
@@ -102,13 +102,13 @@ export const Rank = styled.div<{ rank: number }>`
   padding: ${theme.spacing[0]} ${theme.spacing[1]};
   border-radius: ${theme.spacing[1]};
   background-color: ${({ rank }) =>
-        rank <= 3
-            ? theme.colors.colorScale.red[600]
-            : theme.colors.colorScale.gray[200]};
+    rank <= 3
+      ? theme.colors.colorScale.red[600]
+      : theme.colors.colorScale.gray[200]};
   color: ${({ rank }) =>
-        rank <= 3
-            ? theme.colors.colorScale.gray[0]
-            : theme.colors.colorScale.gray[1000]};
+    rank <= 3
+      ? theme.colors.colorScale.gray[0]
+      : theme.colors.colorScale.gray[1000]};
   ${theme.typography.label2Bold}
 `;
 
