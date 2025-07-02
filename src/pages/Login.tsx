@@ -96,6 +96,8 @@ const Login: React.FC = () => {
   // state 생성
   const [id, setId] = useState('');
   const [idError, setIdError] = useState('');
+  const [pw, setPw] = useState('');
+  const [pwError, setPwError] = useState('');
 
   // ID 조건 검사
   const validateId = (value: string) => {
@@ -109,6 +111,16 @@ const Login: React.FC = () => {
     return '';
   };
 
+  // PW 조건 검사
+  const validatePw = (value: string) => {
+    if (!value.trim()) {
+      return 'PW를 입력해주세요.';
+    }
+    if (value.length < 8) {
+      return 'PW는 최소 8글자 이상이어야 합니다.';
+    }
+    return '';
+  };
   const handleClick = () => {
     navigate(redirectTo, { replace: true });
   };
@@ -167,7 +179,43 @@ const Login: React.FC = () => {
                 `}
               />
               <div>
-                <InputBox placeholder="비밀번호" type="password" />
+                <InputBox
+                  placeholder="비밀번호"
+                  type="password"
+                  value={pw}
+                  hasError={!!pwError}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setPw(value);
+
+                    const err = validatePw(value);
+                    setPwError(err);
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'rgb(134, 139, 148)';
+                  }}
+                  onBlur={(e) => {
+                    const err = validatePw(e.target.value);
+                    setPwError(err);
+                    // 오류가 있으면 빨간색 테두리 적용
+                    if (err) {
+                      e.currentTarget.style.borderColor = 'red';
+                    }
+                  }}
+                  style={pwError ? { borderColor: 'rgb(250, 52, 44)' } : {}}
+                />
+                {pwError && (
+                  <span
+                    css={css`
+                      color: rgb(250, 52, 44);
+                      font-size: 0.75rem;
+                      margin-top: 4px;
+                      display: inline-block;
+                    `}
+                  >
+                    {pwError}
+                  </span>
+                )}
               </div>
               <div
                 css={css`
