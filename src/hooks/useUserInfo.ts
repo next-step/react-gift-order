@@ -1,9 +1,5 @@
 import { useState } from "react";
-
-type StateHook<T> = {
-  value: T;
-  setValue: (value: T) => void;
-};
+import { type StateHook } from "./stateHookType";
 
 export type UserInfoHook = {
   email: StateHook<string>;
