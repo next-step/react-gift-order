@@ -34,12 +34,13 @@ const Form = styled.form`
   padding: 16px;
 `;
 
-const Input = styled.input`
+const Input = styled.input<{ error?: boolean }>`
   border: 0;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.gray[400]};
+  border-bottom: 1px solid
+    ${({ theme, error }) => (error ? theme.colors.red[700] : theme.colors.gray[400])};
   height: 30px;
   padding: 8px 0;
-  margin-bottom: 16px;
+  margin-bottom: 4px;
   ${({ theme }) => theme.typography.body1Regular};
   &::placeholder {
     ${({ theme }) => theme.typography.body1Regular};
@@ -49,6 +50,12 @@ const Input = styled.input`
     outline: none;
     border-color: #000;
   }
+`;
+
+const ErrorMsg = styled.span`
+  ${({ theme }) => theme.typography.label2Regular};
+  color: ${({ theme }) => theme.colors.red[700]};
+  margin-bottom: 16px;
 `;
 
 const ButtonWrapper = styled.div`
@@ -81,7 +88,10 @@ export default function LoginPage() {
               value={values.email}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={!!errors.email}
             />
+            {errors.email && <ErrorMsg>{errors.email}</ErrorMsg>}
+
             <Input
               name="password"
               placeholder="비밀번호"
@@ -89,7 +99,10 @@ export default function LoginPage() {
               value={values.password}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={!!errors.password}
             />
+            {errors.password && <ErrorMsg>{errors.password}</ErrorMsg>}
+
             <ButtonWrapper>
               <KakaoButton type="submit" fullWidth>
                 로그인
