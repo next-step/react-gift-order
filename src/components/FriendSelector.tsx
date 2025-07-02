@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
 import styled from '@emotion/styled';
-import { useTheme } from '@emotion/react';
 import { FaPlus } from 'react-icons/fa';
 
 const Wrapper = styled.div`
@@ -37,7 +36,6 @@ const Text = styled.span`
 `;
 
 const FriendSelector = () => {
-  const theme = useTheme();
 
   return (
     <Wrapper>
