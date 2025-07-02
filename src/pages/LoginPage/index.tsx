@@ -40,11 +40,11 @@ const LoginPage = () => {
       <Container>
         <Logo src={LogoIcon} alt='kakao logo' />
         <InputWrapper>
-          <Input type="email" name="email" id="email" autoComplete="email" placeholder="이메일" value={email} onChange={handleEmailChange} onBlur={handleEmailBlur} />
+          <Input type="email" name="email" id="email" autoComplete="email" placeholder="이메일" value={email} onChange={handleEmailChange} onBlur={handleEmailBlur} isError={Boolean(emailError)} />
           {emailError && <ErrorMessage>{emailError}</ErrorMessage>}
         </InputWrapper>
         <InputWrapper>
-          <Input type="password" name="password" id="password" autoComplete="current-password" placeholder="비밀번호" value={pw} onChange={handlePwChange} onBlur={handlePwBlur} />
+          <Input type="password" name="password" id="password" autoComplete="current-password" placeholder="비밀번호" value={pw} onChange={handlePwChange} onBlur={handlePwBlur} isError={Boolean(pwError)}/>
           {pwError && <ErrorMessage>{pwError}</ErrorMessage>}
         </InputWrapper>
         <LoginButton onClick={handleLogin}>로그인</LoginButton>

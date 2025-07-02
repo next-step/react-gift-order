@@ -26,13 +26,15 @@ export const InputWrapper = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing.spacing6};
 `;
 
-export const Input = styled.input`
+export const Input = styled.input<{ isError: boolean }>`
   width: 360px;
   padding: ${({ theme }) => theme.spacing.spacing3};
   margin-bottom: ${({ theme }) => theme.spacing.spacing6};
   font : ${({ theme }) => theme.typography.body2Regular};
   border: none;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.semantic.borderDefault};
+  border-bottom: 1px solid
+    ${({ isError, theme }) =>
+    isError ? theme.colors.semantic.critical : theme.colors.semantic.borderDefault};
   background: transparent;
   outline: none;
   color: ${({ theme }) => theme.colors.semantic.textDefault};
