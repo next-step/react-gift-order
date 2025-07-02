@@ -3,7 +3,12 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { Section } from '@/components/layout';
 import { Button, ErrorMessage } from '@/components/common';
-import { getEmailErrorMessage, getPasswordErrorMessage } from '@/utils';
+import {
+  getEmailErrorMessage,
+  getPasswordErrorMessage,
+  isValidEmail,
+  isValidPassword,
+} from '@/utils';
 
 const LoginContainer = styled.div`
   display: flex;
@@ -87,6 +92,12 @@ const LoginPage = () => {
     setPasswordError(errorMessage);
   };
 
+  const isFormValid =
+    isValidEmail(email) &&
+    isValidPassword(password) &&
+    !emailError &&
+    !passwordError;
+
   const handleLogin = () => {
     // TODO: 현재는 항상 로그인 성공 처리 -> 실제 API 연동은 추후 구현
     console.log('로그인 성공:', { email, password });
@@ -130,7 +141,13 @@ const LoginPage = () => {
         </InputGroup>
 
         <ButtonContainer>
-          <Button variant="primary" size="lg" fullWidth onClick={handleLogin}>
+          <Button
+            variant="primary"
+            size="lg"
+            fullWidth
+            onClick={handleLogin}
+            disabled={!isFormValid}
+          >
             로그인
           </Button>
         </ButtonContainer>
