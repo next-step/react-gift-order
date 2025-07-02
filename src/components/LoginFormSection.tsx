@@ -15,6 +15,10 @@ const LoginFormSection = () => {
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
+  const isEmailValid = !emailError && email.length > 0;
+  const isPasswordValid = !passwordError && password.length >= 8;
+  const isFormValid = isEmailValid && isPasswordValid;
+
   const validateEmail = (value: string) => {
     if (!value) {
       setEmailError('ID를 입력해주세요.');
@@ -72,7 +76,9 @@ const LoginFormSection = () => {
           />
           {passwordError && <ErrorText>{passwordError}</ErrorText>}
         </InputWrapper>
-        <LoginButton onClick={handleLogin}>로그인</LoginButton>
+        <LoginButton disabled={!isFormValid} onClick={handleLogin}>
+          로그인
+        </LoginButton>
       </Wrapper>
     </>
   );
@@ -129,7 +135,8 @@ const LoginButton = styled.button`
   ${({ theme }) => theme.typography.body.body2Regular};
   border: none;
   border-radius: 6px;
-  cursor: pointer;
+  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
 `;
 
 const ErrorText = styled.p`
