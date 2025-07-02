@@ -34,7 +34,7 @@ const TabIcon = styled.span`
 `;
 
 interface TabNavigationProps {
-  tabs: Tab[];
+  tabs: readonly Tab[];
   activeTab: string;
   onTabChange: (tabId: string) => void;
 }

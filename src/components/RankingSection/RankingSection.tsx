@@ -6,6 +6,7 @@ import { ProductGrid } from '@/components/RankingSection/ProductGrid';
 import { TabNavigation } from '@/components/RankingSection/TabNavigation';
 import { Button } from '@/components/common/Button';
 import { tabs, filters, products } from '@/mock/mockData';
+import type { TabId, FilterId } from '@/types';
 import { useSearchParams } from 'react-router';
 
 const RankingHeader = styled.h2`
@@ -20,26 +21,48 @@ const ButtonContainer = styled.div`
   padding: ${spacing.xl} ${spacing.lg};
 `;
 
+// 유효한 값인지 검증하는 헬퍼 함수들
+const isValidTabId = (tabId: string | null): tabId is TabId => {
+  return tabs.some((tab) => tab.id === tabId);
+};
+
+const isValidFilterId = (filterId: string | null): filterId is FilterId => {
+  return filters.some((filter) => filter.id === filterId);
+};
+
 export const RankingSection = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'all');
-  const [activeFilter, setActiveFilter] = useState(searchParams.get('filter') || 'wanted');
+
+  // URL 파라미터에서 값을 가져오고 유효성 검증
+  const tabParam = searchParams.get('tab');
+  const filterParam = searchParams.get('filter');
+
+  const [activeTab, setActiveTab] = useState<TabId>(isValidTabId(tabParam) ? tabParam : 'all');
+  const [activeFilter, setActiveFilter] = useState<FilterId>(
+    isValidFilterId(filterParam) ? filterParam : 'wanted',
+  );
+
   const [isExpanded, setIsExpanded] = useState(false);
   const itemsPerPage = 6;
+
   const handleToggleView = () => {
     setIsExpanded(!isExpanded);
   };
 
   const handleTabChange = (newTab: string) => {
-    setActiveTab(newTab);
-    searchParams.set('tab', newTab);
-    setSearchParams(searchParams);
+    if (isValidTabId(newTab)) {
+      setActiveTab(newTab);
+      searchParams.set('tab', newTab);
+      setSearchParams(searchParams);
+    }
   };
 
   const handleFilterChange = (newFilter: string) => {
-    setActiveFilter(newFilter);
-    searchParams.set('filter', newFilter);
-    setSearchParams(searchParams);
+    if (isValidFilterId(newFilter)) {
+      setActiveFilter(newFilter);
+      searchParams.set('filter', newFilter);
+      setSearchParams(searchParams);
+    }
   };
 
   const displayedProducts = isExpanded ? products : products.slice(0, itemsPerPage);

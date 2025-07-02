@@ -1,3 +1,5 @@
+import { tabs, filters } from '@/mock/mockData';
+
 export interface CategoryTheme {
   themeId: number;
   name: string;
@@ -23,15 +25,8 @@ export interface Product {
   price: PriceInfo;
   brandInfo: BrandInfo;
 }
-export type TabId = 'all' | 'female' | 'male' | 'teen';
-export interface Tab {
-  id: TabId;
-  label: string;
-  icon?: string;
-}
+export type Tab = (typeof tabs)[number];
+export type TabId = (typeof tabs)[number]['id'];
 
-export type FilterId = 'wanted' | 'gifted' | 'wished';
-export interface Filter {
-  id: FilterId;
-  label: string;
-}
+export type Filter = (typeof filters)[number];
+export type FilterId = (typeof filters)[number]['id'];
