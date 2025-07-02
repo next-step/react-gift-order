@@ -1,8 +1,8 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import Header from '@/components/Header/Header';
 import { Alert, Container, InputWrapper, LoginButton, LogoImg, StyledInput } from '@/pages/Login/Login.styles';
-import { KAKAO_LOGO_SVG                                                                                                  } from "@/assets/svg/kakaoLogo";
-import { useLoginForm } from '@/hooks/useLoginForm.tsx';
+import { KAKAO_LOGO_SVG } from "@/assets/svg/kakaoLogo";
+import { useLoginForm } from '@/hooks/useLoginForm';
 
 const Login = () => {
   const navigate = useNavigate();
