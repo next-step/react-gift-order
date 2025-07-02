@@ -15,20 +15,20 @@ export const useInput = ({
     const [value, setValue] = useState<string>("");
     const [errorMessage, setErrorMessage] = useState<string>("");
 
-    const onBlur = (event: FocusEvent) => {
-        const target = event.currentTarget as HTMLInputElement;
+    const onBlur: React.FocusEventHandler<HTMLInputElement> = (event) => {
+        const target = event.currentTarget;
         if (target.value !== value) setValue(target.value);
         if (onBlurCallback) onBlurCallback(target.value);
     };
 
-    const onChange = (event: Event) => {
-        const target = event.currentTarget as HTMLInputElement;
+    const onChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+        const target = event.currentTarget;
         if (target.value !== value) setValue(target.value);
         if (onChangeCallback) onChangeCallback(target.value);
     };
 
-    const onFocus = (event: FocusEvent) => {
-        const target = event.currentTarget as HTMLInputElement;
+    const onFocus: React.FocusEventHandler<HTMLInputElement> = (event) => {
+        const target = event.currentTarget;
         if (target.value !== value) setValue(target.value);
         if (onFocusCallback) onFocusCallback(target.value);
     };
