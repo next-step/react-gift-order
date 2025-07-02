@@ -38,7 +38,6 @@ export function useEmailValidation(initialValue = "") {
 
   return {
     email,
-    emailErrors,
     handleEmailChange,
     validateEmail,
     getFormErrorMessage,
