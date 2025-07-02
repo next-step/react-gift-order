@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { isNotEmpty, validateEmailFormat } from "../utils/validation";
-import { LOGIN_ERROR_MESSAGES } from "../const/labels";
+import { LOGIN_ERROR_MESSAGES } from "../constants/labels";
 
 export function useEmailValidation(initialValue = "") {
   const [email, setEmail] = useState(initialValue);

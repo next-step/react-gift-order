@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { isNotEmpty, validatePasswordFormat } from "../utils/validation";
-import { LOGIN_ERROR_MESSAGES } from "../const/labels";
+import { LOGIN_ERROR_MESSAGES } from "../constants/labels";
 
 function usePasswordValidation() {
   const [password, setPassword] = useState("");
