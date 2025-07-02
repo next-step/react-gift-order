@@ -42,15 +42,18 @@ export const InputField = styled.input<{
       isError ? theme.colors.red[700] : theme.colors.border.default};
   border-radius: 0;
   background-color: ${({ theme }) => theme.colors.background.default};
-  opacity: 0.5;
 
   font-size: 1rem;
   font-family: "Pretendard", sans-serif;
   color: ${({ theme }) => theme.colors.gray[900]};
 
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.gray[600]};
+    opacity: 1;
+  }
+
   &:focus {
     outline: none;
-    border-bottom-color: ${({ theme }) => theme.colors.gray[900]};
   }
 `;
 
