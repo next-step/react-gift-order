@@ -12,7 +12,9 @@ export const Logo = styled.img`
     width: 120px;
     height: auto;
 `;
-
+export const ErrorMessage = styled.p`
+  
+`;
 export const Input = styled.input`
   width: 360px;
   padding: ${({ theme }) => theme.spacing.spacing3};
