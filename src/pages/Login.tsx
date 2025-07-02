@@ -8,6 +8,19 @@ import styled from '@emotion/styled';
 import Layout from '../components/Layout';
 import NavBar from '../components/NavBar';
 
+import { useInput } from '@/hooks/useInput';
+
+const validateEmail = (v: string) => {
+  if(!v) return 'ID를 입력해주세요.';
+  const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  return ok ? '' : 'ID는 이메일 형식으로 입력해주세요.'
+};
+
+const validatePassword = (v: string) => {
+  if(!v) return 'PW를 입력해주세요.';
+  return v.length >= 8 ? '' : 'PW는 최소 8글자 이상이어야 합니다.'
+};
+
 const LoginFormWrapper = styled.div`
   height: 100vh;
   padding: 0 150px;
@@ -77,7 +90,7 @@ const LoginFormPw = styled.input<InputProps>`
 
 const LoginFormBtn = styled.button<InputProps>`
   background-color: ${({ theme ,hasEnabled}) => hasEnabled ? theme.colors.semantic.kakaoYellow : '#fff19b'};
-  cursor: ${({hasEnabled}) => hasEnabled ? 'pointer' : 'not-allowed'};
+  cursor: ${({hasEnabled}) => (hasEnabled ? 'pointer' : 'not-allowed')};
   border: none;
   border-radius: 5px;
   height: 40px;
@@ -89,51 +102,16 @@ function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/';
-  
-  const [userId, setUserId] = useState('');
-  const [userPw, setUserPw] = useState('');
-  const [idError, setIdError] = useState('');
-  const [pwError, setPwError] = useState('');
 
-  const handleIdBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    const value = e.target.value.trim();
+  const id = useInput(validateEmail);
+  const pw = useInput(validatePassword);
 
-    if(!value) {
-        setIdError('ID를 입력해주세요.');
-        return;
-    } 
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if(!emailRegex.test(value)) {
-        setIdError('ID는 이메일 형식으로 입력해주세요.');
-        return;
-    }
-
-    setIdError('');
-  }
-
-  const handlePwBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    const value = e.target.value.trim();
-
-    if(!value) {
-        setPwError('PW를 입력해주세요.');
-        return;
-    } 
-
-    if(value.length < 8) {
-        setPwError('PW는 최소 8글자 이상이어야 합니다.');
-        return;
-    }
-
-    setPwError('');
-  }
+  const isFormValid = id.isValid && pw.isValid;
 
   const handleLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if(idError) return;
-    if(pwError) return;
-
-    navigate(from, { replace: true });
+    if(!isFormValid) return;
+    navigate(from, { replace: true});
   };
 
   return (
@@ -144,11 +122,11 @@ function Login() {
         <LoginFormWrapper>
           <LoginForm>
             <LoginFormTitle>KAKAO</LoginFormTitle>
-            <LoginFormId placeholder='이메일' type='email' value={userId} onChange={e => setUserId(e.target.value)} onBlur={handleIdBlur} hasIdError={idError}></LoginFormId>
-            {idError && <LoginFormErrorText>{idError}</LoginFormErrorText>}
-            <LoginFormPw placeholder='비밀번호' type='password' value={userPw} onChange={e => setUserPw(e.target.value)} onBlur={handlePwBlur} hasPwError={pwError}></LoginFormPw>
-            {pwError && <LoginFormErrorText>{pwError}</LoginFormErrorText>}
-            <LoginFormBtn onClick={handleLogin} hasEnabled={((idError === '') && (pwError === '')) && (userId.length > 0 && userPw.length > 7)}>로그인</LoginFormBtn>
+            <LoginFormId placeholder='이메일' type='email' value={id.value} onChange={id.onChange} onBlur={id.onBlur} hasIdError={id.error}></LoginFormId>
+            {id.error && <LoginFormErrorText>{id.error}</LoginFormErrorText>}
+            <LoginFormPw placeholder='비밀번호' type='password' value={pw.value} onChange={pw.onChange} onBlur={pw.onBlur} hasPwError={pw.error}></LoginFormPw>
+            {pw.error && <LoginFormErrorText>{pw.error}</LoginFormErrorText>}
+            <LoginFormBtn onClick={handleLogin} hasEnabled={isFormValid}>로그인</LoginFormBtn>
           </LoginForm>
         </LoginFormWrapper>
       </Layout>
@@ -156,5 +134,3 @@ function Login() {
   );
 }
 export default Login;
-
-//에러면 문자열이 들어가있고 에러가 아니면 문자열이 없음 즉 두개다 빈 문자열일때

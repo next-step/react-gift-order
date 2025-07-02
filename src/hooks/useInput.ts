@@ -1,10 +1,21 @@
-// import { useState } from 'react';
+import { useState } from 'react';
 
-// function useInput(initialValue: string) {
-//     const [value, setValue] = useState(initialValue);
-//     const onChange = (e) => setValue(e.target.value);
+type Validator = (value: string) => string;
 
-//     return { value ,onChange};
-// }
+export function useInput(validator: Validator) {
+    const [value, setValue] = useState(''); // 사용자가 적는 글자
+    const [error, setError] = useState(''); // 현재 에러 메시지
 
-// export default useInput;
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setValue(e.target.value);
+    };
+
+    const onBlur = () => {
+        const msg = validator(value.trim());
+        setError(msg);
+    }
+
+    const isValid = (error === '') && (value.trim() !== '');
+
+    return { value, onChange, onBlur, error, isValid };
+}
