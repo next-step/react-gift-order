@@ -1,6 +1,8 @@
 import { useState } from "react";
 import type { FormData, ValidationErrors } from "@/utils/type";
 import { createFieldHandler, validators } from "@/utils/validation";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { setUserInfo } from "@/utils/storage";
 
 interface UseLoginFormProps {
   formData: {
@@ -13,11 +15,15 @@ interface UseLoginFormProps {
   handlePasswordChange: (value: string) => void;
   handleIdBlur: () => void;
   handlePasswordBlur: () => void;
+  handleSubmit: () => void;
 }
 
 export const useLoginForm = (): UseLoginFormProps => {
   const [formData, setFormData] = useState<FormData>({ id: "", password: "" });
   const [errors, setErrors] = useState<ValidationErrors>({});
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
 
   const idHandler = createFieldHandler(
     "id",
@@ -36,6 +42,16 @@ export const useLoginForm = (): UseLoginFormProps => {
     ([key, value]) => !validators[key as keyof typeof validators](value),
   );
 
+  const handleSubmit = () => {
+    if (!isFormValid) return;
+
+    setUserInfo({ email: formData.id });
+
+    const previousPage = location.state?.from;
+    const redirectPath = previousPage || searchParams.get("redirect") || "/";
+    navigate(redirectPath);
+  };
+
   return {
     formData,
     errors,
@@ -44,5 +60,6 @@ export const useLoginForm = (): UseLoginFormProps => {
     handlePasswordChange: passwordHandler.onChange,
     handleIdBlur: () => idHandler.onBlur(formData.id),
     handlePasswordBlur: () => passwordHandler.onBlur(formData.password),
+    handleSubmit,
   };
 };

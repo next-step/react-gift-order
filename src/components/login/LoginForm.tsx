@@ -1,5 +1,5 @@
 import { Input } from "@/components/common";
-import { LoginButton } from "@/components/login/LoginButton";
+import { LoginButton } from "@/components/login";
 import { useLoginForm } from "@/hooks/login/useLoginForm";
 import styled from "@emotion/styled";
 
@@ -35,6 +35,7 @@ export const LoginForm = () => {
     handlePasswordChange,
     handleIdBlur,
     handlePasswordBlur,
+    handleSubmit,
   } = useLoginForm();
 
   return (
@@ -62,7 +63,7 @@ export const LoginForm = () => {
         />
         {errors.password && <ErrorMessage>{errors.password}</ErrorMessage>}
       </LoginInputWrapper>
-      <LoginButton isDisabled={!isFormValid} />
+      <LoginButton isDisabled={!isFormValid} onClick={handleSubmit} />
     </LoginFormContainer>
   );
 };

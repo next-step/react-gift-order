@@ -1,6 +1,5 @@
 import { Button } from "@/components/common";
 import styled from "@emotion/styled";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 const StyledLoginButton = styled.div(({ theme }) => ({
   marginTop: `${theme.spacing11}`,
@@ -8,28 +7,17 @@ const StyledLoginButton = styled.div(({ theme }) => ({
 
 interface LoginButtonProps {
   isDisabled: boolean;
+  onClick: () => void;
 }
 
-export const LoginButton = ({ isDisabled }: LoginButtonProps) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [searchParams] = useSearchParams();
-
-  const handleLoginSuccess = () => {
-    if (isDisabled) return;
-
-    const previousPage = location.state?.from;
-    const redirectPath = previousPage || searchParams.get("redirect") || "/";
-    navigate(redirectPath);
-  };
-
+export const LoginButton = ({ isDisabled, onClick }: LoginButtonProps) => {
   return (
     <StyledLoginButton>
       <Button
         variant="primary"
         size="large"
         width="390px"
-        onClick={handleLoginSuccess}
+        onClick={onClick}
         disabled={isDisabled}
       >
         로그인
