@@ -1,37 +1,24 @@
-import { useState } from "react";
+import { useRef } from "react";
 import { LOGIN_LABELS } from "../constants/labels";
 import { ErrorMessage, InputField } from "../LoginPage.styles";
-import { isNotEmpty, validateEmailFormat } from "../utils/validation";
+import { useEmailValidation } from "../hooks/useEmailValidation";
 
 function IDField() {
-  const [email, setEmail] = useState("");
-  const [isEmailBlurred, setIsEmailBlurred] = useState(false);
-  const [emailErrors, setEmailErrors] = useState({
-    isEmpty: false,
-    invalidFormat: false,
-  });
+  const { email, emailErrors, handleEmailChange, validateEmail } =
+    useEmailValidation();
+  const isEmailBlurredRef = useRef(false);
 
-  const validateEmailErrors = (email: string) => {
-    const hasValue = isNotEmpty(email);
-    const isFormatValid = validateEmailFormat(email);
+  const handleChange = (value: string) => {
+    handleEmailChange(value);
 
-    setEmailErrors({
-      isEmpty: !hasValue,
-      invalidFormat: hasValue && !isFormatValid,
-    });
-  };
-
-  const handleEmailChange = (email: string) => {
-    setEmail(email);
-
-    if (isEmailBlurred) {
-      validateEmailErrors(email);
+    if (isEmailBlurredRef.current) {
+      validateEmail(value);
     }
   };
 
-  const handleEmailBlur = () => {
-    setIsEmailBlurred(true);
-    validateEmailErrors(email);
+  const handleBlur = (email: string) => {
+    isEmailBlurredRef.current = true;
+    validateEmail(email);
   };
 
   return (
@@ -40,8 +27,8 @@ function IDField() {
         type="email"
         placeholder={LOGIN_LABELS.EMAIL_PLACEHOLDER}
         value={email}
-        onChange={(e) => handleEmailChange(e.target.value)}
-        onBlur={handleEmailBlur}
+        onChange={(e) => handleChange(e.target.value)}
+        onBlur={(e) => handleBlur(e.target.value)}
         required
         isError={emailErrors.isEmpty || emailErrors.invalidFormat}
       />
