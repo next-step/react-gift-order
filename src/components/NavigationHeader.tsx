@@ -47,6 +47,7 @@ const Title = styled.h1`
   line-height: ${theme.typography.title1Bold.lineHeight};
   color: ${theme.colors.gray1000};
   margin: 0;
+  cursor: pointer;
 `;
 
 const IconButton = styled.button`
@@ -94,6 +95,10 @@ export function NavigationHeader({
     }
   };
 
+  const handleHomeClick = () => {
+    navigate('/');
+  };
+
   const handleProfileClick = () => {
     if (onProfileClick) {
       onProfileClick();
@@ -115,7 +120,7 @@ export function NavigationHeader({
         )}
       </SideContainer>
 
-      <TitleContainer>
+      <TitleContainer onClick={handleHomeClick}>
         <Title>{title}</Title>
       </TitleContainer>
 
