@@ -1,3 +1,5 @@
+import useInput from '@/hook/useInput';
+import theme from '@/styles/theme';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 
@@ -29,7 +31,7 @@ const LoginSection = styled.section`
   padding: 16px;
 `;
 
-const InputSection = styled.input`
+const InputSection = styled.input<{ hasError?: boolean }>`
   width: 100%;
   box-sizing: border-box;
   color: rgb(42, 48, 56);
@@ -41,20 +43,21 @@ const InputSection = styled.input`
   line-height: 1.375rem;
   padding: 8px 0px;
   border-width: 0px 0px 1px;
-  border-color: rgb(220, 222, 227);
+  border-color: ${({ hasError }) => (hasError ? 'red' : 'rgb(220, 222, 227)')};
+  
 `;
 
-const LoginButton = styled.button`
+const LoginButton = styled.button<{ hasError?: boolean }>`
   width: 100%;
   height: 2.75rem;
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 1.1875rem;
   color: rgb(42, 48, 56);
-  background-color: rgb(254, 229, 0);
+  background-color: ${theme.colors.kakaoYellow};
   border-radius: 4px;
   border: none;
-  cursor: pointer;
+  cursor: ${({hasError}) => (hasError? 'pointer' : 'not-allowed' ) };
   transition: background-color 200ms;
 `;
 
@@ -70,9 +73,35 @@ const EmptyDiv2 = styled.div`
   background-color: transparent;
 `;
 
+const ErrorMessage = styled.div`
+  color: red;
+  font-size: 0.75rem;
+  margin-top: 4px;
+`;
+
+const validateEmail = (value: string): string | null => {
+  if (!value) return 'ID를 입력해주세요.';
+  // 간단한 이메일 형식 체크 정규식
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(value)) return 'ID는 이메일 형식으로 입력해주세요.';
+  return null;
+};
+
+// 비밀번호 유효성 검사 함수
+const validatePassword = (value: string): string | null => {
+  if (!value) return 'PW를 입력해주세요.';
+  if (value.length < 8) return 'PW는 최소 8글자 이상이어야 합니다.';
+  return null;
+};
+
 const Login = () => {
 
     const navigate = useNavigate();
+    const id = useInput('', validateEmail);
+    const pw = useInput('', validatePassword);
+
+    // 두 조건 모두 충족해야 로그인 버튼 활성화
+    const canSubmit = id.isValid && pw.isValid;
 
   return (
     <MyDiv>
@@ -84,14 +113,33 @@ const Login = () => {
 
         <LoginSection>
           <div>
-            <InputSection placeholder="이메일" />
+            <InputSection
+              placeholder="이메일"
+              value={id.value}
+              onChange={id.onChange}
+              onBlur={id.onBlur} 
+              hasError={!!id.error}
+              />
+              {id.error && <ErrorMessage>{id.error}</ErrorMessage>}
           </div>
           <EmptyDiv1 />
           <div>
-            <InputSection type="password" placeholder="비밀번호" />
+            <InputSection
+              type="password"
+              placeholder="비밀번호"
+              value={pw.value}
+              onChange={pw.onChange}
+              onBlur={pw.onBlur}
+              hasError={!!pw.error}
+            />
+            {pw.error && <ErrorMessage>{pw.error}</ErrorMessage>}
           </div>
           <EmptyDiv2 />
-          <LoginButton onClick={() =>navigate('/')}>로그인</LoginButton>
+          <LoginButton 
+            disabled={!canSubmit} 
+            onClick={() => canSubmit && navigate('/')}
+            hasError={!!pw.error || !! id.error}
+          >로그인</LoginButton>
         </LoginSection>
       </LoginMain>
     </MyDiv>
