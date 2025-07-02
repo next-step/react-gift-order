@@ -6,10 +6,11 @@ import Header from '@/components/Header'
 import { typography } from '../styles/typography'
 import { useRef } from 'react'
 import GlobalStyle from '@/styles/GlobalStyle'
+import { useEmailInput } from '@/hooks/useEmailInput'
 
 const wrapperStyle = css({
-  maxWidth: 720, 
-  margin: '0 auto', 
+  maxWidth: 720,
+  margin: '0 auto',
   alignItems: 'center'
 })
 const formStyle = css({
@@ -57,7 +58,7 @@ const buttonStyle = css({
 const LoginPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const emailRef = useRef<HTMLInputElement>(null)
+  const { emailRef, emailError, handleEmailBlur, checkAndSetError } = useEmailInput()
   const passwordRef = useRef<HTMLInputElement>(null)
 
   // 뒤로가기 버튼 클릭
@@ -65,9 +66,10 @@ const LoginPage = () => {
     navigate('/')
   }
 
-  // 로그인 버튼 클릭
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
+    const error = checkAndSetError()
+    if (error) return
     const from = (location.state as any)?.from || '/'
     navigate(from, { replace: true })
   }
@@ -76,10 +78,20 @@ const LoginPage = () => {
     <div css={wrapperStyle}>
       <GlobalStyle />
       <Header onBack={handleBack} />
-      <form css={formStyle} onSubmit={handleLogin}>
+      <form css={formStyle} onSubmit={handleLogin} noValidate>
         <div css={logoStyle}>kakao</div>
         <div css={inputWrapStyle}>
-          <input css={inputStyle} ref={emailRef} type="email" placeholder="이메일" required />
+          <input
+            css={inputStyle}
+            ref={emailRef}
+            type="email"
+            placeholder="이메일"
+            required
+            onBlur={handleEmailBlur}
+          />
+          {emailError && (
+            <div id="email-error" style={{ color: 'red', fontSize: 13, marginTop: 4 }}>{emailError}</div>
+          )}
         </div>
         <div css={inputWrapStyle}>
           <input css={inputStyle} ref={passwordRef} type="password" placeholder="비밀번호" required />
