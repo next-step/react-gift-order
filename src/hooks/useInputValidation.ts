@@ -17,7 +17,7 @@ export const useInputValidation = (validator: Validator) => {
   const handleBlur = useCallback(() => {
     const err = validator(value);
     setError(err);
-  }, [value]);
+  }, [value, validator]);
 
   const isValid = validator(value) === '';
 
