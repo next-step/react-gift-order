@@ -6,7 +6,7 @@ import useUserInfo, { type UserInfoHook } from "@src/hooks/useUserInfo";
 import theme from "@src/styles/kakaoTheme";
 import { createNewIDEvaluator } from "@src/utils/evaluator/implementation/idEvaluator";
 import { createNewPWEvaluator } from "@src/utils/evaluator/implementation/passwordEvaluator";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 function LoginForm() {
@@ -19,15 +19,24 @@ function LoginForm() {
 
   const userContext = useContext(UserContext);
 
-  const handleLogin = (userInfo: UserInfoHook) => {
-    userContext?.valid.setValue(true);
-    userContext?.email.setValue(userInfo.email.value);
-    userContext?.user.setValue(userInfo.email.value.split("@")[0]);
-
+  const nagivateToRedirectionTarget = () => {
     const searchParams = new URLSearchParams(window.location.search);
     const redirectPath = searchParams.get("redirect");
     navigate(redirectPath ? decodeURIComponent(redirectPath) : "/");
   };
+
+  const handleLogin = (userInfo: UserInfoHook) => {
+    userContext?.valid.setValue(true);
+    userContext?.email.setValue(userInfo.email.value);
+    userContext?.user.setValue(userInfo.email.value.split("@")[0]);
+    nagivateToRedirectionTarget();
+  };
+
+  useEffect(() => {
+    if (userContext?.valid.value) {
+      nagivateToRedirectionTarget();
+    }
+  }, [userContext?.valid.value]);
 
   return (
     <InputForm onSubmit={(e) => e.preventDefault()}>
