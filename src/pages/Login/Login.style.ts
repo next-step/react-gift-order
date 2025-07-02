@@ -48,8 +48,8 @@ export const inputStyle = (theme: ThemeType, hasError: boolean) => css`
 
 export const errorTextStyle = (theme: ThemeType) => css`
   color: ${theme.color.red.red800};
-  font-size: ${theme.typography.body2Regular.fontSize};
-  margin-top: ${theme.spacing[1]};
+  font-size: ${theme.typography.label2Regular.fontSize};
+  margin-top: 0;
 `;
 
 export const loginButtonStyle = (theme: ThemeType) => css`
