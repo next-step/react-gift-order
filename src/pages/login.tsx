@@ -4,12 +4,14 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { colors } from '../styles/colors'
 import Header from '@/components/Header'
 import { typography } from '../styles/typography'
+
 import GlobalStyle from '@/styles/GlobalStyle'
 import { useInput,validateEmail,validatePassword } from '@/hooks/useInput'
 
 const wrapperStyle = css({
   maxWidth: 720,
   margin: '0 auto',
+
   alignItems: 'center'
 })
 const formStyle = css({
@@ -64,8 +66,10 @@ const errorTextStyle = css({
 const LoginPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
+
   const { inputRef: emailRef, error: emailError, handleBlur: handleEmailBlur } = useInput(validateEmail)
 const { inputRef: passwordRef, error: passwordError, handleBlur: handlePasswordBlur} = useInput(validatePassword)
+
 
   // 뒤로가기 버튼 클릭
   const handleBack = () => {
@@ -88,6 +92,7 @@ const { inputRef: passwordRef, error: passwordError, handleBlur: handlePasswordB
     <div css={wrapperStyle}>
       <GlobalStyle />
       <Header onBack={handleBack} />
+
       <form css={formStyle} onSubmit={handleLogin} noValidate>
         <div css={logoStyle}>kakao</div>
         <div css={inputWrapStyle}>
@@ -115,6 +120,7 @@ const { inputRef: passwordRef, error: passwordError, handleBlur: handlePasswordB
           {passwordError && (
             <div id="password-error" css={errorTextStyle}>{passwordError}</div>
           )}
+
         </div>
         <button
           css={buttonStyle(isLoginButtonDisabled)}
