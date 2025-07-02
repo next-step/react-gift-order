@@ -1,14 +1,7 @@
-import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { Section } from '@/components/layout';
 import { Button, ErrorMessage } from '@/components/common';
-import {
-  getEmailErrorMessage,
-  getPasswordErrorMessage,
-  isValidEmail,
-  isValidPassword,
-} from '@/utils';
+import { useLoginForm } from '@/hooks';
 
 const LoginContainer = styled.div`
   display: flex;
@@ -75,37 +68,18 @@ const ButtonContainer = styled.div`
 `;
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [emailError, setEmailError] = useState<string | null>(null);
-  const [passwordError, setPasswordError] = useState<string | null>(null);
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const handleEmailBlur = () => {
-    const errorMessage = getEmailErrorMessage(email);
-    setEmailError(errorMessage);
-  };
-
-  const handlePasswordBlur = () => {
-    const errorMessage = getPasswordErrorMessage(password);
-    setPasswordError(errorMessage);
-  };
-
-  const isFormValid =
-    isValidEmail(email) &&
-    isValidPassword(password) &&
-    !emailError &&
-    !passwordError;
-
-  const handleLogin = () => {
-    // TODO: 현재는 항상 로그인 성공 처리 -> 실제 API 연동은 추후 구현
-    console.log('로그인 성공:', { email, password });
-
-    // 이전 페이지 정보가 있으면 그곳으로, 없으면 홈(/)으로 이동
-    const from = location.state?.from || '/';
-    navigate(from, { replace: true }); // replace로 로그인 페이지를 히스토리에서 제거
-  };
+  const {
+    email,
+    password,
+    emailError,
+    passwordError,
+    isFormValid,
+    handleEmailChange,
+    handlePasswordChange,
+    handleEmailBlur,
+    handlePasswordBlur,
+    handleLogin,
+  } = useLoginForm();
 
   return (
     <Section>
@@ -119,7 +93,7 @@ const LoginPage = () => {
             type="email"
             placeholder="이메일을 입력하세요"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => handleEmailChange(e.target.value)}
             onBlur={handleEmailBlur}
             error={!!emailError}
           />
@@ -133,7 +107,7 @@ const LoginPage = () => {
             type="password"
             placeholder="비밀번호를 입력하세요"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => handlePasswordChange(e.target.value)}
             onBlur={handlePasswordBlur}
             error={!!passwordError}
           />
