@@ -80,6 +80,12 @@ const LoginButton = styled.button`
   border: none;
   cursor: pointer;
   transition: background-color 200ms;
+  :hover {
+    background-color: #ffea2e;
+  }
+  :active {
+    background-color: #d5c000;
+  }
 `;
 
 interface LocationState {
