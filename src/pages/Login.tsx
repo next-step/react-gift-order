@@ -67,8 +67,9 @@ const ErrorText = styled.p`
   text-align: left;
 `;
 
-const LoginButton = styled.button`
-  background-color: ${({ theme }) => theme.colors.kakaoYellow};
+const LoginButton = styled.button<{ disabled: boolean }>`
+  background-color: ${({ theme, disabled }) =>
+    disabled ? theme.colors.yellow300 : theme.colors.kakaoYellow};
   font-size: ${({ theme }) => theme.typography.body2Regular.fontSize};
   font-weight: ${({ theme }) =>
     theme.typography.body2Regular.fontWeight};
@@ -79,6 +80,7 @@ const LoginButton = styled.button`
   border: none;
   border-radius: 4px;
   color: ${({ theme }) => theme.colors.gray900};
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
 `;
 
 const validateEmail = (value: string) => {
@@ -92,7 +94,9 @@ const validateEmail = (value: string) => {
 const validatePassword = (value: string) => {
   if (!value.trim()) return 'PW는 반드시 입력되어야 합니다.';
 
-  return value.length > 8 ? '' : 'PW는 최소 8글자 이상이어야 합니다.';
+  return value.length >= 8
+    ? ''
+    : 'PW는 최소 8글자 이상이어야 합니다.';
 };
 
 const Login = () => {
@@ -153,7 +157,9 @@ const Login = () => {
             <ErrorText>{passwordInput.error}</ErrorText>
           )}
 
-          <LoginButton onClick={handleLogin}>로그인</LoginButton>
+          <LoginButton disabled={!isFormValid} onClick={handleLogin}>
+            로그인
+          </LoginButton>
         </LoginContainer>
       </MainContent>
     </PageWrapper>
