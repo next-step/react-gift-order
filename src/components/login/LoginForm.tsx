@@ -1,27 +1,60 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
+import { useState } from "react";
 
 type Props = {
-  email: string;
-  password: string;
-  emailError: string;
-  passwordError: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
-  onSubmit: () => void;
-  disabled: boolean;
+  onLoginSuccess: () => void;
 };
 
-export const LoginForm = ({
-  email,
-  password,
-  emailError,
-  passwordError,
-  onChange,
-  onBlur,
-  onSubmit,
-  disabled,
-}: Props) => {
+export const LoginForm = ({ onLoginSuccess }: Props) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
+  const validateEmail = (email: string) => {
+    if (!email) return "ID를 입력해주세요.";
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!regex.test(email)) return "ID는 이메일 형식으로 입력해주세요.";
+    return "";
+  };
+
+  const validatePassword = (password: string) => {
+    if (!password) return "PW를 입력해주세요.";
+    if (password.length < 8) return "PW는 최소 8글자 이상이어야 합니다.";
+    return "";
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    if (name === "email") {
+      setEmail(value);
+      if (emailError) setEmailError("");
+    } else if (name === "password") {
+      setPassword(value);
+      if (passwordError) setPasswordError("");
+    }
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    if (name === "email") setEmailError(validateEmail(value));
+    if (name === "password") setPasswordError(validatePassword(value));
+  };
+
+  const handleSubmit = () => {
+    const emailErr = validateEmail(email);
+    const pwErr = validatePassword(password);
+    setEmailError(emailErr);
+    setPasswordError(pwErr);
+
+    if (!emailErr && !pwErr) {
+      onLoginSuccess(); 
+    }
+  };
+
+  const disabled = !email || !password || !!emailError || !!passwordError;
+
   return (
     <FormSection>
       <InputWrapper>
@@ -30,8 +63,8 @@ export const LoginForm = ({
           name="email"
           placeholder="이메일"
           value={email}
-          onChange={onChange}
-          onBlur={onBlur}
+          onChange={handleChange}
+          onBlur={handleBlur}
           isError={!!emailError}
         />
         {emailError && <ErrorMessage>{emailError}</ErrorMessage>}
@@ -43,19 +76,20 @@ export const LoginForm = ({
           name="password"
           placeholder="비밀번호"
           value={password}
-          onChange={onChange}
-          onBlur={onBlur}
+          onChange={handleChange}
+          onBlur={handleBlur}
           isError={!!passwordError}
         />
         {passwordError && <ErrorMessage>{passwordError}</ErrorMessage>}
       </InputWrapper>
 
-      <LoginButton onClick={onSubmit} disabled={disabled}>
+      <LoginButton onClick={handleSubmit} disabled={disabled}>
         로그인
       </LoginButton>
     </FormSection>
   );
 };
+
 
 const FormSection = styled.section`
   width: 100%;
