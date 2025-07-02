@@ -16,13 +16,13 @@ export const Logo = styled.img`
   height: auto;
 `;
 
-export const Input = styled.input`
+export const Input = styled.input<{ hasError?: boolean }>`
   width: 80%;
   padding: ${spaces.sm} 0;
   margin-bottom: ${spaces.md};
   font-size: ${fontSizes.body};
   border: none;
-  border-bottom: 1px solid ${colors.surface};
+  border-bottom: 1px solid ${({ hasError }) => (hasError ? colors.error : colors.surface)};
   background: transparent;
 
   &:focus {
@@ -31,18 +31,22 @@ export const Input = styled.input`
   }
 `;
 
-export const Button = styled.button`
+
+
+export const ErrorMsg = styled.div`
+  height: 1.25rem;
+  font-size: 0.875rem;
+  color: ${colors.error};
+  margin-bottom: ${spaces.sm};
+`;
+
+export const Button = styled.button<{ disabled?: boolean }>`
   width: 80%;
   padding: ${spaces.sm};
   background: ${colors.kakaomain};
-  color: ${colors.text};
-  font-size: ${fontSizes.body};
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: ${spaces.md};
+  color: white;
+  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+  cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
 
-  &:hover {
-    opacity: 0.9;
-  }
 `;
+
