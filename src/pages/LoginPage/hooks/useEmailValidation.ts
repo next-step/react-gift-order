@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { isNotEmpty, validateEmailFormat } from "../utils/validation";
+import { LOGIN_ERROR_MESSAGES } from "../const/lables";
 
 export function useEmailValidation(initialValue = "") {
   const [email, setEmail] = useState(initialValue);
@@ -25,10 +26,10 @@ export function useEmailValidation(initialValue = "") {
 
   const getFormErrorMessage = () => {
     if (emailErrors.isEmpty) {
-      return "ID를 입력해주세요.";
+      return LOGIN_ERROR_MESSAGES.EMAIL_EMPTY;
     }
     if (emailErrors.invalidFormat) {
-      return "ID는 이메일 형식으로 입력해주세요.";
+      return LOGIN_ERROR_MESSAGES.EMAIL_INVALID;
     }
     return null;
   };
