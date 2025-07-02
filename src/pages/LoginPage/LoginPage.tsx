@@ -13,6 +13,14 @@ import PasswordField from "./components/PasswordField";
 import usePasswordValidation from "./hooks/usePasswordValidation";
 import { useEmailValidation } from "./hooks/useEmailValidation";
 
+export interface LoginFormProps {
+  value: string;
+  handleChange: (value: string) => void;
+  validator: (value: string) => void;
+  getFormErrorMessage: () => string | null;
+  hasError: boolean;
+}
+
 function LoginPage() {
   const {
     email,
@@ -53,16 +61,16 @@ function LoginPage() {
         <LoginForm onSubmit={handleSubmit}>
           <InputFieldGroup>
             <IDField
-              email={email}
+              value={email}
               handleChange={handleEmailValueChange}
-              validateEmail={validateEmail}
+              validator={validateEmail}
               getFormErrorMessage={getEmailErrorMessage}
               hasError={hasEmailError}
             />
             <PasswordField
-              password={password}
+              value={password}
               handleChange={handlePasswordValueChange}
-              validatePassword={validatePassword}
+              validator={validatePassword}
               getFormErrorMessage={getPasswordErrorMessage}
               hasError={hasPasswordError}
             />
