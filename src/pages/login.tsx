@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { colors } from '../styles/colors'
 import Header from '@/components/Header'
 import { typography } from '../styles/typography'
+
 import GlobalStyle from '@/styles/GlobalStyle'
 import { useEmailInput } from '@/hooks/useEmailInput'
 import { usePasswordInput } from '@/hooks/usePasswordInput'
@@ -11,6 +12,7 @@ import { usePasswordInput } from '@/hooks/usePasswordInput'
 const wrapperStyle = css({
   maxWidth: 720,
   margin: '0 auto',
+
   alignItems: 'center'
 })
 const formStyle = css({
@@ -58,6 +60,7 @@ const buttonStyle = css({
 const LoginPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
+
   const { emailRef, emailError, handleEmailBlur, checkAndSetError: checkEmailError } = useEmailInput()
   const { passwordRef, passwordError, handlePasswordBlur, checkAndSetError: checkPasswordError } = usePasswordInput()
 
@@ -71,6 +74,7 @@ const LoginPage = () => {
     const emailErr = checkEmailError()
     const pwErr = checkPasswordError()
     if (emailErr || pwErr) return
+
     const from = (location.state as any)?.from || '/'
     navigate(from, { replace: true })
   }
@@ -79,6 +83,7 @@ const LoginPage = () => {
     <div css={wrapperStyle}>
       <GlobalStyle />
       <Header onBack={handleBack} />
+
       <form css={formStyle} onSubmit={handleLogin} noValidate>
         <div css={logoStyle}>kakao</div>
         <div css={inputWrapStyle}>
@@ -106,6 +111,7 @@ const LoginPage = () => {
           {passwordError && (
             <div id="password-error" style={{ color: 'red', fontSize: 13, marginTop: 4 }}>{passwordError}</div>
           )}
+
         </div>
         <button css={buttonStyle} type="submit">로그인</button>
       </form>
