@@ -4,9 +4,9 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { colors } from '../styles/colors'
 import Header from '@/components/Header'
 import { typography } from '../styles/typography'
-import { useRef } from 'react'
 import GlobalStyle from '@/styles/GlobalStyle'
 import { useEmailInput } from '@/hooks/useEmailInput'
+import { usePasswordInput } from '@/hooks/usePasswordInput'
 
 const wrapperStyle = css({
   maxWidth: 720,
@@ -58,8 +58,8 @@ const buttonStyle = css({
 const LoginPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const { emailRef, emailError, handleEmailBlur, checkAndSetError } = useEmailInput()
-  const passwordRef = useRef<HTMLInputElement>(null)
+  const { emailRef, emailError, handleEmailBlur, checkAndSetError: checkEmailError } = useEmailInput()
+  const { passwordRef, passwordError, handlePasswordBlur, checkAndSetError: checkPasswordError } = usePasswordInput()
 
   // 뒤로가기 버튼 클릭
   const handleBack = () => {
@@ -68,8 +68,9 @@ const LoginPage = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
-    const error = checkAndSetError()
-    if (error) return
+    const emailErr = checkEmailError()
+    const pwErr = checkPasswordError()
+    if (emailErr || pwErr) return
     const from = (location.state as any)?.from || '/'
     navigate(from, { replace: true })
   }
@@ -94,7 +95,17 @@ const LoginPage = () => {
           )}
         </div>
         <div css={inputWrapStyle}>
-          <input css={inputStyle} ref={passwordRef} type="password" placeholder="비밀번호" required />
+          <input
+            css={inputStyle}
+            ref={passwordRef}
+            type="password"
+            placeholder="비밀번호"
+            required
+            onBlur={handlePasswordBlur}
+          />
+          {passwordError && (
+            <div id="password-error" style={{ color: 'red', fontSize: 13, marginTop: 4 }}>{passwordError}</div>
+          )}
         </div>
         <button css={buttonStyle} type="submit">로그인</button>
       </form>
