@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -9,16 +10,17 @@ export const useLoginForm = () => {
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/';
+
+  // 이메일 변경 핸들러
   const handleEmailChange = (value: string) => {
     setEmail(value);
     if (emailError) setEmailError('');
   };
 
-  const handlePasswordChange = (value: string) => {
-    setPassword(value);
-    if (passwordError) setPasswordError('');
-  };
-
+  // 이메일 유효성 검사
   const validateEmail = () => {
     if (!email) {
       setEmailError('ID를 입력해주세요.');
@@ -29,6 +31,13 @@ export const useLoginForm = () => {
     }
   };
 
+  // 비밀번호 변경 핸들러
+  const handlePasswordChange = (value: string) => {
+    setPassword(value);
+    if (passwordError) setPasswordError('');
+  };
+
+  // 비밀번호 유효성 검사
   const validatePassword = () => {
     if (!password) {
       setPasswordError('PW를 입력해주세요.');
@@ -39,9 +48,15 @@ export const useLoginForm = () => {
     }
   };
 
+  // 로그인 버튼 활성화 조건
   const isValid = useMemo(() => {
     return EMAIL_REGEX.test(email) && password.length >= 8;
   }, [email, password]);
+
+  // 로그인 버튼 클릭 시
+  const goToLogin = () => {
+    navigate(from, { replace: true });
+  };
 
   return {
     email,
@@ -55,5 +70,6 @@ export const useLoginForm = () => {
     validatePassword,
 
     isValid,
+    goToLogin,
   };
 };
