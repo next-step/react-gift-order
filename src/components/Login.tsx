@@ -4,68 +4,75 @@ import { css } from "@emotion/react";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
 
-const exp = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-
 const Login = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const ref = useRef(null);
 
-  const [email, setEmail] = useState("");
-  const [isValidEmail, setIsValidEmail] = useState(false);
-  const [emailMessage, setEmailMessage] = useState("");
+  const passwordValidator = {
+    test: (pw) => {
+      return pw.length >= 8;
+    },
+  };
 
-  const [password, setPassword] = useState("");
-  const [isValidPassword, setIsValidPassword] = useState(false);
-  const [passwordMessage, setPasswordMessage] = useState("");
-  const isEnabled = isValidEmail && isValidPassword;
-  // console.log(isEnabled);
+  const exp = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+
+  function useValidate(validator) {
+    const [string, setString] = useState("");
+    const [isValid, setIsValid] = useState(false);
+    const [message, setMessage] = useState("");
+
+    const onChange = (e) => {
+      setString(e.target.value);
+      if (validator.test(string)) {
+        setIsValid(true);
+      } else {
+        setIsValid(false);
+      }
+    };
+
+    const onBlur = () => {
+      if (string == "") {
+        setMessage("값을 입력해주세요");
+      } else if (!isValid) {
+        setMessage("입력값에 맞게 작성해주세요.");
+      } else if (isValid) {
+        setIsValid(true);
+        setMessage("");
+      }
+    };
+
+    return { string, isValid, message, onChange, onBlur };
+  }
+
+  const email = useValidate(exp);
+  const password = useValidate(passwordValidator);
+  const isFormValid = email.isValid && password.isValid;
+
   return (
     <div css={containerStyle(theme)}>
       <h1 css={textSytle(theme)}>로그인</h1>
       <div css={inputContainerSytle(theme)}>
         <input
-          onChange={(event) => {
-            setEmail(event.target.value);
-            setIsValidEmail(exp.test(event.target.value));
-          }}
-          onBlur={() => {
-            if (email === "") {
-              setEmailMessage("이메일을 입력해주세요.");
-            } else if (!isValidEmail) {
-              setEmailMessage("이메일 형식이 올바르지 않습니다.");
-            } else if (isValidEmail) {
-              setEmailMessage("");
-            }
-          }}
+          onChange={email.onChange}
+          onBlur={email.onBlur}
           css={inputSytle(theme)}
           type="text"
           placeholder="이메일"
         />
         <p style={{ color: "red", fontSize: "12px", marginTop: "4px" }}>
-          {emailMessage}
+          {email.message}
         </p>
 
         <input
-          onChange={(event) => {
-            setPassword(event.target.value);
-            setIsValidPassword(event.target.value.length >= 8);
-          }}
-          onBlur={() => {
-            if (password === "") {
-              setPasswordMessage("비밀번호를 입력해주세요.");
-            } else if (!isValidPassword) {
-              setPasswordMessage("비밀번호는 8자 이상이어야 합니다.");
-            } else if (isValidPassword) {
-              setPasswordMessage("");
-            }
-          }}
+          onChange={password.onChange}
+          onBlur={password.onBlur}
           css={inputSytle(theme)}
           type="password"
           placeholder="비밀번호"
         />
         <p style={{ color: "red", fontSize: "12px", marginTop: "4px" }}>
-          {passwordMessage}
+          {password.message}
         </p>
       </div>
 
@@ -78,8 +85,8 @@ const Login = () => {
           }
         }}
         ref={ref}
-        css={buttonSytle(theme, isEnabled)}
-        disabled={!isEnabled} // 선택사항, 접근성 위해 넣어도 좋아
+        css={buttonSytle(theme, isFormValid)}
+        disabled={!isFormValid}
       >
         로그인
       </button>
@@ -97,7 +104,7 @@ const buttonSytle = (theme: Theme, enabled: boolean) => css`
     ${enabled ? theme.colors.semantic.kakaoYellow : "rgba(255, 230, 0, 0.5)"};
   color: ${enabled ? "inherit" : theme.colors.gray.gray500};
   align-items: center;
-  width: 60%;
+  width: 80%;
   height: 48px;
   cursor: ${enabled ? "pointer" : "not-allowed"};
   transition: background-color 0.3s ease;
