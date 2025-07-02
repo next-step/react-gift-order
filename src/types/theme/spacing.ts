@@ -16,5 +16,11 @@ export const spacing = {
   spacing14: "56px",
   spacing15: "60px",
   spacing16: "64px",
-  spacing17: "300px",
+  spacing17: "80px",
+  spacing18: "96px",
+  spacing19: "120px",
+  spacing20: "160px",
+  spacing21: "200px",
+  spacing22: "240px",
+  spacing23: "300px",
 };
