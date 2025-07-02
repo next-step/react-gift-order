@@ -1,14 +1,37 @@
 import styled from '@emotion/styled'
 import { Navbar } from '@/components/Navbar/Navbar'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { useLoginForm } from '@/hooks/useLoginForm'
 
 export function LoginPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const from = location.state?.from?.pathname || '/'
 
-  const handleLogin = () => {
-    navigate(from, { replace: true })
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    emailError,
+    passwordError,
+    emailTouched,
+    passwordTouched,
+    validateEmail,
+    validatePassword,
+    isFormValid,
+    setEmailTouched,
+    setPasswordTouched,
+  } = useLoginForm()
+
+  const submitLoginForm = (e: React.FormEvent) => {
+    e.preventDefault()
+    validateEmail(email)
+    validatePassword(password)
+
+    if (isFormValid) {
+      navigate(from, { replace: true })
+    }
   }
 
   return (
@@ -16,10 +39,48 @@ export function LoginPage() {
       <Navbar />
       <Container>
         <Logo>kakao</Logo>
-        <Form>
-          <Input type="email" placeholder="이메일" />
-          <Input type="password" placeholder="비밀번호" />
-          <LoginButton onClick={handleLogin}>로그인</LoginButton>
+        <Form onSubmit={submitLoginForm}>
+          <Input
+            type="email"
+            placeholder="이메일"
+            value={email}
+            onChange={(e) => {
+              const newValue = e.target.value
+              setEmail(newValue)
+
+              if (emailTouched) {
+                validateEmail(newValue)
+              }
+            }}
+            onBlur={() => {
+              setEmailTouched(true)
+              validateEmail(email)
+            }}
+          />
+          {emailTouched && emailError && <Error>{emailError}</Error>}
+
+          <Input
+            type="password"
+            placeholder="비밀번호"
+            value={password}
+            onChange={(e) => {
+              const newValue = e.target.value
+              setPassword(newValue)
+
+              if (passwordTouched) {
+                validatePassword(newValue)
+              }
+            }}
+            onBlur={() => {
+              setPasswordTouched(true)
+              validatePassword(password)
+            }}
+          />
+          {passwordTouched && passwordError && <Error>{passwordError}</Error>}
+
+          <LoginButton type="submit" disabled={!isFormValid}>
+            로그인
+          </LoginButton>
         </Form>
       </Container>
     </>
@@ -60,17 +121,27 @@ const Input = styled.input`
   }
 `
 
-const LoginButton = styled.button`
+const Error = styled.div`
+  font-size: 0.75rem;
+  color: red;
+  margin-top: -8px;
+  margin-bottom: 0.625rem;
+`
+
+const LoginButton = styled.button<{ disabled: boolean }>`
   padding: 12px;
   font-size: 14px;
-  background-color: ${({ theme }) => theme.colors.kakaoYellow};
+  background-color: ${({ disabled, theme }) =>
+    disabled ? theme.colors.gray300 : theme.colors.kakaoYellow};
+  color: ${({ disabled }) => (disabled ? '#888' : '#000')};
   border: none;
   border-radius: 5px;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   margin-top: 33px;
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: ${({ theme }) => theme.colors.kakaoYellowHover};
+    background-color: ${({ disabled, theme }) =>
+      disabled ? theme.colors.gray300 : theme.colors.kakaoYellowHover};
   }
 `
