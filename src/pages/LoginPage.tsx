@@ -71,10 +71,20 @@ const LoginPage = () => {
   const [emailError, setEmailError] = useState('')
   const [emailTouched, setEmailTouched] = useState(false)
 
+  const [password, setPassword] = useState('')
+  const [passwordError, setPasswordError] = useState('')
+  const [passwordTouched, setPasswordTouched] = useState(false)
+
   const validateEmail = (value: string): string => {
     if (!value.trim()) return 'ID를 입력해주세요.'
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(value)) return 'ID는 이메일 형식으로 입력해주세요.'
+    return ''
+  }
+
+  const validatePassword = (pw: string) => {
+    if (!pw) return 'PW를 입력해주세요.'
+    if (pw.length < 8) return 'PW는 최소 8글자 이상이어야 합니다.'
     return ''
   }
 
@@ -84,10 +94,22 @@ const LoginPage = () => {
     setEmailError(error)
   }
 
+  const handlePasswordBlur = () => {
+    setPasswordTouched(true)
+    setPasswordError(validatePassword(password))
+  }
+
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value)
     if (emailTouched) {
       setEmailError(validateEmail(e.target.value))
+    }
+  }
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value)
+    if (passwordTouched) {
+      setPasswordError(validatePassword(e.target.value))
     }
   }
 
@@ -112,7 +134,14 @@ const LoginPage = () => {
       />
       {emailError && <ErrorMsg>{emailError}</ErrorMsg>}
 
-      <Input name="password" placeholder="비밀번호" type="password" />
+      <Input
+        name="password"
+        placeholder="비밀번호"
+        value={password}
+        onChange={handlePasswordChange}
+        onBlur={handlePasswordBlur}
+      />
+      {passwordError && <ErrorMsg>{passwordError}</ErrorMsg>}
       <Button onClick={handleLogin}>로그인</Button>
     </Wrapper>
   )
