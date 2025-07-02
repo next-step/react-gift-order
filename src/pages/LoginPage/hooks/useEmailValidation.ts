@@ -29,7 +29,7 @@ export function useEmailValidation(initialValue = "") {
       return LOGIN_ERROR_MESSAGES.EMAIL_EMPTY;
     }
     if (emailErrors.invalidFormat) {
-      return LOGIN_ERROR_MESSAGES.EMAIL_INVALID;
+      return LOGIN_ERROR_MESSAGES.EMAIL_FORMAT_INVALID;
     }
     return null;
   };
