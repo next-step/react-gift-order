@@ -1,6 +1,6 @@
-// pages/LoginPage.tsx
 import styled from '@emotion/styled'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { useInput } from '@/hooks/useInput'
 
 const Wrapper = styled.section`
   display: flex;
@@ -52,30 +52,70 @@ const Button = styled.button`
   line-height: ${({ theme }) => theme.typography.body1Bold.lineHeight};
   color: ${({ theme }) => theme.colors.gray.gray1000};
   text-align: center;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+  opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
 `
+
+const ErrorMsg = styled.div`
+  color: ${({ theme }) => theme.colors.red.red500};
+  font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
+  margin-bottom: ${({ theme }) => theme.spacing.spacing3};
+  max-width: 320px;
+  width: 100%;
+`
+const emailValidator = (value: string): string => {
+  if (!value.trim()) return 'ID를 입력해주세요.'
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!emailRegex.test(value)) return 'ID는 이메일 형식으로 입력해주세요.'
+  return ''
+}
+
+const passwordValidator = (value: string): string => {
+  if (!value.trim()) return 'PW를 입력해주세요.'
+  if (value.length < 8) return 'PW는 최소 8글자 이상이어야 합니다.'
+  return ''
+}
 
 const LoginPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
+  const emailInput = useInput('', emailValidator)
+  const passwordInput = useInput('', passwordValidator)
+  const isFormValid = emailInput.isValid && passwordInput.isValid
 
   const handleLogin = () => {
-    if (location.key !== 'default') {
-      navigate(-1)
-    } else {
-      navigate('/')
+    if (isFormValid) {
+      if (location.key !== 'default') {
+        navigate(-1)
+      } else {
+        navigate('/')
+      }
     }
   }
 
   return (
-    <>
-      <Wrapper>
-        <Title>kakao</Title>
-        <Input name="email" placeholder="이메일" />
-        <Input name="password" placeholder="비밀번호" type="password" />
-        <Button onClick={handleLogin}>로그인</Button>
-      </Wrapper>
-    </>
+    <Wrapper>
+      <Title>kakao</Title>
+
+      <Input
+        name="email"
+        placeholder="이메일"
+        value={emailInput.value}
+        onChange={emailInput.onChange}
+        onBlur={emailInput.onBlur}
+      />
+      {emailInput.error && <ErrorMsg>{emailInput.error}</ErrorMsg>}
+
+      <Input
+        name="password"
+        placeholder="비밀번호"
+        value={passwordInput.value}
+        onChange={passwordInput.onChange}
+        onBlur={passwordInput.onBlur}
+      />
+      {passwordInput.error && <ErrorMsg>{passwordInput.error}</ErrorMsg>}
+      <Button onClick={handleLogin} disabled={!isFormValid}>로그인</Button>
+    </Wrapper>
   )
 }
 
