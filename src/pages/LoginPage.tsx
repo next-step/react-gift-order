@@ -1,7 +1,8 @@
-import { useNavigate, useLocation } from 'react-router-dom';
-import styled from '@emotion/styled';
-import LoginButton from '../components/common/BaseButton';
-import KakaoLogo from '../components/common/KakaoLogo';
+import { useNavigate, useLocation } from "react-router-dom";
+import styled from "@emotion/styled";
+import LoginButton from "../components/common/BaseButton";
+import KakaoLogo from "../components/common/KakaoLogo";
+import { useEmailInput } from "../hooks/useEmailInput";
 
 type LocationState = {
   from?: {
@@ -14,20 +15,30 @@ const LoginPage = () => {
   const location = useLocation();
 
   const from =
-    typeof location.state?.from?.pathname === 'string'
+    typeof location.state?.from?.pathname === "string"
       ? location.state.from.pathname
-      : '/';
+      : "/";
 
   const handleLogin = () => {
     navigate(from, { replace: true });
   };
+
+  const { email, emailError, handleEmailChange, handleEmailBlur } =
+    useEmailInput();
 
   return (
     <Wrapper>
       <Logo>
         <KakaoLogo />
       </Logo>
-      <Input placeholder="이메일" />
+      <Input
+        type="email"
+        placeholder="이메일"
+        value={email}
+        onChange={handleEmailChange}
+        onBlur={handleEmailBlur}
+      />
+      {emailError && <ErrorText>{emailError}</ErrorText>}
       <Input type="password" placeholder="비밀번호" />
       <LoginButton
         color="yellow"
@@ -71,6 +82,13 @@ const Input = styled.input`
   &::placeholder {
     color: ${({ theme }) => theme.colors.gray600};
   }
+`;
+
+const ErrorText = styled.div`
+  color: red;
+  font-size: 12px;
+  margin-top: -10px;
+  margin-bottom: 10px;
 `;
 
 export default LoginPage;
