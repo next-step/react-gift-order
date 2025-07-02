@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 import LoginButton from "../components/common/BaseButton";
 import KakaoLogo from "../components/common/KakaoLogo";
 import { useEmailInput } from "../hooks/useEmailInput";
+import { usePasswordInput } from "../hooks/usePasswordInput";
 
 type LocationState = {
   from?: {
@@ -26,6 +27,13 @@ const LoginPage = () => {
   const { email, emailError, handleEmailChange, handleEmailBlur } =
     useEmailInput();
 
+  const {
+    password,
+    passwordError,
+    handleChange: handlePasswordChange,
+    handleBlur: handlePasswordBlur,
+  } = usePasswordInput();
+
   return (
     <Wrapper>
       <Logo>
@@ -39,7 +47,14 @@ const LoginPage = () => {
         onBlur={handleEmailBlur}
       />
       {emailError && <ErrorText>{emailError}</ErrorText>}
-      <Input type="password" placeholder="비밀번호" />
+      <Input
+        type="password"
+        placeholder="비밀번호"
+        value={password}
+        onChange={handlePasswordChange}
+        onBlur={handlePasswordBlur}
+      />
+      {passwordError && <ErrorText>{passwordError}</ErrorText>}
       <LoginButton
         color="yellow"
         onClick={handleLogin}
@@ -86,7 +101,7 @@ const Input = styled.input`
 
 const ErrorText = styled.div`
   color: red;
-  font-size: 12px;
+  font-size: ${({ theme }) => theme.typography.body2Regular.fontSize};
   margin-top: -10px;
   margin-bottom: 10px;
 `;
