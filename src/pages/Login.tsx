@@ -3,7 +3,7 @@ import { PageContainer } from "@/components/layout/PageContainer";
 import { LoginForm } from "@/components/login/LoginForm";
 import styled from "@emotion/styled";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useLoginForm } from "@/hooks/useLoginForm"; 
+import { useLoginForm } from "@/hooks/useLoginForm";
 
 const Container = styled.div`
   width: 100%;
@@ -29,6 +29,8 @@ const LoginPage = () => {
     email,
     password,
     emailError,
+    passwordError,
+    isValid,
     handleChange,
     handleBlur,
   } = useLoginForm();
@@ -46,10 +48,11 @@ const LoginPage = () => {
           email={email}
           password={password}
           emailError={emailError}
+          passwordError={passwordError}
           onChange={handleChange}
           onBlur={handleBlur}
           onSubmit={handleLogin}
-          disabled={true}
+          disabled={!isValid}
         />
       </Container>
     </PageContainer>

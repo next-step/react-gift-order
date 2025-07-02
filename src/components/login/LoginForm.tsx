@@ -5,6 +5,7 @@ type Props = {
   email: string;
   password: string;
   emailError: string;
+  passwordError: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
   onSubmit: () => void;
@@ -15,6 +16,7 @@ export const LoginForm = ({
   email,
   password,
   emailError,
+  passwordError,
   onChange,
   onBlur,
   onSubmit,
@@ -35,13 +37,18 @@ export const LoginForm = ({
         {emailError && <ErrorMessage>{emailError}</ErrorMessage>}
       </InputWrapper>
 
-      <Input
-        type="password"
-        name="password"
-        placeholder="비밀번호"
-        value={password}
-        onChange={onChange}
-      />
+      <InputWrapper>
+        <Input
+          type="password"
+          name="password"
+          placeholder="비밀번호"
+          value={password}
+          onChange={onChange}
+          onBlur={onBlur}
+          isError={!!passwordError}
+        />
+        {passwordError && <ErrorMessage>{passwordError}</ErrorMessage>}
+      </InputWrapper>
 
       <LoginButton onClick={onSubmit} disabled={disabled}>
         로그인
@@ -52,12 +59,13 @@ export const LoginForm = ({
 
 const FormSection = styled.section`
   width: 100%;
-  max-width: 26.25rem;
+  max-width: 28rem;
   padding: ${({ theme }) => theme.spacing.spacing4};
 `;
 
 const InputWrapper = styled.div`
   width: 100%;
+  margin-bottom: ${({ theme }) => theme.spacing.spacing4};
 `;
 
 type InputProps = {
@@ -73,7 +81,7 @@ const Input = styled.input<InputProps>`
   border-bottom: 1px solid
     ${({ theme, isError }) =>
       isError ? theme.colors.red700 : theme.colors.borderDefault};
-  min-height: 2.75rem;
+  min-height: 3rem;
   ${({ theme }) => theme.typography.body1Regular};
   padding: ${({ theme }) => `${theme.spacing.spacing2} 0`};
 
@@ -83,7 +91,7 @@ const Input = styled.input<InputProps>`
 `;
 
 const ErrorMessage = styled.p`
-  ${({ theme }) => theme.typography.label2Regular};
+  ${({ theme }) => theme.typography.body1Regular};
   color: ${({ theme }) => theme.colors.red700};
   margin-top: ${({ theme }) => theme.spacing.spacing1};
 `;
@@ -91,7 +99,7 @@ const ErrorMessage = styled.p`
 const LoginButton = styled.button<{ disabled: boolean }>`
   width: 100%;
   height: 50px;
-  margin-top: ${({ theme }) => theme.spacing.spacing5};
+  margin-top: ${({ theme }) => theme.spacing.spacing4};
   ${({ theme }) => theme.typography.subtitle2Regular};
 
   color: ${({ theme }) => theme.colors.textDefault};
