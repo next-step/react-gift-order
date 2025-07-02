@@ -28,10 +28,12 @@ const Login = () => {
           onChange={(event) => {
             setEmail(event.target.value);
             setIsValidEmail(exp.test(event.target.value));
-            if (!exp.test(event.target.value) || event.target.value === "") {
+          }}
+          onBlur={() => {
+            if (email === "") {
+              setEmailMessage("이메일을 입력해주세요.");
+            } else if (!isValidEmail) {
               setEmailMessage("이메일 형식이 올바르지 않습니다.");
-            } else {
-              setEmailMessage("");
             }
           }}
           css={inputSytle(theme)}
