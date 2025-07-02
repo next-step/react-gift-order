@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { useLocation, useNavigate } from "react-router-dom";
+import LoginFormSection from "./components/LoginFormSection";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -14,16 +15,7 @@ export default function LoginPage() {
   return (
     <Wrapper>
       <Title>kakao</Title>
-
-      <Form onSubmit={(e) => e.preventDefault()}>
-        <Label />
-        <Input placeholder="이메일" />
-
-        <Label />
-        <Input type="password" placeholder="비밀번호" />
-
-        <LoginButton onClick={handleLogin}>로그인</LoginButton>
-      </Form>
+      <LoginFormSection onLogin={handleLogin} />
     </Wrapper>
   );
 }
@@ -43,50 +35,4 @@ const Title = styled.h1`
   font-weight: 400;
   margin-bottom: 48px;
   color: ${({ theme }) => theme.colors.semantic.text.default};
-`;
-
-const Form = styled.form`
-  width: 100%;
-  max-width: 360px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
-
-const Label = styled.label`
-  font-size: 0.875rem;
-  color: ${({ theme }) => theme.colors.semantic.text.placeholder};
-`;
-
-const Input = styled.input`
-  border: none;
-  border-bottom: 1px solid
-    ${({ theme }) => theme.colors.semantic.border.default};
-  padding: 12px 0;
-  font-size: 1rem;
-  outline: none;
-
-  &::placeholder {
-    color: ${({ theme }) => theme.colors.semantic.text.placeholder};
-  }
-`;
-
-const LoginButton = styled.button`
-  width: 100%;
-  background-color: ${({ theme }) => theme.colors.brand.kakao.yellow};
-  color: ${({ theme }) => theme.colors.brand.kakao.brown};
-  border: none;
-  border-radius: 8px;
-  padding: 12px 0;
-  font-weight: 700;
-  font-size: 0.875rem;
-  cursor: pointer;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.brand.kakao.yellowHover};
-  }
-
-  &:active {
-    background-color: ${({ theme }) => theme.colors.brand.kakao.yellowActive};
-  }
 `;
