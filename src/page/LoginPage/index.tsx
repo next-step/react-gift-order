@@ -60,7 +60,7 @@ const P = styled.p`
   text-align: left;
 `;
 
-const Button = styled.button`
+const ButtonActive = styled.button`
   width: 100%;
   height: ${({ theme }) => theme.spacing.spacing11};
   font-size: ${({ theme }) => theme.typography.subtitle2Regular.fontSize};
@@ -75,10 +75,26 @@ const Button = styled.button`
   margin-top: ${({ theme }) => theme.spacing.spacing7};
 `;
 
+const Button = styled.button`
+  width: 100%;
+  height: ${({ theme }) => theme.spacing.spacing11};
+  font-size: ${({ theme }) => theme.typography.subtitle2Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.subtitle2Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.subtitle2Regular.lineHeight};
+  color: ${({ theme }) => theme.colors.semantic.text.default};
+  background-color: ${({ theme }) => theme.colors.semantic.brand.kakaoYellowPressed};
+  border-radius: 4px;
+  border: none;
+  transition: background-color 200ms;
+  margin-top: ${({ theme }) => theme.spacing.spacing7};
+`;
+
 const LoginPage = () => {
   const navigateBackOrHome = useNavigateBackOrHome();
   const username = useUsername('');
   const password = usePassword('');
+
+  const isButtonActive = username.isValid && password.isValid;
 
   return (
     <Container>
@@ -96,8 +112,13 @@ const LoginPage = () => {
           <Input placeholder="비밀번호" type="password" {...password} />
           {password.error && <P style={{ color: 'red' }}>{password.error}</P>}
         </InputContainer>
-
-        <Button onClick={navigateBackOrHome}>로그인</Button>
+        {isButtonActive ? (
+          <ButtonActive onClick={navigateBackOrHome}>로그인</ButtonActive>
+        ) : (
+          <Button onClick={navigateBackOrHome} disabled={!isButtonActive}>
+            로그인
+          </Button>
+        )}
       </Section>
     </Container>
   );
