@@ -1,19 +1,25 @@
 import Text from '@/common/Text';
 import styled from '@emotion/styled';
 
-const LoginButton = ({ onClick }: { onClick: () => void }) => {
+const LoginButton = ({
+  onClick,
+  disabled = false,
+}: {
+  onClick: () => void;
+  disabled?: boolean;
+}) => {
   return (
-    <Content onClick={onClick}>
+    <StyledButton onClick={onClick} disabled={disabled}>
       <Text size="label1" weight="regular">
         로그인
       </Text>
-    </Content>
+    </StyledButton>
   );
 };
 
 export default LoginButton;
 
-const Content = styled.div`
+const StyledButton = styled.button`
   margin-top: 23px;
   display: flex;
   justify-content: center;
@@ -22,4 +28,12 @@ const Content = styled.div`
   background-color: ${({ theme }) => theme.colors.kakaoYellow};
   width: 388px;
   height: 44px;
+  border: none;
+  cursor: pointer;
+
+  &:disabled {
+    background-color: ${({ theme }) => theme.colors.kakaoYellow};
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 `;

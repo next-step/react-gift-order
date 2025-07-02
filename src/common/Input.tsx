@@ -7,6 +7,8 @@ interface InputProps {
   placeholder?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  hasError?: boolean;
 }
 
 const Input = ({
@@ -15,6 +17,8 @@ const Input = ({
   placeholder,
   value,
   onChange,
+  onBlur,
+  hasError = false,
 }: InputProps) => (
   <Layout>
     <StyledInput
@@ -23,6 +27,8 @@ const Input = ({
       placeholder={placeholder}
       value={value}
       onChange={onChange}
+      onBlur={onBlur}
+      hasError={hasError}
     />
   </Layout>
 );
@@ -37,10 +43,12 @@ const Layout = styled.div`
   width: 100%;
 `;
 
-const StyledInput = styled.input`
+const StyledInput = styled.input<{ hasError: boolean }>`
   padding: 12px 16px;
   border: none;
-  border-bottom: 1.2px solid ${({ theme }) => theme.colors.borderDefault};
+  border-bottom: 1.2px solid
+    ${({ theme, hasError }) =>
+      hasError ? theme.colors.red700 : theme.colors.borderDefault};
   font-size: ${({ theme }) => theme.typography.fontSizes.title2};
   outline: none;
 
