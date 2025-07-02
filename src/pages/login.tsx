@@ -4,12 +4,14 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { colors } from '../styles/colors'
 import Header from '@/components/Header'
 import { typography } from '../styles/typography'
-import { useRef } from 'react'
+
 import GlobalStyle from '@/styles/GlobalStyle'
+import { useInput,validateEmail,validatePassword } from '@/hooks/useInput'
 
 const wrapperStyle = css({
-  maxWidth: 720, 
-  margin: '0 auto', 
+  maxWidth: 720,
+  margin: '0 auto',
+
   alignItems: 'center'
 })
 const formStyle = css({
@@ -41,50 +43,92 @@ const inputStyle = css({
     color: colors.textSub,
   },
 })
-const buttonStyle = css({
+
+const buttonStyle = (disabled: boolean) => css({
   width: '100%',
-  background: colors.kakaoYellow,
+  background: disabled ? '#FFF7B2' : colors.kakaoYellow, // 연한색/원래색
   color: colors.gray900,
   border: 'none',
   borderRadius: 6,
   padding: '14px 0',
   marginTop: 24,
-  cursor: 'pointer',
+  cursor: disabled ? 'not-allowed' : 'pointer',
   ...typography.body2Bold,
+})
+
+const errorTextStyle = css({
+  color: 'red',
+  fontSize: 13,
+  marginTop: 4,
 })
 
 
 const LoginPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const emailRef = useRef<HTMLInputElement>(null)
-  const passwordRef = useRef<HTMLInputElement>(null)
+
+  const { inputRef: emailRef, error: emailError, handleBlur: handleEmailBlur } = useInput(validateEmail)
+const { inputRef: passwordRef, error: passwordError, handleBlur: handlePasswordBlur} = useInput(validatePassword)
+
 
   // 뒤로가기 버튼 클릭
   const handleBack = () => {
     navigate('/')
   }
 
-  // 로그인 버튼 클릭
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
     const from = (location.state as any)?.from || '/'
     navigate(from, { replace: true })
   }
 
+  const isLoginButtonDisabled =
+    !emailRef.current?.value ||
+    !passwordRef.current?.value ||
+    !!emailError ||
+    !!passwordError
+
   return (
     <div css={wrapperStyle}>
       <GlobalStyle />
       <Header onBack={handleBack} />
-      <form css={formStyle} onSubmit={handleLogin}>
+
+      <form css={formStyle} onSubmit={handleLogin} noValidate>
         <div css={logoStyle}>kakao</div>
         <div css={inputWrapStyle}>
-          <input css={inputStyle} ref={emailRef} type="email" placeholder="이메일" required />
+          <input
+            css={inputStyle}
+            ref={emailRef}
+            type="email"
+            placeholder="이메일"
+            required
+            onBlur={handleEmailBlur}
+          />
+          {emailError && (
+            <div id="email-error" css={errorTextStyle}>{emailError}</div>
+          )}
         </div>
         <div css={inputWrapStyle}>
-          <input css={inputStyle} ref={passwordRef} type="password" placeholder="비밀번호" required />
+          <input
+            css={inputStyle}
+            ref={passwordRef}
+            type="password"
+            placeholder="비밀번호"
+            required
+            onBlur={handlePasswordBlur}
+          />
+          {passwordError && (
+            <div id="password-error" css={errorTextStyle}>{passwordError}</div>
+          )}
+
         </div>
-        <button css={buttonStyle} type="submit">로그인</button>
+        <button
+          css={buttonStyle(isLoginButtonDisabled)}
+          type="submit"
+          disabled={isLoginButtonDisabled}
+        >
+          로그인
+        </button>
       </form>
     </div>
   )
