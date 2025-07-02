@@ -42,11 +42,16 @@ export function LoginPage() {
     }
   }
 
+  const isFormValid = isEmailValid(email) && isPasswordValid(password)
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
     validateEmail()
     validatePassword()
-    navigate(from, { replace: true })
+
+    if (isFormValid) {
+      navigate(from, { replace: true })
+    }
   }
 
   return (
@@ -104,7 +109,9 @@ export function LoginPage() {
             }}
           />
           {passwordTouched && passwordError && <Error>{passwordError}</Error>}
-          <LoginButton onClick={handleLogin}>로그인</LoginButton>
+          <LoginButton type="submit" disabled={!isFormValid}>
+            로그인
+          </LoginButton>
         </Form>
       </Container>
     </>
@@ -152,17 +159,20 @@ const Error = styled.div`
   margin-bottom: 0.625rem;
 `
 
-const LoginButton = styled.button`
+const LoginButton = styled.button<{ disabled: boolean }>`
   padding: 12px;
   font-size: 14px;
-  background-color: ${({ theme }) => theme.colors.kakaoYellow};
+  background-color: ${({ disabled, theme }) =>
+    disabled ? theme.colors.gray300 : theme.colors.kakaoYellow};
+  color: ${({ disabled }) => (disabled ? '#888' : '#000')};
   border: none;
   border-radius: 5px;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   margin-top: 33px;
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: ${({ theme }) => theme.colors.kakaoYellowHover};
+    background-color: ${({ disabled, theme }) =>
+      disabled ? theme.colors.gray300 : theme.colors.kakaoYellowHover};
   }
 `
