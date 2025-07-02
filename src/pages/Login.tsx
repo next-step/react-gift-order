@@ -2,6 +2,7 @@
 import styled from '@emotion/styled';
 import { FiArrowLeft, FiUser } from 'react-icons/fi';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useInputWithValidation } from '../hooks/useInputValidation';
 
 const PageWrapper = styled.div`
   display: flex;
@@ -43,7 +44,7 @@ const LoginContainer = styled.div`
 const InputStyle = styled.input`
   width: 100%;
   padding: 12px 0;
-  margin-bottom: 24px;
+  margin-bottom: 4px;
   border: none;
   border-bottom: 1px solid #ccc;
   outline: none;
@@ -58,6 +59,14 @@ const InputStyle = styled.input`
   }
 `;
 
+const ErrorText = styled.p`
+  width: 100%;
+  margin-bottom: 16px;
+  font-size: 0.8rem;
+  color: red;
+  text-align: left;
+`;
+
 const LoginButton = styled.button`
   background-color: ${({ theme }) => theme.colors.kakaoYellow};
   font-size: ${({ theme }) => theme.typography.body2Regular.fontSize};
@@ -69,17 +78,25 @@ const LoginButton = styled.button`
   height: 2.75rem;
   border: none;
   border-radius: 4px;
-  cursor: pointer;
   color: ${({ theme }) => theme.colors.gray900};
 `;
+
+const validateEmail = (value: string) => {
+  if (!value.trim()) return 'ID는 반드시 입력되어야 합니다.';
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(value)
+    ? ''
+    : 'ID는 이메일 형식이어야 합니다.';
+};
 
 const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const emailInput = useInputWithValidation('', validateEmail);
+
   const handleLogin = () => {
     const redirectPath = location.state?.from?.pathname;
-
     if (redirectPath) {
       navigate(redirectPath, { replace: true });
     } else {
@@ -88,31 +105,39 @@ const Login = () => {
   };
 
   return (
-    <>
-      <PageWrapper>
-        <HeaderContainer>
-          <FiArrowLeft size={20} onClick={() => navigate('/')} />
-          <Title>선물하기</Title>
-          <FiUser size={20} />
-        </HeaderContainer>
-        <MainContent>
-          <LoginContainer>
-            <img
-              alt="카카오 로고"
-              src="./kakao_logo.svg"
-              width="88px"
-              height="88px"
-            />
-            <br />
-            <InputStyle type="text" placeholder="이메일" />
-            <br />
-            <InputStyle type="password" placeholder="비밀번호" />
-            <br />
-            <LoginButton onClick={handleLogin}>로그인</LoginButton>
-          </LoginContainer>
-        </MainContent>
-      </PageWrapper>
-    </>
+    <PageWrapper>
+      <HeaderContainer>
+        <FiArrowLeft size={20} onClick={() => navigate('/')} />
+        <Title>선물하기</Title>
+        <FiUser size={20} />
+      </HeaderContainer>
+
+      <MainContent>
+        <LoginContainer>
+          <img
+            alt="카카오 로고"
+            src="./kakao_logo.svg"
+            width="88px"
+            height="88px"
+          />
+          <br />
+          <InputStyle
+            type="text"
+            placeholder="이메일"
+            value={emailInput.value}
+            onChange={e => emailInput.setValue(e.target.value)}
+            onBlur={emailInput.handleBlur}
+          />
+          {emailInput.error && (
+            <ErrorText>{emailInput.error}</ErrorText>
+          )}
+
+          <InputStyle type="password" placeholder="비밀번호" />
+
+          <LoginButton onClick={handleLogin}>로그인</LoginButton>
+        </LoginContainer>
+      </MainContent>
+    </PageWrapper>
   );
 };
 
