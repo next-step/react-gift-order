@@ -1,9 +1,7 @@
-import { useState } from "react";
 import {
   LoginContainer,
   KakaoLogo,
   LoginForm,
-  InputField,
   LoginButton,
   InputFieldGroup,
 } from "./LoginPage.styles";
@@ -11,10 +9,9 @@ import { LOGIN_LABELS } from "./constants/labels";
 import Layout from "@/layout";
 import { useLocation, useNavigate } from "react-router-dom";
 import IDField from "./components/IDField";
+import PasswordField from "./components/PasswordField";
 
 function LoginPage() {
-  const [password, setPassword] = useState("");
-
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -32,14 +29,7 @@ function LoginPage() {
         <LoginForm onSubmit={handleSubmit}>
           <InputFieldGroup>
             <IDField />
-            <InputField
-              type="password"
-              placeholder={LOGIN_LABELS.PASSWORD_PLACEHOLDER}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              isError={false}
-            />
+            <PasswordField />
           </InputFieldGroup>
           <LoginButton type="submit">{LOGIN_LABELS.LOGIN_BUTTON}</LoginButton>
         </LoginForm>
