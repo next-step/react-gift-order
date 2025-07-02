@@ -61,8 +61,8 @@ export const PWErrorContainer = styled.p`
   color: red;
 `;
 
-export const LoginButton = styled.button<{ active: boolean }>`
-  ${({ theme, active }) => `
+export const LoginButton = styled.button<{ $active: boolean }>`
+  ${({ theme, $active }) => `
     font-size: ${theme.typography.title1Bold.fontSize};
     width: 70%;
     font-weight: ${theme.typography.title1Bold.fontWeight};
@@ -70,7 +70,7 @@ export const LoginButton = styled.button<{ active: boolean }>`
     height: 50px;
     margin-top: 15px;
     color: black;
-    background-color: ${active ? theme.colors.kakaoYellow : 'rgb(185, 176, 92, 0.5)'};
+    background-color: ${$active ? theme.colors.kakaoYellow : 'rgb(185, 176, 92, 0.5)'};
     border: none;
     border-radius: 4px;
     cursor: pointer;
