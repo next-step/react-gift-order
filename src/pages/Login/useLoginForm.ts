@@ -17,7 +17,14 @@ export const useLoginForm = () => {
   // 이메일 변경 핸들러
   const handleEmailChange = (value: string) => {
     setEmail(value);
-    if (emailError) setEmailError('');
+
+    if (!value) {
+      setEmailError('ID를 입력해주세요.');
+    } else if (!EMAIL_REGEX.test(value)) {
+      setEmailError('ID는 이메일 형식으로 입력해주세요.');
+    } else {
+      setEmailError('');
+    }
   };
 
   // 이메일 유효성 검사
@@ -34,13 +41,13 @@ export const useLoginForm = () => {
   // 비밀번호 변경 핸들러
   const handlePasswordChange = (value: string) => {
     setPassword(value);
-    
+
     if (!value) {
-        setPasswordError('PW를 입력해주세요.');
+      setPasswordError('PW를 입력해주세요.');
     } else if (value.length < 8) {
-        setPasswordError('PW는 최소 8글자 이상이어야 합니다.');
+      setPasswordError('PW는 최소 8글자 이상이어야 합니다.');
     } else {
-        setPasswordError('');
+      setPasswordError('');
     }
   };
 
@@ -55,12 +62,10 @@ export const useLoginForm = () => {
     }
   };
 
-  // 로그인 버튼 활성화 조건
   const isValid = useMemo(() => {
     return EMAIL_REGEX.test(email) && password.length >= 8;
   }, [email, password]);
 
-  // 로그인 버튼 클릭 시
   const goToLogin = () => {
     navigate(from, { replace: true });
   };
