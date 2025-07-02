@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
-    "baseUrl": "./",
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["src/*"],
+      "@components/*": ["src/components/*"],
+      "@components/common*": ["src/components/common/*"]
     },
     "types": ["node"]
   },

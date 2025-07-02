@@ -3,7 +3,6 @@ import styled from '@emotion/styled';
 import { theme } from '../styles/theme';
 import { IconFilterItem } from './common/IconFilterItem';
 
-
 const filters = [
   { key: 'all', label: '전체', icon: 'ALL' },
   { key: 'female', label: '여성', icon: '👩' },
@@ -56,18 +55,29 @@ const TabButton = styled.button<{ selected: boolean }>`
   border: none;
 `;
 
-export default function GiftRankingFilter() {
-  const [selected, setSelected] = useState<FilterKey>(() => {
-    const saved = localStorage.getItem(LOCAL_FILTER_KEY);
-    return (
-      filters.some(f => f.key === saved) ? saved : 'all'
-    ) as FilterKey;
-  });
+function getValidStoredValue<T>(
+  key: string,
+  validValues: T[],
+  defaultValue: T
+): T {
+  const stored = localStorage.getItem(key);
+  return validValues.includes(stored as T)
+    ? (stored as T)
+    : defaultValue;
+}
 
-  const [selectedTab, setSelectedTab] = useState(() => {
-    const saved = localStorage.getItem(LOCAL_TAB_KEY);
-    return tabOptions.includes(saved || '') ? saved! : tabOptions[0];
-  });
+export default function GiftRankingFilter() {
+  const [selected, setSelected] = useState<FilterKey>(() =>
+    getValidStoredValue(
+      LOCAL_FILTER_KEY,
+      filters.map(f => f.key),
+      'all'
+    )
+  );
+
+  const [selectedTab, setSelectedTab] = useState(() =>
+    getValidStoredValue(LOCAL_TAB_KEY, tabOptions, tabOptions[0])
+  );
 
   const handleFilterChange = (key: FilterKey) => {
     setSelected(key);
@@ -78,7 +88,6 @@ export default function GiftRankingFilter() {
     setSelectedTab(tab);
     localStorage.setItem(LOCAL_TAB_KEY, tab);
   };
-
 
   return (
     <Container>
@@ -92,7 +101,6 @@ export default function GiftRankingFilter() {
             icon={icon}
             selected={selected === key}
             onClick={() => handleFilterChange(key)}
-
           />
         ))}
       </IconFilterContainer>
@@ -103,7 +111,6 @@ export default function GiftRankingFilter() {
             key={tab}
             selected={selectedTab === tab}
             onClick={() => handleTabChange(tab)}
-
           >
             {tab}
           </TabButton>
