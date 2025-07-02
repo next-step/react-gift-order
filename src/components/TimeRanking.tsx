@@ -11,7 +11,10 @@ const genderOptions = [
   { label: '청소년이', icon: '🧒🏻', value: '청소년' },
 ]
 
-const rankTypeTabs = ['받고 싶어한', '많이 선물한', '위시로 받은']
+const RankTypeOptions = ['받고 싶어한', '많이 선물한', '위시로 받은']
+
+type Gender = 'ALL' | '여성' | '남성' | '청소년'
+type RankType = '받고 싶어한' | '많이 선물한' | '위시로 받은'
 
 export default function TimeRanking() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -19,13 +22,13 @@ export default function TimeRanking() {
   const [selectedRankType, setSelectedRankType] = useState(() => searchParams.get('rankType') || '받고 싶어한')
   const [showAll, setShowAll] = useState(false)
 
-  const handleGenderChange = (value: string) => {
+  const changeGender = (value: Gender) => {
     setSelectedGender(value)
     searchParams.set('gender', value)
     setSearchParams(searchParams)
   }
 
-  const handleRankTypeChange = (value: string) => {
+  const changeRankType = (value: RankType) => {
     setSelectedRankType(value)
     searchParams.set('rankType', value)
     setSearchParams(searchParams)
@@ -45,7 +48,7 @@ export default function TimeRanking() {
           <GenderTab key={value}>
             <GenderButton
               isSelected={selectedGender === value}
-              onClick={() => handleGenderChange(value)}
+              onClick={() => changeGender(value as Gender)}
             >
               {icon}
             </GenderButton>
@@ -57,11 +60,11 @@ export default function TimeRanking() {
       <Spacing height="16px" />
 
       <RankingBox>
-        {rankTypeTabs.map((tab) => (
+        {RankTypeOptions.map((tab) => (
           <RankingTab
             key={tab}
             isSelected={selectedRankType === tab}
-            onClick={() => handleRankTypeChange(tab)}
+            onClick={() => changeRankType(tab as RankType)}
           >
             {tab}
           </RankingTab>
