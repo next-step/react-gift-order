@@ -47,7 +47,7 @@ const LoginPage = () => {
           <Input type="password" name="password" id="password" autoComplete="current-password" placeholder="비밀번호" value={pw} onChange={handlePwChange} onBlur={handlePwBlur} isError={Boolean(pwError)}/>
           {pwError && <ErrorMessage>{pwError}</ErrorMessage>}
         </InputWrapper>
-        <LoginButton onClick={handleLogin}>로그인</LoginButton>
+        <LoginButton disabled={!isValid} onClick={handleLogin}>로그인</LoginButton>
       </Container>
     </>
   );

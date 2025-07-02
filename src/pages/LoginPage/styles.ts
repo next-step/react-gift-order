@@ -59,4 +59,9 @@ export const LoginButton = styled.button`
   border-radius: ${({ theme }) => theme.spacing.spacing1};
   cursor: pointer;
   margin-top: ${({ theme }) => theme.spacing.spacing10};
+  &:disabled {
+    background-color: ${({ theme }) => theme.colors.semantic.backgroundDisabled};;
+    cursor: not-allowed;
+    color: ${({ theme }) => theme.colors.semantic.textDisabled};;
+  }
 `;
