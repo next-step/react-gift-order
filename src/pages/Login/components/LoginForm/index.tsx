@@ -1,7 +1,7 @@
 import React from 'react';
-import { useLoginForm } from '../../../../hooks/useLoginForm';
-import InputField from '../../../../components/Form/inputField';
-import Button from '../../../../components/common/Button';
+import { useLoginForm } from '@/hooks/useLoginForm';
+import InputField from '@/components/Form/inputField';
+import Button from '@/components/common/Button';
 import * as S from './sytles';
 
 const LoginForm: React.FC = () => {

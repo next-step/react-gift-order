@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import * as S from './styles';
-import IconButton from '../common/IconButton';
+import IconButton from '@/components/common/IconButton';
 
 const Navigation = () => {
   const navigate = useNavigate();

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { rankingItems, genderItems, actionItems } from '../../../../data/ranking';
-import ItemCard from '../../../../components/common/ItemCard';
+import { rankingItems, genderItems, actionItems } from '@/data/ranking';
+import ItemCard from '@/components/common/ItemCard';
 import * as S from './styles';
 
 const RankingSection = () => {
@@ -58,11 +58,11 @@ const RankingSection = () => {
           ))}
         </S.ActionFilterContainer>
       </S.FilterContainer>
-
+      
       <S.Grid>
         {(isExpanded ? rankingItems : rankingItems.slice(0, 6)).map((item, index) => (
-          <ItemCard 
-            key={item.id} //key 간소화
+          <ItemCard
+            key={item.id}
             imageUrl={item.imageURL}
             title={item.name}
             subtitle={item.brandInfo.name}
