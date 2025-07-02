@@ -1,35 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { ThemeProvider } from '@emotion/react';
+import { theme } from '@/styles/theme';
+import GlobalStyle from '@/styles/GlobalStyle';
+import Layout from '@/components/Layout/Layout';
+import NavigationBar from '@/components/NavigationBar/NavigationBar';
+import CategorySection from '@/components/CategorySection/CategorySection';
+import AddFriend from '@/components/OtherSection/AddFriend';
+import Fighting from '@/components/OtherSection/Fighting';
+import RisingSection from '@/components/RisingSection/RisingSection';
+import { Routes, Route } from 'react-router-dom';
+import LoginPage from '@/pages/LoginPage';
+import NotFoundPage from '@/pages/NotFoundPage';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <ThemeProvider theme={theme}>
+      <GlobalStyle />
+      <Layout>
+        <NavigationBar />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <AddFriend />
+                <CategorySection />
+                <Fighting />
+                <RisingSection />
+              </>
+            }
+          />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Layout>
+    </ThemeProvider>
+  );
 }
 
-export default App
+export default App;
