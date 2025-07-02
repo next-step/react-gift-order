@@ -3,7 +3,13 @@ import { REGEX_EMAIL } from "@/features/auth/constants/regex";
 import { useInput } from "@/shared/hooks/useInput";
 
 export const useSignIn = () => {
-    const [emailRef, email, emailError, setEmailError] = useInput({
+    const {
+        inputRef: emailRef,
+        value: email,
+        errorMessage: emailError,
+        setErrorMessage: setEmailError,
+        inputProps: emailInputProps,
+    } = useInput({
         onBlur(value) {
             if (!value) setEmailError("ID를 입력해주세요.");
         },
@@ -13,7 +19,13 @@ export const useSignIn = () => {
         },
     });
 
-    const [passwordRef, password, passwordError, setPasswordError] = useInput({
+    const {
+        inputRef: passwordRef,
+        value: password,
+        errorMessage: passwordError,
+        setErrorMessage: setPasswordError,
+        inputProps: passwordInputProps,
+    } = useInput({
         onBlur(value) {
             if (!value) setPasswordError("PW를 입력해주세요.");
         },
@@ -29,10 +41,12 @@ export const useSignIn = () => {
         emailRef,
         email,
         emailError,
+        emailInputProps,
 
         passwordRef,
         password,
         passwordError,
+        passwordInputProps,
 
         isLoginButtonActive,
     };

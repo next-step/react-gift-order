@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 export type UseInputOptions = {
     onChange?: (value: string) => void;
@@ -6,41 +6,44 @@ export type UseInputOptions = {
     onFocus?: (value: string) => void;
 };
 
-export const useInput = ({ onChange, onBlur, onFocus }: UseInputOptions) => {
+export const useInput = ({
+    onChange: onChangeCallback,
+    onBlur: onBlurCallback,
+    onFocus: onFocusCallback,
+}: UseInputOptions) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
     const [value, setValue] = useState<string>("");
     const [errorMessage, setErrorMessage] = useState<string>("");
 
-    useEffect(() => {
-        const blurEventHandler = (event: FocusEvent) => {
-            const target = event.currentTarget as HTMLInputElement;
-            if (target.value !== value) setValue(target.value);
-            if (onBlur) onBlur(target.value);
-        };
+    const onBlur = (event: FocusEvent) => {
+        const target = event.currentTarget as HTMLInputElement;
+        if (target.value !== value) setValue(target.value);
+        if (onBlurCallback) onBlurCallback(target.value);
+    };
 
-        const changeEventHandler = (event: Event) => {
-            const target = event.currentTarget as HTMLInputElement;
-            if (target.value !== value) setValue(target.value);
-            if (onChange) onChange(target.value);
-        };
+    const onChange = (event: Event) => {
+        const target = event.currentTarget as HTMLInputElement;
+        if (target.value !== value) setValue(target.value);
+        if (onChangeCallback) onChangeCallback(target.value);
+    };
 
-        const focusEventHandler = (event: FocusEvent) => {
-            const target = event.currentTarget as HTMLInputElement;
-            if (target.value !== value) setValue(target.value);
-            if (onFocus) onFocus(target.value);
-        };
+    const onFocus = (event: FocusEvent) => {
+        const target = event.currentTarget as HTMLInputElement;
+        if (target.value !== value) setValue(target.value);
+        if (onFocusCallback) onFocusCallback(target.value);
+    };
 
-        const $input = inputRef.current;
-        $input?.addEventListener("blur", blurEventHandler);
-        $input?.addEventListener("input", changeEventHandler);
-        $input?.addEventListener("focus", focusEventHandler);
+    return {
+        inputRef,
+        value,
+        setValue,
+        errorMessage,
+        setErrorMessage,
 
-        return () => {
-            $input?.removeEventListener("blur", blurEventHandler);
-            $input?.removeEventListener("input", changeEventHandler);
-            $input?.removeEventListener("focus", focusEventHandler);
-        };
-    }, [onBlur, onChange, onFocus, value]);
-
-    return [inputRef, value, errorMessage, setErrorMessage] as const;
+        inputProps: {
+            onBlur,
+            onChange,
+            onFocus,
+        },
+    };
 };

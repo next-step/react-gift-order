@@ -14,12 +14,16 @@ export default function SignInPage() {
 
     const {
         isLoginButtonActive,
+
         emailRef,
-        passwordRef,
         email,
-        password,
         emailError,
+        emailInputProps,
+
+        passwordRef,
+        password,
         passwordError,
+        passwordInputProps,
     } = useSignIn();
 
     return (
@@ -36,6 +40,7 @@ export default function SignInPage() {
                         placeholder="이메일"
                         value={email}
                         error={emailError}
+                        {...emailInputProps}
                     />
                 </Styles.FieldSet>
                 <VerticalSpacing size="16px" />
@@ -48,6 +53,7 @@ export default function SignInPage() {
                         placeholder="비밀번호"
                         value={password}
                         error={passwordError}
+                        {...passwordInputProps}
                     />
                 </Styles.FieldSet>
 
