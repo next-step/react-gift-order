@@ -1,18 +1,58 @@
 import type { Theme } from "@emotion/react";
 import { useTheme } from "@emotion/react";
 import { css } from "@emotion/react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
+
+const exp = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
 const Login = () => {
   const theme = useTheme();
   const navigate = useNavigate();
 
+  const [email, setEmail] = useState("");
+  const [isValidEmail, setIsValidEmail] = useState(true);
+  const [emailMessage, setEmailMessage] = useState("");
+
+  const [password, setPassword] = useState("");
+  const [isValidPassword, setIsValidPassword] = useState(true);
+  const [passwordMessage, setPasswordMessage] = useState("");
+
+  // 이메일 유효성 검사 함수
+
   return (
     <div css={containerStyle(theme)}>
       <h1 css={textSytle(theme)}>로그인</h1>
       <div css={inputContainerSytle(theme)}>
-        <input css={inputSytle(theme)} type="text" placeholder="이메일" />
-        <input css={inputSytle(theme)} type="password" placeholder="비밀번호" />
+        <input
+          onChange={(event) => {
+            setEmail(event.target.value);
+            setIsValidEmail(exp.test(event.target.value));
+            if (!exp.test(event.target.value)) {
+              setEmailMessage("이메일 형식이 올바르지 않습니다.");
+            } else {
+              setEmailMessage("");
+            }
+          }}
+          css={inputSytle(theme)}
+          type="text"
+          placeholder="이메일"
+        />
+        <input
+          onChange={(event) => {
+            setPassword(event.target.value);
+            if (event.target.value.length < 8) {
+              setIsValidPassword(false);
+              setPasswordMessage("비밀번호는 8자 이상이어야 합니다.");
+            } else {
+              setIsValidPassword(true);
+              setPasswordMessage("");
+            }
+          }}
+          css={inputSytle(theme)}
+          type="password"
+          placeholder="비밀번호"
+        />
       </div>
       <button
         onClick={() => {
@@ -22,7 +62,8 @@ const Login = () => {
             navigate("/");
           }
         }}
-        css={buttonSytle(theme)}>
+        css={buttonSytle(theme)}
+      >
         로그인
       </button>
     </div>
