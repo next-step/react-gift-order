@@ -48,11 +48,14 @@ const Login = () => {
         <input
           onChange={(event) => {
             setPassword(event.target.value);
-            if (event.target.value.length < 8) {
-              setIsValidPassword(false);
+            setIsValidPassword(event.target.value.length >= 8);
+          }}
+          onBlur={() => {
+            if (password === "") {
+              setPasswordMessage("비밀번호를 입력해주세요.");
+            } else if (!isValidPassword) {
               setPasswordMessage("비밀번호는 8자 이상이어야 합니다.");
-            } else {
-              setIsValidPassword(true);
+            } else if (isValidPassword) {
               setPasswordMessage("");
             }
           }}
