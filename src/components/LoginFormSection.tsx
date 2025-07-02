@@ -12,6 +12,8 @@ const LoginFormSection = () => {
 
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
   const validateEmail = (value: string) => {
     if (!value) {
@@ -20,6 +22,16 @@ const LoginFormSection = () => {
       setEmailError('ID는 이메일 형식으로 입력해주세요.');
     } else {
       setEmailError('');
+    }
+  };
+
+  const validatePassword = (value: string) => {
+    if (!value) {
+      setPasswordError('PW를 입력해주세요.');
+    } else if (value.length < 8) {
+      setPasswordError('PW는 최소 8글자 이상이어야 합니다.');
+    } else {
+      setPasswordError('');
     }
   };
 
@@ -42,10 +54,23 @@ const LoginFormSection = () => {
               setEmail(value);
               validateEmail(value);
             }}
+            onBlur={() => validateEmail(email)}
             hasError={!!emailError}
           />
           {emailError && <ErrorText>{emailError}</ErrorText>}
-          {/* <StyledInput type="password" placeholder="비밀번호" /> */}
+          <StyledInput
+            type="password"
+            placeholder="비밀번호"
+            value={password}
+            onChange={e => {
+              const value = e.target.value;
+              setPassword(value);
+              validatePassword(value);
+            }}
+            onBlur={() => validatePassword(password)}
+            hasError={!!passwordError}
+          />
+          {passwordError && <ErrorText>{passwordError}</ErrorText>}
         </InputWrapper>
         <LoginButton onClick={handleLogin}>로그인</LoginButton>
       </Wrapper>
