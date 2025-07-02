@@ -60,6 +60,12 @@ const LoginPage = () => {
         onClick={handleLogin}
         label="로그인"
         size="large"
+        disabled={
+          !!emailError ||
+          !!passwordError ||
+          email.trim() === "" ||
+          password.trim() === ""
+        }
       ></LoginButton>
     </Wrapper>
   );
