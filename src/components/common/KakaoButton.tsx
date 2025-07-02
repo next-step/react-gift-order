@@ -18,6 +18,10 @@ const Btn = styled.button<{ fullWidth?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 `;
 
 export default function KakaoButton({ children, fullWidth, ...rest }: Props) {

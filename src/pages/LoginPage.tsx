@@ -104,7 +104,7 @@ export default function LoginPage() {
             {errors.password && <ErrorMsg>{errors.password}</ErrorMsg>}
 
             <ButtonWrapper>
-              <KakaoButton type="submit" fullWidth>
+              <KakaoButton type="submit" fullWidth disabled={!isValid}>
                 로그인
               </KakaoButton>
             </ButtonWrapper>
