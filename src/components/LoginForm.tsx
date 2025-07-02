@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useState } from 'react';
+import { useLoginForm } from '../hooks/useLoginForm';
 import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
 
@@ -32,16 +32,17 @@ const Form = styled.form`
   max-width: 400px;
   display: flex;
   flex-direction: column;
-  gap: ${theme.spacing.spacing4};
+  gap: ${theme.spacing.spacing1};
 `;
 
-const InputField = styled.input`
+const InputField = styled.input<{ hasError?: boolean }>`
   width: 100%;
-  padding: ${theme.spacing.spacing4} 0;
+  padding: ${theme.spacing.spacing2} 0;
   border: none;
-  border-bottom: 1px solid ${theme.colors.borderDefault};
+  border-bottom: 1px solid
+    ${props => (props.hasError ? 'red' : theme.colors.borderDefault)};
   background: transparent;
-  font-size: ${theme.typography.body1Regular.fontSize};
+  font-size: ${theme.typography.title2Regular.fontSize};
   color: ${theme.colors.textDefault};
   outline: none;
   transition: border-color 0.2s ease;
@@ -51,7 +52,8 @@ const InputField = styled.input`
   }
 
   &:focus {
-    border-bottom-color: ${theme.colors.blue700};
+    border-bottom-color: ${props =>
+      props.hasError ? 'red' : theme.colors.blue700};
   }
 `;
 
@@ -79,12 +81,27 @@ const LoginButton = styled.button`
   }
 `;
 
+const ErrorMessage = styled.div`
+  color: red;
+  font-size: 0.7em;
+`;
+
 export function LoginForm({ onSubmit }: LoginFormProps) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const {
+    email,
+    password,
+    emailError,
+    passwordError,
+    handleEmailChange,
+    handlePasswordChange,
+    handleEmailBlur,
+    handlePasswordBlur,
+    isValid,
+  } = useLoginForm();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isValid) return;
     onSubmit(email, password);
   };
 
@@ -98,20 +115,32 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
 
       <Form onSubmit={handleSubmit}>
         <InputField
-          type="text"
+          type="email"
           placeholder="이메일"
           value={email}
-          onChange={e => setEmail(e.target.value)}
+          onChange={handleEmailChange}
+          onBlur={handleEmailBlur}
+          hasError={!!emailError}
         />
+        {emailError && <ErrorMessage>{emailError}</ErrorMessage>}
 
         <InputField
           type="password"
           placeholder="비밀번호"
           value={password}
-          onChange={e => setPassword(e.target.value)}
+          onChange={handlePasswordChange}
+          onBlur={handlePasswordBlur}
+          hasError={!!passwordError}
         />
+        {passwordError && <ErrorMessage>{passwordError}</ErrorMessage>}
 
-        <LoginButton type="submit">로그인</LoginButton>
+        <LoginButton
+          type="submit"
+          disabled={!isValid}
+          style={{ opacity: isValid ? 1 : 0.5 }}
+        >
+          로그인
+        </LoginButton>
       </Form>
     </LoginContainer>
   );
