@@ -89,13 +89,23 @@ const validateEmail = (value: string) => {
     : 'ID는 이메일 형식이어야 합니다.';
 };
 
+const validatePassword = (value: string) => {
+  if (!value.trim()) return 'PW는 반드시 입력되어야 합니다.';
+
+  return value.length > 8 ? '' : 'PW는 최소 8글자 이상이어야 합니다.';
+};
+
 const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
   const emailInput = useInputWithValidation('', validateEmail);
+  const passwordInput = useInputWithValidation('', validatePassword);
+
+  const isFormValid = emailInput.isValid && passwordInput.isValid;
 
   const handleLogin = () => {
+    if (!isFormValid) return;
     const redirectPath = location.state?.from?.pathname;
     if (redirectPath) {
       navigate(redirectPath, { replace: true });
@@ -132,7 +142,16 @@ const Login = () => {
             <ErrorText>{emailInput.error}</ErrorText>
           )}
 
-          <InputStyle type="password" placeholder="비밀번호" />
+          <InputStyle
+            type="password"
+            placeholder="비밀번호"
+            value={passwordInput.value}
+            onChange={e => passwordInput.setValue(e.target.value)}
+            onBlur={passwordInput.handleBlur}
+          />
+          {passwordInput.error && (
+            <ErrorText>{passwordInput.error}</ErrorText>
+          )}
 
           <LoginButton onClick={handleLogin}>로그인</LoginButton>
         </LoginContainer>
