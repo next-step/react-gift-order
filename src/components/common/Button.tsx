@@ -1,6 +1,15 @@
 import styled from "@emotion/styled";
 import { type ComponentPropsWithoutRef } from "react";
 
+type ButtonVariant = "primary" | "secondary" | "icon";
+type ButtonSize = "small" | "medium" | "large";
+
+interface ButtonProps extends ComponentPropsWithoutRef<"button"> {
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  fullWidth?: boolean;
+}
+
 const Button = (props: ButtonProps) => {
   return (
     <Style
@@ -16,14 +25,6 @@ const Button = (props: ButtonProps) => {
   );
 };
 
-type ButtonVariant = "primary" | "secondary" | "icon";
-type ButtonSize = "small" | "medium" | "large";
-
-interface ButtonProps extends ComponentPropsWithoutRef<"button"> {
-  variant?: ButtonVariant;
-  size?: ButtonSize;
-  fullWidth?: boolean;
-}
 const Style = styled.button<{
   variant?: ButtonVariant;
   size?: ButtonSize;

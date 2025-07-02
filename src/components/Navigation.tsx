@@ -8,17 +8,17 @@ import Button from "@/components/common/Button";
 const Navigation = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const handleBackClick = () => {
+  const goBack = () => {
     if (window.history.length > 1) {
       navigate(-1);
     } else {
       navigate(ROUTE_PATH.HOME);
     }
   };
-  const handleHomeClick = () => {
+  const goHome = () => {
     navigate(ROUTE_PATH.HOME);
   };
-  const handleLoginClick = () => {
+  const goLogin = () => {
     let path: string = `${ROUTE_PATH.LOGIN}`;
     if ((Object.values(ROUTE_PATH) as string[]).includes(location.pathname)) {
       path = path + `?redirect=${location.pathname}`;
@@ -29,17 +29,17 @@ const Navigation = () => {
     <Container>
       <Nav>
         <NavLeft>
-          <Button variant="icon" onClick={handleBackClick}>
+          <Button variant="icon" onClick={goBack}>
             <LeftArrow />
           </Button>
         </NavLeft>
         <NavCenter>
-          <Button variant="icon" onClick={handleHomeClick}>
+          <Button variant="icon" onClick={goHome}>
             선물하기
           </Button>
         </NavCenter>
         <NavRight>
-          <Button variant="icon" onClick={handleLoginClick} disabled={location.pathname === ROUTE_PATH.LOGIN}>
+          <Button variant="icon" onClick={goLogin} disabled={location.pathname === ROUTE_PATH.LOGIN}>
             <Profile />
           </Button>
         </NavRight>

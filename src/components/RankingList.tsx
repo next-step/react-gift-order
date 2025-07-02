@@ -11,9 +11,7 @@ const RANKING_LIST_ITEM_VIEW_COUNT = 6;
 const RankingList = () => {
   const [viewCount, setViewCount] = useState(RANKING_LIST_ITEM_VIEW_COUNT);
   const theme = useTheme();
-  const isClosed = () => {
-    return viewCount === RANKING_LIST_ITEM_VIEW_COUNT;
-  };
+  const isClosed = viewCount === RANKING_LIST_ITEM_VIEW_COUNT;
   return (
     <Container>
       <Content>
@@ -39,11 +37,11 @@ const RankingList = () => {
         <Button
           variant="secondary"
           onClick={() => {
-            const rankingListItemViewMaxCount = isClosed() ? rankingItemMock.length : RANKING_LIST_ITEM_VIEW_COUNT;
+            const rankingListItemViewMaxCount = isClosed ? rankingItemMock.length : RANKING_LIST_ITEM_VIEW_COUNT;
             setViewCount(rankingListItemViewMaxCount);
           }}
         >
-          {isClosed() ? "더보기" : "접기"}
+          {isClosed ? "더보기" : "접기"}
         </Button>
       </ItemContent>
       <Divider />
