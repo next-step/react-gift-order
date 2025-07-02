@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import theme from '@src/styles/tokens/index';
 import kakao_logo from '@src/assets/icons/kakao_logo.svg';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 const mainStyle = css`
   width: 100%;
@@ -32,7 +33,11 @@ const inputDiv = css`
   font: inherit;
 `;
 
-const inputStyle = css`
+const inputStyle = (
+  focused: boolean,
+  hasError: boolean,
+  touched: boolean
+) => css`
   width: 100%;
   box-sizing: border-box;
   color: ${theme.colors.gray900};
@@ -44,16 +49,26 @@ const inputStyle = css`
   line-height: 1.375rem;
   padding: 8px 0px;
   border-width: 0px 0px 1px;
-  border-color: ${theme.colors.textDisabled};
+  border-color: ${focused
+    ? theme.colors.gray700
+    : hasError && touched
+      ? theme.colors.red700
+      : theme.colors.textDisabled};
 
   &:focus {
-    border-color: ${theme.colors.gray700};
     outline: none;
   }
+
   &::placeholder {
     color: ${theme.colors.textPlaceholder};
-    opacity: 1; /
+    opacity: 1;
   }
+`;
+
+const errorMessageStyle = css`
+  color: ${theme.colors.red700 || 'red'};
+  font-size: 0.75rem;
+  margin-top: 4px;
 `;
 
 const buttonStyle = css`
@@ -68,6 +83,11 @@ const buttonStyle = css`
   border: none;
   cursor: pointer;
   transition: background-color 200ms;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 `;
 
 const spacer16 = css`
@@ -83,8 +103,25 @@ const spacer48 = css`
 `;
 
 const Login = () => {
+  const [email, setEmail] = useState('');
+  const [emailFocused, setEmailFocused] = useState(false);
+  const [emailTouched, setEmailTouched] = useState(false);
+  const [emailError, setEmailError] = useState('');
+
   const navigate = useNavigate();
   const location = useLocation();
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  const validateEmail = (value: string) => {
+    if (!value) return 'ID를 입력해주세요.';
+    if (!emailRegex.test(value)) return 'ID는 이메일 형식으로 입력해주세요.';
+    return '';
+  };
+
+  useEffect(() => {
+    setEmailError(validateEmail(email));
+  }, [email, emailTouched]);
 
   const loginClicked = () => {
     const from = location.state?.from?.pathname || '/';
@@ -96,13 +133,37 @@ const Login = () => {
       <img css={logoStyle} src={kakao_logo} alt="카카오 공식 로고" />
       <section css={sectionStyle}>
         <div css={inputDiv}>
-          <input css={inputStyle} placeholder="이메일" type="email" />
+          <input
+            css={inputStyle(emailFocused, !!emailError, emailTouched)}
+            placeholder="이메일"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            onFocus={() => setEmailFocused(true)}
+            onBlur={() => {
+              setEmailFocused(false);
+              setEmailTouched(true);
+              setEmailError(validateEmail(email));
+            }}
+          />
+          {emailTouched && emailError && (
+            <p css={errorMessageStyle}>{emailError}</p>
+          )}
         </div>
+
         <div css={spacer16} />
+
         <div css={inputDiv}>
-          <input css={inputStyle} placeholder="비밀번호" type="password" />
+          <input
+            // pw작업시 inputStyle의 값을 바꿔주어야 함.
+            css={inputStyle(false, false, false)}
+            placeholder="비밀번호"
+            type="password"
+          />
         </div>
+
         <div css={spacer48} />
+
         <button css={buttonStyle} onClick={loginClicked}>
           로그인
         </button>
