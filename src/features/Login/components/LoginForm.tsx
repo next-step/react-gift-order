@@ -77,9 +77,10 @@ const LoginForm: React.FC = () => {
         <ErrorMessage isActive={!!passwordError}>{passwordError}</ErrorMessage>
 
         <MyButton
-          buttonType="login"
           onClick={handleLoginClick}
+          variant="primary"
           disabled={!loginOK()}
+          fullWidth={true}
         >
           로그인
         </MyButton>

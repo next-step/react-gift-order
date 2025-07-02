@@ -18,7 +18,7 @@ const NotFound: React.FC = () => {
         <NotFoundImg src={notFoundImg}></NotFoundImg>
         <Title>잘못된 접근입니다.</Title>
         <SubTitle>찾으시는 페이지가 존재하지 않습니다.</SubTitle>
-        <MyButton buttonType="home" onClick={() => navigate('/')}>
+        <MyButton variant="primary" size="small" onClick={() => navigate('/')}>
           홈으로
         </MyButton>
       </ErrorContainer>

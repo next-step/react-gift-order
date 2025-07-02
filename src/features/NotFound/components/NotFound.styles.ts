@@ -16,6 +16,7 @@ export const ErrorContainer = styled.div`
   margin-top: ${theme.spacing[10]};
   padding: ${theme.spacing[6]};
 `
+
 export const NotFoundImg = styled.img`
   width: 152px;
   height: 152px;
@@ -29,4 +30,5 @@ export const Title = styled.div`
 
 export const SubTitle = styled.div`
   ${theme.typography.subtitle1Regular};
+  margin-bottom: ${theme.spacing[5]};
 `
