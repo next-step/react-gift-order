@@ -1,53 +1,33 @@
 import styled from '@emotion/styled'
 import { Navbar } from '@/components/Navbar/Navbar'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useLoginForm } from '@/hooks/useLoginForm'
 
 export function LoginPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const from = location.state?.from?.pathname || '/'
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [emailError, setEmailError] = useState('')
-  const [passwordError, setPasswordError] = useState('')
-  const [emailTouched, setEmailTouched] = useState(false)
-  const [passwordTouched, setPasswordTouched] = useState(false)
-
-  const isEmailValid = (value: string) =>
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
-
-  const isPasswordValid = (value: string) => value.length >= 8
-
-  const validateEmail = () => {
-    setEmailTouched(true)
-    if (!email) {
-      setEmailError('ID를 입력해주세요.')
-    } else if (!isEmailValid(email)) {
-      setEmailError('ID는 이메일 형식으로 입력해주세요.')
-    } else {
-      setEmailError('')
-    }
-  }
-
-  const validatePassword = () => {
-    setPasswordTouched(true)
-    if (!password) {
-      setPasswordError('PW를 입력해주세요.')
-    } else if (!isPasswordValid(password)) {
-      setPasswordError('PW는 최소 8글자 이상이어야 합니다.')
-    } else {
-      setPasswordError('')
-    }
-  }
-
-  const isFormValid = isEmailValid(email) && isPasswordValid(password)
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    emailError,
+    passwordError,
+    emailTouched,
+    passwordTouched,
+    validateEmail,
+    validatePassword,
+    isFormValid,
+    setEmailTouched,
+    setPasswordTouched,
+  } = useLoginForm()
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
-    validateEmail()
-    validatePassword()
+    validateEmail(email)
+    validatePassword(password)
 
     if (isFormValid) {
       navigate(from, { replace: true })
@@ -69,18 +49,12 @@ export function LoginPage() {
               setEmail(newValue)
 
               if (emailTouched) {
-                if (!newValue) {
-                  setEmailError('ID를 입력해주세요.')
-                } else if (!isEmailValid(newValue)) {
-                  setEmailError('ID는 이메일 형식으로 입력해주세요.')
-                } else {
-                  setEmailError('')
-                }
+                validateEmail(newValue)
               }
             }}
             onBlur={() => {
               setEmailTouched(true)
-              validateEmail()
+              validateEmail(email)
             }}
           />
           {emailTouched && emailError && <Error>{emailError}</Error>}
@@ -94,21 +68,16 @@ export function LoginPage() {
               setPassword(newValue)
 
               if (passwordTouched) {
-                if (!newValue) {
-                  setPasswordError('PW를 입력해주세요.')
-                } else if (!isPasswordValid(newValue)) {
-                  setPasswordError('PW는 최소 8글자 이상이어야 합니다.')
-                } else {
-                  setPasswordError('')
-                }
+                validatePassword(newValue)
               }
             }}
             onBlur={() => {
               setPasswordTouched(true)
-              validatePassword()
+              validatePassword(password)
             }}
           />
           {passwordTouched && passwordError && <Error>{passwordError}</Error>}
+
           <LoginButton type="submit" disabled={!isFormValid}>
             로그인
           </LoginButton>
