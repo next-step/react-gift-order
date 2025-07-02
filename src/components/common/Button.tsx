@@ -84,8 +84,7 @@ const StyledButton = styled.button<{
           }
 
           &:disabled {
-            background-color: ${theme.semanticColors.background.disabled};
-            color: ${theme.semanticColors.text.disabled};
+            opacity: 0.5;
             cursor: not-allowed;
           }
         `
