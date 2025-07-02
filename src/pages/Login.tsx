@@ -68,7 +68,7 @@ const InputBox = styled.input<{ hasError?: boolean }>`
   }
 `;
 
-const LoginButton = styled.button`
+const LoginButton = styled.button<{ disabled?: boolean }>`
   width: 100%;
   height: 2.75rem;
   font-size: 0.875rem;
@@ -78,14 +78,20 @@ const LoginButton = styled.button`
   background-color: rgb(254, 229, 0);
   border-radius: 4px;
   border: none;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+  opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
   transition: background-color 200ms;
-  :hover {
-    background-color: #ffea2e;
-  }
-  :active {
-    background-color: #d5c000;
-  }
+
+  ${({ disabled }) =>
+    !disabled &&
+    css`
+      &:hover {
+        background-color: #ffea2e;
+      }
+      &:active {
+        background-color: #d5c000;
+      }
+    `}
 `;
 
 interface LocationState {
@@ -127,6 +133,12 @@ const Login: React.FC = () => {
     }
     return '';
   };
+
+  // 유효성 검사
+  const isFormVaild = () => {
+    return validateId(id) === '' && validatePw(pw) === '';
+  };
+
   const handleClick = () => {
     navigate(redirectTo, { replace: true });
   };
@@ -230,7 +242,9 @@ const Login: React.FC = () => {
                   background-color: transparent;
                 `}
               />
-              <LoginButton onClick={handleClick}>로그인</LoginButton>
+              <LoginButton onClick={handleClick} disabled={!isFormVaild()}>
+                로그인
+              </LoginButton>
             </InputSection>
           </Container>
         </LoginPage>
