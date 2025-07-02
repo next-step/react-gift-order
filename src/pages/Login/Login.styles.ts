@@ -41,6 +41,11 @@ export const StyledInput = styled.input`
     }
 `;
 
+export const Alert = styled.span`
+    color: ${({ theme }) => theme.colors.red700};
+    font-size: 15px;
+`
+
 export const LoginButton = styled.button`
     width: 420px;
     border: none;
@@ -55,8 +60,14 @@ export const LoginButton = styled.button`
     display: block;
     height: 100%;
     line-height: 44px;
+  
+    &:hover {
+      background-color: ${({ theme }) => theme.colors.semantic.brand.kakaoYellowHover};
+    }
 
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.semantic.brand.kakaoYellowHover};
-  }
+    &:disabled {
+        background-color: ${({ theme }) => theme.colors.gray300};;
+        cursor: not-allowed;
+        color: ${({ theme }) => theme.colors.gray700};;
+    }
 `;
