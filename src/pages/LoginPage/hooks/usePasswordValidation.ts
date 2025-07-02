@@ -10,12 +10,13 @@ function usePasswordValidation() {
   });
 
   const handlePasswordValueChange = (value: string) => {
-    setPassword(value.trim());
+    setPassword(value);
   };
 
   const validatePassword = (value: string) => {
-    const hasValue = isNotEmpty(value);
-    const isFormatValid = validatePasswordFormat(value);
+    const trimmedValue = value.trim();
+    const hasValue = isNotEmpty(trimmedValue);
+    const isFormatValid = validatePasswordFormat(trimmedValue);
 
     const errors = {
       isEmpty: !hasValue,

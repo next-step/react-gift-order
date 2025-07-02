@@ -10,12 +10,13 @@ export function useEmailValidation(initialValue = "") {
   });
 
   const handleEmailValueChange = (value: string) => {
-    setEmail(value.trim());
+    setEmail(value);
   };
 
   const validateEmail = (value: string) => {
-    const hasValue = isNotEmpty(value);
-    const isFormatValid = validateEmailFormat(value);
+    const trimmedValue = value.trim();
+    const hasValue = isNotEmpty(trimmedValue);
+    const isFormatValid = validateEmailFormat(trimmedValue);
 
     const errors = {
       isEmpty: !hasValue,
