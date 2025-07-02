@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+const PASSWORD_MIN_LENGTH = 8
 
 export const useLoginForm = () => {
   const [email, setEmail] = useState('')
@@ -12,8 +13,6 @@ export const useLoginForm = () => {
     /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i
 
   const checkEmail = () => {
-    if (!emailTouched) return false
-
     if (!email) {
       setEmailError('ID를 입력해주세요.')
       return false
@@ -26,12 +25,10 @@ export const useLoginForm = () => {
   }
 
   const checkPassword = () => {
-    if (!passwordTouched) return false
-
     if (!password) {
       setPasswordError('비밀번호를 입력해주세요.')
       return false
-    } else if (password.length < 8) {
+    } else if (password.length < PASSWORD_MIN_LENGTH) {
       setPasswordError('비밀번호는 8자 이상이어야 합니다.')
       return false
     }
@@ -40,15 +37,15 @@ export const useLoginForm = () => {
   }
 
   useEffect(() => {
-    checkEmail()
+    if (emailTouched) checkEmail()
   }, [email, emailTouched])
 
   useEffect(() => {
-    checkPassword()
+    if (passwordTouched) checkPassword()
   }, [password, passwordTouched])
 
   const loginOK = () => {
-    return emailRegEx.test(email) && password.length >= 8
+    return emailRegEx.test(email) && password.length >= PASSWORD_MIN_LENGTH
   }
 
   return {
