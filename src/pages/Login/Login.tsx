@@ -2,39 +2,26 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Header from '@/components/Header/Header';
 import { Alert, Container, InputWrapper, LoginButton, LogoImg, StyledInput } from '@/pages/Login/Login.styles';
 import { KAKAO_LOGO_SVG                                                                                                  } from "@/assets/svg/kakaoLogo";
-import { useState } from 'react';
+import { useLoginForm } from '@/hooks/useLoginForm.tsx';
 
 const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [id, setId] = useState('');
-  const [isValidEmail, setIsValidEmail] = useState(true);
-  const [passwd, setPasswd] = useState('');
-  const [isValidPass, setIsValidPass] = useState(true);
 
-  const handleEmailCheck = e => {
-    const value = e.target.value;
-    setId(value);
-
-    const emailRegex= /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    setIsValidEmail(emailRegex.test(value));
-  }
-
-  const handlePasswordCheck = e => {
-    const value = e.target.value;
-    setPasswd(value);
-
-    if (value.length < 8) {
-      setIsValidPass(false);
-    } else {
-      setIsValidPass(true);
-    }
-  }
+  const {
+    id,
+    passwd,
+    isValidEmail,
+    isValidPass,
+    handleEmailCheck,
+    handlePasswordCheck,
+    isFormValid,
+  } = useLoginForm();
 
   const handleLogin = (e) => {
     e.preventDefault();
 
-    if (!isValidEmail || !isValidPass || id === '' || passwd === '') {
+    if (isFormValid) {
       return;
     }
 
@@ -80,7 +67,7 @@ const Login = () => {
           </InputWrapper>
           <LoginButton
             type="submit"
-            disabled={!isValidEmail || !isValidPass || !id || !passwd}
+            disabled={isFormValid}
           >
             로그인
           </LoginButton>
