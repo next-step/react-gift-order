@@ -1,3 +1,4 @@
+
 import useInput from '@/hook/useInput';
 import theme from '@/styles/theme';
 import styled from '@emotion/styled';
@@ -81,13 +82,11 @@ const ErrorMessage = styled.div`
 
 const validateEmail = (value: string): string | null => {
   if (!value) return 'ID를 입력해주세요.';
-  // 간단한 이메일 형식 체크 정규식
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(value)) return 'ID는 이메일 형식으로 입력해주세요.';
   return null;
 };
 
-// 비밀번호 유효성 검사 함수
 const validatePassword = (value: string): string | null => {
   if (!value) return 'PW를 입력해주세요.';
   if (value.length < 8) return 'PW는 최소 8글자 이상이어야 합니다.';
@@ -100,7 +99,6 @@ const Login = () => {
     const id = useInput('', validateEmail);
     const pw = useInput('', validatePassword);
 
-    // 두 조건 모두 충족해야 로그인 버튼 활성화
     const canSubmit = id.isValid && pw.isValid;
 
   return (
