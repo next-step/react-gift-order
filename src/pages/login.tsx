@@ -5,8 +5,7 @@ import { colors } from '../styles/colors'
 import Header from '@/components/Header'
 import { typography } from '../styles/typography'
 import GlobalStyle from '@/styles/GlobalStyle'
-import { useEmailInput } from '@/hooks/useEmailInput'
-import { usePasswordInput } from '@/hooks/usePasswordInput'
+import { useInput,validateEmail,validatePassword } from '@/hooks/useInput'
 
 const wrapperStyle = css({
   maxWidth: 720,
@@ -65,8 +64,8 @@ const errorTextStyle = css({
 const LoginPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const { emailRef, emailError, handleEmailBlur } = useEmailInput()
-  const { passwordRef, passwordError, handlePasswordBlur} = usePasswordInput()
+  const { inputRef: emailRef, error: emailError, handleBlur: handleEmailBlur } = useInput(validateEmail)
+const { inputRef: passwordRef, error: passwordError, handleBlur: handlePasswordBlur} = useInput(validatePassword)
 
   // 뒤로가기 버튼 클릭
   const handleBack = () => {
