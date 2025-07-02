@@ -73,7 +73,7 @@ const LoginForm = () => {
                 onBlur={handlePasswordBlur}
             />
             {passwordError && <ErrorMessage>{passwordError}</ErrorMessage>}
-            <LoginButton/>
+            <LoginButton disabled={!isValid} />
         </Container>
     )
 }
