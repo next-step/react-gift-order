@@ -54,6 +54,12 @@ const buttonStyle = css({
   ...typography.body2Bold,
 })
 
+const errorTextStyle = css({
+  color: 'red',
+  fontSize: 13,
+  marginTop: 4,
+})
+
 
 const LoginPage = () => {
   const navigate = useNavigate()
@@ -91,7 +97,7 @@ const LoginPage = () => {
             onBlur={handleEmailBlur}
           />
           {emailError && (
-            <div id="email-error" style={{ color: 'red', fontSize: 13, marginTop: 4 }}>{emailError}</div>
+            <div id="email-error" css={errorTextStyle}>{emailError}</div>
           )}
         </div>
         <div css={inputWrapStyle}>
@@ -104,7 +110,7 @@ const LoginPage = () => {
             onBlur={handlePasswordBlur}
           />
           {passwordError && (
-            <div id="password-error" style={{ color: 'red', fontSize: 13, marginTop: 4 }}>{passwordError}</div>
+            <div id="password-error" css={errorTextStyle}>{passwordError}</div>
           )}
         </div>
         <button css={buttonStyle} type="submit">로그인</button>
