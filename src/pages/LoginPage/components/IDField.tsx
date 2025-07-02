@@ -5,17 +5,12 @@ import FormErrorMessage from "./FormErrorMessage";
 import { useEmailValidation } from "../hooks/useEmailValidation";
 
 function IDField() {
-  const {
-    email,
-    handleEmailChange,
-    validateEmail,
-    getFormErrorMessage,
-    hasError,
-  } = useEmailValidation();
+  const { email, handleChange, validateEmail, getFormErrorMessage, hasError } =
+    useEmailValidation();
   const isEmailBlurredRef = useRef(false);
 
-  const handleChange = (value: string) => {
-    handleEmailChange(value);
+  const handleEmailChange = (value: string) => {
+    handleChange(value);
 
     if (isEmailBlurredRef.current) {
       validateEmail(value);
@@ -33,7 +28,7 @@ function IDField() {
         type="email"
         placeholder={LOGIN_LABELS.EMAIL_PLACEHOLDER}
         value={email}
-        onChange={(e) => handleChange(e.target.value)}
+        onChange={(e) => handleEmailChange(e.target.value)}
         onBlur={(e) => handleBlur(e.target.value)}
         required
         isError={hasError}

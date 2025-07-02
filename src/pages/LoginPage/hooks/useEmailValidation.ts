@@ -8,7 +8,7 @@ export function useEmailValidation(initialValue = "") {
     isEmpty: false,
     invalidFormat: false,
   });
-  const handleEmailChange = (value: string) => {
+  const handleChange = (value: string) => {
     setEmail(value);
   };
 
@@ -38,7 +38,7 @@ export function useEmailValidation(initialValue = "") {
 
   return {
     email,
-    handleEmailChange,
+    handleChange,
     validateEmail,
     getFormErrorMessage,
     hasError,
