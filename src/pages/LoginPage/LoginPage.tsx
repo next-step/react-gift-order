@@ -7,11 +7,11 @@ import {
 } from "./LoginPage.styles";
 import { LOGIN_LABELS } from "./constants/labels";
 import Layout from "@/layout";
-import { useLocation, useNavigate } from "react-router-dom";
 import IDField from "./components/IDField";
 import PasswordField from "./components/PasswordField";
 import usePasswordValidation from "./hooks/usePasswordValidation";
 import { useEmailValidation } from "./hooks/useEmailValidation";
+import useLoginSubmit from "./hooks/useLoginSubmit";
 
 export interface LoginFormProps {
   value: string;
@@ -22,6 +22,8 @@ export interface LoginFormProps {
 }
 
 function LoginPage() {
+  const { handleSubmit } = useLoginSubmit();
+
   const {
     email,
     handleEmailValueChange,
@@ -43,16 +45,6 @@ function LoginPage() {
     !hasPasswordError &&
     email.trim() !== "" &&
     password.trim() !== "";
-
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const from = location.state?.from || "/";
-    navigate(from, { replace: true });
-  };
 
   return (
     <Layout>
