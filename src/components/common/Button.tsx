@@ -34,7 +34,7 @@ const Style = styled.button<{
   justify-content: center;
   align-items: center;
   font-family: "Pretendard", sans-serif;
-  cursor: ${({ disabled = false }) => (disabled ? "default" : "pointer")};
+  cursor: ${({ disabled = false }) => (disabled ? "not-allowed" : "pointer")};
   border: none;
 
   ${({ size = "medium", theme }) => {
