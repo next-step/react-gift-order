@@ -62,3 +62,9 @@ export const loginButtonStyle = (theme: ThemeType) => css`
   font-size: ${theme.typography.body1Bold.fontSize};
   cursor: pointer;
 `;
+
+export const loginButtonDisabledStyle = (theme: ThemeType) => css`
+  background-color: ${theme.color.yellow.yellow300};
+  color: ${theme.color.gray.gray500};
+  cursor: not-allowed;
+`;

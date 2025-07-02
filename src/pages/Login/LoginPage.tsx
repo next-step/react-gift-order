@@ -9,6 +9,7 @@ import {
   inputStyle,
   errorTextStyle,
   loginButtonStyle,
+  loginButtonDisabledStyle,
 } from './Login.style';
 
 const LoginPage = () => {
@@ -25,6 +26,7 @@ const LoginPage = () => {
     passwordError,
     handlePasswordChange,
     validatePassword,
+    isValid,
   } = useLoginForm();
 
   const from = location.state?.from?.pathname || '/';
@@ -62,7 +64,11 @@ const LoginPage = () => {
         />
         {passwordError && <p css={errorTextStyle(theme)}>{passwordError}</p>}
 
-        <button onClick={goToLogin} css={loginButtonStyle(theme)}>
+        <button
+          onClick={goToLogin}
+          css={[loginButtonStyle(theme), !isValid && loginButtonDisabledStyle(theme)]}
+          disabled={!isValid}
+        >
           로그인
         </button>
       </div>

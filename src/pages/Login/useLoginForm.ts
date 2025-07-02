@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -39,6 +39,10 @@ export const useLoginForm = () => {
     }
   };
 
+  const isValid = useMemo(() => {
+    return EMAIL_REGEX.test(email) && password.length >= 8;
+  }, [email, password]);
+
   return {
     email,
     emailError,
@@ -49,5 +53,7 @@ export const useLoginForm = () => {
     passwordError,
     handlePasswordChange,
     validatePassword,
+
+    isValid,
   };
 };
