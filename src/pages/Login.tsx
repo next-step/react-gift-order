@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import GlobalStyle from './styles/GlobalStyle';
+import GlobalStyle from '../styles/GlobalStyle';
 import { ThemeProvider } from '@emotion/react';
-import theme from './styles/theme';
+import theme from '../styles/theme';
 import styled from '@emotion/styled';
 
-import Layout from './components/Layout';
-import NavBar from './components/NavBar';
+import Layout from '../components/Layout';
+import NavBar from '../components/NavBar';
 
 const LoginFormWrapper = styled.div`
   height: 100vh;
@@ -77,6 +77,7 @@ function Login() {
 
   const handleLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+
     navigate(from, { replace: true });
   };
 

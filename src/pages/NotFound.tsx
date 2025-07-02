@@ -1,8 +1,8 @@
-import Layout from './components/Layout';
-import NavBar from './components/NavBar';
+import Layout from '../components/Layout';
+import NavBar from '../components/NavBar';
 import { ThemeProvider } from '@emotion/react';
-import GlobalStyle from './styles/GlobalStyle';
-import theme from './styles/theme';
+import GlobalStyle from '../styles/GlobalStyle';
+import theme from '../styles/theme';
 import styled from '@emotion/styled';
 
 import { useNavigate } from 'react-router-dom';
