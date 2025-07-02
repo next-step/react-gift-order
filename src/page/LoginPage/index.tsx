@@ -60,33 +60,21 @@ const P = styled.p`
   text-align: left;
 `;
 
-const ButtonActive = styled.button`
+const Button = styled.button<{ $active: boolean }>`
   width: 100%;
   height: ${({ theme }) => theme.spacing.spacing11};
   font-size: ${({ theme }) => theme.typography.subtitle2Regular.fontSize};
   font-weight: ${({ theme }) => theme.typography.subtitle2Regular.fontWeight};
   line-height: ${({ theme }) => theme.typography.subtitle2Regular.lineHeight};
   color: ${({ theme }) => theme.colors.semantic.text.default};
-  background-color: ${({ theme }) => theme.colors.semantic.brand.kakaoYellow};
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 200ms;
-  margin-top: ${({ theme }) => theme.spacing.spacing7};
-`;
-
-const Button = styled.button`
-  width: 100%;
-  height: ${({ theme }) => theme.spacing.spacing11};
-  font-size: ${({ theme }) => theme.typography.subtitle2Regular.fontSize};
-  font-weight: ${({ theme }) => theme.typography.subtitle2Regular.fontWeight};
-  line-height: ${({ theme }) => theme.typography.subtitle2Regular.lineHeight};
-  color: ${({ theme }) => theme.colors.semantic.text.default};
-  background-color: ${({ theme }) => theme.colors.semantic.brand.kakaoYellowPressed};
   border-radius: 4px;
   border: none;
   transition: background-color 200ms;
   margin-top: ${({ theme }) => theme.spacing.spacing7};
+  background-color: ${({ $active, theme }) =>
+    $active
+      ? theme.colors.semantic.brand.kakaoYellow
+      : theme.colors.semantic.brand.kakaoYellowPressed};
 `;
 
 const LoginPage = () => {
@@ -112,13 +100,14 @@ const LoginPage = () => {
           <Input placeholder="비밀번호" type="password" {...password} />
           {password.error && <P style={{ color: 'red' }}>{password.error}</P>}
         </InputContainer>
-        {isButtonActive ? (
-          <ButtonActive onClick={navigateBackOrHome}>로그인</ButtonActive>
-        ) : (
-          <Button onClick={navigateBackOrHome} disabled={!isButtonActive}>
-            로그인
-          </Button>
-        )}
+        <Button
+          type="button"
+          $active={isButtonActive}
+          disabled={!isButtonActive}
+          onClick={isButtonActive ? navigateBackOrHome : undefined}
+        >
+          로그인
+        </Button>
       </Section>
     </Container>
   );
