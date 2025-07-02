@@ -6,6 +6,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -20,6 +21,18 @@ const Login = () => {
     return '';
   };
 
+  const validatePassword = (password: string) => {
+    if (!password) {
+      return 'PW를 입력해주세요.';
+    }
+    
+    if (password.length < 8) {
+      return 'PW는 최소 8글자 이상이어야 합니다.';
+    }
+    
+    return '';
+  };
+
   const handleEmailBlur = () => {
     const error = validateEmail(email);
     setEmailError(error);
@@ -31,6 +44,18 @@ const Login = () => {
     //에러 상태에서 입력값을 변경해서 정상이되면 에러 메세지 없애기
     const error = validateEmail(email);
     setEmailError(error);
+  };
+
+  const handlePasswordBlur = () => {
+    const error = validatePassword(password);
+    setPasswordError(error);
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const password = e.target.value;
+    setPassword(password);
+    const error = validatePassword(password);
+    setPasswordError(error);
   };
 
   const handleLogin = () => {
@@ -71,8 +96,11 @@ const Login = () => {
               type="password"
               placeholder="비밀번호"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handlePasswordChange}
+              onBlur={handlePasswordBlur}
+              hasError={!!passwordError}
             />
+            {passwordError && <S.ErrorMessage>{passwordError}</S.ErrorMessage>}
           </S.InputContainer>
           
           <S.Spacer />
