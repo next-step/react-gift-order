@@ -7,6 +7,9 @@ export function useEmailValidation(initialValue = "") {
     isEmpty: false,
     invalidFormat: false,
   });
+  const handleEmailChange = (value: string) => {
+    setEmail(value);
+  };
 
   const validateEmail = (value: string) => {
     const hasValue = isNotEmpty(value);
@@ -20,14 +23,24 @@ export function useEmailValidation(initialValue = "") {
     setEmailErrors(errors);
   };
 
-  const handleEmailChange = (value: string) => {
-    setEmail(value);
+  const getFormErrorMessage = () => {
+    if (emailErrors.isEmpty) {
+      return "ID를 입력해주세요.";
+    }
+    if (emailErrors.invalidFormat) {
+      return "ID는 이메일 형식으로 입력해주세요.";
+    }
+    return null;
   };
+
+  const hasError = emailErrors.isEmpty || emailErrors.invalidFormat;
 
   return {
     email,
     emailErrors,
     handleEmailChange,
     validateEmail,
+    getFormErrorMessage,
+    hasError,
   };
 }

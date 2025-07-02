@@ -1,11 +1,17 @@
 import { useRef } from "react";
 import { LOGIN_LABELS } from "../constants/labels";
-import { ErrorMessage, InputField } from "../LoginPage.styles";
+import { InputField } from "../LoginPage.styles";
+import FormErrorMessage from "./FormErrorMessage";
 import { useEmailValidation } from "../hooks/useEmailValidation";
 
 function IDField() {
-  const { email, emailErrors, handleEmailChange, validateEmail } =
-    useEmailValidation();
+  const {
+    email,
+    handleEmailChange,
+    validateEmail,
+    getFormErrorMessage,
+    hasError,
+  } = useEmailValidation();
   const isEmailBlurredRef = useRef(false);
 
   const handleChange = (value: string) => {
@@ -30,13 +36,9 @@ function IDField() {
         onChange={(e) => handleChange(e.target.value)}
         onBlur={(e) => handleBlur(e.target.value)}
         required
-        isError={emailErrors.isEmpty || emailErrors.invalidFormat}
+        isError={hasError}
       />
-      {emailErrors.isEmpty ? (
-        <ErrorMessage>ID를 입력해주세요.</ErrorMessage>
-      ) : emailErrors.invalidFormat ? (
-        <ErrorMessage>ID는 이메일 형식으로 입력해주세요.</ErrorMessage>
-      ) : null}
+      <FormErrorMessage errorMessage={getFormErrorMessage()} />
     </>
   );
 }
