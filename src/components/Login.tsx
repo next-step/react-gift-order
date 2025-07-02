@@ -108,6 +108,11 @@ const Login = () => {
   const [emailTouched, setEmailTouched] = useState(false);
   const [emailError, setEmailError] = useState('');
 
+  const [pw, setPw] = useState('');
+  const [pwFocused, setPwFocused] = useState(false);
+  const [pwTouched, setPwTouched] = useState(false);
+  const [pwError, setPwError] = useState('');
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -119,9 +124,21 @@ const Login = () => {
     return '';
   };
 
+  const validatePassword = (value: string) => {
+    if (!value) return 'PW를 입력해주세요.';
+    if (value.length < 8) return 'PW는 최소 8글자 이상이어야 합니다.';
+    return '';
+  };
+
   useEffect(() => {
     setEmailError(validateEmail(email));
   }, [email, emailTouched]);
+
+  useEffect(() => {
+    if (pwTouched) {
+      setPwError(validatePassword(pw));
+    }
+  }, [pw, pwTouched]);
 
   const loginClicked = () => {
     const from = location.state?.from?.pathname || '/';
@@ -155,11 +172,19 @@ const Login = () => {
 
         <div css={inputDiv}>
           <input
-            // pw작업시 inputStyle의 값을 바꿔주어야 함.
-            css={inputStyle(false, false, false)}
+            css={inputStyle(pwFocused, !!pwError, pwTouched)}
             placeholder="비밀번호"
             type="password"
+            value={pw}
+            onChange={(e) => setPw(e.target.value)}
+            onFocus={() => setPwFocused(true)}
+            onBlur={() => {
+              setPwFocused(false);
+              setPwTouched(true);
+              setPwError(validatePassword(pw));
+            }}
           />
+          {pwTouched && pwError && <p css={errorMessageStyle}>{pwError}</p>}
         </div>
 
         <div css={spacer48} />
