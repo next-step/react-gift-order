@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { emailInputStyle, errorTextStyle } from "./style";
 
-export default function EmailInput({
-  onValidityChange,
-}: {
+type EmailInputProps = {
   onValidityChange: (valid: boolean) => void;
-}) {
+};
+
+export default function EmailInput({ onValidityChange }: EmailInputProps) {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
 
@@ -29,10 +29,8 @@ export default function EmailInput({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setEmail(value);
-    if (error) {
-      setError("");
-    }
     const errorMessage = validateEmail(value);
+    setError(errorMessage);
     onValidityChange(errorMessage === "");
   };
 
