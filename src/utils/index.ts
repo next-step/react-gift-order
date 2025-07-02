@@ -1,1 +1,6 @@
-export { isValidEmail, getEmailErrorMessage } from './validation';
+export {
+  isValidEmail,
+  getEmailErrorMessage,
+  isValidPassword,
+  getPasswordErrorMessage,
+} from './validation';

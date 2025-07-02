@@ -20,3 +20,21 @@ export const getEmailErrorMessage = (email: string): string | null => {
 
   return null;
 };
+
+export const isValidPassword = (password: string): boolean => {
+  return password.trim().length >= 8;
+};
+
+export const getPasswordErrorMessage = (password: string): string | null => {
+  const trimmedPassword = password.trim();
+
+  if (!trimmedPassword) {
+    return 'PW를 입력해주세요.';
+  }
+
+  if (trimmedPassword.length < 8) {
+    return 'PW는 최소 8글자 이상이어야 합니다.';
+  }
+
+  return null;
+};
