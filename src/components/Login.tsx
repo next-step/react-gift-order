@@ -1,7 +1,7 @@
 import type { Theme } from "@emotion/react";
 import { useTheme } from "@emotion/react";
 import { css } from "@emotion/react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
 
 const exp = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
@@ -9,17 +9,17 @@ const exp = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 const Login = () => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const ref = useRef(null);
 
   const [email, setEmail] = useState("");
-  const [isValidEmail, setIsValidEmail] = useState(true);
+  const [isValidEmail, setIsValidEmail] = useState(false);
   const [emailMessage, setEmailMessage] = useState("");
 
   const [password, setPassword] = useState("");
-  const [isValidPassword, setIsValidPassword] = useState(true);
+  const [isValidPassword, setIsValidPassword] = useState(false);
   const [passwordMessage, setPasswordMessage] = useState("");
-
-  // 이메일 유효성 검사 함수
-
+  const isEnabled = isValidEmail && isValidPassword;
+  // console.log(isEnabled);
   return (
     <div css={containerStyle(theme)}>
       <h1 css={textSytle(theme)}>로그인</h1>
@@ -45,6 +45,7 @@ const Login = () => {
         <p style={{ color: "red", fontSize: "12px", marginTop: "4px" }}>
           {emailMessage}
         </p>
+
         <input
           onChange={(event) => {
             setPassword(event.target.value);
@@ -63,7 +64,11 @@ const Login = () => {
           type="password"
           placeholder="비밀번호"
         />
+        <p style={{ color: "red", fontSize: "12px", marginTop: "4px" }}>
+          {passwordMessage}
+        </p>
       </div>
+
       <button
         onClick={() => {
           if (window.history.length) {
@@ -72,7 +77,9 @@ const Login = () => {
             navigate("/");
           }
         }}
-        css={buttonSytle(theme)}
+        ref={ref}
+        css={buttonSytle(theme, isEnabled)}
+        disabled={!isEnabled} // 선택사항, 접근성 위해 넣어도 좋아
       >
         로그인
       </button>
@@ -82,14 +89,18 @@ const Login = () => {
 
 export default Login;
 
-const buttonSytle = (theme: Theme) => css`
-  background-color: ${theme.colors.semantic.kakaoYellow}; // 배경색 변경
-  border: 1px solid ${theme.colors.semantic.kakaoYellow}; // 테두리 색상 변경
-  color: inherit; // 글자색은 그대로 유지
+const buttonSytle = (theme: Theme, enabled: boolean) => css`
+  background-color: ${enabled
+    ? theme.colors.semantic.kakaoYellow
+    : "rgba(255, 230, 0, 0.5)"};
+  border: 1px solid
+    ${enabled ? theme.colors.semantic.kakaoYellow : "rgba(255, 230, 0, 0.5)"};
+  color: ${enabled ? "inherit" : theme.colors.gray.gray500};
   align-items: center;
   width: 60%;
   height: 48px;
-  font-color: ${theme.colors.gray.gray500}; // 글자색 변경
+  cursor: ${enabled ? "pointer" : "not-allowed"};
+  transition: background-color 0.3s ease;
 `;
 
 const textSytle = (theme: Theme) => css`
