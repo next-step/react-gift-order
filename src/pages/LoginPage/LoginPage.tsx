@@ -13,6 +13,15 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
+  const handleEmailChange = (email: string) => {
+    setEmail(email);
+  };
+
+  const isValidEmail = (email: string) => {
+    setEmail(email);
+    return /^[\w.-]+@[\w-]+\.\w+$/.test(email);
+  };
+
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
@@ -35,7 +44,7 @@ function LoginPage() {
               type="email"
               placeholder={LOGIN_LABELS.EMAIL_PLACEHOLDER}
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => handleEmailChange(e.target.value)}
               required
             />
             <InputField
