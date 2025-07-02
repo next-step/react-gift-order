@@ -20,15 +20,15 @@ const LoginForm = () => {
     if (!newEmail.trim()) {
       return "ID를 입력해주세요.";
     } else if (!validateEmail(newEmail)) {
-      return "올바른 이메일 형식이 아닙니다.";
+      return "ID는 이메일 형식으로 입력해주세요.";
     }
     return "";
   };
   const checkPasswordError = (newPassword: string): string => {
     if (!newPassword.trim()) {
-      return "비밀번호를 입력해주세요.";
+      return "PW를 입력해주세요.";
     } else if (newPassword.length < 8) {
-      return "비밀번호는 8자 이상이어야 합니다.";
+      return "PW는 최소 8글자 이상이어야 합니다.";
     }
     return "";
   };
@@ -76,7 +76,7 @@ const LoginForm = () => {
       {passwordError && <ErrorMessage message={passwordError} />}
       <Button
         type="submit"
-        disabled={!email || !password || !!emailError || !!passwordError}
+        disabled={!!checkEmailError(email) || !!checkPasswordError(password)}
       >
         로그인
       </Button>
