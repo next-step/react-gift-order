@@ -1,4 +1,5 @@
 import { ROUTE_PATH } from "@/constants";
+import { getUserInfo } from "@/utils";
 import styled from "@emotion/styled";
 import { ChevronLeft, UserRound } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -38,9 +39,14 @@ export const Header = () => {
   const location = useLocation();
 
   const handleLoginClick = () => {
-    navigate(
-      `${ROUTE_PATH.LOGIN}?redirect=${encodeURIComponent(location.pathname)}`,
-    );
+    const userEmail = getUserInfo();
+    if (userEmail) {
+      navigate(ROUTE_PATH.MY);
+    } else {
+      navigate(
+        `${ROUTE_PATH.LOGIN}?redirect=${encodeURIComponent(location.pathname)}`,
+      );
+    }
   };
 
   const handleTitleClick = () => {
