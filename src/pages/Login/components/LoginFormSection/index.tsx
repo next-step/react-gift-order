@@ -4,28 +4,62 @@ import { ROUTE_PATH } from '@/pages/Routes';
 import styled from '@emotion/styled';
 import { useNavigate, useSearchParams } from 'react-router';
 
-export const LoginFormSection = () => {
-  const [searchParams] = useSearchParams();
-  const redirect = searchParams.get('redirect');
-  const navigate = useNavigate();
+// export const LoginFormSection = () => {
+//   const [searchParams] = useSearchParams();
+//   const redirect = searchParams.get('redirect');
+//   const navigate = useNavigate();
 
-  const handleSubmit = () => {
-    const redirectUrl = redirect ? decodeURIComponent(redirect) : ROUTE_PATH.HOME;
+//   const handleSubmit = () => {
+//     const redirectUrl = redirect ? decodeURIComponent(redirect) : ROUTE_PATH.HOME;
 
-    navigate(redirectUrl);
-  };
+//     navigate(redirectUrl);
+//   };
 
+//   return (
+//     <Wrapper>
+//       <UnderlineInputField placeholder='이메일' />
+//       <HorizontalSpacing size='spacing4' />
+//       <UnderlineInputField placeholder='비밀번호' type='password' />
+//       <HorizontalSpacing size='spacing12' />
+//       <Button onClick={handleSubmit}>로그인</Button>
+//     </Wrapper>
+//   );
+// };
+
+export interface LoginFormSectionProps {
+  email: string;
+  password: string;
+  onChangeEmail: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChangePassword: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSubmit: () => void;
+}
+
+export const LoginFormSection = ({
+  email,
+  password,
+  onChangeEmail,
+  onChangePassword,
+  onSubmit,
+}: LoginFormSectionProps) => {
   return (
     <Wrapper>
-      <UnderlineInputField placeholder='이메일' />
-      <HorizontalSpacing size='spacing4' />
-      <UnderlineInputField placeholder='비밀번호' type='password' />
-      <HorizontalSpacing size='spacing12' />
-      <Button onClick={handleSubmit}>로그인</Button>
+      <UnderlineInputField
+        placeholder="이메일"
+        value={email}
+        onChange={onChangeEmail}
+      />
+      <HorizontalSpacing size="spacing4" />
+      <UnderlineInputField
+        placeholder="비밀번호"
+        type="password"
+        value={password}
+        onChange={onChangePassword}
+      />
+      <HorizontalSpacing size="spacing12" />
+      <Button onClick={onSubmit}>로그인</Button>
     </Wrapper>
   );
 };
-
 const Wrapper = styled.section(({ theme }) => ({
   width: '100%',
   maxWidth: '26.25rem',

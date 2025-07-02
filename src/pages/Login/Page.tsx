@@ -1,12 +1,11 @@
 import styled from '@emotion/styled';
 import logo from '@/resources/images/kakao_logo.svg';
-import { LoginFormSection } from './components/LoginFormSection';
-
+import { LoginLogic } from './components/LoginFormSection/LoginLogic';
 const LoginPage = () => {
   return (
     <Wrapper>
       <Logo src={logo} alt='카카오 공식 로고' />
-      <LoginFormSection />
+      <LoginLogic />
     </Wrapper>
   );
 };
