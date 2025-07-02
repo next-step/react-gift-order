@@ -4,6 +4,7 @@ import MobileLayout from '@/layouts/MobileLayout';
 import NavBar from '@/components/NavBar';
 import logo from '@/assets/logo.svg';
 import KakaoButton from '@/components/common/KakaoButton';
+import useLoginForm from '@/hooks/useLoginForm';
 
 const Wrapper = styled.div`
   display: flex;
@@ -55,12 +56,14 @@ const ButtonWrapper = styled.div`
 `;
 
 export default function LoginPage() {
+  const { values, errors, handleChange, handleBlur, isValid } = useLoginForm();
   const navigate = useNavigate();
   const location = useLocation();
   const from = (location.state as { from?: string })?.from || '/';
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isValid) return;
     navigate(from, { replace: true });
   };
 
@@ -71,8 +74,22 @@ export default function LoginPage() {
         <Content>
           <LogoImg src={logo} alt="kakao 로고" />
           <Form onSubmit={handleSubmit}>
-            <Input placeholder="이메일" type="email" />
-            <Input placeholder="비밀번호" type="password" />
+            <Input
+              name="email"
+              placeholder="이메일"
+              type="email"
+              value={values.email}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            <Input
+              name="password"
+              placeholder="비밀번호"
+              type="password"
+              value={values.password}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
             <ButtonWrapper>
               <KakaoButton type="submit" fullWidth>
                 로그인
