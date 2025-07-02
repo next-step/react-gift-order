@@ -1,6 +1,4 @@
-import { LoginForm } from "@/components/login/LoginForm";
-import { LoginLayout } from "@/components/login/LoginLayout";
-import { LoginLogo } from "@/components/login/LoginLogo";
+import { LoginLogo, LoginForm, LoginLayout } from "@/components/login";
 
 export const LoginPage = () => {
   return (

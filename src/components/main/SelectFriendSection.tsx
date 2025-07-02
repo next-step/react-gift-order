@@ -1,3 +1,4 @@
+import { getUserInfo } from "@/utils";
 import styled from "@emotion/styled";
 import { Plus } from "lucide-react";
 
@@ -37,6 +38,9 @@ const FriendSectionDescription = styled.p(({ theme }) => ({
 }));
 
 export const SelectFriendSection = () => {
+  const userInfo = getUserInfo();
+  const userName = userInfo ? userInfo.email.split("@")[0] : "";
+
   return (
     <FriendSectionWrapper>
       <FriendSectionContainer>
@@ -44,7 +48,9 @@ export const SelectFriendSection = () => {
           <Plus />
         </FriendSectionIconCircle>
         <FriendSectionDescription>
-          선물할 친구를 선택해 주세요.
+          {userName
+            ? `${userName}님! 선물할 친구를 선택해 주세요.`
+            : "선물할 친구를 선택해 주세요."}
         </FriendSectionDescription>
       </FriendSectionContainer>
     </FriendSectionWrapper>

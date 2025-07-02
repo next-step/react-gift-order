@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 
-type ButtonVariant = "primary" | "secondary";
+type ButtonVariant = "primary" | "secondary" | "outlined";
 type ButtonSize = "medium" | "large";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -23,7 +23,7 @@ const StyledButton = styled.button<ButtonProps>(
 
     ...(size === "large" && {
       height: "44px",
-      padding: `${theme.spacing3} ${theme.spacing6}`,
+      padding: `${theme.spacing3} 0`,
     }),
     ...(size === "medium" && {
       padding: `${theme.spacing4} ${theme.spacing6}`,
@@ -39,6 +39,20 @@ const StyledButton = styled.button<ButtonProps>(
       color: theme.color.gray[900],
       border: "1px solid rgb(220,222,227)",
     }),
+
+    ...(variant === "outlined" && {
+      backgroundColor: theme.color.gray[300],
+      color: theme.color.gray[900],
+      border: "none",
+    }),
+
+    "&:disabled": {
+      cursor: "not-allowed",
+      opacity: 0.5,
+      "&:hover": {
+        cursor: "not-allowed",
+      },
+    },
   }),
 );
 
@@ -46,11 +60,18 @@ export const Button = ({
   variant = "primary",
   size = "medium",
   width = "auto",
+  disabled,
   children,
   ...props
 }: ButtonProps) => {
   return (
-    <StyledButton variant={variant} size={size} width={width} {...props}>
+    <StyledButton
+      variant={variant}
+      size={size}
+      width={width}
+      disabled={disabled}
+      {...props}
+    >
       {children}
     </StyledButton>
   );

@@ -47,3 +47,20 @@ export const SecondaryFullWidth: Story = {
     children: "Secondary",
   },
 };
+
+export const Outlined: Story = {
+  args: {
+    variant: "outlined",
+    size: "large",
+    children: "Outlined",
+  },
+};
+
+export const OutlinedFullWidth: Story = {
+  args: {
+    variant: "outlined",
+    size: "large",
+    width: "100%",
+    children: "Outlined",
+  },
+};

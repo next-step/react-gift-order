@@ -20,3 +20,9 @@ type Story = StoryObj<typeof LoginButton>;
 export const Default: Story = {
   args: {},
 };
+
+export const Disabled: Story = {
+  args: {
+    isDisabled: true,
+  },
+};
