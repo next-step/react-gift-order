@@ -10,7 +10,7 @@ function usePasswordValidation() {
   });
 
   const handlePasswordValueChange = (value: string) => {
-    setPassword(value);
+    setPassword(value.trim());
   };
 
   const validatePassword = (value: string) => {

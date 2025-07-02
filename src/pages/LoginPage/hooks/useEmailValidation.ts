@@ -10,7 +10,7 @@ export function useEmailValidation(initialValue = "") {
   });
 
   const handleEmailValueChange = (value: string) => {
-    setEmail(value);
+    setEmail(value.trim());
   };
 
   const validateEmail = (value: string) => {
