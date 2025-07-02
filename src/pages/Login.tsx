@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { TopNavBar } from '@/components/TopNavBar';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import useValidateId from '@/hooks/useValidateId';
 import useValidatePassword from '@/hooks/useValidatePassword';
+import useUserInfo from '@/hooks/useUserInfo';
 
 const Container = styled.div`
   display: flex;
@@ -88,6 +89,8 @@ const Button = styled.button`
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const nextPath = location.state?.from || -1;
   const [emailIsClicked, setEmailIsClicked] = useState(false);
   const [passwordIsClicked, setPasswordIsClicked] = useState(false);
   const [email, setEmail, isFirstIdTry, setIsFirstIdTry, idError] = useValidateId();
@@ -95,7 +98,9 @@ const Login = () => {
     useValidatePassword();
   const [idInputFieldStyle, setIdInputFieldStyle] = useState('idle');
   const [pwdInputFieldStyle, setPwdInputFieldStyle] = useState('idle');
+  const isFirstTry = isFirstIdTry || isFirstPwdTry;
   const isAllValid = !idError && !passwordError;
+  const { setUser } = useUserInfo();
 
   const handleInputFieldStyle = useCallback(
     (type: string, isFirstTry: boolean, isClicked: boolean, error: string) => {
@@ -170,7 +175,12 @@ const Login = () => {
             type="password"
             placeholder="비밀번호"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              if (isFirstPwdTry && e.target.value.length > 7) {
+                setIsFirstPwdTry(false);
+              }
+              setPassword(e.target.value);
+            }}
             onFocus={() => setPasswordIsClicked(true)}
             onBlur={() => {
               setIsFirstPwdTry(false);
@@ -181,9 +191,10 @@ const Login = () => {
         </div>
         <Button
           onClick={() => {
-            navigate('/');
+            setUser({ id: email, password: password });
+            navigate(nextPath, { replace: true });
           }}
-          disabled={!isAllValid}
+          disabled={isFirstTry ? true : !isAllValid}
         >
           로그인
         </Button>
