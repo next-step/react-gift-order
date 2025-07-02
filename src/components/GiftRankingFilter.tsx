@@ -79,6 +79,7 @@ export default function GiftRankingFilter() {
     getValidStoredValue(LOCAL_TAB_KEY, tabOptions, tabOptions[0])
   );
 
+
   const handleFilterChange = (key: FilterKey) => {
     setSelected(key);
     localStorage.setItem(LOCAL_FILTER_KEY, key);

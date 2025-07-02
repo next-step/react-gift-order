@@ -16,6 +16,7 @@ const containerStyle = css`
   align-items: center;
 `;
 
+
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
@@ -28,6 +29,7 @@ const App = () => {
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </BrowserRouter>
+
       </div>
     </ThemeProvider>
   );

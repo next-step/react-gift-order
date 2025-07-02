@@ -4,6 +4,7 @@ import { FiArrowLeft, FiUser } from 'react-icons/fi';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useInputWithValidation } from '../hooks/useInputValidation';
 
+
 const PageWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -44,7 +45,8 @@ const LoginContainer = styled.div`
 const InputStyle = styled.input`
   width: 100%;
   padding: 12px 0;
-  margin-bottom: 4px;
+  margin-bottom: 24px;
+
   border: none;
   border-bottom: 1px solid #ccc;
   outline: none;
@@ -59,6 +61,7 @@ const InputStyle = styled.input`
   }
 `;
 
+
 const ErrorText = styled.p`
   width: 100%;
   margin-bottom: 16px;
@@ -70,6 +73,7 @@ const ErrorText = styled.p`
 const LoginButton = styled.button<{ disabled: boolean }>`
   background-color: ${({ theme, disabled }) =>
     disabled ? theme.colors.yellow300 : theme.colors.kakaoYellow};
+
   font-size: ${({ theme }) => theme.typography.body2Regular.fontSize};
   font-weight: ${({ theme }) =>
     theme.typography.body2Regular.fontWeight};
@@ -99,6 +103,7 @@ const validatePassword = (value: string) => {
     : 'PW는 최소 8글자 이상이어야 합니다.';
 };
 
+
 const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -111,6 +116,7 @@ const Login = () => {
   const handleLogin = () => {
     if (!isFormValid) return;
     const redirectPath = location.state?.from?.pathname;
+
     if (redirectPath) {
       navigate(redirectPath, { replace: true });
     } else {
@@ -163,6 +169,7 @@ const Login = () => {
         </LoginContainer>
       </MainContent>
     </PageWrapper>
+
   );
 };
 
