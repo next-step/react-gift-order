@@ -24,11 +24,18 @@ a:hover {
 
 body {
   margin: 0;
+<<<<<<< HEAD
   padding: 0;
   min-width: 320px;
   min-height: 100vh;
   background-color: #fff;
   font-family: 'Pretendard', sans-serif;
+=======
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+>>>>>>> 61b7afae1aaafde5e5ecd7b798f1931386f866b8
 }
 
 h1 {

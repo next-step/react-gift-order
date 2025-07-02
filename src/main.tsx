@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import Root from './Root';
 import './index.css';
 
-// ✅ Emotion ThemeProvider와 Global 추가
+
 import { ThemeProvider, Global } from '@emotion/react';
 import { theme } from './styles/theme';
 import { globalReset } from './styles/reset';
