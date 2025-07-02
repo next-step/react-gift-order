@@ -113,6 +113,8 @@ const Login = () => {
   const [pwTouched, setPwTouched] = useState(false);
   const [pwError, setPwError] = useState('');
 
+  const [loginActivated, setLoginActivated] = useState(false);
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -139,6 +141,12 @@ const Login = () => {
       setPwError(validatePassword(pw));
     }
   }, [pw, pwTouched]);
+
+  useEffect(() => {
+    const emailValid = validateEmail(email) === '';
+    const pwValid = validatePassword(pw) === '';
+    setLoginActivated(emailValid && pwValid);
+  }, [email, pw]);
 
   const loginClicked = () => {
     const from = location.state?.from?.pathname || '/';
@@ -189,7 +197,11 @@ const Login = () => {
 
         <div css={spacer48} />
 
-        <button css={buttonStyle} onClick={loginClicked}>
+        <button
+          css={buttonStyle}
+          onClick={loginClicked}
+          disabled={!loginActivated}
+        >
           로그인
         </button>
       </section>
