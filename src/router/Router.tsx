@@ -4,7 +4,7 @@ import LoginPage from "@src/pages/LoginPage";
 import Mainpage from "@src/pages/MainPage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-const PATH = { MAIN: "/", LOGIN: "/login", EXCEPT: "*" } as const;
+const PATH = { MAIN: "/", LOGIN: `/login`, EXCEPT: "*" } as const;
 
 function Router() {
   return (
