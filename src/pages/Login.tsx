@@ -3,6 +3,7 @@ import { PageContainer } from "@/components/layout/PageContainer";
 import { LoginForm } from "@/components/login/LoginForm";
 import styled from "@emotion/styled";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useLoginForm } from "@/hooks/useLoginForm"; 
 
 const Container = styled.div`
   width: 100%;
@@ -24,6 +25,14 @@ const LoginPage = () => {
   const location = useLocation();
   const redirectPath = location.state?.from?.pathname || "/";
 
+  const {
+    email,
+    password,
+    emailError,
+    handleChange,
+    handleBlur,
+  } = useLoginForm();
+
   const handleLogin = () => {
     navigate(redirectPath, { replace: true });
   };
@@ -33,7 +42,15 @@ const LoginPage = () => {
       <Navigation />
       <Container>
         <Logo src="/assets/kakao_logo.svg" alt="카카오 로고" />
-        <LoginForm onSubmit={handleLogin} disabled={true} />
+        <LoginForm
+          email={email}
+          password={password}
+          emailError={emailError}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          onSubmit={handleLogin}
+          disabled={true}
+        />
       </Container>
     </PageContainer>
   );
