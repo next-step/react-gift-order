@@ -1,7 +1,7 @@
 import type { ThemeType } from "@/types/ThemeType";
 import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import RankingList from "@/components/RankingList";
 import { rankingTargetCategory } from "@/assets/rankingTargetCategory";
 import { useSearchParams } from "react-router-dom";
@@ -33,15 +33,14 @@ const Ranking = () => {
   const [selectedTargetCategory, setSelectedTargetCategory] = useState(targetTypeCategory);
   const [selectedRankCategory, setSelectedRankCategory] = useState(rankTypeCategory);
   const theme = useTheme();
-  const isSelected = (element: string, selected: string) => {
-    return element === selected;
-  };
 
-  useEffect(() => {
+  const handleSelectedChange = () => {
     rankingCategoryParams.set("targetType", selectedTargetCategory);
     rankingCategoryParams.set("rankType", selectedRankCategory);
-    setRankCategoryParams(rankingCategoryParams);
-  }, [selectedTargetCategory, selectedRankCategory]);
+    setRankCategoryParams(rankingCategoryParams, {
+      replace: true,
+    });
+  };
   return (
     <Container>
       <Title>실시간 급상승 선물랭킹</Title>
@@ -52,6 +51,7 @@ const Ranking = () => {
               key={e.targetType}
               onClick={() => {
                 setSelectedTargetCategory(e.targetType);
+                handleSelectedChange();
               }}
             >
               <TargetCategoryImg selected={isSelected(e.targetType, selectedTargetCategory)} theme={theme}>
@@ -71,6 +71,7 @@ const Ranking = () => {
               theme={theme}
               onClick={() => {
                 setSelectedRankCategory(keyword);
+                handleSelectedChange();
               }}
             >
               {value}
@@ -81,6 +82,10 @@ const Ranking = () => {
       <RankingList />
     </Container>
   );
+};
+
+const isSelected = (element: string, selected: string) => {
+  return element === selected;
 };
 
 const Container = styled.section`

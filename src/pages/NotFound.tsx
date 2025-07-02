@@ -8,7 +8,7 @@ const NOT_FOUND_IMG_URL = "https://gift-s.kakaocdn.net/dn/gift/webapp/images/m64
 
 const NotFound = () => {
   const navigate = useNavigate();
-  const handleBtnClick = () => {
+  const goHome = () => {
     navigate(ROUTE_PATH.HOME);
   };
   return (
@@ -19,7 +19,7 @@ const NotFound = () => {
           <Title>잘못된 접근입니다.</Title>
           <Msg>찾으시는 페이지가 존재하지 않습니다.</Msg>
         </Wrapper>
-        <Button onClick={handleBtnClick}>홈으로</Button>
+        <Button onClick={goHome}>홈으로</Button>
       </Content>
     </Container>
   );
