@@ -4,7 +4,7 @@ import KakaoLogo from "@/assets/kakaologo.svg";
 import PageContainer from "@/components/PageContainer";
 import Input from "@/components/Input";
 import { useInput } from "@/hooks/useInput";
-import { validateEmail } from "@/utils/validate";
+import { validateEmail, validatePassword } from "@/utils/validate";
 
 const LogoImage = styled.img`
   width: 88px;
@@ -41,6 +41,13 @@ export default function LoginPage() {
     isValid: isEmailValid,
   } = useInput("", validateEmail);
 
+  const {
+    value: password,
+    error: passwordError,
+    onChange: onPasswordChange,
+    onBlur: onPasswordBlur,
+    isValid: isPasswordValid,
+  } = useInput("", validatePassword);
 
   const handleLogin = () => {
     if (window.history.length > 2) {
@@ -61,7 +68,14 @@ export default function LoginPage() {
         onBlur={onEmailBlur}
         error={emailError}
       />
-      <Input type="password" placeholder="비밀번호" />
+      <Input
+        type="password"
+        placeholder="비밀번호"
+        value={password}
+        onChange={onPasswordChange}
+        onBlur={onPasswordBlur}
+        error={passwordError}
+      />
       <Button onClick={handleLogin}>로그인</Button>
     </PageContainer>
   );
