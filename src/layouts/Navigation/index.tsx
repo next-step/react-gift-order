@@ -1,5 +1,5 @@
+import useNavigateBackOrHome from '@/hooks/useNavigateBackOrHome';
 import { BackButton, Container, LogoImage, LogoLink, Nav, UserIconLink } from './styles';
-import { useNavigate } from 'react-router-dom';
 
 const BackIcon = () => (
   <svg
@@ -37,20 +37,12 @@ const UserIcon = () => (
 );
 
 const Navigation = () => {
-  const navigate = useNavigate();
-
-  const handleBackClick = () => {
-    if (window.history.length > 1) {
-      navigate(-1);
-    } else {
-      navigate('/');
-    }
-  };
+  const navigateBackOrHome = useNavigateBackOrHome();
 
   return (
     <Container>
       <Nav>
-        <BackButton onClick={handleBackClick}>
+        <BackButton onClick={navigateBackOrHome}>
           <BackIcon />
         </BackButton>
 
