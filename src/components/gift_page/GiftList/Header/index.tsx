@@ -148,27 +148,50 @@ export const Header = () => {
     <Container>
       <Title>실시간 급상승 선물랭킹</Title>
       <TargetBtnContainer>
-        <TargetButton type="All" isClicked={allIsClicked} setCurrentTarget={setCurrentTarget} />
         <TargetButton
-          type="Female"
+          targetType="All"
+          isClicked={allIsClicked}
+          setCurrentTarget={setCurrentTarget}
+          aria-pressed={allIsClicked}
+        />
+        <TargetButton
+          targetType="Female"
           isClicked={femaleIsClicked}
           setCurrentTarget={setCurrentTarget}
+          aria-pressed={femaleIsClicked}
         />
-        <TargetButton type="Male" isClicked={maleIsClicked} setCurrentTarget={setCurrentTarget} />
-        <TargetButton type="Youth" isClicked={youthIsClicked} setCurrentTarget={setCurrentTarget} />
+        <TargetButton
+          targetType="Male"
+          isClicked={maleIsClicked}
+          setCurrentTarget={setCurrentTarget}
+          aria-pressed={maleIsClicked}
+        />
+        <TargetButton
+          targetType="Youth"
+          isClicked={youthIsClicked}
+          setCurrentTarget={setCurrentTarget}
+          aria-pressed={youthIsClicked}
+        />
       </TargetBtnContainer>
       <TopicBtnContainer>
         <Wrapper>
-          <TopicButton type="Wanted" isClicked={isWanted} setCurrentTopic={setCurrentTopic} />
           <TopicButton
-            type="MostGifted"
-            isClicked={isMostGifted}
+            topicType="Wanted"
+            isClicked={isWanted}
             setCurrentTopic={setCurrentTopic}
+            aria-pressed={isWanted}
           />
           <TopicButton
-            type="Wishlisted"
+            topicType="MostGifted"
+            isClicked={isMostGifted}
+            setCurrentTopic={setCurrentTopic}
+            aria-pressed={isMostGifted}
+          />
+          <TopicButton
+            topicType="Wishlisted"
             isClicked={isWishlisted}
             setCurrentTopic={setCurrentTopic}
+            aria-pressed={isWishlisted}
           />
         </Wrapper>
       </TopicBtnContainer>

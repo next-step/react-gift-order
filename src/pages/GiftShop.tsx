@@ -1,10 +1,9 @@
 import styled from '@emotion/styled';
-import { Header } from '@/components/Header';
+import { TopNavBar } from '@/components/TopNavBar';
 import { Category } from '@/components/gift_page/Category';
 import { SelectFriend } from '@/components/gift_page/SelectFriend';
 import { Banner } from '@/components/gift_page/Banner';
 import { GiftList } from '@/components/gift_page/GiftList';
-import type { Path } from '@/types/path';
 
 const Container = styled.div`
   display: flex;
@@ -19,10 +18,10 @@ const Container = styled.div`
   background-color: ${({ theme }) => theme.colors.gray200};
 `;
 
-const GiftShop = ({ prevPath, setPrevPath }: Path) => {
+const GiftShop = () => {
   return (
     <Container>
-      <Header title="선물하기" mainPath="/" prevPath={prevPath} setPrevPath={setPrevPath} />
+      <TopNavBar title="선물하기" mainPath="/" />
       <SelectFriend />
       <Category />
       <Banner />

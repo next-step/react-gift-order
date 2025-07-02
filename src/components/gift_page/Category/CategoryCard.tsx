@@ -17,7 +17,7 @@ const Image = styled.img`
 `;
 
 const Name = styled.div`
-  ${({ theme }) => theme.typography.label2Regular};
+  ${({ theme }) => theme.typography.label2Regular}
   margin-top: ${({ theme }) => theme.spacing.spacing1};
   margin-bottom: ${({ theme }) => theme.spacing.spacing5};
 `;

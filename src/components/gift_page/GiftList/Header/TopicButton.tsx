@@ -1,7 +1,9 @@
 import type { TopicButtonType } from '@/types/button';
 import styled from '@emotion/styled';
 
-const Button = styled.div`
+const Button = styled.button`
+  all: unset;
+  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -10,32 +12,38 @@ const Button = styled.div`
   background-color: ${({ theme }) => theme.colors.blue100};
 `;
 
-const Text = styled.button<{ isClicked: boolean }>`
-  all: unset;
+const Text = styled.div<{ isClicked: boolean }>`
   cursor: pointer;
   ${({ theme }) => theme.typography.label1Bold}
   color: ${({ theme, isClicked }) => (isClicked ? theme.colors.blue700 : theme.colors.blue400)};
   transition: color 0.3s;
 `;
 
-export const TopicButton = ({ type, isClicked, setCurrentTopic }: TopicButtonType) => {
+export const TopicButton = ({
+  topicType,
+  isClicked,
+  setCurrentTopic,
+  ...props
+}: TopicButtonType) => {
   let text = '?';
   const texts = ['받고 싶어한', '많이 선물한', '위시로 받은'];
 
-  if (type === 'Wanted') {
+  if (topicType === 'Wanted') {
     text = texts[0];
-  } else if (type === 'MostGifted') {
+  } else if (topicType === 'MostGifted') {
     text = texts[1];
-  } else if (type === 'Wishlisted') {
+  } else if (topicType === 'Wishlisted') {
     text = texts[2];
   }
   return (
     <Button
       onClick={() => {
-        setCurrentTopic(type);
+        setCurrentTopic(topicType);
       }}
+      {...props}
     >
       <Text isClicked={isClicked}>{text}</Text>
     </Button>
   );
 };
+
