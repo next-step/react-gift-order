@@ -27,7 +27,7 @@ export const MyPageSection = () => {
 
   const handleLogout = () => {
     removeUserInfo();
-    navigate(ROUTE_PATH.HOME);
+    navigate(ROUTE_PATH.LOGIN);
   };
 
   return (
