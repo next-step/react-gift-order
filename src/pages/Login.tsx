@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "@emotion/styled";
+import { useLoginForm } from "../hooks/useLoginForm";
 
 const LoginWrapper = styled.div`
   min-height: 100vh;
@@ -71,56 +72,24 @@ const LoginButton = styled.button`
 `;
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-
-  const validateEmail = (value: string) => {
-    if (!value) return "ID를 입력해주세요.";
-    const emailRegex = /^[\w.-]+@[\w.-]+\.[A-Za-z]{2,}$/;
-    if (!emailRegex.test(value)) return "ID는 이메일 형식으로 입력해주세요.";
-    return "";
-  };
-
-  const validatePassword = (value: string) => {
-    if (!value) return "PW를 입력해주세요.";
-    if (value.length < 8) return "PW는 최소 8글자 이상이어야 합니다.";
-    return "";
-  };
-
-  const handleEmailBlur = () => {
-    const error = validateEmail(email);
-    setEmailError(error);
-  };
-
-  const handlePasswordBlur = () => {
-    const error = validatePassword(password);
-    setPasswordError(error);
-  };
-
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-    if (emailError) {
-      const error = validateEmail(e.target.value);
-      setEmailError(error);
-    }
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-    if (passwordError) {
-      const error = validatePassword(e.target.value);
-      setPasswordError(error);
-    }
-  };
-
-  const isFormValid = validateEmail(email) === "" && validatePassword(password) === "";
+  // 커스텀 훅에서 모든 상태와 핸들러를 받아옴
+  const {
+    email,
+    password,
+    emailError,
+    passwordError,
+    isFormValid,
+    handleEmailChange,
+    handleEmailBlur,
+    handlePasswordChange,
+    handlePasswordBlur,
+  } = useLoginForm();
 
   return (
     <LoginWrapper>
       <Logo>kakao</Logo>
       <Form>
+        {/* 이메일 입력 필드 */}
         <Input
           type="email"
           placeholder="이메일"
@@ -130,6 +99,7 @@ const Login: React.FC = () => {
           onBlur={handleEmailBlur}
         />
         <ErrorMessage>{emailError}</ErrorMessage>
+        {/* 비밀번호 입력 필드 */}
         <Input
           type="password"
           placeholder="비밀번호"
