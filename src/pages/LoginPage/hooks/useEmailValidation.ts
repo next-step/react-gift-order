@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { isNotEmpty, validateEmailFormat } from "../utils/validation";
-import { LOGIN_ERROR_MESSAGES } from "../const/lables";
+import { LOGIN_ERROR_MESSAGES } from "../const/labels";
 
 export function useEmailValidation(initialValue = "") {
   const [email, setEmail] = useState(initialValue);
@@ -8,7 +8,8 @@ export function useEmailValidation(initialValue = "") {
     isEmpty: false,
     invalidFormat: false,
   });
-  const handleChange = (value: string) => {
+
+  const handleEmailValueChange = (value: string) => {
     setEmail(value);
   };
 
@@ -24,7 +25,7 @@ export function useEmailValidation(initialValue = "") {
     setEmailErrors(errors);
   };
 
-  const getFormErrorMessage = () => {
+  const getEmailErrorMessage = () => {
     if (emailErrors.isEmpty) {
       return LOGIN_ERROR_MESSAGES.EMAIL_EMPTY;
     }
@@ -34,13 +35,13 @@ export function useEmailValidation(initialValue = "") {
     return null;
   };
 
-  const hasError = emailErrors.isEmpty || emailErrors.invalidFormat;
+  const hasEmailError = emailErrors.isEmpty || emailErrors.invalidFormat;
 
   return {
     email,
-    handleChange,
+    handleEmailValueChange,
     validateEmail,
-    getFormErrorMessage,
-    hasError,
+    getEmailErrorMessage,
+    hasEmailError,
   };
 }

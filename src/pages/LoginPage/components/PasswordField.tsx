@@ -2,17 +2,20 @@ import { useRef } from "react";
 import { LOGIN_LABELS } from "../constants/labels";
 import { InputField } from "../LoginPage.styles";
 import FormErrorMessage from "./FormErrorMessage";
-import usePasswordValidation from "../hooks/usePasswordValidation";
 
-function PasswordField() {
-  const {
-    password,
-    handleChange,
-    validatePassword,
-    getFormErrorMessage,
-    hasError,
-  } = usePasswordValidation();
-
+function PasswordField({
+  password,
+  handleChange,
+  validatePassword,
+  getFormErrorMessage,
+  hasError,
+}: {
+  password: string;
+  handleChange: (value: string) => void;
+  validatePassword: (value: string) => void;
+  getFormErrorMessage: () => string | null;
+  hasError: boolean;
+}) {
   const isPasswordBlurredRef = useRef(false);
 
   const handlePasswordChange = (value: string) => {

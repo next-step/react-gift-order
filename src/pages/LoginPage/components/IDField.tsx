@@ -2,11 +2,20 @@ import { useRef } from "react";
 import { LOGIN_LABELS } from "../constants/labels";
 import { InputField } from "../LoginPage.styles";
 import FormErrorMessage from "./FormErrorMessage";
-import { useEmailValidation } from "../hooks/useEmailValidation";
 
-function IDField() {
-  const { email, handleChange, validateEmail, getFormErrorMessage, hasError } =
-    useEmailValidation();
+function IDField({
+  email,
+  handleChange,
+  validateEmail,
+  getFormErrorMessage,
+  hasError,
+}: {
+  email: string;
+  handleChange: (value: string) => void;
+  validateEmail: (value: string) => void;
+  getFormErrorMessage: () => string | null;
+  hasError: boolean;
+}) {
   const isEmailBlurredRef = useRef(false);
 
   const handleEmailChange = (value: string) => {

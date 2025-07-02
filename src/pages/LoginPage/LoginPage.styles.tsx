@@ -64,7 +64,9 @@ export const ErrorMessage = styled.p`
   color: ${({ theme }) => theme.colors.red[700]};
 `;
 
-export const LoginButton = styled.button`
+export const LoginButton = styled.button<{
+  disabled: boolean;
+}>`
   width: 100%;
   height: 2.8rem;
 
@@ -76,7 +78,8 @@ export const LoginButton = styled.button`
   font-weight: ${({ theme }) => theme.typography.body.body1Regular.fontWeight};
   color: ${({ theme }) => theme.colors.gray[900]};
 
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
+  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.brand.kakaoYellowHover};

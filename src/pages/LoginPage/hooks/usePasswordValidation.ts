@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { isNotEmpty, validatePasswordFormat } from "../utils/validation";
-import { LOGIN_ERROR_MESSAGES } from "../const/lables";
+import { LOGIN_ERROR_MESSAGES } from "../const/labels";
 
 function usePasswordValidation() {
   const [password, setPassword] = useState("");
@@ -9,7 +9,7 @@ function usePasswordValidation() {
     invalidFormat: false,
   });
 
-  const handleChange = (value: string) => {
+  const handlePasswordValueChange = (value: string) => {
     setPassword(value);
   };
 
@@ -25,7 +25,7 @@ function usePasswordValidation() {
     setPasswordErrors(errors);
   };
 
-  const getFormErrorMessage = () => {
+  const getPasswordErrorMessage = () => {
     if (passwordErrors.isEmpty) {
       return LOGIN_ERROR_MESSAGES.PASSWORD_EMPTY;
     }
@@ -35,14 +35,15 @@ function usePasswordValidation() {
     return null;
   };
 
-  const hasError = passwordErrors.isEmpty || passwordErrors.invalidFormat;
+  const hasPasswordError =
+    passwordErrors.isEmpty || passwordErrors.invalidFormat;
 
   return {
     password,
-    handleChange,
+    handlePasswordValueChange,
     validatePassword,
-    getFormErrorMessage,
-    hasError,
+    getPasswordErrorMessage,
+    hasPasswordError,
   };
 }
 
