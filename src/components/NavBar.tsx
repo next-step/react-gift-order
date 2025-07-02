@@ -7,27 +7,27 @@ import theme from '../styles/theme';
 const NavBar = () => {
   const navigate = useNavigate();
 
-  const handleBack = () => {
+  const goToBack = () => {
     navigate(-1);
   };
 
-  const handleLoginClick = () => {
+  const goToLogin = () => {
     navigate('/login');
   };
 
-  const handleTitleClick = () => {
+  const goToHome = () => {
     navigate('/');
   };
 
   return (
     <nav css={navStyle}>
-      <button onClick={handleBack} css={iconButtonStyle}>
+      <button onClick={goToBack} css={iconButtonStyle}>
         <FiArrowLeft size={24} color="#000" />
       </button>
-      <button onClick={handleTitleClick} css={titleButtonStyle}>
+      <button onClick={goToHome} css={titleButtonStyle}>
         선물하기
       </button>
-      <button onClick={handleLoginClick} css={iconButtonStyle}>
+      <button onClick={goToLogin} css={iconButtonStyle}>
         <FiUser size={24} color="#000" />
       </button>
     </nav>

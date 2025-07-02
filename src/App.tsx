@@ -6,7 +6,7 @@ import { categories } from './data/categories';
 import FriendSelector from './components/FriendSelector';
 import Banner from './components/Banner';
 import RankingSection from './components/RankingSection/RankingSection';
-import LoginPage from './pages/LoginPage';
+import LoginPage from './pages/Login/LoginPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 const Home = () => (
