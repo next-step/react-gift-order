@@ -10,7 +10,7 @@ const LoginPage = () => {
 
   const from = location.state?.from?.pathname || '/';
 
-  const handleLogin = () => {
+  const goToLogin = () => {
     navigate(from, { replace: true });
   };
 
@@ -32,7 +32,7 @@ const LoginPage = () => {
           placeholder="비밀번호"
           css={inputStyle(theme)}
         />
-        <button onClick={handleLogin} css={loginButtonStyle(theme)}>
+        <button onClick={goToLogin} css={loginButtonStyle(theme)}>
           로그인
         </button>
       </div>
