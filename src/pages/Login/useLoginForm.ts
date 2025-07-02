@@ -34,7 +34,14 @@ export const useLoginForm = () => {
   // 비밀번호 변경 핸들러
   const handlePasswordChange = (value: string) => {
     setPassword(value);
-    if (passwordError) setPasswordError('');
+    
+    if (!value) {
+        setPasswordError('PW를 입력해주세요.');
+    } else if (value.length < 8) {
+        setPasswordError('PW는 최소 8글자 이상이어야 합니다.');
+    } else {
+        setPasswordError('');
+    }
   };
 
   // 비밀번호 유효성 검사
