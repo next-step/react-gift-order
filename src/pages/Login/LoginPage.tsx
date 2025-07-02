@@ -21,6 +21,10 @@ const LoginPage = () => {
     emailError,
     handleEmailChange,
     validateEmail,
+    password,
+    passwordError,
+    handlePasswordChange,
+    validatePassword,
   } = useLoginForm();
 
   const from = location.state?.from?.pathname || '/';
@@ -51,8 +55,12 @@ const LoginPage = () => {
           id="password"
           name="password"
           placeholder="비밀번호"
-          css={inputStyle(theme, false)}
+          css={inputStyle(theme, !!passwordError)}
+          value={password}
+          onChange={(e) => handlePasswordChange(e.target.value)}
+          onBlur={validatePassword}
         />
+        {passwordError && <p css={errorTextStyle(theme)}>{passwordError}</p>}
 
         <button onClick={goToLogin} css={loginButtonStyle(theme)}>
           로그인

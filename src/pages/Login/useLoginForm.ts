@@ -6,11 +6,17 @@ export const useLoginForm = () => {
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
 
+  const [password, setPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
   const handleEmailChange = (value: string) => {
     setEmail(value);
-    if (emailError) {
-      setEmailError('');
-    }
+    if (emailError) setEmailError('');
+  };
+
+  const handlePasswordChange = (value: string) => {
+    setPassword(value);
+    if (passwordError) setPasswordError('');
   };
 
   const validateEmail = () => {
@@ -23,10 +29,25 @@ export const useLoginForm = () => {
     }
   };
 
+  const validatePassword = () => {
+    if (!password) {
+      setPasswordError('PW를 입력해주세요.');
+    } else if (password.length < 8) {
+      setPasswordError('PW는 최소 8글자 이상이어야 합니다.');
+    } else {
+      setPasswordError('');
+    }
+  };
+
   return {
     email,
     emailError,
     handleEmailChange,
     validateEmail,
+
+    password,
+    passwordError,
+    handlePasswordChange,
+    validatePassword,
   };
 };
