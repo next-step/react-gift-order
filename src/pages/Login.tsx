@@ -68,6 +68,8 @@ const LoginButton = styled.button`
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const validateEmail = (value: string) => {
     if (!value) return "ID를 입력해주세요.";
@@ -76,9 +78,20 @@ const Login: React.FC = () => {
     return "";
   };
 
+  const validatePassword = (value: string) => {
+    if (!value) return "PW를 입력해주세요.";
+    if (value.length < 8) return "PW는 최소 8글자 이상이어야 합니다.";
+    return "";
+  };
+
   const handleEmailBlur = () => {
     const error = validateEmail(email);
     setEmailError(error);
+  };
+
+  const handlePasswordBlur = () => {
+    const error = validatePassword(password);
+    setPasswordError(error);
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,6 +99,14 @@ const Login: React.FC = () => {
     if (emailError) {
       const error = validateEmail(e.target.value);
       setEmailError(error);
+    }
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    if (passwordError) {
+      const error = validatePassword(e.target.value);
+      setPasswordError(error);
     }
   };
 
@@ -102,7 +123,15 @@ const Login: React.FC = () => {
           onBlur={handleEmailBlur}
         />
         <ErrorMessage>{emailError}</ErrorMessage>
-        <Input type="password" placeholder="비밀번호" autoComplete="current-password" />
+        <Input
+          type="password"
+          placeholder="비밀번호"
+          autoComplete="current-password"
+          value={password}
+          onChange={handlePasswordChange}
+          onBlur={handlePasswordBlur}
+        />
+        <ErrorMessage>{passwordError}</ErrorMessage>
         <LoginButton type="submit">로그인</LoginButton>
       </Form>
     </LoginWrapper>
