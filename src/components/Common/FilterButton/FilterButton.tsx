@@ -10,7 +10,7 @@ interface Props {
 export default function FilterButton({ icon, label, isActive, onClick }: Props) {
   return (
     <Wrapper isActive={isActive} onClick={onClick}>
-      <div>{icon}</div>
+      {icon && <div>{icon}</div>}
       <p>{label}</p>
     </Wrapper>
   )
