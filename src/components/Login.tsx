@@ -28,7 +28,7 @@ const Login = () => {
           onChange={(event) => {
             setEmail(event.target.value);
             setIsValidEmail(exp.test(event.target.value));
-            if (!exp.test(event.target.value)) {
+            if (!exp.test(event.target.value) || event.target.value === "") {
               setEmailMessage("이메일 형식이 올바르지 않습니다.");
             } else {
               setEmailMessage("");
@@ -38,6 +38,9 @@ const Login = () => {
           type="text"
           placeholder="이메일"
         />
+        <p style={{ color: "red", fontSize: "12px", marginTop: "4px" }}>
+          {emailMessage}
+        </p>
         <input
           onChange={(event) => {
             setPassword(event.target.value);
