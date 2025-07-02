@@ -54,6 +54,13 @@ export const InputField = styled.input<{
   }
 `;
 
+export const ErrorMessage = styled.p`
+  font-size: ${({ theme }) => theme.typography.label.label2Regular.fontSize};
+  font-weight: ${({ theme }) =>
+    theme.typography.label.label2Regular.fontWeight};
+  color: ${({ theme }) => theme.colors.red[700]};
+`;
+
 export const LoginButton = styled.button`
   width: 100%;
   height: 2.8rem;
