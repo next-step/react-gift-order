@@ -24,11 +24,9 @@ function LoginForm() {
     userContext?.email.setValue(userInfo.email.value);
     userContext?.user.setValue(userInfo.email.value.split("@")[0]);
 
-    if (window.history.length > 1) {
-      navigate(-1);
-    } else {
-      navigate("/");
-    }
+    const searchParams = new URLSearchParams(window.location.search);
+    const redirectPath = searchParams.get("redirect");
+    navigate(redirectPath ? decodeURIComponent(redirectPath) : "/");
   };
 
   return (

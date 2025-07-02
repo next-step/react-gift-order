@@ -1,13 +1,6 @@
-import { useContext, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import UserContext from "./UserContext";
 import useStoredState from "@src/hooks/useStoredState";
-
-export const ClearUserContext = () => {
-  const userContext = useContext(UserContext);
-  userContext?.valid.setValue(false);
-  userContext?.user.setValue(null);
-  userContext?.email.setValue(null);
-};
 
 const UserContextProvider = ({ children }: { children: ReactNode }) => {
   const [valid, setValid] = useStoredState<boolean>("valid", false);
