@@ -42,15 +42,16 @@ const inputStyle = css({
     color: colors.textSub,
   },
 })
-const buttonStyle = css({
+
+const buttonStyle = (disabled: boolean) => css({
   width: '100%',
-  background: colors.kakaoYellow,
+  background: disabled ? '#FFF7B2' : colors.kakaoYellow, // 연한색/원래색
   color: colors.gray900,
   border: 'none',
   borderRadius: 6,
   padding: '14px 0',
   marginTop: 24,
-  cursor: 'pointer',
+  cursor: disabled ? 'not-allowed' : 'pointer',
   ...typography.body2Bold,
 })
 
@@ -64,8 +65,8 @@ const errorTextStyle = css({
 const LoginPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const { emailRef, emailError, handleEmailBlur, checkAndSetError: checkEmailError } = useEmailInput()
-  const { passwordRef, passwordError, handlePasswordBlur, checkAndSetError: checkPasswordError } = usePasswordInput()
+  const { emailRef, emailError, handleEmailBlur } = useEmailInput()
+  const { passwordRef, passwordError, handlePasswordBlur} = usePasswordInput()
 
   // 뒤로가기 버튼 클릭
   const handleBack = () => {
@@ -74,12 +75,15 @@ const LoginPage = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
-    const emailErr = checkEmailError()
-    const pwErr = checkPasswordError()
-    if (emailErr || pwErr) return
     const from = (location.state as any)?.from || '/'
     navigate(from, { replace: true })
   }
+
+  const isLoginButtonDisabled =
+    !emailRef.current?.value ||
+    !passwordRef.current?.value ||
+    !!emailError ||
+    !!passwordError
 
   return (
     <div css={wrapperStyle}>
@@ -113,7 +117,13 @@ const LoginPage = () => {
             <div id="password-error" css={errorTextStyle}>{passwordError}</div>
           )}
         </div>
-        <button css={buttonStyle} type="submit">로그인</button>
+        <button
+          css={buttonStyle(isLoginButtonDisabled)}
+          type="submit"
+          disabled={isLoginButtonDisabled}
+        >
+          로그인
+        </button>
       </form>
     </div>
   )
