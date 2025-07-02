@@ -19,12 +19,10 @@ const HotGiftRankingGridItem = styled.div(({ theme }) => ({
 
 const HotGiftRankingImageContainer = styled.img(({ theme }) => ({
   width: "100%",
-  height: "224px",
-  display: "flex",
+  aspectRatio: "1 / 1",
+  objectFit: "cover",
   borderRadius: "4px",
   marginBottom: `${theme.spacing3}`,
-  alignItems: "center",
-  justifyContent: "center",
 }));
 
 const RankBadge = styled.div<{ rank: number }>(({ theme, rank }) => ({
