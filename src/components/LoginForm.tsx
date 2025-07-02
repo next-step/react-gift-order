@@ -7,10 +7,11 @@ import theme from "@src/styles/kakaoTheme";
 import { createNewIDEvaluator } from "@src/utils/evaluator/implementation/idEvaluator";
 import { createNewPWEvaluator } from "@src/utils/evaluator/implementation/passwordEvaluator";
 import { useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function LoginForm() {
   const navigate = useNavigate();
+  const location = useLocation();
   const userInfo = useUserInfo();
 
   const idEvaluator = createNewIDEvaluator();
@@ -19,9 +20,10 @@ function LoginForm() {
 
   const userContext = useContext(UserContext);
 
+  const searchParams = new URLSearchParams(location.search);
+  const redirectPath = searchParams.get("redirect");
+
   const nagivateToRedirectionTarget = () => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const redirectPath = searchParams.get("redirect");
     navigate(redirectPath ? decodeURIComponent(redirectPath) : "/");
   };
 

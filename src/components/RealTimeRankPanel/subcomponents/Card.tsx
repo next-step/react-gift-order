@@ -1,6 +1,8 @@
 import styled from "@emotion/styled";
-import type { Product } from "@src/mock/mockData";
+import type { Product } from "@src/mock/productMockData";
+import { PATH } from "@src/router/Router";
 import theme from "@src/styles/kakaoTheme";
+import { useNavigate } from "react-router-dom";
 
 type CardProps = {
   no: number;
@@ -8,8 +10,14 @@ type CardProps = {
 };
 
 function Card({ no, prod }: CardProps) {
+  const navigate = useNavigate();
+
+  const clickHandler = () => {
+    navigate(`${PATH.ORDER}/${prod.id}`);
+  };
+
   return (
-    <CardWrapper>
+    <CardWrapper onClick={clickHandler}>
       <CardNumber top3={no <= 3}>{no}</CardNumber>
       <CardImage src={prod.imageURL} alt="image" />
       <GrayP>{prod.brandInfo.name}</GrayP>
@@ -34,9 +42,12 @@ const BoldSpan = styled.span`
   font-weight: bold;
 `;
 
-const CardWrapper = styled.div`
+const CardWrapper = styled.button`
   position: relative;
   flex: 1 30%;
+  border: none;
+  padding: 0;
+  background-color: transparent;
 `;
 
 const CardNumber = styled.div<{ top3: boolean }>`
