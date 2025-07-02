@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "@emotion/styled";
 
 const LoginWrapper = styled.div`
@@ -40,6 +40,14 @@ const Input = styled.input`
   }
 `;
 
+const ErrorMessage = styled.div`
+  color: #e74c3c;
+  font-size: 1.6rem;
+  margin-top: -24px;
+  margin-bottom: 8px;
+  min-height: 24px;
+`;
+
 const LoginButton = styled.button`
   width: 100%;
   background: #f7e244;
@@ -58,11 +66,42 @@ const LoginButton = styled.button`
 `;
 
 const Login: React.FC = () => {
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
+
+  const validateEmail = (value: string) => {
+    if (!value) return "ID를 입력해주세요.";
+    const emailRegex = /^[\w.-]+@[\w.-]+\.[A-Za-z]{2,}$/;
+    if (!emailRegex.test(value)) return "ID는 이메일 형식으로 입력해주세요.";
+    return "";
+  };
+
+  const handleEmailBlur = () => {
+    const error = validateEmail(email);
+    setEmailError(error);
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    if (emailError) {
+      const error = validateEmail(e.target.value);
+      setEmailError(error);
+    }
+  };
+
   return (
     <LoginWrapper>
       <Logo>kakao</Logo>
       <Form>
-        <Input type="email" placeholder="이메일" autoComplete="username" />
+        <Input
+          type="email"
+          placeholder="이메일"
+          autoComplete="username"
+          value={email}
+          onChange={handleEmailChange}
+          onBlur={handleEmailBlur}
+        />
+        <ErrorMessage>{emailError}</ErrorMessage>
         <Input type="password" placeholder="비밀번호" autoComplete="current-password" />
         <LoginButton type="submit">로그인</LoginButton>
       </Form>
