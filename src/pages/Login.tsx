@@ -62,6 +62,9 @@ const InputBox = styled.input`
     outline: none;
     border-color: rgb(134, 139, 148);
   }
+  ::placeholder {
+    color: #b0b3ba;
+  }
 `;
 
 const LoginButton = styled.button`
