@@ -1,86 +1,138 @@
 import type { ComponentPropsWithoutRef } from 'react'
-import { theme } from '@/theme'
 import styled from '@emotion/styled'
+import { theme } from '@/theme'
 
-type ButtonType = 'login' | 'more' | 'home'
+type Variant = 'primary' | 'outlined'
+type Size = 'large' | 'medium' | 'small'
 
 interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
-  buttonType: ButtonType
+  variant?: Variant
+  size?: Size
+  disabled?: boolean
+  fullWidth?: boolean
 }
 
-const buttonStyleByType = {
-  login: {
-    width: '100%',
-    height: theme.spacing[11],
-    margin: `${theme.spacing[8]} 0 0 0`,
-    activeBackground: theme.colors.semanticColor.brandColor.kakaoYellow,
+const variantStyles = {
+  primary: {
+    background: theme.colors.semanticColor.brandColor.kakaoYellow,
     inactiveBackground: theme.colors.colorScale.yellow[300],
-    activeColor: theme.colors.semanticColor.textColor.default,
-    inactiveColor: theme.colors.colorScale.gray[700],
-    typography: theme.typography.label2Regular,
     hoverBackground: theme.colors.semanticColor.brandColor.kakaoYellowHover,
+    color: theme.colors.semanticColor.textColor.default,
+    inactiveColor: theme.colors.colorScale.gray[700],
     border: 'none',
   },
-  more: {
-    width: '70%',
-    height: `${theme.spacing[10]}`,
-    margin: `${theme.spacing[4]} auto`,
-    activeBackground: theme.colors.colorScale.gray[0],
+  outlined: {
+    background: theme.colors.colorScale.gray[0],
     inactiveBackground: theme.colors.colorScale.gray[0],
-    activeColor: theme.colors.semanticColor.textColor.default,
-    inactiveColor: theme.colors.semanticColor.textColor.default,
-    typography: theme.typography.label1Regular,
     hoverBackground: theme.colors.colorScale.gray[100],
+    color: theme.colors.semanticColor.textColor.default,
+    inactiveColor: theme.colors.semanticColor.textColor.default,
     border: `1px solid ${theme.colors.colorScale.gray[400]}`,
   },
-  home: {
-    width: '160px',
+}
+
+const sizeStyles = {
+  large: {
+    width: '360px',
     height: theme.spacing[11],
-    margin: theme.spacing[10],
-    activeBackground: theme.colors.semanticColor.brandColor.kakaoYellow,
-    inactiveBackground: theme.colors.semanticColor.brandColor.kakaoYellow,
-    activeColor: theme.colors.semanticColor.textColor.default,
-    inactiveColor: theme.colors.semanticColor.textColor.default,
+    padding: `0 ${theme.spacing[6]}`,
     typography: theme.typography.label1Regular,
-    hoverBackground: theme.colors.semanticColor.brandColor.kakaoYellowHover,
-    border: 'none',
+  },
+  medium: {
+    width: '260px',
+    height: theme.spacing[10],
+    padding: `0 ${theme.spacing[5]}`,
+    typography: theme.typography.label1Regular,
+  },
+  small: {
+    width: '160px',
+    height: theme.spacing[9],
+    padding: `0 ${theme.spacing[4]}`,
+    typography: theme.typography.label2Regular,
   },
 }
 
-const StyledButton = styled.button<{
-  $buttonType: ButtonType
-}>`
-  display: block;
-  border-radius: ${theme.spacing[1]};
-  width: ${({ $buttonType }) => buttonStyleByType[$buttonType].width};
-  height: ${({ $buttonType }) => buttonStyleByType[$buttonType].height};
-  margin: ${({ $buttonType }) => buttonStyleByType[$buttonType].margin};
-  border: ${({ $buttonType }) => buttonStyleByType[$buttonType].border};
-  ${({ $buttonType }) => buttonStyleByType[$buttonType].typography};
-
-  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
-
-  background-color: ${({ disabled, $buttonType }) =>
-    disabled
-      ? buttonStyleByType[$buttonType].inactiveBackground
-      : buttonStyleByType[$buttonType].activeBackground};
-
-  color: ${({ disabled, $buttonType }) =>
-    disabled
-      ? buttonStyleByType[$buttonType].inactiveColor
-      : buttonStyleByType[$buttonType].activeColor};
-
-  &:hover {
-    background-color: ${({ disabled, $buttonType }) =>
-      disabled
-        ? buttonStyleByType[$buttonType].inactiveBackground
-        : buttonStyleByType[$buttonType].hoverBackground};
+const setButtonStyle = ({
+  variant = 'primary',
+  size = 'medium',
+  disabled,
+  fullWidth,
+}: ButtonProps) => {
+  return {
+    width: fullWidth ? '100%' : sizeStyles[size].width,
+    height: sizeStyles[size].height,
+    padding: sizeStyles[size].padding,
+    typography: sizeStyles[size].typography,
+    background: disabled
+      ? variantStyles[variant].inactiveBackground
+      : variantStyles[variant].background,
+    hoverBackground: disabled
+      ? variantStyles[variant].inactiveBackground
+      : variantStyles[variant].hoverBackground,
+    color: disabled
+      ? variantStyles[variant].inactiveColor
+      : variantStyles[variant].color,
+    border: variantStyles[variant].border,
+    cursor: disabled ? 'not-allowed' : 'pointer',
   }
+}
+
+const StyledButton = styled.button<ButtonProps>`
+  display: block;
+  margin: 0 auto;
+  border-radius: ${theme.spacing[1]};
+
+  ${({
+    variant = 'primary',
+    size = 'medium',
+    disabled = false,
+    fullWidth = false,
+  }) => {
+    const {
+      width,
+      height,
+      padding,
+      typography,
+      background,
+      hoverBackground,
+      color,
+      border,
+      cursor,
+    } = setButtonStyle({ variant, size, disabled, fullWidth })
+
+    return `
+      width: ${width};
+      height: ${height};
+      padding: ${padding};
+      ${typography};
+      background-color: ${background};
+      color: ${color};
+      border: ${border};
+      cursor: ${cursor};
+
+      &:hover {
+        background-color: ${hoverBackground};
+      }
+    `
+  }}
 `
 
-const MyButton = ({ buttonType, children, ...props }: ButtonProps) => {
+const MyButton = ({
+  variant,
+  size,
+  disabled,
+  fullWidth,
+  children,
+  ...props
+}: ButtonProps) => {
   return (
-    <StyledButton type="button" $buttonType={buttonType} {...props}>
+    <StyledButton
+      variant={variant}
+      size={size}
+      disabled={disabled}
+      fullWidth={fullWidth}
+      {...props}
+    >
       {children}
     </StyledButton>
   )
