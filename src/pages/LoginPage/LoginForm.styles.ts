@@ -20,13 +20,11 @@ export const Input = styled.input<{ hasError?: boolean }>`
   padding: ${({ theme }) => theme.spacing.spacing3};
   border: none;
   border-bottom: 1px solid
-    ${({ theme, hasError }) =>
-    hasError ? theme.color.state.critical : theme.color.border.default};
+    ${({ theme, hasError }) => (hasError ? theme.color.state.critical : theme.color.border.default)};
   width: 90%;
   font-size: 16px;
   outline: none;
-  margin-bottom: ${({ theme, hasError }) =>
-    hasError ? '0px' : theme.spacing.spacing2};
+  margin-bottom: ${({ theme, hasError }) => (hasError ? '0px' : theme.spacing.spacing2)};
   &::placeholder {
     color: ${({ theme }) => theme.color.text.placeholder};
   }
