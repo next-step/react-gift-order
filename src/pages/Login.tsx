@@ -1,8 +1,9 @@
 import styled from '@emotion/styled';
-import React, { useState } from 'react';
+import React from 'react';
 import { Header } from '@/components/Header/Header';
 import { useLocation, useNavigate } from 'react-router';
-import { ROUTE_PATH } from '@/shared/Router';
+import { ROUTE_PATH } from '@/shared/RoutePath';
+import { useLoginForm } from '@/hooks/useLoginForm';
 
 const AppContainer = styled.div`
   width: 720px;
@@ -61,6 +62,12 @@ const Input = styled.input`
   }
 `;
 
+const ErrorMessage = styled.div`
+  color: #ff0000;
+  font-size: 14px;
+  margin-top: 4px;
+`;
+
 const IconButton = styled.button`
   position: absolute;
   right: 0;
@@ -74,37 +81,45 @@ const IconButton = styled.button`
   cursor: pointer;
 `;
 
-const Button = styled.button`
+const Button = styled.button<{ disabled: boolean }>`
   height: 50px;
-  background: #ffe812;
-  color: #191919;
+  background: ${({ disabled }) => (disabled ? '#f5f5f5' : '#ffe812')};
+  color: ${({ disabled }) => (disabled ? '#bdbdbd' : '#191919')};
   border: none;
   border-radius: 4px;
   font-size: 17px;
   font-weight: 400;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   margin-top: 16px;
   transition: filter 0.2s;
 
   &:hover {
-    filter: brightness(0.95);
+    filter: ${({ disabled }) => (disabled ? 'none' : 'brightness(0.95)')};
   }
 `;
 
-export const Login = () => {
+export const Login: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || ROUTE_PATH.HOME;
-  const handleLogin = () => {
-    navigate(from, { replace: true });
-  };
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+
+  const {
+    email,
+    password,
+    emailError,
+    passwordError,
+    handleEmailChange,
+    handlePasswordChange,
+    handleEmailBlur,
+    handlePasswordBlur,
+    isValid,
+  } = useLoginForm();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // 로그인 처리 로직
+    if (!isValid) return;
     alert(`이메일: ${email}\n비밀번호: ${password}`);
+    navigate(from, { replace: true });
   };
 
   return (
@@ -118,9 +133,11 @@ export const Login = () => {
               type="email"
               placeholder="이메일"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleEmailChange}
+              onBlur={handleEmailBlur}
               required
             />
+            {emailError && <ErrorMessage>{emailError}</ErrorMessage>}
             <IconButton tabIndex={-1} type="button" aria-label="이메일 도움말" />
           </InputRow>
           <InputRow style={{ marginBottom: '32px' }}>
@@ -128,12 +145,14 @@ export const Login = () => {
               type="password"
               placeholder="비밀번호"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handlePasswordChange}
+              onBlur={handlePasswordBlur}
               autoComplete="current-password"
               required
             />
+            {passwordError && <ErrorMessage>{passwordError}</ErrorMessage>}
           </InputRow>
-          <Button type="submit" onClick={handleLogin}>
+          <Button type="submit" disabled={!isValid}>
             로그인
           </Button>
         </Form>
