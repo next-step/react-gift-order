@@ -1,19 +1,40 @@
 import kakaologo from '@/assets/icons/kakaologo.svg';
+import InputBox from '@/components/Common/InputBox';
 import Header from '@/components/Header';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
+import { useLoginForm } from '@/hooks/useLoginForm';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { email, password, isFormValid } = useLoginForm();
+
   return (
     <>
       <Header title="로그인" />
       <LoginContainer>
         <LoginSection>
           <Kakaologo src={kakaologo} alt="카카오 로고" />
-          <EmailInput placeholder="이메일" />
-          <PasswordInput placeholder="비밀번호" />
-          <LoginButton onClick={() => navigate('/')}>로그인</LoginButton>
+          <InputBox
+            type="email"
+            placeholder="이메일"
+            value={email.value}
+            onChange={email.onChange}
+            onBlur={email.onBlur}
+            error={email.error}
+          />
+
+          <InputBox
+            type="password"
+            placeholder="비밀번호"
+            value={password.value}
+            onChange={password.onChange}
+            onBlur={password.onBlur}
+            error={password.error}
+          />
+          <LoginButton onClick={() => navigate('/')} disabled={!isFormValid}>
+            로그인
+          </LoginButton>
         </LoginSection>
       </LoginContainer>
     </>
@@ -50,50 +71,6 @@ const Kakaologo = styled.img`
   display: block;
 `;
 
-const EmailInput = styled.input`
-  width: 100%;
-  transition: border-color 0.2s ease;
-  border: none;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.gray500};
-  ${({ theme }) => `
-    font-size: ${theme.font.body1Regular.size};
-    font-weight: ${theme.font.body1Regular.weight};
-    line-height: ${theme.font.body1Regular.lineHeight};
-  `}
-  padding: ${({ theme }) => theme.spacing.spacing2};
-
-  &:focus {
-    outline: none;
-    border-bottom-color: ${({ theme }) => theme.colors.gray700};
-  }
-
-  &::placeholder {
-    font: ${({ theme }) => theme.font.title1Regular};
-  }
-`;
-
-const PasswordInput = styled.input`
-  width: 100%;
-  transition: border-color 0.2s ease;
-  border: none;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.gray500};
-  ${({ theme }) => `
-    font-size: ${theme.font.body1Regular.size};
-    font-weight: ${theme.font.body1Regular.weight};
-    line-height: ${theme.font.body1Regular.lineHeight};
-  `}
-  padding: ${({ theme }) => theme.spacing.spacing2};
-
-  &:focus {
-    outline: none;
-    border-bottom-color: ${({ theme }) => theme.colors.gray700};
-  }
-
-  &::placeholder {
-    font: ${({ theme }) => theme.font.title1Regular};
-  }
-`;
-
 const LoginButton = styled.button`
   margin-top: ${({ theme }) => theme.spacing.spacing6};
   width: 100%;
@@ -106,5 +83,10 @@ const LoginButton = styled.button`
   }
   &:hover {
     background-color: ${({ theme }) => theme.colors.kakaoYellowHover};
+  }
+
+  &:disabled {
+    background-color: ${({ theme }) => theme.colors.yellow300};
+    cursor: not-allowed;
   }
 `;
