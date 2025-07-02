@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
   Wrapper,
@@ -19,12 +19,22 @@ const MIN_VISIBLE_CARDS = 6;
 
 const RankingSection = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const selectedTarget =
-    (searchParams.get("targetType") as TargetType) ?? "ALL";
-  const selectedRank =
-    (searchParams.get("rankType") as RankType) ?? "MANY_WISH";
   const [showAll, setShowAll] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+
+    if (!params.has("targetType")) {
+      params.set("targetType", "ALL");
+    }
+    if (!params.has("rankType")) {
+      params.set("rankType", "MANY_WISH");
+    }
+    setSearchParams(params, { replace: true });
+  }, [searchParams, setSearchParams]);
+
+  const selectedTarget = searchParams.get("targetType") as TargetType;
+  const selectedRank = searchParams.get("rankType") as RankType;
 
   const cards = cardData.map((item) => ({
     id: item.id,
@@ -47,6 +57,7 @@ const RankingSection = () => {
     params.set("rankType", rank);
     setSearchParams(params);
   };
+
   return (
     <Wrapper>
       <Title>실시간 급상승 선물랭킹</Title>
