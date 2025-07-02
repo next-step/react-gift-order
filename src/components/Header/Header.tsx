@@ -2,13 +2,14 @@ import leftArrow from '@/assets/left-arrow.svg';
 import user from '@/assets/user.svg';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { HeaderWrapper, StyledLink, Title, Icon } from '@/components/Header/Header.styles';
+import { PATH } from '@/constants/path';
 
 export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleLoginClick = () => {
-    navigate('/login', { state: { from: location.pathname}});
+    navigate(PATH.LOGIN, { state: { from: location.pathname}});
   }
 
   return (
