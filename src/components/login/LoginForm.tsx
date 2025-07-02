@@ -1,53 +1,15 @@
 import { ROUTE_PATH } from "@/routes/paths";
 import styled from "@emotion/styled";
-import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
+import useFormInput from "@/hooks/useFormInput";
+import { checkEmailError, checkPasswordError } from "@/utils/validation";
 import ErrorMessage from "./ErrorMessage";
 
 const LoginForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-
-  const validateEmail = (email: string) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  };
-
-  const checkEmailError = (newEmail: string): string => {
-    if (!newEmail.trim()) {
-      return "ID를 입력해주세요.";
-    } else if (!validateEmail(newEmail)) {
-      return "ID는 이메일 형식으로 입력해주세요.";
-    }
-    return "";
-  };
-  const checkPasswordError = (newPassword: string): string => {
-    if (!newPassword.trim()) {
-      return "PW를 입력해주세요.";
-    } else if (newPassword.length < 8) {
-      return "PW는 최소 8글자 이상이어야 합니다.";
-    }
-    return "";
-  };
-
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newEmail = e.target.value;
-    setEmail(newEmail);
-    if (!checkEmailError(newEmail)) {
-      setEmailError("");
-    }
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newPassword = e.target.value;
-    setPassword(newPassword);
-    if (!checkPasswordError(newPassword)) {
-      setPasswordError("");
-    }
-  };
+  const emailInput = useFormInput(checkEmailError);
+  const passwordInput = useFormInput(checkPasswordError);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -57,26 +19,29 @@ const LoginForm = () => {
   return (
     <Form onSubmit={handleSubmit}>
       <Input
-        error={!!emailError}
+        error={!!emailInput.error}
         type="text"
-        value={email}
+        value={emailInput.value}
         placeholder="이메일"
-        onChange={handleEmailChange}
-        onBlur={() => setEmailError(checkEmailError(email))}
+        onChange={emailInput.onChange}
+        onBlur={emailInput.onBlur}
       />
-      {emailError && <ErrorMessage message={emailError} />}
+      {emailInput.error && <ErrorMessage message={emailInput.error} />}
       <Input
-        error={!!passwordError}
+        error={!!passwordInput.error}
         type="password"
         placeholder="비밀번호"
-        value={password}
-        onChange={handlePasswordChange}
-        onBlur={() => setPasswordError(checkPasswordError(password))}
+        value={passwordInput.value}
+        onChange={passwordInput.onChange}
+        onBlur={passwordInput.onBlur}
       />
-      {passwordError && <ErrorMessage message={passwordError} />}
+      {passwordInput.error && <ErrorMessage message={passwordInput.error} />}
       <Button
         type="submit"
-        disabled={!!checkEmailError(email) || !!checkPasswordError(password)}
+        disabled={
+          !!checkEmailError(emailInput.value) ||
+          !!checkPasswordError(passwordInput.value)
+        }
       >
         로그인
       </Button>
