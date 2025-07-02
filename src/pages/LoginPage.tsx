@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { Section } from '@/components/layout';
 import { Button, ErrorMessage } from '@/components/common';
-import { getEmailErrorMessage } from '@/utils';
+import { getEmailErrorMessage, getPasswordErrorMessage } from '@/utils';
 
 const LoginContainer = styled.div`
   display: flex;
@@ -73,12 +73,18 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleEmailBlur = () => {
     const errorMessage = getEmailErrorMessage(email);
     setEmailError(errorMessage);
+  };
+
+  const handlePasswordBlur = () => {
+    const errorMessage = getPasswordErrorMessage(password);
+    setPasswordError(errorMessage);
   };
 
   const handleLogin = () => {
@@ -117,7 +123,10 @@ const LoginPage = () => {
             placeholder="비밀번호를 입력하세요"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onBlur={handlePasswordBlur}
+            error={!!passwordError}
           />
+          <ErrorMessage message={passwordError} />
         </InputGroup>
 
         <ButtonContainer>
