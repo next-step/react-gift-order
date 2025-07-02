@@ -33,6 +33,9 @@ const Login = () => {
     return '';
   };
 
+  // 로그인 버튼 활성화 여부 판단 
+  const isFormValid = !validateEmail(email) && !validatePassword(password);
+
   const handleEmailBlur = () => {
     const error = validateEmail(email);
     setEmailError(error);
@@ -65,7 +68,9 @@ const Login = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    handleLogin();
+    if (isFormValid) {
+      handleLogin();
+    }
   };
 
   return (
@@ -105,7 +110,7 @@ const Login = () => {
           
           <S.Spacer />
           
-          <S.LoginButton type="submit">
+          <S.LoginButton type="submit" disabled={!isFormValid}>
             로그인
           </S.LoginButton>
         </form>

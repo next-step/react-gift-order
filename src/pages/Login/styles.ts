@@ -68,6 +68,12 @@ export const LoginButton = styled.button`
   &:active {
     background-color: ${({ theme }) => theme.semantic.brand.kakaoYellowActive};
   }
+  
+  &:disabled {
+    background-color: ${({ theme }) => theme.colors.yellow[300]};
+    color: ${({ theme }) => theme.colors.gray[600]};
+    cursor: not-allowed;
+  }
 `;
 
 export const ErrorMessage = styled.span`
