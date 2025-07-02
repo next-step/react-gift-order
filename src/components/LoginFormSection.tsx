@@ -3,41 +3,24 @@ import KakaoLogo from '@/assets/kakao.webp';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { LOCATION_STATE_KEYS } from '@/constants/navigationState';
 import { ROUTES } from '@/constants/routes';
-import { useState } from 'react';
+import useLoginForm from '@/hooks/useLoginForm';
 
 const LoginFormSection = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.[LOCATION_STATE_KEYS.FROM] ?? ROUTES.HOME;
 
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-
-  const isEmailValid = !emailError && email.length > 0;
-  const isPasswordValid = !passwordError && password.length >= 8;
-  const isFormValid = isEmailValid && isPasswordValid;
-
-  const validateEmail = (value: string) => {
-    if (!value) {
-      setEmailError('ID를 입력해주세요.');
-    } else if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value)) {
-      setEmailError('ID는 이메일 형식으로 입력해주세요.');
-    } else {
-      setEmailError('');
-    }
-  };
-
-  const validatePassword = (value: string) => {
-    if (!value) {
-      setPasswordError('PW를 입력해주세요.');
-    } else if (value.length < 8) {
-      setPasswordError('PW는 최소 8글자 이상이어야 합니다.');
-    } else {
-      setPasswordError('');
-    }
-  };
+  const {
+    email,
+    setEmail,
+    emailError,
+    validateEmail,
+    password,
+    setPassword,
+    passwordError,
+    validatePassword,
+    isButtonValid,
+  } = useLoginForm();
 
   const handleLogin = () => {
     const redirectTo = from ? from.pathname + from.search : '/';
@@ -76,7 +59,7 @@ const LoginFormSection = () => {
           />
           {passwordError && <ErrorText>{passwordError}</ErrorText>}
         </InputWrapper>
-        <LoginButton disabled={!isFormValid} onClick={handleLogin}>
+        <LoginButton disabled={!isButtonValid} onClick={handleLogin}>
           로그인
         </LoginButton>
       </Wrapper>
