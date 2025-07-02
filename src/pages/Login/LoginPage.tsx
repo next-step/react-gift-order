@@ -2,6 +2,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import styled from "@emotion/styled";
 import Spacing from "@/components/Spacing";
 import { useLoginForm } from "./useLoginForm";
+import { css } from "@emotion/react";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -13,10 +14,10 @@ export default function LoginPage() {
     emailError,
     password,
     passwordError,
-    handleEmailChange,
-    handleEmailBlur,
-    handlePasswordChange,
-    handlePasswordBlur,
+    changeEmail,
+    notFocusEmail,
+    changePassword,
+    notFocusPassword,
     isFormValid,
   } = useLoginForm();
 
@@ -34,8 +35,8 @@ export default function LoginPage() {
             type="email"
             placeholder="이메일"
             value={email}
-            onChange={handleEmailChange}
-            onBlur={handleEmailBlur}
+            onChange={changeEmail}
+            onBlur={notFocusEmail}
             hasError={!!emailError}
           />
           {emailError && <ErrorText>{emailError}</ErrorText>}
@@ -44,8 +45,8 @@ export default function LoginPage() {
             type="password"
             placeholder="비밀번호"
             value={password}
-            onChange={handlePasswordChange}
-            onBlur={handlePasswordBlur}
+            onChange={changePassword}
+            onBlur={notFocusPassword}
             hasError={!!passwordError}
           />
           {passwordError && <ErrorText>{passwordError}</ErrorText>}
@@ -108,6 +109,27 @@ const ErrorText = styled.p`
   ${({ theme }) => theme.typography.label2Regular};
 `;
 
+const disabledStyles = ({ theme }: { theme: any }) => css`
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: ${theme.colors.kakao.yellow.default};
+  &:hover,
+  &:active {
+    background-color: ${theme.colors.kakao.yellow.default};
+  }
+`;
+
+const enabledStyles = ({ theme }: { theme: any }) => css`
+  opacity: 1;
+  cursor: pointer;
+  &:hover {
+    background-color: ${theme.colors.kakao.yellow.hover};
+  }
+  &:active {
+    background-color: ${theme.colors.kakao.yellow.pressed};
+  }
+`;
+
 const LoginButton = styled.button<{ disabled: boolean }>`
   width: 100%;
   height: 2.75rem;
@@ -115,22 +137,8 @@ const LoginButton = styled.button<{ disabled: boolean }>`
   border-radius: 4px;
   background-color: ${({ theme }) => theme.colors.kakao.yellow.default};
   color: ${({ theme }) => theme.colors.gray[900]};
-  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
-  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
   ${({ theme }) => theme.typography.body2Regular};
   transition: background-color 200ms;
 
-  &:hover {
-    background-color: ${({ theme, disabled }) =>
-      disabled
-        ? theme.colors.kakao.yellow.default
-        : theme.colors.kakao.yellow.hover};
-  }
-
-  &:active {
-    background-color: ${({ theme, disabled }) =>
-      disabled
-        ? theme.colors.kakao.yellow.default
-        : theme.colors.kakao.yellow.pressed};
-  }
+  ${({ disabled }) => (disabled ? disabledStyles : enabledStyles)}
 `;

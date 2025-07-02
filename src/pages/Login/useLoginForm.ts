@@ -7,6 +7,8 @@ export function useLoginForm() {
   const [password, setPassword] = useState('')
   const [passwordError, setPasswordError] = useState('')
 
+  const MIN_PASSWORD_LENGTH = 8;
+
   const validateEmail = (value: string) => {
     if (!value.trim()) return 'ID를 입력해주세요.'
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -16,27 +18,25 @@ export function useLoginForm() {
 
   const validatePassword = (value: string) => {
     if (!value.trim()) return 'PW를 입력해주세요.'
-    if (value.length < 8) return 'PW는 최소 8글자 이상이어야 합니다.'
+    if (value.length < MIN_PASSWORD_LENGTH) return 'PW는 최소 8글자 이상이어야 합니다.'
     return ''
   }
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
+  const changeEmail = ({ target: { value }}: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(value)
     setEmailError(validateEmail(value))
   }
 
-  const handleEmailBlur = () => {
+  const notFocusEmail = () => {
     setEmailError(validateEmail(email))
   }
 
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
+  const changePassword = ({ target: { value }}: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(value)
     setPasswordError(validatePassword(value))
   }
 
-  const handlePasswordBlur = () => {
+  const notFocusPassword = () => {
     setPasswordError(validatePassword(password))
   }
 
@@ -47,10 +47,10 @@ export function useLoginForm() {
     emailError,
     password,
     passwordError,
-    handleEmailChange,
-    handleEmailBlur,
-    handlePasswordChange,
-    handlePasswordBlur,
+    changeEmail,
+    notFocusEmail,
+    changePassword,
+    notFocusPassword,
     isFormValid
   }
 }
