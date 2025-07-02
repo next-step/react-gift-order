@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { Section } from '@/components/layout';
-import { Button } from '@/components/common';
+import { Button, ErrorMessage } from '@/components/common';
+import { getEmailErrorMessage } from '@/utils';
 
 const LoginContainer = styled.div`
   display: flex;
@@ -36,18 +37,25 @@ const InputLabel = styled.label`
   margin-bottom: ${(props) => props.theme.spacing.spacing2};
 `;
 
-const Input = styled.input`
+const Input = styled.input<{ error?: boolean }>`
   width: 100%;
   padding: ${(props) => props.theme.spacing.spacing3}
     ${(props) => props.theme.spacing.spacing4};
-  border: 1px solid ${(props) => props.theme.semanticColors.border.default};
+  border: 1px solid
+    ${(props) =>
+      props.error
+        ? props.theme.semanticColors.state.critical
+        : props.theme.semanticColors.border.default};
   border-radius: 6px;
   font-size: ${(props) => props.theme.typography.body2Regular.fontSize};
   font-family: 'Pretendard', sans-serif;
 
   &:focus {
     outline: none;
-    border-color: ${(props) => props.theme.semanticColors.kakaoYellow};
+    border-color: ${(props) =>
+      props.error
+        ? props.theme.semanticColors.state.critical
+        : props.theme.semanticColors.kakaoYellow};
   }
 
   &::placeholder {
@@ -64,8 +72,14 @@ const ButtonContainer = styled.div`
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [emailError, setEmailError] = useState<string | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
+
+  const handleEmailBlur = () => {
+    const errorMessage = getEmailErrorMessage(email);
+    setEmailError(errorMessage);
+  };
 
   const handleLogin = () => {
     // TODO: 현재는 항상 로그인 성공 처리 -> 실제 API 연동은 추후 구현
@@ -89,7 +103,10 @@ const LoginPage = () => {
             placeholder="이메일을 입력하세요"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            onBlur={handleEmailBlur}
+            error={!!emailError}
           />
+          <ErrorMessage message={emailError} />
         </InputGroup>
 
         <InputGroup>
