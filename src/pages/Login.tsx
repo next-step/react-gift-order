@@ -1,9 +1,11 @@
+
 import Navbar from "./../components/navbar/Navbar";
 import { PaddingSm } from "./../components/padding/Padding";
 import { PaddingMd } from "@/components/padding/Padding";
 import styled from "@emotion/styled";
 import { useNavigate } from "react-router-dom";
 import useInput from "@/hooks/useInput";
+
 
 const LoginWrapper = styled.div`
   display: flex;
@@ -20,14 +22,17 @@ const Loginform = styled.section`
   padding: 16px;
 `;
 
+
 const Logo = styled.img`
   width: 5.5rem;
 `;
 const InputWrapper = styled.div`
   width: 100%;
 `;
+
 const Input = styled.input<{ hasError: boolean }>`
   outline: none;
+
   width: 100%;
   color: ${({ theme }) => theme.colors.text.default};
   border-width: 0px 0px 1px;
@@ -77,7 +82,6 @@ const Login = () => {
   const email = useInput(emailValidator);
   const password = useInput(passwordValidator);
   const isActivatedBtn = !email.isValid && !password.isValid;
-
   return (
     <div>
       <Navbar />
@@ -85,7 +89,7 @@ const Login = () => {
         <Logo src="src/assets/images/카카오로고.svg" alt="" />
         <Loginform>
           <InputWrapper>
-            <Input {...email} hasError={!!email.error} placeholder="이메일" />
+          <Input {...email} hasError={!!email.error} placeholder="이메일" />
             {<ValidationMsg>{email.error}</ValidationMsg>}
           </InputWrapper>
           <PaddingSm />
@@ -115,3 +119,4 @@ const Login = () => {
 };
 
 export default Login;
+
