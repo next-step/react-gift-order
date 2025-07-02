@@ -6,8 +6,7 @@ import styled from "@emotion/styled";
 import type React from "react";
 import useInput from "@/hooks/useInput";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import type { ThemeType } from "@/types/ThemeType";
-import theme from "@/styles/theme/theme";
+import { useCallback } from "react";
 
 const ERROR_MSG_ID_EMPTY = "ID를 입력해주세요.";
 const ERROR_MSG_ID_FORM = "ID는 이메일 형식으로 입력해주세요.";
@@ -15,25 +14,27 @@ const ERROR_MSG_PASSWORD_EMPTY = "PW를 입력해주세요.";
 const ERROR_MSG_PASSWORD_FORM = "PW는 최소 8글자 이상이어야 합니다.";
 
 const Login = () => {
-  const id = useInput("", isValidId);
-  const password = useInput("", isValidPassword);
+  const id = useInput("", getIdError);
+  const password = useInput("", getPasswordError);
   const navigate = useNavigate();
-  const [redirectUrl] = useSearchParams();
+  const [searchParams] = useSearchParams();
+
+  const getRedirectUrl = useCallback(() => {
+    const path = searchParams.get("redirect")?.trim();
+    if (path && (Object.values(ROUTE_PATH) as string[]).includes(path)) {
+      return path;
+    } else {
+      return ROUTE_PATH.HOME;
+    }
+  }, [searchParams]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const redirect = () => {
-      const path = redirectUrl.get("redirect")?.trim();
-      if (path && (Object.values(ROUTE_PATH) as string[]).includes(path)) {
-        return path;
-      } else {
-        return ROUTE_PATH.HOME;
-      }
-    };
-    if (redirect() === ROUTE_PATH.LOGIN) {
+    const redirectUrl = getRedirectUrl();
+    if (redirectUrl === ROUTE_PATH.LOGIN) {
       navigate(ROUTE_PATH.HOME);
     } else {
-      navigate(`${redirect()}`);
+      navigate(`${redirectUrl}`);
     }
   };
 
@@ -45,14 +46,7 @@ const Login = () => {
         <Logo>kakao</Logo>
         <Form onSubmit={handleSubmit}>
           <InputWrapper>
-            <Input
-              type="email"
-              placeholder="이메일"
-              onChange={id.onChange}
-              onBlur={id.onBlur}
-              errorMsg={id.errorMsg}
-              theme={theme}
-            />
+            <Input type="email" placeholder="이메일" onChange={id.onChange} onBlur={id.onBlur} errorMsg={id.errorMsg} />
             <ErrorMsg>{id.errorMsg}</ErrorMsg>
           </InputWrapper>
           <InputWrapper>
@@ -62,7 +56,6 @@ const Login = () => {
               onChange={password.onChange}
               onBlur={password.onBlur}
               errorMsg={password.errorMsg}
-              theme={theme}
             />
             <ErrorMsg>{password.errorMsg}</ErrorMsg>
           </InputWrapper>
@@ -76,18 +69,18 @@ const Login = () => {
   );
 };
 
-const isValidId = (id: string) => {
+const getIdError = (id: string) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  let msg: string | null = null;
-  if (!id) msg = ERROR_MSG_ID_EMPTY;
-  else if (!emailRegex.test(id)) msg = ERROR_MSG_ID_FORM;
-  return msg;
+  let errorMsg: string | null = null;
+  if (!id) errorMsg = ERROR_MSG_ID_EMPTY;
+  else if (!emailRegex.test(id)) errorMsg = ERROR_MSG_ID_FORM;
+  return errorMsg;
 };
-const isValidPassword = (password: string) => {
-  let msg: string | null = null;
-  if (!password) msg = ERROR_MSG_PASSWORD_EMPTY;
-  else if (password.length < 8) msg = ERROR_MSG_PASSWORD_FORM;
-  return msg;
+const getPasswordError = (password: string) => {
+  let errorMsg: string | null = null;
+  if (!password) errorMsg = ERROR_MSG_PASSWORD_EMPTY;
+  else if (password.length < 8) errorMsg = ERROR_MSG_PASSWORD_FORM;
+  return errorMsg;
 };
 
 const Content = styled.div`
@@ -126,7 +119,6 @@ const InputWrapper = styled.div`
 
 type InputType = {
   errorMsg: string | null;
-  theme: ThemeType;
 };
 const Input = styled.input<InputType>`
   width: 100%;

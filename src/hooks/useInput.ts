@@ -4,21 +4,18 @@ type ValidatorType = (value: string) => string | null;
 
 const useInput = (initialValue: string, validator: ValidatorType) => {
   const [value, setValue] = useState(initialValue);
-  const [active, setActive] = useState(false);
+  const [isTouched, setIsTouched] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
-    if (active) {
-      setErrorMsg(validator(event.target.value));
-    }
+    const newValue = event.target.value;
+    setValue(newValue);
+    isTouched && setErrorMsg(validator(newValue));
   };
 
   const onBlur = () => {
-    if (!active) {
-      setActive(true);
-      setErrorMsg(validator(value));
-    }
+    setIsTouched(true);
+    setErrorMsg(validator(value));
   };
 
   return { value, onChange, errorMsg, onBlur };

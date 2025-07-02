@@ -1,80 +1,59 @@
-import type { ThemeType } from "@/types/ThemeType";
-import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
-import { useState } from "react";
 import RankingList from "@/components/RankingList";
-import { rankingTargetCategory } from "@/assets/rankingTargetCategory";
+import { rankingRankCategoryList, rankingTargetCategory } from "@/assets/rankingCategory";
 import { useSearchParams } from "react-router-dom";
-
-const rankingRankCategoryList = {
-  MANY_WISH: "받고 싶어한",
-  MANY_RECEIVE: "많이 선물한",
-  MANY_WISH_RECEIVE: "위시로 받은",
-} as const;
 
 const Ranking = () => {
   const [rankingCategoryParams, setRankCategoryParams] = useSearchParams();
-  const targetTypeCategory = () => {
-    const targetType = rankingCategoryParams.get("targetType")?.trim();
-    if (targetType && rankingTargetCategory.some((item) => item.targetType === targetType)) {
-      return targetType;
-    } else {
-      return rankingTargetCategory[0].targetType;
-    }
-  };
-  const rankTypeCategory = () => {
-    const rankType = rankingCategoryParams.get("rankType")?.trim();
-    if (rankType && rankType in rankingRankCategoryList) {
-      return rankType;
-    }
-    return Object.keys(rankingRankCategoryList)[0];
-  };
 
-  const [selectedTargetCategory, setSelectedTargetCategory] = useState(targetTypeCategory);
-  const [selectedRankCategory, setSelectedRankCategory] = useState(rankTypeCategory);
-  const theme = useTheme();
+  const targetTypeParams = rankingCategoryParams.get("targetType")?.trim();
+  const rankTypeParams = rankingCategoryParams.get("rankType")?.trim();
 
-  const handleSelectedChange = () => {
-    rankingCategoryParams.set("targetType", selectedTargetCategory);
-    rankingCategoryParams.set("rankType", selectedRankCategory);
-    setRankCategoryParams(rankingCategoryParams, {
-      replace: true,
-    });
+  const isValidTarget = targetTypeParams && rankingTargetCategory.some((item) => item.targetType === targetTypeParams);
+  const isValidRank = rankTypeParams && rankTypeParams in rankingRankCategoryList;
+
+  const selectedTarget = isValidTarget ? targetTypeParams : rankingTargetCategory[0].targetType;
+  const selectedRank = isValidRank ? rankTypeParams : Object.keys(rankingRankCategoryList)[0];
+
+  const changeTargetType = (targetType: string) => {
+    rankingCategoryParams.set("targetType", targetType);
+    setRankCategoryParams(rankingCategoryParams, { replace: true });
+  };
+  const changeRankType = (rankType: string) => {
+    rankingCategoryParams.set("rankType", rankType);
+    setRankCategoryParams(rankingCategoryParams, { replace: true });
   };
   return (
     <Container>
       <Title>실시간 급상승 선물랭킹</Title>
       <NavBar>
         <TargetCategoryList>
-          {rankingTargetCategory.map((e) => (
+          {rankingTargetCategory.map((targetCategory) => (
             <TargetCategory
-              key={e.targetType}
+              key={targetCategory.targetType}
               onClick={() => {
-                setSelectedTargetCategory(e.targetType);
-                handleSelectedChange();
+                changeTargetType(targetCategory.targetType);
               }}
             >
-              <TargetCategoryImg selected={isSelected(e.targetType, selectedTargetCategory)} theme={theme}>
-                {e.image}
+              <TargetCategoryImg selected={checkSelected(targetCategory.targetType, selectedTarget)}>
+                {targetCategory.image}
               </TargetCategoryImg>
-              <TargetCategoryName selected={isSelected(e.targetType, selectedTargetCategory)} theme={theme}>
-                {e.name}
+              <TargetCategoryName selected={checkSelected(targetCategory.targetType, selectedTarget)}>
+                {targetCategory.name}
               </TargetCategoryName>
             </TargetCategory>
           ))}
         </TargetCategoryList>
         <RankCategoryList>
-          {Object.entries(rankingRankCategoryList).map(([keyword, value]) => (
+          {Object.entries(rankingRankCategoryList).map(([keyword, rankCategory]) => (
             <RankCategory
               key={keyword}
-              selected={isSelected(keyword, selectedRankCategory)}
-              theme={theme}
+              selected={checkSelected(keyword, selectedRank)}
               onClick={() => {
-                setSelectedRankCategory(keyword);
-                handleSelectedChange();
+                changeRankType(keyword);
               }}
             >
-              {value}
+              {rankCategory}
             </RankCategory>
           ))}
         </RankCategoryList>
@@ -84,7 +63,7 @@ const Ranking = () => {
   );
 };
 
-const isSelected = (element: string, selected: string) => {
+const checkSelected = (element: string, selected: string) => {
   return element === selected;
 };
 
@@ -124,7 +103,6 @@ const TargetCategory = styled.button`
 `;
 type SelectedAndTheme = {
   selected: boolean;
-  theme: ThemeType;
 };
 const TargetCategoryImg = styled.div<SelectedAndTheme>`
   width: 2.75rem;
@@ -134,13 +112,21 @@ const TargetCategoryImg = styled.div<SelectedAndTheme>`
   align-items: center;
   justify-content: center;
   border-radius: 1rem;
-  background-color: ${(props) => (props.selected ? props.theme.color.blue600 : props.theme.color.blue200)};
-  color: ${(props) => (props.selected ? props.theme.color.gray00 : props.theme.color.gray500)};
   font-weight: bold;
+  ${({ selected, theme }) => {
+    return `
+      background-color: ${selected ? theme.color.blue600 : theme.color.blue200};
+      color: ${selected ? theme.color.gray00 : theme.color.gray500};
+  `;
+  }}
 `;
 const TargetCategoryName = styled.p<SelectedAndTheme>`
-  font: ${({ theme }) => theme.typography.label1Bold};
-  color: ${(props) => (props.selected ? props.theme.color.blue600 : props.theme.color.gray500)};
+  ${({ selected, theme }) => {
+    return `
+      font: ${theme.typography.label1Bold};
+      color: ${selected ? theme.color.blue600 : theme.color.gray500};
+  `;
+  }}
 `;
 const RankCategoryList = styled.div`
   width: 100%;
@@ -154,13 +140,16 @@ const RankCategoryList = styled.div`
 `;
 const RankCategory = styled.button<SelectedAndTheme>`
   width: 100%;
-  font: ${(props) => (props.selected ? props.theme.typography.label1Bold : props.theme.typography.label1Regular)};
   align-items: center;
   justify-content: center;
   background-color: transparent;
   border: none;
-  color: ${(props) => (props.selected ? props.theme.color.blue600 : props.theme.color.blue400)};
   cursor: pointer;
+  ${({ selected, theme }) => {
+    return `
+      font: ${selected ? theme.typography.label1Bold : theme.typography.label1Regular};
+      color: ${selected ? theme.color.blue600 : theme.color.blue400};`;
+  }}
 `;
 
 export default Ranking;

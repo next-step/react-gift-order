@@ -19,11 +19,9 @@ const Navigation = () => {
     navigate(ROUTE_PATH.HOME);
   };
   const goLogin = () => {
-    let path: string = `${ROUTE_PATH.LOGIN}`;
-    if ((Object.values(ROUTE_PATH) as string[]).includes(location.pathname)) {
-      path = path + `?redirect=${location.pathname}`;
-    }
-    navigate(path);
+    const isValidPath = (Object.values(ROUTE_PATH) as string[]).includes(location.pathname);
+    const loginPath = isValidPath ? ROUTE_PATH.LOGIN + `?redirect=${location.pathname}` : ROUTE_PATH.LOGIN;
+    navigate(loginPath);
   };
   return (
     <Container>

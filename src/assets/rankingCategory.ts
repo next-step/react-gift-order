@@ -1,6 +1,4 @@
-import type { RankingTargetCategoryType } from "@/types/RankingTargetCategoryType";
-
-export const rankingTargetCategory: RankingTargetCategoryType[] = [
+export const rankingTargetCategory = [
   {
     image: "ALL",
     name: "전체",
@@ -21,4 +19,10 @@ export const rankingTargetCategory: RankingTargetCategoryType[] = [
     name: "청소년이",
     targetType: "TEEN",
   },
-];
+] as const;
+
+export const rankingRankCategoryList = {
+  MANY_WISH: "받고 싶어한",
+  MANY_RECEIVE: "많이 선물한",
+  MANY_WISH_RECEIVE: "위시로 받은",
+} as const;

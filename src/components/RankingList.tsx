@@ -2,24 +2,23 @@ import { rankingItemMock } from "@/assets/rankingItemMock";
 import styled from "@emotion/styled";
 import Divider from "@/components/Divider";
 import { useState } from "react";
-import type { ThemeType } from "@/types/ThemeType";
-import { useTheme } from "@emotion/react";
 import Button from "@/components/common/Button";
 
 const RANKING_LIST_ITEM_VIEW_COUNT = 6;
 
 const RankingList = () => {
   const [viewCount, setViewCount] = useState(RANKING_LIST_ITEM_VIEW_COUNT);
-  const theme = useTheme();
-  const isClosed = viewCount === RANKING_LIST_ITEM_VIEW_COUNT;
+  const isCollapsed = viewCount === RANKING_LIST_ITEM_VIEW_COUNT;
+  const toggleView = () => {
+    const nextViewCount = isCollapsed ? rankingItemMock.length : RANKING_LIST_ITEM_VIEW_COUNT;
+    setViewCount(nextViewCount);
+  };
   return (
     <Container>
       <Content>
         {rankingItemMock.slice(0, viewCount).map((item, index) => (
           <Item key={item.id}>
-            <ItemRank ranking={index + 1} theme={theme}>
-              {index + 1}
-            </ItemRank>
+            <ItemRank ranking={index + 1}>{index + 1}</ItemRank>
             <ItemContent>
               <ItemContentImg src={item.imageURL} />
               <ItemContentBrand>{item.brandInfo.name}</ItemContentBrand>
@@ -34,14 +33,8 @@ const RankingList = () => {
       </Content>
       <Divider />
       <ItemContent>
-        <Button
-          variant="secondary"
-          onClick={() => {
-            const rankingListItemViewMaxCount = isClosed ? rankingItemMock.length : RANKING_LIST_ITEM_VIEW_COUNT;
-            setViewCount(rankingListItemViewMaxCount);
-          }}
-        >
-          {isClosed ? "더보기" : "접기"}
+        <Button variant="secondary" onClick={toggleView}>
+          {isCollapsed ? "더보기" : "접기"}
         </Button>
       </ItemContent>
       <Divider />
@@ -64,7 +57,6 @@ const Item = styled.div`
 `;
 type RankingAndTheme = {
   ranking: number;
-  theme: ThemeType;
 };
 const ItemRank = styled.span<RankingAndTheme>`
   position: absolute;
@@ -77,9 +69,13 @@ const ItemRank = styled.span<RankingAndTheme>`
   justify-content: center;
   top: 0.25rem;
   left: 0.25rem;
-  font: ${({ theme }) => theme.typography.label1Bold};
-  color: ${({ theme }) => theme.color.gray00};
-  background-color: ${(props) => (props.ranking <= 3 ? props.theme.color.red500 : props.theme.color.gray700)};
+  ${({ ranking, theme }) => {
+    return `
+      font: ${theme.typography.label1Bold};
+      color: ${theme.color.gray00};
+      background-color: ${ranking <= 3 ? theme.color.red500 : theme.color.gray700};
+    `;
+  }}
 `;
 const ItemContent = styled.div`
   width: 100%;
