@@ -9,11 +9,16 @@ export function LoginPage() {
   const from = location.state?.from?.pathname || '/'
 
   const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [emailError, setEmailError] = useState('')
+  const [passwordError, setPasswordError] = useState('')
   const [emailTouched, setEmailTouched] = useState(false)
+  const [passwordTouched, setPasswordTouched] = useState(false)
 
   const isEmailValid = (value: string) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+
+  const isPasswordValid = (value: string) => value.length >= 8
 
   const validateEmail = () => {
     setEmailTouched(true)
@@ -26,9 +31,21 @@ export function LoginPage() {
     }
   }
 
+  const validatePassword = () => {
+    setPasswordTouched(true)
+    if (!password) {
+      setPasswordError('PW를 입력해주세요.')
+    } else if (!isPasswordValid(password)) {
+      setPasswordError('PW는 최소 8글자 이상이어야 합니다.')
+    } else {
+      setPasswordError('')
+    }
+  }
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
     validateEmail()
+    validatePassword()
     navigate(from, { replace: true })
   }
 
@@ -63,7 +80,30 @@ export function LoginPage() {
           />
           {emailTouched && emailError && <Error>{emailError}</Error>}
 
-          <Input type="password" placeholder="비밀번호" />
+          <Input
+            type="password"
+            placeholder="비밀번호"
+            value={password}
+            onChange={(e) => {
+              const newValue = e.target.value
+              setPassword(newValue)
+
+              if (passwordTouched) {
+                if (!newValue) {
+                  setPasswordError('PW를 입력해주세요.')
+                } else if (!isPasswordValid(newValue)) {
+                  setPasswordError('PW는 최소 8글자 이상이어야 합니다.')
+                } else {
+                  setPasswordError('')
+                }
+              }
+            }}
+            onBlur={() => {
+              setPasswordTouched(true)
+              validatePassword()
+            }}
+          />
+          {passwordTouched && passwordError && <Error>{passwordError}</Error>}
           <LoginButton onClick={handleLogin}>로그인</LoginButton>
         </Form>
       </Container>
