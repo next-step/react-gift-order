@@ -1,10 +1,12 @@
 import styled from "@emotion/styled";
+import UserContext from "@src/contexts/UserContext";
 import type { InputErrorHandlerHook } from "@src/hooks/useInputErrorHandler";
 import useInputErrorHandler from "@src/hooks/useInputErrorHandler";
 import useUserInfo, { type UserInfoHook } from "@src/hooks/useUserInfo";
 import theme from "@src/styles/kakaoTheme";
 import { createNewIDEvaluator } from "@src/utils/evaluator/implementation/idEvaluator";
 import { createNewPWEvaluator } from "@src/utils/evaluator/implementation/passwordEvaluator";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 function LoginForm() {
@@ -15,11 +17,13 @@ function LoginForm() {
   const pwEvaluator = createNewPWEvaluator();
   const inputErrorHandler: InputErrorHandlerHook = useInputErrorHandler();
 
+  const userContext = useContext(UserContext);
+
   const handleLogin = (userInfo: UserInfoHook) => {
-    console.log({
-      email: userInfo.email.value,
-      password: userInfo.password.value
-    });
+    userContext?.valid.setValue(true);
+    userContext?.email.setValue(userInfo.email.value);
+    userContext?.user.setValue(userInfo.email.value.split("@")[0]);
+
     if (window.history.length > 1) {
       navigate(-1);
     } else {
