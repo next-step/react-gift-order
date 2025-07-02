@@ -39,12 +39,12 @@ export function ProductListSection() {
     }
   }, [])
 
-  const handleGenderClick = (option: string) => {
+  const selectGender = (option: string) => {
     setSelectedGender(option)
     localStorage.setItem('selectedGender', option)
   }
 
-  const handleTopicClick = (option: string) => {
+  const selectTopic = (option: string) => {
     setSelectedTopic(option)
     localStorage.setItem('selectedTopic', option)
   }
@@ -62,7 +62,7 @@ export function ProductListSection() {
           <span
             key={option}
             className={selectedGender === option ? 'active' : ''}
-            onClick={() => handleGenderClick(option)}
+            onClick={() => selectGender(option)}
           >
             {getEmoji(option)} {option}
           </span>
@@ -74,7 +74,7 @@ export function ProductListSection() {
           <span
             key={option}
             className={selectedTopic === option ? 'active' : ''}
-            onClick={() => handleTopicClick(option)}
+            onClick={() => selectTopic(option)}
           >
             {option}
           </span>

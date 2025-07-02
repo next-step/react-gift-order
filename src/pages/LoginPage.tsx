@@ -24,7 +24,7 @@ export function LoginPage() {
     setPasswordTouched,
   } = useLoginForm()
 
-  const handleLogin = (e: React.FormEvent) => {
+  const submitLoginForm = (e: React.FormEvent) => {
     e.preventDefault()
     validateEmail(email)
     validatePassword(password)
@@ -39,7 +39,7 @@ export function LoginPage() {
       <Navbar />
       <Container>
         <Logo>kakao</Logo>
-        <Form onSubmit={handleLogin}>
+        <Form onSubmit={submitLoginForm}>
           <Input
             type="email"
             placeholder="이메일"
