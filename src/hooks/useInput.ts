@@ -26,8 +26,16 @@ export const useInput = (initialValue: string, rule: Rule) => {
     setError(errorMessage)
   }
 
+  // * 초기화
+  // ? 추후 여러 폼 작성 시에 필요할 것 같아 추가
+  const reset = () => {
+    setValue(initialValue)
+    setError(null)
+    setIsBlurred(false)
+  }
+
   // * 유효성 여부 (버튼 활성화용)
   const isValid = validateValue(value, rule) === null
 
-  return { value, error, handleChange, handleBlur, isValid }
+  return { value, error, handleChange, handleBlur, isValid, reset }
 }
