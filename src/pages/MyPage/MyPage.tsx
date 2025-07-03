@@ -1,10 +1,7 @@
+import { useAuth } from "@/contexts/AuthContext";
 import Layout from "@/layout";
 import styled from "@emotion/styled";
-
-const user = {
-  email: "test@test.com",
-};
-const logout = () => {};
+import { useNavigate } from "react-router-dom";
 
 const MyPageContainer = styled.div`
   padding: ${({ theme }) => theme.spacing[4]} 0 0
@@ -40,13 +37,21 @@ const LogoutButton = styled.button`
 `;
 
 function MyPage() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login", { replace: true });
+  };
+
   return (
     <Layout>
       <MyPageContainer>
         <Title>마이 페이지</Title>
-        <Greeting>{user.email.split("@")[0]}님 안녕하세요!</Greeting>
-        <Email>이메일 주소는 {user.email}입니다.</Email>
-        <LogoutButton onClick={logout}>로그아웃</LogoutButton>
+        <Greeting>{user?.email.split("@")[0]}님 안녕하세요!</Greeting>
+        <Email>이메일 주소는 {user?.email}입니다.</Email>
+        <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
       </MyPageContainer>
     </Layout>
   );
