@@ -33,11 +33,7 @@ const inputDiv = css`
   font: inherit;
 `;
 
-const inputStyle = (
-  focused: boolean,
-  hasError: boolean,
-  touched: boolean
-) => css`
+const inputStyle = (hasError: boolean, touched: boolean) => css`
   width: 100%;
   box-sizing: border-box;
   color: ${theme.colors.gray900};
@@ -49,14 +45,13 @@ const inputStyle = (
   line-height: 1.375rem;
   padding: 8px 0px;
   border-width: 0px 0px 1px;
-  border-color: ${focused
-    ? theme.colors.gray700
-    : hasError && touched
-      ? theme.colors.red700
-      : theme.colors.textDisabled};
+  border-color: ${hasError && touched
+    ? theme.colors.red700
+    : theme.colors.textDisabled};
 
   &:focus {
     outline: none;
+    border-color: ${theme.colors.gray700};
   }
 
   &::placeholder {
@@ -103,25 +98,8 @@ const spacer48 = css`
 `;
 
 const Login = () => {
-  const {
-    email,
-    setEmail,
-    emailFocused,
-    setEmailFocused,
-    emailTouched,
-    emailError,
-    handleEmailBlur,
-
-    pw,
-    setPw,
-    pwFocused,
-    setPwFocused,
-    pwTouched,
-    pwError,
-    handlePwBlur,
-
-    loginActivated,
-  } = useLoginForm();
+  const { formValue, handleChange, handleBlur, isError, loginActivated } =
+    useLoginForm();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -137,32 +115,32 @@ const Login = () => {
       <section css={sectionStyle}>
         <div css={inputDiv}>
           <input
-            css={inputStyle(emailFocused, !!emailError, emailTouched)}
+            css={inputStyle(!!isError.email, formValue.email !== '')}
             placeholder="이메일"
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            onFocus={() => setEmailFocused(true)}
-            onBlur={handleEmailBlur}
+            name="email"
+            value={formValue.email}
+            onChange={handleChange}
+            onBlur={() => handleBlur('email')}
           />
-          {emailTouched && emailError && (
-            <p css={errorMessageStyle}>{emailError}</p>
-          )}
+          {isError.email && <p css={errorMessageStyle}>{isError.email}</p>}
         </div>
 
         <div css={spacer16} />
 
         <div css={inputDiv}>
           <input
-            css={inputStyle(pwFocused, !!pwError, pwTouched)}
+            css={inputStyle(!!isError.password, formValue.password !== '')}
             placeholder="비밀번호"
             type="password"
-            value={pw}
-            onChange={(e) => setPw(e.target.value)}
-            onFocus={() => setPwFocused(true)}
-            onBlur={handlePwBlur}
+            name="password"
+            value={formValue.password}
+            onChange={handleChange}
+            onBlur={() => handleBlur('password')}
           />
-          {pwTouched && pwError && <p css={errorMessageStyle}>{pwError}</p>}
+          {isError.password && (
+            <p css={errorMessageStyle}>{isError.password}</p>
+          )}
         </div>
 
         <div css={spacer48} />

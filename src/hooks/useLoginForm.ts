@@ -4,7 +4,7 @@ const EMAIL_REQUIRED_ERROR = 'ID를 입력해주세요.';
 const EMAIL_INVALID_FORMAT_ERROR = 'ID는 이메일 형식으로 입력해주세요.';
 
 const PASSWORD_REQUIRED_ERROR = 'PW를 입력해주세요.';
-const PASSWORD_MIN_LENGTH_ERROR = 'PW는 최소 8글자 이상이어야 합니다.'
+const PASSWORD_MIN_LENGTH_ERROR = 'PW는 최소 8글자 이상이어야 합니다.';
 const PASSWORD_MIN_LENGTH = 8;
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -22,65 +22,73 @@ const validatePassword = (value: string) => {
 };
 
 const useLoginForm = () => {
-  const [email, setEmail] = useState('');
-  const [emailFocused, setEmailFocused] = useState(false);
+  const [formValue, setFormValue] = useState({
+    email: '',
+    password: '',
+  });
+
+  const [isError, setIsError] = useState({
+    email: '',
+    password: '',
+  });
+
+  // 상태를 줄이는 과정에서 상태 검토(없애도 스타일 동일 작동 예상)
   const [emailTouched, setEmailTouched] = useState(false);
-  const [emailError, setEmailError] = useState('');
+  const [passwordTouched, setPasswordTouched] = useState(false);
 
-  const [pw, setPw] = useState('');
-  const [pwFocused, setPwFocused] = useState(false);
-  const [pwTouched, setPwTouched] = useState(false);
-  const [pwError, setPwError] = useState('');
-
+  // 상태를 줄이는 과정에서 삭제 검토
   const [loginActivated, setLoginActivated] = useState(false);
 
   useEffect(() => {
-    setEmailError(validateEmail(email));
-  }, [email, emailTouched]);
-
-  useEffect(() => {
-    if (pwTouched) {
-      setPwError(validatePassword(pw));
+    if (emailTouched) {
+      setIsError((prev) => ({
+        ...prev,
+        email: validateEmail(formValue.email),
+      }));
     }
-  }, [pw, pwTouched]);
+  }, [formValue.email, emailTouched]);
 
   useEffect(() => {
-    const emailValid = validateEmail(email) === '';
-    const pwValid = validatePassword(pw) === '';
-    setLoginActivated(emailValid && pwValid);
-  }, [email, pw]);
+    if (passwordTouched) {
+      setIsError((prev) => ({
+        ...prev,
+        password: validatePassword(formValue.password),
+      }));
+    }
+  }, [formValue.password, passwordTouched]);
 
-  const handleEmailBlur = () => {
-    setEmailFocused(false);
-    setEmailTouched(true);
-    setEmailError(validateEmail(email));
+  useEffect(() => {
+    const isEmailValid = validateEmail(formValue.email) === '';
+    const isPasswordValid = validatePassword(formValue.password) === '';
+    setLoginActivated(isEmailValid && isPasswordValid);
+  }, [formValue]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormValue((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handlePwBlur = () => {
-    setPwFocused(false);
-    setPwTouched(true);
-    setPwError(validatePassword(pw));
+  const handleBlur = (field: 'email' | 'password') => {
+    if (field === 'email') {
+      setEmailTouched(true);
+      setIsError((prev) => ({
+        ...prev,
+        email: validateEmail(formValue.email),
+      }));
+    } else {
+      setPasswordTouched(true);
+      setIsError((prev) => ({
+        ...prev,
+        password: validatePassword(formValue.password),
+      }));
+    }
   };
 
   return {
-    email,
-    setEmail,
-    emailFocused,
-    setEmailFocused,
-    emailTouched,
-    setEmailTouched,
-    emailError,
-    handleEmailBlur,
-
-    pw,
-    setPw,
-    pwFocused,
-    setPwFocused,
-    pwTouched,
-    setPwTouched,
-    pwError,
-    handlePwBlur,
-
+    formValue,
+    handleChange,
+    handleBlur,
+    isError,
     loginActivated,
   };
 };
