@@ -35,16 +35,15 @@ const LoginFormTitle = styled.h1`
 `;
 
 interface InputProps {
-  hasIdError?: string;
-  hasPwError?: string;
+  invalid?: string;
   hasEnabled?: boolean;
 }
 
-const LoginFormId = styled.input<InputProps>`
+const LoginFormInput = styled.input<InputProps>`
   border-top: none;
   border-left: none;
   border-right: none;
-  border-bottom: 1px solid ${({ theme ,hasIdError}) => hasIdError ? theme.colors.red[400] : theme.colors.gray[400]};
+  border-bottom: 1px solid ${({ theme ,invalid}) => invalid ? theme.colors.red[400] : theme.colors.gray[400]};
   height: 40px;
   font-size: ${({ theme }) => theme.typography.title2Regular.fontSize};
   font-weight: ${({ theme }) => theme.typography.title2Regular.fontWeight};
@@ -54,30 +53,14 @@ const LoginFormId = styled.input<InputProps>`
     outline: none;
     border-bottom: 1px solid ${({ theme }) => theme.colors.gray[700]};
   }
-
-`;
+`
 
 const LoginFormErrorText = styled.p`
     color: red;
     font-size: 14px;
 `
 
-const LoginFormPw = styled.input<InputProps>`
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  border-bottom: 1px solid ${({ theme ,hasPwError}) => hasPwError ? theme.colors.red[400] : theme.colors.gray[400]};
-  margin-top: 25px;
-  height: 40px;
-  font-size: ${({ theme }) => theme.typography.title2Regular.fontSize};
-  font-weight: ${({ theme }) => theme.typography.title2Regular.fontWeight};
-  line-height: ${({ theme }) => theme.typography.title2Regular.lineHeight};
 
-  &:focus {
-    outline: none;
-    border-bottom: 1px solid ${({ theme }) => theme.colors.gray[700]};
-  }
-`;
 
 const LoginFormBtn = styled.button<InputProps>`
   background-color: ${({ theme ,hasEnabled}) => hasEnabled ? theme.colors.semantic.kakaoYellow : '#fff19b'};
@@ -124,9 +107,9 @@ function Login() {
         <LoginFormWrapper>
           <LoginForm>
             <LoginFormTitle>KAKAO</LoginFormTitle>
-            <LoginFormId placeholder='이메일' type='email' value={id.value} onChange={id.onChange} onBlur={id.onBlur} hasIdError={id.error}></LoginFormId>
+            <LoginFormInput placeholder='이메일' type='email' value={id.value} onChange={id.onChange} onBlur={id.onBlur} invalid={id.error}></LoginFormInput>
             {id.error && <LoginFormErrorText>{id.error}</LoginFormErrorText>}
-            <LoginFormPw placeholder='비밀번호' type='password' value={pw.value} onChange={pw.onChange} onBlur={pw.onBlur} hasPwError={pw.error}></LoginFormPw>
+            <LoginFormInput placeholder='비밀번호' type='password' value={pw.value} onChange={pw.onChange} onBlur={pw.onBlur} invalid={pw.error}></LoginFormInput>
             {pw.error && <LoginFormErrorText>{pw.error}</LoginFormErrorText>}
             <LoginFormBtn onClick={handleLogin} hasEnabled={isFormValid}>로그인</LoginFormBtn>
           </LoginForm>
