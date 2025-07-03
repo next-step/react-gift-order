@@ -1,5 +1,6 @@
 import { useAuth } from "@/contexts/AuthContext";
 import Layout from "@/layout";
+import { getUserName } from "@/utils/auth";
 import styled from "@emotion/styled";
 import { useNavigate } from "react-router-dom";
 
@@ -40,6 +41,8 @@ function MyPage() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
+  const userName = getUserName(user?.email || "");
+
   const handleLogout = () => {
     logout();
     navigate("/login", { replace: true });
@@ -49,7 +52,7 @@ function MyPage() {
     <Layout>
       <MyPageContainer>
         <Title>마이 페이지</Title>
-        <Greeting>{user?.email.split("@")[0]}님 안녕하세요!</Greeting>
+        <Greeting>{userName}님 안녕하세요!</Greeting>
         <Email>이메일 주소는 {user?.email}입니다.</Email>
         <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
       </MyPageContainer>
