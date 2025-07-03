@@ -36,7 +36,6 @@ const LoginFormTitle = styled.h1`
 
 interface InputProps {
   invalid?: string;
-  hasEnabled?: boolean;
 }
 
 const LoginFormInput = styled.input<InputProps>`
@@ -60,16 +59,18 @@ const LoginFormErrorText = styled.p`
     font-size: 14px;
 `
 
-
-
 const LoginFormBtn = styled.button<InputProps>`
-  background-color: ${({ theme ,hasEnabled}) => hasEnabled ? theme.colors.semantic.kakaoYellow : '#fff19b'};
-  cursor: ${({hasEnabled}) => (hasEnabled ? 'pointer' : 'not-allowed')};
+  background-color: ${({ theme }) => theme.colors.semantic.kakaoYellow };
+  cursor: pointer;
   border: none;
   border-radius: 5px;
   height: 40px;
   margin-top: 25px;
   
+  &:disabled {
+    background-color: '#fff19b';
+    cursor: not-allowed;
+  }
 `;
 
 const validateEmail = (v: string) => {
@@ -111,7 +112,7 @@ function Login() {
             {id.error && <LoginFormErrorText>{id.error}</LoginFormErrorText>}
             <LoginFormInput placeholder='비밀번호' type='password' value={pw.value} onChange={pw.onChange} onBlur={pw.onBlur} invalid={pw.error}></LoginFormInput>
             {pw.error && <LoginFormErrorText>{pw.error}</LoginFormErrorText>}
-            <LoginFormBtn onClick={handleLogin} hasEnabled={isFormValid}>로그인</LoginFormBtn>
+            <LoginFormBtn onClick={handleLogin} disabled={!isFormValid}>로그인</LoginFormBtn>
           </LoginForm>
         </LoginFormWrapper>
       </Layout>
