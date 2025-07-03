@@ -1,24 +1,16 @@
-import styled from "@emotion/styled";
+import { forwardRef, Fragment } from "react";
 
-export type InputProps = React.ComponentProps<"input">;
+import * as Styles from "@/shared/ui/Input.styled";
 
-export const Input = styled.input<InputProps>`
-    width: ${({ width }) => width};
-    height: ${({ height }) => height};
+export interface InputProps extends React.ComponentProps<"input"> {
+    error?: string;
+}
 
-    padding: 8px 0px;
-
-    border: none;
-    border-bottom: 1px solid;
-    border-color: ${({ theme }) => theme.colors.gray.gray400};
-
-    font-size: 1rem;
-
-    outline: none;
-
-    transition: border-color 100ms ease-in-out;
-
-    &:focus {
-        border-color: ${({ theme }) => theme.colors.gray.gray900};
-    }
-`;
+export const Input = forwardRef<HTMLInputElement, InputProps>(({ error, ...props }, ref) => {
+    return (
+        <Fragment>
+            <Styles.InputElement type="text" ref={ref} error={error} {...props} />
+            <Styles.InputErrorMessage>{error}</Styles.InputErrorMessage>
+        </Fragment>
+    );
+});
