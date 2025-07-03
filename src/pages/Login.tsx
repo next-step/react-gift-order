@@ -83,12 +83,13 @@ const Login: React.FC = () => {
     handleEmailBlur,
     handlePasswordChange,
     handlePasswordBlur,
+    handleSubmit,
   } = useLoginForm();
 
   return (
     <LoginWrapper>
       <Logo>kakao</Logo>
-      <Form>
+      <Form onSubmit={handleSubmit}>
         {/* 이메일 입력 필드 */}
         <Input
           type="email"
