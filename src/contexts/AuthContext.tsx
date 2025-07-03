@@ -30,7 +30,7 @@ export const AuthProvider = ({
     setIsAuthenticated(true);
     setUserEmail(email);
     localStorage.setItem('isAuthenticated', 'true');
-    localStorage.seItem('userEmail', email);
+    localStorage.setItem('userEmail', email);
   };
 
   const logout = () => {
