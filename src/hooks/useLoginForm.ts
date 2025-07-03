@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+const MIN_PASSWORD_LENGTH = 8;
+
 function useLoginForm() {
   const [id, setId] = useState<string>('');
   const [pw, setPw] = useState<string>('');
@@ -24,7 +26,7 @@ function useLoginForm() {
     if (!pw) {
       setPwError('PW를 입력해주세요.');
       return false;
-    } else if (pw.length < 8) {
+    } else if (pw.length < MIN_PASSWORD_LENGTH) {
       setPwError('PW는 최소 8글자 이상이어야 합니다.');
       return false;
     }
