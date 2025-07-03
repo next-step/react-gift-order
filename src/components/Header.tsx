@@ -12,7 +12,7 @@ export default function Header() {
         <IconButton aria-label="뒤로가기" onClick={() => navigate(-1)}>
           <FiChevronLeft size={24} />
         </IconButton>
-        <Title>선물하기</Title>
+        <Title onClick={() => navigate("/")}>선물하기</Title>
         <IconButton
           aria-label="마이페이지"
           onClick={() => {
@@ -47,8 +47,7 @@ const Inner = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: ${({ theme }) => theme.typography.title1Bold.fontSize};
-  font-weight: ${({ theme }) => theme.typography.title1Bold.fontWeight};
-  line-height: ${({ theme }) => theme.typography.title1Bold.lineHeight};
+  ${({ theme }) => theme.typography.title1Bold};
   color: ${({ theme }) => theme.colors.text.default};
+  cursor: pointer;
 `;
