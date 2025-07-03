@@ -6,6 +6,7 @@ import { StyledLoginButton } from '@styles/Login/StyledLoginButton';
 import { StyledLoginComponentContainerDiv } from '@styles/Login/StyledLoginComponentContainerDiv';
 import { StyledLoginComponentDiv } from '@styles/Login/StyledLoginComponentDiv';
 import { StyledLoginKakoLogo } from '@styles/Login/StyledLoginKakoLogo';
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
@@ -21,6 +22,15 @@ const Login: React.FC = () => {
 
   const { id, idError, handleIdBlur, handleIdChange } = useLoginEmailForm();
   const { pw, pwError, handlePwBlur, handlePwChange } = useLoginPwForm();
+
+  // 로그인 버튼 활성화 조건 (기존과 동일)
+  const isLoginButtonEnabled = useMemo(() => {
+    const isIdValid = !id || idError ? false : true;
+    const isPasswordValid = !pw || pwError ? false : true;
+
+    return isIdValid && isPasswordValid;
+  }, [id, pw, idError, pwError]);
+
   return (
     <>
       <NavigationBar />
@@ -33,6 +43,7 @@ const Login: React.FC = () => {
             onChange={handleIdChange}
             onBlur={handleIdBlur}
             id='loginid'
+            isError={idError}
             placeholder='이메일'
           ></StyeldLoginInput>
           {idError && <p>{idError}</p>}
@@ -42,10 +53,13 @@ const Login: React.FC = () => {
             onChange={handlePwChange}
             onBlur={handlePwBlur}
             id='passwd'
+            isError={pwError}
             placeholder='비밀번호'
           ></StyeldLoginInput>
           {pwError && <p>{pwError}</p>}
-          <StyledLoginButton onClick={handelBackOrHome}>로그인</StyledLoginButton>
+          <StyledLoginButton onClick={handelBackOrHome} disabled={!isLoginButtonEnabled}>
+            로그인
+          </StyledLoginButton>
         </StyledLoginComponentDiv>
       </StyledLoginComponentContainerDiv>
     </>
