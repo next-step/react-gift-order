@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import styled from '@emotion/styled';
 import { FaPlus } from 'react-icons/fa';
+import { useUserManagement } from '../pages/Login/userManagement';
 
 const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.color.gray.gray300};
@@ -36,6 +37,8 @@ const Text = styled.span`
 `;
 
 const FriendSelector = () => {
+  const { user } = useUserManagement();
+  const name = user?.email.split('@')[0];
 
   return (
     <Wrapper>
@@ -43,7 +46,9 @@ const FriendSelector = () => {
         <IconWrapper>
           <FaPlus size={12} color="black" />
         </IconWrapper>
-        <Text>선물할 친구를 선택해 주세요.</Text>
+        <Text>
+          {user ? `${name}님! 선물할 친구를 선택해 주세요.` : '선물할 친구를 선택해 주세요.'}
+        </Text>
       </Button>
     </Wrapper>
   );
