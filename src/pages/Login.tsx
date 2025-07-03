@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "@emotion/styled";
 import { useLoginForm } from "../hooks/useLoginForm";
+import { useNavigate } from "react-router-dom";
+import { Layout } from "../Components/layout/Layout";
 
 const LoginWrapper = styled.div`
   min-height: 100vh;
@@ -72,6 +74,7 @@ const LoginButton = styled.button`
 `;
 
 const Login: React.FC = () => {
+  const navigate = useNavigate();
   // 커스텀 훅에서 모든 상태와 핸들러를 받아옴
   const {
     email,
@@ -84,37 +87,41 @@ const Login: React.FC = () => {
     handlePasswordChange,
     handlePasswordBlur,
     handleSubmit,
-  } = useLoginForm();
+  } = useLoginForm({
+    onSuccess: () => navigate("/my")
+  });
 
   return (
-    <LoginWrapper>
-      <Logo>kakao</Logo>
-      <Form onSubmit={handleSubmit}>
-        {/* 이메일 입력 필드 */}
-        <Input
-          type="email"
-          placeholder="이메일"
-          autoComplete="username"
-          value={email}
-          onChange={handleEmailChange}
-          onBlur={handleEmailBlur}
-        />
-        <ErrorMessage>{emailError}</ErrorMessage>
-        {/* 비밀번호 입력 필드 */}
-        <Input
-          type="password"
-          placeholder="비밀번호"
-          autoComplete="current-password"
-          value={password}
-          onChange={handlePasswordChange}
-          onBlur={handlePasswordBlur}
-        />
-        <ErrorMessage>{passwordError}</ErrorMessage>
-        <LoginButton type="submit" disabled={!isFormValid}>
-          로그인
-        </LoginButton>
-      </Form>
-    </LoginWrapper>
+    <Layout>
+      <LoginWrapper>
+        <Logo>kakao</Logo>
+        <Form onSubmit={handleSubmit}>
+          {/* 이메일 입력 필드 */}
+          <Input
+            type="email"
+            placeholder="이메일"
+            autoComplete="username"
+            value={email}
+            onChange={handleEmailChange}
+            onBlur={handleEmailBlur}
+          />
+          <ErrorMessage>{emailError}</ErrorMessage>
+          {/* 비밀번호 입력 필드 */}
+          <Input
+            type="password"
+            placeholder="비밀번호"
+            autoComplete="current-password"
+            value={password}
+            onChange={handlePasswordChange}
+            onBlur={handlePasswordBlur}
+          />
+          <ErrorMessage>{passwordError}</ErrorMessage>
+          <LoginButton type="submit" disabled={!isFormValid}>
+            로그인
+          </LoginButton>
+        </Form>
+      </LoginWrapper>
+    </Layout>
   );
 };
 

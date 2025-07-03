@@ -1,6 +1,10 @@
 import { useInput } from "./useInput";
 
-export function useLoginForm() {
+interface UseLoginFormOptions {
+  onSuccess?: () => void;
+}
+
+export function useLoginForm(options?: UseLoginFormOptions) {
   const validateEmail = (value: string) => {
     if (!value) return "ID를 입력해주세요.";
     const emailRegex = /^[\w.-]+@[\w.-]+\.[A-Za-z]{2,}$/;
@@ -30,6 +34,9 @@ export function useLoginForm() {
         password: passwordInput.value 
       });
       // 로그인 성공 API 추가
+      if (options && options.onSuccess) {
+        options.onSuccess();
+      }
     }
   };
 

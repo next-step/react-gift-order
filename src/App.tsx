@@ -5,6 +5,8 @@ import GlobalStyle from '@/styles/GlobalStyle'
 import Home from '@/pages/Home'
 import Login from './pages/Login'
 import NotFound from './pages/NotFound'
+import MyPage from "./pages/MyPage";
+import ProtectedRoute from "./Components/ProtectedRoute";
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { LoginProvider } from "./contexts/LoginContext"
 
@@ -19,8 +21,14 @@ function App() {
           <BrowserRouter>
             <GlobalStyle />
             <Routes>
+              
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/my" element={
+                <ProtectedRoute>
+                  <MyPage />
+                </ProtectedRoute>
+              } />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
 
 export interface User {
@@ -16,12 +16,25 @@ const LoginContext = createContext<LoginContextType | undefined>(undefined);
 export function LoginProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
 
+  useEffect(() => {
+    const stored = sessionStorage.getItem("user");
+    if (stored) {
+      try {
+        setUser(JSON.parse(stored));
+      } catch (e) {
+        setUser(null);
+      }
+    }
+  }, []);
+
   const login = (userInfo: User) => {
     setUser(userInfo);
+    sessionStorage.setItem("user", JSON.stringify(userInfo));
   };
 
   const logout = () => {
     setUser(null);
+    sessionStorage.removeItem("user");
   };
 
   return (
