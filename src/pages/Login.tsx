@@ -7,12 +7,14 @@ import { PageContainer } from '@/components/common/PageContainer'
 import { Button } from '@/components/common/Button'
 import { useInput } from '@/hooks/useInput'
 import { ROUTH_PATH } from '@/Router'
+import { VALIDATE_RULES } from '@/data/validateRules'
 
 // * 로그인 화면
 export const Login = () => {
-  // * 이메일, 비밀번호 입력 상태 관리 (useInput 커스텀 훅 사용)
-  const email = useInput('', validateEmail)
-  const password = useInput('', validatePassword)
+  // * 이메일, 비밀번호 입력 상태 관리 (useInput 커스텀 훅 & VALIDATE_RULES 사용)
+  // ? VALIDATE_RULES : 유효성 검증을 위해 별도로 관리되는 규칙 상수 데이터
+  const email = useInput('', VALIDATE_RULES.email)
+  const password = useInput('', VALIDATE_RULES.password)
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -67,33 +69,6 @@ export const Login = () => {
       </LoginForm>
     </PageContainer>
   )
-}
-
-// ! 이메일 형식 검사를 위한 정규식
-const EMAIL_REGEX = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
-
-// * 이메일 유효성 검사 함수
-const validateEmail = (email: string): string | null => {
-  if (!email.trim()) {
-    return 'ID를 입력해주세요.'
-  }
-  if (!EMAIL_REGEX.test(email)) {
-    return 'ID는 이메일 형식으로 입력해주세요.'
-  }
-
-  return null
-}
-
-// * 비밀번호 유효성 검사 함수
-const validatePassword = (password: string): string | null => {
-  if (!password.trim()) {
-    return 'PW를 입력해주세요.'
-  }
-  if (password.length < 8) {
-    return 'PW는 최소 8글자 이상이어야 합니다.'
-  }
-
-  return null
 }
 
 // * 로고 이미지
