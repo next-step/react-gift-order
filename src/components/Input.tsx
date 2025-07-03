@@ -1,15 +1,5 @@
 import type { SerializedStyles } from "@emotion/react";
 
-{
-  /* <input
-          onChange={email.onChange}
-          onBlur={email.onBlur}
-          css={inputStyle(theme)}
-          type="text"
-          placeholder="이메일"
-        /> */
-}
-
 interface InputProps {
   type: string;
   placeholder: string;
