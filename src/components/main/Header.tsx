@@ -39,8 +39,8 @@ export const Header = () => {
   const location = useLocation();
 
   const handleLoginClick = () => {
-    const userEmail = getUserInfo();
-    if (userEmail) {
+    const userInfo = getUserInfo();
+    if (userInfo) {
       navigate(ROUTE_PATH.MY);
     } else {
       navigate(

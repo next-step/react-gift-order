@@ -23,7 +23,6 @@ const MyPageGreet = styled.p(({ theme }) => ({
 export const MyPageSection = () => {
   const navigate = useNavigate();
   const userInfo = getUserInfo();
-  const userName = userInfo ? userInfo.email.split("@")[0] : "";
 
   const handleLogout = () => {
     removeUserInfo();
@@ -33,7 +32,9 @@ export const MyPageSection = () => {
   return (
     <>
       <MyPageHeader>마이 페이지</MyPageHeader>
-      <MyPageGreet>{userName ? `${userName}님 안녕하세요!` : ""}</MyPageGreet>
+      <MyPageGreet>
+        {userInfo ? `${userInfo.userName}님 안녕하세요!` : ""}
+      </MyPageGreet>
       <MyPageGreet>
         {userInfo ? `이메일 주소는 ${userInfo.email}입니다.` : ""}
       </MyPageGreet>

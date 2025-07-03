@@ -13,11 +13,13 @@ export const setUserInfo = (userInfo: UserInfo) => {
   }
 };
 
-export const getUserInfo = (): UserInfo | null => {
+export const getUserInfo = (): (UserInfo & { userName: string }) | null => {
   try {
     const userInfoString = sessionStorage.getItem(EMAIL_STORAGE_KEY);
     if (!userInfoString) return null;
-    return JSON.parse(userInfoString);
+    const userInfo = JSON.parse(userInfoString) as UserInfo;
+    const userName = userInfo ? userInfo.email.split("@")[0] : "";
+    return { ...userInfo, userName };
   } catch (e) {
     console.error("세션 스토리지에서 키 가져오기 실패", e);
     return null;
