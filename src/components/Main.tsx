@@ -1,9 +1,9 @@
-import GlobalStyle from "@/styles/GlobalStyle";
-import Category from "@/components/Category";
-import SelectFriend from "@/components/SelectFriend";
-import Cheering from "@/components/Cheering";
-import GiftRanking from "@/components/GiftRankingBox";
-import GiftRankingHeader from "@/components/GiftRankingHeader";
+import GlobalStyle from "@/styles/GlobalStyle.tsx";
+import Category from "@/components/Category.tsx";
+import SelectFriend from "@/components/SelectFriend.tsx";
+import Cheering from "@/components/Cheering.tsx";
+import GiftRanking from "@/components/GiftRankingBox.tsx";
+import GiftRankingHeader from "@/components/GiftRankingHeader.tsx";
 
 const Main = () => {
   return (

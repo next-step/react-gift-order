@@ -10,19 +10,19 @@ const Login = () => {
   const ref = useRef(null);
 
   const passwordValidator = {
-    test: (pw) => {
-      return pw.length >= 8;
+    test: (password: string) => {
+      return password.length >= 8;
     },
   };
 
   const exp = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
-  function useValidate(validator) {
+  function useValidate(validator: any) {
     const [string, setString] = useState("");
     const [isValid, setIsValid] = useState(false);
     const [message, setMessage] = useState("");
 
-    const onChange = (e) => {
+    const onChange = (e: any) => {
       setString(e.target.value);
       if (validator.test(string)) {
         setIsValid(true);
@@ -50,9 +50,9 @@ const Login = () => {
   const isFormValid = email.isValid && password.isValid;
 
   return (
-    <div css={containerStyle(theme)}>
+    <div css={containerStyle()}>
       <h1 css={textSytle(theme)}>로그인</h1>
-      <div css={inputContainerSytle(theme)}>
+      <div css={inputContainerSytle()}>
         <input
           onChange={email.onChange}
           onBlur={email.onBlur}
@@ -118,7 +118,7 @@ const textSytle = (theme: Theme) => css`
   margin-bottom: 20px;
 `;
 
-const inputContainerSytle = (theme: Theme) => css`
+const inputContainerSytle = () => css`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -137,7 +137,7 @@ const inputSytle = (theme: Theme) => css`
   }
 `;
 
-const containerStyle = (theme: Theme) => css`
+const containerStyle = () => css`
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -1,5 +1,5 @@
 import { css } from "@emotion/react";
-import { Theme } from "@emotion/react";
+import type { Theme } from "@emotion/react";
 import { IoAppsOutline, IoWomanOutline, IoManOutline } from "react-icons/io5";
 import { useTheme } from "@emotion/react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -51,35 +51,35 @@ const GiftRankingHeader = () => {
         />
         <IoAppsOutline
           onClick={() => handleTargetClick("ALL")}
-          css={[
-            iconStyle(theme),
-            target == "ALL" && selectedTargetStyle(theme),
-          ]}
+          css={[iconStyle(), target == "ALL" && selectedTargetStyle(theme)]}
         />
       </div>
       <div css={tabContainerStyle(theme)}>
         <div
           onClick={() => handleRankClick("MANY-WANT")}
           css={[
-            tabItemStyle(theme),
+            tabItemStyle(),
             rankType == "MANY-WANT" && selectedRankStyle(theme),
-          ]}>
+          ]}
+        >
           받고 싶어한
         </div>
         <div
           onClick={() => handleRankClick("MANY-GIVE")}
           css={[
-            tabItemStyle(theme),
+            tabItemStyle(),
             rankType == "MANY-GIVE" && selectedRankStyle(theme),
-          ]}>
+          ]}
+        >
           많이 선물한
         </div>
         <div
           onClick={() => handleRankClick("MANY-WISH")}
           css={[
-            tabItemStyle(theme),
+            tabItemStyle(),
             rankType == "MANY-WISH" && selectedRankStyle(theme),
-          ]}>
+          ]}
+        >
           위시로 받은
         </div>
       </div>
@@ -110,7 +110,7 @@ const containerStyle = css`
   border-radius: 16px;
 `;
 
-const iconStyle = (theme: Theme) => css`
+const iconStyle = () => css`
   font-size: 24px;
   cursor: pointer;
   border-radius: 20%;
@@ -128,7 +128,7 @@ const tabContainerStyle = (theme: Theme) => css`
   background-color: ${theme.colors.blue.blue100};
 `;
 
-const tabItemStyle = (theme: Theme) => css`
+const tabItemStyle = () => css`
   flex: 1;
   padding: 12px 16px;
   text-align: center;

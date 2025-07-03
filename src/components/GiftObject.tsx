@@ -2,7 +2,23 @@ import type { Theme } from "@emotion/react";
 import { css } from "@emotion/react";
 import { useTheme } from "@emotion/react";
 
-const GiftObject = ({ gift }) => {
+interface Gift {
+  id: number;
+  name: string;
+  imageURL: string;
+  price: {
+    basicPrice: number;
+    discountRate: number;
+    sellingPrice: number;
+  };
+  brandInfo: {
+    id: number;
+    name: string;
+    imageURL: string;
+  };
+}
+
+const GiftObject = ({ gift }: { gift: Gift }) => {
   const theme = useTheme();
   return (
     <div css={giftStyle(theme)}>
