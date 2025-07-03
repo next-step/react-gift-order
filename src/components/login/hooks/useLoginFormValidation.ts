@@ -6,6 +6,8 @@ export default function useLoginFormValidation() {
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [isPasswordValid, setIsPasswordValid] = useState(false);
 
@@ -24,6 +26,10 @@ export default function useLoginFormValidation() {
   };
 
   return {
+    email,
+    setEmail,
+    password,
+    setPassword,
     isFormValid,
     handleEmailValidityChange,
     handlePasswordValidityChange,
