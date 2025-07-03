@@ -10,3 +10,9 @@
 - ID, PW 입력될때마다 즉시 에러메시지 갱신하도록 구현
 - ID의 조건과 PW 조건이 모두 충족 되었을 때에만 로그인 버튼 활성화.
 - 커스텀 훅으로 ID, PW 유효성 검증 로직 구현
+
+## 1단계 과제 피드백 적용 내용
+
+- ID, PW 유효성검사를 최초에는 onBlur시에만 하도록 하고, 그 이후에는 onChange마다 하도록 로직 수정
+- useEmailInput.ts와 usePasswordInput.ts를 병합해서 useInput.ts파일로 유지
+- 로그인 화면에서 엔터를 통해 로그인 버튼을 누를 수 있도록 기능 추가 (onSubmit사용)
