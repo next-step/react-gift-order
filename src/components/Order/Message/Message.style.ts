@@ -46,6 +46,6 @@ export const TextAreaWrapper = styled.div`
         border-radius: 5px;
         font-size: 15px;
         padding: 5px 8px;
-        margin-bottom: 40px;
+        margin: 0 20px 40px 20px;
     }
 `

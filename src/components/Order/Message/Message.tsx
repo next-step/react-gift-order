@@ -7,7 +7,7 @@ import {
   MessageImage,
   TextAreaWrapper,
   Wrapper,
-} from '@/components/Order/Message.style.ts';
+} from '@/components/Order/Message/Message.style.ts';
 
 export default function Message() {
   const [image, setImage] = useState(orderMessage[0].imageUrl);
