@@ -32,30 +32,8 @@ const useLoginForm = () => {
     password: '',
   });
 
-  // 상태를 줄이는 과정에서 상태 검토(없애도 스타일 동일 작동 예상)
-  const [emailTouched, setEmailTouched] = useState(false);
-  const [passwordTouched, setPasswordTouched] = useState(false);
-
   // 상태를 줄이는 과정에서 삭제 검토
   const [loginActivated, setLoginActivated] = useState(false);
-
-  useEffect(() => {
-    if (emailTouched) {
-      setIsError((prev) => ({
-        ...prev,
-        email: validateEmail(formValue.email),
-      }));
-    }
-  }, [formValue.email, emailTouched]);
-
-  useEffect(() => {
-    if (passwordTouched) {
-      setIsError((prev) => ({
-        ...prev,
-        password: validatePassword(formValue.password),
-      }));
-    }
-  }, [formValue.password, passwordTouched]);
 
   useEffect(() => {
     const isEmailValid = validateEmail(formValue.email) === '';
@@ -66,17 +44,19 @@ const useLoginForm = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormValue((prev) => ({ ...prev, [name]: value }));
+    setIsError((prev) => ({
+      ...prev,
+      [name]: name === 'email' ? validateEmail(value) : validatePassword(value),
+    }));
   };
 
   const handleBlur = (field: 'email' | 'password') => {
     if (field === 'email') {
-      setEmailTouched(true);
       setIsError((prev) => ({
         ...prev,
         email: validateEmail(formValue.email),
       }));
     } else {
-      setPasswordTouched(true);
       setIsError((prev) => ({
         ...prev,
         password: validatePassword(formValue.password),
