@@ -20,7 +20,7 @@ const LoginFormSection = () => {
     setPassword,
     passwordError,
     validatePassword,
-    isButtonValid,
+    isValidForm,
   } = useLoginForm();
 
   const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,7 +64,7 @@ const LoginFormSection = () => {
             placeholder="비밀번호"
           />
         </InputWrapper>
-        <LoginButton type="submit" disabled={!isButtonValid}>
+        <LoginButton type="submit" disabled={!isValidForm}>
           로그인
         </LoginButton>
       </FormWrapper>
