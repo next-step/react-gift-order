@@ -34,7 +34,7 @@ function IDField({
         required
         isError={hasError && isEmailBlurredRef.current}
       />
-      {isEmailBlurredRef.current && (
+      {isEmailBlurredRef.current && errorMessage && (
         <FormErrorMessage errorMessage={errorMessage} />
       )}
     </>

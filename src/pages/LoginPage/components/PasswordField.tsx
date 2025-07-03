@@ -34,7 +34,7 @@ function PasswordField({
         isError={hasError && isPasswordBlurredRef.current}
         onBlur={(e) => handlePasswordBlur(e.target.value)}
       />
-      {isPasswordBlurredRef.current && (
+      {isPasswordBlurredRef.current && errorMessage && (
         <FormErrorMessage errorMessage={errorMessage} />
       )}
     </>

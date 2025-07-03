@@ -1,10 +1,6 @@
 import { ErrorMessage } from "../LoginPage.styles";
 
-function FormErrorMessage({ errorMessage }: { errorMessage: string | null }) {
-  if (!errorMessage) {
-    return null;
-  }
-
+function FormErrorMessage({ errorMessage }: { errorMessage: string }) {
   return <ErrorMessage>{errorMessage}</ErrorMessage>;
 }
 
