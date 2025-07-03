@@ -63,8 +63,11 @@ function useLoginForm({ onSuccess }: UseLoginFormProps) {
   // 폼 제출 핸들러
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // 모든 조건이 충족되면 onSuccess 콜백 실행
-    if (!validateEmail(email) && !validatePassword(password)) {
+    // 1. boolean 변수로 명확하게 분리
+    const isValidEmail = validateEmail(email) === '';
+    const isValidPassword = validatePassword(password) === '';
+    // 2. 두 조건이 모두 true일 때만 onSuccess 호출
+    if (isValidEmail && isValidPassword) {
       onSuccess();
     }
   };
