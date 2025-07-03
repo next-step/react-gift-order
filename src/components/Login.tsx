@@ -27,14 +27,14 @@ const Login = () => {
     const [isValid, setIsValid] = useState(false);
     const [message, setMessage] = useState("");
 
-    const onChange = (e: any) => {
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const nextValue = e.target.value;
       setString(nextValue);
       setIsValid(validator(nextValue));
     };
 
-    const onBlur = () => {
-      if (string == "") {
+    const onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+      if (e.target.value === "") {
         setMessage("값을 입력해주세요");
       } else if (!isValid) {
         setMessage(errorMessage);
