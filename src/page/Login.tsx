@@ -1,107 +1,17 @@
 import useInput from '@/hook/useInput';
-import theme from '@/styles/theme';
-import styled from '@emotion/styled';
+import { validateEmail, validatePassword } from '@/utils/validateInput';
 import { useNavigate } from 'react-router-dom';
+import { EmptyDiv16h, EmptyDiv48h, ErrorMessage, InputSection, KakaoLogo, LoginButton, LoginMain, LoginSection, MyDiv } from './Login.styled';
 
-const MyDiv = styled.div`
-  max-width: 720px;
-  width: 100%;
-  min-height: 100vh;
-  height: 100%;
-  background-color: rgb(255, 255, 255);
-  padding-top: 2.75rem;
-`;
-
-const LoginMain = styled.main`
-  width: 100%;
-  height: calc(-2.75rem + 100vh);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`;
-
-const KakaoLogo = styled.img`
-  width: 5.5rem;
-  color: rgb(42, 48, 56);
-`;
-const LoginSection = styled.section`
-  width: 100%;
-  max-width: 26.25rem;
-  padding: 16px;
-`;
-
-const InputSection = styled.input<{ hasError?: boolean }>`
-  width: 100%;
-  box-sizing: border-box;
-  color: rgb(42, 48, 56);
-  transition: border-color 200ms;
-  border-style: solid;
-  min-height: 2.75rem;
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.375rem;
-  padding: 8px 0px;
-  border-width: 0px 0px 1px;
-  border-color: ${({ hasError }) => (hasError ? 'red' : 'rgb(220, 222, 227)')};
-  
-`;
-
-const LoginButton = styled.button<{ hasError?: boolean }>`
-  width: 100%;
-  height: 2.75rem;
-  font-size: 0.875rem;
-  font-weight: 400;
-  line-height: 1.1875rem;
-  color: rgb(42, 48, 56);
-  background-color: ${theme.colors.kakaoYellow};
-  border-radius: 4px;
-  border: none;
-  cursor: ${({hasError}) => (hasError? 'pointer' : 'not-allowed' ) };
-  transition: background-color 200ms;
-`;
-
-const EmptyDiv1 = styled.div`
-  width: 100%;
-  height: 16px;
-  background-color: transparent;
-`;
-
-const EmptyDiv2 = styled.div`
-  width: 100%;
-  height: 48px;
-  background-color: transparent;
-`;
-
-const ErrorMessage = styled.div`
-  color: red;
-  font-size: 0.75rem;
-  margin-top: 4px;
-`;
-
-const validateEmail = (value: string): string | null => {
-  if (!value) return 'ID를 입력해주세요.';
-  // 간단한 이메일 형식 체크 정규식
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(value)) return 'ID는 이메일 형식으로 입력해주세요.';
-  return null;
-};
-
-// 비밀번호 유효성 검사 함수
-const validatePassword = (value: string): string | null => {
-  if (!value) return 'PW를 입력해주세요.';
-  if (value.length < 8) return 'PW는 최소 8글자 이상이어야 합니다.';
-  return null;
-};
 
 const Login = () => {
 
     const navigate = useNavigate();
-    const id = useInput('', validateEmail);
-    const pw = useInput('', validatePassword);
+    const id = useInput(validateEmail);
+    const pw = useInput(validatePassword);
 
-    // 두 조건 모두 충족해야 로그인 버튼 활성화
     const canSubmit = id.isValid && pw.isValid;
+    const handleLoginClick = () =>{canSubmit && navigate('/')};
 
   return (
     <MyDiv>
@@ -122,7 +32,7 @@ const Login = () => {
               />
               {id.error && <ErrorMessage>{id.error}</ErrorMessage>}
           </div>
-          <EmptyDiv1 />
+          <EmptyDiv16h />
           <div>
             <InputSection
               type="password"
@@ -134,11 +44,11 @@ const Login = () => {
             />
             {pw.error && <ErrorMessage>{pw.error}</ErrorMessage>}
           </div>
-          <EmptyDiv2 />
+          <EmptyDiv48h />
           <LoginButton 
             disabled={!canSubmit} 
-            onClick={() => canSubmit && navigate('/')}
-            hasError={!!pw.error || !! id.error}
+            onClick={handleLoginClick}
+            notVaild={!canSubmit}
           >로그인</LoginButton>
         </LoginSection>
       </LoginMain>
