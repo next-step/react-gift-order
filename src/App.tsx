@@ -1,15 +1,15 @@
-import { Route, Routes } from 'react-router-dom';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import NotFound from './pages/NotFound';
+import { ThemeProvider } from '@emotion/react';
+import { BrowserRouter } from 'react-router-dom';
+import { theme } from './theme/theme';
+import { Routes } from './routes/Routes';
 
 const App = () => {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+    <BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <Routes />
+      </ThemeProvider>
+    </BrowserRouter>
   );
 };
 
