@@ -64,11 +64,11 @@ const InputBox = styled.input<StyleProps>(({ theme, hasError }) => ({
   lineHeight: '1.375rem',
   padding: '8px 0px',
   borderWidth: '0px 0px 1px',
-  borderColor: theme.semanticColors.border.default,
+  borderColor: hasError ? theme.semanticColors.state.critical : theme.semanticColors.border.default,
 
   '&:focus': {
     outline: 'none',
-    borderColor: hasError ? theme.semanticColors.state.critical : theme.colorScale.gray700,
+    borderColor: theme.colorScale.gray700,
   },
 
   '::placeholder': {
@@ -147,11 +147,7 @@ const Login: React.FC = () => {
                   onChange={(e) => {
                     handleIdChange(e.target.value);
                   }}
-                  onFocus={(e) => {
-                    e.currentTarget.style.borderColor = 'rgb(134, 139, 148)';
-                  }}
                   onBlur={handleIdBlur}
-                  style={idError ? { borderColor: 'rgb(250, 52, 44)' } : {}}
                 />
                 {idError && (
                   <span
@@ -182,11 +178,7 @@ const Login: React.FC = () => {
                   onChange={(e) => {
                     handlePwChange(e.target.value);
                   }}
-                  onFocus={(e) => {
-                    e.currentTarget.style.borderColor = 'rgb(134, 139, 148)';
-                  }}
                   onBlur={handlePwBlur}
-                  style={pwError ? { borderColor: 'rgb(250, 52, 44)' } : {}}
                 />
                 {pwError && (
                   <span

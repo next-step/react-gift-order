@@ -36,17 +36,11 @@ export const useLoginForm = () => {
   const handleIdBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const err = validateId(e.target.value);
     setIdError(err);
-    if (err) {
-      e.currentTarget.style.borderColor = theme.semanticColors.state.critical;
-    }
   };
 
   const handlePwBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const err = validatePw(e.target.value);
     setPwError(err);
-    if (err) {
-      e.currentTarget.style.borderColor = theme.semanticColors.state.critical;
-    }
   };
 
   return {
