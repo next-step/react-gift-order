@@ -53,7 +53,7 @@ export const Login = () => {
           placeholder="이메일"
           value={email.value}
           onChange={email.handleChange}
-          hasError={!email.isValid}
+          hasError={!!email.error}
           onBlur={email.handleBlur}
         />
         {email.error && <ErrorText>{email.error}</ErrorText>}
@@ -62,7 +62,7 @@ export const Login = () => {
           placeholder="비밀번호"
           value={password.value}
           onChange={password.handleChange}
-          hasError={!password.isValid}
+          hasError={!!password.error}
           onBlur={password.handleBlur}
         />
         {password.error && <ErrorText>{password.error}</ErrorText>}
@@ -71,12 +71,7 @@ export const Login = () => {
           type="submit"
           variant="kakao"
           size="medium"
-          disabled={
-            email.value.length === 0 ||
-            password.value.length === 0 ||
-            !email.isValid ||
-            !password.isValid
-          }
+          disabled={!email.isValid || !password.isValid}
         >
           로그인
         </Button>

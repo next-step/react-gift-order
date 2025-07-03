@@ -12,10 +12,10 @@ export const useInput = (initialValue: string, rule: Rule) => {
     const newValue = e.target.value
     setValue(newValue)
 
-    // * 유효성 검사 함수가 있으면 실행
+    // * blur된 상태에서는 실시간으로 에러 업데이트
     if (isBlurred) {
-      const errorMessage = validateValue(newValue, rule)
-      setError(errorMessage)
+      const newError = validateValue(newValue, rule)
+      setError(newError)
     }
   }
 
@@ -26,8 +26,8 @@ export const useInput = (initialValue: string, rule: Rule) => {
     setError(errorMessage)
   }
 
-  // * 유효성 검사 결과
-  const isValid = !error
+  // * 유효성 여부 (버튼 활성화용)
+  const isValid = validateValue(value, rule) === null
 
   return { value, error, handleChange, handleBlur, isValid }
 }
