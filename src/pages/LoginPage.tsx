@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Section } from '@/components/layout';
 import { Button, ErrorMessage } from '@/components/common';
 import { useLoginForm } from '@/hooks';
@@ -21,9 +22,15 @@ const Logo = styled.div`
   text-align: center;
 `;
 
-const InputGroup = styled.div`
+const LoginForm = styled.form`
   width: 100%;
   max-width: 280px;
+  display: flex;
+  flex-direction: column;
+`;
+
+const InputGroup = styled.div`
+  width: 100%;
   margin-bottom: ${(props) => props.theme.spacing.spacing4};
 `;
 
@@ -63,7 +70,6 @@ const Input = styled.input<{ error?: boolean }>`
 
 const ButtonContainer = styled.div`
   width: 100%;
-  max-width: 280px;
   margin-top: ${(props) => props.theme.spacing.spacing6};
 `;
 
@@ -78,53 +84,75 @@ const LoginPage = () => {
     handlePasswordChange,
     handleEmailBlur,
     handlePasswordBlur,
-    handleLogin,
+    onSubmit,
   } = useLoginForm();
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // LoginPage의 책임: 로그인 성공 후 처리
+  const handleLoginSuccess = ({
+    email,
+    password,
+  }: {
+    email: string;
+    password: string;
+  }) => {
+    console.log('로그인 성공:', { email, password });
+
+    // 이전 페이지로 이동하거나 홈으로 이동
+    const from = location.state?.from || '/';
+    navigate(from, { replace: true });
+  };
 
   return (
     <Section>
       <LoginContainer>
         <Logo>kakao</Logo>
 
-        <InputGroup>
-          <InputLabel htmlFor="email">이메일</InputLabel>
-          <Input
-            id="email"
-            type="email"
-            placeholder="이메일을 입력하세요"
-            value={email}
-            onChange={(e) => handleEmailChange(e.target.value)}
-            onBlur={handleEmailBlur}
-            error={!!emailError}
-          />
-          <ErrorMessage message={emailError} />
-        </InputGroup>
+        <LoginForm onSubmit={onSubmit(handleLoginSuccess)}>
+          <InputGroup>
+            <InputLabel htmlFor="email">이메일</InputLabel>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="이메일을 입력하세요"
+              value={email}
+              onChange={(e) => handleEmailChange(e.target.value)}
+              onBlur={handleEmailBlur}
+              error={!!emailError}
+            />
+            <ErrorMessage message={emailError} />
+          </InputGroup>
 
-        <InputGroup>
-          <InputLabel htmlFor="password">비밀번호</InputLabel>
-          <Input
-            id="password"
-            type="password"
-            placeholder="비밀번호를 입력하세요"
-            value={password}
-            onChange={(e) => handlePasswordChange(e.target.value)}
-            onBlur={handlePasswordBlur}
-            error={!!passwordError}
-          />
-          <ErrorMessage message={passwordError} />
-        </InputGroup>
+          <InputGroup>
+            <InputLabel htmlFor="password">비밀번호</InputLabel>
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="비밀번호를 입력하세요"
+              value={password}
+              onChange={(e) => handlePasswordChange(e.target.value)}
+              onBlur={handlePasswordBlur}
+              error={!!passwordError}
+            />
+            <ErrorMessage message={passwordError} />
+          </InputGroup>
 
-        <ButtonContainer>
-          <Button
-            variant="primary"
-            size="lg"
-            fullWidth
-            onClick={handleLogin}
-            disabled={!isFormValid}
-          >
-            로그인
-          </Button>
-        </ButtonContainer>
+          <ButtonContainer>
+            <Button
+              type="submit"
+              variant="primary"
+              size="lg"
+              fullWidth
+              disabled={!isFormValid}
+            >
+              로그인
+            </Button>
+          </ButtonContainer>
+        </LoginForm>
       </LoginContainer>
     </Section>
   );

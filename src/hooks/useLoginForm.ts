@@ -1,11 +1,15 @@
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 import {
   getEmailErrorMessage,
   getPasswordErrorMessage,
   isValidEmail,
   isValidPassword,
 } from '@/utils';
+
+interface LoginFormData {
+  email: string;
+  password: string;
+}
 
 interface UseLoginFormReturn {
   email: string;
@@ -17,7 +21,9 @@ interface UseLoginFormReturn {
   handlePasswordChange: (value: string) => void;
   handleEmailBlur: () => void;
   handlePasswordBlur: () => void;
-  handleLogin: () => void;
+  onSubmit: (
+    callback: (data: LoginFormData) => void
+  ) => (e: React.FormEvent) => void;
 }
 
 export const useLoginForm = (): UseLoginFormReturn => {
@@ -27,8 +33,6 @@ export const useLoginForm = (): UseLoginFormReturn => {
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [isEmailTouched, setIsEmailTouched] = useState(false);
   const [isPasswordTouched, setIsPasswordTouched] = useState(false);
-  const navigate = useNavigate();
-  const location = useLocation();
 
   const handleEmailChange = (value: string) => {
     setEmail(value);
@@ -64,12 +68,16 @@ export const useLoginForm = (): UseLoginFormReturn => {
     !emailError &&
     !passwordError;
 
-  const handleLogin = () => {
-    console.log('로그인 성공:', { email, password });
+  const onSubmit =
+    (callback: (data: LoginFormData) => void) => (e: React.FormEvent) => {
+      e.preventDefault();
 
-    const from = location.state?.from || '/';
-    navigate(from, { replace: true });
-  };
+      if (!isFormValid) {
+        return;
+      }
+
+      callback({ email, password });
+    };
 
   return {
     email,
@@ -81,6 +89,6 @@ export const useLoginForm = (): UseLoginFormReturn => {
     handlePasswordChange,
     handleEmailBlur,
     handlePasswordBlur,
-    handleLogin,
+    onSubmit,
   };
 };
