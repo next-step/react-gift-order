@@ -6,7 +6,7 @@ interface InputProps {
   type: string;
   placeholder: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onBlur: () => void;
+  onBlur: (e: React.FocusEvent) => void;
   css: SerializedStyles;
   message: string;
 }
