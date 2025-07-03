@@ -16,6 +16,7 @@ export const validatePw = (pw: string): string | undefined => {
     return 'PW를 입력해주세요.';
   }
   if (pw.length < MIN_PASSWORD_LENGTH) {
-    return `PW는 최소 ${MIN_PASSWORD_LENGTH}글자 이상이어야 합니다.`;}
+    return `PW는 최소 ${MIN_PASSWORD_LENGTH}글자 이상이어야 합니다.`;
+  }
   return;
 };
