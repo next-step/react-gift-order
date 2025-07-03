@@ -51,8 +51,8 @@ const Login = () => {
 
   return (
     <div css={containerStyle()}>
-      <h1 css={textSytle(theme)}>로그인</h1>
-      <div css={inputContainerSytle(theme)}>
+      <h1 css={textStyle(theme)}>로그인</h1>
+      <div css={inputContainerStyle(theme)}>
         <input
           onChange={email.onChange}
           onBlur={email.onBlur}
@@ -60,14 +60,20 @@ const Login = () => {
           type="text"
           placeholder="이메일"
         />
-        <p style={{ color: "red", fontSize: "12px", marginTop: "4px" }}>
+        <p
+          style={{
+            color: "red",
+            fontSize: "12px",
+            marginTop: "4px",
+          }}
+        >
           {email.message}
         </p>
 
         <input
           onChange={password.onChange}
           onBlur={password.onBlur}
-          css={inputSytle(theme)}
+          css={inputStyle(theme)}
           type="password"
           placeholder="비밀번호"
         />
@@ -85,7 +91,7 @@ const Login = () => {
           }
         }}
         ref={ref}
-        css={buttonSytle(theme, isFormValid)}
+        css={buttonStyle(theme, isFormValid)}
         disabled={!isFormValid}
       >
         로그인
@@ -96,7 +102,7 @@ const Login = () => {
 
 export default Login;
 
-const buttonSytle = (theme: Theme, enabled: boolean) => css`
+const buttonStyle = (theme: Theme, enabled: boolean) => css`
   background-color: ${enabled
     ? theme.colors.semantic.kakaoYellow
     : "rgba(255, 230, 0, 0.5)"};
@@ -110,7 +116,7 @@ const buttonSytle = (theme: Theme, enabled: boolean) => css`
   transition: background-color 0.3s ease;
 `;
 
-const textSytle = (theme: Theme) => css`
+const textStyle = (theme: Theme) => css`
   font-size: ${theme.typography.title1Regular.size};
   font-weight: ${theme.typography.title1Regular.weight};
   line-height: ${theme.typography.title1Regular.lineHeight};
@@ -118,7 +124,7 @@ const textSytle = (theme: Theme) => css`
   margin-bottom: 20px;
 `;
 
-const inputContainerSytle = (theme: Theme) => css`
+const inputContainerStyle = (theme: Theme) => css`
   display: flex;
   flex-direction: column;
   align-items: center;
