@@ -10,8 +10,6 @@ const Login = () => {
   const navigate = useNavigate();
   const ref = useRef(null);
 
-  const EMAIL_REGEXP = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-
   const validateEmail = (email: string) => {
     const EMAIL_REGEXP = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return Boolean(EMAIL_REGEXP.test(email));
@@ -122,13 +120,13 @@ const textStyle = (theme: Theme) => css`
 `;
 
 const inputContainerStyle = (theme: Theme) => css`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  gap: 16px;
-  padding: ${theme.spacing.spacing6};
-  }
+display: flex;
+flex-direction: column;
+align-items: center;
+width: 100%;
+gap: 16px;
+padding: ${theme.spacing.spacing6};
+}
 `;
 
 const inputStyle = (theme: Theme) => css`
