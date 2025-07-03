@@ -4,7 +4,6 @@ import { FiArrowLeft, FiUser } from 'react-icons/fi';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useInputWithValidation } from '../hooks/useInputValidation';
 
-
 const PageWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -61,7 +60,6 @@ const InputStyle = styled.input`
   }
 `;
 
-
 const ErrorText = styled.p`
   width: 100%;
   margin-bottom: 16px;
@@ -97,12 +95,10 @@ const validateEmail = (value: string) => {
 
 const validatePassword = (value: string) => {
   if (!value.trim()) return 'PW는 반드시 입력되어야 합니다.';
+  if (value.length >= 8) return 'PW는 최소 8글자 이상이어야 합니다.';
 
-  return value.length >= 8
-    ? ''
-    : 'PW는 최소 8글자 이상이어야 합니다.';
+  return '';
 };
-
 
 const Login = () => {
   const navigate = useNavigate();
@@ -169,7 +165,6 @@ const Login = () => {
         </LoginContainer>
       </MainContent>
     </PageWrapper>
-
   );
 };
 

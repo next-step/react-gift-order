@@ -130,7 +130,6 @@ export const reset = css`
     border-spacing: 0;
   }
   html,
-  body,
   #root {
     height: 100%;
     margin: 0;

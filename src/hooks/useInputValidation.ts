@@ -8,23 +8,23 @@ export const useInputWithValidation = (
 ) => {
   const [value, setValue] = useState(initialValue);
   const [error, setError] = useState('');
-  const [touched, setTouched] = useState(false);
+  const [focused, setFocused] = useState(false);
 
   useEffect(() => {
-    if (touched) {
+    if (focused) {
       setError(validate(value));
     }
-  }, [value, validate, touched]);
+  }, [value, validate, focused]);
 
   const handleBlur = () => {
-    setTouched(true);
+    setFocused(true);
     setError(validate(value));
   };
 
   return {
     value,
     setValue,
-    error: touched ? error : '',
+    error: focused ? error : '',
     isValid: validate(value) === '',
     handleBlur,
   };

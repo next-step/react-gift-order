@@ -71,14 +71,13 @@ export default function GiftRankingFilter() {
     getValidStoredValue(
       LOCAL_FILTER_KEY,
       filters.map(f => f.key),
-      'all'
+      filters[0].key
     )
   );
 
   const [selectedTab, setSelectedTab] = useState(() =>
     getValidStoredValue(LOCAL_TAB_KEY, tabOptions, tabOptions[0])
   );
-
 
   const handleFilterChange = (key: FilterKey) => {
     setSelected(key);
