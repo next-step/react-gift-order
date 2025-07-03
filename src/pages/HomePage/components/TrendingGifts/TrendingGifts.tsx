@@ -16,7 +16,7 @@ import {
   MoreInfo,
 } from "./TrendingGifts.styles";
 import { LocalStorageProvider } from "@/contexts/LocalStorageContext";
-import { useMainTab, useSubTab } from "@/hooks/useLocalStorage";
+import { useMainTab, useSubTab } from "@/pages/HomePage/hooks/useLocalStorage";
 
 function TrendingGiftsContent() {
   const [mainTabIdx, setMainTabIdx] = useMainTab();
