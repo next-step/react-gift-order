@@ -32,8 +32,7 @@ function IDField({
         onChange={(e) => handleEmailChange(e.target.value)}
         onBlur={(e) => handleBlur(e.target.value)}
         required
-        isError={hasError}
-        isBlurred={isEmailBlurredRef.current}
+        isError={hasError && isEmailBlurredRef.current}
       />
       {isEmailBlurredRef.current && (
         <FormErrorMessage errorMessage={getFormErrorMessage()} />

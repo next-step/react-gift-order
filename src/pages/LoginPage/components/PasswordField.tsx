@@ -31,9 +31,8 @@ function PasswordField({
         value={password}
         onChange={(e) => handlePasswordChange(e.target.value)}
         required
-        isError={hasError}
+        isError={hasError && isPasswordBlurredRef.current}
         onBlur={(e) => handlePasswordBlur(e.target.value)}
-        isBlurred={isPasswordBlurredRef.current}
       />
       {isPasswordBlurredRef.current && (
         <FormErrorMessage errorMessage={getFormErrorMessage()} />

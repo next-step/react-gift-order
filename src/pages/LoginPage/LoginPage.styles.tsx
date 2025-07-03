@@ -32,17 +32,14 @@ export const InputFieldGroup = styled.div`
 
 export const InputField = styled.input<{
   isError: boolean;
-  isBlurred: boolean;
 }>`
   width: 100%;
   height: 2.5rem;
 
   border: none;
   border-bottom: 1px solid
-    ${({ isError, isBlurred, theme }) =>
-      isError && isBlurred
-        ? theme.colors.red[700]
-        : theme.colors.border.default};
+    ${({ isError, theme }) =>
+      isError ? theme.colors.red[700] : theme.colors.border.default};
   border-radius: 0;
   background-color: ${({ theme }) => theme.colors.background.default};
 
