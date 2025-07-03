@@ -10,8 +10,10 @@ import FilterButton from '@/components/Common/FilterButton/FilterButton';
 import SortSpan from "@/components/Common/SortOption/SortOption"
 import RankingCard from '@/components/Common/RankingCard/RankingCard';
 import useSelectedState from '@/hooks/useSelectedState.tsx';
+import { useNavigate } from 'react-router-dom';
 
 export default function GiftRanking() {
+  const navigate = useNavigate();
   const [showCount, setShowCount] = useState(INITIAL_VISIBLE_GIFT_COUNT); // 초기에 6개 보여줌
   const [category, setCategory] = useSelectedState("giftRankingCategory", "전체");
   const [sort, setSort] = useSelectedState("giftRankingSort", "받고 싶어한");
@@ -58,6 +60,12 @@ export default function GiftRanking() {
             name={item.name}
             price={item.price.sellingPrice}
             brand={item.brandInfo.name}
+            onClick={() =>
+              navigate(
+                sessionStorage.getItem('splitedId')
+                ?`/order/${index + 1}`
+                : '/login'
+              )}
           />
         ))}
       </Grid>

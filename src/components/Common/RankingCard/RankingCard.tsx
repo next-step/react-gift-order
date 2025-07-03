@@ -12,13 +12,14 @@ interface Props {
   name: string;
   price: string;
   brand: string;
+  onClick?: () => void;
 }
 
-export default function RankingCard({ rank, image, name, price, brand }: Props) {
+export default function RankingCard({ rank, image, name, price, brand, onClick }: Props) {
   return (
-    <Card>
+    <Card onClick={onClick}>
       <ImageWrapper>
-        <RankBadge>{rank}</RankBadge>
+        <RankBadge rank={rank}>{rank}</RankBadge>
         <ProductImage src={image} alt={name} />
       </ImageWrapper>
       <BrandName>{brand}</BrandName>
