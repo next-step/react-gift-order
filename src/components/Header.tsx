@@ -1,10 +1,10 @@
-import { FiChevronLeft, FiUser } from 'react-icons/fi'
-import styled from '@emotion/styled'
-import { useNavigate } from 'react-router-dom'
-import IconButton from './IconButton'
+import { FiChevronLeft, FiUser } from "react-icons/fi";
+import styled from "@emotion/styled";
+import { useNavigate } from "react-router-dom";
+import IconButton from "./IconButton";
 
 export default function Header() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
     <Container>
@@ -13,12 +13,19 @@ export default function Header() {
           <FiChevronLeft size={24} />
         </IconButton>
         <Title>선물하기</Title>
-        <IconButton aria-label="마이페이지" onClick={() => navigate('/login')}>
+        <IconButton
+          aria-label="마이페이지"
+          onClick={() => {
+            const userInfo = sessionStorage.getItem("userInfo");
+            if (userInfo) navigate("/my");
+            else navigate("/login");
+          }}
+        >
           <FiUser size={24} />
         </IconButton>
       </Inner>
     </Container>
-  )
+  );
 }
 
 const Container = styled.header`
@@ -28,7 +35,7 @@ const Container = styled.header`
   justify-content: center;
   background-color: white;
   position: fixed;
-`
+`;
 
 const Inner = styled.div`
   width: 100%;
@@ -37,11 +44,11 @@ const Inner = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 0 16px;
-`
+`;
 
 const Title = styled.h1`
   font-size: ${({ theme }) => theme.typography.title1Bold.fontSize};
   font-weight: ${({ theme }) => theme.typography.title1Bold.fontWeight};
   line-height: ${({ theme }) => theme.typography.title1Bold.lineHeight};
   color: ${({ theme }) => theme.colors.text.default};
-`
+`;
