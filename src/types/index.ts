@@ -23,3 +23,11 @@ export interface GiftItem {
   price: Price;
   brandInfo: BrandInfo;
 }
+
+export interface RankingItem extends GiftItem {
+  give: number;
+  want: number;
+  receive: number;
+}
+
+export type RankField = 'give' | 'want' | 'receive';

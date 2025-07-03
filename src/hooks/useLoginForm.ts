@@ -31,8 +31,6 @@ export const useLoginForm = () => {
     setPwError(validatePw(pw)?? '');
   };
 
-  //에러없고 아이디 비번 다 있으면 로그인 가능
-  //const isValid = id && pw && !idError && !pwError;
   const isValid = !!(id && !!pw && !idError && !pwError);
 
 

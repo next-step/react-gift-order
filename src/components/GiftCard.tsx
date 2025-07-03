@@ -25,7 +25,7 @@ const info = css`
 `;
 
 interface Props {
-  item: ;
+  item: GiftItem;
   rank: number;
 }
 

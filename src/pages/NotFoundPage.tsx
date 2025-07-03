@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { css, useTheme } from '@emotion/react';
 
 export const NotFoundPage = () => {
-  const { palette, spacing, typography } = useTheme();
+  const { palette, typography } = useTheme();
   return (
     <div
       css={css`
@@ -11,7 +11,7 @@ export const NotFoundPage = () => {
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        gap: ${spacing.spacing4};
+        gap: 12px;
         background: ${palette.gray100};
       `}
     >
@@ -27,7 +27,7 @@ export const NotFoundPage = () => {
       <Link
         to="/"
         css={css`
-          padding: ${spacing.spacing3} ${spacing.spacing6};
+          padding: 12px 24px;
           border-radius: 9999px;
           background: ${palette.blue700};
           color: ${palette.gray00};
