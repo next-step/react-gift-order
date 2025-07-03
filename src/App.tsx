@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Gift from "@/pages/Gift";
 import Login from "@/pages/Login";
 import NotFound from "@/pages/NotFound";
+import Profile from "@/pages/Profile";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Routes>
           <Route path={ROUTE_PATH.HOME} element={<Gift />} />
           <Route path={ROUTE_PATH.LOGIN} element={<Login />} />
+          <Route path={ROUTE_PATH.PROFILE} element={<Profile />} />
           <Route path={ROUTE_PATH.NOT_FOUND} element={<NotFound />} />
         </Routes>
       </BrowserRouter>
@@ -24,6 +26,7 @@ function App() {
 export const ROUTE_PATH = {
   HOME: "/",
   LOGIN: "/login",
+  PROFILE: "/my",
   NOT_FOUND: "*",
 } as const;
 

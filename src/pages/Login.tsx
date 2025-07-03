@@ -28,8 +28,11 @@ const Login = () => {
     }
   }, [searchParams]);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleLoginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    document.cookie = `userId=${id.value}`;
+
     const redirectUrl = getRedirectUrl();
     if (redirectUrl === ROUTE_PATH.LOGIN) {
       navigate(ROUTE_PATH.HOME);
@@ -44,7 +47,7 @@ const Login = () => {
     <Container>
       <Content>
         <Logo>kakao</Logo>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleLoginSubmit}>
           <InputWrapper>
             <Input type="email" placeholder="이메일" onChange={id.onChange} onBlur={id.onBlur} errorMsg={id.errorMsg} />
             <ErrorMsg>{id.errorMsg}</ErrorMsg>
