@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import styled from '@emotion/styled'
 import PersonIcon from '@mui/icons-material/Person'
+import { useNavigate } from 'react-router-dom'
 
 // 타입 정의
 export type FilterKey = 'all' | 'female' | 'male' | 'teen'
@@ -207,6 +208,7 @@ const FILTER_KEY = 'ranking_selected_filter'
 const TAB_KEY = 'ranking_selected_tab'
 
 const RankingSection = () => {
+  const navigate = useNavigate();
   // localStorage에서 초기값 불러오기
   const getInitialFilter = () => {
     const saved = localStorage.getItem(FILTER_KEY)
@@ -260,7 +262,7 @@ const RankingSection = () => {
       </TabRow>
       <Grid>
         {rankingData.map((item) => (
-          <Card key={item.id}>
+          <Card key={item.id} onClick={() => navigate(`/order/${item.id}`)} style={{ cursor: 'pointer' }}>
             <RankBadge>{item.id}</RankBadge>
             <ProductImg src={item.imageURL} alt={item.name} />
             <Brand>{item.brandInfo.name}</Brand>
