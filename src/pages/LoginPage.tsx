@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { ROUTE_PATH } from '@/constants/routes';
 import useLoginForm from '../hooks/useLoginForm';
+import Input from '@/components/common/Input';
 
 const PageBackground = styled.div`
   height: 100vh;
@@ -35,20 +36,6 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 24px;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  padding: 16px 0;
-  border: none;
-  border-bottom: 1px solid #ddd;
-  font-size: 16px;
-  background: transparent;
-  color: #222;
-  outline: none;
-  &::placeholder {
-    color: #bbb;
-  }
 `;
 
 const Button = styled.button`
@@ -107,9 +94,7 @@ function LoginPage() {
               value={email}
               onChange={handleEmailChange}
               onBlur={handleEmailBlur}
-              style={{
-                borderBottom: emailError ? '1.5px solid #f44336' : undefined,
-              }}
+              error={!!emailError} // error가 있으면 true, 없으면 false
             />
             {emailError && <ErrorMsg>{emailError}</ErrorMsg>}
           </div>
@@ -121,9 +106,7 @@ function LoginPage() {
               value={password}
               onChange={handlePasswordChange}
               onBlur={handlePasswordBlur}
-              style={{
-                borderBottom: pwError ? '1.5px solid #f44336' : undefined,
-              }}
+              error={!!pwError}
             />
             {pwError && <ErrorMsg>{pwError}</ErrorMsg>}
           </div>
