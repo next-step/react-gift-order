@@ -5,6 +5,7 @@ import GlobalStyle from '@/styles/global';
 import NavigationBar from '@components/NavigationBar';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useLoginForm } from '@/hooks/useLoginForm';
 
 const Wrapper = styled.div(({ theme }) => ({
   width: '100%',
@@ -113,39 +114,18 @@ const Login: React.FC = () => {
   if (location.state && 'from' in location.state) {
     redirectTo = (location.state as LocationState).from?.pathname ?? '/';
   }
-  // state 생성
-  const [id, setId] = useState('');
-  const [idError, setIdError] = useState('');
-  const [pw, setPw] = useState('');
-  const [pwError, setPwError] = useState('');
 
-  // ID 조건 검사
-  const validateId = (value: string) => {
-    if (!value.trim()) {
-      return 'ID를 입력해주세요.';
-    }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(value)) {
-      return 'ID는 이메일 형식으로 입력해주세요.';
-    }
-    return '';
-  };
-
-  // PW 조건 검사
-  const validatePw = (value: string) => {
-    if (!value.trim()) {
-      return 'PW를 입력해주세요.';
-    }
-    if (value.length < 8) {
-      return 'PW는 최소 8글자 이상이어야 합니다.';
-    }
-    return '';
-  };
-
-  // 유효성 검사
-  const isFormVaild = () => {
-    return validateId(id) === '' && validatePw(pw) === '';
-  };
+  const {
+    id,
+    idError,
+    pw,
+    pwError,
+    handleIdChange,
+    handlePwChange,
+    handleIdBlur,
+    handlePwBlur,
+    isFormValid,
+  } = useLoginForm();
 
   const handleClick = () => {
     navigate(redirectTo, { replace: true });
@@ -165,23 +145,12 @@ const Login: React.FC = () => {
                   value={id}
                   hasError={!!idError}
                   onChange={(e) => {
-                    const value = e.target.value;
-                    setId(value);
-
-                    const error = validateId(value);
-                    setIdError(error);
+                    handleIdChange(e.target.value);
                   }}
                   onFocus={(e) => {
                     e.currentTarget.style.borderColor = 'rgb(134, 139, 148)';
                   }}
-                  onBlur={(e) => {
-                    const err = validateId(e.target.value);
-                    setIdError(err);
-                    // 오류가 있으면 빨간색 테두리 적용
-                    if (err) {
-                      e.currentTarget.style.borderColor = 'red';
-                    }
-                  }}
+                  onBlur={handleIdBlur}
                   style={idError ? { borderColor: 'rgb(250, 52, 44)' } : {}}
                 />
                 {idError && (
@@ -211,23 +180,12 @@ const Login: React.FC = () => {
                   value={pw}
                   hasError={!!pwError}
                   onChange={(e) => {
-                    const value = e.target.value;
-                    setPw(value);
-
-                    const err = validatePw(value);
-                    setPwError(err);
+                    handlePwChange(e.target.value);
                   }}
                   onFocus={(e) => {
                     e.currentTarget.style.borderColor = 'rgb(134, 139, 148)';
                   }}
-                  onBlur={(e) => {
-                    const err = validatePw(e.target.value);
-                    setPwError(err);
-                    // 오류가 있으면 빨간색 테두리 적용
-                    if (err) {
-                      e.currentTarget.style.borderColor = 'red';
-                    }
-                  }}
+                  onBlur={handlePwBlur}
                   style={pwError ? { borderColor: 'rgb(250, 52, 44)' } : {}}
                 />
                 {pwError && (
@@ -250,7 +208,7 @@ const Login: React.FC = () => {
                   background-color: transparent;
                 `}
               />
-              <LoginButton onClick={handleClick} disabled={!isFormVaild()}>
+              <LoginButton onClick={handleClick} disabled={!isFormValid()}>
                 로그인
               </LoginButton>
             </InputSection>
