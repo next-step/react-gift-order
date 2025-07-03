@@ -5,12 +5,14 @@ import { useNavigate } from "react-router-dom";
 import { Layout } from "../Components/layout/Layout";
 
 const LoginWrapper = styled.div`
-  min-height: 100vh;
-  background: #fff;
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  min-height: 0;
+  padding: 48px 0 32px 0;
+  box-sizing: border-box;
 `;
 
 const Logo = styled.h1`
