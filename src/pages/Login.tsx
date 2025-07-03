@@ -3,11 +3,9 @@ import {
   LoginTitle,
   LoginButton,
   LoginContainer,
-  LoginInput,
-  LoginPasswordInput,
+  Input,
+  ErrorContainer,
   LoginForm,
-  IDErrorContainer,
-  PWErrorContainer,
 } from '@/styles/Login.styles';
 
 type LoginProps = {
@@ -39,21 +37,16 @@ function Login({ onLogin }: LoginProps) {
     <LoginContainer>
       <LoginTitle>KAKAO</LoginTitle>
       <LoginForm onSubmit={handleSubmit}>
-        <LoginInput
-          placeholder="이메일"
-          value={id}
-          onChange={handleIdChange}
-          onBlur={handleIdBlur}
-        />
-        {idError && <IDErrorContainer>{idError}</IDErrorContainer>}
-        <LoginPasswordInput
+        <Input placeholder="이메일" value={id} onChange={handleIdChange} onBlur={handleIdBlur} />
+        {idError && <ErrorContainer>{idError}</ErrorContainer>}
+        <Input
           type="password"
           placeholder="비밀번호"
           value={pw}
           onChange={handlePwChange}
           onBlur={handlePwBlur}
         />
-        {pwError && <PWErrorContainer>{pwError}</PWErrorContainer>}
+        {pwError && <ErrorContainer>{pwError}</ErrorContainer>}
         <LoginButton type="submit" $active={isValid}>
           로그인
         </LoginButton>

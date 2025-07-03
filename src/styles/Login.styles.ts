@@ -34,7 +34,7 @@ export const LoginForm = styled.form`
   align-items: center;
 `;
 
-export const LoginInput = styled.input`
+export const Input = styled.input`
   width: 70%;
   padding: 10px;
   margin-bottom: 5px;
@@ -43,20 +43,7 @@ export const LoginInput = styled.input`
   outline: none;
   font-size: 16px;
 `;
-export const IDErrorContainer = styled.p`
-  font-size: 14px;
-  color: red;
-`;
-export const LoginPasswordInput = styled.input`
-  width: 70%;
-  padding: 10px;
-  margin-bottom: 5px;
-  border: none;
-  border-bottom: 1px solid #ccc;
-  outline: none;
-  font-size: 16px;
-`;
-export const PWErrorContainer = styled.p`
+export const ErrorContainer = styled.p`
   font-size: 14px;
   color: red;
 `;
