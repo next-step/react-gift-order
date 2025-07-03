@@ -18,14 +18,15 @@ export default function useLoginForm() {
   const [isValid, setIsValid] = useState(false)
 
   const checkValidity = () => {
-    setIsValid(validateEmail(email) && validatePassword(password))
-  }
+    setIsValid(!!email && validateEmail(email) && validatePassword(password))  }
 
   const handleEmailBlur = () => {
-    if (validateEmail(email)) {
-      setEmailError('')
+    if (!email) {
+      setEmailError('ID를 입력해주세요.')
+    } else if (!validateEmail(email)) {
+      setEmailError('ID는 이메일 형식으로 입력해주세요.')
     } else {
-      setEmailError('유효한 이메일 주소를 입력하세요.')
+      setEmailError('잘못된 접근입니다.')
     }
     checkValidity()
   }
