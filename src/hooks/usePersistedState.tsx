@@ -4,13 +4,10 @@ export default function usePersistedState<T>(key: string, initialValue: T) {
     const [state, setState] = useState<T>(() => {
       try {
         const stored = localStorage.getItem(key);
-        if (stored !== null) {
-          return JSON.parse(stored);
-        }
+        return stored !== null ? JSON.parse(stored) : initialValue;
       } catch (error) {
         console.error("localStorage parsing error", error);
       }
-      return initialValue;
   });
 
   useEffect(() => {
