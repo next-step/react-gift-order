@@ -3,6 +3,7 @@ import { useState } from "react";
 export const useEmailInput = () => {
   const [email, setEmail] = useState<string>("");
   const [emailError, setEmailError] = useState<string>("");
+  const [touched, setTouched] = useState(false);
 
   const validateEmail = (value: string): string => {
     if (!value) return "ID를 입력해주세요.";
@@ -14,10 +15,13 @@ export const useEmailInput = () => {
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setEmail(value);
-    setEmailError(validateEmail(value));
+    if (touched) {
+      setEmailError(validateEmail(value));
+    }
   };
 
   const handleEmailBlur = () => {
+    setTouched(true);
     setEmailError(validateEmail(email));
   };
 

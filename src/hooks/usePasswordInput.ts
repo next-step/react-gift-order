@@ -3,6 +3,7 @@ import { useState } from "react";
 export const usePasswordInput = () => {
   const [password, setPassword] = useState<string>("");
   const [passwordError, setPasswordError] = useState<string>("");
+  const [touched, setTouched] = useState(false);
 
   const validatePassword = (value: string): string => {
     if (!value) {
@@ -17,10 +18,13 @@ export const usePasswordInput = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setPassword(value);
-    setPasswordError(validatePassword(value));
+    if (touched) {
+      setPasswordError(validatePassword(value));
+    }
   };
 
   const handleBlur = () => {
+    setTouched(true);
     setPasswordError(validatePassword(password));
   };
 
