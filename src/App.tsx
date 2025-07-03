@@ -6,6 +6,7 @@ import HomePage from '@/pages/HomePage'
 import LoginPage from '@/pages/Login/LoginPage'
 import NotFoundPage from '@/pages/NotfoundPage'
 import { MainLayout } from './components/MainLayout'
+import MyPage from './pages/MyPage'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<MainLayout><HomePage /></MainLayout>} />
           <Route path="/login" element={<MainLayout><LoginPage /></MainLayout>} />
           <Route path="*" element={<MainLayout><NotFoundPage /></MainLayout>} />
+          <Route path="/my" element={<MainLayout><MyPage /></MainLayout>} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
