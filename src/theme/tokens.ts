@@ -104,7 +104,7 @@ export const semanticColors = {
 export type SemanticColorsType = typeof semanticColors;
 
 // 3. Typography Tokens
-export const typographyTokens = {
+export const typography = {
   // Titles
   title1Bold: { size: '1.25rem', weight: 700, lineHeight: '1.6875rem' },
   title1Regular: { size: '1.25rem', weight: 400, lineHeight: '1.6875rem' },
@@ -130,10 +130,10 @@ export const typographyTokens = {
   label2Regular: { size: '0.75rem', weight: 400, lineHeight: '1rem' },
 } as const;
 
-export type TypographyType = typeof typographyTokens;
+export type TypographyType = typeof typography;
 
 // 4. Spacing Tokens
-export const spacingTokens = {
+export const spacing = {
   spacing0: '0px',
   spacing1: '4px',
   spacing2: '8px',
@@ -153,4 +153,4 @@ export const spacingTokens = {
   spacing16: '64px',
 } as const;
 
-export type SpacingTokensType = typeof spacingTokens;
+export type SpacingType = typeof spacing;

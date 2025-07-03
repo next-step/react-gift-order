@@ -1,8 +1,8 @@
-import { colorScale, semanticColors, spacingTokens, typographyTokens } from './tokens';
+import { colorScale, semanticColors, spacing, typography } from './tokens';
 
 export const theme = {
   colorScale,
   semanticColors,
-  typographyTokens,
-  spacingTokens,
+  typography,
+  spacing,
 };
