@@ -5,7 +5,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 export default function useLoginFormValidation() {
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from?.pathname || "/";
 
   const auth = useAuth();
 
@@ -16,15 +15,8 @@ export default function useLoginFormValidation() {
 
   const isFormValid = isEmailValid && isPasswordValid;
 
-  const handleEmailValidityChange = (valid: boolean) => {
-    setIsEmailValid(valid);
-  };
-
-  const handlePasswordValidityChange = (valid: boolean) => {
-    setIsPasswordValid(valid);
-  };
-
   const handleLogin = () => {
+    const from = location.state?.from?.pathname || "/";
     auth.login(email);
     navigate(from, { replace: true });
   };
@@ -35,8 +27,8 @@ export default function useLoginFormValidation() {
     password,
     setPassword,
     isFormValid,
-    handleEmailValidityChange,
-    handlePasswordValidityChange,
+    setIsEmailValid,
+    setIsPasswordValid,
     handleLogin,
   };
 }

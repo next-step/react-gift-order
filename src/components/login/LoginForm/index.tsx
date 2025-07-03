@@ -6,8 +6,8 @@ import useLoginFormValidation from "./hooks/useLoginFormValidation.ts";
 export default function LoginForm() {
   const {
     isFormValid,
-    handleEmailValidityChange,
-    handlePasswordValidityChange,
+    setIsEmailValid,
+    setIsPasswordValid,
     handleLogin,
     email,
     setEmail,
@@ -20,12 +20,12 @@ export default function LoginForm() {
       <EmailInput
         value={email}
         onChange={setEmail}
-        onValidityChange={handleEmailValidityChange}
+        onValidityChange={setIsEmailValid}
       />
       <PasswordInput
         value={password}
         onChange={setPassword}
-        onValidityChange={handlePasswordValidityChange}
+        onValidityChange={setIsPasswordValid}
       />
       <button onClick={handleLogin} css={buttonStyle} disabled={!isFormValid}>
         로그인
