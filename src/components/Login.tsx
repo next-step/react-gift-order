@@ -3,6 +3,7 @@ import { useTheme } from "@emotion/react";
 import { css } from "@emotion/react";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
+import Input from "@/components/Input";
 
 const Login = () => {
   const theme = useTheme();
@@ -53,33 +54,23 @@ const Login = () => {
     <div css={containerStyle()}>
       <h1 css={textStyle(theme)}>로그인</h1>
       <div css={inputContainerStyle(theme)}>
-        <input
+        <Input
           onChange={email.onChange}
           onBlur={email.onBlur}
           css={inputStyle(theme)}
-          type="text"
+          type="email"
           placeholder="이메일"
-        />
-        <p
-          style={{
-            color: "red",
-            fontSize: "12px",
-            marginTop: "4px",
-          }}
-        >
-          {email.message}
-        </p>
+          message={email.message}
+        ></Input>
 
-        <input
+        <Input
           onChange={password.onChange}
           onBlur={password.onBlur}
           css={inputStyle(theme)}
           type="password"
-          placeholder="비밀번호"
-        />
-        <p style={{ color: "red", fontSize: "12px", marginTop: "4px" }}>
-          {password.message}
-        </p>
+          placeholder="패스워드"
+          message={password.message}
+        ></Input>
       </div>
 
       <button
