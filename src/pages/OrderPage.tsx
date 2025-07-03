@@ -1,13 +1,19 @@
 import styled from "@emotion/styled";
 import CardSelector from "@src/components/OrderPanels/CardSelector";
 import ProductCard from "@src/components/OrderPanels/ProductCard";
+import AdvancedInput from "@src/components/shared/AdvancedInput";
 import InputGroup from "@src/components/shared/InputGroup";
 import UserContext from "@src/contexts/UserContext";
-import { cardTempleteMockData } from "@src/mock/cardTempleteMockData";
+import useOrderErrorHandler from "@src/hooks/useOrderErrorHandler";
+import useOrderState from "@src/hooks/useOrderState";
 import { productMockData } from "@src/mock/productMockData";
 import { PATH } from "@src/router/Router";
 import theme from "@src/styles/kakaoTheme";
-import { useContext, useEffect } from "react";
+import { createNewMessegeEvaluator } from "@src/utils/evaluator/implementation/messegeEvaluator";
+import { createNewNameEvaluator } from "@src/utils/evaluator/implementation/nameEvaluator";
+import { createNewPNEvaluator } from "@src/utils/evaluator/implementation/phoneNumberEvaluator";
+import { createNewQuantityEvaluator } from "@src/utils/evaluator/implementation/quantityEvaluator";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 function OrderPage() {
@@ -19,6 +25,48 @@ function OrderPage() {
     navigate(PATH.LOGIN + `?redirect=${encodeURIComponent(path)}/${id}`);
   };
 
+  const messegeEvaluator = createNewMessegeEvaluator();
+  const nameEvaluator = createNewNameEvaluator();
+  const phoneNumberEvaluator = createNewPNEvaluator();
+  const quantityEvaluator = createNewQuantityEvaluator();
+
+  const orderState = useOrderState();
+  const orderErrorHandler = useOrderErrorHandler();
+
+  const orderHandler = () => {
+    const messegeValid = messegeEvaluator.evaluate(orderState.messege.value);
+    const messegeReason = messegeEvaluator.reason();
+    const senderValid = nameEvaluator.evaluate(orderState.sender.value);
+    const senderReason = nameEvaluator.reason();
+    const receiverValid = nameEvaluator.evaluate(orderState.receiver.value);
+    const receiverReason = nameEvaluator.reason();
+    const phoneNumberValid = phoneNumberEvaluator.evaluate(
+      orderState.phoneNumber.value
+    );
+    const phoneNumberReason = phoneNumberEvaluator.reason();
+    const quantityValid = quantityEvaluator.evaluate(orderState.quantity.value);
+    const quantityReason = quantityEvaluator.reason();
+
+    orderErrorHandler.messegeValid.setValue(messegeValid);
+    orderErrorHandler.senderValid.setValue(senderValid);
+    orderErrorHandler.receiverValid.setValue(receiverValid);
+    orderErrorHandler.phoneNumberValid.setValue(phoneNumberValid);
+    orderErrorHandler.quantityValid.setValue(quantityValid);
+
+    if (senderValid && receiverValid && phoneNumberValid && quantityValid) {
+      alert(
+        `주문이 완료되었습니다.\n상품명: ${productMockData.name}\n수량: ${orderState.quantity.value}\n발신자 이름: ${orderState.sender.value}\n받는 사람 이름: ${orderState.receiver.value}\n메세지: ${orderState.messege.value}`
+      );
+      navigate(PATH.MAIN);
+    } else {
+      orderErrorHandler.messegeReason.setValue(messegeReason);
+      orderErrorHandler.senderReason.setValue(senderReason);
+      orderErrorHandler.receiverReason.setValue(receiverReason);
+      orderErrorHandler.phoneNumberReason.setValue(phoneNumberReason);
+      orderErrorHandler.quantityReason.setValue(quantityReason);
+    }
+  };
+
   useEffect(() => {
     if (!userContext?.valid.value) {
       RequireLogin(PATH.ORDER, params.id);
@@ -27,29 +75,66 @@ function OrderPage() {
 
   return (
     <OrderPageWrapper>
-      <CardSelector />
+      <CardSelector
+        evaluator={messegeEvaluator}
+        validHookSet={orderErrorHandler.messegeValid}
+        reasonHookSet={orderErrorHandler.messegeReason}
+        valueHookSet={orderState.messege}
+      />
       <InputGroup title="보내는 사람">
-        <InputField placeholder="이름을 입력하세요." />
+        <AdvancedInput
+          placeholder="이름을 입력하세요."
+          type="text"
+          evaluator={nameEvaluator}
+          validHookSet={orderErrorHandler.senderValid}
+          reasonHookSet={orderErrorHandler.senderReason}
+          valueHookSet={orderState.sender}
+        />
         <Sub>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</Sub>
       </InputGroup>
       <InputGroup title="받는 사람">
         <InputCaptionPairWrapper>
           <Caption>이름</Caption>
-          <InputField placeholder="이름을 입력하세요." />
+          <AdvancedInput
+            placeholder="이름을 입력하세요."
+            type="text"
+            evaluator={nameEvaluator}
+            validHookSet={orderErrorHandler.receiverValid}
+            reasonHookSet={orderErrorHandler.receiverReason}
+            valueHookSet={orderState.receiver}
+          />
         </InputCaptionPairWrapper>
         <InputCaptionPairWrapper>
           <Caption>전화번호</Caption>
-          <InputField placeholder="전화번호를 입력하세요." />
+          <AdvancedInput
+            placeholder="전화번호를 입력하세요."
+            type="text"
+            evaluator={phoneNumberEvaluator}
+            validHookSet={orderErrorHandler.phoneNumberValid}
+            reasonHookSet={orderErrorHandler.phoneNumberReason}
+            valueHookSet={orderState.phoneNumber}
+          />
         </InputCaptionPairWrapper>
         <InputCaptionPairWrapper>
           <Caption>수량</Caption>
-          <InputField type="number" />
+          <AdvancedInput
+            placeholder=""
+            type="number"
+            evaluator={quantityEvaluator}
+            validHookSet={orderErrorHandler.quantityValid}
+            reasonHookSet={orderErrorHandler.quantityReason}
+            valueHookSet={orderState.quantity}
+          />
         </InputCaptionPairWrapper>
       </InputGroup>
       <InputGroup title="상품 정보">
         <ProductCard />
       </InputGroup>
-      <FooterButton>19000원 주문하기</FooterButton>
+      <FooterButton onClick={orderHandler}>
+        {productMockData.price.sellingPrice *
+          parseInt(orderState.quantity.value)}
+        원 주문하기
+      </FooterButton>
     </OrderPageWrapper>
   );
 }
@@ -77,20 +162,6 @@ const InputCaptionPairWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
-`;
-
-const InputField = styled.input`
-  flex: 1;
-  border: 1px solid ${theme.colors.gray.gray500};
-  border-radius: 10px;
-  background-color: transparent;
-  padding: 10px;
-  outline: none;
-  transition: border-bottom 0.25s ease;
-
-  &:focus {
-    border: 1px solid ${theme.colors.gray.gray700};
-  }
 `;
 
 const Sub = styled.p`
