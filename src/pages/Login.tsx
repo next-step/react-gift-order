@@ -1,5 +1,6 @@
 import NavigationBar from '@/components/NavigationBar';
 import styled from '@emotion/styled';
+import { useLoginForm } from '@/hooks/useLoginForm';
 import { useNavigate } from 'react-router-dom';
 
 const StyledLoginComponentContainerDiv = styled.div`
@@ -45,7 +46,7 @@ const StyledButton = styled.button`
   }
 `;
 
-const Login = () => {
+const Login: React.FC = () => {
   const navigate = useNavigate();
 
   const handelBackOrHome = () => {
@@ -55,14 +56,24 @@ const Login = () => {
       navigate('/');
     }
   };
+
+  const { id, idError, handleIdBlur, handleIdChange } = useLoginForm();
   return (
     <>
       <NavigationBar />
       <StyledLoginComponentContainerDiv>
         <StyledLoginComponentDiv>
           <StyledKakoLogo>kakao</StyledKakoLogo>
-          <StyledInput type='text' id='loginid' placeholder='이메일' />
-          <StyledInput type='password' id='passwd' placeholder='비밀번호' />
+          <StyledInput
+            type='text'
+            value={id}
+            onChange={handleIdChange}
+            onBlur={handleIdBlur}
+            id='loginid'
+            placeholder='이메일'
+          ></StyledInput>
+          {idError && <p>{idError}</p>}
+          <StyledInput type='password' id='passwd' placeholder='비밀번호'></StyledInput>
           <StyledButton onClick={handelBackOrHome}>로그인</StyledButton>
         </StyledLoginComponentDiv>
       </StyledLoginComponentContainerDiv>

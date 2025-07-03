@@ -31,7 +31,9 @@
       "@components/*": ["src/components/*"],
       "@types/*": ["src/types/*"],
       "@router/*": ["src/router/*"],
-      "@pages/*": ["src/pages/*"]
+      "@pages/*": ["src/pages/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@theme/*": ["src/theme/*"]
     }
   },
   "include": ["src"]
