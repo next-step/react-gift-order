@@ -12,6 +12,64 @@ interface NavigationHeaderProps {
   showProfileButton?: boolean;
 }
 
+export function NavigationHeader({
+  title,
+  onBackClick,
+  onProfileClick,
+  showBackButton = true,
+  showProfileButton = true,
+}: NavigationHeaderProps) {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleBackClick = () => {
+    if (onBackClick) {
+      onBackClick();
+    } else {
+      navigate(-1);
+    }
+  };
+
+  const handleHomeClick = () => {
+    navigate('/');
+  };
+
+  const handleProfileClick = () => {
+    if (onProfileClick) {
+      onProfileClick();
+    } else {
+      const navState: NavigationState = { from: location.pathname };
+      navigate('/login', {
+        state: navState,
+      });
+    }
+  };
+
+  return (
+    <HeaderContainer>
+      <SideContainer position="left">
+        {showBackButton && (
+          <IconButton onClick={handleBackClick} type="button">
+            <ChevronLeft />
+          </IconButton>
+        )}
+      </SideContainer>
+
+      <TitleContainer onClick={handleHomeClick}>
+        <Title>{title}</Title>
+      </TitleContainer>
+
+      <SideContainer position="right">
+        {showProfileButton && (
+          <IconButton onClick={handleProfileClick} type="button">
+            <User />
+          </IconButton>
+        )}
+      </SideContainer>
+    </HeaderContainer>
+  );
+}
+
 const HeaderContainer = styled.header`
   display: flex;
   align-items: center;
@@ -76,61 +134,3 @@ const IconButton = styled.button`
     color: ${theme.colors.gray1000};
   }
 `;
-
-export function NavigationHeader({
-  title,
-  onBackClick,
-  onProfileClick,
-  showBackButton = true,
-  showProfileButton = true,
-}: NavigationHeaderProps) {
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const handleBackClick = () => {
-    if (onBackClick) {
-      onBackClick();
-    } else {
-      navigate(-1);
-    }
-  };
-
-  const handleHomeClick = () => {
-    navigate('/');
-  };
-
-  const handleProfileClick = () => {
-    if (onProfileClick) {
-      onProfileClick();
-    } else {
-      const navState: NavigationState = { from: location.pathname };
-      navigate('/login', {
-        state: navState,
-      });
-    }
-  };
-
-  return (
-    <HeaderContainer>
-      <SideContainer position="left">
-        {showBackButton && (
-          <IconButton onClick={handleBackClick} type="button">
-            <ChevronLeft />
-          </IconButton>
-        )}
-      </SideContainer>
-
-      <TitleContainer onClick={handleHomeClick}>
-        <Title>{title}</Title>
-      </TitleContainer>
-
-      <SideContainer position="right">
-        {showProfileButton && (
-          <IconButton onClick={handleProfileClick} type="button">
-            <User />
-          </IconButton>
-        )}
-      </SideContainer>
-    </HeaderContainer>
-  );
-}

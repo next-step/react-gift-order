@@ -199,12 +199,9 @@ export function RealTimeRanking({
   const updateURL = (target: TargetFilter, category: CategoryFilter) => {
     const targetCode = TARGET_KR_TO_EN_MAP[target];
     const categoryCode = CATEGORY_KR_TO_EN_MAP[category];
-
-    const newSearchParams = new URLSearchParams();
-    newSearchParams.set('targetType', targetCode);
-    newSearchParams.set('categoryType', categoryCode);
-
-    navigate(`?${newSearchParams.toString()}`, { replace: true });
+    navigate(`?targetType=${targetCode}&categoryType=${categoryCode}`, {
+      replace: true,
+    });
   };
 
   const displayedProducts = showAll
@@ -220,7 +217,7 @@ export function RealTimeRanking({
   };
 
   const handleProductClick = (product: Product) => {
-    console.log('상품 클릭:', product.name);
+    // 상세 페이지 이동 등 구현
   };
 
   return (

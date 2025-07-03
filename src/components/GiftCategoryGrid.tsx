@@ -8,30 +8,6 @@ interface GiftCategoryGridProps {
   onThemeClick?: (theme: GiftTheme) => void;
 }
 
-const Container = styled.div`
-  padding: ${theme.spacing.spacing4};
-  background: ${theme.colors.default};
-`;
-
-const SectionTitle = styled.h2`
-  font-size: ${theme.typography.title1Bold.fontSize};
-  font-weight: ${theme.typography.title1Bold.fontWeight};
-  line-height: ${theme.typography.title1Bold.lineHeight};
-  color: ${theme.colors.gray1000};
-  margin: 0 0 ${theme.spacing.spacing4} 0;
-  padding-left: ${theme.spacing.spacing4};
-`;
-
-const Grid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: ${theme.spacing.spacing4};
-
-  @media (max-width: 480px) {
-    gap: ${theme.spacing.spacing3};
-  }
-`;
-
 export function GiftCategoryGrid({
   themes,
   onThemeClick,
@@ -55,3 +31,27 @@ export function GiftCategoryGrid({
     </Container>
   );
 }
+
+const Container = styled.div`
+  padding: ${theme.spacing.spacing4};
+  background: ${theme.colors.default};
+`;
+
+const SectionTitle = styled.h2`
+  font-size: ${theme.typography.title1Bold.fontSize};
+  font-weight: ${theme.typography.title1Bold.fontWeight};
+  line-height: ${theme.typography.title1Bold.lineHeight};
+  color: ${theme.colors.gray1000};
+  margin: 0 0 ${theme.spacing.spacing4} 0;
+  padding-left: ${theme.spacing.spacing4};
+`;
+
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: ${theme.spacing.spacing4};
+
+  @media (max-width: 480px) {
+    gap: ${theme.spacing.spacing3};
+  }
+`;

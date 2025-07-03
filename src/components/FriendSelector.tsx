@@ -7,6 +7,27 @@ interface FriendSelectorProps {
   placeholder?: string;
 }
 
+export function FriendSelector({
+  onAddFriend,
+  placeholder = '선물할 친구를 선택해 주세요.',
+}: FriendSelectorProps) {
+  const handleClick = () => {
+    console.log('친구 선택 클릭');
+    onAddFriend?.();
+  };
+
+  return (
+    <SelectorContainer>
+      <SelectorWrapper onClick={handleClick}>
+        <PlusButton type="button">
+          <Plus />
+        </PlusButton>
+        <PlaceholderText>{placeholder}</PlaceholderText>
+      </SelectorWrapper>
+    </SelectorContainer>
+  );
+}
+
 const SelectorContainer = styled.div`
   padding: ${theme.spacing.spacing3};
   background-color: ${theme.colors.gray200};
@@ -71,24 +92,3 @@ const PlaceholderText = styled.span`
   flex: 1;
   user-select: none;
 `;
-
-export function FriendSelector({
-  onAddFriend,
-  placeholder = '선물할 친구를 선택해 주세요.',
-}: FriendSelectorProps) {
-  const handleClick = () => {
-    console.log('친구 선택 클릭');
-    onAddFriend?.();
-  };
-
-  return (
-    <SelectorContainer>
-      <SelectorWrapper onClick={handleClick}>
-        <PlusButton type="button">
-          <Plus />
-        </PlusButton>
-        <PlaceholderText>{placeholder}</PlaceholderText>
-      </SelectorWrapper>
-    </SelectorContainer>
-  );
-}
