@@ -108,10 +108,11 @@ interface LocationState {
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const state = location.state as LocationState | undefined;
 
-  const redirectTo = state?.from?.pathname ?? '/';
-
+  let redirectTo = '/';
+  if (location.state && 'from' in location.state) {
+    redirectTo = (location.state as LocationState).from?.pathname ?? '/';
+  }
   // state 생성
   const [id, setId] = useState('');
   const [idError, setIdError] = useState('');
