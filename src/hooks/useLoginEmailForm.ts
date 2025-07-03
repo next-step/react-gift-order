@@ -1,14 +1,14 @@
 // src/hooks/useLoginForm.ts
 import { useState, useCallback, type ChangeEvent, type FocusEvent, useEffect } from 'react';
 
-interface LoginForm {
+interface LoginIdForm {
   id: string;
   idError: string;
   handleIdChange: (e: ChangeEvent<HTMLInputElement>) => void;
   handleIdBlur: (e: FocusEvent<HTMLInputElement>) => void;
 }
 
-export const useLoginForm = (): LoginForm => {
+export const useLoginEmailForm = (): LoginIdForm => {
   const [id, setId] = useState<string>(''); // ID 상태
   const [idError, setIdError] = useState<string>(''); // ID 입력 오류 메시지 상태
   const [idTouched, setIdTouched] = useState<boolean>(false); // ID input 태그 클릭 상태 -> 기본값 : 클릭되지 않은 상태
