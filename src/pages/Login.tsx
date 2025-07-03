@@ -76,6 +76,13 @@ const InputBox = styled.input<StyleProps>(({ theme, hasError }) => ({
   },
 }));
 
+const ErrorMessage = styled.span(({ theme }) => ({
+  color: theme.semanticColors.state.critical,
+  fontSize: '0.75rem',
+  marginTop: '4px',
+  display: 'inlineBlock',
+}));
+
 const LoginButton = styled.button<StyleProps>(({ disabled, theme }) => ({
   width: '100%',
   height: '2.75rem',
@@ -100,6 +107,18 @@ const LoginButton = styled.button<StyleProps>(({ disabled, theme }) => ({
           backgroundColor: theme.semanticColors.brand.kakaoYellowActive,
         },
       }),
+}));
+
+const HoriziontalSpacing1 = styled.div(({ theme }) => ({
+  width: '100%',
+  height: theme.spacing.spacing4,
+  backgroundColor: 'transparent',
+}));
+
+const HoriziontalSpacing2 = styled.div(({ theme }) => ({
+  width: '100%',
+  height: theme.spacing.spacing12,
+  backgroundColor: 'transparent',
 }));
 
 interface LocationState {
@@ -144,62 +163,24 @@ const Login: React.FC = () => {
                   placeholder="이메일"
                   value={id}
                   hasError={!!idError}
-                  onChange={(e) => {
-                    handleIdChange(e.target.value);
-                  }}
+                  onChange={handleIdChange}
                   onBlur={handleIdBlur}
                 />
-                {idError && (
-                  <span
-                    css={css`
-                      color: rgb(250, 52, 44);
-                      font-size: 0.75rem;
-                      margin-top: 4px;
-                      display: inline-block;
-                    `}
-                  >
-                    {idError}
-                  </span>
-                )}
+                {idError && <ErrorMessage>{idError}</ErrorMessage>}
               </div>
-              <div
-                css={css`
-                  width: 100%;
-                  height: 16px;
-                  background-color: transparent;
-                `}
-              />
+              <HoriziontalSpacing1 />
               <div>
                 <InputBox
                   placeholder="비밀번호"
                   type="password"
                   value={pw}
                   hasError={!!pwError}
-                  onChange={(e) => {
-                    handlePwChange(e.target.value);
-                  }}
+                  onChange={handlePwChange}
                   onBlur={handlePwBlur}
                 />
-                {pwError && (
-                  <span
-                    css={css`
-                      color: rgb(250, 52, 44);
-                      font-size: 0.75rem;
-                      margin-top: 4px;
-                      display: inline-block;
-                    `}
-                  >
-                    {pwError}
-                  </span>
-                )}
+                {pwError && <ErrorMessage>{pwError}</ErrorMessage>}
               </div>
-              <div
-                css={css`
-                  width: 100%;
-                  height: 48px;
-                  background-color: transparent;
-                `}
-              />
+              <HoriziontalSpacing2 />
               <LoginButton onClick={handleClick} disabled={!isFormValid()}>
                 로그인
               </LoginButton>

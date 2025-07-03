@@ -23,12 +23,14 @@ export const useLoginForm = () => {
 
   const isFormValid = () => validateId(id) === '' && validatePw(pw) === '';
 
-  const handleIdChange = (value: string) => {
+  const handleIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
     setId(value);
     setIdError(validateId(value));
   };
 
-  const handlePwChange = (value: string) => {
+  const handlePwChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
     setPw(value);
     setPwError(validatePw(value));
   };
