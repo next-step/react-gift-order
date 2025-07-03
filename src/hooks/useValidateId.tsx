@@ -6,13 +6,11 @@ type UseValidateId = [
   React.Dispatch<React.SetStateAction<string>>,
   boolean,
   React.Dispatch<React.SetStateAction<boolean>>,
-  boolean,
   string,
 ];
 
 export const useValidateId = (): UseValidateId => {
   const [id, setId] = useState('');
-  const [isValidId, setIsValidId] = useState(false);
   const [isFirstTry, setIsFirstTry] = useState(true);
   const [error, setError] = useState('');
 
@@ -21,19 +19,17 @@ export const useValidateId = (): UseValidateId => {
       return;
     } else {
       if (id === '') {
-        setIsValidId(false);
-        setError('ID를 입력해주세요.');
+        setError('ID를 입력해주세요.'); // truthy
         return;
       } else if (!isEmail(id)) {
-        setIsValidId(false);
-        setError('ID는 이메일 형식으로 입력해주세요.');
+        setError('ID는 이메일 형식으로 입력해주세요.'); // truthy
       } else {
-        setIsValidId(true);
+        setError(''); // falsy
       }
     }
   }, [id, isFirstTry]);
 
-  return [id, setId, isFirstTry, setIsFirstTry, isValidId, error];
+  return [id, setId, isFirstTry, setIsFirstTry, error];
 };
 
 export default useValidateId;

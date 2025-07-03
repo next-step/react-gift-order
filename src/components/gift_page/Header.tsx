@@ -24,9 +24,9 @@ const Btn = styled.button`
   cursor: pointer;
 `;
 
-export const Header = () => {
-  const svgSize = 30;
+const svgSize = 30;
 
+export const Header = () => {
   return (
     <Container>
       <Btn>

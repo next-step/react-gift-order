@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { TopNavBar } from '@/components/TopNavBar';
 import { useNavigate } from 'react-router-dom';
@@ -35,7 +35,7 @@ const Logo = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing.spacing6};
 `;
 
-const Input = styled.input<{ isClicked: boolean; isValid: boolean; isFirstTry: boolean }>`
+const Input = styled.input<{ inputFieldStyle: string }>`
   all: unset;
   width: 24rem;
   padding-top: 0.8rem;
@@ -43,27 +43,13 @@ const Input = styled.input<{ isClicked: boolean; isValid: boolean; isFirstTry: b
   margin-top: ${({ theme }) => theme.spacing.spacing4};
   border-bottom-width: 1px;
   border-bottom-style: solid;
-  border-bottom-color: ${({ theme, isClicked, isValid, isFirstTry }) => {
-    if (isFirstTry) {
-      if (isClicked) {
-        return theme.colors.gray700;
-      } else {
-        return theme.colors.gray400;
-      }
+  border-bottom-color: ${({ theme, inputFieldStyle }) => {
+    if (inputFieldStyle === 'idle' || inputFieldStyle === 'blurredValid') {
+      return theme.colors.gray400;
+    } else if (inputFieldStyle === 'firstAttempt' || inputFieldStyle === 'focusedValid') {
+      return theme.colors.gray700;
     } else {
-      if (isClicked) {
-        if (isValid) {
-          return theme.colors.gray700;
-        } else {
-          return theme.colors.red700;
-        }
-      } else {
-        if (isValid) {
-          return theme.colors.gray400;
-        } else {
-          return theme.colors.red700;
-        }
-      }
+      return theme.colors.red700;
     }
   }};
   font-size: 1rem;
@@ -104,9 +90,55 @@ const Login = () => {
   const navigate = useNavigate();
   const [emailIsClicked, setEmailIsClicked] = useState(false);
   const [passwordIsClicked, setPasswordIsClicked] = useState(false);
-  const [email, setEmail, isFirstIdTry, setIsFirstIdTry, isValidId, idError] = useValidateId();
-  const [password, setPassword, isFirstPwdTry, setIsFirstPwdTry, isValidPassword, passwordError] =
+  const [email, setEmail, isFirstIdTry, setIsFirstIdTry, idError] = useValidateId();
+  const [password, setPassword, isFirstPwdTry, setIsFirstPwdTry, passwordError] =
     useValidatePassword();
+  const [idInputFieldStyle, setIdInputFieldStyle] = useState('idle');
+  const [pwdInputFieldStyle, setPwdInputFieldStyle] = useState('idle');
+  const isAllValid = !idError && !passwordError;
+
+  const handleInputFieldStyle = useCallback(
+    (type: string, isFirstTry: boolean, isClicked: boolean, error: string) => {
+      let inputStatus = '';
+
+      if (isFirstTry) {
+        if (isClicked) {
+          inputStatus = 'firstAttempt';
+        } else {
+          inputStatus = 'idle';
+        }
+      } else {
+        if (isClicked) {
+          if (!error) {
+            inputStatus = 'focusedValid';
+          } else {
+            inputStatus = 'error';
+          }
+        } else {
+          if (!error) {
+            inputStatus = 'blurredValid';
+          } else {
+            inputStatus = 'error';
+          }
+        }
+      }
+
+      if (type === 'id') {
+        setIdInputFieldStyle(inputStatus);
+      } else {
+        setPwdInputFieldStyle(inputStatus);
+      }
+    },
+    []
+  );
+
+  useEffect(() => {
+    handleInputFieldStyle('id', isFirstIdTry, emailIsClicked, idError);
+  }, [handleInputFieldStyle, isFirstIdTry, emailIsClicked, idError]);
+
+  useEffect(() => {
+    handleInputFieldStyle('password', isFirstPwdTry, passwordIsClicked, passwordError);
+  }, [handleInputFieldStyle, isFirstPwdTry, passwordIsClicked, passwordError]);
 
   return (
     <Container>
@@ -117,9 +149,7 @@ const Login = () => {
           style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start' }}
         >
           <Input
-            isClicked={emailIsClicked}
-            isValid={isValidId}
-            isFirstTry={isFirstIdTry}
+            inputFieldStyle={idInputFieldStyle}
             type="email"
             placeholder="이메일"
             value={email}
@@ -130,15 +160,13 @@ const Login = () => {
               setEmailIsClicked(false);
             }}
           />
-          {isValidId ? <></> : <ErrorText>{idError}</ErrorText>}
+          {idError && <ErrorText>{idError}</ErrorText>}
         </div>
         <div
           style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start' }}
         >
           <Input
-            isClicked={passwordIsClicked}
-            isValid={isValidPassword}
-            isFirstTry={isFirstPwdTry}
+            inputFieldStyle={pwdInputFieldStyle}
             type="password"
             placeholder="비밀번호"
             value={password}
@@ -149,13 +177,13 @@ const Login = () => {
               setPasswordIsClicked(false);
             }}
           />
-          {isValidPassword ? <></> : <ErrorText>{passwordError}</ErrorText>}
+          {passwordError && <ErrorText>{passwordError}</ErrorText>}
         </div>
         <Button
           onClick={() => {
             navigate('/');
           }}
-          disabled={!(isValidId && isValidPassword)}
+          disabled={!isAllValid}
         >
           로그인
         </Button>
