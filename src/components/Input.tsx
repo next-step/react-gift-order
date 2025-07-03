@@ -1,4 +1,6 @@
+import type { Theme } from "@emotion/react";
 import type { SerializedStyles } from "@emotion/react";
+import { css } from "@emotion/react";
 
 interface InputProps {
   type: string;
@@ -26,9 +28,15 @@ const Input = ({
         onBlur={onBlur}
         css={css}
       />
-      <p style={{ color: "red", fontSize: 12, marginTop: 4 }}>{message}</p>
+      <p css={errorMessageStyle}>{message}</p>
     </div>
   );
 };
+
+const errorMessageStyle = (theme: Theme) => css`
+  color: ${theme.colors.red.red700};
+  font-size: ${theme.typography.label2Regular.size};
+  margin-top: ${theme.spacing.spacing1};
+`;
 
 export default Input;
