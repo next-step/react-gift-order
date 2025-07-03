@@ -1,7 +1,9 @@
+import { EMAIL_REGEX } from "@/constants/regex";
+
 export const checkEmailError = (newEmail: string): string => {
   if (!newEmail.trim()) {
     return "ID를 입력해주세요.";
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+  } else if (!EMAIL_REGEX.test(newEmail)) {
     return "ID는 이메일 형식으로 입력해주세요.";
   }
   return "";
