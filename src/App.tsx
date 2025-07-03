@@ -6,6 +6,8 @@ import Login from './pages/Login';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import NotFoundPage from './pages/NotFoundPage';
+import { AuthProvider } from './contexts/AuthContext';
+import MyPage from './pages/MyPage';
 
 const containerStyle = css`
   max-width: 720px;
@@ -21,13 +23,16 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <Global styles={reset} />
       <div css={containerStyle}>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </BrowserRouter>
+        <AuthProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="*" element={<NotFoundPage />} />
+              <Route path="/my" element={<MyPage />} />
+            </Routes>
+          </BrowserRouter>
+        </AuthProvider>
       </div>
     </ThemeProvider>
   );
