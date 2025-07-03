@@ -11,18 +11,31 @@ export const useLoginFormValidation = () => {
   const [emailError, setEmailError] = useState<string | null>("");
   const [passwordError, setPasswordError] = useState<string | null>("");
 
-  const handleEmailInput = (value: string) => {
-    const error = checkEmailValidation(value);
+  const [emailTouched, setEmailTouched] = useState(false);
+  const [passwordTouched, setPasswordTouched] = useState(false);
 
+  const handleEmailInput = (value: string) => {
     setEmail(value);
-    setEmailError(error);
+    if (emailTouched) {
+      setEmailError(checkEmailValidation(value));
+    }
+  };
+
+  const handleEmailBlur = () => {
+    setEmailTouched(true);
+    setEmailError(checkEmailValidation(email));
   };
 
   const handlePasswordInput = (value: string) => {
-    const error = checkPasswordValidation(value);
-
     setPassword(value);
-    setPasswordError(error);
+    if (passwordTouched) {
+      setPasswordError(checkPasswordValidation(value));
+    }
+  };
+
+  const handlePasswordBlur = () => {
+    setPasswordTouched(true);
+    setPasswordError(checkPasswordValidation(password));
   };
 
   return {
@@ -31,6 +44,8 @@ export const useLoginFormValidation = () => {
     emailError,
     passwordError,
     handleEmailInput,
+    handleEmailBlur,
     handlePasswordInput,
+    handlePasswordBlur,
   };
 };

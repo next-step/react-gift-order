@@ -20,7 +20,9 @@ const LoginPage = () => {
     emailError,
     passwordError,
     handleEmailInput,
+    handleEmailBlur,
     handlePasswordInput,
+    handlePasswordBlur,
   } = useLoginFormValidation();
 
   const handleLoginClick = () => {
@@ -43,6 +45,7 @@ const LoginPage = () => {
             placeholder="이메일"
             value={email}
             onChange={(e) => handleEmailInput(e.target.value)}
+            onBlur={handleEmailBlur}
           />
           {emailError && <ErrorMessage>{emailError}</ErrorMessage>}
           <Input
@@ -50,6 +53,7 @@ const LoginPage = () => {
             placeholder="비밀번호"
             value={password}
             onChange={(e) => handlePasswordInput(e.target.value)}
+            onBlur={handlePasswordBlur}
           />
           {passwordError && <ErrorMessage>{passwordError}</ErrorMessage>}
           <LoginButton type="button" onClick={handleLoginClick}>
