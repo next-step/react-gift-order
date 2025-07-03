@@ -1,31 +1,44 @@
 import styled from "@emotion/styled";
+import UserContext from "@src/contexts/UserContext";
 import type { InputErrorHandlerHook } from "@src/hooks/useInputErrorHandler";
 import useInputErrorHandler from "@src/hooks/useInputErrorHandler";
 import useUserInfo, { type UserInfoHook } from "@src/hooks/useUserInfo";
 import theme from "@src/styles/kakaoTheme";
 import { createNewIDEvaluator } from "@src/utils/evaluator/implementation/idEvaluator";
 import { createNewPWEvaluator } from "@src/utils/evaluator/implementation/passwordEvaluator";
-import { useNavigate } from "react-router-dom";
+import { useContext, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function LoginForm() {
   const navigate = useNavigate();
-  const userInfo = useUserInfo();
+  const location = useLocation();
+  const userInfo: UserInfoHook = useUserInfo();
 
   const idEvaluator = createNewIDEvaluator();
   const pwEvaluator = createNewPWEvaluator();
   const inputErrorHandler: InputErrorHandlerHook = useInputErrorHandler();
 
-  const handleLogin = (userInfo: UserInfoHook) => {
-    console.log({
-      email: userInfo.email.value,
-      password: userInfo.password.value
-    });
-    if (window.history.length > 1) {
-      navigate(-1);
-    } else {
-      navigate("/");
-    }
+  const userContext = useContext(UserContext);
+
+  const searchParams = new URLSearchParams(location.search);
+  const redirectPath = searchParams.get("redirect");
+
+  const nagivateToRedirectionTarget = () => {
+    navigate(redirectPath ? decodeURIComponent(redirectPath) : "/");
   };
+
+  const handleLogin = () => {
+    userContext?.valid.setValue(true);
+    userContext?.email.setValue(userInfo.email.value);
+    userContext?.user.setValue(userInfo.email.value.split("@")[0]);
+    nagivateToRedirectionTarget();
+  };
+
+  useEffect(() => {
+    if (userContext?.valid.value) {
+      nagivateToRedirectionTarget();
+    }
+  }, [userContext?.valid.value]);
 
   return (
     <InputForm onSubmit={(e) => e.preventDefault()}>
@@ -73,9 +86,7 @@ function LoginForm() {
             userInfo.password.value.length > 0
           )
         }
-        onClick={() => {
-          handleLogin(userInfo);
-        }}
+        onClick={handleLogin}
       >
         로그인
       </LoginButton>

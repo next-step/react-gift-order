@@ -1,8 +1,12 @@
 import styled from "@emotion/styled";
 import RoundButton from "@src/components/shared/RoundButton";
+import UserContext from "@src/contexts/UserContext";
 import theme from "@src/styles/kakaoTheme";
+import { useContext } from "react";
 
 function RecipientSelector() {
+  const userContext = useContext(UserContext);
+
   return (
     <RecipientSelectorWrapper>
       <InnerBox>
@@ -10,7 +14,11 @@ function RecipientSelector() {
           color={`${theme.colors.yellow.yellow600}`}
           children="+"
         ></RoundButton>
-        <DescriptionP>선물할 친구를 선택해 주세요.</DescriptionP>
+        <DescriptionP>
+          {userContext?.valid.value
+            ? `${userContext.user.value}님! 선물할 친구를 선택해 주세요.`
+            : "선물할 친구를 선택해 주세요."}
+        </DescriptionP>
       </InnerBox>
     </RecipientSelectorWrapper>
   );

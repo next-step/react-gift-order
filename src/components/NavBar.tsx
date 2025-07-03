@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import { PATH } from "@src/router/Router";
 import { useNavigate } from "react-router-dom";
 
 function NavBar() {
@@ -17,14 +18,14 @@ function NavBar() {
       </Button>
       <Button
         onClick={() => {
-          navigate("/");
+          navigate(PATH.MAIN);
         }}
       >
         <h2>선물하기</h2>
       </Button>
       <Button
         onClick={() => {
-          navigate("/login");
+          navigate(PATH.MY);
         }}
       >
         <PersonOutlineIcon />
