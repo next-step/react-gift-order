@@ -9,17 +9,8 @@ import Layout from '../components/Layout';
 import NavBar from '../components/NavBar';
 
 import { useInput } from '@/hooks/useInput';
-
-const validateEmail = (v: string) => {
-  if(!v) return 'ID를 입력해주세요.';
-  const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-  return ok ? '' : 'ID는 이메일 형식으로 입력해주세요.'
-};
-
-const validatePassword = (v: string) => {
-  if(!v) return 'PW를 입력해주세요.';
-  return v.length >= 8 ? '' : 'PW는 최소 8글자 이상이어야 합니다.'
-};
+import { EMAIL_REGEX } from '@/\butils/regex';
+import { ID_REQUIRED, ID_INVALID, PW_REQUIRED, PW_TOO_SHORT } from '@/constants/messages';
 
 const LoginFormWrapper = styled.div`
   height: 100vh;
@@ -97,6 +88,17 @@ const LoginFormBtn = styled.button<InputProps>`
   margin-top: 25px;
   
 `;
+
+const validateEmail = (v: string) => {
+  if(!v) return ID_REQUIRED;
+  const ok = EMAIL_REGEX.test(v);
+  return ok ? '' : ID_INVALID;
+};
+
+const validatePassword = (v: string) => {
+  if(!v) return PW_REQUIRED;
+  return v.length >= 8 ? '' : PW_TOO_SHORT;
+};
 
 function Login() {
   const navigate = useNavigate();
