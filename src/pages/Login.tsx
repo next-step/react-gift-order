@@ -1,4 +1,4 @@
-import { ROUTE_PATH } from "@/App";
+import { ROUTE_PATH } from "@/components/routes/Routes";
 import Button from "@/components/common/Button";
 import Container from "@/components/Container";
 import Divider from "@/components/Divider";
@@ -7,6 +7,7 @@ import type React from "react";
 import useInput from "@/hooks/useInput";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useCallback } from "react";
+import { setCookieValue } from "@/utils/cookie";
 
 const ERROR_MSG_ID_EMPTY = "ID를 입력해주세요.";
 const ERROR_MSG_ID_FORM = "ID는 이메일 형식으로 입력해주세요.";
@@ -31,7 +32,7 @@ const Login = () => {
   const handleLoginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    document.cookie = `userId=${id.value}`;
+    setCookieValue("userId", id.value);
 
     const redirectUrl = getRedirectUrl();
     if (redirectUrl === ROUTE_PATH.LOGIN) {

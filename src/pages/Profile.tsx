@@ -3,19 +3,20 @@ import Container from "@/components/Container";
 import Divider from "@/components/Divider";
 import Button from "@/components/common/Button";
 import { useNavigate } from "react-router-dom";
-import { ROUTE_PATH } from "@/App";
+import { ROUTE_PATH } from "@/components/routes/Routes";
+import { clearCookieValue, getCookieValue } from "@/utils/cookie";
 
 const Profile = () => {
   const navigate = useNavigate();
-  const goHome = () => {
-    navigate(ROUTE_PATH.HOME);
+  const goLogin = () => {
+    navigate(ROUTE_PATH.LOGIN);
   };
   const logout = () => {
-    clearUserId();
-    goHome();
+    clearCookieValue("userId");
+    goLogin();
   };
-  const userId = getUserId();
-  const userName = userId ? userId?.split("@")[0] : undefined;
+  const userId = getCookieValue("userId");
+  const userName = userId ? userId?.split("@")[0] : null;
   return (
     <Container>
       <Content>
@@ -29,14 +30,6 @@ const Profile = () => {
       </Content>
     </Container>
   );
-};
-
-const getUserId = () => {
-  const userId = document.cookie.match("(^|;) ?userId=([^;]*)(;|$)");
-  return userId ? userId[2] : null;
-};
-const clearUserId = () => {
-  document.cookie = `userId=`;
 };
 
 const Content = styled.div`

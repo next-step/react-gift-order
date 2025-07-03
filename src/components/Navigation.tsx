@@ -2,8 +2,8 @@ import styled from "@emotion/styled";
 import LeftArrow from "@/components/icons/LeftArrow";
 import Profile from "@/components/icons/Profile";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ROUTE_PATH } from "@/App";
 import Button from "@/components/common/Button";
+import { ROUTE_PATH } from "@/components/routes/Routes";
 
 const Navigation = () => {
   const location = useLocation();
@@ -23,6 +23,7 @@ const Navigation = () => {
     const loginPath = isValidPath ? ROUTE_PATH.LOGIN + `?redirect=${location.pathname}` : ROUTE_PATH.LOGIN;
     navigate(loginPath);
   };
+  const isLoginPageOrProfilePage = location.pathname === ROUTE_PATH.LOGIN || location.pathname === ROUTE_PATH.PROFILE;
   return (
     <Container>
       <Nav>
@@ -37,7 +38,7 @@ const Navigation = () => {
           </Button>
         </NavCenter>
         <NavRight>
-          <Button variant="icon" onClick={goLogin} disabled={location.pathname === ROUTE_PATH.LOGIN}>
+          <Button variant="icon" onClick={goLogin} disabled={isLoginPageOrProfilePage}>
             <Profile />
           </Button>
         </NavRight>
