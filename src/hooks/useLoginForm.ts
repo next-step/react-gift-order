@@ -48,10 +48,13 @@ function useLoginForm() {
     setPwError(result.ok ? '' : result.reason);
     return result.ok;
   }
-  const isValid = idError === '' && pwError === '' && id !== '' && pw !== '';
   function isValidForm() {
     return !handleCheckId() || !handleCheckPw();
   }
+
+  const isValid = validateId(id).ok && validatePw(pw).ok;
+  // const isValid = idError === '' && pwError === '' && id !== '' && pw.length >= 8;
+
   return {
     id,
     pw,
