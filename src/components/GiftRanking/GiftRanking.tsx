@@ -5,7 +5,7 @@ import {
   MoreButton, Grid, Section, Title,
   SortOptions,
 } from '@/components/GiftRanking/GiftRanking.styles';
-import { categories, sorts, INITIAL_VISIBLE_GIFT_COUNT } from "@/constants/RankingConstants";
+import { categories, sorts, INITIAL_VISIBLE_GIFT_COUNT, TOTAL_GIFT_COUNT } from '@/constants/RankingConstants';
 import FilterButton from '@/components/Common/FilterButton/FilterButton';
 import SortSpan from "@/components/Common/SortOption/SortOption"
 import RankingCard from '@/components/Common/RankingCard/RankingCard';
@@ -19,10 +19,10 @@ export default function GiftRanking() {
   const [sort, setSort] = useSelectedState("giftRankingSort", "받고 싶어한");
 
   const handleToggle = () => {
-    setShowCount(prev => (prev === 6 ? 21 : 6));
+    setShowCount(prev => (prev === INITIAL_VISIBLE_GIFT_COUNT ? TOTAL_GIFT_COUNT : INITIAL_VISIBLE_GIFT_COUNT));
   };
 
-  const expandedList = Array(21).fill(productList[0]);
+  const expandedList = Array(TOTAL_GIFT_COUNT).fill(productList[0]);
 
   return (
     <Section>
