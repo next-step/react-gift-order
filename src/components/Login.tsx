@@ -10,22 +10,28 @@ const Login = () => {
   const navigate = useNavigate();
   const ref = useRef(null);
 
-  const passwordValidator = {
-    test: (password: string) => {
-      return password.length >= 8;
-    },
-  };
-
   const EMAIL_REGEXP = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
-  function useValidate(validator: any) {
+  const validateEmail = (email: string) => {
+    const EMAIL_REGEXP = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return Boolean(EMAIL_REGEXP.test(email));
+  };
+
+  const validatePassword = (password: string) => {
+    return password.length >= 8;
+  };
+
+  function useValidate(
+    validator: (value: string) => boolean,
+    errorMessage: string
+  ) {
     const [string, setString] = useState("");
     const [isValid, setIsValid] = useState(false);
     const [message, setMessage] = useState("");
 
     const onChange = (e: any) => {
       setString(e.target.value);
-      if (validator.test(string)) {
+      if (validator(string)) {
         setIsValid(true);
       } else {
         setIsValid(false);
@@ -36,7 +42,7 @@ const Login = () => {
       if (string == "") {
         setMessage("값을 입력해주세요");
       } else if (!isValid) {
-        setMessage("입력값에 맞게 작성해주세요.");
+        setMessage(errorMessage);
       } else if (isValid) {
         setIsValid(true);
         setMessage("");
@@ -46,8 +52,8 @@ const Login = () => {
     return { string, isValid, message, onChange, onBlur };
   }
 
-  const email = useValidate(EMAIL_REGEXP);
-  const password = useValidate(passwordValidator);
+  const email = useValidate(validateEmail, "이메일 형식을 지켜주세요.");
+  const password = useValidate(validatePassword, "비밀번호는 8자 이상입니다.");
   const isFormValid = email.isValid && password.isValid;
 
   return (
