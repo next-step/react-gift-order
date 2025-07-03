@@ -3,6 +3,7 @@ import { Home } from '@/pages/Home'
 import { Login } from '@/pages/Login'
 import { NotFound } from '@/pages/NotFound'
 import { Routes, Route } from 'react-router-dom'
+import { MyPage } from './pages/MyPage'
 
 // * 라우터 컴포넌트
 const Router = () => {
@@ -14,6 +15,8 @@ const Router = () => {
         <Route index element={<Home />} />
         {/* 로그인 페이지 */}
         <Route path={ROUTH_PATH.LOGIN} element={<Login />} />
+        {/* 마이 페이지 */}
+        <Route path={ROUTH_PATH.MY} element={<MyPage />} />
 
         {/* 404 NotFound 페이지 - 기타 구현되지 않은 경로 페이지 */}
         <Route path={ROUTH_PATH.NOT_FOUND} element={<NotFound />} />
@@ -30,6 +33,8 @@ export const ROUTH_PATH = {
   HOME: '/',
   // * 로그인 페이지
   LOGIN: '/login',
+  // * 마이 페이지
+  MY: '/my',
   // * 404 페이지
   NOT_FOUND: '*',
 }

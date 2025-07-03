@@ -25,6 +25,7 @@ export const Login = () => {
 
   const from = (location.state as { from?: string })?.from || ROUTH_PATH.HOME
 
+  // * 로그인 핸들러
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -38,6 +39,7 @@ export const Login = () => {
       email: email.value,
     })
 
+    // * 로그인 시 이전 페이지로 리다이렉트
     navigate(from, { replace: true }) // * replace로 히스토리 정리
   }
 
