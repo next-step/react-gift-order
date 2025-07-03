@@ -40,11 +40,10 @@ function LoginPage() {
     hasPasswordError,
   } = usePasswordValidation();
 
-  const isFormValid =
-    !hasEmailError &&
-    !hasPasswordError &&
-    email.trim() !== "" &&
-    password.trim() !== "";
+  const isValidEmail = !hasEmailError && email.trim() !== "";
+  const isValidPassword = !hasPasswordError && password.trim() !== "";
+
+  const isFormValid = isValidEmail && isValidPassword;
 
   return (
     <Layout>
