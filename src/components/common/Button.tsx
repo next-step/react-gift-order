@@ -10,7 +10,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   width: string;
   children: ReactNode;
 }
-
+//TODO : 버튼 컴포넌트 별도의 스타일 파일로 분리해서 로직 및 스타일 분리? variants가 늘어난다면 props 관리 필요
 const StyledButton = styled.button<ButtonProps>(
   ({ theme, variant = "primary", size = "medium", width = "auto" }) => ({
     display: "flex",
