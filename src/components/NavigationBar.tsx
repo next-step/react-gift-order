@@ -37,8 +37,6 @@ const StyledNavLoginBtn = styled.button`
   background-color: ${({ theme }) => theme.sementicPalette.backgroundDefault};
 `;
 
-//Home 페이지와 Login 페이지를 비교하면 NavigatioBar가 미묘하게 오른쪽으로 움직인것처럼 보입니다.
-//혹시 왜 그런지 이유를 알 수 있을까요?
 const NavigationBar = () => {
   const navigate = useNavigate();
   const LOGIN_URL = URLS.login;

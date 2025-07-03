@@ -129,4 +129,7 @@ export const reset = css`
   * {
     font-family: 'Pretendard-Regular', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif, 'Noto Sans KR';
   }
+  html {
+    scrollbar-gutter: stable;
+  }
 `;
