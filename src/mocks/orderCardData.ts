@@ -1,4 +1,4 @@
-[
+export const cardData = [
   {
     id: 904,
     thumbUrl:

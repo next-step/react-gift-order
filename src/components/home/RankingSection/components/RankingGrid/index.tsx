@@ -1,6 +1,7 @@
 import { useTheme } from "@emotion/react";
 import { mockProduct } from "@/mocks/productData";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   gridStyle,
   itemStyle,
@@ -13,6 +14,7 @@ export default function RankingGrid() {
   const theme = useTheme();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const genderFilter = searchParams.get("gender");
   const filteredProducts =
     genderFilter && genderFilter !== "전체"
@@ -27,7 +29,13 @@ export default function RankingGrid() {
         <div
           key={item.id}
           css={itemStyle}
-          onClick={() => navigate(`/order/${item.id}`)}
+          onClick={() => {
+            if (user) {
+              navigate(`/order/${item.id}`);
+            } else {
+              navigate("/login");
+            }
+          }}
         >
           <div css={rankStyle(theme)}>{index + 1}</div>
           <img src={item.imageURL} alt={item.name} css={imageStyle} />

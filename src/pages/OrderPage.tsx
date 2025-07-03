@@ -9,11 +9,11 @@ function OrderPage() {
     <>
       <GiftMessageSection />
       <HorizontalSpacing size="spacing6" />
-      <ProductInfoSection />
-      <HorizontalSpacing size="spacing6" />
       <SenderSection />
       <HorizontalSpacing size="spacing6" />
       <ReceiverSection />
+      <HorizontalSpacing size="spacing6" />
+      <ProductInfoSection />
     </>
   );
 }
