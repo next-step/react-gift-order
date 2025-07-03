@@ -1,12 +1,7 @@
 import styled from "@emotion/styled";
-import type { ChangeEventHandler, FocusEventHandler } from "react";
+import type { InputHTMLAttributes } from "react";
 
-type Props = {
-  type?: "text" | "password" | "email";
-  value: string;
-  placeholder?: string;
-  onChange?: ChangeEventHandler<HTMLInputElement>;
-  onBlur?: FocusEventHandler<HTMLInputElement>;
+type Props = InputHTMLAttributes<HTMLInputElement> & {
   error?: string;
 };
 

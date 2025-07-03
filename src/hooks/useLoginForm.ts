@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { validateEmail, validatePassword } from "@/utils/validators";
 
 export const useLoginForm = () => {
   const [email, setEmail] = useState("");
@@ -9,36 +10,21 @@ export const useLoginForm = () => {
 
   const [isButtonEnabled, setIsButtonEnabled] = useState(false);
 
-  const validateEmail = (email: string) => {
-    if (!email) return "아이디를 입력해주세요.";
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email))
-      return "아이디는 이메일 형식으로 입력해주세요.";
-    return "";
-  };
-
-  const validatePassword = (password: string) => {
-    if (!password) return "비밀번호를 입력해주세요.";
-    if (password.length < 8) return "비밀번호는 최소 8글자 이상이어야 합니다.";
-    return "";
-  };
-
   const handleEmailChange = (value: string) => {
+    const err = validateEmail(value);
+
     setEmail(value);
-    setEmailError(validateEmail(value));
+    setEmailError(err);
+    setIsButtonEnabled(err === "" && passwordError === "");
   };
 
   const handlePasswordChange = (value: string) => {
+    const err = validatePassword(value);
+
     setPassword(value);
-    setPasswordError(validatePassword(value));
+    setPasswordError(err);
+    setIsButtonEnabled(emailError === "" && err === "");
   };
-
-  useEffect(() => {
-    const isEmailValid = validateEmail(email) === "";
-    const isPasswordValid = validatePassword(password) === "";
-
-    setIsButtonEnabled(isEmailValid && isPasswordValid);
-  }, [email, password]);
 
   return {
     email,
