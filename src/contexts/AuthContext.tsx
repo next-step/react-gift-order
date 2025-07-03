@@ -10,9 +10,17 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<string | null>(null);
-  const login = (username: string) => setUser(username);
-  const logout = () => setUser(null);
+  const [user, setUser] = useState<string | null>(() => {
+    return localStorage.getItem("user");
+  });
+  const login = (username: string) => {
+    localStorage.setItem("user", username);
+    setUser(username);
+  };
+  const logout = () => {
+    localStorage.removeItem("user");
+    setUser(null);
+  };
 
   const value = { user, login, logout };
 
