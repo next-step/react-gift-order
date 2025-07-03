@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState } from 'react';
 
 const EMAIL_REGEX = /^[\w-.]+@[\w-]+\.[a-z]{2,}$/i;
 
@@ -12,18 +12,18 @@ export const useLoginForm = () => {
   const [passwordTouched, setPasswordTouched] = useState(false);
 
   // 이메일 유효성 검사
-  const validateEmail = useCallback((value: string) => {
+  const validateEmail = (value: string) => {
     if (!value) return 'ID를 입력해주세요.';
     if (!EMAIL_REGEX.test(value)) return 'ID는 이메일 형식으로 입력해주세요.';
     return '';
-  }, []);
+  };
 
   // 패스워드 유효성 검사
-  const validatePassword = useCallback((value: string) => {
+  const validatePassword = (value: string) => {
     if (!value) return 'PW를 입력해주세요.';
     if (value.length < 8) return 'PW는 최소 8글자 이상이어야 합니다.';
     return '';
-  }, []);
+  };
 
   // onBlur 시 에러 메시지 갱신
   const handleEmailBlur = () => {
@@ -48,14 +48,11 @@ export const useLoginForm = () => {
   };
 
   // 버튼 활성화 조건
-  const isValid = useMemo(
-    () =>
-      !validateEmail(email) &&
-      !validatePassword(password) &&
-      email.length > 0 &&
-      password.length >= 8,
-    [email, password, validateEmail, validatePassword],
-  );
+  const isValid =
+    !validateEmail(email) &&
+    !validatePassword(password) &&
+    email.length > 0 &&
+    password.length >= 8;
 
   return {
     email,
