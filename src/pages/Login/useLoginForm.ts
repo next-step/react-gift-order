@@ -5,23 +5,28 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const useLoginForm = () => {
   const [emailValue, setEmailValue] = useState('');
+  const [emailTouched, setEmailTouched] = useState(false);
+
   const [passwordValue, setPasswordValue] = useState('');
+  const [passwordTouched, setPasswordTouched] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/';
 
   const emailError = useMemo(() => {
+    if (!emailTouched) return '';
     if (!emailValue) return 'ID를 입력해주세요.';
     if (!EMAIL_REGEX.test(emailValue)) return 'ID는 이메일 형식으로 입력해주세요.';
     return '';
-  }, [emailValue]);
+  }, [emailValue, emailTouched]);
 
   const passwordError = useMemo(() => {
+    if (!passwordTouched) return '';
     if (!passwordValue) return 'PW를 입력해주세요.';
     if (passwordValue.length < 8) return 'PW는 최소 8글자 이상이어야 합니다.';
     return '';
-  }, [passwordValue]);
+  }, [passwordValue, passwordTouched]);
 
   const handleEmailChange = (value: string) => {
     setEmailValue(value);
@@ -31,12 +36,24 @@ export const useLoginForm = () => {
     setPasswordValue(value);
   };
 
-  const validateEmail = () => {}; // 기존 구조 유지 (비어 있는 함수)
-  const validatePassword = () => {}; // 기존 구조 유지
+  const validateEmail = () => {
+    setEmailTouched(true);
+  };
+
+  const validatePassword = () => {
+    setPasswordTouched(true);
+  };
 
   const isValid = useMemo(() => {
-    return !emailError && !passwordError;
-  }, [emailError, passwordError]);
+    return (
+      EMAIL_REGEX.test(emailValue) &&
+      passwordValue.length >= 8
+    );
+  }, [emailValue, passwordValue]);
+
+  const goToLogin = () => {
+    navigate(from, { replace: true });
+  };
 
   return {
     email: {
@@ -52,6 +69,6 @@ export const useLoginForm = () => {
       validate: validatePassword,
     },
     isValid,
-    goToLogin: () => navigate(from, { replace: true }),
+    goToLogin,
   };
 };
