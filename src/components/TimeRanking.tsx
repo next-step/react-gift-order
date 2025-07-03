@@ -9,9 +9,9 @@ const genderOptions = [
   { label: '여성이', icon: '👩🏻', value: '여성' },
   { label: '남성이', icon: '👨🏻', value: '남성' },
   { label: '청소년이', icon: '🧒🏻', value: '청소년' },
-]
+] as const
 
-const RankTypeOptions = ['받고 싶어한', '많이 선물한', '위시로 받은']
+const RankTypeOptions = ['받고 싶어한', '많이 선물한', '위시로 받은'] as const
 
 type Gender = 'ALL' | '여성' | '남성' | '청소년'
 type RankType = '받고 싶어한' | '많이 선물한' | '위시로 받은'
@@ -48,7 +48,7 @@ export default function TimeRanking() {
           <GenderTab key={value}>
             <GenderButton
               isSelected={selectedGender === value}
-              onClick={() => changeGender(value as Gender)}
+              onClick={() => changeGender(value)}
             >
               {icon}
             </GenderButton>
@@ -64,7 +64,7 @@ export default function TimeRanking() {
           <RankingTab
             key={tab}
             isSelected={selectedRankType === tab}
-            onClick={() => changeRankType(tab as RankType)}
+            onClick={() => changeRankType(tab)}
           >
             {tab}
           </RankingTab>
