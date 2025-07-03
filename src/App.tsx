@@ -1,35 +1,55 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import Header from "./components/Header";
+import HomePage from "./pages/HomePage";
+import RankingPage from "./pages/RankingPage";
+import MyGiftPage from "./pages/MyGiftPage";
+import LoginPage from "./pages/LoginPage";
+import { PATHS } from "./constants/paths";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <Router>
+      <div className="min-h-screen bg-gray-100 pb-20 font-sans">
+        <Header />
+        <nav className="bg-white shadow-md py-3 px-4 flex justify-center space-x-6 text-gray-700 border-b border-gray-200">
+          <Link
+            to={PATHS.HOME}
+            className="hover:text-blue-600 font-semibold text-lg py-1 px-3 rounded-md hover:bg-blue-50 transition-colors"
+          >
+            홈
+          </Link>
+          <Link
+            to={PATHS.RANKING}
+            className="hover:text-blue-600 font-semibold text-lg py-1 px-3 rounded-md hover:bg-blue-50 transition-colors"
+          >
+            랭킹
+          </Link>
+          <Link
+            to={PATHS.MY_GIFTS}
+            className="hover:text-blue-600 font-semibold text-lg py-1 px-3 rounded-md hover:bg-blue-50 transition-colors"
+          >
+            내 선물함
+          </Link>
+        </nav>
+        <main>
+          <Routes>
+            <Route path={PATHS.HOME} element={<HomePage />} />
+            <Route path={PATHS.RANKING} element={<RankingPage />} />
+            <Route path={PATHS.MY_GIFTS} element={<MyGiftPage />} />
+            <Route path={PATHS.LOGIN} element={<LoginPage />} />
+            <Route
+              path={PATHS.NOT_FOUND}
+              element={
+                <div className="container mx-auto py-10 text-center text-xl font-bold text-gray-700">
+                  404 - 페이지를 찾을 수 없습니다!
+                </div>
+              }
+            />
+          </Routes>
+        </main>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </Router>
+  );
 }
 
-export default App
+export default App;
