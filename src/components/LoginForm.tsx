@@ -12,7 +12,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 function LoginForm() {
   const navigate = useNavigate();
   const location = useLocation();
-  const userInfo = useUserInfo();
+  const userInfo: UserInfoHook = useUserInfo();
 
   const idEvaluator = createNewIDEvaluator();
   const pwEvaluator = createNewPWEvaluator();
@@ -27,7 +27,7 @@ function LoginForm() {
     navigate(redirectPath ? decodeURIComponent(redirectPath) : "/");
   };
 
-  const handleLogin = (userInfo: UserInfoHook) => {
+  const handleLogin = () => {
     userContext?.valid.setValue(true);
     userContext?.email.setValue(userInfo.email.value);
     userContext?.user.setValue(userInfo.email.value.split("@")[0]);
@@ -86,9 +86,7 @@ function LoginForm() {
             userInfo.password.value.length > 0
           )
         }
-        onClick={() => {
-          handleLogin(userInfo);
-        }}
+        onClick={handleLogin}
       >
         로그인
       </LoginButton>
