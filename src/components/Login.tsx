@@ -2,6 +2,8 @@ import { css } from '@emotion/react';
 import theme from '@src/styles/tokens/index';
 import kakao_logo from '@src/assets/icons/kakao_logo.svg';
 import { useLocation, useNavigate } from 'react-router-dom';
+import useLoginForm from '@src/hooks/useLoginForm';
+import LoginInput from '@src/components/LoginInput';
 
 const mainStyle = css`
   width: 100%;
@@ -23,66 +25,36 @@ const sectionStyle = css`
   padding: 16px;
 `;
 
-const inputDiv = css`
-  margin: 0;
-  padding: 0;
-  border: 0;
-  vertical-align: baseline;
-  box-sizing: border-box;
-  font: inherit;
-`;
-
-const inputStyle = css`
-  width: 100%;
-  box-sizing: border-box;
-  color: ${theme.colors.gray900};
-  transition: border-color 200ms;
-  border-style: solid;
-  min-height: 2.75rem;
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.375rem;
-  padding: 8px 0px;
-  border-width: 0px 0px 1px;
-  border-color: ${theme.colors.textDisabled};
-
-  &:focus {
-    border-color: ${theme.colors.gray700};
-    outline: none;
-  }
-  &::placeholder {
-    color: ${theme.colors.textPlaceholder};
-    opacity: 1; /
-  }
-`;
-
 const buttonStyle = css`
   width: 100%;
   height: 2.75rem;
-  font-size: 0.875rem;
-  font-weight: 400;
-  line-height: 1.1875rem;
+  font-size: ${theme.typography.subtitle2Regular.fontSize};
+  font-weight: ${theme.typography.subtitle2Regular.fontWeight};
+  line-height: ${theme.typography.subtitle2Regular.lineHeight};
   color: ${theme.colors.textDefault};
   background-color: ${theme.colors.yellow600};
   border-radius: 4px;
   border: none;
   cursor: pointer;
   transition: background-color 200ms;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 `;
 
 const spacer16 = css`
-  width: 100%;
-  height: 16px;
-  background-color: transparent;
+  height: ${theme.spacing.spacing4};
 `;
 
 const spacer48 = css`
-  width: 100%;
-  height: 48px;
-  background-color: transparent;
+  height: ${theme.spacing.spacing12};
 `;
 
 const Login = () => {
+  const { formValue, handleChange, handleBlur, isError, loginActivated } =
+    useLoginForm();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -95,17 +67,40 @@ const Login = () => {
     <main css={mainStyle}>
       <img css={logoStyle} src={kakao_logo} alt="카카오 공식 로고" />
       <section css={sectionStyle}>
-        <div css={inputDiv}>
-          <input css={inputStyle} placeholder="이메일" type="email" />
-        </div>
-        <div css={spacer16} />
-        <div css={inputDiv}>
-          <input css={inputStyle} placeholder="비밀번호" type="password" />
-        </div>
-        <div css={spacer48} />
-        <button css={buttonStyle} onClick={loginClicked}>
-          로그인
-        </button>
+        <form action="">
+          <LoginInput
+            name="email"
+            type="email"
+            placeholder="이메일"
+            value={formValue.email}
+            onChange={handleChange}
+            onBlur={() => handleBlur('email')}
+            error={isError.email}
+          />
+
+          <div css={spacer16} />
+
+          <LoginInput
+            name="password"
+            type="password"
+            placeholder="비밀번호"
+            value={formValue.password}
+            onChange={handleChange}
+            onBlur={() => handleBlur('password')}
+            error={isError.password}
+          />
+
+          <div css={spacer48} />
+
+          <button
+            type="submit"
+            css={buttonStyle}
+            onClick={loginClicked}
+            disabled={!loginActivated}
+          >
+            로그인
+          </button>
+        </form>
       </section>
     </main>
   );
