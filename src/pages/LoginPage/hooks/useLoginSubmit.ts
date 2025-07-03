@@ -1,3 +1,4 @@
+import { ROUTES } from "@/constants/routes";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -11,7 +12,7 @@ function useLoginSubmit() {
     (e: React.FormEvent, email: string) => {
       e.preventDefault();
       login(email);
-      const from = location.state?.from || "/";
+      const from = location.state?.from || ROUTES.HOME;
       navigate(from, { replace: true });
     },
     // TODO: eslint 경고 확인

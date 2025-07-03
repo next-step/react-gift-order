@@ -9,13 +9,14 @@ import {
 } from "./NavigationBar.styles";
 import { NAVIGATION_BAR_LABELS } from "./constants/labels";
 import { useLocation, useNavigate } from "react-router-dom";
+import { ROUTES } from "@/constants/routes";
 
 function NavigationBar() {
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleProfileClick = () => {
-    navigate("/my", {
+    navigate(ROUTES.MY, {
       state: { from: location.pathname },
     });
   };

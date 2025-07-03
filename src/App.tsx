@@ -8,6 +8,7 @@ import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import { ViewportContainer } from "./App.styles";
 import { AuthProvider } from "./contexts/AuthContext";
 import MyPage from "./pages/MyPage/MyPage";
+import { ROUTES } from "./constants/routes";
 
 const globalStyles = css`
   body {
@@ -22,10 +23,10 @@ function App() {
         <Global styles={[resetStyles, globalStyles]} />
         <ViewportContainer>
           <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/my" element={<MyPage />} />
-            <Route path="*" element={<NotFoundPage />} />
+            <Route path={ROUTES.HOME} element={<HomePage />} />
+            <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+            <Route path={ROUTES.MY} element={<MyPage />} />
+            <Route path={ROUTES.NOT_FOUND} element={<NotFoundPage />} />
           </Routes>
         </ViewportContainer>
       </AuthProvider>
