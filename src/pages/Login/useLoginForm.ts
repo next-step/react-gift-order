@@ -28,11 +28,11 @@ export const useLoginForm = () => {
     return '';
   }, [passwordValue, passwordTouched]);
 
-  const handleEmailChange = (value: string) => {
+  const changeEmail = (value: string) => {
     setEmailValue(value);
   };
 
-  const handlePasswordChange = (value: string) => {
+  const changePassword = (value: string) => {
     setPasswordValue(value);
   };
 
@@ -59,13 +59,13 @@ export const useLoginForm = () => {
     email: {
       value: emailValue,
       error: emailError,
-      onChange: handleEmailChange,
+      onChange: changeEmail ,
       validate: validateEmail,
     },
     password: {
       value: passwordValue,
       error: passwordError,
-      onChange: handlePasswordChange,
+      onChange: changePassword,
       validate: validatePassword,
     },
     isValid,
