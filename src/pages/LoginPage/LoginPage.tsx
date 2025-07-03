@@ -9,8 +9,8 @@ import { LOGIN_LABELS } from "./constants/labels";
 import Layout from "@/layout";
 import IDField from "./components/IDField";
 import PasswordField from "./components/PasswordField";
-import usePasswordValidation from "./hooks/usePasswordValidation";
 import { useEmailValidation } from "./hooks/useEmailValidation";
+import usePasswordValidation from "./hooks/usePasswordValidation";
 import useLoginSubmit from "./hooks/useLoginSubmit";
 
 export interface LoginFormProps {
