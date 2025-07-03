@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import styled from '@emotion/styled';
 import { palette, spacing, typography } from '@/styles/theme';
 import { useLoginForm } from '@/hooks/useLoginForm';
 
@@ -19,13 +20,13 @@ const inputStyle = css`
   font-size: ${typography.body1Regular.fontSize};
 `;
 
-const errorcss = css`
+const error = css`
   margin-top: 4px;
   font-size: 12px;
   color: ${palette.red600};
 `;
 
-const loginButton = (enabled: boolean) => css`
+const LoginButton = styled.button`
   width: 100%;
   padding: 14px 0;
   border-radius: 8px;
@@ -33,8 +34,8 @@ const loginButton = (enabled: boolean) => css`
   font-size: ${typography.body1Bold.fontSize};
   color: ${palette.black};
   background: ${palette.primary};
-  // 로그인 버튼이 활성화 되었을 때만 클릭되도록 
-  cursor: ${enabled ? 'pointer' : 'not-allowed'}; 
+  
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
 `;
 
 export const LoginFormSection = () => {
@@ -60,7 +61,7 @@ export const LoginFormSection = () => {
           onBlur={onBlurId}
           css={inputStyle}
         />
-        {touched.id && idError && <div css={errorcss}>{idError}</div>}
+        {touched.id && idError && <div css={error}>{idError}</div>}
       </div>
 
       <div>
@@ -73,14 +74,12 @@ export const LoginFormSection = () => {
           onBlur={onBlurPw}
           css={inputStyle}
         />
-        {touched.pw && pwError && <div css={errorcss}>{pwError}</div>}
+        {touched.pw && pwError && <div css={error}>{pwError}</div>}
       </div>
 
-      <button type="button" onClick={onSubmit} css={loginButton(isValid)} disabled={!isValid}>
+      <LoginButton type="button" onClick={onSubmit} disabled={!isValid}>
         로그인
-      </button>
+      </LoginButton>
     </div>
   );
 };
-
-// 기존의 로그인 페이지 여기로 옮김 
