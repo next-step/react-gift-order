@@ -12,6 +12,8 @@ function IDField({
   hasError,
 }: LoginFormProps) {
   const isEmailBlurredRef = useRef(false);
+  const shouldShowErrorStyle = hasError && isEmailBlurredRef.current;
+  const shouldShowErrorMessage = errorMessage && isEmailBlurredRef.current;
 
   const handleEmailChange = (value: string) => {
     handleChange(value);
@@ -32,9 +34,9 @@ function IDField({
         onChange={(e) => handleEmailChange(e.target.value)}
         onBlur={(e) => handleBlur(e.target.value)}
         required
-        isError={hasError && isEmailBlurredRef.current}
+        isError={shouldShowErrorStyle}
       />
-      {isEmailBlurredRef.current && errorMessage && (
+      {shouldShowErrorMessage && (
         <FormErrorMessage errorMessage={errorMessage} />
       )}
     </>

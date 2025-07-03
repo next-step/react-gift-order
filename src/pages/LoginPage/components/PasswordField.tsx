@@ -12,6 +12,8 @@ function PasswordField({
   hasError,
 }: LoginFormProps) {
   const isPasswordBlurredRef = useRef(false);
+  const shouldShowErrorStyle = hasError && isPasswordBlurredRef.current;
+  const shouldShowErrorMessage = errorMessage && isPasswordBlurredRef.current;
 
   const handlePasswordChange = (value: string) => {
     handleChange(value);
@@ -30,11 +32,11 @@ function PasswordField({
         placeholder={LOGIN_LABELS.PASSWORD_PLACEHOLDER}
         value={password}
         onChange={(e) => handlePasswordChange(e.target.value)}
-        required
-        isError={hasError && isPasswordBlurredRef.current}
         onBlur={(e) => handlePasswordBlur(e.target.value)}
+        required
+        isError={shouldShowErrorStyle}
       />
-      {isPasswordBlurredRef.current && errorMessage && (
+      {shouldShowErrorMessage && (
         <FormErrorMessage errorMessage={errorMessage} />
       )}
     </>
