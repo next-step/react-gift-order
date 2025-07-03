@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { PASSWORD_LENGTH } from '@/constants/password.ts';
 
 export const useLoginForm = () => {
   const [id, setId] = useState('');
@@ -18,11 +19,7 @@ export const useLoginForm = () => {
     const value = e.target.value;
     setPassword(value);
 
-    if (value.length < 8) {
-      setIsValidPassword(false);
-    } else {
-      setIsValidPassword(true);
-    }
+    setIsValidPassword(value.length > PASSWORD_LENGTH);
   }
 
   const isFormValid = !isValidEmail || !isValidPassword || id === '' || password === '';
