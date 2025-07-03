@@ -27,13 +27,10 @@ const Login = () => {
     const [isValid, setIsValid] = useState(false);
     const [message, setMessage] = useState("");
 
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setString(e.target.value);
-      if (validator(string)) {
-        setIsValid(true);
-      } else {
-        setIsValid(false);
-      }
+    const onChange = (e: any) => {
+      const nextValue = e.target.value;
+      setString(nextValue);
+      setIsValid(validator(nextValue));
     };
 
     const onBlur = () => {
@@ -137,9 +134,8 @@ const inputStyle = (theme: Theme) => css`
   font-weight: ${theme.typography.body1Regular.weight};
   line-height: ${theme.typography.body1Regular.lineHeight};
   outline: none;
-
   &:focus {
-    border-color: ${theme.colors.semantic.kakaoYellow};
+    border-color: red;
   }
 `;
 
