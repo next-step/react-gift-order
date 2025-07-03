@@ -9,6 +9,7 @@ interface BaseButtonProps {
   direction?: "vertical" | "horizontal";
   color?: "blue" | "yellow";
   disabled?: boolean;
+  type?: "button" | "submit" | "reset";
 }
 
 export default function BaseButton({
@@ -20,6 +21,7 @@ export default function BaseButton({
   direction = "horizontal",
   color = "yellow",
   disabled = false,
+  type = "button",
 }: BaseButtonProps) {
   return (
     <Button

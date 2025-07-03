@@ -19,7 +19,16 @@ const LoginPage = () => {
       ? location.state.from.pathname
       : "/";
 
-  const handleLogin = () => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (
+      emailError ||
+      passwordError ||
+      email.trim() === "" ||
+      password.trim() === ""
+    ) {
+      return;
+    }
     navigate(from, { replace: true });
   };
 
@@ -56,34 +65,36 @@ const LoginPage = () => {
       <Logo>
         <KakaoLogo />
       </Logo>
-      <Input
-        type="email"
-        placeholder="이메일"
-        value={email}
-        onChange={handleEmailChange}
-        onBlur={handleEmailBlur}
-      />
-      {emailError && <ErrorText>{emailError}</ErrorText>}
-      <Input
-        type="password"
-        placeholder="비밀번호"
-        value={password}
-        onChange={handlePasswordChange}
-        onBlur={handlePasswordBlur}
-      />
-      {passwordError && <ErrorText>{passwordError}</ErrorText>}
-      <LoginButton
-        color="yellow"
-        onClick={handleLogin}
-        label="로그인"
-        size="large"
-        disabled={
-          !!emailError ||
-          !!passwordError ||
-          email.trim() === "" ||
-          password.trim() === ""
-        }
-      ></LoginButton>
+      <Form onSubmit={handleSubmit}>
+        <Input
+          type="email"
+          placeholder="이메일"
+          value={email}
+          onChange={handleEmailChange}
+          onBlur={handleEmailBlur}
+        />
+        {emailError && <ErrorText>{emailError}</ErrorText>}
+        <Input
+          type="password"
+          placeholder="비밀번호"
+          value={password}
+          onChange={handlePasswordChange}
+          onBlur={handlePasswordBlur}
+        />
+        {passwordError && <ErrorText>{passwordError}</ErrorText>}
+        <LoginButton
+          color="yellow"
+          type="submit"
+          label="로그인"
+          size="large"
+          disabled={
+            !!emailError ||
+            !!passwordError ||
+            email.trim() === "" ||
+            password.trim() === ""
+          }
+        />
+      </Form>
     </Wrapper>
   );
 };
@@ -107,6 +118,12 @@ const Logo = styled.div`
     display: flex;
     margin: 0 auto 12px;
   }
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 `;
 
 const Input = styled.input`
