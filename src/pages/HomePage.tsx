@@ -1,7 +1,7 @@
-import CategorySection from "@/components/CategorySection";
-import FriendSelectBox from "@/components/FriendSelectBox";
-import SupportBanner from "@/components/SupportBanner";
-import RankingSection from "@/components/RankingSection/RankingSection";
+import CategorySection from "@/components/home/CategorySection";
+import FriendSelectBox from "@/components/home/FriendSelectBox";
+import RankingSection from "@/components/home/RankingSection";
+import SupportBanner from "@/components/home/SupportBanner";
 
 export default function HomePage() {
   return (
