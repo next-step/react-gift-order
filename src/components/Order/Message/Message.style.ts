@@ -42,7 +42,7 @@ export const TextAreaWrapper = styled.div`
     textarea {
         width: 700px;
         height: 60px;
-        border: 1px solid lightgray;
+        border: 1px solid ${({ theme }) => theme.colors.gray500};
         border-radius: 5px;
         font-size: 15px;
         padding: 5px 8px;
