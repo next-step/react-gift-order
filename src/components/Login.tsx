@@ -127,31 +127,33 @@ const Login = () => {
         </div>
 
         <div css={spacer16} />
+        <form>
+          <div css={inputDiv}>
+            <input
+              css={inputStyle(!!isError.password, formValue.password !== '')}
+              placeholder="비밀번호"
+              type="password"
+              name="password"
+              value={formValue.password}
+              onChange={handleChange}
+              onBlur={() => handleBlur('password')}
+            />
+            {isError.password && (
+              <p css={errorMessageStyle}>{isError.password}</p>
+            )}
+          </div>
 
-        <div css={inputDiv}>
-          <input
-            css={inputStyle(!!isError.password, formValue.password !== '')}
-            placeholder="비밀번호"
-            type="password"
-            name="password"
-            value={formValue.password}
-            onChange={handleChange}
-            onBlur={() => handleBlur('password')}
-          />
-          {isError.password && (
-            <p css={errorMessageStyle}>{isError.password}</p>
-          )}
-        </div>
+          <div css={spacer48} />
 
-        <div css={spacer48} />
-
-        <button
-          css={buttonStyle}
-          onClick={loginClicked}
-          disabled={!loginActivated}
-        >
-          로그인
-        </button>
+          <button
+            type="submit"
+            css={buttonStyle}
+            onClick={loginClicked}
+            disabled={!loginActivated}
+          >
+            로그인
+          </button>
+        </form>
       </section>
     </main>
   );
