@@ -42,17 +42,13 @@ const useLoginForm = () => {
   };
 
   const handleBlur = (field: 'email' | 'password') => {
-    if (field === 'email') {
-      setIsError((prev) => ({
-        ...prev,
-        email: validateEmail(formValue.email),
-      }));
-    } else {
-      setIsError((prev) => ({
-        ...prev,
-        password: validatePassword(formValue.password),
-      }));
-    }
+    setIsError((prev) => ({
+      ...prev,
+      [field]:
+        field === 'email'
+          ? validateEmail(formValue.email)
+          : validatePassword(formValue.password),
+    }));
   };
 
   const loginActivated =
