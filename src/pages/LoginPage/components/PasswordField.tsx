@@ -8,7 +8,7 @@ function PasswordField({
   value: password,
   handleChange,
   validator: validatePassword,
-  getFormErrorMessage,
+  errorMessage,
   hasError,
 }: LoginFormProps) {
   const isPasswordBlurredRef = useRef(false);
@@ -35,7 +35,7 @@ function PasswordField({
         onBlur={(e) => handlePasswordBlur(e.target.value)}
       />
       {isPasswordBlurredRef.current && (
-        <FormErrorMessage errorMessage={getFormErrorMessage()} />
+        <FormErrorMessage errorMessage={errorMessage} />
       )}
     </>
   );

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { isNotEmpty, validateEmailFormat } from "../utils/validation";
 import { LOGIN_ERROR_MESSAGES } from "../constants/labels";
 
@@ -26,7 +26,7 @@ export function useEmailValidation(initialValue = "") {
     setEmailErrors(errors);
   };
 
-  const getEmailErrorMessage = () => {
+  const emailErrorMessage = useMemo(() => {
     if (emailErrors.isEmpty) {
       return LOGIN_ERROR_MESSAGES.EMAIL_EMPTY;
     }
@@ -34,7 +34,7 @@ export function useEmailValidation(initialValue = "") {
       return LOGIN_ERROR_MESSAGES.EMAIL_FORMAT_INVALID;
     }
     return null;
-  };
+  }, [emailErrors.isEmpty, emailErrors.invalidFormat]);
 
   const hasEmailError = emailErrors.isEmpty || emailErrors.invalidFormat;
 
@@ -42,7 +42,7 @@ export function useEmailValidation(initialValue = "") {
     email,
     handleEmailValueChange,
     validateEmail,
-    getEmailErrorMessage,
+    emailErrorMessage,
     hasEmailError,
   };
 }

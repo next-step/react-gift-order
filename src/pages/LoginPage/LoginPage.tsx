@@ -17,7 +17,7 @@ export interface LoginFormProps {
   value: string;
   handleChange: (value: string) => void;
   validator: (value: string) => void;
-  getFormErrorMessage: () => string | null;
+  errorMessage: string | null;
   hasError: boolean;
 }
 
@@ -28,7 +28,7 @@ function LoginPage() {
     email,
     handleEmailValueChange,
     validateEmail,
-    getEmailErrorMessage,
+    emailErrorMessage,
     hasEmailError,
   } = useEmailValidation();
 
@@ -36,7 +36,7 @@ function LoginPage() {
     password,
     handlePasswordValueChange,
     validatePassword,
-    getPasswordErrorMessage,
+    passwordErrorMessage,
     hasPasswordError,
   } = usePasswordValidation();
 
@@ -55,14 +55,14 @@ function LoginPage() {
               value={email}
               handleChange={handleEmailValueChange}
               validator={validateEmail}
-              getFormErrorMessage={getEmailErrorMessage}
+              errorMessage={emailErrorMessage}
               hasError={hasEmailError}
             />
             <PasswordField
               value={password}
               handleChange={handlePasswordValueChange}
               validator={validatePassword}
-              getFormErrorMessage={getPasswordErrorMessage}
+              errorMessage={passwordErrorMessage}
               hasError={hasPasswordError}
             />
           </InputFieldGroup>

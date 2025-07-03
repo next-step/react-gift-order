@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { isNotEmpty, validatePasswordFormat } from "../utils/validation";
 import { LOGIN_ERROR_MESSAGES } from "../constants/labels";
 
@@ -26,7 +26,7 @@ function usePasswordValidation() {
     setPasswordErrors(errors);
   };
 
-  const getPasswordErrorMessage = () => {
+  const passwordErrorMessage = useMemo(() => {
     if (passwordErrors.isEmpty) {
       return LOGIN_ERROR_MESSAGES.PASSWORD_EMPTY;
     }
@@ -34,7 +34,7 @@ function usePasswordValidation() {
       return LOGIN_ERROR_MESSAGES.PASSWORD_FORMAT_INVALID;
     }
     return null;
-  };
+  }, [passwordErrors.isEmpty, passwordErrors.invalidFormat]);
 
   const hasPasswordError =
     passwordErrors.isEmpty || passwordErrors.invalidFormat;
@@ -43,7 +43,7 @@ function usePasswordValidation() {
     password,
     handlePasswordValueChange,
     validatePassword,
-    getPasswordErrorMessage,
+    passwordErrorMessage,
     hasPasswordError,
   };
 }

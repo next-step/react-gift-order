@@ -8,7 +8,7 @@ function IDField({
   value: email,
   handleChange,
   validator: validateEmail,
-  getFormErrorMessage,
+  errorMessage,
   hasError,
 }: LoginFormProps) {
   const isEmailBlurredRef = useRef(false);
@@ -35,7 +35,7 @@ function IDField({
         isError={hasError && isEmailBlurredRef.current}
       />
       {isEmailBlurredRef.current && (
-        <FormErrorMessage errorMessage={getFormErrorMessage()} />
+        <FormErrorMessage errorMessage={errorMessage} />
       )}
     </>
   );
