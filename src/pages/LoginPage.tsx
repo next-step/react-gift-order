@@ -4,6 +4,7 @@ import MobileLayout from '@/layouts/MobileLayout';
 import NavBar from '@/components/NavBar';
 import logo from '@/assets/logo.svg';
 import KakaoButton from '@/components/common/KakaoButton';
+import useLoginForm from '@/hooks/useLoginForm';
 
 const Wrapper = styled.div`
   display: flex;
@@ -33,12 +34,13 @@ const Form = styled.form`
   padding: 16px;
 `;
 
-const Input = styled.input`
+const Input = styled.input<{ error?: boolean }>`
   border: 0;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.gray[400]};
+  border-bottom: 1px solid
+    ${({ theme, error }) => (error ? theme.colors.red[700] : theme.colors.gray[400])};
   height: 30px;
   padding: 8px 0;
-  margin-bottom: 16px;
+  margin-bottom: 4px;
   ${({ theme }) => theme.typography.body1Regular};
   &::placeholder {
     ${({ theme }) => theme.typography.body1Regular};
@@ -50,17 +52,25 @@ const Input = styled.input`
   }
 `;
 
+const ErrorMsg = styled.span`
+  ${({ theme }) => theme.typography.label2Regular};
+  color: ${({ theme }) => theme.colors.red[700]};
+  margin-bottom: 16px;
+`;
+
 const ButtonWrapper = styled.div`
   margin-top: 32px;
 `;
 
 export default function LoginPage() {
+  const { values, errors, handleChange, handleBlur, isValid } = useLoginForm();
   const navigate = useNavigate();
   const location = useLocation();
   const from = (location.state as { from?: string })?.from || '/';
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isValid) return;
     navigate(from, { replace: true });
   };
 
@@ -71,10 +81,30 @@ export default function LoginPage() {
         <Content>
           <LogoImg src={logo} alt="kakao 로고" />
           <Form onSubmit={handleSubmit}>
-            <Input placeholder="이메일" type="email" />
-            <Input placeholder="비밀번호" type="password" />
+            <Input
+              name="email"
+              placeholder="이메일"
+              type="email"
+              value={values.email}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={!!errors.email}
+            />
+            {errors.email && <ErrorMsg>{errors.email}</ErrorMsg>}
+
+            <Input
+              name="password"
+              placeholder="비밀번호"
+              type="password"
+              value={values.password}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={!!errors.password}
+            />
+            {errors.password && <ErrorMsg>{errors.password}</ErrorMsg>}
+
             <ButtonWrapper>
-              <KakaoButton type="submit" fullWidth>
+              <KakaoButton type="submit" fullWidth disabled={!isValid}>
                 로그인
               </KakaoButton>
             </ButtonWrapper>
