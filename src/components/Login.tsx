@@ -15,7 +15,7 @@ const Login = () => {
     },
   };
 
-  const exp = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+  const EMAIL_REGEXP = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
   function useValidate(validator: any) {
     const [string, setString] = useState("");
