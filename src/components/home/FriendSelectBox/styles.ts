@@ -7,7 +7,6 @@ export const boxStyle = (theme: Theme) => css`
   background-color: ${theme.colors.semantic.kakaoYellow};
   border-radius: 12px;
   padding: ${theme.spacing.spacing4};
-  margin-bottom: ${theme.spacing.spacing6};
 `;
 
 export const plusIconStyle = (theme: Theme) => css`

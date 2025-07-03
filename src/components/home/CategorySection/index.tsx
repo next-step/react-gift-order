@@ -1,7 +1,6 @@
 import { useTheme } from "@emotion/react";
 import { categoryData } from "@/mocks/categoryData";
 import {
-  sectionStyle,
   titleStyle,
   gridStyle,
   itemStyle,
@@ -13,7 +12,7 @@ export default function CategorySection() {
   const theme = useTheme();
 
   return (
-    <section css={sectionStyle(theme)}>
+    <>
       <h2 css={titleStyle(theme)}>선물 테마</h2>
       <div css={gridStyle}>
         {categoryData.map((item) => (
@@ -23,6 +22,6 @@ export default function CategorySection() {
           </div>
         ))}
       </div>
-    </section>
+    </>
   );
 }

@@ -1,10 +1,6 @@
 import { css } from "@emotion/react";
 import type { Theme } from "@emotion/react";
 
-export const sectionStyle = (theme: Theme) => css`
-  padding: ${theme.spacing.spacing6} ${theme.spacing.spacing4};
-`;
-
 export const titleStyle = (theme: Theme) => css`
   font-size: ${theme.fontSizes.title2Bold};
   font-weight: 700;
