@@ -25,7 +25,7 @@ export const StyledLink = styled(Link)`
     font-weight: bold;
     text-decoration: none;
     transition: background-color 0.2s ease;
-    width: ${({ theme }) => theme.spacing.spacing17};
+    width: ${({ theme }) => theme.spacing.spacing23};
     height: ${({ theme }) => theme.spacing.spacing10};
 
     &:hover {
