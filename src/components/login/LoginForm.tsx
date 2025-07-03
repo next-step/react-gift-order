@@ -24,6 +24,7 @@ const ErrorMessage = styled.div(({ theme }) => ({
   fontWeight: theme.typography.label1Regular.fontWeight,
   lineHeight: theme.typography.label1Regular.lineHeight,
   marginTop: theme.spacing1,
+  minHeight: `calc(${theme.typography.label1Regular.lineHeight} + ${theme.spacing1})`,
 }));
 
 export const LoginForm = () => {
@@ -49,7 +50,7 @@ export const LoginForm = () => {
           onBlur={handleIdBlur}
           hasError={!!errors.id}
         />
-        {errors.id && <ErrorMessage>{errors.id}</ErrorMessage>}
+        <ErrorMessage>{errors.id || "\u00A0"}</ErrorMessage>
       </LoginInputWrapper>
 
       <LoginInputWrapper>
@@ -61,7 +62,7 @@ export const LoginForm = () => {
           onBlur={handlePasswordBlur}
           hasError={!!errors.password}
         />
-        {errors.password && <ErrorMessage>{errors.password}</ErrorMessage>}
+        <ErrorMessage>{errors.password || "\u00A0"}</ErrorMessage>
       </LoginInputWrapper>
       <LoginButton isDisabled={!isFormValid} onClick={handleSubmit} />
     </LoginFormContainer>
