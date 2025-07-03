@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useUserManagement } from './userManagement';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -12,9 +12,6 @@ export const useLoginForm = () => {
   const [passwordTouched, setPasswordTouched] = useState(false);
 
   const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || '/';
-
   const { login } = useUserManagement();
 
   const emailError = useMemo(() => {
@@ -48,10 +45,7 @@ export const useLoginForm = () => {
   };
 
   const isValid = useMemo(() => {
-    return (
-      EMAIL_REGEX.test(emailValue) &&
-      passwordValue.length >= 8
-    );
+    return EMAIL_REGEX.test(emailValue) && passwordValue.length >= 8;
   }, [emailValue, passwordValue]);
 
   const goToLogin = () => {
@@ -59,7 +53,8 @@ export const useLoginForm = () => {
 
     login(emailValue);
 
-    navigate(from, { replace: true });
+    // 로그인 성공하면 무조건 /my 로 이동
+    navigate('/my', { replace: true });
   };
 
   return {

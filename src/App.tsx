@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import NavBar from './components/NavBar';
 import CategorySection from './components/CategorySection';
 import { categories } from './data/categories';
@@ -9,7 +9,8 @@ import RankingSection from './components/RankingSection/RankingSection';
 import LoginPage from './pages/Login/LoginPage';
 import NotFoundPage from './pages/NotFoundPage';
 import MyPage from './pages/MyPage';
-import { UserManagementProvider } from './pages/Login/userManagement'; 
+import { UserManagementProvider, useUserManagement } from './pages/Login/userManagement';
+import React from 'react';
 
 const Home = () => (
   <main>
@@ -20,6 +21,15 @@ const Home = () => (
   </main>
 );
 
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const { user } = useUserManagement();
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  return <>{children}</>;
+};
+
 function App() {
   return (
     <BrowserRouter>
@@ -28,7 +38,14 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/my" element={<MyPage />} />
+          <Route
+            path="/my"
+            element={
+              <ProtectedRoute>
+                <MyPage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </UserManagementProvider>

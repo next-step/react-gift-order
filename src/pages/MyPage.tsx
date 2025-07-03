@@ -9,11 +9,11 @@ const MyPage = () => {
   const { user, logout } = useUserManagement();
   const navigate = useNavigate();
 
-  const name = user?.email.split('@')[0] ?? '사용자'; 
+  const name = user?.email.split('@')[0] ?? '사용자';
 
   const performLogout = () => {
-    logout();             
-    navigate('/');        
+    logout();
+    navigate('/login', { replace: true });
   };
 
   return (
@@ -34,7 +34,7 @@ const MyPage = () => {
           color: ${theme.color.gray.gray900};
         `}
       >
-        {name ?? '사용자'}님 안녕하세요!
+        {name}님 안녕하세요!
       </h1>
       <p
         css={css`
