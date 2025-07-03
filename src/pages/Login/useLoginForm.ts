@@ -5,66 +5,38 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const useLoginForm = () => {
   const [emailValue, setEmailValue] = useState('');
-  const [emailError, setEmailError] = useState('');
-
   const [passwordValue, setPasswordValue] = useState('');
-  const [passwordError, setPasswordError] = useState('');
 
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/';
 
+  const emailError = useMemo(() => {
+    if (!emailValue) return 'ID를 입력해주세요.';
+    if (!EMAIL_REGEX.test(emailValue)) return 'ID는 이메일 형식으로 입력해주세요.';
+    return '';
+  }, [emailValue]);
+
+  const passwordError = useMemo(() => {
+    if (!passwordValue) return 'PW를 입력해주세요.';
+    if (passwordValue.length < 8) return 'PW는 최소 8글자 이상이어야 합니다.';
+    return '';
+  }, [passwordValue]);
+
   const handleEmailChange = (value: string) => {
     setEmailValue(value);
-
-    if (!value) {
-      setEmailError('ID를 입력해주세요.');
-    } else if (!EMAIL_REGEX.test(value)) {
-      setEmailError('ID는 이메일 형식으로 입력해주세요.');
-    } else {
-      setEmailError('');
-    }
-  };
-
-  const validateEmail = () => {
-    if (!emailValue) {
-      setEmailError('ID를 입력해주세요.');
-    } else if (!EMAIL_REGEX.test(emailValue)) {
-      setEmailError('ID는 이메일 형식으로 입력해주세요.');
-    } else {
-      setEmailError('');
-    }
   };
 
   const handlePasswordChange = (value: string) => {
     setPasswordValue(value);
-
-    if (!value) {
-      setPasswordError('PW를 입력해주세요.');
-    } else if (value.length < 8) {
-      setPasswordError('PW는 최소 8글자 이상이어야 합니다.');
-    } else {
-      setPasswordError('');
-    }
   };
 
-  const validatePassword = () => {
-    if (!passwordValue) {
-      setPasswordError('PW를 입력해주세요.');
-    } else if (passwordValue.length < 8) {
-      setPasswordError('PW는 최소 8글자 이상이어야 합니다.');
-    } else {
-      setPasswordError('');
-    }
-  };
+  const validateEmail = () => {}; // 기존 구조 유지 (비어 있는 함수)
+  const validatePassword = () => {}; // 기존 구조 유지
 
   const isValid = useMemo(() => {
-    return EMAIL_REGEX.test(emailValue) && passwordValue.length >= 8;
-  }, [emailValue, passwordValue]);
-
-  const goToLogin = () => {
-    navigate(from, { replace: true });
-  };
+    return !emailError && !passwordError;
+  }, [emailError, passwordError]);
 
   return {
     email: {
@@ -80,6 +52,6 @@ export const useLoginForm = () => {
       validate: validatePassword,
     },
     isValid,
-    goToLogin,
+    goToLogin: () => navigate(from, { replace: true }),
   };
 };
