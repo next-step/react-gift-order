@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Layout } from "../Components/layout/Layout";
 import styled from "@emotion/styled";
 
@@ -413,6 +413,36 @@ const cardTemplates =[
   },
 ];
 
+const PreviewWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 32px;
+`;
+
+const PreviewImage = styled.img`
+  width: 220px;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  margin-bottom: 16px;
+`;
+
+const MessageInput = styled.textarea`
+  width: 100%;
+  max-width: 320px;
+  min-height: 60px;
+  font-size: 1.1rem;
+  padding: 12px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 10px;
+  resize: none;
+  box-sizing: border-box;
+  margin-bottom: 8px;
+  background: #fafafa;
+`;
+
 const CardList = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -420,21 +450,27 @@ const CardList = styled.div`
   margin-top: 24px;
 `;
 
-const CardItem = styled.div`
+const CardItem = styled.div<{ selected: boolean }>`
   width: 90px;
   display: flex;
   flex-direction: column;
   align-items: center;
   cursor: pointer;
+  border-radius: 12px;
+  box-shadow: ${({ selected }) => selected ? '0 0 0 3px #f7e244' : 'none'};
+  background: ${({ selected }) => selected ? '#fffbe6' : 'transparent'};
+  transition: box-shadow 0.2s, background 0.2s;
 `;
 
-const Thumb = styled.img`
+const Thumb = styled.img<{ selected: boolean }>`
   width: 90px;
   height: 90px;
   border-radius: 12px;
   object-fit: cover;
   margin-bottom: 8px;
-  border: 2px solid #eee;
+  border: 2px solid ${({ selected }) => selected ? '#f7e244' : '#eee'};
+  box-shadow: ${({ selected }) => selected ? '0 2px 8px #ffe14a' : 'none'};
+  transition: border 0.2s, box-shadow 0.2s;
 `;
 
 const Message = styled.div`
@@ -443,14 +479,67 @@ const Message = styled.div`
   text-align: center;
 `;
 
+const OrderButton = styled.button`
+  width: 100%;
+  max-width: 320px;
+  background: #f7e244;
+  color: #222;
+  font-size: 1.2rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  padding: 18px 0;
+  margin-top: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  &:hover:enabled {
+    background: #ffe14a;
+  }
+  &:disabled {
+    background: #f0f0f0;
+    color: #b0b3ba;
+    cursor: not-allowed;
+  }
+`;
+
 const Order: React.FC = () => {
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [message, setMessage] = useState("");
+
+  const selectedCard = cardTemplates.find(card => card.id === selectedId);
+
+  // 카드 선택 시 메시지 입력란에 기본 메시지 세팅
+  const handleSelect = (id: number) => {
+    setSelectedId(id);
+    const card = cardTemplates.find(c => c.id === id);
+    setMessage(card?.defaultTextMessage || "");
+  };
+
   return (
     <Layout>
       <h2>카드 템플릿 선택</h2>
+      {selectedCard && (
+        <PreviewWrapper>
+          <PreviewImage src={selectedCard.imageUrl} alt={selectedCard.defaultTextMessage} />
+          <MessageInput
+            value={message}
+            onChange={e => setMessage(e.target.value)}
+            placeholder="메시지를 입력하세요."
+          />
+          <OrderButton type="button" disabled={!message.trim()}>
+            주문하기
+          </OrderButton>
+        </PreviewWrapper>
+      )}
       <CardList>
         {cardTemplates.map(card => (
-          <CardItem key={card.id}>
-            <Thumb src={card.thumbUrl} alt={card.defaultTextMessage} />
+          <CardItem
+            key={card.id}
+            selected={selectedId === card.id}
+            onClick={() => handleSelect(card.id)}
+          >
+            <Thumb src={card.thumbUrl} alt={card.defaultTextMessage} selected={selectedId === card.id} />
             <Message>{card.defaultTextMessage}</Message>
           </CardItem>
         ))}
