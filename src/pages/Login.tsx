@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "@emotion/styled";
+import { useLoginForm } from "../hooks/useLoginForm";
 
 const LoginWrapper = styled.div`
   min-height: 100vh;
@@ -40,6 +41,14 @@ const Input = styled.input`
   }
 `;
 
+const ErrorMessage = styled.div`
+  color: #e74c3c;
+  font-size: 1.6rem;
+  margin-top: -24px;
+  margin-bottom: 8px;
+  min-height: 24px;
+`;
+
 const LoginButton = styled.button`
   width: 100%;
   background: #f7e244;
@@ -55,16 +64,55 @@ const LoginButton = styled.button`
   &:hover {
     background: #ffe14a;
   }
+  &:disabled {
+    background: #f0f0f0;
+    color: #b0b3ba;
+    cursor: not-allowed;
+  }
 `;
 
 const Login: React.FC = () => {
+  // 커스텀 훅에서 모든 상태와 핸들러를 받아옴
+  const {
+    email,
+    password,
+    emailError,
+    passwordError,
+    isFormValid,
+    handleEmailChange,
+    handleEmailBlur,
+    handlePasswordChange,
+    handlePasswordBlur,
+    handleSubmit,
+  } = useLoginForm();
+
   return (
     <LoginWrapper>
       <Logo>kakao</Logo>
-      <Form>
-        <Input type="email" placeholder="이메일" autoComplete="username" />
-        <Input type="password" placeholder="비밀번호" autoComplete="current-password" />
-        <LoginButton type="submit">로그인</LoginButton>
+      <Form onSubmit={handleSubmit}>
+        {/* 이메일 입력 필드 */}
+        <Input
+          type="email"
+          placeholder="이메일"
+          autoComplete="username"
+          value={email}
+          onChange={handleEmailChange}
+          onBlur={handleEmailBlur}
+        />
+        <ErrorMessage>{emailError}</ErrorMessage>
+        {/* 비밀번호 입력 필드 */}
+        <Input
+          type="password"
+          placeholder="비밀번호"
+          autoComplete="current-password"
+          value={password}
+          onChange={handlePasswordChange}
+          onBlur={handlePasswordBlur}
+        />
+        <ErrorMessage>{passwordError}</ErrorMessage>
+        <LoginButton type="submit" disabled={!isFormValid}>
+          로그인
+        </LoginButton>
       </Form>
     </LoginWrapper>
   );

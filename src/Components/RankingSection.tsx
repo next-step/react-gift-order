@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import styled from '@emotion/styled'
 import PersonIcon from '@mui/icons-material/Person'
 
