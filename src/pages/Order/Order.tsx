@@ -1,4 +1,4 @@
-import Receiver from '@/components/Order/Receiver.tsx';
+import Receiver from '@/components/Order/Receiver/Receiver.tsx';
 import ItemInfo from '@/components/Order/ItemInfo.tsx';
 import Message from '@/components/Order/Message/Message.tsx';
 import Sender from '@/components/Order/Sender/Sender.tsx';
