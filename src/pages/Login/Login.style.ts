@@ -32,18 +32,26 @@ export const Input = styled.input`
     border-bottom: 1px solid ${({ theme }) => theme.colors.gray600};
   }
 `;
-export const LoginButton = styled.button`
-  background: ${({ theme }) => theme.colors.kakaoYellow};
+export const LoginButton = styled.button<{ isValid?: boolean }>`
+  background: ${({ theme, isValid }) =>
+    isValid ? theme.colors.kakaoYellow : theme.colors.backgroundDisabled};
   height: 48px;
   outline: none;
   border: none;
   border-radius: 4px;
   font-size: ${({ theme }) => theme.typography.title2Regular.fontSize};
   margin-top: ${({ theme }) => theme.spacing.spacing10};
-  cursor: pointer;
+  cursor: ${({ isValid }) => (isValid ? "pointer" : "default")};
+  opacity: ${({ isValid }) => (isValid ? 1 : 0.5)};
+  transition:
+    background 0.2s,
+    opacity 0.2s;
 
   &:active {
-    background: ${({ theme }) => theme.colors.kakaoYellowActive};
+    background: ${({ theme, isValid }) =>
+      isValid
+        ? theme.colors.kakaoYellowActive
+        : theme.colors.backgroundDisabled};
     transform: scale(0.98);
   }
 `;

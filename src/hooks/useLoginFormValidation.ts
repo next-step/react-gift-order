@@ -38,6 +38,12 @@ export const useLoginFormValidation = () => {
     setPasswordError(checkPasswordValidation(password));
   };
 
+  const isValid =
+    Boolean(email) &&
+    Boolean(password) &&
+    emailError === null &&
+    passwordError === null;
+
   return {
     email,
     password,
@@ -47,5 +53,6 @@ export const useLoginFormValidation = () => {
     handleEmailBlur,
     handlePasswordInput,
     handlePasswordBlur,
+    isValid,
   };
 };

@@ -23,14 +23,19 @@ const LoginPage = () => {
     handleEmailBlur,
     handlePasswordInput,
     handlePasswordBlur,
+    isValid,
   } = useLoginFormValidation();
 
-  const handleLoginClick = () => {
-    const hasPrev = window.history.length;
-    if (hasPrev > 1) {
-      navigate(-1);
-    } else {
-      navigate(RouterPath.HOME);
+  const handleLoginClick = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isValid) {
+      localStorage.setItem("isLoggedIn", "true");
+      const hasPrev = window.history.length;
+      if (hasPrev > 1) {
+        navigate(-1);
+      } else {
+        navigate(RouterPath.HOME);
+      }
     }
   };
 
@@ -56,7 +61,12 @@ const LoginPage = () => {
             onBlur={handlePasswordBlur}
           />
           {passwordError && <ErrorMessage>{passwordError}</ErrorMessage>}
-          <LoginButton type="button" onClick={handleLoginClick}>
+          <LoginButton
+            type="submit"
+            disabled={!isValid}
+            isValid={isValid}
+            onClick={handleLoginClick}
+          >
             로그인
           </LoginButton>
         </Form>
