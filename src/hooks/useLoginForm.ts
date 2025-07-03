@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -18,15 +18,19 @@ export default function useLoginForm() {
   const [isValid, setIsValid] = useState(false)
 
   const checkValidity = () => {
-    setIsValid(!!email && validateEmail(email) && validatePassword(password))  }
+    setIsValid(!!email && validateEmail(email) && validatePassword(password))
+  }
 
+  useEffect(() => {
+    checkValidity()
+  }, [email, password])
   const handleEmailBlur = () => {
     if (!email) {
       setEmailError('ID를 입력해주세요.')
     } else if (!validateEmail(email)) {
       setEmailError('ID는 이메일 형식으로 입력해주세요.')
     } else {
-      setEmailError('잘못된 접근입니다.')
+      setEmailError('')
     }
     checkValidity()
   }
@@ -39,7 +43,7 @@ export default function useLoginForm() {
       setPasswordError('비밀번호는 8자 이상이어야 합니다.')
     }    
     else {
-      setPasswordError('잘못된 접근입니다.')
+      setPasswordError('')
     }
 
     checkValidity()

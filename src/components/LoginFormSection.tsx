@@ -6,7 +6,7 @@ import { typography } from '@/theme/typography'
 import { spacing } from '@/theme/spacing'
 
 interface LoginFormSectionProps {
-  onSuccess: () => void
+    onSuccess: () => void
 }
 
 const Form = styled.form`
@@ -47,51 +47,60 @@ const Button = styled.button`
   cursor: pointer;
   transition: background 0.2s ease;
 
-  &:hover {
+  &:hover:enabled {
     background-color: ${colors.brand.kakaoYellowHover};
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
   }
 `
 
 export default function LoginFormSection({ onSuccess }: LoginFormSectionProps) {
-  const {
-    email,
-    setEmail,
-    password,
-    setPassword,
-    emailError,
-    passwordError,
-    handleEmailBlur,
-    handlePasswordBlur,
-  } = useLoginForm()
+    const {
+        email,
+        setEmail,
+        password,
+        setPassword,
+        emailError,
+        passwordError,
+        handleEmailBlur,
+        handlePasswordBlur,
+        isValid,
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault()
-    if (!emailError && !passwordError && email && password) {
-      onSuccess()
+    } = useLoginForm()
+
+    const handleSubmit = (e: FormEvent) => {
+        e.preventDefault()
+        if (!emailError && !passwordError && email && password) {
+            onSuccess()
+        }
     }
-  }
 
-  return (
-    <Form onSubmit={handleSubmit}>
-      <Input
-        type="email"
-        placeholder="이메일"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        onBlur={handleEmailBlur}
-        required
-      />
-      {emailError && <ErrorMessage>{emailError}</ErrorMessage>}
-      <Input
-        type="password"
-        placeholder="비밀번호"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        onBlur={handlePasswordBlur}
-        required
-      />
-      {passwordError && <ErrorMessage>{passwordError}</ErrorMessage>}
-      <Button type="submit">로그인</Button>
-    </Form>
-  )
+    return (
+        <Form onSubmit={handleSubmit}>
+            <Input
+                type="email"
+                placeholder="이메일"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                onBlur={handleEmailBlur}
+                required
+            />
+            {emailError && <ErrorMessage>{emailError}</ErrorMessage>}
+            <Input
+                type="password"
+                placeholder="비밀번호"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onBlur={handlePasswordBlur}
+                required
+            />
+            {passwordError && <ErrorMessage>{passwordError}</ErrorMessage>}
+            <Button type="submit" disabled={!isValid}>
+                로그인
+            </Button>
+        </Form>
+    )
 }
