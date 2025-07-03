@@ -2,8 +2,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import styled from "@emotion/styled";
 import LoginButton from "../components/common/BaseButton";
 import KakaoLogo from "../components/common/KakaoLogo";
-import { useEmailInput } from "../hooks/useEmailInput";
-import { usePasswordInput } from "../hooks/usePasswordInput";
+import { useInput } from "../hooks/useInput";
 
 type LocationState = {
   from?: {
@@ -24,15 +23,33 @@ const LoginPage = () => {
     navigate(from, { replace: true });
   };
 
-  const { email, emailError, handleEmailChange, handleEmailBlur } =
-    useEmailInput();
+  const emailValidation = (value: string) => {
+    if (!value.trim()) return "이메일을 입력해주세요.";
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(value))
+      return "이메일은 이메일 형식으로 입력해주세요.";
+    return "";
+  };
+
+  const passwordValidation = (value: string) => {
+    if (!value.trim()) return "비밀번호를 입력해주세요.";
+    if (value.length < 8) return "비밀번호는 최소 8자 이상이어야 합니다.";
+    return "";
+  };
 
   const {
-    password,
-    passwordError,
+    value: email,
+    error: emailError,
+    handleChange: handleEmailChange,
+    handleBlur: handleEmailBlur,
+  } = useInput(emailValidation);
+
+  const {
+    value: password,
+    error: passwordError,
     handleChange: handlePasswordChange,
     handleBlur: handlePasswordBlur,
-  } = usePasswordInput();
+  } = useInput(passwordValidation);
 
   return (
     <Wrapper>
