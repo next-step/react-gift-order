@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const EMAIL_REQUIRED_ERROR = 'ID를 입력해주세요.';
 const EMAIL_INVALID_FORMAT_ERROR = 'ID는 이메일 형식으로 입력해주세요.';
@@ -32,15 +32,6 @@ const useLoginForm = () => {
     password: '',
   });
 
-  // 상태를 줄이는 과정에서 삭제 검토
-  const [loginActivated, setLoginActivated] = useState(false);
-
-  useEffect(() => {
-    const isEmailValid = validateEmail(formValue.email) === '';
-    const isPasswordValid = validatePassword(formValue.password) === '';
-    setLoginActivated(isEmailValid && isPasswordValid);
-  }, [formValue]);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormValue((prev) => ({ ...prev, [name]: value }));
@@ -63,6 +54,10 @@ const useLoginForm = () => {
       }));
     }
   };
+
+  const loginActivated =
+    validateEmail(formValue.email) === '' &&
+    validatePassword(formValue.password) === '';
 
   return {
     formValue,
