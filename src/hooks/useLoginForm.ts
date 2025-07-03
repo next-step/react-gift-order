@@ -1,11 +1,6 @@
-import { useState } from "react";
+import { useInput } from "./useInput";
 
 export function useLoginForm() {
-  const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-
   const validateEmail = (value: string) => {
     if (!value) return "ID를 입력해주세요.";
     const emailRegex = /^[\w.-]+@[\w.-]+\.[A-Za-z]{2,}$/;
@@ -19,53 +14,37 @@ export function useLoginForm() {
     return "";
   };
 
-  const handleEmailBlur = () => {
-    const error = validateEmail(email);
-    setEmailError(error);
-  };
+  const emailInput = useInput("", validateEmail);
+  const passwordInput = useInput("", validatePassword);
 
-  const handlePasswordBlur = () => {
-    const error = validatePassword(password);
-    setPasswordError(error);
-  };
-
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-    if (emailError) {
-      const error = validateEmail(e.target.value);
-      setEmailError(error);
-    }
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-    if (passwordError) {
-      const error = validatePassword(e.target.value);
-      setPasswordError(error);
-    }
-  };
-
-  const isFormValid = validateEmail(email) === "" && validatePassword(password) === "";
+  const isFormValid = 
+    validateEmail(emailInput.value) === "" && 
+    validatePassword(passwordInput.value) === "";
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (isFormValid) {
-      console.log("로그인 시도:", { email, password });
+      console.log("로그인 시도:", { 
+        email: emailInput.value, 
+        password: passwordInput.value 
+      });
       // 로그인 성공 API 추가
     }
   };
 
   return {
-    email,
-    password,
-    emailError,
-    passwordError,
+    email: emailInput.value,
+    emailError: emailInput.error,
+    handleEmailChange: emailInput.handleChange,
+    handleEmailBlur: emailInput.handleBlur,
+    
+    password: passwordInput.value,
+    passwordError: passwordInput.error,
+    handlePasswordChange: passwordInput.handleChange,
+    handlePasswordBlur: passwordInput.handleBlur,
+    
     isFormValid,
-    handleEmailChange,
-    handleEmailBlur,
-    handlePasswordChange,
-    handlePasswordBlur,
     handleSubmit,
   };
 } 
