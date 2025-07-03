@@ -1,3 +1,4 @@
+import type { Dispatch, SetStateAction } from "react";
 import { EMAIL_REGEX, ERROR_MESSAGE } from "@/constants";
 import type { FormData, ValidationErrors, ValidationRule } from "@/utils/type";
 
@@ -36,8 +37,8 @@ export const validators = {
 
 export const createFieldHandler = <T extends keyof ValidationErrors>(
   field: T,
-  setFormData: React.Dispatch<React.SetStateAction<FormData>>,
-  setErrors: React.Dispatch<React.SetStateAction<ValidationErrors>>,
+  setFormData: Dispatch<SetStateAction<FormData>>,
+  setErrors: Dispatch<SetStateAction<ValidationErrors>>,
   hasError: boolean,
 ) => ({
   onChange: (value: string) => {
