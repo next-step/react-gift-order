@@ -1,29 +1,49 @@
-import { useState } from 'react';
 import {
   LoginContainer,
   KakaoLogo,
   LoginForm,
-  InputField,
   LoginButton,
   InputFieldGroup,
-} from './LoginPage.styles';
-import { LOGIN_LABELS } from './constants/labels';
-import Layout from '@/layout';
-import { useLocation, useNavigate } from 'react-router-dom';
+} from "./LoginPage.styles";
+import { LOGIN_LABELS } from "./constants/labels";
+import Layout from "@/layout";
+import IDField from "./components/IDField";
+import PasswordField from "./components/PasswordField";
+import usePasswordValidation from "./hooks/usePasswordValidation";
+import { useEmailValidation } from "./hooks/useEmailValidation";
+import useLoginSubmit from "./hooks/useLoginSubmit";
+
+export interface LoginFormProps {
+  value: string;
+  handleChange: (value: string) => void;
+  validator: (value: string) => void;
+  errorMessage: string | null;
+  hasError: boolean;
+}
 
 function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const { handleSubmit } = useLoginSubmit();
 
-  const navigate = useNavigate();
-  const location = useLocation();
+  const {
+    email,
+    handleEmailValueChange,
+    validateEmail,
+    emailErrorMessage,
+    hasEmailError,
+  } = useEmailValidation();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    password,
+    handlePasswordValueChange,
+    validatePassword,
+    passwordErrorMessage,
+    hasPasswordError,
+  } = usePasswordValidation();
 
-    const from = location.state?.from || '/';
-    navigate(from, { replace: true });
-  };
+  const isValidEmail = !hasEmailError && email.trim() !== "";
+  const isValidPassword = !hasPasswordError && password.trim() !== "";
+
+  const isFormValid = isValidEmail && isValidPassword;
 
   return (
     <Layout>
@@ -31,22 +51,24 @@ function LoginPage() {
         <KakaoLogo>kakao</KakaoLogo>
         <LoginForm onSubmit={handleSubmit}>
           <InputFieldGroup>
-            <InputField
-              type="email"
-              placeholder={LOGIN_LABELS.EMAIL_PLACEHOLDER}
+            <IDField
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              // required
+              handleChange={handleEmailValueChange}
+              validator={validateEmail}
+              errorMessage={emailErrorMessage}
+              hasError={hasEmailError}
             />
-            <InputField
-              type="password"
-              placeholder={LOGIN_LABELS.PASSWORD_PLACEHOLDER}
+            <PasswordField
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              // required
+              handleChange={handlePasswordValueChange}
+              validator={validatePassword}
+              errorMessage={passwordErrorMessage}
+              hasError={hasPasswordError}
             />
           </InputFieldGroup>
-          <LoginButton type="submit">{LOGIN_LABELS.LOGIN_BUTTON}</LoginButton>
+          <LoginButton type="submit" disabled={!isFormValid}>
+            {LOGIN_LABELS.LOGIN_BUTTON}
+          </LoginButton>
         </LoginForm>
       </LoginContainer>
     </Layout>
