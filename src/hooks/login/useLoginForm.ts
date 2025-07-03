@@ -5,10 +5,7 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { setUserInfo } from "@/utils/storage";
 
 interface UseLoginFormProps {
-  formData: {
-    id: string;
-    password: string;
-  };
+  formData: FormData;
   errors: ValidationErrors;
   isFormValid: boolean;
   handleIdChange: (value: string) => void;
