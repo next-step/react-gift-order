@@ -3,10 +3,12 @@ import LoginPage from "@/pages/LoginPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import HomePage from "@/pages/HomePage";
 import Header from "@/components/layout/Header";
+import LogoutPage from "@/pages/LogoutPage";
 
 const ROUTES = {
   ROOT: "/",
   LOGIN: "/login",
+  MYPAGE: "/my",
 };
 
 export default function Router() {
@@ -16,6 +18,7 @@ export default function Router() {
       <Routes>
         <Route path={ROUTES.ROOT} element={<HomePage />} />
         <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+        <Route path={ROUTES.MYPAGE} element={<LogoutPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
