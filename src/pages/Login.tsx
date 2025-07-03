@@ -6,25 +6,25 @@ import NavigationBar from '@components/NavigationBar';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
-const Wrapper = styled.div`
-  width: 100%;
-  min-height: 100vh;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  background-color: rgb(247, 248, 249);
-`;
+const Wrapper = styled.div(({ theme }) => ({
+  width: '100%',
+  minHeight: '100vh',
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'flex-start',
+  backgroundColor: theme.semanticColors.background.fill,
+}));
 
-const LoginPage = styled.div`
-  max-width: 720px;
-  width: 100%;
-  min-height: 100vh;
-  height: 100%;
-  background-color: rgb(255, 255, 255);
-  padding-top: 2.75rem;
-`;
+const LoginPage = styled.div(({ theme }) => ({
+  maxWidth: '720px',
+  width: '100%',
+  minHeight: '100vh',
+  height: '100%',
+  backgroundColor: theme.semanticColors.background.default,
+  paddingTop: '2.75rem',
+}));
 
 const Container = styled.main`
   width: 100%;
@@ -35,10 +35,10 @@ const Container = styled.main`
   justify-content: center;
 `;
 
-const Logo = styled.img`
-  width: 5.5rem;
-  color: rgb(42, 48, 56);
-`;
+const Logo = styled.img(({ theme }) => ({
+  width: '5.5rem',
+  color: theme.semanticColors.text.default,
+}));
 
 const InputSection = styled.section`
   width: 100%;
@@ -46,53 +46,60 @@ const InputSection = styled.section`
   padding: 16px;
 `;
 
-const InputBox = styled.input<{ hasError?: boolean }>`
-  width: 100%;
-  box-sizing: border-box;
-  color: rgb(42, 48, 56);
-  transition: border-color 200ms;
-  border-style: solid;
-  min-height: 2.75rem;
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.375rem;
-  padding: 8px 0px;
-  border-width: 0px 0px 1px;
-  border-color: rgb(220, 222, 227);
-  :focus {
-    outline: none;
-    border-color: ${(props) => (props.hasError ? 'rgb(250, 52, 44)' : 'rgb(134, 139, 148)')};
-  }
-  ::placeholder {
-    color: #b0b3ba;
-  }
-`;
+type StyleProps = {
+  hasError?: boolean;
+  disabled?: boolean;
+};
 
-const LoginButton = styled.button<{ disabled?: boolean }>`
-  width: 100%;
-  height: 2.75rem;
-  font-size: 0.875rem;
-  font-weight: 400;
-  line-height: 1.1875rem;
-  color: rgb(42, 48, 56);
-  background-color: rgb(254, 229, 0);
-  border-radius: 4px;
-  border: none;
-  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
-  opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
-  transition: background-color 200ms;
+const InputBox = styled.input<StyleProps>(({ theme, hasError }) => ({
+  width: '100%',
+  boxSizing: 'border-box',
+  color: theme.semanticColors.text.default,
+  transition: 'border-color 200ms',
+  borderStyle: 'solid',
+  minHeight: '2.75rem',
+  fontSize: '1rem',
+  fontWeight: 400,
+  lineHeight: '1.375rem',
+  padding: '8px 0px',
+  borderWidth: '0px 0px 1px',
+  borderColor: theme.semanticColors.border.default,
 
-  ${({ disabled }) =>
-    !disabled &&
-    css`
-      &:hover {
-        background-color: #ffea2e;
-      }
-      &:active {
-        background-color: #d5c000;
-      }
-    `}
-`;
+  '&:focus': {
+    outline: 'none',
+    borderColor: hasError ? theme.semanticColors.state.critical : theme.colorScale.gray700,
+  },
+
+  '::placeholder': {
+    color: theme.semanticColors.text.placeholder,
+  },
+}));
+
+const LoginButton = styled.button<StyleProps>(({ disabled, theme }) => ({
+  width: '100%',
+  height: '2.75rem',
+  fontSize: '0.875rem',
+  fontWeight: 400,
+  lineHeight: '1.1875rem',
+  color: theme.semanticColors.text.default,
+  backgroundColor: theme.semanticColors.brand.kakaoYellow,
+  borderRadius: '4px',
+  border: 'none',
+  cursor: disabled ? 'not-allowed' : 'pointer',
+  opacity: disabled ? '0.5' : '1',
+  transition: 'background-color 200ms',
+
+  ...(disabled
+    ? {}
+    : {
+        '&:hover': {
+          backgroundColor: theme.semanticColors.brand.kakaoYellowHover,
+        },
+        '&:active': {
+          backgroundColor: theme.semanticColors.brand.kakaoYellowActive,
+        },
+      }),
+}));
 
 interface LocationState {
   from?: { pathname: string };
