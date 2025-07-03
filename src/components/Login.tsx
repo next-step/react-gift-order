@@ -27,7 +27,7 @@ const Login = () => {
     const [isValid, setIsValid] = useState(false);
     const [message, setMessage] = useState("");
 
-    const onChange = (e: any) => {
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setString(e.target.value);
       if (validator(string)) {
         setIsValid(true);
