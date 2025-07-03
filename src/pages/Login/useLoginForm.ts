@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useUserManagement } from './userManagement';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -13,6 +14,8 @@ export const useLoginForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/';
+
+  const { login } = useUserManagement();
 
   const emailError = useMemo(() => {
     if (!emailTouched) return '';
@@ -52,6 +55,10 @@ export const useLoginForm = () => {
   }, [emailValue, passwordValue]);
 
   const goToLogin = () => {
+    if (!isValid) return;
+
+    login(emailValue);
+
     navigate(from, { replace: true });
   };
 
@@ -59,7 +66,7 @@ export const useLoginForm = () => {
     email: {
       value: emailValue,
       error: emailError,
-      onChange: changeEmail ,
+      onChange: changeEmail,
       validate: validateEmail,
     },
     password: {
