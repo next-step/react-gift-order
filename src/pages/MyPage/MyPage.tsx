@@ -2,7 +2,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import Layout from "@/layout";
 import { getUserName } from "@/utils/auth";
 import styled from "@emotion/styled";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const MyPageContainer = styled.div`
   padding: ${({ theme }) => theme.spacing[4]} 0 0
@@ -38,8 +38,12 @@ const LogoutButton = styled.button`
 `;
 
 function MyPage() {
-  const { user, logout } = useAuth();
+  const { user, logout, isLoggedIn } = useAuth();
   const navigate = useNavigate();
+
+  if (!isLoggedIn) {
+    return <Navigate to="/login" replace />;
+  }
 
   const userName = getUserName(user?.email || "");
 
