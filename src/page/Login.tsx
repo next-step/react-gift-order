@@ -1,78 +1,19 @@
-import styled from '@emotion/styled';
+
+import useInput from '@/hook/useInput';
+import { validateEmail, validatePassword } from '@/utils/validateInput';
 import { useNavigate } from 'react-router-dom';
+import { EmptyDiv16h, EmptyDiv48h, ErrorMessage, InputSection, KakaoLogo, LoginButton, LoginMain, LoginSection, MyDiv } from './Login.styled';
 
-const MyDiv = styled.div`
-  max-width: 720px;
-  width: 100%;
-  min-height: 100vh;
-  height: 100%;
-  background-color: rgb(255, 255, 255);
-  padding-top: 2.75rem;
-`;
 
-const LoginMain = styled.main`
-  width: 100%;
-  height: calc(-2.75rem + 100vh);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`;
-
-const KakaoLogo = styled.img`
-  width: 5.5rem;
-  color: rgb(42, 48, 56);
-`;
-const LoginSection = styled.section`
-  width: 100%;
-  max-width: 26.25rem;
-  padding: 16px;
-`;
-
-const InputSection = styled.input`
-  width: 100%;
-  box-sizing: border-box;
-  color: rgb(42, 48, 56);
-  transition: border-color 200ms;
-  border-style: solid;
-  min-height: 2.75rem;
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.375rem;
-  padding: 8px 0px;
-  border-width: 0px 0px 1px;
-  border-color: rgb(220, 222, 227);
-`;
-
-const LoginButton = styled.button`
-  width: 100%;
-  height: 2.75rem;
-  font-size: 0.875rem;
-  font-weight: 400;
-  line-height: 1.1875rem;
-  color: rgb(42, 48, 56);
-  background-color: rgb(254, 229, 0);
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 200ms;
-`;
-
-const EmptyDiv1 = styled.div`
-  width: 100%;
-  height: 16px;
-  background-color: transparent;
-`;
-
-const EmptyDiv2 = styled.div`
-  width: 100%;
-  height: 48px;
-  background-color: transparent;
-`;
 
 const Login = () => {
 
     const navigate = useNavigate();
+    const id = useInput(validateEmail);
+    const pw = useInput(validatePassword);
+
+    const canSubmit = id.isValid && pw.isValid;
+    const handleLoginClick = () =>{canSubmit && navigate('/')};
 
   return (
     <MyDiv>
@@ -84,14 +25,33 @@ const Login = () => {
 
         <LoginSection>
           <div>
-            <InputSection placeholder="이메일" />
+            <InputSection
+              placeholder="이메일"
+              value={id.value}
+              onChange={id.onChange}
+              onBlur={id.onBlur} 
+              hasError={!!id.error}
+              />
+              {id.error && <ErrorMessage>{id.error}</ErrorMessage>}
           </div>
-          <EmptyDiv1 />
+          <EmptyDiv16h />
           <div>
-            <InputSection type="password" placeholder="비밀번호" />
+            <InputSection
+              type="password"
+              placeholder="비밀번호"
+              value={pw.value}
+              onChange={pw.onChange}
+              onBlur={pw.onBlur}
+              hasError={!!pw.error}
+            />
+            {pw.error && <ErrorMessage>{pw.error}</ErrorMessage>}
           </div>
-          <EmptyDiv2 />
-          <LoginButton onClick={() =>navigate('/')}>로그인</LoginButton>
+          <EmptyDiv48h />
+          <LoginButton 
+            disabled={!canSubmit} 
+            onClick={handleLoginClick}
+            notVaild={!canSubmit}
+          >로그인</LoginButton>
         </LoginSection>
       </LoginMain>
     </MyDiv>
