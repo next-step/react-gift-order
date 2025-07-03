@@ -15,7 +15,7 @@ import {
   MoreInfoWrapper,
   MoreInfo,
 } from "./TrendingGifts.styles";
-import { LocalStorageProvider } from "@/pages/HomePage/hooks/TabStorageContext";
+import { LocalStorageProvider } from "@/pages/HomePage/context/TabStorageContext";
 import { useMainTab, useSubTab } from "@/pages/HomePage/hooks/useTabStorage";
 
 function TrendingGiftsContent() {

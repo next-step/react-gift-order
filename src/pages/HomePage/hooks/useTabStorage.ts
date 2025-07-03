@@ -1,4 +1,4 @@
-import { useLocalStorageContext } from "@/pages/HomePage/hooks/TabStorageContext";
+import { useLocalStorageContext } from "@/pages/HomePage/context/TabStorageContext";
 
 export const useMainTab = () => {
   const { state, setItem } = useLocalStorageContext();
