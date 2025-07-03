@@ -2,9 +2,8 @@ import styled from '@emotion/styled';
 import BackArrow from '@/assets/chevron_left.svg?react';
 import User from '@/assets/user.svg?react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import type { Path } from '@/types/path';
 
-interface HeaderType {
+interface TopNavBarType {
   title: string;
   mainPath: string;
 }
@@ -31,7 +30,7 @@ const Btn = styled.button`
   cursor: pointer;
 `;
 
-export const Header = ({ title, mainPath, prevPath, setPrevPath }: HeaderType & Path) => {
+export const TopNavBar = ({ title, mainPath }: TopNavBarType) => {
   const svgSize = 30;
   const url = useLocation();
   const navigate = useNavigate();
@@ -40,8 +39,7 @@ export const Header = ({ title, mainPath, prevPath, setPrevPath }: HeaderType & 
     <Container>
       <Btn
         onClick={() => {
-          setPrevPath(url.pathname);
-          navigate(prevPath);
+          navigate(-1);
         }}
       >
         <BackArrow width={svgSize} height={svgSize} fill="black" style={{ marginLeft: '10px' }} />
@@ -50,8 +48,9 @@ export const Header = ({ title, mainPath, prevPath, setPrevPath }: HeaderType & 
         <Text
           onClick={() => {
             if (url.pathname !== mainPath) {
-              setPrevPath(url.pathname);
               navigate(mainPath);
+            } else {
+              navigate(0);
             }
           }}
         >
@@ -61,8 +60,9 @@ export const Header = ({ title, mainPath, prevPath, setPrevPath }: HeaderType & 
       <Btn
         onClick={() => {
           if (url.pathname !== '/login') {
-            setPrevPath(url.pathname);
             navigate('/login');
+          } else {
+            navigate(0);
           }
         }}
       >

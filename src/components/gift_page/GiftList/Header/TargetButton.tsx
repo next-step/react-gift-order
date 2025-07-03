@@ -35,22 +35,27 @@ const Text = styled.div<{ isClicked: boolean }>`
   transition: color 0.3s;
 `;
 
-export const TargetButton = ({ type, isClicked, setCurrentTarget }: TargetButtonType) => {
+export const TargetButton = ({
+  targetType,
+  isClicked,
+  setCurrentTarget,
+  ...props
+}: TargetButtonType) => {
   let icon = '?';
   let text = '?';
   const icons = ['ALL', '👩🏻', '👨🏻', '👦🏻'];
   const texts = ['전체', '여성이', '남성이', '청소년이'];
 
-  if (type === 'All') {
+  if (targetType === 'All') {
     icon = icons[0];
     text = texts[0];
-  } else if (type === 'Female') {
+  } else if (targetType === 'Female') {
     icon = icons[1];
     text = texts[1];
-  } else if (type === 'Male') {
+  } else if (targetType === 'Male') {
     icon = icons[2];
     text = texts[2];
-  } else if (type === 'Youth') {
+  } else if (targetType === 'Youth') {
     icon = icons[3];
     text = texts[3];
   }
@@ -58,11 +63,13 @@ export const TargetButton = ({ type, isClicked, setCurrentTarget }: TargetButton
   return (
     <Button
       onClick={() => {
-        setCurrentTarget(type);
+        setCurrentTarget(targetType);
       }}
+      {...props}
     >
       <Icon isClicked={isClicked}>{icon}</Icon>
       <Text isClicked={isClicked}>{text}</Text>
     </Button>
   );
 };
+
