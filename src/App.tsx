@@ -13,13 +13,13 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Layout>
+        <NavigationBar />
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route
             path="/"
             element={
               <>
-                <NavigationBar />
                 <Main />
               </>
             }
