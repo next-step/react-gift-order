@@ -8,10 +8,20 @@ import {
   LogoImg,
   Input,
   LoginButton,
+  ErrorMessage,
 } from "@/pages/Login/Login.style";
+import { useLoginFormValidation } from "@/hooks/useLoginFormValidation";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const {
+    email,
+    password,
+    emailError,
+    passwordError,
+    handleEmailInput,
+    handlePasswordInput,
+  } = useLoginFormValidation();
 
   const handleLoginClick = () => {
     const hasPrev = window.history.length;
@@ -28,8 +38,20 @@ const LoginPage = () => {
       <Wrapper>
         <Form>
           <LogoImg src={logo} alt="logo" />
-          <Input type="email" placeholder="이메일" />
-          <Input type="password" placeholder="비밀번호" />
+          <Input
+            type="email"
+            placeholder="이메일"
+            value={email}
+            onChange={(e) => handleEmailInput(e.target.value)}
+          />
+          {emailError && <ErrorMessage>{emailError}</ErrorMessage>}
+          <Input
+            type="password"
+            placeholder="비밀번호"
+            value={password}
+            onChange={(e) => handlePasswordInput(e.target.value)}
+          />
+          {passwordError && <ErrorMessage>{passwordError}</ErrorMessage>}
           <LoginButton type="button" onClick={handleLoginClick}>
             로그인
           </LoginButton>

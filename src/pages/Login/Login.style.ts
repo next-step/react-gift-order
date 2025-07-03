@@ -47,3 +47,10 @@ export const LoginButton = styled.button`
     transform: scale(0.98);
   }
 `;
+
+export const ErrorMessage = styled.div`
+  color: ${({ theme }) => theme.colors.critical};
+  font-size: ${({ theme }) => theme.typography.body2Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.body2Regular.fontWeight};
+  margin-bottom: ${({ theme }) => theme.spacing.spacing1};
+`;
