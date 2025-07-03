@@ -3,7 +3,6 @@ import { createContext, useContext, useState, useEffect } from "react";
 
 interface User {
   email: string;
-  name: string;
 }
 
 interface AuthContextType {
@@ -36,9 +35,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const login = (email: string) => {
-    // 이메일에서 사용자 이름 추출 (@ 앞부분)
-    const name = email.split("@")[0];
-    const newUser: User = { email, name };
+    const newUser: User = { email };
 
     setUser(newUser);
     sessionStorage.setItem(SESSION_KEYS.USER, JSON.stringify(newUser));
