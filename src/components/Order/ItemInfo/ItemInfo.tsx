@@ -8,8 +8,7 @@ import {
   ItemWrapper,
 } from '@/components/Order/ItemInfo/ItemInfo.style.ts';
 
-export default function ItemInfo() {
-  const { id } = useParams();
+export default function ItemInfo({ id }) {
   const list = JSON.parse(localStorage.getItem('expandedList') || '[]');
   const data = list[id - 1];
 

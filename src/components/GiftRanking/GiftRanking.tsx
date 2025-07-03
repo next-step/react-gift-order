@@ -11,7 +11,6 @@ import SortSpan from "@/components/Common/SortOption/SortOption"
 import RankingCard from '@/components/Common/RankingCard/RankingCard';
 import useSelectedState from '@/hooks/useSelectedState.tsx';
 import { useNavigate } from 'react-router-dom';
-import { expandedList } from '@/data/expandedList.ts';
 
 export default function GiftRanking() {
   const navigate = useNavigate();

@@ -17,6 +17,7 @@ export const Item = styled.div`
     border: 1px solid ${({ theme }) => theme.colors.gray500};
     border-radius: 5px;
     padding: 15px;
+    margin-bottom: 50px;
 `
 
 export const ItemImage = styled.div`

@@ -4,7 +4,8 @@ import {
   RecevierSpan, RecevierTitle, Row,
 } from '@/components/Order/Receiver/Receiver.style.ts';
 
-export default function Receiver() {
+export default function Receiver({ setCount }) {
+
   return (
     <ReceiverWrapper>
       <RecevierTitle>받는 사람</RecevierTitle>
@@ -21,7 +22,7 @@ export default function Receiver() {
 
       <Row>
         <RecevierSpan>수량</RecevierSpan>
-        <ReceiverInput type='number' defaultValue='1'/>
+        <ReceiverInput type='number' defaultValue='1' min='1' onChange={e => setCount(e.target.value)}/>
       </Row>
     </ReceiverWrapper>
   )
