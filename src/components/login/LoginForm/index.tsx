@@ -1,7 +1,7 @@
 import { buttonStyle } from "./style.ts";
 import EmailInput from "./EmailInput/index.tsx";
 import PasswordInput from "./PasswordInput/index.tsx";
-import useLoginFormValidation from "../hooks/useLoginFormValidation.ts";
+import useLoginFormValidation from "./hooks/useLoginFormValidation.ts";
 
 export default function LoginForm() {
   const {

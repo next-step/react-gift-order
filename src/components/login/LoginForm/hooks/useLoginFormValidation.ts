@@ -1,3 +1,4 @@
+import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -5,6 +6,8 @@ export default function useLoginFormValidation() {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
+
+  const auth = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,6 +25,7 @@ export default function useLoginFormValidation() {
   };
 
   const handleLogin = () => {
+    auth.login(email);
     navigate(from, { replace: true });
   };
 
