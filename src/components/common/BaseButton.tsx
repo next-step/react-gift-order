@@ -8,6 +8,8 @@ interface BaseButtonProps {
   size?: "small" | "medium" | "large";
   direction?: "vertical" | "horizontal";
   color?: "blue" | "yellow";
+  disabled?: boolean;
+  type?: "button" | "submit" | "reset";
 }
 
 export default function BaseButton({
@@ -18,6 +20,8 @@ export default function BaseButton({
   size = "medium",
   direction = "horizontal",
   color = "yellow",
+  disabled = false,
+  type = "button",
 }: BaseButtonProps) {
   return (
     <Button
@@ -26,6 +30,7 @@ export default function BaseButton({
       direction={direction}
       color={color}
       onClick={onClick}
+      disabled={disabled}
     >
       {icon && <Icon>{icon}</Icon>}
       <Label isActive={isActive} size={size}>
@@ -72,12 +77,18 @@ const Button = styled.button<{
       }
     }};
   }
+
   &:active {
     background-color: ${({ color, theme }) => {
       if (color === "yellow") {
         return theme.colors.kakaoYellowActive;
       }
     }};
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 `;
 

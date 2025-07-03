@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
-import styled from '@emotion/styled';
-import { useNavigate, useLocation } from 'react-router-dom';
+import styled from "@emotion/styled";
+import { useNavigate, useLocation } from "react-router-dom";
+import MyPageIcon from "../common/MyPageIcon";
 
 export default function NavigationBar() {
   const navigate = useNavigate();
@@ -9,18 +10,20 @@ export default function NavigationBar() {
   const handleBack = () => {
     const isInternalReferrer = document.referrer.includes(window.location.host);
     if (!isInternalReferrer) {
-      navigate('/');
+      navigate("/");
     } else {
       navigate(-1);
     }
   };
-  const handleLogin = () => navigate('/login', { state: { from: location } });
+  const handleLogin = () => navigate("/login", { state: { from: location } });
 
   return (
     <NavBar>
       <BackButton onClick={handleBack}>←</BackButton>
       <NavTitle>선물하기</NavTitle>
-      <LoginButton onClick={handleLogin}>로그인</LoginButton>
+      <LoginButton onClick={handleLogin}>
+        <MyPageIcon />
+      </LoginButton>
     </NavBar>
   );
 }
@@ -35,22 +38,22 @@ const NavBar = styled.header`
 `;
 
 const BackButton = styled.div`
-  font-size: 20px;
+  font-size: ${({ theme }) => theme.typography.title1Regular.fontSize};
   cursor: pointer;
-  color: ${({ theme }) => theme.colors.gray800};
+  color: ${({ theme }) => theme.colors.gray1000};
 `;
 
 const NavTitle = styled.div`
-  font-size: ${({ theme }) => theme.typography.subtitle1Regular.fontSize};
-  font-weight: ${({ theme }) => theme.typography.subtitle1Regular.fontWeight};
-  color: ${({ theme }) => theme.colors.gray800};
+  font-size: ${({ theme }) => theme.typography.title1Regular.fontSize};
+  font-weight: bold;
+  color: ${({ theme }) => theme.colors.gray1000};
 `;
 
 const LoginButton = styled.button`
-  font-size: ${({ theme }) => theme.typography.subtitle1Regular.fontSize};
-  font-weight: ${({ theme }) => theme.typography.subtitle1Regular.fontWeight};
+  font-size: ${({ theme }) => theme.typography.title1Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.title1Regular.fontWeight};
   background: none;
   border: none;
-  color: ${({ theme }) => theme.colors.gray800};
+  color: ${({ theme }) => theme.colors.gray1000};
   cursor: pointer;
 `;
