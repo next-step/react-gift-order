@@ -49,7 +49,7 @@ function useLoginForm() {
     return result.ok;
   }
   function isValidForm() {
-    return !handleCheckId() || !handleCheckPw();
+    return handleCheckId() && handleCheckPw();
   }
 
   const isValid = validateId(id).ok && validatePw(pw).ok;

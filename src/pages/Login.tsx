@@ -28,7 +28,7 @@ function Login({ onLogin }: LoginProps) {
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (isValidForm()) return;
+    if (!isValidForm()) return;
     onLogin();
   }
 
