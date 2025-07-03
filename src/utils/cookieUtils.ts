@@ -7,12 +7,12 @@ export const setCookie = (name: string, value: string, days: number = 7) => {
 
 // * 쿠키 읽기
 export const getCookie = (name: string): string | null => {
-  return (
-    document.cookie
-      .split('; ')
-      .find((row) => row.startsWith(name + '='))
-      ?.split('=')[1] ?? null
-  )
+  const value = document.cookie
+    .split('; ')
+    .find((row) => row.startsWith(name + '='))
+    ?.split('=')[1]
+
+  return value ? decodeURIComponent(value) : null
 }
 
 // * 쿠키 삭제

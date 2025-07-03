@@ -8,6 +8,7 @@ import { Button } from '@/components/common/Button'
 import { useInput } from '@/hooks/useInput'
 import { ROUTH_PATH } from '@/Router'
 import { VALIDATE_RULES } from '@/data/validateRules'
+import { useAuth } from '@/contexts/AuthContext'
 
 // * 로그인 화면
 export const Login = () => {
@@ -15,6 +16,9 @@ export const Login = () => {
   // ? VALIDATE_RULES : 유효성 검증을 위해 별도로 관리되는 규칙 상수 데이터
   const email = useInput('', VALIDATE_RULES.email)
   const password = useInput('', VALIDATE_RULES.password)
+
+  // * 인증 컨텍스트 사용
+  const { login } = useAuth()
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -24,8 +28,16 @@ export const Login = () => {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
 
-    // ! 로그인 정보 저장 로직 없이 바로 리디렉션
-    // TODO: 이후 로그인 정보 저장 로직 추가 필요
+    // ! 이메일에서 이름을 추출해서 사용
+    // ? 실제로는 서버에서 받은 사용자 정보를 사용
+    const name = email.value.split('@')[0]
+
+    // * 로그인 정보 저장 (쿠키에 암호화되어 저장)
+    login({
+      name,
+      email: email.value,
+    })
+
     navigate(from, { replace: true }) // * replace로 히스토리 정리
   }
 

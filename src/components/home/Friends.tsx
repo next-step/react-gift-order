@@ -2,9 +2,13 @@ import styled from '@emotion/styled'
 import { theme } from '@/styles/theme'
 import { typographyMixin } from '@/components/common'
 import { Plus } from 'lucide-react'
+import { useAuth } from '@/contexts/AuthContext'
 
 // * 선물할 친구 섹션
 export const Friends = () => {
+  // * 전역으로 관리되는 유저 정보 가져오기
+  const { user, isLogin } = useAuth()
+
   return (
     <Container>
       <AddFriendButton>
@@ -12,7 +16,10 @@ export const Friends = () => {
           {/* 추가 아이콘 */}
           <Plus size={24} color={theme.colors.gray.gray900} />
         </AddFriendButtonIconContainer>
-        <AddFriendButtonText>선물할 친구를 선택해 주세요.</AddFriendButtonText>
+        <AddFriendButtonText>
+          {/* 로그인 시에 유저 이름을 추가로 표시 */}
+          {isLogin && `${user.name}님!`} 선물할 친구를 선택해 주세요.
+        </AddFriendButtonText>
       </AddFriendButton>
     </Container>
   )
