@@ -8,6 +8,8 @@ import Banner from './components/Banner';
 import RankingSection from './components/RankingSection/RankingSection';
 import LoginPage from './pages/Login/LoginPage';
 import NotFoundPage from './pages/NotFoundPage';
+import MyPage from './pages/MyPage';
+import { UserManagementProvider } from './pages/Login/userManagement'; 
 
 const Home = () => (
   <main>
@@ -21,12 +23,15 @@ const Home = () => (
 function App() {
   return (
     <BrowserRouter>
-      <NavBar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<LoginPage />} />
-         <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+      <UserManagementProvider>
+        <NavBar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/my" element={<MyPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </UserManagementProvider>
     </BrowserRouter>
   );
 }
