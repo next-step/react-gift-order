@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { LOCATION_STATE_KEYS } from '@/constants/navigationState';
 import { ROUTES } from '@/constants/routes';
 import useLoginForm from '@/hooks/useLoginForm';
+import InputField from '@/components/common/InputField';
 
 const LoginFormSection = () => {
   const navigate = useNavigate();
@@ -22,48 +23,52 @@ const LoginFormSection = () => {
     isButtonValid,
   } = useLoginForm();
 
-  const handleLogin = () => {
+  const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setEmail(value);
+    validateEmail(value);
+  };
+
+  const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPassword(value);
+    validatePassword(value);
+  };
+
+  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     const redirectTo = from ? from.pathname + from.search : '/';
     navigate(redirectTo, { replace: true });
   };
 
   return (
-    <>
-      <Wrapper>
-        <Logo src={KakaoLogo} alt="카카오 로고" />
+    <Wrapper>
+      <Logo src={KakaoLogo} alt="카카오 로고" />
+      <FormWrapper onSubmit={handleLogin}>
         <InputWrapper>
-          <StyledInput
+          <InputField
             type="email"
-            placeholder="이메일"
             value={email}
-            onChange={e => {
-              const value = e.target.value;
-              setEmail(value);
-              validateEmail(value);
-            }}
+            onChange={handleEmail}
             onBlur={() => validateEmail(email)}
-            hasError={!!emailError}
+            error={emailError}
+            placeholder="이메일"
           />
-          {emailError && <ErrorText>{emailError}</ErrorText>}
-          <StyledInput
+          <InputField
             type="password"
-            placeholder="비밀번호"
             value={password}
-            onChange={e => {
-              const value = e.target.value;
-              setPassword(value);
-              validatePassword(value);
-            }}
+            onChange={handlePassword}
             onBlur={() => validatePassword(password)}
-            hasError={!!passwordError}
+            error={passwordError}
+            placeholder="비밀번호"
           />
-          {passwordError && <ErrorText>{passwordError}</ErrorText>}
         </InputWrapper>
-        <LoginButton disabled={!isButtonValid} onClick={handleLogin}>
+        <LoginButton type="submit" disabled={!isButtonValid}>
           로그인
         </LoginButton>
-      </Wrapper>
-    </>
+      </FormWrapper>
+    </Wrapper>
   );
 };
 
@@ -82,6 +87,14 @@ const Logo = styled.img`
   margin: ${({ theme }) => theme.spacing[8]} 0;
 `;
 
+const FormWrapper = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: ${({ theme }) => theme.spacing[5]};
+`;
+
 const InputWrapper = styled.div`
   width: 100%;
   max-width: 360px;
@@ -89,25 +102,6 @@ const InputWrapper = styled.div`
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing[4]};
   margin-bottom: ${({ theme }) => theme.spacing[5]};
-`;
-
-const StyledInput = styled.input<{ hasError: boolean }>`
-  border: none;
-  border-bottom: 1px solid
-    ${({ hasError, theme }) =>
-      hasError ? theme.color.red[500] : theme.color.gray[400]};
-  padding: ${({ theme }) => theme.spacing[3]} 0;
-  color: ${({ theme }) => theme.color.semantic.text.default};
-  background-color: transparent;
-
-  &::placeholder {
-    color: ${({ theme }) => theme.color.semantic.text.sub};
-  }
-
-  &:focus {
-    outline: none;
-    border-bottom: 2px solid ${({ theme }) => theme.color.gray[500]};
-  }
 `;
 
 const LoginButton = styled.button`
@@ -120,10 +114,4 @@ const LoginButton = styled.button`
   border-radius: 6px;
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
-`;
-
-const ErrorText = styled.p`
-  color: ${({ theme }) => theme.color.red[500]};
-  ${({ theme }) => theme.typography.body.body2Regular};
-  margin: 0;
 `;
