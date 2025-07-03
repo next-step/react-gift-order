@@ -19,17 +19,16 @@ function Login({ onLogin }: LoginProps) {
     idError,
     pwError,
     isValid,
-    handleCheckId,
-    handleCheckPw,
     handleIdChange,
     handlePwChange,
     handleIdBlur,
     handlePwBlur,
+    isValidForm,
   } = useLoginForm();
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!handleCheckId() || !handleCheckPw()) return;
+    if (isValidForm()) return;
     onLogin();
   }
 

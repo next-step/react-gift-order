@@ -49,19 +49,20 @@ function useLoginForm() {
     return result.ok;
   }
   const isValid = idError === '' && pwError === '' && id !== '' && pw !== '';
-
+  function isValidForm() {
+    return !handleCheckId() || !handleCheckPw();
+  }
   return {
     id,
     pw,
     idError,
     pwError,
     isValid,
-    handleCheckId,
-    handleCheckPw,
     handleIdChange: (e: React.ChangeEvent<HTMLInputElement>) => setId(e.target.value),
     handlePwChange: (e: React.ChangeEvent<HTMLInputElement>) => setPw(e.target.value),
     handleIdBlur: () => handleCheckId(),
     handlePwBlur: () => handleCheckPw(),
+    isValidForm,
   };
 }
 
