@@ -7,10 +7,12 @@ export interface LoginFormState {
     emailError: string;
     pwError: string;
     isValid: boolean;
+    emailTouched: boolean;
+    pwTouched: boolean;
     setEmail: (value: string) => void;
     setPw: (value: string) => void;
-    handleEmailBlur: () => void;
-    handlePwBlur: () => void;
+    handleEmailChange: (value: string) => void;
+    handlePwChange: (value: string) => void;
 }
 
 export const useLoginForm = (): LoginFormState => {
@@ -18,6 +20,8 @@ export const useLoginForm = (): LoginFormState => {
     const [pw, setPw] = useState('');
     const [emailError, setEmailError] = useState('');
     const [pwError, setPwError] = useState('');
+    const [emailTouched, setEmailTouched] = useState(false);
+    const [pwTouched, setPwTouched] = useState(false);
 
     const validateEmail = (value: string) => {
         if (!value) return VALIDATION_MESSAGES.email.required;
@@ -31,20 +35,28 @@ export const useLoginForm = (): LoginFormState => {
         return '';
     };
 
-    const handleEmailBlur = () => setEmailError(validateEmail(email));
-    const handlePwBlur = () => setPwError(validatePw(pw));
+    const handleEmailChange = (value: string) => {
+        setEmail(value);
+        setEmailTouched(true);
+        setEmailError(validateEmail(value));
+    };
+    const handlePwChange = (value: string) => {
+        setPw(value);
+        setPwTouched(true);
+        setPwError(validatePw(value));
+    };
 
-    const isValid = !validateEmail(email) && !validatePw(pw);
+    const isValid = emailError === '' && pwError === '';
 
     return {
         email,
         pw,
         emailError,
         pwError,
+        emailTouched,
+        pwTouched,
         isValid,
-        setEmail,
-        setPw,
-        handleEmailBlur,
-        handlePwBlur,
+        handleEmailChange,
+        handlePwChange,
     };
 };
