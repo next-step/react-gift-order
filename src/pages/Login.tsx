@@ -11,29 +11,35 @@ const LoginWrapper = styled.div`
   align-items: center;
   justify-content: center;
   min-height: 0;
-  padding: 48px 0 32px 0;
+  width: 100%;
+  padding: 32px 0 24px 0;
   box-sizing: border-box;
 `;
 
 const Logo = styled.h1`
-  font-size: 64px;
+  font-size: 2.5rem;
   font-weight: 500;
-  margin-bottom: 80px;
+  margin-bottom: 48px;
   letter-spacing: 1px;
+  text-align: center;
 `;
 
 const Form = styled.form`
-  width: 90vw;
-  max-width: 800px;
+  width: 100%;
+  max-width: 400px;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 24px;
+  @media (min-width: 720px) {
+    max-width: 400px;
+    gap: 32px;
+  }
 `;
 
 const Input = styled.input`
   width: 100%;
-  font-size: 2.2rem;
-  padding: 24px 0 8px 0;
+  font-size: 1.2rem;
+  padding: 18px 0 8px 0;
   border: none;
   border-bottom: 2px solid #e0e0e0;
   outline: none;
@@ -41,7 +47,7 @@ const Input = styled.input`
   background: transparent;
   &::placeholder {
     color: #b0b3ba;
-    font-size: 2.2rem;
+    font-size: 1.2rem;
   }
 `;
 
@@ -57,12 +63,12 @@ const LoginButton = styled.button`
   width: 100%;
   background: #f7e244;
   color: #222;
-  font-size: 2.2rem;
+  font-size: 1.2rem;
   font-weight: 500;
   border: none;
   border-radius: 10px;
-  padding: 28px 0;
-  margin-top: 40px;
+  padding: 18px 0;
+  margin-top: 24px;
   cursor: pointer;
   transition: background 0.2s;
   &:hover {
