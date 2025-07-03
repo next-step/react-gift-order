@@ -1,5 +1,3 @@
-// src/hooks/useLoginForm.ts
-import { theme } from '@/theme/theme';
 import { useState } from 'react';
 
 export const useLoginForm = () => {

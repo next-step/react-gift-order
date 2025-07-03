@@ -1,10 +1,8 @@
 import styled from '@emotion/styled';
-import { css } from '@emotion/react';
 import KakaoIconUrl from '../assets/KaKaoLogo.svg';
 import GlobalStyle from '@/styles/global';
 import NavigationBar from '@components/NavigationBar';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
 import { useLoginForm } from '@/hooks/useLoginForm';
 
 const Wrapper = styled.div(({ theme }) => ({
