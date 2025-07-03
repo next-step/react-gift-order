@@ -45,18 +45,18 @@ const Login = () => {
     return { string, isValid, message, onChange, onBlur };
   }
 
-  const email = useValidate(exp);
+  const email = useValidate(EMAIL_REGEXP);
   const password = useValidate(passwordValidator);
   const isFormValid = email.isValid && password.isValid;
 
   return (
     <div css={containerStyle()}>
       <h1 css={textSytle(theme)}>로그인</h1>
-      <div css={inputContainerSytle()}>
+      <div css={inputContainerSytle(theme)}>
         <input
           onChange={email.onChange}
           onBlur={email.onBlur}
-          css={inputSytle(theme)}
+          css={inputStyle(theme)}
           type="text"
           placeholder="이메일"
         />
@@ -118,22 +118,28 @@ const textSytle = (theme: Theme) => css`
   margin-bottom: 20px;
 `;
 
-const inputContainerSytle = () => css`
+const inputContainerSytle = (theme: Theme) => css`
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
   gap: 16px;
-  padding: 20px;
+  padding: ${theme.spacing.spacing6};
   }
 `;
 
-const inputSytle = (theme: Theme) => css`
+const inputStyle = (theme: Theme) => css`
   width: 60%;
-  gap: 16px;
-  padding: 20px;
-  border : none;
+  padding: ${theme.spacing.spacing4};
+  border: none;
   border-bottom: 1px solid ${theme.colors.gray.gray500};
+  font-size: ${theme.typography.body1Regular.size};
+  font-weight: ${theme.typography.body1Regular.weight};
+  line-height: ${theme.typography.body1Regular.lineHeight};
+  outline: none;
+
+  &:focus {
+    border-color: ${theme.colors.semantic.kakaoYellow};
   }
 `;
 
