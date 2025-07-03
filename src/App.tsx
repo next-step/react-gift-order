@@ -6,24 +6,27 @@ import Home from '@/pages/Home'
 import Login from './pages/Login'
 import NotFound from './pages/NotFound'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { LoginProvider } from "./contexts/LoginContext"
 
 
 const muiTheme = createTheme()
 
 function App() {
   return (
-    <MuiThemeProvider theme={muiTheme}>
-      <EmotionThemeProvider theme={emotionTheme}>
-        <BrowserRouter>
-          <GlobalStyle />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </EmotionThemeProvider>
-    </MuiThemeProvider>
+    <LoginProvider>
+      <MuiThemeProvider theme={muiTheme}>
+        <EmotionThemeProvider theme={emotionTheme}>
+          <BrowserRouter>
+            <GlobalStyle />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </EmotionThemeProvider>
+      </MuiThemeProvider>
+    </LoginProvider>
   )
 }
 
