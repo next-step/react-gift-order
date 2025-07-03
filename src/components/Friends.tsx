@@ -2,13 +2,23 @@ import styled from '@emotion/styled';
 import { FiPlus } from 'react-icons/fi';
 
 export default function Friends() {
+  const userInfo = sessionStorage.getItem("userInfo");
+  let userId = ""
+  if (userInfo) {
+    const user = JSON.parse(userInfo);
+    userId = user.email.split("@")[0];
+  }
+
   return (
     <Wrapper>
         <Button>
           <IconWrapper>
             <FiPlus size={20} />
           </IconWrapper>
-          <Text>선물할 친구를 선택해 주세요.</Text>
+          <Text>
+            {userId ? `${userId}님! 선물할 친구를 선택해 주세요.`
+            : '선물할 친구를 선택해 주세요.'}
+          </Text>
         </Button>
     </Wrapper>
   );
