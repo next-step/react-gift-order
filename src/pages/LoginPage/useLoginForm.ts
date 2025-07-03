@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { EMAIL_REGEX, VALIDATION_MESSAGES, PASSWORD_MIN } from '@/constants/validation';
 
 export interface LoginFormState {
     email: string;
@@ -13,28 +14,27 @@ export interface LoginFormState {
 }
 
 export const useLoginForm = (): LoginFormState => {
-    const [email, setEmail] = useState<string>('');
-    const [pw, setPw] = useState<string>('');
-    const [emailError, setEmailError] = useState<string>('');
-    const [pwError, setPwError] = useState<string>('');
+    const [email, setEmail] = useState('');
+    const [pw, setPw] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [pwError, setPwError] = useState('');
 
-    const validateEmail = (value: string): string => {
-        if (!value) return 'ID를 입력해주세요.';
-        const emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(value)) return 'ID는 이메일 형식으로 입력해주세요.';
+    const validateEmail = (value: string) => {
+        if (!value) return VALIDATION_MESSAGES.email.required;
+        if (!EMAIL_REGEX.test(value)) return VALIDATION_MESSAGES.email.invalid;
         return '';
     };
 
-    const validatePw = (value: string): string => {
-        if (!value) return 'PW를 입력해주세요.';
-        if (value.length < 8) return 'PW는 최소 8글자 이상이어야 합니다.';
+    const validatePw = (value: string) => {
+        if (!value) return VALIDATION_MESSAGES.password.required;
+        if (value.length < PASSWORD_MIN) return VALIDATION_MESSAGES.password.minLength;
         return '';
     };
 
-    const handleEmailBlur = (): void => setEmailError(validateEmail(email));
-    const handlePwBlur = (): void => setPwError(validatePw(pw));
+    const handleEmailBlur = () => setEmailError(validateEmail(email));
+    const handlePwBlur = () => setPwError(validatePw(pw));
 
-    const isValid: boolean = !validateEmail(email) && !validatePw(pw);
+    const isValid = !validateEmail(email) && !validatePw(pw);
 
     return {
         email,

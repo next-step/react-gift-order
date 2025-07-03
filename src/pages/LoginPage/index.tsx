@@ -3,15 +3,15 @@ import NavigationBar from '@/components/NavigationBar';
 import { Container, Logo, Input, LoginButton, ErrorMessage, InputWrapper } from './styles'
 import LogoIcon from '@/assets/logo.svg';
 import { useLoginForm } from './useLoginForm';
+import { PATH } from '../../constants/paths';
 
 interface LocationState {
   from?: string;
 }
 const LoginPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const state = location.state as LocationState;
-  const from = state?.from || '/';
+  const { state } = useLocation<LocationState>();
+  const from = state?.from || PATH.HOME;
   const {
     email,
     pw,
