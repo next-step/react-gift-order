@@ -1,6 +1,14 @@
 import { useState } from 'react';
 
 const MIN_PASSWORD_LENGTH = 8;
+type ValidateResult =
+  | {
+      ok: true;
+    }
+  | {
+      ok: false;
+      reason: string;
+    };
 
 function useLoginForm() {
   const [id, setId] = useState<string>('');
@@ -11,27 +19,34 @@ function useLoginForm() {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
   }
 
-  function checkId(id: string): boolean {
+  function validateId(id: string): ValidateResult {
     if (!id) {
-      setIdError('ID를 입력해주세요');
-      return false;
-    } else if (!isEmail(id)) {
-      setIdError('ID는 이메일 형식으로 입력해주세요.');
-      return false;
+      return { ok: false, reason: 'ID를 입력해주세요' };
     }
-    setIdError('');
-    return true;
+    if (!isEmail(id)) {
+      return { ok: false, reason: 'ID는 이메일 형식으로 입력해주세요.' };
+    }
+    return { ok: true };
   }
-  function checkPw(pw: string): boolean {
+  function handleCheckId() {
+    const result = validateId(id);
+    setIdError(result.ok ? '' : result.reason);
+    return result.ok;
+  }
+
+  function validatePw(pw: string): ValidateResult {
     if (!pw) {
-      setPwError('PW를 입력해주세요.');
-      return false;
-    } else if (pw.length < MIN_PASSWORD_LENGTH) {
-      setPwError('PW는 최소 8글자 이상이어야 합니다.');
-      return false;
+      return { ok: false, reason: 'PW를 입력해주세요' };
     }
-    setPwError('');
-    return true;
+    if (pw.length < MIN_PASSWORD_LENGTH) {
+      return { ok: false, reason: 'PW는 최소 8글자 이상이어야 합니다.' };
+    }
+    return { ok: true };
+  }
+  function handleCheckPw() {
+    const result = validatePw(pw);
+    setPwError(result.ok ? '' : result.reason);
+    return result.ok;
   }
   const isValid = idError === '' && pwError === '' && id !== '' && pw !== '';
 
@@ -41,12 +56,12 @@ function useLoginForm() {
     idError,
     pwError,
     isValid,
-    checkId,
-    checkPw,
+    handleCheckId,
+    handleCheckPw,
     handleIdChange: (e: React.ChangeEvent<HTMLInputElement>) => setId(e.target.value),
     handlePwChange: (e: React.ChangeEvent<HTMLInputElement>) => setPw(e.target.value),
-    handleIdBlur: () => checkId(id),
-    handlePwBlur: () => checkPw(pw),
+    handleIdBlur: () => handleCheckId(),
+    handlePwBlur: () => handleCheckPw(),
   };
 }
 

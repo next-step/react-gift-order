@@ -19,8 +19,8 @@ function Login({ onLogin }: LoginProps) {
     idError,
     pwError,
     isValid,
-    checkId,
-    checkPw,
+    handleCheckId,
+    handleCheckPw,
     handleIdChange,
     handlePwChange,
     handleIdBlur,
@@ -29,7 +29,7 @@ function Login({ onLogin }: LoginProps) {
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!checkId(id) || !checkPw(pw)) return;
+    if (!handleCheckId() || !handleCheckPw()) return;
     onLogin();
   }
 
