@@ -120,13 +120,12 @@ const textStyle = (theme: Theme) => css`
 `;
 
 const inputContainerStyle = (theme: Theme) => css`
-display: flex;
-flex-direction: column;
-align-items: center;
-width: 100%;
-gap: 16px;
-padding: ${theme.spacing.spacing6};
-}
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: ${theme.spacing.spacing8};
+  padding: ${theme.spacing.spacing6};
 `;
 
 const inputStyle = (theme: Theme) => css`
