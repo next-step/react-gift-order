@@ -96,7 +96,7 @@ const Login: React.FC = () => {
     handlePasswordBlur,
     handleSubmit,
   } = useLoginForm({
-    onSuccess: () => navigate("/my")
+    onSuccess: () => navigate("/")
   });
 
   return (

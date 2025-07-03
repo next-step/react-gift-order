@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import AddIcon from '@mui/icons-material/Add'
+import { useLoginContext } from '../contexts/LoginContext'
 
 const Section = styled.section`
   width: 100%;
@@ -41,13 +42,17 @@ const GuideText = styled.div`
 `
 
 const GiftFriendsSection = () => {
+  const { user } = useLoginContext();
+  const userId = user ? user.email.split('@')[0] : '';
   return (
     <Section>
       <Card>
         <AddCircle>
           <PlusIcon fontSize="inherit" />
         </AddCircle>
-        <GuideText>선물할 친구를 선택해 주세요.</GuideText>
+        <GuideText>
+          {userId ? `${userId}님! 선물할 친구를 선택해 주세요.` : '선물할 친구를 선택해 주세요.'}
+        </GuideText>
       </Card>
     </Section>
   )
