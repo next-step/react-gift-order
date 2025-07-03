@@ -9,12 +9,12 @@ import { categories, sorts, INITIAL_VISIBLE_GIFT_COUNT } from "@/constants/Ranki
 import FilterButton from '@/components/Common/FilterButton/FilterButton';
 import SortSpan from "@/components/Common/SortOption/SortOption"
 import RankingCard from '@/components/Common/RankingCard/RankingCard';
-import usePersistedState from '@/hooks/usePersistedState.tsx';
+import useSelectedState from '@/hooks/useSelectedState.tsx';
 
 export default function GiftRanking() {
   const [showCount, setShowCount] = useState(INITIAL_VISIBLE_GIFT_COUNT); // 초기에 6개 보여줌
-  const [category, setCategory] = usePersistedState("giftRankingCategory", "전체");
-  const [sort, setSort] = usePersistedState("giftRankingSort", "받고 싶어한");
+  const [category, setCategory] = useSelectedState("giftRankingCategory", "전체");
+  const [sort, setSort] = useSelectedState("giftRankingSort", "받고 싶어한");
 
   const handleToggle = () => {
     setShowCount(prev => (prev === 6 ? 21 : 6));

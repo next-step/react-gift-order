@@ -26,6 +26,11 @@ const Login = () => {
       return;
     }
 
+    const splitedId = id.split("@")[0];
+
+    sessionStorage.setItem('splitedId', splitedId);
+    sessionStorage.setItem('password', password);
+
     const fallback = location.state?.from || '/';
     navigate(fallback);
   }
