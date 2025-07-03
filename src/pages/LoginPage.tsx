@@ -1,6 +1,8 @@
 import styled from '@emotion/styled';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { ROUTE_PATH } from '@/constants/routes';
+import useLoginForm from '../hooks/useLoginForm';
+import Input from '@/components/common/Input';
 
 const PageBackground = styled.div`
   height: 100vh;
@@ -36,20 +38,6 @@ const Form = styled.form`
   gap: 24px;
 `;
 
-const Input = styled.input`
-  width: 100%;
-  padding: 16px 0;
-  border: none;
-  border-bottom: 1px solid #ddd;
-  font-size: 16px;
-  background: transparent;
-  color: #222;
-  outline: none;
-  &::placeholder {
-    color: #bbb;
-  }
-`;
-
 const Button = styled.button`
   width: 100%;
   padding: 14px 0;
@@ -67,27 +55,73 @@ const Button = styled.button`
   }
 `;
 
+const ErrorMsg = styled.div`
+  color: #f44336;
+  font-size: 13px;
+  margin-top: 4px;
+  margin-bottom: -16px;
+`;
+
 function LoginPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-
-  // URL에서 이전 페이지 정보를 가져옴 (기본값: '/')
   const from = searchParams.get('from') || ROUTE_PATH.HOME;
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // 로그인 성공 후 이전 페이지로 리다이렉트
-    navigate(from, { replace: true });
-  };
+  // 커스텀 훅에서 모든 상태와 핸들러를 받아옴
+  const {
+    email,
+    password,
+    emailError,
+    pwError,
+    isButtonActive,
+    handleEmailChange,
+    handlePasswordChange,
+    handleEmailBlur,
+    handlePasswordBlur,
+    handleSubmit,
+  } = useLoginForm({ onSuccess: () => navigate(from, { replace: true }) });
 
   return (
     <PageBackground>
       <Card>
         <Title>kakao</Title>
         <Form onSubmit={handleSubmit}>
-          <Input type="email" placeholder="이메일" />
-          <Input type="password" placeholder="비밀번호" />
-          <Button type="submit">로그인</Button>
+          {/* 이메일 입력 */}
+          <div>
+            <Input
+              type="email"
+              placeholder="이메일"
+              value={email}
+              onChange={handleEmailChange}
+              onBlur={handleEmailBlur}
+              error={!!emailError} // error가 있으면 true, 없으면 false
+            />
+            {emailError && <ErrorMsg>{emailError}</ErrorMsg>}
+          </div>
+          {/* 비밀번호 입력 */}
+          <div>
+            <Input
+              type="password"
+              placeholder="비밀번호"
+              value={password}
+              onChange={handlePasswordChange}
+              onBlur={handlePasswordBlur}
+              error={!!pwError}
+            />
+            {pwError && <ErrorMsg>{pwError}</ErrorMsg>}
+          </div>
+          {/* 로그인 버튼: 조건 충족 시에만 활성화 */}
+          <Button
+            type="submit"
+            disabled={!isButtonActive}
+            style={{
+              background: isButtonActive ? '#ffe812' : '#f5f6fa',
+              color: isButtonActive ? '#222' : '#bbb',
+              cursor: isButtonActive ? 'pointer' : 'not-allowed',
+            }}
+          >
+            로그인
+          </Button>
         </Form>
       </Card>
     </PageBackground>
