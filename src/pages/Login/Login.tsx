@@ -3,6 +3,7 @@ import Header from '@/components/Header/Header';
 import { Alert, Container, InputWrapper, LoginButton, LogoImg, StyledInput } from '@/pages/Login/Login.styles';
 import { KAKAO_LOGO_SVG } from "@/assets/svg/kakaoLogo";
 import { useLoginForm } from '@/hooks/useLoginForm';
+import { PASSWORD_LENGTH } from '@/constants/password.ts';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -10,9 +11,9 @@ const Login = () => {
 
   const {
     id,
-    passwd,
+    password,
     isValidEmail,
-    isValidPass,
+    isValidPassword,
     handleEmailCheck,
     handlePasswordCheck,
     isFormValid,
@@ -48,20 +49,25 @@ const Login = () => {
                 onChange={handleEmailCheck}
               />
               {!isValidEmail &&
-                (id && <Alert>올바른 이메일 형식이 아닙니다.</Alert>
-                  || !id && <Alert>아이디를 입력해주세요.</Alert>)}
+                (id ? (
+                  <Alert>올바른 이메일 형식이 아닙니다.</Alert>
+                  ) : (
+                    <Alert>아이디를 입력해주세요.</Alert>
+                ))}
             </>
 
             <>
               <StyledInput
                 type="password"
                 placeholder="비밀번호"
-                value={passwd}
+                value={password}
                 onChange={handlePasswordCheck}
               />
-              {!isValidPass &&
-                ((passwd.length > 0 && passwd.length < 8) && <Alert>비밀번호는 최소 8글자 이상이어야 합니다.</Alert>
-                  || !passwd && <Alert>비밀번호를 입력해주세요.</Alert>)}
+              {!isValidPassword &&
+                (password
+                  ? (password.length < PASSWORD_LENGTH && <Alert>비밀번호는 최소 8글자 이상이어야 합니다.</Alert>)
+                    : <Alert>비밀번호를 입력해주세요.</Alert>
+                )}
             </>
 
           </InputWrapper>

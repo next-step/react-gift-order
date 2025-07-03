@@ -3,8 +3,8 @@ import { useState } from 'react';
 export const useLoginForm = () => {
   const [id, setId] = useState('');
   const [isValidEmail, setIsValidEmail] = useState(true);
-  const [passwd, setPasswd] = useState('');
-  const [isValidPass, setIsValidPass] = useState(true);
+  const [password, setPassword] = useState('');
+  const [isValidPassword, setIsValidPassword] = useState(true);
 
   const handleEmailCheck = e => {
     const value = e.target.value;
@@ -16,22 +16,22 @@ export const useLoginForm = () => {
 
   const handlePasswordCheck = e => {
     const value = e.target.value;
-    setPasswd(value);
+    setPassword(value);
 
     if (value.length < 8) {
-      setIsValidPass(false);
+      setIsValidPassword(false);
     } else {
-      setIsValidPass(true);
+      setIsValidPassword(true);
     }
   }
 
-  const isFormValid = !isValidEmail || !isValidPass || id === '' || passwd === '';
+  const isFormValid = !isValidEmail || !isValidPassword || id === '' || password === '';
 
   return {
     id,
-    passwd,
+    password,
     isValidEmail,
-    isValidPass,
+    isValidPassword,
     handleEmailCheck,
     handlePasswordCheck,
     isFormValid,
