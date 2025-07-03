@@ -25,23 +25,35 @@ export const useLoginForm = (): UseLoginFormReturn => {
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [isEmailTouched, setIsEmailTouched] = useState(false);
+  const [isPasswordTouched, setIsPasswordTouched] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleEmailChange = (value: string) => {
     setEmail(value);
+    if (isEmailTouched) {
+      const errorMessage = getEmailErrorMessage(value);
+      setEmailError(errorMessage);
+    }
   };
 
   const handlePasswordChange = (value: string) => {
     setPassword(value);
+    if (isPasswordTouched) {
+      const errorMessage = getPasswordErrorMessage(value);
+      setPasswordError(errorMessage);
+    }
   };
 
   const handleEmailBlur = () => {
+    setIsEmailTouched(true);
     const errorMessage = getEmailErrorMessage(email);
     setEmailError(errorMessage);
   };
 
   const handlePasswordBlur = () => {
+    setIsPasswordTouched(true);
     const errorMessage = getPasswordErrorMessage(password);
     setPasswordError(errorMessage);
   };
