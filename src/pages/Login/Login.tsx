@@ -29,7 +29,7 @@ const Login = () => {
     const splitedId = id.split("@")[0];
 
     sessionStorage.setItem('splitedId', splitedId);
-    sessionStorage.setItem('password', password);
+    sessionStorage.setItem('email', id);
 
     const fallback = location.state?.from || '/';
     navigate(fallback);

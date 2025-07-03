@@ -8,6 +8,7 @@ import { theme } from '@/styles/theme';
 import NotFound from '@/pages/NotFound/NotFound';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import My from '@/pages/My/My.tsx';
 
 const App: () => JSX.Element = () => {
   return (
@@ -18,6 +19,7 @@ const App: () => JSX.Element = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/my" element={<My />}/>
 
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -9,7 +9,11 @@ export default function Header() {
   const location = useLocation();
 
   const handleLoginClick = () => {
-    navigate(PATH.LOGIN, { state: { from: location.pathname}});
+    if (sessionStorage.getItem('splitedId')) {
+      navigate(PATH.MY, { state: { from:location.pathname }})
+    } else {
+      navigate(PATH.LOGIN, { state: { from: location.pathname}});
+    }
   }
 
   return (
