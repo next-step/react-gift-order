@@ -25,7 +25,6 @@ const error = css`
   font-size: 12px;
   color: ${palette.red600};
 `;
-
 const LoginButton = styled.button`
   width: 100%;
   padding: 14px 0;
