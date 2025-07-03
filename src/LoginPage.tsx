@@ -4,6 +4,7 @@ import KakaoLogo from "@/assets/kakaologo.svg";
 import PageContainer from "@/components/PageContainer";
 import Input from "@/components/Input";
 import { useInput } from "@/hooks/useInput";
+import { useValidate } from "@/hooks/useValidate";
 import { validateEmail, validatePassword } from "@/utils/validate";
 
 const LogoImage = styled.img`
@@ -39,21 +40,11 @@ const Button = styled.button<{ disabled?: boolean }>`
 export default function LoginPage() {
   const navigate = useNavigate();
 
-  const {
-    value: email,
-    error: emailError,
-    onChange: onEmailChange,
-    onBlur: onEmailBlur,
-    isValid: isEmailValid,
-  } = useInput("", validateEmail);
+  const emailInput = useInput("");
+  const emailValidation = useValidate(emailInput.value, validateEmail);
 
-  const {
-    value: password,
-    error: passwordError,
-    onChange: onPasswordChange,
-    onBlur: onPasswordBlur,
-    isValid: isPasswordValid,
-  } = useInput("", validatePassword);
+  const passwordInput = useInput("");
+  const passwordValidation = useValidate(passwordInput.value, validatePassword);
 
   const handleLogin = () => {
     if (window.history.length > 2) {
@@ -69,20 +60,20 @@ export default function LoginPage() {
       <Input
         type="email"
         placeholder="이메일"
-        value={email}
-        onChange={onEmailChange}
-        onBlur={onEmailBlur}
-        error={emailError}
+        value={emailInput.value}
+        onChange={emailInput.onChange}
+        onBlur={emailValidation.onBlur}
+        error={emailValidation.error}
       />
       <Input
         type="password"
         placeholder="비밀번호"
-        value={password}
-        onChange={onPasswordChange}
-        onBlur={onPasswordBlur}
-        error={passwordError}
+        value={passwordInput.value}
+        onChange={passwordInput.onChange}
+        onBlur={passwordValidation.onBlur}
+        error={passwordValidation.error}
       />
-      <Button onClick={handleLogin} disabled={!isEmailValid || !isPasswordValid}>로그인</Button>
+      <Button onClick={handleLogin} disabled={!(emailValidation.isValid && passwordValidation.isValid)}>로그인</Button>
     </PageContainer>
   );
 }
