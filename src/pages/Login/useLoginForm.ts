@@ -4,19 +4,18 @@ import { useNavigate, useLocation } from 'react-router-dom';
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const useLoginForm = () => {
-  const [email, setEmail] = useState('');
+  const [emailValue, setEmailValue] = useState('');
   const [emailError, setEmailError] = useState('');
 
-  const [password, setPassword] = useState('');
+  const [passwordValue, setPasswordValue] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/';
 
-  // 이메일 변경 핸들러
   const handleEmailChange = (value: string) => {
-    setEmail(value);
+    setEmailValue(value);
 
     if (!value) {
       setEmailError('ID를 입력해주세요.');
@@ -27,20 +26,18 @@ export const useLoginForm = () => {
     }
   };
 
-  // 이메일 유효성 검사
   const validateEmail = () => {
-    if (!email) {
+    if (!emailValue) {
       setEmailError('ID를 입력해주세요.');
-    } else if (!EMAIL_REGEX.test(email)) {
+    } else if (!EMAIL_REGEX.test(emailValue)) {
       setEmailError('ID는 이메일 형식으로 입력해주세요.');
     } else {
       setEmailError('');
     }
   };
 
-  // 비밀번호 변경 핸들러
   const handlePasswordChange = (value: string) => {
-    setPassword(value);
+    setPasswordValue(value);
 
     if (!value) {
       setPasswordError('PW를 입력해주세요.');
@@ -51,11 +48,10 @@ export const useLoginForm = () => {
     }
   };
 
-  // 비밀번호 유효성 검사
   const validatePassword = () => {
-    if (!password) {
+    if (!passwordValue) {
       setPasswordError('PW를 입력해주세요.');
-    } else if (password.length < 8) {
+    } else if (passwordValue.length < 8) {
       setPasswordError('PW는 최소 8글자 이상이어야 합니다.');
     } else {
       setPasswordError('');
@@ -63,24 +59,26 @@ export const useLoginForm = () => {
   };
 
   const isValid = useMemo(() => {
-    return EMAIL_REGEX.test(email) && password.length >= 8;
-  }, [email, password]);
+    return EMAIL_REGEX.test(emailValue) && passwordValue.length >= 8;
+  }, [emailValue, passwordValue]);
 
   const goToLogin = () => {
     navigate(from, { replace: true });
   };
 
   return {
-    email,
-    emailError,
-    handleEmailChange,
-    validateEmail,
-
-    password,
-    passwordError,
-    handlePasswordChange,
-    validatePassword,
-
+    email: {
+      value: emailValue,
+      error: emailError,
+      onChange: handleEmailChange,
+      validate: validateEmail,
+    },
+    password: {
+      value: passwordValue,
+      error: passwordError,
+      onChange: handlePasswordChange,
+      validate: validatePassword,
+    },
     isValid,
     goToLogin,
   };
