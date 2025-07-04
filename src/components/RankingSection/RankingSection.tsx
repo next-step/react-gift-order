@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo} from 'react'
 import { RankingItem } from './RankingItem'
 import { mockProduct } from '@/data/products'
 
@@ -12,23 +12,26 @@ const filters = [
 
 const tabs = ['받고 싶어한', '많이 선물한', '위시로 받은']
 
+type FilterLabel = '전체' | '여성이' | '남성이' | '청소년이'
+type TabLabel = '받고 싶어한' | '많이 선물한' | '위시로 받은'
+
+
 export const RankingSection = () => {
 
-  const [selectedFilter, setSelectedFilter] = useState(() => {
-    return localStorage.getItem('selectedFilter') || '전체'
+  const [selectedFilter, setSelectedFilter] = useState<FilterLabel>(() => {
+    return (localStorage.getItem('selectedFilter') as FilterLabel) || '전체'
   })
 
-  const [selectedTab, setSelectedTab] = useState(() => {
-    return localStorage.getItem('selectedTab') || '받고 싶어한'
+  const [selectedTab, setSelectedTab] = useState<TabLabel>(() => {
+    return (localStorage.getItem('selectedTab') as TabLabel) || '받고 싶어한'
   })
 
-
-  const handleFilterChange = (label: string) => {
+  const handleFilterChange = (label: FilterLabel) => {
     setSelectedFilter(label)
     localStorage.setItem('selectedFilter', label)
   }
 
-  const handleTabChange = (tab: string) => {
+  const handleTabChange = (tab: TabLabel) => {
     setSelectedTab(tab)
     localStorage.setItem('selectedTab', tab)
   }
@@ -47,7 +50,7 @@ export const RankingSection = () => {
           <Filter
             key={label}
             selected={label === selectedFilter}
-            onClick={() => handleFilterChange(label)} 
+            onClick={() => handleFilterChange(label as FilterLabel)} 
           >
             <div className="emoji">{emoji}</div>
             <span>{label}</span>
@@ -60,7 +63,7 @@ export const RankingSection = () => {
           <Tab
             key={t}
             selected={t === selectedTab}
-            onClick={() => handleTabChange(t)}  
+            onClick={() => handleTabChange(t as TabLabel)}  
           >
             {t}
           </Tab>
