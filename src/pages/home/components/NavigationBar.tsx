@@ -48,6 +48,7 @@ const Left = styled.div`
 const Center = styled.div`
   font-size: 16px;
   font-weight: 700;
+  cursor: pointer;
 `;
 
 const Right = styled.div`
