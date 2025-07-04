@@ -76,8 +76,9 @@ const Login = () => {
 
       <button
         onClick={() => {
-          if (window.history.length) {
-            navigate(-1);
+          if (isFormValid) {
+            sessionStorage.setItem("email", email.string);
+            sessionStorage.setItem("password", password.string);
           } else {
             navigate("/");
           }
