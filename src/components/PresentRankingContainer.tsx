@@ -36,10 +36,6 @@ const StyledPresentRankingContainerTitle = styled.p`
 `;
 const PresentRankingContainer = () => {
   const [isVisible, setisVisible] = useState(false);
-  //기본값을 false라고 정의했더니 상품 랭킹 컴포넌트들이 많이 등장하게 되었다. -> 의도와는 다른 부분
-  //왜 기본값을 false라고 주었는데도 true인 상태로 PresentRankingItem에 보내지게 될까요?
-  //변수명을 isVisible이라고 했기에 삼항연산자에서 isVisible == true면 적게, false면 많이 출력되도록 해야했는데
-  //이전에는 순서를 바꿔서 작성했음
 
   const handelToogle = () => {
     setisVisible((prev) => !prev);

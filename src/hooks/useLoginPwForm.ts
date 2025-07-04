@@ -12,12 +12,12 @@ export const useLoginPwForm = (): LoginPwForm => {
   const [pw, setPw] = useState<string>(''); // ID 상태
   const [pwError, setPwError] = useState<string>(''); // Pw 입력 오류 메시지 상태
   const [pwTouched, setPwTouched] = useState<boolean>(false); // Pw input 태그 클릭 상태 -> 기본값 : 클릭되지 않은 상태
+  const maxPwLength = 8;
 
   const isValidPw = (pw: string): boolean => {
     // 비밀번호 길이 검사 -> 이 값에 따라 오류문을 즉각 반영하기 위해 useEffect에 의존 배열로 isValidPw를 설정
-    // TODO---
-    // 이때문에 useCallback 함수로 정의 -> vsc에서 오류문을 출력하길래 수정했는데 왜 그래야하는지 이유를 모르겠네요...
-    return pw.length < 8 ? false : true;
+
+    return pw.length < maxPwLength ? false : true;
   };
 
   // ID 유효성 검사 로직

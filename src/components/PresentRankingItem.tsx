@@ -49,7 +49,7 @@ const PresentItem = ({ isVisible }: { isVisible: boolean }) => {
         <div key={index}>
           <StyledPresentRankingItemDiv>
             <StyledPresentRankingNumContainer index={index + 1}>{index + 1}</StyledPresentRankingNumContainer>
-            <StyledPresentRankingItemImage src={item.imageURL} alt='' />
+            <StyledPresentRankingItemImage src={item.imageURL} alt='제품 이미지' />
             <StyledPresentRankingItemBrandName className='brand_name'>
               {item.brandInfo.name}
             </StyledPresentRankingItemBrandName>
@@ -65,5 +65,4 @@ const PresentItem = ({ isVisible }: { isVisible: boolean }) => {
     </>
   );
 };
-//toLocaleString() 메서드는 숫자나 날짜 객체를 문자열로 변환할 때 사용
 export default PresentItem;

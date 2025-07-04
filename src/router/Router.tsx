@@ -1,18 +1,21 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 import Home from '@pages/Home';
 import Login from '@pages/Login';
 import NotFound from '@pages/NotFound';
+import { URLS } from '@assets/urls';
 
-const Router = () => {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='login' element={<Login />} />
-        <Route path='*' element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
-  );
-};
-
+const Router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Home />,
+  },
+  {
+    path: URLS.login,
+    element: <Login />,
+  },
+  {
+    path: '*',
+    element: <NotFound />,
+  },
+]);
 export default Router;

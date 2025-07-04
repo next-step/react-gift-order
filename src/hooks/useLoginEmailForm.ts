@@ -21,9 +21,9 @@ export const useLoginEmailForm = (): LoginIdForm => {
 
   // ID 유효성 검사 로직
   useEffect(() => {
-    if (!idTouched)
+    if (!idTouched) {
       setIdError(''); //input 태그가 클릭되지 않은 상황에서 Error 값이 없으면 검사 통과
-    else if (!id.trim()) {
+    } else if (!id.trim()) {
       setIdError('ID를 입력해주세요.');
     } else if (!isValidEmail(id)) {
       setIdError('ID는 이메일 형식으로 입력해주세요.');
