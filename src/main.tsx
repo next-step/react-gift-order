@@ -4,9 +4,12 @@ import { theme } from '@/styles/theme';
 import App from './App';
 import './styles/reset.css';
 import './index.css';
+import { AuthProvider } from './contexts/AuthContext';
 
 createRoot(document.getElementById('root')!).render(
   <ThemeProvider theme={theme}>
-    <App />
+    <AuthProvider>
+      <App />
+    </AuthProvider>
   </ThemeProvider>
 );
