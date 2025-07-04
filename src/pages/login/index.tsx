@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import LoginFormSection from "@/pages/login/components/LoginFormSection";
 import { useAuth } from "@/hooks/useAuth";
 import type { User } from "@/contexts/AuthContext";
@@ -7,12 +7,9 @@ import type { User } from "@/contexts/AuthContext";
 export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login, isLoggedIn } = useAuth();
+  const { login } = useAuth();
 
-  const locationState = location.state as { from?: string } | null;
   const from = location.state?.from || "/";
-  console.log(isLoggedIn, locationState, "ㅁㄴㅇㄹ");
-  console.log(isLoggedIn, !locationState?.from);
 
   const handleLogin = (user: User) => {
     login(user);
