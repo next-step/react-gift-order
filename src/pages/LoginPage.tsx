@@ -41,7 +41,7 @@ export default function LoginPage() {
     navigate(from, { replace });
   };
 
-  const handleLogin = (email: string, password: string) => {
+  const handleLogin = (email: string, _password: string) => {
     login({ email });
     handleRedirect(true);
   };
