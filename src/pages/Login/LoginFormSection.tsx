@@ -8,15 +8,26 @@ import {
   logoStyle,
 } from './Login.style';
 import { useLoginForm } from './useLoginForm';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const LoginFormSection = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  const redirectPath = searchParams.get('redirect') || '/my';
+
   const {
     email,
     password,
     isValid,
     goToLogin,
   } = useLoginForm();
+
+  const handleLoginAndRedirect = () => {
+    goToLogin();
+    navigate(redirectPath, { replace: true });
+  };
 
   return (
     <div css={cardStyle(theme)}>
@@ -49,7 +60,7 @@ const LoginFormSection = () => {
       <button
         css={loginButtonStyle(theme)}
         disabled={!isValid}
-        onClick={goToLogin}
+        onClick={handleLoginAndRedirect}
       >
         로그인
       </button>
