@@ -1,21 +1,22 @@
-import { Routes, Route } from 'react-router-dom';
-import App from './App'; 
-import LoginPage from './pages/LoginPage';
-import NotFoundPage from './pages/NotFoundPage';
-import {Navbar} from './components/Navbar'
+import { Routes, Route } from 'react-router-dom'
+import App from './App'
+import LoginPage from './pages/LoginPage'
+import NotFoundPage from './pages/NotFoundPage'
 
+const PATHS = {
+  HOME: '/',
+  LOGIN: '/login',
+  NOT_FOUND: '*',
+}
 
 const Root = () => {
   return (
-    <>
-      
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-    </>
-  );
-};
+    <Routes>
+      <Route path={PATHS.HOME} element={<App />} />
+      <Route path={PATHS.LOGIN} element={<LoginPage />} />
+      <Route path={PATHS.NOT_FOUND} element={<NotFoundPage />} />
+    </Routes>
+  )
+}
 
-export default Root;
+export default Root
