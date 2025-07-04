@@ -2,10 +2,14 @@
 import styled from "@emotion/styled";
 import { useNavigate, useLocation } from "react-router-dom";
 import MyPageIcon from "../common/MyPageIcon";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function NavigationBar() {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const { isLoggedIn } = useAuth();
+  console.log("로그인 상태:", isLoggedIn);
 
   const handleBack = () => {
     const isInternalReferrer = document.referrer.includes(window.location.host);
