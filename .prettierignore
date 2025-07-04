@@ -3,4 +3,4 @@ dist
 build
 .git
 *.log
-package-lock.json 
+package-lock.json

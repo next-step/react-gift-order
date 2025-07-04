@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Section } from '@/components/layout';
-import { Button } from '@/components/common';
+import { Button, ErrorMessage } from '@/components/common';
+import { useLoginForm } from '@/hooks';
 
 const LoginContainer = styled.div`
   display: flex;
@@ -22,9 +22,15 @@ const Logo = styled.div`
   text-align: center;
 `;
 
-const InputGroup = styled.div`
+const LoginForm = styled.form`
   width: 100%;
   max-width: 280px;
+  display: flex;
+  flex-direction: column;
+`;
+
+const InputGroup = styled.div`
+  width: 100%;
   margin-bottom: ${(props) => props.theme.spacing.spacing4};
 `;
 
@@ -36,18 +42,25 @@ const InputLabel = styled.label`
   margin-bottom: ${(props) => props.theme.spacing.spacing2};
 `;
 
-const Input = styled.input`
+const Input = styled.input<{ error?: boolean }>`
   width: 100%;
   padding: ${(props) => props.theme.spacing.spacing3}
     ${(props) => props.theme.spacing.spacing4};
-  border: 1px solid ${(props) => props.theme.semanticColors.border.default};
+  border: 1px solid
+    ${(props) =>
+      props.error
+        ? props.theme.semanticColors.state.critical
+        : props.theme.semanticColors.border.default};
   border-radius: 6px;
   font-size: ${(props) => props.theme.typography.body2Regular.fontSize};
   font-family: 'Pretendard', sans-serif;
 
   &:focus {
     outline: none;
-    border-color: ${(props) => props.theme.semanticColors.kakaoYellow};
+    border-color: ${(props) =>
+      props.error
+        ? props.theme.semanticColors.state.critical
+        : props.theme.semanticColors.kakaoYellow};
   }
 
   &::placeholder {
@@ -57,23 +70,39 @@ const Input = styled.input`
 
 const ButtonContainer = styled.div`
   width: 100%;
-  max-width: 280px;
   margin-top: ${(props) => props.theme.spacing.spacing6};
 `;
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const {
+    email,
+    password,
+    emailError,
+    passwordError,
+    isFormValid,
+    handleEmailChange,
+    handlePasswordChange,
+    handleEmailBlur,
+    handlePasswordBlur,
+    onSubmit,
+  } = useLoginForm();
+
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleLogin = () => {
-    // TODO: 현재는 항상 로그인 성공 처리 -> 실제 API 연동은 추후 구현
+  // LoginPage의 책임: 로그인 성공 후 처리
+  const handleLoginSuccess = ({
+    email,
+    password,
+  }: {
+    email: string;
+    password: string;
+  }) => {
     console.log('로그인 성공:', { email, password });
 
-    // 이전 페이지 정보가 있으면 그곳으로, 없으면 홈(/)으로 이동
+    // 이전 페이지로 이동하거나 홈으로 이동
     const from = location.state?.from || '/';
-    navigate(from, { replace: true }); // replace로 로그인 페이지를 히스토리에서 제거
+    navigate(from, { replace: true });
   };
 
   return (
@@ -81,33 +110,49 @@ const LoginPage = () => {
       <LoginContainer>
         <Logo>kakao</Logo>
 
-        <InputGroup>
-          <InputLabel htmlFor="email">이메일</InputLabel>
-          <Input
-            id="email"
-            type="email"
-            placeholder="이메일을 입력하세요"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </InputGroup>
+        <LoginForm onSubmit={onSubmit(handleLoginSuccess)}>
+          <InputGroup>
+            <InputLabel htmlFor="email">이메일</InputLabel>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="이메일을 입력하세요"
+              value={email}
+              onChange={(e) => handleEmailChange(e.target.value)}
+              onBlur={handleEmailBlur}
+              error={!!emailError}
+            />
+            <ErrorMessage message={emailError} />
+          </InputGroup>
 
-        <InputGroup>
-          <InputLabel htmlFor="password">비밀번호</InputLabel>
-          <Input
-            id="password"
-            type="password"
-            placeholder="비밀번호를 입력하세요"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </InputGroup>
+          <InputGroup>
+            <InputLabel htmlFor="password">비밀번호</InputLabel>
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="비밀번호를 입력하세요"
+              value={password}
+              onChange={(e) => handlePasswordChange(e.target.value)}
+              onBlur={handlePasswordBlur}
+              error={!!passwordError}
+            />
+            <ErrorMessage message={passwordError} />
+          </InputGroup>
 
-        <ButtonContainer>
-          <Button variant="primary" size="lg" fullWidth onClick={handleLogin}>
-            로그인
-          </Button>
-        </ButtonContainer>
+          <ButtonContainer>
+            <Button
+              type="submit"
+              variant="primary"
+              size="lg"
+              fullWidth
+              disabled={!isFormValid}
+            >
+              로그인
+            </Button>
+          </ButtonContainer>
+        </LoginForm>
       </LoginContainer>
     </Section>
   );
