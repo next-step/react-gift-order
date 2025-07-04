@@ -19,7 +19,7 @@ const Router = createBrowserRouter([
     path: URLS.mypage,
     element: <MyPage />,
   },
-  { path: URLS.order + '*', element: <Order /> },
+  { path: URLS.order, element: <Order /> },
   {
     path: '*',
     element: <NotFound />,
