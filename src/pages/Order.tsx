@@ -237,6 +237,35 @@ const ProductPrice = styled.div`
   margin-top: 4px;
 `;
 
+const FixedFooter = styled.div`
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100vw;
+  max-width: 720px;
+  margin: 0 auto;
+  background: #fff;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.04);
+  padding: 0 16px 24px 16px;
+  z-index: 100;
+  @media (min-width: 720px) {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+`;
+
+const PageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+`;
+
+const ErrorMessage = styled.div`
+  color: #e74c3c;
+  font-size: 1rem;
+  margin: 4px 0 8px 4px;
+`;
+
 const Order: React.FC = () => {
   const { id } = useParams();
   const product = products.find(p => String(p.id) === String(id));
@@ -246,6 +275,8 @@ const Order: React.FC = () => {
   const [receiverName, setReceiverName] = useState("");
   const [receiverPhone, setReceiverPhone] = useState("");
   const [quantity, setQuantity] = useState(1);
+  const [messageError, setMessageError] = useState("");
+  const [senderError, setSenderError] = useState("");
 
   const selectedCard = cardTemplates.find(card => card.id === selectedId);
 
@@ -254,6 +285,22 @@ const Order: React.FC = () => {
     setSelectedId(id);
     const card = cardTemplates.find(c => c.id === id);
     setMessage(card?.defaultTextMessage || "");
+  };
+
+  const handleOrder = () => {
+    if (!message.trim()) {
+      setMessageError("메시지를 입력해주세요.");
+      return;
+    } else {
+      setMessageError("");
+    }
+    if (!sender.trim()) {
+      setSenderError("보내는 사람 이름을 입력해주세요.");
+      return;
+    } else {
+      setSenderError("");
+    }
+    // TODO: 다음 유효성 검사 및 주문 처리
   };
 
   return (
@@ -276,9 +323,13 @@ const Order: React.FC = () => {
             <PreviewImage src={selectedCard.imageUrl} alt={selectedCard.defaultTextMessage} />
             <MessageInput
               value={message}
-              onChange={e => setMessage(e.target.value)}
+              onChange={e => {
+                setMessage(e.target.value);
+                if (messageError) setMessageError("");
+              }}
               placeholder="메시지를 입력하세요."
             />
+            {messageError && <ErrorMessage>{messageError}</ErrorMessage>}
           </>
         )}
       </PreviewWrapper>
@@ -288,8 +339,12 @@ const Order: React.FC = () => {
           type="text"
           placeholder="이름을 입력하세요."
           value={sender}
-          onChange={e => setSender(e.target.value)}
+          onChange={e => {
+            setSender(e.target.value);
+            if (senderError) setSenderError("");
+          }}
         />
+        {senderError && <ErrorMessage>{senderError}</ErrorMessage>}
         <SenderGuide>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</SenderGuide>
       </SenderSection>
       <ReceiverSection>
@@ -340,9 +395,13 @@ const Order: React.FC = () => {
           <div>상품 정보를 불러올 수 없습니다.</div>
         )}
       </ProductSection>
-      <OrderButton type="button" disabled={!message.trim()}>
-        주문하기
-      </OrderButton>
+      <PageWrapper>
+        <FixedFooter>
+          <OrderButton type="button" onClick={handleOrder} disabled={!message.trim()}>
+            주문하기
+          </OrderButton>
+        </FixedFooter>
+      </PageWrapper>
     </Layout>
   );
 };
