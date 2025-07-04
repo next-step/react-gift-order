@@ -2,7 +2,7 @@ import { useState } from "react";
 
 type Refs = {
   messageRef: React.RefObject<HTMLTextAreaElement>;
-  senderRef: React.RefObject<HTMLTextAreaElement>;
+  senderRef: React.RefObject<HTMLInputElement>;
   receiverRef: React.RefObject<HTMLInputElement>;
   phoneRef: React.RefObject<HTMLInputElement>;
   quantityRef: React.RefObject<HTMLInputElement>;

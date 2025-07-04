@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 import { useState } from "react";
 
 interface Props {
-  inputRef: React.RefObject<HTMLTextAreaElement>;
+  inputRef: React.RefObject<HTMLInputElement>;
   error?: string;
 }
 
@@ -25,7 +25,7 @@ const SenderInfoSection = ({ inputRef, error }: Props) => {
   );
 };
 
-const SenderNameInput = styled.textarea`
+const SenderNameInput = styled.input`
   width: 90%;
   height: 20px;
   margin: 0 auto;
