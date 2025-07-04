@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 import LoginButton from "../components/common/BaseButton";
 import KakaoLogo from "../components/common/KakaoLogo";
 import { useInput } from "../hooks/useInput";
+import { useAuth } from "../contexts/AuthContext";
 
 type LocationState = {
   from?: {
@@ -13,6 +14,7 @@ type LocationState = {
 const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { login } = useAuth();
 
   const from =
     typeof location.state?.from?.pathname === "string"
@@ -29,7 +31,19 @@ const LoginPage = () => {
     ) {
       return;
     }
-    navigate(from, { replace: true });
+
+    login(email);
+
+    const state = location.state as {
+      from?: string;
+      product?: unknown;
+    };
+
+    if (state?.from === "/order" && state?.product) {
+      navigate("/order", { state: { product: state.product } });
+    } else {
+      navigate("/my");
+    }
   };
 
   const emailValidation = (value: string) => {

@@ -1,14 +1,14 @@
 /** @jsxImportSource @emotion/react */
-import styled from '@emotion/styled';
-import CategoryItem from './CategoryItem';
-import { categories } from './mock';
+import styled from "@emotion/styled";
+import CategoryItem from "./CategoryItem";
+import { CATEGORIES } from "../../mocks/categories_mock";
 
 export default function CategorySection() {
   return (
     <>
       <SectionTitle>선물 테마</SectionTitle>
       <Container>
-        {categories.map(({ themeId, name, image }) => (
+        {CATEGORIES.map(({ themeId, name, image }) => (
           <CategoryItem key={themeId} name={name} image={image} />
         ))}
       </Container>

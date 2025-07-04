@@ -1,12 +1,18 @@
 /** @jsxImportSource @emotion/react */
-import styled from '@emotion/styled';
+import styled from "@emotion/styled";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function AddFriend() {
+  const { userEmail } = useAuth();
+  const displayName = userEmail
+    ? `${userEmail.split("@")[0]}님! 선물할 친구를 선택해주세요`
+    : "선물할 친구를 선택해 주세요";
+
   return (
     <Wrapper>
       <Card>
         <AddButton>+</AddButton>
-        <Text>선물할 친구를 선택해 주세요</Text>
+        <Text>{displayName}</Text>
       </Card>
     </Wrapper>
   );

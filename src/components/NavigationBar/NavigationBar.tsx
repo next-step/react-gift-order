@@ -2,10 +2,13 @@
 import styled from "@emotion/styled";
 import { useNavigate, useLocation } from "react-router-dom";
 import MyPageIcon from "../common/MyPageIcon";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function NavigationBar() {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const { isLoggedIn } = useAuth();
 
   const handleBack = () => {
     const isInternalReferrer = document.referrer.includes(window.location.host);
@@ -15,12 +18,21 @@ export default function NavigationBar() {
       navigate(-1);
     }
   };
-  const handleLogin = () => navigate("/login", { state: { from: location } });
+  const handleLogin = () => {
+    if (isLoggedIn) {
+      navigate("/my");
+    } else {
+      navigate("/login", { state: { from: location } });
+    }
+  };
+  const handleTitleClick = () => {
+    navigate("/");
+  };
 
   return (
     <NavBar>
       <BackButton onClick={handleBack}>←</BackButton>
-      <NavTitle>선물하기</NavTitle>
+      <NavTitle onClick={handleTitleClick}>선물하기</NavTitle>
       <LoginButton onClick={handleLogin}>
         <MyPageIcon />
       </LoginButton>
@@ -43,10 +55,13 @@ const BackButton = styled.div`
   color: ${({ theme }) => theme.colors.gray1000};
 `;
 
-const NavTitle = styled.div`
+const NavTitle = styled.button`
   font-size: ${({ theme }) => theme.typography.title1Regular.fontSize};
   font-weight: bold;
   color: ${({ theme }) => theme.colors.gray1000};
+  background: none;
+  border: none;
+  cursor: pointer;
 `;
 
 const LoginButton = styled.button`
