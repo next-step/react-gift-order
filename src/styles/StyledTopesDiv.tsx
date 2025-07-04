@@ -52,6 +52,9 @@ const StyledTopestDiv = styled.div`
   .label2Regular {
     ${({ theme }) => theme.typography.label2Regular}
   }
+  .background-default {
+    background-color: ${({ theme }) => theme.sementicPalette.backgroundDefault};
+  }
 `;
 
 export default StyledTopestDiv;

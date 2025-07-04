@@ -22,7 +22,6 @@ const StyledOrderCardSideScrollConntainer = styled.div`
 
 const StyledOrderCardContainer = styled.div`
   width: 100%;
-  border: 1px black solid;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -57,7 +56,7 @@ const OrderCardTemplateContainer = () => {
   };
 
   return (
-    <StyledOrderTemplateContainer>
+    <StyledOrderTemplateContainer className='background-default'>
       <StyledOrderCardSideScrollConntainer>
         {ORDER_TEMPLATE_DATA.map((template: OrderTemplate, index: number) => (
           <img
