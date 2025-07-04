@@ -56,7 +56,9 @@ function OrderPage() {
 
   const product = useProductInfo();
 
-  const validateForms = () => {
+  const validateForms = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     validateMessage(message);
     validateSenderName(senderName);
     validateReceiverName(receiverName);
@@ -72,44 +74,42 @@ function OrderPage() {
   return (
     <Layout>
       <OrderPageContainer>
-        <CardSelection
-          cards={orderCardMockData}
-          selectedCard={selectedCard}
-          message={message}
-          onSelect={handleCardSelect}
-          onMessageChange={handleMessageChange}
-          hasCardSelectionError={hasCardSelectionError}
-          cardSelectionErrorMessage={cardSelectionErrorMessage}
-        />
-        <SenderSectionComponent
-          senderName={senderName}
-          handleSenderNameChange={handleSenderNameChange}
-          validateSenderName={validateSenderName}
-          senderNameErrorMessage={senderNameErrorMessage}
-          hasSenderNameError={hasSenderNameError}
-        />
-        <ReceiverSectionComponent
-          receiverName={receiverName}
-          receiverPhone={receiverPhone}
-          quantity={quantity}
-          handleReceiverNameChange={handleReceiverNameChange}
-          handleReceiverPhoneChange={handleReceiverPhoneChange}
-          handleQuantityChange={handleQuantityChange}
-          validateReceiverName={validateReceiverName}
-          validateReceiverPhone={validateReceiverPhone}
-          validateQuantity={validateQuantity}
-          receiverNameErrorMessage={receiverNameErrorMessage}
-          receiverPhoneErrorMessage={receiverPhoneErrorMessage}
-          quantityErrorMessage={quantityErrorMessage}
-          hasReceiverNameError={hasReceiverNameError}
-          hasReceiverPhoneError={hasReceiverPhoneError}
-          hasQuantityError={hasQuantityError}
-        />
-        <ProductInfo
-          product={product}
-          quantity={quantity}
-          validateForms={validateForms}
-        />
+        <form onSubmit={validateForms}>
+          <CardSelection
+            cards={orderCardMockData}
+            selectedCard={selectedCard}
+            message={message}
+            onSelect={handleCardSelect}
+            onMessageChange={handleMessageChange}
+            hasCardSelectionError={hasCardSelectionError}
+            cardSelectionErrorMessage={cardSelectionErrorMessage}
+          />
+          <SenderSectionComponent
+            senderName={senderName}
+            handleSenderNameChange={handleSenderNameChange}
+            validateSenderName={validateSenderName}
+            senderNameErrorMessage={senderNameErrorMessage}
+            hasSenderNameError={hasSenderNameError}
+          />
+          <ReceiverSectionComponent
+            receiverName={receiverName}
+            receiverPhone={receiverPhone}
+            quantity={quantity}
+            handleReceiverNameChange={handleReceiverNameChange}
+            handleReceiverPhoneChange={handleReceiverPhoneChange}
+            handleQuantityChange={handleQuantityChange}
+            validateReceiverName={validateReceiverName}
+            validateReceiverPhone={validateReceiverPhone}
+            validateQuantity={validateQuantity}
+            receiverNameErrorMessage={receiverNameErrorMessage}
+            receiverPhoneErrorMessage={receiverPhoneErrorMessage}
+            quantityErrorMessage={quantityErrorMessage}
+            hasReceiverNameError={hasReceiverNameError}
+            hasReceiverPhoneError={hasReceiverPhoneError}
+            hasQuantityError={hasQuantityError}
+          />
+          <ProductInfo product={product} quantity={quantity} />
+        </form>
       </OrderPageContainer>
     </Layout>
   );

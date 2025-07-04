@@ -16,16 +16,10 @@ import type { TrendingGiftsType } from "@/types/TrendingGiftsType";
 interface ProductInfoProps {
   product: TrendingGiftsType;
   quantity: string;
-  validateForms: () => void;
 }
 
-function ProductInfo({ product, quantity, validateForms }: ProductInfoProps) {
+function ProductInfo({ product, quantity }: ProductInfoProps) {
   const totalPrice = product.price.sellingPrice * parseInt(quantity, 10);
-
-  const handleOrder = () => {
-    validateForms();
-    // TODO: 주문 처리 로직
-  };
 
   return (
     <ProductSection>
@@ -41,7 +35,7 @@ function ProductInfo({ product, quantity, validateForms }: ProductInfoProps) {
           </PriceContainer>
         </ProductDetails>
       </ProductContainer>
-      <OrderButton onClick={handleOrder}>
+      <OrderButton type="submit">
         {totalPrice.toLocaleString()}원 주문하기
       </OrderButton>
     </ProductSection>
