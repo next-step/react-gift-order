@@ -67,6 +67,7 @@ export const MessageTextArea = styled.textarea`
   width: 100%;
   height: 40px;
   padding: ${({ theme }) => theme.spacing[3]};
+  margin-bottom: 2.5rem;
 
   border: 1px solid ${({ theme }) => theme.colors.gray[400]};
   border-radius: ${({ theme }) => theme.borderRadius.sm};

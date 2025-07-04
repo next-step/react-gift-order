@@ -41,7 +41,11 @@ function CardSelection({
       </CardSelectorContainer>
       <CardPreviewContainer>
         <MainCardImage src={selectedCard.imageUrl} alt="selected-card" />
-        <MessageTextArea value={message} onChange={onMessageChange} />
+        <MessageTextArea
+          value={message}
+          onChange={onMessageChange}
+          placeholder="메시지를 입력해주세요."
+        />
       </CardPreviewContainer>
     </section>
   );
