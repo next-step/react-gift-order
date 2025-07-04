@@ -18,7 +18,6 @@ const StyledSendPersonContainer = styled.div`
     padding: 3px 8px;
     margin: 5px 10px;
     height: 30px;
-    ${({ theme }) => theme.typography.body1Regular}
   }
   p {
     margin: 5px 10px;
@@ -33,6 +32,7 @@ const StyledReceivePersonContainer = styled.div`
   margin-top: 10px;
   display: flex;
   flex-direction: column;
+  padding: 10px 0px;
 
   div {
     display: flex;
@@ -48,7 +48,7 @@ const StyledReceivePersonContainer = styled.div`
 `;
 
 const SyltedOrderInput = styled.input`
-  padding: 8px 12px;
+  padding: 6px 12px;
   width: 100%;
 `;
 
@@ -57,6 +57,18 @@ const StyledItemInfoContainer = styled.div`
   height: 150px;
   border: 1px black solid;
   margin-top: 10px;
+  padding: 10px 0px;
+
+  p {
+    margin: 5px 10px;
+  }
+`;
+
+const StyledOrderButton = styled.button`
+  position: fixed;
+  bottom: 0;
+  width: 720px;
+  height: 50px;
 `;
 
 const OrderContainer = () => {
@@ -67,25 +79,25 @@ const OrderContainer = () => {
         <textarea></textarea>
       </StyledOrderCardContainer>
       <StyledSendPersonContainer className='send-person'>
-        <p className='body2subtitle'>보내는 사람</p>
+        <p className='title2Bold'>보내는 사람</p>
         <input
           type='text'
-          className='send-person-name'
+          className='send-person-name body2Regular'
           placeholder='이름을 입력하세요'
         />
-        <p className='margin-left-20'>
+        <p className='margin-left-20 label2Regular'>
           * 실제 선물 발송시 발신자이름으로 반영되는 정보입니다.
         </p>
       </StyledSendPersonContainer>
       <StyledReceivePersonContainer className='receive-person'>
         <div>
-          <p>받는 사람</p>
+          <p className='title2Bold'>받는 사람</p>
         </div>
         <div>
           <p>이름</p>
           <SyltedOrderInput
             type='text'
-            className='send-person-name'
+            className='send-person-name body2Regular'
             placeholder='이름을 입력하세요'
           />
         </div>
@@ -93,7 +105,7 @@ const OrderContainer = () => {
           <p>전화번호</p>
           <SyltedOrderInput
             type='text'
-            className='send-person-name'
+            className='send-person-name body2Regular'
             placeholder='전화번호를 입력하세요'
           />
         </div>
@@ -101,16 +113,19 @@ const OrderContainer = () => {
           <p>수량</p>
           <SyltedOrderInput
             type='number'
-            className='send-person-name'
+            className='send-person-name body2Regular'
             placeholder='수량을 입력하세요'
             min='1'
           />
         </div>
       </StyledReceivePersonContainer>
       <StyledItemInfoContainer className='item-info'>
-        <p>상품 정보</p>
+        <p className='title2Bold'>상품 정보</p>
         <div></div>
       </StyledItemInfoContainer>
+      <StyledOrderButton className='order'>
+        주문하기
+      </StyledOrderButton>
     </StyledTopestDiv>
   );
 };

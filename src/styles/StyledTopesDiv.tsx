@@ -4,7 +4,7 @@ const StyledTopestDiv = styled.div`
   background-color: ${({ theme }) => theme.palette.gray200};
   width: 720px;
 
-  .title1bold {
+  .title1Bold {
     ${({ theme }) => theme.typography.title1Bold}
   }
   .title1Regular {
