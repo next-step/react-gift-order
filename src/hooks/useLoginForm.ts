@@ -38,18 +38,22 @@ export function useLoginForm() {
   const isFormValid = isEmailValid(email) && isPasswordValid(password)
 
   return {
-    email,
-    setEmail,
-    password,
-    setPassword,
-    emailError,
-    passwordError,
-    emailTouched,
-    passwordTouched,
-    validateEmail,
-    validatePassword,
-    isFormValid,
-    setEmailTouched,
-    setPasswordTouched,
+    email: {
+      value: email,
+      change: setEmail,
+      error: emailError,
+      touched: emailTouched,
+      onBlur: () => setEmailTouched(true),
+      validate: validateEmail,
+    },
+    password: {
+      value: password,
+      change: setPassword,
+      error: passwordError,
+      touched: passwordTouched,
+      onBlur: () => setPasswordTouched(true),
+      validate: validatePassword,
+    },
+    validForm: isFormValid,
   }
 }

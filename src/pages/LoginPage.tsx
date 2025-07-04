@@ -8,28 +8,14 @@ export function LoginPage() {
   const location = useLocation()
   const from = location.state?.from?.pathname || '/'
 
-  const {
-    email,
-    setEmail,
-    password,
-    setPassword,
-    emailError,
-    passwordError,
-    emailTouched,
-    passwordTouched,
-    validateEmail,
-    validatePassword,
-    isFormValid,
-    setEmailTouched,
-    setPasswordTouched,
-  } = useLoginForm()
+  const { email, password, validForm } = useLoginForm()
 
   const submitLoginForm = (e: React.FormEvent) => {
     e.preventDefault()
-    validateEmail(email)
-    validatePassword(password)
+    email.validate(email.value)
+    password.validate(password.value)
 
-    if (isFormValid) {
+    if (validForm) {
       navigate(from, { replace: true })
     }
   }
@@ -43,42 +29,44 @@ export function LoginPage() {
           <Input
             type="email"
             placeholder="이메일"
-            value={email}
+            value={email.value}
             onChange={(e) => {
               const newValue = e.target.value
-              setEmail(newValue)
+              email.change(newValue)
 
-              if (emailTouched) {
-                validateEmail(newValue)
+              if (email.touched) {
+                email.validate(newValue)
               }
             }}
             onBlur={() => {
-              setEmailTouched(true)
-              validateEmail(email)
+              email.onBlur()
+              email.validate(email.value)
             }}
           />
-          {emailTouched && emailError && <Error>{emailError}</Error>}
+          {email.touched && email.error && <Error>{email.error}</Error>}
 
           <Input
             type="password"
             placeholder="비밀번호"
-            value={password}
+            value={password.value}
             onChange={(e) => {
               const newValue = e.target.value
-              setPassword(newValue)
+              password.change(newValue)
 
-              if (passwordTouched) {
-                validatePassword(newValue)
+              if (password.touched) {
+                password.validate(newValue)
               }
             }}
             onBlur={() => {
-              setPasswordTouched(true)
-              validatePassword(password)
+              password.onBlur()
+              password.validate(password.value)
             }}
           />
-          {passwordTouched && passwordError && <Error>{passwordError}</Error>}
+          {password.touched && password.error && (
+            <Error>{password.error}</Error>
+          )}
 
-          <LoginButton type="submit" disabled={!isFormValid}>
+          <LoginButton type="submit" disabled={!validForm}>
             로그인
           </LoginButton>
         </Form>
