@@ -95,7 +95,7 @@ const validateEmail = (value: string) => {
 
 const validatePassword = (value: string) => {
   if (!value.trim()) return 'PW는 반드시 입력되어야 합니다.';
-  if (value.length >= 8) return 'PW는 최소 8글자 이상이어야 합니다.';
+  if (value.length < 8) return 'PW는 최소 8글자 이상이어야 합니다.';
 
   return '';
 };
