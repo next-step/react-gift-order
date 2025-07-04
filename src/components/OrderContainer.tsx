@@ -1,11 +1,7 @@
 import StyledTopestDiv from '@/styles/StyledTopesDiv';
 import styled from '@emotion/styled';
+import OrderCardTemplateContainer from '@components/OrderCardTemplateContainer';
 
-const StyledOrderCardContainer = styled.div`
-  width: 100%;
-  height: 300px;
-  border: 1px black solid;
-`;
 const StyledSendPersonContainer = styled.div`
   width: 100%;
   border: 1px black solid;
@@ -74,10 +70,7 @@ const StyledOrderButton = styled.button`
 const OrderContainer = () => {
   return (
     <StyledTopestDiv>
-      <StyledOrderCardContainer className='order-template-card'>
-        <div></div>
-        <textarea></textarea>
-      </StyledOrderCardContainer>
+      <OrderCardTemplateContainer />
       <StyledSendPersonContainer className='send-person'>
         <p className='title2Bold'>보내는 사람</p>
         <input
