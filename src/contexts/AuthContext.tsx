@@ -5,12 +5,21 @@ interface User {
   email: string;
 }
 
-interface AuthContextType {
-  user: User | null;
+type LoggedInState = {
+  user: User;
+  isLoggedIn: true;
   login: (email: string) => void;
   logout: () => void;
-  isLoggedIn: boolean;
-}
+};
+
+type LoggedOutState = {
+  user: null;
+  isLoggedIn: false;
+  login: (email: string) => void;
+  logout: () => void;
+};
+
+type AuthContextType = LoggedInState | LoggedOutState;
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -46,14 +55,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     sessionStorage.removeItem(SESSION_KEYS.USER);
   };
 
-  const isLoggedIn = user !== null;
-
-  const value: AuthContextType = {
-    user,
-    login,
-    logout,
-    isLoggedIn,
-  };
+  const value: AuthContextType = user
+    ? {
+        user,
+        login,
+        logout,
+        isLoggedIn: true,
+      }
+    : {
+        user: null,
+        login,
+        logout,
+        isLoggedIn: false,
+      };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
