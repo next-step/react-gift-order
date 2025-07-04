@@ -2,14 +2,12 @@ import { Global, css } from '@emotion/react';
 import 'pretendard/dist/web/static/pretendard.css';
 
 const globalStyleCss = css`
-
   html,
   body,
   #root {
     width: 100%;
     height: 100%;
   }
-
 
   body {
     min-height: 100vh;

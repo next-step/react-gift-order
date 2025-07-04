@@ -11,11 +11,9 @@ const User = styled.div`
 `;
 
 const LoginIcon = () => {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
-  return (
-    <User onClick={() => navigate('/login')} />
-  );
+  return <User onClick={() => navigate('/login')} />;
 };
 
 export default LoginIcon;
