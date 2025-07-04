@@ -11,6 +11,8 @@ import NotFoundPage from './pages/NotFoundPage';
 import MyPage from './pages/MyPage';
 import { UserManagementProvider, useUserManagement } from './pages/Login/userManagement';
 import React from 'react';
+import OrderPage from './pages/Order/OrderPage';
+
 
 const Home = () => (
   <main>
@@ -38,6 +40,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/order" element={<OrderPage />} /> {/*주문하기 페이지 구현하기 위해 추가함*/}
+
           <Route
             path="/my"
             element={
