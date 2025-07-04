@@ -1,5 +1,7 @@
+import Layout from "@/layout";
+
 function OrderPage() {
-  return <div>OrderPage</div>;
+  return <Layout></Layout>;
 }
 
 export default OrderPage;
