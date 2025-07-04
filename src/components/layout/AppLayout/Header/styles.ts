@@ -1,10 +1,13 @@
 import { css } from "@emotion/react";
 
 export const headerWrapper = () => css`
+  position: sticky;
+  top: 0;
+  z-index: 1000;
   display: flex;
   align-items: center;
   padding: 12px 16px;
-  background-color: #f5f5f5;
+  background-color: #ffffff;
 `;
 
 export const titleStyle = () => css`

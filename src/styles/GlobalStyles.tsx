@@ -22,6 +22,7 @@ const GlobalStyles = () => (
         max-width: 720px;
         margin: 0 auto;
         padding: 0 16px;
+        background-color: #f5f5f5; /* ← 추가: 전체 배경색 */
       }
       button {
         background: none;

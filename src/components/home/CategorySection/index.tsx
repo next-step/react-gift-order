@@ -7,12 +7,13 @@ import {
   imageStyle,
   nameStyle,
 } from "./styles";
+import { whiteSectionStyle } from "@/styles/CommonStyles";
 
 export default function CategorySection() {
   const theme = useTheme();
 
   return (
-    <>
+    <div css={whiteSectionStyle(theme)}>
       <h2 css={titleStyle(theme)}>선물 테마</h2>
       <div css={gridStyle}>
         {categoryData.map((item) => (
@@ -22,6 +23,6 @@ export default function CategorySection() {
           </div>
         ))}
       </div>
-    </>
+    </div>
   );
 }

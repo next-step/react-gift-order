@@ -7,13 +7,13 @@ import SupportBanner from "@/components/home/SupportBanner";
 export default function HomePage() {
   return (
     <>
-      <HorizontalSpacing size="spacing6" />
+      <HorizontalSpacing size="spacing4" />
       <FriendSelectBox />
-      <HorizontalSpacing size="spacing6" />
+      <HorizontalSpacing size="spacing4" />
       <CategorySection />
-      <HorizontalSpacing size="spacing6" />
+      <HorizontalSpacing size="spacing4" />
       <SupportBanner />
-      <HorizontalSpacing size="spacing6" />
+      <HorizontalSpacing size="spacing4" />
       <RankingSection />
     </>
   );

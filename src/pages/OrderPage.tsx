@@ -8,12 +8,13 @@ function OrderPage() {
   return (
     <>
       <GiftMessageSection />
-      <HorizontalSpacing size="spacing6" />
+      <HorizontalSpacing size="spacing3" />
       <SenderSection />
-      <HorizontalSpacing size="spacing6" />
+      <HorizontalSpacing size="spacing3" />
       <ReceiverSection />
-      <HorizontalSpacing size="spacing6" />
+      <HorizontalSpacing size="spacing3" />
       <ProductInfoSection />
+      <HorizontalSpacing size="spacing3" />
     </>
   );
 }
