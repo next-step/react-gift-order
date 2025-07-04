@@ -6,8 +6,10 @@ type Props = {
 };
 
 export default function AuthGuard({ children }: Props) {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, isInitialized } = useAuth();
   const location = useLocation();
+
+  if (!isInitialized) return null;
 
   if (!isLoggedIn) {
     return <Navigate to="/login" replace state={{ from: location.pathname }} />;
