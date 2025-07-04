@@ -107,8 +107,8 @@ const OrderButton = styled.button`
 `;
 
 const Order: React.FC = () => {
-  const [selectedId, setSelectedId] = useState<number | null>(null);
-  const [message, setMessage] = useState("");
+  const [selectedId, setSelectedId] = useState<number | null>(cardTemplates[0]?.id ?? null);
+  const [message, setMessage] = useState(cardTemplates[0]?.defaultTextMessage ?? "");
 
   const selectedCard = cardTemplates.find(card => card.id === selectedId);
 
