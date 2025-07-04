@@ -6,8 +6,8 @@ type User = {
 };
 
 type UserInfoContextType = {
-  user: User;
-  setUser: React.Dispatch<React.SetStateAction<User>>;
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
 };
 
 const UserInfoContext = createContext<UserInfoContextType | undefined>(
@@ -15,7 +15,7 @@ const UserInfoContext = createContext<UserInfoContextType | undefined>(
 );
 
 export function UserInfoProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState({ email: "", password: "" });
+  const [user, setUser] = useState<User | null>(null);
 
   return (
     <UserInfoContext.Provider value={{ user, setUser }}>
