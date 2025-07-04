@@ -15,12 +15,10 @@ export default function SignInPage() {
     const {
         isLoginButtonActive,
 
-        emailRef,
         email,
         emailError,
         emailInputProps,
 
-        passwordRef,
         password,
         passwordError,
         passwordInputProps,
@@ -33,7 +31,6 @@ export default function SignInPage() {
             <Styles.Form>
                 <Styles.FieldSet>
                     <Input
-                        ref={emailRef}
                         type="email"
                         width="100%"
                         height="44px"
@@ -46,7 +43,6 @@ export default function SignInPage() {
                 <VerticalSpacing size="16px" />
                 <Styles.FieldSet>
                     <Input
-                        ref={passwordRef}
                         type="password"
                         width="100%"
                         height="44px"

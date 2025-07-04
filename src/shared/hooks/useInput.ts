@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 export type UseInputOptions = {
     onChange?: (value: string) => void;
@@ -11,7 +11,6 @@ export const useInput = ({
     onBlur: onBlurCallback,
     onFocus: onFocusCallback,
 }: UseInputOptions) => {
-    const inputRef = useRef<HTMLInputElement | null>(null);
     const [value, setValue] = useState<string>("");
     const [errorMessage, setErrorMessage] = useState<string>("");
 
@@ -34,7 +33,6 @@ export const useInput = ({
     };
 
     return {
-        inputRef,
         value,
         setValue,
         errorMessage,

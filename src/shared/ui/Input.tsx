@@ -1,16 +1,14 @@
-import { forwardRef } from "react";
-
 import * as Styles from "@/shared/ui/Input.styled";
 
 export interface InputProps extends React.ComponentProps<"input"> {
     error?: string;
 }
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(({ error, ...props }, ref) => {
+export const Input = ({ error, ...props }: InputProps) => {
     return (
         <>
-            <Styles.InputElement type="text" ref={ref} error={error} {...props} />
+            <Styles.InputElement type="text" error={error} {...props} />
             <Styles.InputErrorMessage>{error}</Styles.InputErrorMessage>
         </>
     );
-});
+};

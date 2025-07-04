@@ -4,7 +4,6 @@ import { useInput } from "@/shared/hooks/useInput";
 
 export const useSignIn = () => {
     const {
-        inputRef: emailRef,
         value: email,
         errorMessage: emailError,
         setErrorMessage: setEmailError,
@@ -20,7 +19,6 @@ export const useSignIn = () => {
     });
 
     const {
-        inputRef: passwordRef,
         value: password,
         errorMessage: passwordError,
         setErrorMessage: setPasswordError,
@@ -38,12 +36,10 @@ export const useSignIn = () => {
     const isLoginButtonActive = email && password && !emailError && !passwordError;
 
     return {
-        emailRef,
         email,
         emailError,
         emailInputProps,
 
-        passwordRef,
         password,
         passwordError,
         passwordInputProps,
