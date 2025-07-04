@@ -13,6 +13,7 @@ export const itemStyle = css`
   flex-direction: column;
   align-items: center;
   text-align: center;
+  cursor: pointer;
 `;
 
 export const rankStyle = (theme: Theme) => css`

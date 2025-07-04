@@ -2,11 +2,16 @@ import { useState } from "react";
 import { emailInputStyle, errorTextStyle } from "./style";
 
 type EmailInputProps = {
+  value: string;
+  onChange: (value: string) => void;
   onValidityChange: (valid: boolean) => void;
 };
 
-export default function EmailInput({ onValidityChange }: EmailInputProps) {
-  const [email, setEmail] = useState("");
+export default function EmailInput({
+  value,
+  onChange,
+  onValidityChange,
+}: EmailInputProps) {
   const [error, setError] = useState("");
 
   const validateEmail = (value: string) => {
@@ -21,15 +26,15 @@ export default function EmailInput({ onValidityChange }: EmailInputProps) {
   };
 
   const handleBlur = () => {
-    const errorMessage = validateEmail(email);
+    const errorMessage = validateEmail(value);
     setError(errorMessage);
     onValidityChange(errorMessage === "");
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setEmail(value);
-    const errorMessage = validateEmail(value);
+    const newValue = e.target.value;
+    onChange(newValue);
+    const errorMessage = validateEmail(newValue);
     setError(errorMessage);
     onValidityChange(errorMessage === "");
   };
@@ -39,7 +44,7 @@ export default function EmailInput({ onValidityChange }: EmailInputProps) {
       <input
         type="email"
         placeholder="이메일"
-        value={email}
+        value={value}
         onChange={handleChange}
         onBlur={handleBlur}
         css={emailInputStyle}

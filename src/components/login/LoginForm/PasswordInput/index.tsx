@@ -2,13 +2,16 @@ import { useState } from "react";
 import { passwordInputStyle, errorTextStyle } from "./style";
 
 type PasswordInputProps = {
+  value: string;
+  onChange: (value: string) => void;
   onValidityChange: (valid: boolean) => void;
 };
 
 export default function PasswordInput({
+  value,
+  onChange,
   onValidityChange,
 }: PasswordInputProps) {
-  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const validatePassword = (value: string) => {
@@ -22,15 +25,15 @@ export default function PasswordInput({
   };
 
   const handleBlur = () => {
-    const message = validatePassword(password);
+    const message = validatePassword(value);
     setError(message);
     onValidityChange(!message);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setPassword(value);
-    const message = validatePassword(value);
+    const newValue = e.target.value;
+    onChange(newValue);
+    const message = validatePassword(newValue);
     setError(message);
     onValidityChange(message === "");
   };
@@ -40,7 +43,7 @@ export default function PasswordInput({
       <input
         type="password"
         placeholder="비밀번호"
-        value={password}
+        value={value}
         onChange={handleChange}
         onBlur={handleBlur}
         css={passwordInputStyle}
