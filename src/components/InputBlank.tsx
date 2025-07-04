@@ -1,36 +1,45 @@
 import styled from "@emotion/styled"
 import type { ComponentStyle } from "@/interfaces/ComponentStyle"
 import Text from "@/components/Text"
-import { useState } from "react"
+import theme from "@/styles/theme"
 
 const InputStyle = styled.input<ComponentStyle & { hasError?: boolean }>`
   width: ${({ width }) => width};
   height: ${({ height }) => height};
   border: none;
-  border-bottom: 1px solid ${({ hasError }) => (hasError ? "red" : "#ccc")};
+  border-bottom: 1px solid
+    ${({ hasError }) => (hasError ? theme.colors.red700 : theme.colors.gray700)};
 `
 
-interface InputBlankProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  height?: string
-  width?: string
-  message?: string
-}
+export type InputBlankProps<T> = Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  "name"
+> &
+  ComponentStyle & {
+    name: keyof T
+    message?: string
+    onBlur?: React.FocusEventHandler<HTMLInputElement>
+  }
 
-const InputBlank = (props: InputBlankProps) => {
-  const [touched, setTouched] = useState(false)
-  const hasError = touched && !!props.message
+function InputBlank<T>({
+  width,
+  height,
+  name,
+  message,
+  onBlur,
+  ...props
+}: InputBlankProps<T>) {
+  const hasError = Boolean(message)
 
   return (
     <div>
       <InputStyle
-        width={props.width}
-        height={props.height}
+        width={width}
+        height={height}
         hasError={hasError}
+        name={String(name)}
+        onBlur={onBlur}
         {...props}
-        onBlur={(e) => {
-          setTouched(true)
-          props.onBlur && props.onBlur(e)
-        }}
       />
       {hasError && (
         <Text
@@ -39,10 +48,11 @@ const InputBlank = (props: InputBlankProps) => {
           padding="spacing0"
           color="red700"
         >
-          {props.message}
+          {message}
         </Text>
       )}
     </div>
   )
 }
+
 export default InputBlank

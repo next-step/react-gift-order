@@ -8,7 +8,7 @@ export const useInput = <T extends ValueType>(
   const [data, setData] = useState(initialValue)
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
+    const { name, value } = e.target as HTMLInputElement & { name: keyof T }
     setData({ ...data, [name]: value })
   }
   return [data, onChange]
