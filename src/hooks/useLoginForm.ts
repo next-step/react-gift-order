@@ -1,10 +1,8 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 export function useLoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [emailError, setEmailError] = useState('')
-  const [passwordError, setPasswordError] = useState('')
   const [emailTouched, setEmailTouched] = useState(false)
   const [passwordTouched, setPasswordTouched] = useState(false)
 
@@ -13,29 +11,21 @@ export function useLoginForm() {
 
   const isPasswordValid = (value: string) => value.length >= 8
 
-  const validateEmail = (value: string) => {
-    setEmailTouched(true)
-    if (!value) {
-      setEmailError('ID를 입력해주세요.')
-    } else if (!isEmailValid(value)) {
-      setEmailError('ID는 이메일 형식으로 입력해주세요.')
-    } else {
-      setEmailError('')
-    }
-  }
+  const emailError = useMemo(() => {
+    if (!email) return 'ID를 입력해주세요.'
+    if (!isEmailValid(email)) return 'ID는 이메일 형식으로 입력해주세요.'
+    return ''
+  }, [email])
 
-  const validatePassword = (value: string) => {
-    setPasswordTouched(true)
-    if (!value) {
-      setPasswordError('PW를 입력해주세요.')
-    } else if (!isPasswordValid(value)) {
-      setPasswordError('PW는 최소 8글자 이상이어야 합니다.')
-    } else {
-      setPasswordError('')
-    }
-  }
+  const passwordError = useMemo(() => {
+    if (!password) return 'PW를 입력해주세요.'
+    if (!isPasswordValid(password)) return 'PW는 최소 8글자 이상이어야 합니다.'
+    return ''
+  }, [password])
 
-  const isFormValid = isEmailValid(email) && isPasswordValid(password)
+  const isFormValid = useMemo(() => {
+    return isEmailValid(email) && isPasswordValid(password)
+  }, [email, password])
 
   return {
     email: {
@@ -44,7 +34,6 @@ export function useLoginForm() {
       error: emailError,
       touched: emailTouched,
       onBlur: () => setEmailTouched(true),
-      validate: validateEmail,
     },
     password: {
       value: password,
@@ -52,7 +41,6 @@ export function useLoginForm() {
       error: passwordError,
       touched: passwordTouched,
       onBlur: () => setPasswordTouched(true),
-      validate: validatePassword,
     },
     validForm: isFormValid,
   }

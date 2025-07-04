@@ -12,8 +12,8 @@ export function LoginPage() {
 
   const submitLoginForm = (e: React.FormEvent) => {
     e.preventDefault()
-    email.validate(email.value)
-    password.validate(password.value)
+    email.onBlur()
+    password.onBlur()
 
     if (validForm) {
       navigate(from, { replace: true })
@@ -30,18 +30,8 @@ export function LoginPage() {
             type="email"
             placeholder="이메일"
             value={email.value}
-            onChange={(e) => {
-              const newValue = e.target.value
-              email.change(newValue)
-
-              if (email.touched) {
-                email.validate(newValue)
-              }
-            }}
-            onBlur={() => {
-              email.onBlur()
-              email.validate(email.value)
-            }}
+            onChange={(e) => email.change(e.target.value)}
+            onBlur={email.onBlur}
           />
           {email.touched && email.error && <Error>{email.error}</Error>}
 
@@ -49,18 +39,8 @@ export function LoginPage() {
             type="password"
             placeholder="비밀번호"
             value={password.value}
-            onChange={(e) => {
-              const newValue = e.target.value
-              password.change(newValue)
-
-              if (password.touched) {
-                password.validate(newValue)
-              }
-            }}
-            onBlur={() => {
-              password.onBlur()
-              password.validate(password.value)
-            }}
+            onChange={(e) => password.change(e.target.value)}
+            onBlur={password.onBlur}
           />
           {password.touched && password.error && (
             <Error>{password.error}</Error>
