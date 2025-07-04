@@ -13,6 +13,14 @@ const LoginForm = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    sessionStorage.setItem(
+      "kakaotech/userInfo",
+      JSON.stringify({
+        email: emailInput.value,
+      }),
+    );
+
     navigate(location.state?.from || ROUTE_PATH.HOME);
   };
 
