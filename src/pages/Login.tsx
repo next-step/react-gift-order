@@ -2,11 +2,13 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import KakaoLogo from '@/assets/kakao-logo.svg';
 import * as S from '@/pages/LoginStyle';
 import { useValidation } from '@/hooks/useValidation';
+import { useAuth } from '@/contexts/AuthContext';
 
 
 export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { login } = useAuth();
 
   const from = location.state?.from ?? '/';
 
@@ -30,9 +32,11 @@ export default function Login() {
 
 
 
-  const handleLogin = () => {
-
-    navigate(from, { replace: true });
+  const handleLogin = async () => {
+    const success = await login(email.value, password.value);
+    if (success) {
+      navigate(from, { replace: true });
+    }
   };
 
   return (

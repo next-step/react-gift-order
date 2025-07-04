@@ -3,6 +3,7 @@ import products from '@/data/products';
 import type { Product } from '@/data/products';
 import * as S from '@/components/LiveRankingStyle';
 import { FilterGender, FilterType } from '@/components/LiveRankingFilter';
+import { useNavigate } from 'react-router-dom';
 
 const genderList = [
   { label: 'All', icon: 'ALL' },
@@ -19,9 +20,9 @@ type TypeLabel = (typeof typeList)[number];
 const TrendRanking = () => {
   const [selectedGender, setSelectedGender] = useState<GenderLabel>('All');
   const [selectedType, setSelectedType] = useState<TypeLabel>('받고 싶어한');
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [visibleCount, setVisibleCount] = useState(6);
   const [isExpanded, setIsExpanded] = useState(false);
+  const navigate = useNavigate();
 
   const handleGenderClick = (label: string) => {
     setSelectedGender(label);
@@ -32,7 +33,7 @@ const TrendRanking = () => {
   };
 
   const handleProductSelect = (product: Product) => {
-    setSelectedProduct(product);
+    navigate(`/order/${product.id}`);
   };
 
   const handleToggleView = () => {
@@ -53,13 +54,9 @@ const TrendRanking = () => {
     console.log('선택된 Type:', selectedType);
   }, [selectedType]);
 
-  useEffect(() => {
-    console.log('선택된 Product:', selectedProduct);
-  }, [selectedProduct]);
-
   return (
     <S.Container>
-      <h2>실시간 급상승 선물랭킹</h2>
+      <S.RankingTitle>실시간 급상승 선물랭킹</S.RankingTitle>
 
       <S.GenderTab>
         {genderList.map(({ icon, label }) => (

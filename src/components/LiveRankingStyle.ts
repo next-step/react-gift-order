@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
+import { colors } from '@/tokens/designTokens';
 
 export const Container = styled.section`
   padding: ${theme.spacing[4]};
@@ -88,6 +89,16 @@ export const ProductItem = styled.div`
   background: ${theme.colors.semanticColor.backgroundColor.default};
   border-radius: ${theme.spacing[2]};
   padding: ${theme.spacing[1]};
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+
+  &:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+
+  p, strong {
+    color: ${colors.text};
+  }
 `;
 
 export const ProductImage = styled.img`
@@ -122,4 +133,11 @@ export const MoreButton = styled.button`
   border: 1px solid ${theme.colors.colorScale.gray[400]};
   background-color: ${theme.colors.colorScale.gray[0]};
   ${theme.typography.label1Regular};
+`;
+
+export const RankingTitle = styled.h2`
+  color: ${theme.colors.semanticColor.textColor.default};
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: ${theme.spacing[4]};
 `;

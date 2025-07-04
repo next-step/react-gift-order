@@ -1,4 +1,3 @@
-
 import styled from '@emotion/styled';
 import { spaces, colors, fontSizes } from '@/tokens/designTokens';
 
@@ -31,8 +30,6 @@ export const Input = styled.input<{ hasError?: boolean }>`
   }
 `;
 
-
-
 export const ErrorMsg = styled.div`
   height: 1.25rem;
   font-size: 0.875rem;
@@ -43,10 +40,10 @@ export const ErrorMsg = styled.div`
 export const Button = styled.button<{ disabled?: boolean }>`
   width: 80%;
   padding: ${spaces.sm};
-  background: ${colors.kakaomain};
-  color: white;
-  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+  background: ${({ disabled }) => (disabled ? colors.accent : colors.kakaomain)};
+  color: ${colors.text};
+  opacity: 1;
   cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
-
+  transition: background 0.2s;
 `;
 
