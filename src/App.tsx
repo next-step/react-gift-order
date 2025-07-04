@@ -9,18 +9,21 @@ import NavigationBar from "@/components/NavigationBar";
 import NotFound from "@/components/NotFound";
 import Layout from "@/styles/Layout.tsx";
 import MyPage from "@/components/MyPage.tsx";
+import { UserInfoProvider } from "@/context/UserInfoProvider";
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <Layout>
         <NavigationBar />
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/" element={<Main />} />
-          <Route path="/my" element={<MyPage />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <UserInfoProvider>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/" element={<Main />} />
+            <Route path="/my" element={<MyPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </UserInfoProvider>
       </Layout>
     </ThemeProvider>
   );
