@@ -1,9 +1,11 @@
+import useLoginForm from '@/hooks/useLoginForm';
 import {
   LoginTitle,
   LoginButton,
   LoginContainer,
-  LoginInput,
-  LoginPasswordInput,
+  Input,
+  ErrorContainer,
+  LoginForm,
 } from '@/styles/Login.styles';
 
 type LoginProps = {
@@ -11,12 +13,43 @@ type LoginProps = {
 };
 
 function Login({ onLogin }: LoginProps) {
+  const {
+    id,
+    pw,
+    idError,
+    pwError,
+    isValid,
+    handleIdChange,
+    handlePwChange,
+    handleIdBlur,
+    handlePwBlur,
+    isValidForm,
+  } = useLoginForm();
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!isValidForm()) return;
+    onLogin();
+  }
+
   return (
     <LoginContainer>
       <LoginTitle>KAKAO</LoginTitle>
-      <LoginInput placeholder="이메일" />
-      <LoginPasswordInput type="password" placeholder="비밀번호" />
-      <LoginButton onClick={onLogin}>로그인</LoginButton>
+      <LoginForm onSubmit={handleSubmit}>
+        <Input placeholder="이메일" value={id} onChange={handleIdChange} onBlur={handleIdBlur} />
+        {idError && <ErrorContainer>{idError}</ErrorContainer>}
+        <Input
+          type="password"
+          placeholder="비밀번호"
+          value={pw}
+          onChange={handlePwChange}
+          onBlur={handlePwBlur}
+        />
+        {pwError && <ErrorContainer>{pwError}</ErrorContainer>}
+        <LoginButton type="submit" $active={isValid}>
+          로그인
+        </LoginButton>
+      </LoginForm>
     </LoginContainer>
   );
 }
