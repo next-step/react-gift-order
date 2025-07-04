@@ -139,10 +139,52 @@ const SenderGuide = styled.div`
   margin-left: 2px;
 `;
 
+const ReceiverSection = styled.section`
+  background: #fafbfc;
+  border-radius: 12px;
+  padding: 24px 16px 16px 16px;
+  margin-bottom: 24px;
+`;
+
+const ReceiverTitle = styled.h3`
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+`;
+
+const ReceiverRow = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+`;
+
+const ReceiverLabel = styled.label`
+  width: 80px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #222;
+`;
+
+const ReceiverInput = styled.input`
+  flex: 1;
+  font-size: 1.1rem;
+  padding: 14px 16px;
+  border: 1.5px solid #d6dbe1;
+  border-radius: 12px;
+  outline: none;
+  background: #fff;
+  &::placeholder {
+    color: #b0b3ba;
+  }
+`;
+
 const Order: React.FC = () => {
   const [selectedId, setSelectedId] = useState<number | null>(cardTemplates[0]?.id ?? null);
   const [message, setMessage] = useState(cardTemplates[0]?.defaultTextMessage ?? "");
   const [sender, setSender] = useState("");
+  const [receiverName, setReceiverName] = useState("");
+  const [receiverPhone, setReceiverPhone] = useState("");
+  const [quantity, setQuantity] = useState(1);
 
   const selectedCard = cardTemplates.find(card => card.id === selectedId);
 
@@ -189,6 +231,39 @@ const Order: React.FC = () => {
         />
         <SenderGuide>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</SenderGuide>
       </SenderSection>
+      <ReceiverSection>
+        <ReceiverTitle>받는 사람</ReceiverTitle>
+        <ReceiverRow>
+          <ReceiverLabel htmlFor="receiverName">이름</ReceiverLabel>
+          <ReceiverInput
+            id="receiverName"
+            type="text"
+            placeholder="이름을 입력하세요."
+            value={receiverName}
+            onChange={e => setReceiverName(e.target.value)}
+          />
+        </ReceiverRow>
+        <ReceiverRow>
+          <ReceiverLabel htmlFor="receiverPhone">전화번호</ReceiverLabel>
+          <ReceiverInput
+            id="receiverPhone"
+            type="tel"
+            placeholder="전화번호를 입력하세요."
+            value={receiverPhone}
+            onChange={e => setReceiverPhone(e.target.value)}
+          />
+        </ReceiverRow>
+        <ReceiverRow>
+          <ReceiverLabel htmlFor="quantity">수량</ReceiverLabel>
+          <ReceiverInput
+            id="quantity"
+            type="number"
+            min={1}
+            value={quantity}
+            onChange={e => setQuantity(Number(e.target.value))}
+          />
+        </ReceiverRow>
+      </ReceiverSection>
       <OrderButton type="button" disabled={!message.trim()}>
         주문하기
       </OrderButton>
