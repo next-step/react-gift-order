@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 import { useState } from "react";
 
 type Props = {
-  onLoginSuccess: () => void;
+  onLoginSuccess: (email: string) => void;
 };
 
 export const LoginForm = ({ onLoginSuccess }: Props) => {
@@ -49,7 +49,7 @@ export const LoginForm = ({ onLoginSuccess }: Props) => {
     setPasswordError(pwErr);
 
     if (!emailErr && !pwErr) {
-      onLoginSuccess(); 
+      onLoginSuccess(email); 
     }
   };
 
@@ -89,7 +89,6 @@ export const LoginForm = ({ onLoginSuccess }: Props) => {
     </FormSection>
   );
 };
-
 
 const FormSection = styled.section`
   width: 100%;

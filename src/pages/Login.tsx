@@ -3,6 +3,7 @@ import { PageContainer } from "@/components/layout/PageContainer";
 import { LoginForm } from "@/components/login/LoginForm";
 import styled from "@emotion/styled";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Container = styled.div`
   width: 100%;
@@ -22,10 +23,13 @@ const Logo = styled.img`
 const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { login } = useAuth(); 
+
   const redirectPath = location.state?.from?.pathname || "/";
 
-  const handleLoginSuccess = () => {
-    navigate(redirectPath, { replace: true });
+  const handleLoginSuccess = (email: string) => {
+    login({ id: email, email }); 
+    navigate(redirectPath, { replace: true }); 
   };
 
   return (
