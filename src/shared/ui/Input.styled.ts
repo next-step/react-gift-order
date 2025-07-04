@@ -6,7 +6,12 @@ export const Input = styled.input<InputProps>`
     width: ${({ width }) => width || "100%"};
     height: ${({ height }) => height || "40px"};
 
-    border: 1px solid ${({ theme }) => theme.colors.gray.gray300};
+    border: 1px solid;
+    border-color: ${({ theme, error }) => {
+        if (error) return theme.colors.red.red600;
+        return theme.colors.gray.gray300;
+    }};
+
     border-radius: 8px;
 
     padding: ${({ theme }) => theme.spacing.spacing3};
