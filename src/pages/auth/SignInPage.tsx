@@ -1,5 +1,6 @@
 import kakaoLogo from "@/app/assets/kakao-logo.svg";
 
+import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useSignIn } from "@/features/auth/hooks/useSignIn";
 
 import { useRedirect } from "@/shared/hooks/useRedirect";
@@ -11,6 +12,7 @@ import * as Styles from "./SignInPage.styled";
 
 export default function SignInPage() {
     const { returnToRedirect } = useRedirect();
+    const { signIn } = useAuth();
 
     const {
         isLoginButtonActive,
@@ -23,6 +25,11 @@ export default function SignInPage() {
         passwordError,
         passwordInputProps,
     } = useSignIn();
+
+    const onSignIn = () => {
+        signIn(email.split("@")[0], email);
+        returnToRedirect();
+    };
 
     return (
         <Styles.Container>
@@ -61,7 +68,7 @@ export default function SignInPage() {
                     rounded={true}
                     width="100%"
                     height="44px"
-                    onClick={() => returnToRedirect()}
+                    onClick={onSignIn}
                 >
                     로그인
                 </Button>
