@@ -5,7 +5,7 @@ export const globalStyle = (theme: Theme) => css`
   html,
   body {
     font-family: "Pretendard Variable", sans-serif;
-    background-color: ${theme.colors.semantic.background.default};
+    background-color: ${theme.colors.semantic.background.disabled};
     color: ${theme.colors.semantic.text.default};
     line-height: 1.6;
     margin: 0;
@@ -18,6 +18,7 @@ export const globalStyle = (theme: Theme) => css`
     margin: 0 auto;
     padding: 0;
     width: 100%;
+    background-color: ${theme.colors.semantic.background.default};
   }
 
   * {
