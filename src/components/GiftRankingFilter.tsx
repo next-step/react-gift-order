@@ -71,7 +71,7 @@ export default function GiftRankingFilter() {
     getValidStoredValue(
       LOCAL_FILTER_KEY,
       filters.map(f => f.key),
-      'all'
+      filters[0].key
     )
   );
 
