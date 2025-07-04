@@ -1,6 +1,14 @@
 import { ORDER_TEMPLATE_DATA, type OrderTemplate } from '@/assets/orderTemplateData';
+import type { HasErrorProp } from '@/types/HasError';
 import styled from '@emotion/styled';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ChangeEvent } from 'react';
+
+interface OrderCardTemplateContainerProps {
+  msg: string; // msg 필드의 현재 값
+  onMsgChange: (e: ChangeEvent<HTMLTextAreaElement>) => void; // msg 입력 변경 핸들러
+  msgError?: string; // msg 필드의 에러 메시지 (선택 사항으로 처리)
+  setMsg: (value: string) => void; // useMsgForm에서 받아올 setMsg 함수 추가
+}
 
 const StyledOrderCardSideScrollConntainer = styled.div`
   display: flex;
@@ -14,13 +22,16 @@ const StyledOrderCardSideScrollConntainer = styled.div`
     margin: 3px;
     border: 3px solid transparent;
     border-radius: 10px;
+    cursor: pointer; // 클릭 가능하게
+    &.selected {
+      border-color: ${({ theme }) => theme.palette.blue500}; // 선택된 템플릿 테두리
+    }
   }
   .first-card {
     margin-left: 4px;
   }
 `;
-
-const StyledOrderCardContainer = styled.div`
+const StyledOrderCardContainer = styled.div<HasErrorProp>`
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -36,24 +47,33 @@ const StyledOrderCardContainer = styled.div`
     padding: 4px 12px;
     margin-bottom: 20px;
     border-radius: 5px;
+    border: 1px solid ${({ theme, hasError }) => (hasError ? theme.palette.red600 : theme.palette.gray300)}; // 에러 스타일 추가
+    &:focus {
+      outline: none;
+      border-color: ${({ theme, hasError }) => (hasError ? theme.palette.red600 : theme.palette.blue500)};
+    }
   }
 `;
 
 const StyledOrderTemplateContainer = styled.div`
   width: 100%;
 `;
-const OrderCardTemplateContainer = () => {
+
+const ErrorMessage = styled.p`
+  color: ${({ theme }) => theme.palette.red600};
+  font-size: 12px;
+  margin: -15px 10px 20px 10px; // textarea와 간격 조정
+`;
+
+const OrderCardTemplateContainer = ({ msg, onMsgChange, msgError, setMsg }: OrderCardTemplateContainerProps) => {
   const [selectedTemplate, setSelectedTemplate] = useState<OrderTemplate>(ORDER_TEMPLATE_DATA[0]);
-  const [textareaMessage, setTextareaMessage] = useState<string>(selectedTemplate.defaultTextMessage);
 
   useEffect(() => {
-    setTextareaMessage(selectedTemplate.defaultTextMessage);
-  }, [selectedTemplate]); // selectedTemplate가 의존성 배열에 포함되어 변경 시마다 실행
-
-  // textarea 내용이 변경될 때 호출될 핸들러
-  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setTextareaMessage(e.target.value);
-  };
+    // 현재 msg prop의 값이 선택된 템플릿의 기본 메시지와 다를 때만 업데이트
+    if (msg !== selectedTemplate.defaultTextMessage) {
+      setMsg(selectedTemplate.defaultTextMessage); // setMsg 함수 직접 호출
+    }
+  }, [selectedTemplate, msg, setMsg]); // 의존성에 setMsg 추가
 
   return (
     <StyledOrderTemplateContainer className='background-default'>
@@ -63,25 +83,23 @@ const OrderCardTemplateContainer = () => {
             key={template.id}
             src={template.thumbUrl}
             alt={`템플릿 ${template.id} 썸네일`}
-            className={`${selectedTemplate.id === template.id ? 'selected' : ''} ${index == 0 ? 'first-card' : ''}`} // 선택된 썸네일에 'selected' 클래스 추가
-            onClick={() => setSelectedTemplate(template)} // 클릭 시 메인 카드 내용 변경
+            className={`${selectedTemplate.id === template.id ? 'selected' : ''} ${index === 0 ? 'first-card' : ''}`}
+            onClick={() => setSelectedTemplate(template)}
           />
         ))}
       </StyledOrderCardSideScrollConntainer>
 
-      {/* 선택된 카드 이미지 컨테이너*/}
-      <StyledOrderCardContainer className='order-template-card'>
+      <StyledOrderCardContainer className='order-template-card' hasError={!!msgError}>
         <div className='card-image'>
-          <img
-            src={selectedTemplate.imageUrl} // imageUrl
-            alt={`메시지 카드 ${selectedTemplate.id}`}
-          />
+          <img src={selectedTemplate.imageUrl} alt={`메시지 카드 ${selectedTemplate.id}`} loading='lazy' />
         </div>
         <textarea
+          name='msg'
           className='body2Regular'
-          value={textareaMessage} // defaultTextMessage
-          onChange={handleTextareaChange}
+          value={msg}
+          onChange={onMsgChange} // 이제 handleMsgChange가 textarea 이벤트만 받도록 명확히 함
         ></textarea>
+        {msgError && <ErrorMessage>{msgError}</ErrorMessage>}
       </StyledOrderCardContainer>
     </StyledOrderTemplateContainer>
   );
