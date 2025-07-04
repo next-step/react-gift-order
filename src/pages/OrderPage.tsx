@@ -3,15 +3,22 @@ import GiftMessageSection from "@/components/order/GiftMessageSection";
 import ProductInfoSection from "@/components/order/ProductInfoSection";
 import SenderSection from "@/components/order/SenderSection";
 import ReceiverSection from "@/components/order/ReceiverSection";
+import { useOrderForm } from "@/contexts/OrderFormContext";
 
 function OrderPage() {
+  const { nameInput, phoneInput, quantityInput, senderInput } = useOrderForm();
+
   return (
     <>
       <GiftMessageSection />
       <HorizontalSpacing size="spacing3" />
-      <SenderSection />
+      <SenderSection senderInput={senderInput} />
       <HorizontalSpacing size="spacing3" />
-      <ReceiverSection />
+      <ReceiverSection
+        nameInput={nameInput}
+        phoneInput={phoneInput}
+        quantityInput={quantityInput}
+      />
       <HorizontalSpacing size="spacing3" />
       <ProductInfoSection />
       <HorizontalSpacing size="spacing3" />

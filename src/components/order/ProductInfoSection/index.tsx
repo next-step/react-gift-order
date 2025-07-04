@@ -11,12 +11,21 @@ import {
   priceStyle,
   priceValueStyle,
 } from "./styles";
+import { useEffect } from "react";
+import { useOrder } from "@/contexts/OrderContext";
 
 function ProductInfoSection() {
   const { productId } = useParams();
   const product = mockProduct.find((p) => String(p.id) === productId);
 
+  const { setProductPrice, setTotalPrice } = useOrder();
+
   if (!product) return null;
+
+  useEffect(() => {
+    setProductPrice(product.price.sellingPrice);
+    setTotalPrice(product.price.sellingPrice);
+  }, [product.price.sellingPrice]);
 
   return (
     <div css={whiteSectionStyle(theme)}>

@@ -15,7 +15,7 @@ const GiftMessageSection = () => {
   const selectedCard = cardData.find((card) => card.id === selectedCardId);
 
   const [message, setMessage] = useState(
-    selectedCard?.defaultTextMessage ?? ""
+    selectedCard?.defaultTextMessage ?? "메시지를 입력해주세요"
   );
 
   useEffect(() => {

@@ -1,19 +1,16 @@
+import { useOrder } from "@/contexts/OrderContext";
+import { orderSubmitBarStyle } from "./styles";
+import { useOrderForm } from "@/contexts/OrderFormContext";
+
 function OrderSubmitBar() {
+  const { triggerValidation } = useOrderForm();
+  const { totalPrice } = useOrder();
+  const handleClick = () => {
+    triggerValidation();
+  };
   return (
-    <div
-      style={{
-        position: "sticky",
-        bottom: 0,
-        width: "100%",
-        backgroundColor: "#FFD600",
-        padding: "16px",
-        textAlign: "center",
-        fontWeight: "bold",
-        fontSize: 16,
-        color: "#000",
-      }}
-    >
-      0원 주문하기
+    <div css={orderSubmitBarStyle} onClick={handleClick}>
+      {totalPrice}원 주문하기
     </div>
   );
 }
