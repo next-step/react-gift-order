@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import NotFoundPage from './pages/NotFoundPage';
 import { AuthProvider } from './contexts/AuthContext';
 import MyPage from './pages/MyPage';
+import Order from './pages/order';
 
 const containerStyle = css`
   max-width: 720px;
@@ -30,6 +31,7 @@ const App = () => {
               <Route path="/login" element={<Login />} />
               <Route path="*" element={<NotFoundPage />} />
               <Route path="/my" element={<MyPage />} />
+              <Route path="/order" element={<Order />} />
             </Routes>
           </BrowserRouter>
         </AuthProvider>

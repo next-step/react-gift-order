@@ -1,6 +1,6 @@
 // src/pages/MyPage.tsx
 import styled from '@emotion/styled';
-import { Header } from '../components/Header';
+import { Header } from '../components/common/Header';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 

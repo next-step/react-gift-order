@@ -2,15 +2,14 @@
 import styled from '@emotion/styled';
 import { FiArrowLeft, FiUser } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 const HeaderContainer = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  border-bottom: 1px solid
-    ${({ theme }) => theme.colors.borderDefault};
+
   background-color: ${({ theme }) => theme.colors.backgroundDefault};
 `;
 
