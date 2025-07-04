@@ -53,10 +53,16 @@ const SyltedOrderInput = styled.input`
 const StyledOrderButton = styled.button`
   position: fixed;
   bottom: 0;
-  width: 720px;
+  width: 100%;
   height: 50px;
   border: none;
   background-color: ${({ theme }) => theme.sementicPalette.kakaoYellow};
+  color: black;
+  font-weight: bold;
+  font-size: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 720px;
 `;
 
 const StyledItemInfoContainer = styled.div`
@@ -88,20 +94,28 @@ const StyledItemInfoContainer = styled.div`
 `;
 
 const OrderContainer = () => {
-  const [searchParams] = useSearchParams(); // 쿼리 파라미터
-  const [selectedProduct, setSelectedProduct] = useState<Goods | null>(null); // 선택된 상품 상태 관리
+  const [searchParams] = useSearchParams();
+  const [selectedProduct, setSelectedProduct] = useState<Goods | null>(null);
+  // 수량
+  const [quantity, setQuantity] = useState<number>(1);
+
+  // 총 금액
+  const totalPrice = selectedProduct ? selectedProduct.price.sellingPrice * quantity : 0;
 
   useEffect(() => {
-    const productId = searchParams.get('productId'); // URL에서 productId 값 가져오기
+    const productId = searchParams.get('productId');
     if (productId) {
-      // GOODS_DATA에서 해당 ID를 가진 상품 찾기
       const foundProduct = GOODS_DATA.find((item: Goods) => item.id.toString() === productId);
-      setSelectedProduct(foundProduct || null); // 찾았으면 설정, 없으면 null
+      setSelectedProduct(foundProduct || null);
     } else {
-      // productId가 없을 경우 기본값 설정 (예: GOODS_DATA의 첫 번째 상품)
       setSelectedProduct(GOODS_DATA.length > 0 ? GOODS_DATA[0] : null);
     }
-  }, [searchParams]); // searchParams가 변경될 때마다 useEffect 재실행
+  }, [searchParams]);
+
+  const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value, 10);
+    setQuantity(isNaN(value) || value < 1 ? 1 : value);
+  };
 
   return (
     <StyledTopestDiv>
@@ -125,7 +139,14 @@ const OrderContainer = () => {
         </div>
         <div>
           <p>수량</p>
-          <SyltedOrderInput type='number' className='send-person-name body2Regular' placeholder='수량을 입력하세요' min='1' />
+          <SyltedOrderInput
+            type='number'
+            className='send-person-name body2Regular'
+            placeholder='수량을 입력하세요'
+            min='1'
+            value={quantity} // value 속성을 quantity 상태와 연결
+            onChange={handleQuantityChange} // 변경 핸들러
+          />
         </div>
       </StyledReceivePersonContainer>
 
@@ -149,7 +170,9 @@ const OrderContainer = () => {
         )}
       </StyledItemInfoContainer>
 
-      <StyledOrderButton className='order body1Bold'>주문하기</StyledOrderButton>
+      <StyledOrderButton className='order body1Bold'>
+        {selectedProduct ? `(${totalPrice.toLocaleString()}원) 구매하기 ` : '상품을 선택해주세요'}
+      </StyledOrderButton>
       <Spacer />
     </StyledTopestDiv>
   );
