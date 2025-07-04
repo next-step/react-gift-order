@@ -10,7 +10,7 @@ export default function AuthGuard({ children }: Props) {
   const location = useLocation();
 
   if (!isLoggedIn) {
-    return <Navigate to="/login" replace state={{ from: location }} />;
+    return <Navigate to="/login" replace state={{ from: location.pathname }} />;
   }
 
   return <>{children}</>;

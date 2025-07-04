@@ -35,6 +35,7 @@ export const RankingGrid = ({ gender, tab }: RankingGridProps) => {
             price={item.price.sellingPrice}
             brandName={item.brandInfo.name}
             brandImageURL={item.brandInfo.imageURL}
+            productId={item.id}
           />
         ))}
       </Grid>

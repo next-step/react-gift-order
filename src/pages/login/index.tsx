@@ -9,15 +9,14 @@ export default function LoginPage() {
   const location = useLocation();
   const { login, isLoggedIn } = useAuth();
 
-  const from = location.state?.from?.pathname || "/";
-
-  if (isLoggedIn) {
-    return <Navigate to="/my" replace />;
-  }
+  const locationState = location.state as { from?: string } | null;
+  const from = location.state?.from || "/";
+  console.log(isLoggedIn, locationState, "ㅁㄴㅇㄹ");
+  console.log(isLoggedIn, !locationState?.from);
 
   const handleLogin = (user: User) => {
     login(user);
-    navigate(from ?? "/", { replace: true });
+    navigate(from, { replace: true });
   };
 
   return (

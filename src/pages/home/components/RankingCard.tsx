@@ -1,4 +1,6 @@
+import { useAuth } from "@/hooks/useAuth";
 import styled from "@emotion/styled";
+import { useLocation, useNavigate } from "react-router-dom";
 
 type RankingCardProps = {
   rank: number;
@@ -7,6 +9,7 @@ type RankingCardProps = {
   price: number;
   brandName: string;
   brandImageURL: string;
+  productId: number;
 };
 
 export const RankingCard = ({
@@ -16,9 +19,23 @@ export const RankingCard = ({
   price,
   brandName,
   brandImageURL,
+  productId,
 }: RankingCardProps) => {
+  const { isLoggedIn } = useAuth();
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (!isLoggedIn) {
+      navigate("/login", {
+        state: { from: `/order/${productId}` },
+      });
+    } else {
+      navigate(`/order/${productId}`);
+    }
+  };
+
   return (
-    <Card>
+    <Card onClick={handleClick}>
       <ImageWrapper>
         <ProductImage src={imageURL} alt={name} />
         <RankBadge>{rank}위</RankBadge>
@@ -38,6 +55,7 @@ export const RankingCard = ({
 const Card = styled.div`
   display: flex;
   flex-direction: column;
+  cursor: pointer;
 `;
 
 const ImageWrapper = styled.div`
