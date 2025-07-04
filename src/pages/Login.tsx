@@ -67,7 +67,9 @@ const Login = () => {
   const isActivatedBtn = email.isValid && password.isValid;
   const handleLoginClick = () => {
     if (isActivatedBtn) {
+      password.reset()
       navigate("/");
+      
     }
   };
   return (
