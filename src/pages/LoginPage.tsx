@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { NavigationHeader } from '@/components/NavigationHeader';
 import { LoginForm } from '@/components/LoginForm';
 import { theme } from '@/styles/theme';
+import { useAuth } from '@/contexts/AuthContext';
 
 const AppContainer = styled.div`
   min-height: 100vh;
@@ -31,12 +32,18 @@ const MobileViewport = styled.div`
 `;
 
 export default function LoginPage() {
+  const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleRedirect = (replace: boolean = true) => {
     const from = location.state?.from || '/';
     navigate(from, { replace });
+  };
+
+  const handleLogin = (email: string, password: string) => {
+    login({ email });
+    handleRedirect(true);
   };
 
   return (
@@ -46,7 +53,7 @@ export default function LoginPage() {
           title="선물하기"
           onBackClick={() => handleRedirect(false)}
         />
-        <LoginForm onSubmit={() => handleRedirect(true)} />
+        <LoginForm onSubmit={handleLogin} />
       </MobileViewport>
     </AppContainer>
   );
