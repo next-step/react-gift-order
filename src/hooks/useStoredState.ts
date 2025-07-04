@@ -7,7 +7,11 @@ export default function useStoredState<T>(key: string, initialValue: T) {
   });
 
   useEffect(() => {
-    sessionStorage.setItem(key, JSON.stringify(value));
+    if (value === false || value === null) {
+      sessionStorage.removeItem(key);
+    } else {
+      sessionStorage.setItem(key, JSON.stringify(value));
+    }
   }, [key, value]);
 
   return [value, setValue] as const;
