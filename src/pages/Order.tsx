@@ -277,6 +277,9 @@ const Order: React.FC = () => {
   const [quantity, setQuantity] = useState(1);
   const [messageError, setMessageError] = useState("");
   const [senderError, setSenderError] = useState("");
+  const [receiverNameError, setReceiverNameError] = useState("");
+  const [receiverPhoneError, setReceiverPhoneError] = useState("");
+  const [quantityError, setQuantityError] = useState("");
 
   const selectedCard = cardTemplates.find(card => card.id === selectedId);
 
@@ -300,7 +303,29 @@ const Order: React.FC = () => {
     } else {
       setSenderError("");
     }
-    // TODO: 다음 유효성 검사 및 주문 처리
+    if (!receiverName.trim()) {
+      setReceiverNameError("받는 사람 이름을 입력해주세요.");
+      return;
+    } else {
+      setReceiverNameError("");
+    }
+    if (!receiverPhone.trim()) {
+      setReceiverPhoneError("전화번호를 입력해주세요.");
+      return;
+    } else if (!/^010\d{8}$/.test(receiverPhone)) {
+      setReceiverPhoneError("전화번호는 010으로 시작하는 11자리 숫자여야 합니다.");
+      return;
+    } else {
+      setReceiverPhoneError("");
+    }
+    if (!quantity || quantity < 1) {
+      setQuantityError("수량은 1개 이상이어야 합니다.");
+      return;
+    } else {
+      setQuantityError("");
+    }
+    // TODO: 실제 주문 처리
+    console.log({ message, sender, receiverName, receiverPhone, quantity, product });
   };
 
   return (
@@ -356,9 +381,13 @@ const Order: React.FC = () => {
             type="text"
             placeholder="이름을 입력하세요."
             value={receiverName}
-            onChange={e => setReceiverName(e.target.value)}
+            onChange={e => {
+              setReceiverName(e.target.value);
+              if (receiverNameError) setReceiverNameError("");
+            }}
           />
         </ReceiverRow>
+        {receiverNameError && <ErrorMessage>{receiverNameError}</ErrorMessage>}
         <ReceiverRow>
           <ReceiverLabel htmlFor="receiverPhone">전화번호</ReceiverLabel>
           <ReceiverInput
@@ -366,9 +395,13 @@ const Order: React.FC = () => {
             type="tel"
             placeholder="전화번호를 입력하세요."
             value={receiverPhone}
-            onChange={e => setReceiverPhone(e.target.value)}
+            onChange={e => {
+              setReceiverPhone(e.target.value);
+              if (receiverPhoneError) setReceiverPhoneError("");
+            }}
           />
         </ReceiverRow>
+        {receiverPhoneError && <ErrorMessage>{receiverPhoneError}</ErrorMessage>}
         <ReceiverRow>
           <ReceiverLabel htmlFor="quantity">수량</ReceiverLabel>
           <ReceiverInput
@@ -376,9 +409,13 @@ const Order: React.FC = () => {
             type="number"
             min={1}
             value={quantity}
-            onChange={e => setQuantity(Number(e.target.value))}
+            onChange={e => {
+              setQuantity(Number(e.target.value));
+              if (quantityError) setQuantityError("");
+            }}
           />
         </ReceiverRow>
+        {quantityError && <ErrorMessage>{quantityError}</ErrorMessage>}
       </ReceiverSection>
       <ProductSection>
         <ProductTitle>상품 정보</ProductTitle>
@@ -397,7 +434,7 @@ const Order: React.FC = () => {
       </ProductSection>
       <PageWrapper>
         <FixedFooter>
-          <OrderButton type="button" onClick={handleOrder} disabled={!message.trim()}>
+          <OrderButton type="button" onClick={handleOrder}>
             주문하기
           </OrderButton>
         </FixedFooter>
