@@ -1,6 +1,8 @@
 import { GOODS_DATA } from '@/assets/goodsData';
 import type { Goods } from '@/assets/goodsData';
+import { URLS } from '@/assets/urls';
 import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom';
 const BASIC_RANKING_COMPONENT_NUMBER = 6;
 const MANY_RANKING_COMPONENT_NUMBER = 18;
 
@@ -43,10 +45,11 @@ const StyledPresentRankingNumContainer = styled.div<{ index: number }>`
 const PresentItem = ({ isVisible }: { isVisible: boolean }) => {
   const repeatCnt = isVisible ? MANY_RANKING_COMPONENT_NUMBER : BASIC_RANKING_COMPONENT_NUMBER;
   const repeatItems = Array.from({ length: repeatCnt }, (_, i) => GOODS_DATA[i % GOODS_DATA.length]);
+  const navigate = useNavigate();
   return (
     <>
       {repeatItems.map((item: Goods, index: number) => (
-        <div key={index}>
+        <div key={index} onClick={() => navigate(URLS.order + index)} style={{ cursor: 'pointer' }}>
           <StyledPresentRankingItemDiv>
             <StyledPresentRankingNumContainer index={index + 1}>{index + 1}</StyledPresentRankingNumContainer>
             <StyledPresentRankingItemImage src={item.imageURL} alt='제품 이미지' />
