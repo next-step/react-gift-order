@@ -2,32 +2,31 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface LoginContextType {
     isLoggedIn: boolean;
-    login: (token: string) => void;
+    userId: string | null;
+    login: (userId: string) => void;
     logout: () => void;
 }
 
 const LoginContext = createContext<LoginContextType | undefined>(undefined);
 
 export const LoginProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(() => !!localStorage.getItem('userId'));
+    const [userId, setUserId] = useState<string | null>(() => localStorage.getItem('userId'));
 
-    useEffect(() => {
-        const token = sessionStorage.getItem('authToken');
-        if (token) setIsLoggedIn(true);
-    }, []);
-
-    const login = (token: string) => {
-        sessionStorage.setItem('authToken', token);
+    const login = (newUserId: string) => {
+        localStorage.setItem('userId', newUserId);
         setIsLoggedIn(true);
+        setUserId(newUserId);
     };
 
     const logout = () => {
-        sessionStorage.removeItem('authToken');
+        localStorage.removeItem('userId');
         setIsLoggedIn(false);
+        setUserId(null);
     };
 
     return (
-        <LoginContext.Provider value={{ isLoggedIn, login, logout }}>
+        <LoginContext.Provider value={{ isLoggedIn, userId, login, logout }}>
             {children}
         </LoginContext.Provider>
     );

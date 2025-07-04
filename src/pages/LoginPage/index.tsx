@@ -1,19 +1,13 @@
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Container, Logo, Input, LoginButton, ErrorMessage, InputWrapper } from './styles'
 import LogoIcon from '@/assets/logo.svg';
 import { useLoginForm } from './useLoginForm';
 import { PATH } from '@/constants/paths';
 import { useLogin } from '@/contexts/LoginContext';
 
-interface LocationState {
-  from?: string;
-}
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { state } = useLocation<LocationState>();
-  const from = state?.from || PATH.MY_PAGE;
-  const { login, isLoggedIn } = useLogin();
+  const { login } = useLogin();
   const {
     email,
     pw,
@@ -26,15 +20,10 @@ const LoginPage = () => {
     handlePwChange,
   } = useLoginForm();
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      navigate(from, { replace: true });
-    }
-  }, [isLoggedIn, navigate, from]);
-
   const handleLogin = () => {
     if (isValid) {
-      login('token');
+      login(email);
+      navigate(PATH.HOME, { replace: true });
     }
   };
 

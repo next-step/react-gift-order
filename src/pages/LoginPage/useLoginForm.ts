@@ -55,6 +55,8 @@ export const useLoginForm = (): LoginFormState => {
         pwError,
         emailTouched,
         pwTouched,
+        setEmail,
+        setPw,
         isValid,
         handleEmailChange,
         handlePwChange,
