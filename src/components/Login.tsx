@@ -19,6 +19,8 @@ const Login = () => {
     return password.length >= 8;
   };
 
+  const [isLogin, setIsLogin] = useState(false);
+
   function useValidate(
     validator: (value: string) => boolean,
     errorMessage: string
@@ -79,8 +81,7 @@ const Login = () => {
           if (isFormValid) {
             sessionStorage.setItem("email", email.string);
             sessionStorage.setItem("password", password.string);
-          } else {
-            navigate("/");
+            navigate("/my");
           }
         }}
         ref={ref}

@@ -8,6 +8,7 @@ import Main from "@/components/Main.tsx";
 import NavigationBar from "@/components/NavigationBar";
 import NotFound from "@/components/NotFound";
 import Layout from "@/styles/Layout.tsx";
+import MyPage from "@/components/MyPage.tsx";
 
 function App() {
   return (
@@ -16,14 +17,8 @@ function App() {
         <NavigationBar />
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route
-            path="/"
-            element={
-              <>
-                <Main />
-              </>
-            }
-          />
+          <Route path="/" element={<Main />} />
+          <Route path="/my" element={<MyPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Layout>
