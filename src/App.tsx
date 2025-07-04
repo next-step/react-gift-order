@@ -2,13 +2,16 @@ import { ThemeProvider } from '@emotion/react';
 import { BrowserRouter } from 'react-router-dom';
 import { theme } from './theme/theme';
 import { Routes } from './routes/Routes';
+import { AuthProvider } from './contexts/AuthContext';
 
 const App = () => {
   return (
     <BrowserRouter>
-      <ThemeProvider theme={theme}>
-        <Routes />
-      </ThemeProvider>
+      <AuthProvider>
+        <ThemeProvider theme={theme}>
+          <Routes />
+        </ThemeProvider>
+      </AuthProvider>
     </BrowserRouter>
   );
 };
