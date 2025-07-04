@@ -26,7 +26,7 @@ const FilterButton = styled.button<{ active: boolean }>`
 `;
 
 interface FilterButtonsProps {
-  filters: Filter[];
+  filters: readonly Filter[];
   activeFilter: string;
   onFilterChange: (filterId: string) => void;
 }
