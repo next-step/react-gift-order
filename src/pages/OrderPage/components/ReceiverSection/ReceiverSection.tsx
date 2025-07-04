@@ -1,5 +1,6 @@
 import Input from "@/components/common/Input/Input";
 import styled from "@emotion/styled";
+import RECEIVER_SECTION_CONSTANTS from "@/pages/OrderPage/constants/receiverSection";
 
 interface ReceiverSectionProps {
   receiverName: string;
@@ -73,48 +74,56 @@ function ReceiverSectionComponent({
 }: ReceiverSectionProps) {
   return (
     <ReceiverSection>
-      <SectionTitle>받는 사람</SectionTitle>
+      <SectionTitle>{RECEIVER_SECTION_CONSTANTS.TITLE}</SectionTitle>
       <FormContainer>
         <FormField>
-          <FieldLabel>이름</FieldLabel>
+          <FieldLabel>{RECEIVER_SECTION_CONSTANTS.NAME_LABEL}</FieldLabel>
           <Input
             type="text"
-            placeholder="이름을 입력하세요."
+            placeholder={RECEIVER_SECTION_CONSTANTS.NAME_PLACEHOLDER}
             value={receiverName}
             onChange={(e) => {
               handleReceiverNameChange(e.target.value);
               validateReceiverName(e.target.value);
             }}
             hasError={hasReceiverNameError}
-            errorMessage={receiverNameErrorMessage || undefined}
+            errorMessage={
+              receiverNameErrorMessage || RECEIVER_SECTION_CONSTANTS.NAME_ERROR
+            }
           />
         </FormField>
         <FormField>
-          <FieldLabel>전화번호</FieldLabel>
+          <FieldLabel>{RECEIVER_SECTION_CONSTANTS.PHONE_LABEL}</FieldLabel>
           <Input
             type="tel"
-            placeholder="전화번호를 입력하세요."
+            placeholder={RECEIVER_SECTION_CONSTANTS.PHONE_PLACEHOLDER}
             value={receiverPhone}
             onChange={(e) => {
               handleReceiverPhoneChange(e.target.value);
               validateReceiverPhone(e.target.value);
             }}
             hasError={hasReceiverPhoneError}
-            errorMessage={receiverPhoneErrorMessage || undefined}
+            errorMessage={
+              receiverPhoneErrorMessage ||
+              RECEIVER_SECTION_CONSTANTS.PHONE_ERROR
+            }
           />
         </FormField>
         <FormField>
-          <FieldLabel>수량</FieldLabel>
+          <FieldLabel>{RECEIVER_SECTION_CONSTANTS.QUANTITY_LABEL}</FieldLabel>
           <Input
             type="number"
             min="1"
+            placeholder={RECEIVER_SECTION_CONSTANTS.QUANTITY_PLACEHOLDER}
             value={quantity}
             onChange={(e) => {
               handleQuantityChange(e.target.value);
               validateQuantity(e.target.value);
             }}
             hasError={hasQuantityError}
-            errorMessage={quantityErrorMessage || undefined}
+            errorMessage={
+              quantityErrorMessage || RECEIVER_SECTION_CONSTANTS.QUANTITY_ERROR
+            }
           />
         </FormField>
       </FormContainer>

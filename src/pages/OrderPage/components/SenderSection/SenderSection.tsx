@@ -1,5 +1,6 @@
 import Input from "@/components/common/Input/Input";
 import styled from "@emotion/styled";
+import SENDER_SECTION_CONSTANTS from "@/pages/OrderPage/constants/senderSection";
 
 interface SenderSectionProps {
   senderName: string;
@@ -46,13 +47,15 @@ function SenderSectionComponent({
 }: SenderSectionProps) {
   return (
     <SendSection>
-      <SectionTitle>보내는 사람</SectionTitle>
+      <SectionTitle>{SENDER_SECTION_CONSTANTS.TITLE}</SectionTitle>
       <SendForm>
         <Input
           hasError={hasSenderNameError}
-          errorMessage={senderNameErrorMessage || undefined}
+          errorMessage={
+            senderNameErrorMessage || SENDER_SECTION_CONSTANTS.NAME_ERROR
+          }
           type="text"
-          placeholder="이름을 입력해주세요"
+          placeholder={SENDER_SECTION_CONSTANTS.NAME_PLACEHOLDER}
           value={senderName}
           onChange={(e) => {
             handleSenderNameChange(e.target.value);
@@ -60,9 +63,7 @@ function SenderSectionComponent({
           }}
         />
         {!hasSenderNameError && (
-          <InputLabel>
-            * 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다
-          </InputLabel>
+          <InputLabel>{SENDER_SECTION_CONSTANTS.INFO_LABEL}</InputLabel>
         )}
       </SendForm>
     </SendSection>

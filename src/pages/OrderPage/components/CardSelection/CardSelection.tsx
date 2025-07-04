@@ -10,6 +10,7 @@ import {
   MessageTextAreaContainer,
 } from "./CardSelection.styles";
 import type { OrderCardType } from "@/types/OrderCardType";
+import CARD_SELECTION_CONSTANTS from "@/pages/OrderPage/constants/cardSelection";
 
 interface CardSelectionProps {
   cards: OrderCardType[];
@@ -51,11 +52,13 @@ function CardSelection({
           <MessageTextArea
             value={message}
             onChange={(e) => onMessageChange(e.target.value)}
-            placeholder="메시지를 입력해주세요."
+            placeholder={CARD_SELECTION_CONSTANTS.MESSAGE_PLACEHOLDER}
             hasError={hasCardSelectionError}
           />
           {hasCardSelectionError && cardSelectionErrorMessage && (
-            <FormErrorMessage errorMessage={cardSelectionErrorMessage} />
+            <FormErrorMessage
+              errorMessage={CARD_SELECTION_CONSTANTS.MESSAGE_ERROR}
+            />
           )}
         </MessageTextAreaContainer>
       </CardPreviewContainer>
