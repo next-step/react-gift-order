@@ -12,7 +12,7 @@ import MyPage from './pages/MyPage';
 import { UserManagementProvider, useUserManagement } from './pages/Login/userManagement';
 import React from 'react';
 import OrderPage from './pages/Order/OrderPage';
-
+import ScrollToTop from './components/ScrollToTop';
 
 const Home = () => (
   <main>
@@ -36,12 +36,12 @@ function App() {
   return (
     <BrowserRouter>
       <UserManagementProvider>
+        <ScrollToTop />
         <NavBar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/order" element={<OrderPage />} /> {/*주문하기 페이지 구현하기 위해 추가함*/}
-
+          <Route path="/order" element={<OrderPage />} />
           <Route
             path="/my"
             element={

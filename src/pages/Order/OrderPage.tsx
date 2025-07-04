@@ -1,7 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { useTheme } from '@emotion/react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { mockItems } from '../../data/mockItems';
 import { cardTemplates } from '../../data/cardTemplates';
 import {
@@ -21,12 +20,12 @@ import {
   sectionStyle,
   receiverLabelStyle,
   helperTextStyle,
+  errorInputStyle,
+  errorMessageStyle,
 } from './OrderPage.style';
-import { css } from '@emotion/react';
 
 const OrderPage = () => {
   const theme = useTheme();
-  const navigate = useNavigate();
 
   const [selectedCard, setSelectedCard] = useState(cardTemplates[0]);
   const [message, setMessage] = useState(cardTemplates[0].defaultTextMessage);
@@ -76,16 +75,6 @@ const OrderPage = () => {
     setSelectedCard(card);
     setMessage(card.defaultTextMessage);
   };
-
-  const errorInputStyle = css`
-    border-color: red !important;
-  `;
-
-  const errorMessageStyle = css`
-    color: red;
-    font-size: 12px;
-    margin-top: 4px;
-  `;
 
   return (
     <div css={containerStyle(theme)}>
