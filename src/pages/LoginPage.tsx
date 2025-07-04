@@ -32,7 +32,7 @@ const LoginPage = () => {
       return;
     }
     login(email);
-    navigate(from, { replace: true });
+    navigate("/my");
   };
 
   const emailValidation = (value: string) => {

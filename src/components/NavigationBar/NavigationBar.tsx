@@ -8,9 +8,7 @@ export default function NavigationBar() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { isLoggedIn, userEmail } = useAuth();
-  console.log("로그인 상태:", isLoggedIn);
-  console.log("userEmail:", userEmail);
+  const { isLoggedIn } = useAuth();
 
   const handleBack = () => {
     const isInternalReferrer = document.referrer.includes(window.location.host);
@@ -20,12 +18,21 @@ export default function NavigationBar() {
       navigate(-1);
     }
   };
-  const handleLogin = () => navigate("/login", { state: { from: location } });
+  const handleLogin = () => {
+    if (isLoggedIn) {
+      navigate("/my");
+    } else {
+      navigate("/login", { state: { from: location } });
+    }
+  };
+  const handleTitleClick = () => {
+    navigate("/");
+  };
 
   return (
     <NavBar>
       <BackButton onClick={handleBack}>←</BackButton>
-      <NavTitle>선물하기</NavTitle>
+      <NavTitle onClick={handleTitleClick}>선물하기</NavTitle>
       <LoginButton onClick={handleLogin}>
         <MyPageIcon />
       </LoginButton>
@@ -48,10 +55,13 @@ const BackButton = styled.div`
   color: ${({ theme }) => theme.colors.gray1000};
 `;
 
-const NavTitle = styled.div`
+const NavTitle = styled.button`
   font-size: ${({ theme }) => theme.typography.title1Regular.fontSize};
   font-weight: bold;
   color: ${({ theme }) => theme.colors.gray1000};
+  background: none;
+  border: none;
+  cursor: pointer;
 `;
 
 const LoginButton = styled.button`

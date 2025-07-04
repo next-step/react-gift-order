@@ -10,6 +10,7 @@ import RisingSection from "@/components/RisingSection/RisingSection";
 import { Routes, Route } from "react-router-dom";
 import LoginPage from "@/pages/LoginPage";
 import NotFoundPage from "@/pages/NotFoundPage";
+import MyPage from "@/pages/MyPage";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
             }
           />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/my" element={<MyPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Layout>
