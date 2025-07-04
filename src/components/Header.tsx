@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { IoArrowBackOutline, IoPersonOutline } from 'react-icons/io5';
 import { colors, spaces, fontSizes } from '@/tokens/designTokens';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Wrap = styled.header`
   display: flex;
@@ -34,22 +35,19 @@ const IconButton = styled.button`
 export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuth();
 
   const handleBackClick = () => {
-
     navigate(-1);
   };
 
-
   const handleLoginClick = () => {
-
-    navigate('/login', { state: { from: location.pathname } });
+    if (user) {
+      navigate('/my');
+    } else {
+      navigate('/login', { state: { from: location.pathname } });
+    }
   };
-
-
-
-
-
 
   return (
     <Wrap>
