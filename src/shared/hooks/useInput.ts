@@ -16,7 +16,6 @@ export const useInput = ({
 
     const onBlur: React.FocusEventHandler<HTMLInputElement> = (event) => {
         const target = event.currentTarget;
-        if (target.value !== value) setValue(target.value);
         if (onBlurCallback) onBlurCallback(target.value);
     };
 
@@ -28,7 +27,6 @@ export const useInput = ({
 
     const onFocus: React.FocusEventHandler<HTMLInputElement> = (event) => {
         const target = event.currentTarget;
-        if (target.value !== value) setValue(target.value);
         if (onFocusCallback) onFocusCallback(target.value);
     };
 
