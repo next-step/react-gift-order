@@ -1,11 +1,8 @@
 import {
-  Item,
-  ItemBrand,
-  ItemImage,
-  ItemName, ItemPrice,
   ItemTitle,
   ItemWrapper,
 } from '@/components/Order/ItemInfo/ItemInfo.style.ts';
+import Item from "@/components/Common/OrderProductImage/OrerProductImage.tsx"
 
 export default function ItemInfo({ id }) {
   const list = JSON.parse(localStorage.getItem('expandedList') || '[]');
@@ -14,17 +11,12 @@ export default function ItemInfo({ id }) {
   return (
     <ItemWrapper>
       <ItemTitle>상품 정보</ItemTitle>
-      <Item>
-        <ItemImage>
-          <img src={data.imageURL} alt='사진' />
-        </ItemImage>
-
-        <div>
-          <ItemName>{data.name}</ItemName>
-          <ItemBrand>{data.brandInfo.name}</ItemBrand>
-          <ItemPrice><span>상품가</span> {data.price.sellingPrice}원</ItemPrice>
-        </div>
-      </Item>
+      <Item
+        image={data.imageURL}
+        name={data.name}
+        brand={data.brandInfo.name}
+        price={data.price.sellingPrice}
+      />
     </ItemWrapper>
   )
 }

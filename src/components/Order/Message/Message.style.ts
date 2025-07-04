@@ -11,17 +11,6 @@ export const ImageWrapper = styled.div`
     max-width: 100%;
 `
 
-export const MessageImage = styled.img`
-    display: inline-block;
-    margin: 5px;
-    border-radius: 10px;
-    height: 60px;
-
-    &:hover {
-        cursor: pointer;
-    }
-`
-
 export const GifWrapper = styled.div`
     display: flex;
     justify-content: center;
@@ -33,26 +22,4 @@ export const GifImage = styled.img`
     height: 280px;
     margin: 15px 0 40px 0;
     box-shadow: 0 10px 8px rgba(0, 0, 0, 0.2);
-`
-
-export const TextAreaWrapper = styled.div<{ isActive: boolean }>`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    
-    textarea {
-        width: 700px;
-        height: 60px;
-        border: 1px solid ${({ theme, isActive }) => isActive? theme.colors.red700 : theme.colors.gray500};
-        border-radius: 5px;
-        font-size: 15px;
-        padding: 5px 8px;
-        margin: 0 20px ${({ isActive }) => isActive ? '0' : '40px'} 20px;
-    }
-    
-    div {
-        font-size: 12px;
-        margin: 10px 20px 30px 20px;
-        color: ${({ theme }) => theme.colors.red700};
-    }
 `

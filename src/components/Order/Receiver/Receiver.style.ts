@@ -11,10 +11,6 @@ export const RecevierTitle = styled.p`
     font-size: 17px;
     margin-bottom: 15px;
 `
-export const Row = styled.div`
-    display: flex;
-    align-items: center;
-`
 
 export const ReceiverNameInput = styled.input<{ isNameActive: boolean }>`
     height: 45px;
@@ -43,7 +39,6 @@ export const ReceiverPhoneInput = styled.input<{ isPhoneActive: boolean, isFormA
         color: ${({ theme }) => theme.colors.gray500};
     }
 `
-
 export const ReceiverInput = styled.input`
     height: 45px;
     flex: 1;
@@ -52,21 +47,4 @@ export const ReceiverInput = styled.input`
     font-size: 17px;
     padding: 14px;
     margin-bottom: 5px;
-`
-
-export const RecevierSpan = styled.span`
-    width: 80px;
-    font-size: 16px;
-`
-
-export const Column = styled.div`
-    flex: 1;    
-    display: flex;
-    flex-direction: column;
-`
-
-export const ReceiverWarn = styled.div`
-    font-size: 12px;
-    margin: 0 20px 5px 5px;
-    color: ${({ theme }) => theme.colors.red700};
 `
