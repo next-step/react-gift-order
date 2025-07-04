@@ -1,10 +1,10 @@
-import type { Product } from "./types";
+import type { Product } from "../../mocks/types";
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
 import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { MOCK_PRICE_INFO } from "./mock";
+import { MOCK_PRICE_INFO } from "../../mocks/product_mock";
 import RisingItem from "./RisingItem";
 
 const INITIAL_VISIBLE_COUNT = 6;

@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
-import type { Product } from "./types";
+import type { Product } from "../../mocks/types";
 
 export default function RisingItem({ product }: { product: Product }) {
   const { name, imageURL, price, brandInfo } = product;

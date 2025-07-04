@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
-import styled from '@emotion/styled';
-import FilterButtons from './FilterButtons';
-import RisingList from './RisingList';
+import styled from "@emotion/styled";
+import FilterButtons from "./FilterButtons";
+import RisingList from "./RisingList";
 
 export default function RisingSection() {
   return (

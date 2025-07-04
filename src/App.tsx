@@ -11,7 +11,7 @@ import { Routes, Route } from "react-router-dom";
 import LoginPage from "@/pages/LoginPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import MyPage from "@/pages/MyPage";
-import OrderPage from "@/pages/OrderPage";
+import OrderPage from "@/pages/orderpage/OrderPage";
 
 function App() {
   return (
