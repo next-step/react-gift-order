@@ -3,10 +3,11 @@ import { createPortal } from "react-dom";
 import { useParams } from "react-router-dom";
 
 import { cardTemplates } from "@/features/order/constants/cardTemplate";
+import { useOrder } from "@/features/order/hooks/useOrder";
 import { LetterCard } from "@/features/order/ui/LetterCard";
 import { ProductInfo } from "@/features/order/ui/ProductInfo";
 
-import { InputElement as Input, InputFieldGroup } from "@/shared/ui/Input";
+import { Input, InputFieldGroup } from "@/shared/ui/Input";
 import { TextArea } from "@/shared/ui/TextArea";
 
 import { VerticalSpacing } from "@/widgets/layouts/Spacing.styled";
@@ -30,6 +31,17 @@ const product = {
     },
 };
 
+/**
+ * container-presenter 패턴을 사용해서 최상위 컴포넌트를 container컴포넌트로 두고
+ * 하위 컴포넌트로 props 를 넘겨주는 방식으로 했는데, 각 섹션별로 추상화하는게 좋을지 고민됨
+ *
+ * @example
+ * <LetterCardSection/>
+ * <LetterCardPreviewSection/>
+ * <SenderFieldGroup/>
+ * <ReceiverFieldGroup/>
+ * <ProductInfoSection/>
+ */
 export default function OrderPage() {
     const { id } = useParams();
 
@@ -40,20 +52,13 @@ export default function OrderPage() {
         [selectedLetterCardId],
     );
 
-    if (!id) return;
+    const { orderRefs, submit, validationErrors } = useOrder();
 
-    /**
-     * container-presenter 패턴을 사용해서 최상위 컴포넌트를 container컴포넌트로 두고
-     * 하위 컴포넌트로 props 를 넘겨주는 방식으로 했는데,
-     *
-     * <LetterCardSection/>
-     * <LetterCardPreviewSection/>
-     * <SenderFieldGroup/>
-     * <ReceiverFieldGroup/>
-     * <ProductInfoSection/>
-     *
-     * 으로 추상화하는게 좋을지 고민됨.
-     */
+    const onSubmitButtonClick = () => {
+        console.log(submit());
+    };
+
+    if (!id) return;
 
     return (
         <Styles.Container>
@@ -80,6 +85,7 @@ export default function OrderPage() {
 
             <Styles.FieldSet>
                 <TextArea
+                    ref={orderRefs.message}
                     height="65px"
                     placeholder="메시지를 입력해주세요."
                     defaultValue={letterCard?.defaultTextMessage}
@@ -91,7 +97,11 @@ export default function OrderPage() {
 
             <Styles.FieldSet>
                 <Styles.Legend>보내는 사람</Styles.Legend>
-                <Input placeholder="이름을 입력하세요." />
+                <Input
+                    ref={orderRefs.senderName}
+                    placeholder="이름을 입력하세요."
+                    error={validationErrors.senderName}
+                />
             </Styles.FieldSet>
 
             <VerticalSpacing size="32px" />
@@ -101,30 +111,35 @@ export default function OrderPage() {
                 <Styles.Legend>받는 사람</Styles.Legend>
 
                 <InputFieldGroup
+                    ref={orderRefs.receiverName}
                     id="receiver_name"
                     align="horizontal"
                     label="이름"
                     placeholder="이름을 입력하세요."
+                    error={validationErrors.receiverName}
                 />
 
                 <VerticalSpacing size="12px" />
 
                 <InputFieldGroup
+                    ref={orderRefs.receiverPhoneNumber}
                     id="phone_number"
                     align="horizontal"
                     label="전화번호"
-                    error="올바른 휴대폰 번호를 입력해주세요."
+                    placeholder="전화번호를 입력하세요."
+                    error={validationErrors.receiverPhoneNumber}
                 />
 
                 <VerticalSpacing size="12px" />
 
                 <InputFieldGroup
+                    ref={orderRefs.quantity}
                     id="quantity"
                     type="number"
                     align="horizontal"
                     label="수량"
                     placeholder="수량을 입력하세요."
-                    error="수량은 1 이상이어야 합니다."
+                    error={validationErrors.quantity}
                 />
 
                 <VerticalSpacing size="24px" />
@@ -145,7 +160,9 @@ export default function OrderPage() {
             <VerticalSpacing size="60px" />
 
             {createPortal(
-                <Styles.OrderButton>29000원 주문하기</Styles.OrderButton>,
+                <Styles.OrderButton onClick={() => onSubmitButtonClick()}>
+                    29000원 주문하기
+                </Styles.OrderButton>,
                 document.body as HTMLElement,
             )}
         </Styles.Container>
