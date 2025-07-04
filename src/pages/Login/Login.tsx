@@ -56,8 +56,8 @@ const Login = () => {
               {!isValidEmail &&
                 (id ? (
                   <Alert>올바른 이메일 형식이 아닙니다.</Alert>
-                  ) : (
-                    <Alert>아이디를 입력해주세요.</Alert>
+                ) : (
+                  <Alert>아이디를 입력해주세요.</Alert>
                 ))}
             </>
 
@@ -70,7 +70,7 @@ const Login = () => {
               />
               {!isValidPassword &&
                 (password
-                  ? (password.length < PASSWORD_LENGTH && <Alert>비밀번호는 최소 8글자 이상이어야 합니다.</Alert>)
+                    ? (password.length < PASSWORD_LENGTH && <Alert>비밀번호는 최소 8글자 이상이어야 합니다.</Alert>)
                     : <Alert>비밀번호를 입력해주세요.</Alert>
                 )}
             </>
