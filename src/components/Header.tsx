@@ -2,7 +2,7 @@
 import styled from '@emotion/styled';
 import { FiArrowLeft, FiUser } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-
+import { useAuth } from '../contexts/AuthContext';
 
 const HeaderContainer = styled.header`
   display: flex;
@@ -20,14 +20,17 @@ const Title = styled.h1`
 
 export const Header = () => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
+  const handleClick = () => {
+    navigate(isAuthenticated ? '/my' : '/login');
+  };
 
   return (
     <HeaderContainer>
       <FiArrowLeft size={20} />
       <Title>선물하기</Title>
-      <FiUser size={20} onClick={() => navigate('/login')} />
-
+      <FiUser size={20} onClick={handleClick} />
     </HeaderContainer>
   );
 };
