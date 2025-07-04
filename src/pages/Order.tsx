@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Layout } from "../Components/layout/Layout";
 import styled from "@emotion/styled";
 import { cardTemplates } from "../Components/cardTemplates";
+import { useParams } from "react-router-dom";
+import { products } from "../data/products";
 
 const PreviewWrapper = styled.div`
   display: flex;
@@ -178,7 +180,66 @@ const ReceiverInput = styled.input`
   }
 `;
 
+const ProductSection = styled.section`
+  background: #fafbfc;
+  border-radius: 12px;
+  padding: 24px 16px 16px 16px;
+  margin-bottom: 24px;
+`;
+
+const ProductTitle = styled.h3`
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+`;
+
+const ProductBox = styled.div`
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 18px;
+  padding: 18px 20px;
+  gap: 18px;
+`;
+
+const ProductImg = styled.img`
+  width: 72px;
+  height: 72px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: #f0f0f0;
+`;
+
+const ProductInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+`;
+
+const ProductName = styled.div`
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 2px;
+`;
+
+const ProductBrand = styled.div`
+  font-size: 0.98rem;
+  color: #888;
+  margin-bottom: 2px;
+`;
+
+const ProductPrice = styled.div`
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #222;
+  margin-top: 4px;
+`;
+
 const Order: React.FC = () => {
+  const { id } = useParams();
+  const product = products.find(p => String(p.id) === String(id));
   const [selectedId, setSelectedId] = useState<number | null>(cardTemplates[0]?.id ?? null);
   const [message, setMessage] = useState(cardTemplates[0]?.defaultTextMessage ?? "");
   const [sender, setSender] = useState("");
@@ -264,6 +325,21 @@ const Order: React.FC = () => {
           />
         </ReceiverRow>
       </ReceiverSection>
+      <ProductSection>
+        <ProductTitle>상품 정보</ProductTitle>
+        {product ? (
+          <ProductBox>
+            <ProductImg src={product.imageUrl} alt={product.name} />
+            <ProductInfo>
+              <ProductName>{product.name}</ProductName>
+              <ProductBrand>{product.brand}</ProductBrand>
+              <ProductPrice>상품가 <b>{product.price.toLocaleString()}원</b></ProductPrice>
+            </ProductInfo>
+          </ProductBox>
+        ) : (
+          <div>상품 정보를 불러올 수 없습니다.</div>
+        )}
+      </ProductSection>
       <OrderButton type="button" disabled={!message.trim()}>
         주문하기
       </OrderButton>
