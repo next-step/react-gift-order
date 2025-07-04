@@ -18,7 +18,7 @@ export const NavigationBar = () => {
           </IconButton>
         )}
       </Left>
-      <Center>선물하기</Center>
+      <Center onClick={() => navigate("/")}>선물하기</Center>
       <Right>
         <IconButton
           onClick={() => navigate("/login", { state: { from: location } })}

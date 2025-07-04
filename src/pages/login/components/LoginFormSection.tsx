@@ -1,9 +1,10 @@
 import styled from "@emotion/styled";
 import LoginInput from "@/pages/login/components/LoginInput";
 import { useLoginForm } from "@/hooks/useLoginForm";
+import type { User } from "@/contexts/AuthContext";
 
 type Props = {
-  onLogin: () => void;
+  onLogin: (user: User) => void;
 };
 
 export default function LoginFormSection({ onLogin }: Props) {
@@ -16,6 +17,16 @@ export default function LoginFormSection({ onLogin }: Props) {
     handleEmailChange,
     handlePasswordChange,
   } = useLoginForm();
+
+  const handleSubmit = () => {
+    const mockUser: User = {
+      id: Date.now().toString(),
+      name: email.split("@")[0],
+      email,
+    };
+
+    onLogin(mockUser);
+  };
 
   return (
     <Form onSubmit={(e) => e.preventDefault()}>
@@ -34,7 +45,7 @@ export default function LoginFormSection({ onLogin }: Props) {
         onChange={(e) => handlePasswordChange(e.target.value)}
         error={passwordError}
       />
-      <LoginButton onClick={onLogin} disabled={!isButtonEnabled}>
+      <LoginButton onClick={handleSubmit} disabled={!isButtonEnabled}>
         로그인
       </LoginButton>
     </Form>
