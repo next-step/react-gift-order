@@ -35,17 +35,24 @@ export const GifImage = styled.img`
     box-shadow: 0 10px 8px rgba(0, 0, 0, 0.2);
 `
 
-export const TextAreaWrapper = styled.div`
+export const TextAreaWrapper = styled.div<{ isActive: boolean }>`
     display: flex;
+    flex-direction: column;
     justify-content: center;
     
     textarea {
         width: 700px;
         height: 60px;
-        border: 1px solid ${({ theme }) => theme.colors.gray500};
+        border: 1px solid ${({ theme, isActive }) => isActive? theme.colors.red700 : theme.colors.gray500};
         border-radius: 5px;
         font-size: 15px;
         padding: 5px 8px;
-        margin: 0 20px 40px 20px;
+        margin: 0 20px ${({ isActive }) => isActive ? '0' : '40px'} 20px;
+    }
+    
+    div {
+        font-size: 12px;
+        margin: 10px 20px 30px 20px;
+        color: ${({ theme }) => theme.colors.red700};
     }
 `

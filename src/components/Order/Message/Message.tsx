@@ -9,9 +9,8 @@ import {
   Wrapper,
 } from '@/components/Order/Message/Message.style.ts';
 
-export default function Message() {
+export default function Message({ message, setMessage }) {
   const [image, setImage] = useState(orderMessage[0].imageUrl);
-  const [message, setMessage] = useState(orderMessage[0].defaultTextMessage);
 
   return (
     <Wrapper>
@@ -23,7 +22,7 @@ export default function Message() {
             alt={item.defaultTextMessage}
             onClick={()=>{
               setImage(item.imageUrl);
-              setMessage(item.defaultTextMessage);
+              setMessage(prev => ({ ...prev, text: item.defaultTextMessage}));
             }}
           />
         ))}
@@ -33,8 +32,11 @@ export default function Message() {
         <GifImage src={image} alt={image} />
       </GifWrapper>
 
-      <TextAreaWrapper>
-        <textarea defaultValue={message} />
+      <TextAreaWrapper
+        isActive={message.check}
+      >
+        <textarea value={message.text} onChange={e => setMessage({ text: e.target.value, check: false })}/>
+        {message.check && <div>메시지를 입력해주세요.</div>}
       </TextAreaWrapper>
     </Wrapper>
   )

@@ -26,7 +26,7 @@ const App: () => JSX.Element = () => {
           </Routes>
         </BrowserRouter>
       </ThemeProvider>
-      <ToastContainer position="top-center" autoClose={1000} />
+      <ToastContainer position="top-center" />
     </>
   );
 };
