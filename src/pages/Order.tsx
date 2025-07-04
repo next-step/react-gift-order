@@ -291,39 +291,48 @@ const Order: React.FC = () => {
   };
 
   const handleOrder = () => {
+    let hasError = false;
+
     if (!message.trim()) {
       setMessageError("메시지를 입력해주세요.");
-      return;
+      hasError = true;
     } else {
       setMessageError("");
     }
+
     if (!sender.trim()) {
       setSenderError("보내는 사람 이름을 입력해주세요.");
-      return;
+      hasError = true;
     } else {
       setSenderError("");
     }
+
     if (!receiverName.trim()) {
       setReceiverNameError("받는 사람 이름을 입력해주세요.");
-      return;
+      hasError = true;
     } else {
       setReceiverNameError("");
     }
+
     if (!receiverPhone.trim()) {
       setReceiverPhoneError("전화번호를 입력해주세요.");
-      return;
+      hasError = true;
     } else if (!/^010\d{8}$/.test(receiverPhone)) {
       setReceiverPhoneError("전화번호는 010으로 시작하는 11자리 숫자여야 합니다.");
-      return;
+      hasError = true;
     } else {
       setReceiverPhoneError("");
     }
+
     if (!quantity || quantity < 1) {
       setQuantityError("수량은 1개 이상이어야 합니다.");
-      return;
+      hasError = true;
     } else {
       setQuantityError("");
     }
+
+    if (hasError) return;
+
     // TODO: 실제 주문 처리
     console.log({ message, sender, receiverName, receiverPhone, quantity, product });
   };
