@@ -1,6 +1,6 @@
 // src/hooks/useValidation.ts
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 // ChangeEvent, FocusEvent 는 타입이니까 import type 으로 받아옵니다.
 import type { ChangeEvent } from 'react';
 
@@ -8,10 +8,11 @@ type Validator<T> = (value: T) => string | null;
 
 export function useValidation<T>(
     initial: T,
-    validator: Validator<T>
+    validator: Validator<T>,
+    alwaysActive: boolean = false
 ) {
     const [value, setValue] = useState(initial);
-    const [touched, setTouched] = useState(false);
+    const [isTouched, setIsTouched] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     const onChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -21,12 +22,14 @@ export function useValidation<T>(
 
     // onBlur 에서 e 를 안 쓰니까 파라미터를 제거합니다.
     const onBlur = () => {
-        setTouched(true);
+        setIsTouched(true);
         const message = validator(value);
         setError(message);
     };
 
-    const isValid = touched && !validator(value);
+    const isValid = useMemo(() => (
+        alwaysActive ? !error : isTouched && !error
+    ), [alwaysActive, isTouched, error]);
 
-    return { value, error, isValid, onChange, onBlur };
+    return { value, error, isValid, onChange, onBlur, setValue };
 }
