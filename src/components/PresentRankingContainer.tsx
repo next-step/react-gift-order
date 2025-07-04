@@ -51,7 +51,9 @@ const PresentRankingContainer = () => {
         <PresentRankingItem isVisible={isVisible}></PresentRankingItem>
       </StyledPrsentRankingDiv>
       <StyledPresenetRankingAddItemBtnDiv>
-        <StyledPresenetRankingAddItemBtn onClick={handelToogle}>더보기</StyledPresenetRankingAddItemBtn>
+        <StyledPresenetRankingAddItemBtn onClick={handelToogle}>
+          {isVisible ? '닫기' : '더보기'}
+        </StyledPresenetRankingAddItemBtn>
       </StyledPresenetRankingAddItemBtnDiv>
     </StyledPresentRankingContainer>
   );
