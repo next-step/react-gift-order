@@ -271,7 +271,7 @@ export const theme: Theme = {
     },
     title2Regular: {
       fontSize: '1rem',
-      fontWeight: 400,
+      fontWeight: 500,
       lineHeight: '1.5rem',
     },
 
