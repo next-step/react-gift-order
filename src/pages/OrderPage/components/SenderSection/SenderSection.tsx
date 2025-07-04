@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-interface SendSectionProps {
+interface SenderSectionProps {
   senderName: string;
   handleSenderNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -43,10 +43,10 @@ const Input = styled.input`
   }
 `;
 
-function SenderSection({
+function SenderSectionComponent({
   senderName,
   handleSenderNameChange,
-}: SendSectionProps) {
+}: SenderSectionProps) {
   return (
     <SendSection>
       <SectionTitle>보내는 사람</SectionTitle>
@@ -62,4 +62,4 @@ function SenderSection({
   );
 }
 
-export default SenderSection;
+export default SenderSectionComponent;
