@@ -8,7 +8,7 @@ interface SenderSectionProps {
 const SendSection = styled.section`
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 1rem;
   background-color: ${({ theme }) => theme.colors.background.default};
   padding: ${({ theme }) => theme.spacing[4]};
 `;
@@ -22,7 +22,7 @@ const SectionTitle = styled.h2`
 const SendForm = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: ${({ theme }) => theme.spacing[2]};
 `;
 
 const Input = styled.input`
@@ -41,6 +41,18 @@ const Input = styled.input`
     outline: none;
     border-color: ${({ theme }) => theme.components.form.focusBorderColor};
   }
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.text.sub};
+  }
+`;
+
+const InputLabel = styled.label`
+  font-size: ${({ theme }) => theme.typography.label.label2Regular.fontSize};
+  font-weight: ${({ theme }) =>
+    theme.typography.label.label2Regular.fontWeight};
+  color: ${({ theme }) => theme.colors.text.sub};
+  margin-left: ${({ theme }) => theme.spacing[2]};
 `;
 
 function SenderSectionComponent({
@@ -57,6 +69,9 @@ function SenderSectionComponent({
           value={senderName}
           onChange={handleSenderNameChange}
         />
+        <InputLabel>
+          * 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다
+        </InputLabel>
       </SendForm>
     </SendSection>
   );

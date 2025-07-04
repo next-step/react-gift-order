@@ -12,7 +12,7 @@ interface ReceiverSectionProps {
 const ReceiverSection = styled.section`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing[2]};
+  gap: 1rem;
   background-color: ${({ theme }) => theme.colors.background.default};
   padding: ${({ theme }) => theme.spacing[4]};
 `;
@@ -54,6 +54,16 @@ const Input = styled.input`
     outline: none;
     border-color: ${({ theme }) => theme.components.form.focusBorderColor};
   }
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.text.sub};
+  }
+`;
+
+const FormContainer = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing[2]};
 `;
 
 function ReceiverSectionComponent({
@@ -67,33 +77,35 @@ function ReceiverSectionComponent({
   return (
     <ReceiverSection>
       <SectionTitle>받는 사람</SectionTitle>
-      <FormField>
-        <FieldLabel>이름</FieldLabel>
-        <Input
-          type="text"
-          placeholder="이름을 입력하세요."
-          value={receiverName}
-          onChange={handleReceiverNameChange}
-        />
-      </FormField>
-      <FormField>
-        <FieldLabel>전화번호</FieldLabel>
-        <Input
-          type="tel"
-          placeholder="전화번호를 입력하세요."
-          value={receiverPhone}
-          onChange={handleReceiverPhoneChange}
-        />
-      </FormField>
-      <FormField>
-        <FieldLabel>수량</FieldLabel>
-        <Input
-          type="number"
-          min="1"
-          value={quantity}
-          onChange={handleQuantityChange}
-        />
-      </FormField>
+      <FormContainer>
+        <FormField>
+          <FieldLabel>이름</FieldLabel>
+          <Input
+            type="text"
+            placeholder="이름을 입력하세요."
+            value={receiverName}
+            onChange={handleReceiverNameChange}
+          />
+        </FormField>
+        <FormField>
+          <FieldLabel>전화번호</FieldLabel>
+          <Input
+            type="tel"
+            placeholder="전화번호를 입력하세요."
+            value={receiverPhone}
+            onChange={handleReceiverPhoneChange}
+          />
+        </FormField>
+        <FormField>
+          <FieldLabel>수량</FieldLabel>
+          <Input
+            type="number"
+            min="1"
+            value={quantity}
+            onChange={handleQuantityChange}
+          />
+        </FormField>
+      </FormContainer>
     </ReceiverSection>
   );
 }
