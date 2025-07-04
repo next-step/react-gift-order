@@ -154,16 +154,16 @@ const GiftRanking = () => {
   const [activeFilterButton, setActiveFilterButton] = useState<string>('received');
 
   useEffect(() => {
-    const gender = searchParams.get('gender') ?? 'ALL';
+    const generation = searchParams.get('generation') ?? 'ALL';
     const filter = searchParams.get('filter') ?? 'MANY_WISH';
 
-    setActiveGenerationButton(gender);
+    setActiveGenerationButton(generation);
     setActiveFilterButton(filter);
   }, [searchParams]);
 
   const handleGenerationGroupClick = (id: string) => {
     setActiveGenerationButton(id);
-    searchParams.set('gender', id);
+    searchParams.set('generation', id);
     setSearchParams(searchParams, { replace: true });
   };
 
