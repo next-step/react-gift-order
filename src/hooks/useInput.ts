@@ -23,12 +23,9 @@ export const useInput = ({ initialValue = '', validator }: UseInputProps = {}) =
     }
   };
 
-  const hasError = !!error;
-
   return {
     value,
     error,
-    hasError,
     onChange: handleChange,
     onBlur: handleBlur,
     setValue,

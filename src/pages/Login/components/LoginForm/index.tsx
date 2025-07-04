@@ -1,8 +1,8 @@
 import React from 'react';
 import { useLoginForm } from '@/hooks/useLoginForm';
-import InputField from '@/components/Form/inputField';
+import InputField from '@/components/Form/InputField';
 import Button from '@/components/common/Button';
-import * as S from './sytles';
+import * as S from './styles';
 
 const LoginForm: React.FC = () => {
   const { email, password, isFormValid, handleSubmit } = useLoginForm();
@@ -16,7 +16,6 @@ const LoginForm: React.FC = () => {
           value={email.value}
           onChange={email.onChange}
           onBlur={email.onBlur}
-          hasError={email.hasError}
           error={email.error}
         />        
         <S.Spacer />       
@@ -26,7 +25,6 @@ const LoginForm: React.FC = () => {
           value={password.value}
           onChange={password.onChange}
           onBlur={password.onBlur}
-          hasError={password.hasError}
           error={password.error}
         />       
         <S.Spacer />      

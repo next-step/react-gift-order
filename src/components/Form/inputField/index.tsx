@@ -7,8 +7,7 @@ interface InputFieldProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
-  hasError?: boolean;
-  error?: string;
+  error?: string; //hasError삭제 
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -17,7 +16,6 @@ const InputField: React.FC<InputFieldProps> = ({
   value,
   onChange,
   onBlur,
-  hasError,
   error
 }) => {
   return (
@@ -28,7 +26,7 @@ const InputField: React.FC<InputFieldProps> = ({
         value={value}
         onChange={onChange}
         onBlur={onBlur}
-        hasError={hasError}
+        error={error}
       />
       {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
     </S.InputContainer>
