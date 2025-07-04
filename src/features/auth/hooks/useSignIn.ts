@@ -13,7 +13,8 @@ export const useSignIn = () => {
             if (!value) setEmailError("ID를 입력해주세요.");
         },
         onChange(value) {
-            if (!REGEX_EMAIL.test(value)) setEmailError("ID는 이메일 형식으로 입력해주세요.");
+            if (!value.length) setEmailError("ID를 입력해주세요.");
+            else if (!REGEX_EMAIL.test(value)) setEmailError("ID는 이메일 형식으로 입력해주세요.");
             else setEmailError("");
         },
     });
