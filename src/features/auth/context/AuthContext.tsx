@@ -1,8 +1,8 @@
 import { createContext, useContext } from "react";
 
-import { useLocalStorageState } from "@/shared/hooks/useLocalStorageState";
+import { useLocalStorageState, type SerializableRecord } from "@/shared/hooks/useLocalStorageState";
 
-export interface AuthContextValue {
+export interface AuthContextValue extends SerializableRecord {
     isAuthenticated: boolean;
     nickname?: string;
     email?: string;
