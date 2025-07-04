@@ -15,23 +15,25 @@ interface Product {
     name: string
     imageURL: string
   }
-}
-
-interface Props {
-  product: Product
   rank: number
 }
 
-export const ProductItem = memo(function ProductItem({ product, rank }: Props) {
+export const ProductItem = memo(function ProductItem({
+  imageURL,
+  name,
+  price,
+  brandInfo,
+  rank,
+}: Product) {
   return (
     <Wrapper>
       <ImageWrapper>
         <RankBadge rank={rank}>{rank}</RankBadge>
-        <Image src={product.imageURL} alt={product.name} />
+        <Image src={imageURL} alt={name} />
       </ImageWrapper>
-      <Brand>{product.brandInfo.name}</Brand>
-      <Name>{product.brandInfo.name}</Name>
-      <Price>{product.price.sellingPrice.toLocaleString()}원</Price>
+      <Brand>{brandInfo.name}</Brand>
+      <Name>{name}</Name>
+      <Price>{price.sellingPrice.toLocaleString()}원</Price>
     </Wrapper>
   )
 })
