@@ -4,9 +4,12 @@ import { Global } from "@emotion/react";
 import { ThemeProvider } from "@emotion/react";
 import { theme } from "./styles/theme/theme";
 import { AuthProvider } from "./contexts/AuthContext";
+import RequireAuth from "./components/auth/RequireAuth";
+
 import GiftMain from "./pages/GiftMain";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
+import MyPage from "./pages/MyPage";
 
 const App = () => {
   return (
@@ -17,6 +20,14 @@ const App = () => {
           <Routes>
             <Route path="/" element={<GiftMain />} />
             <Route path="/login" element={<Login />} />
+            <Route
+              path="/my"
+              element={
+                <RequireAuth>
+                  <MyPage />
+                </RequireAuth>
+              }
+            />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
