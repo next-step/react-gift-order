@@ -1,25 +1,36 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { OrderCardType } from "@/types/OrderCardType";
+import { isNotEmpty } from "@/utils/validation";
+import { useInput } from "@/hooks/useInput";
 
 export function useCardSelection(initialCards: OrderCardType[]) {
   const [selectedCard, setSelectedCard] = useState<OrderCardType>(
     initialCards[0]
   );
-  const [message, setMessage] = useState(initialCards[0].defaultTextMessage);
+
+  const messageInput = useInput(initialCards[0].defaultTextMessage, {
+    isEmpty: (value: string) => isNotEmpty(value),
+  });
 
   const handleCardSelect = (card: OrderCardType) => {
     setSelectedCard(card);
-    setMessage(card.defaultTextMessage);
+    messageInput.handleValueChange(card.defaultTextMessage);
   };
 
-  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setMessage(e.target.value);
-  };
+  const messageErrorMessage = useMemo(() => {
+    if (messageInput.errors.isEmpty) {
+      return "메시지를 입력해주세요.";
+    }
+    return null;
+  }, [messageInput.errors.isEmpty]);
 
   return {
     selectedCard,
-    message,
+    message: messageInput.value,
     handleCardSelect,
-    handleMessageChange,
+    handleMessageChange: messageInput.handleValueChange,
+    validateMessage: messageInput.validate,
+    cardSelectionErrorMessage: messageErrorMessage,
+    hasCardSelectionError: messageInput.hasError,
   };
 }

@@ -1,3 +1,4 @@
+import FormErrorMessage from "@/pages/LoginPage/components/FormErrorMessage";
 import {
   CardSelectorContainer,
   ThumbnailImage,
@@ -6,6 +7,7 @@ import {
   CardPreviewContainer,
   MainCardImage,
   MessageTextArea,
+  MessageTextAreaContainer,
 } from "./CardSelection.styles";
 import type { OrderCardType } from "@/types/OrderCardType";
 
@@ -14,7 +16,9 @@ interface CardSelectionProps {
   selectedCard: OrderCardType;
   message: string;
   onSelect: (card: OrderCardType) => void;
-  onMessageChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onMessageChange: (value: string) => void;
+  hasCardSelectionError: boolean;
+  cardSelectionErrorMessage: string | null;
 }
 
 function CardSelection({
@@ -23,6 +27,8 @@ function CardSelection({
   message,
   onSelect,
   onMessageChange,
+  hasCardSelectionError,
+  cardSelectionErrorMessage,
 }: CardSelectionProps) {
   return (
     <section>
@@ -41,11 +47,17 @@ function CardSelection({
       </CardSelectorContainer>
       <CardPreviewContainer>
         <MainCardImage src={selectedCard.imageUrl} alt="selected-card" />
-        <MessageTextArea
-          value={message}
-          onChange={onMessageChange}
-          placeholder="메시지를 입력해주세요."
-        />
+        <MessageTextAreaContainer>
+          <MessageTextArea
+            value={message}
+            onChange={(e) => onMessageChange(e.target.value)}
+            placeholder="메시지를 입력해주세요."
+            hasError={hasCardSelectionError}
+          />
+          {hasCardSelectionError && cardSelectionErrorMessage && (
+            <FormErrorMessage errorMessage={cardSelectionErrorMessage} />
+          )}
+        </MessageTextAreaContainer>
       </CardPreviewContainer>
     </section>
   );

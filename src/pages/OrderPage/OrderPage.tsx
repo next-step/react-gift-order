@@ -18,8 +18,15 @@ const OrderPageContainer = styled.div`
 `;
 
 function OrderPage() {
-  const { selectedCard, message, handleCardSelect, handleMessageChange } =
-    useCardSelection(orderCardMockData);
+  const {
+    selectedCard,
+    message,
+    handleCardSelect,
+    handleMessageChange,
+    validateMessage,
+    cardSelectionErrorMessage,
+    hasCardSelectionError,
+  } = useCardSelection(orderCardMockData);
 
   const {
     senderName,
@@ -50,6 +57,7 @@ function OrderPage() {
   const product = useProductInfo();
 
   const validateForms = () => {
+    validateMessage(message);
     validateSenderName(senderName);
     validateReceiverName(receiverName);
     validateReceiverPhone(receiverPhone);
@@ -70,6 +78,8 @@ function OrderPage() {
           message={message}
           onSelect={handleCardSelect}
           onMessageChange={handleMessageChange}
+          hasCardSelectionError={hasCardSelectionError}
+          cardSelectionErrorMessage={cardSelectionErrorMessage}
         />
         <SenderSectionComponent
           senderName={senderName}

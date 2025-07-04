@@ -46,13 +46,17 @@ export const CardPreviewContainer = styled.div`
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+
   align-items: center;
+  justify-content: center;
   gap: ${({ theme }) => theme.spacing[10]};
   background-color: ${({ theme }) => theme.colors.background.default};
 
   padding-top: ${({ theme }) => theme.spacing[4]};
   padding-left: ${({ theme }) => theme.spacing[7]};
   padding-right: ${({ theme }) => theme.spacing[7]};
+
+  padding-bottom: 2.5rem;
 `;
 
 export const MainCardImage = styled.img`
@@ -63,13 +67,14 @@ export const MainCardImage = styled.img`
   box-shadow: 0px 12px 12px 0px hsla(0, 0%, 0%, 0.1);
 `;
 
-export const MessageTextArea = styled.textarea`
+export const MessageTextArea = styled.textarea<{ hasError: boolean }>`
   width: 100%;
   height: 40px;
   padding: ${({ theme }) => theme.spacing[3]};
-  margin-bottom: 2.5rem;
 
-  border: 1px solid ${({ theme }) => theme.colors.gray[400]};
+  border: 1px solid
+    ${({ hasError, theme }) =>
+      hasError ? theme.colors.status.critical : theme.colors.gray[400]};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   resize: none;
   font-size: ${({ theme }) => theme.typography.body.body1Regular.fontSize};
@@ -77,6 +82,16 @@ export const MessageTextArea = styled.textarea`
 
   &:focus {
     outline: none;
-    border-color: ${({ theme }) => theme.components.form.focusBorderColor};
+    border-color: ${({ hasError, theme }) =>
+      hasError
+        ? theme.colors.status.critical
+        : theme.components.form.focusBorderColor};
   }
+`;
+
+export const MessageTextAreaContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: ${({ theme }) => theme.spacing[1]};
 `;
