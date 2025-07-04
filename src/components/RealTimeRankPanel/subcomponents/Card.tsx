@@ -30,10 +30,14 @@ function Card({ no, prod }: CardProps) {
 }
 
 const ZeroMarginP = styled.p`
+  text-align: left;
+  width: 100%;
   margin: 0;
 `;
 
 const GrayP = styled.p`
+  text-align: left;
+  width: 100%;
   color: ${theme.colors.gray.gray600};
   margin: 0;
 `;
