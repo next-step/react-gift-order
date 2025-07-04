@@ -106,9 +106,43 @@ const OrderButton = styled.button`
   }
 `;
 
+const SenderSection = styled.section`
+  background: #fafbfc;
+  border-radius: 12px;
+  padding: 24px 16px 16px 16px;
+  margin-bottom: 24px;
+`;
+
+const SenderTitle = styled.h3`
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+`;
+
+const SenderInput = styled.input`
+  width: 100%;
+  font-size: 1.1rem;
+  padding: 16px 18px;
+  border: 1.5px solid #d6dbe1;
+  border-radius: 16px;
+  outline: none;
+  margin-bottom: 8px;
+  background: #fff;
+  &::placeholder {
+    color: #b0b3ba;
+  }
+`;
+
+const SenderGuide = styled.div`
+  font-size: 0.95rem;
+  color: #b0b3ba;
+  margin-left: 2px;
+`;
+
 const Order: React.FC = () => {
   const [selectedId, setSelectedId] = useState<number | null>(cardTemplates[0]?.id ?? null);
   const [message, setMessage] = useState(cardTemplates[0]?.defaultTextMessage ?? "");
+  const [sender, setSender] = useState("");
 
   const selectedCard = cardTemplates.find(card => card.id === selectedId);
 
@@ -145,6 +179,16 @@ const Order: React.FC = () => {
           </>
         )}
       </PreviewWrapper>
+      <SenderSection>
+        <SenderTitle>보내는 사람</SenderTitle>
+        <SenderInput
+          type="text"
+          placeholder="이름을 입력하세요."
+          value={sender}
+          onChange={e => setSender(e.target.value)}
+        />
+        <SenderGuide>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</SenderGuide>
+      </SenderSection>
       <OrderButton type="button" disabled={!message.trim()}>
         주문하기
       </OrderButton>
