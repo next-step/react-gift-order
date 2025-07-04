@@ -1,4 +1,4 @@
-# React Gift Order 프로젝트
+# React Gift Order 
 
 ## ✅ 목표
 - 쿠키/세션 스토리지, Context API를 사용하여 로그인 정보를 관리
