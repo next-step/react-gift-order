@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
-import { useNavigate } from 'react-router-dom';
+import useNavigateBackOrHome from '@/hooks/useNavigateBackOrHome';
+import useInput from './hooks/useInput';
+import InputField from './components/InputField';
 
 const Container = styled.div`
   display: flex;
@@ -23,22 +25,6 @@ const Section = styled.section`
   padding: ${({ theme }) => theme.spacing.spacing4};
 `;
 
-const Input = styled.input`
-  width: 100%;
-  box-sizing: border-box;
-  color: ${({ theme }) => theme.colors.semantic.text.default};
-  transition: border-color 200ms;
-  border-style: solid;
-  min-height: ${({ theme }) => theme.spacing.spacing11};
-  font-size: ${({ theme }) => theme.typography.body1Regular.fontSize};
-  font-weight: ${({ theme }) => theme.typography.body1Regular.fontWeight};
-  line-height: ${({ theme }) => theme.typography.body1Regular.lineHeight};
-  padding: ${({ theme }) => theme.spacing.spacing2} 0;
-  border-width: 0 0 1px;
-  border-color: ${({ theme }) => theme.colors.semantic.border.default};
-  margin-bottom: ${({ theme }) => theme.spacing.spacing3};
-`;
-
 const Button = styled.button`
   width: 100%;
   height: ${({ theme }) => theme.spacing.spacing11};
@@ -46,22 +32,32 @@ const Button = styled.button`
   font-weight: ${({ theme }) => theme.typography.subtitle2Regular.fontWeight};
   line-height: ${({ theme }) => theme.typography.subtitle2Regular.lineHeight};
   color: ${({ theme }) => theme.colors.semantic.text.default};
-  background-color: ${({ theme }) => theme.colors.semantic.brand.kakaoYellow};
-  border-radius: 4px;
   border: none;
-  cursor: pointer;
-  transition: background-color 200ms;
+  border-radius: 4px;
   margin-top: ${({ theme }) => theme.spacing.spacing7};
+  transition:
+    background-color 200ms,
+    cursor 200ms;
+  background-color: ${({ theme }) => theme.colors.semantic.brand.kakaoYellow};
+  cursor: pointer;
+
+  &:disabled {
+    background-color: ${({ theme }) => theme.colors.semantic.brand.kakaoYellowPressed};
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
 `;
 
 const LoginPage = () => {
-  const navigate = useNavigate();
-  const handleClick = () => {
-    if (window.history.length > 1) {
-      navigate(-1);
-    } else {
-      navigate('/');
-    }
+  const navigateBackOrHome = useNavigateBackOrHome();
+  const username = useInput('email');
+  const password = useInput('password');
+
+  const isButtonActive = username.isValid && password.isValid;
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    navigateBackOrHome();
   };
 
   return (
@@ -71,9 +67,13 @@ const LoginPage = () => {
         src="data:image/svg+xml,%3csvg%20viewBox='0%200%2024%2024'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='m3.0743%2010.4403.655.4728-1.6101%202.0192%201.8647%202.2373-.646.5004-2.201-2.6924zm-2.2376%205.102h-.8367v-7.0302l.8367-.182zm20.944-4.3837c-.4364%200-.7715.1637-1.0049.4912-.2338.3274-.3505.8064-.3505%201.437%200%20.6247.1167%201.096.3505%201.4143.2334.3183.5685.4775%201.0049.4775.4423%200%20.7804-.1593%201.0143-.4775.2332-.3182.35-.7896.35-1.4142%200-.6307-.1168-1.1097-.35-1.4371-.234-.3275-.572-.4912-1.0143-.4912m0-.673c.691%200%201.234.2245%201.6277.673.3944.4488.5916%201.0915.5916%201.9283%200%20.8244-.1955%201.4583-.5868%201.901-.3909.4422-.9356.6637-1.6325.6637-.691%200-1.234-.2215-1.6277-.6638-.3944-.4426-.5916-1.0765-.5916-1.901%200-.8367.1984-1.4794.5957-1.9282.3973-.4485.9385-.673%201.6236-.673m-5.534%204.4658a1.496%201.496%200%200%200%20.3576-.0456%202.8804%202.8804%200%200%200%20.3713-.1181%202.0066%202.0066%200%200%200%20.3488-.1774%202.0778%202.0778%200%200%200%20.2895-.2229v-1.1641h-.8693c-.441%200-.7626.0758-.9645.2274-.2025.1516-.3031.391-.3031.7185%200%20.5214.2563.7822.7697.7822m-1.5704-.7458c0-.5032.1682-.887.5045-1.1504.337-.2638.826-.396%201.4691-.396h.964v-.3182c0-.77-.3393-1.155-1.0185-1.155-.2184%200-.447.0304-.6869.091-.2398.0608-.4594.1365-.659.2274l-.2457-.5913c.2487-.1394.517-.2469.8047-.323.2878-.0754.5685-.1136.8414-.1136%201.176%200%201.7646.6276%201.7646%201.8826v3.1833h-.6188l-.1-.5457c-.2488.2001-.5134.3547-.796.464-.2817.1092-.55.1637-.8046.1637-.4429%200-.7899-.1258-1.0416-.3775-.2515-.2517-.3772-.5987-.3772-1.0413m-1.6508-3.7653.655.4728-1.6095%202.0192%201.864%202.2373-.6454.5004-2.201-2.6924zm-2.237%205.102h-.8367v-7.0302l.8368-.182zm-4.4936-.5909c.1148%200%20.2339-.0151.3576-.0456a2.8794%202.8794%200%200%200%20.3713-.1181%201.9842%201.9842%200%200%200%20.3488-.1774%202.0477%202.0477%200%200%200%20.29-.2229v-1.1641h-.8698c-.4404%200-.762.0758-.9645.2274-.202.1516-.3031.391-.3031.7185%200%20.5214.2563.7822.7697.7822m-1.5704-.7458c0-.5032.1682-.887.5052-1.1504.3363-.2638.826-.396%201.4684-.396h.9646v-.3182c0-.77-.3399-1.155-1.019-1.155-.218%200-.4471.0304-.6863.091-.2398.0608-.4595.1365-.6597.2274l-.2457-.5913c.2487-.1394.517-.2469.8053-.323.2878-.0754.5684-.1136.8408-.1136%201.1766%200%201.7646.6276%201.7646%201.8826v3.1833h-.6182l-.1001-.5457c-.2487.2001-.514.3547-.7958.464-.282.1092-.5501.1637-.8053.1637-.4423%200-.7893-.1258-1.041-.3775-.2516-.2517-.3778-.5987-.3778-1.0413z'/%3e%3c/svg%3e"
       />
       <Section>
-        <Input placeholder="이메일" type="email" />
-        <Input placeholder="비밀번호" type="password" />
-        <Button onClick={handleClick}>로그인</Button>
+        <form onSubmit={handleSubmit}>
+          <InputField hook={username} placeholder="이메일" type="email" />
+          <InputField hook={password} placeholder="비밀번호" type="password" />
+          <Button type="submit" disabled={!isButtonActive}>
+            로그인
+          </Button>
+        </form>
       </Section>
     </Container>
   );

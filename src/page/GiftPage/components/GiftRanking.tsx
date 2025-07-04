@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
+import { filters, generations } from '@/data/categoryDatas';
+import useSearchParamState from '../hooks/useSearchParamState';
+import useToggleCollapse from '../hooks/useToggleCollapse';
 import { rankingDatas } from '@/data/rankingDatas';
-import { useSearchParams } from 'react-router-dom';
 
 interface ButtonProps {
   isActive: boolean;
@@ -144,51 +145,14 @@ const ToggleButton = styled.button`
 `;
 
 const GiftRanking = () => {
-  const [isCollapsed, setIsCollapsed] = useState(true);
-  const [visibleItemsCount, setVisibleItemsCount] = useState(6);
+  const {
+    handleGenerationGroupClick,
+    handleFilterGroupClick,
+    activeGenerationButton,
+    activeFilterButton,
+  } = useSearchParamState();
 
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const [activeGenerationButton, setActiveGenerationButton] = useState<string>('all');
-  const [activeFilterButton, setActiveFilterButton] = useState<string>('received');
-
-  useEffect(() => {
-    const gender = searchParams.get('gender') ?? 'ALL';
-    const filter = searchParams.get('filter') ?? 'MANY_WISH';
-
-    setActiveGenerationButton(gender);
-    setActiveFilterButton(filter);
-  }, [searchParams]);
-
-  const handleGenerationGroupClick = (id: string) => {
-    setActiveGenerationButton(id);
-    searchParams.set('gender', id);
-    setSearchParams(searchParams, { replace: true });
-  };
-
-  const handleFilterGroupClick = (id: string) => {
-    setActiveFilterButton(id);
-    searchParams.set('filter', id);
-    setSearchParams(searchParams, { replace: true });
-  };
-
-  const toggleCollapse = () => {
-    setIsCollapsed(prev => !prev);
-    setVisibleItemsCount(isCollapsed ? rankingDatas.length : 6);
-  };
-
-  const generations = [
-    { id: 'ALL', emoji: 'ALL', label: '전체' },
-    { id: 'FEMALE', emoji: '👩🏻', label: '여성이' },
-    { id: 'MALE', emoji: '👨🏻', label: '남성이' },
-    { id: 'TEEN', emoji: '👦🏻', label: '청소년이' },
-  ];
-
-  const filters = [
-    { id: 'MANY_WISH', label: '받고 싶어한' },
-    { id: 'MANY_RECEIVE', label: '많이 선물한' },
-    { id: 'MANY_WISH_RECEIVE', label: '위시로 받은' },
-  ];
+  const { isCollapsed, visibleItemsCount, toggleCollapse } = useToggleCollapse(rankingDatas.length);
 
   return (
     <Section>
