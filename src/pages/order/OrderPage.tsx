@@ -1,12 +1,14 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useParams } from "react-router-dom";
 
+import { useAuth } from "@/features/auth/hooks/useAuth";
 import { cardTemplates } from "@/features/order/constants/cardTemplate";
 import { useOrder } from "@/features/order/hooks/useOrder";
 import { LetterCard } from "@/features/order/ui/LetterCard";
 import { ProductInfo } from "@/features/order/ui/ProductInfo";
 
+import { useRedirect } from "@/shared/hooks/useRedirect";
 import { Input, InputFieldGroup } from "@/shared/ui/Input";
 import { TextArea } from "@/shared/ui/TextArea";
 
@@ -43,6 +45,9 @@ const product = {
  * <ProductInfoSection/>
  */
 export default function OrderPage() {
+    const { isAuthenticated } = useAuth();
+    const { navigateWithRedirect } = useRedirect();
+
     const { id } = useParams();
 
     const [selectedLetterCardId, setSelectedLetterCardId] = useState<number>(cardTemplates[0].id);
@@ -57,6 +62,11 @@ export default function OrderPage() {
     const onSubmitButtonClick = () => {
         console.log(submit());
     };
+
+    // 인증되지 않은 사용자는 로그인 페이지로 리다이렉트
+    useEffect(() => {
+        if (!isAuthenticated) navigateWithRedirect("/auth/signin");
+    }, [isAuthenticated, navigateWithRedirect]);
 
     if (!id) return;
 

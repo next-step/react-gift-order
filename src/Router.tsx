@@ -25,14 +25,7 @@ const router = createRoutesFromElements(
                 </AuthGuard>
             }
         />
-        <Route
-            path="order/:id"
-            element={
-                // <AuthGuard>
-                <OrderPage />
-                // </AuthGuard>
-            }
-        />
+        <Route path="order/:id" element={<OrderPage />} />
         <Route path="*" element={<NotFoundPage />} />
     </Route>,
 );
