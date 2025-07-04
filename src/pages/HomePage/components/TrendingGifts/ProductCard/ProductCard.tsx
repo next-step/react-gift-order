@@ -13,6 +13,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { ROUTES } from "@/constants/routes";
 
 export interface ProductCardPropsType {
+  id: number;
   imageURL: string;
   name: string;
   brandName: string;
@@ -21,6 +22,7 @@ export interface ProductCardPropsType {
 }
 
 function ProductCard({
+  id,
   imageURL,
   name,
   brandName,
@@ -31,7 +33,7 @@ function ProductCard({
   const navigate = useNavigate();
 
   const handleClick = () => {
-    const redirectPath = ROUTES.ORDER.replace(":id", index.toString());
+    const redirectPath = ROUTES.ORDER.replace(":id", id.toString());
     if (isLoggedIn) {
       navigate(redirectPath);
       return;

@@ -7,6 +7,8 @@ import SenderSectionComponent from "./components/SenderSection/SenderSection";
 import { useSenderInput } from "./hooks/useSenderInput";
 import ReceiverSectionComponent from "./components/ReceiverSection/ReceiverSection";
 import { useReceiverInput } from "./hooks/useReceiverInput";
+import ProductInfo from "./components/ProductInfo/ProductInfo";
+import { useProductInfo } from "./hooks/useProductInfo";
 
 const OrderPageContainer = styled.div`
   display: flex;
@@ -30,6 +32,13 @@ function OrderPage() {
     handleQuantityChange,
   } = useReceiverInput();
 
+  const product = useProductInfo();
+
+  // TODO: 유효성 검사를 어떻게 하면 좋을지
+  if (!product) {
+    return;
+  }
+
   return (
     <Layout>
       <OrderPageContainer>
@@ -52,6 +61,7 @@ function OrderPage() {
           handleReceiverPhoneChange={handleReceiverPhoneChange}
           handleQuantityChange={handleQuantityChange}
         />
+        <ProductInfo product={product} quantity={quantity} />
       </OrderPageContainer>
     </Layout>
   );
