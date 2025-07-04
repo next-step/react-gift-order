@@ -36,12 +36,24 @@ function OrderPage() {
     handleReceiverNameChange,
     handleReceiverPhoneChange,
     handleQuantityChange,
+    validateReceiverName,
+    validateReceiverPhone,
+    validateQuantity,
+    receiverNameErrorMessage,
+    receiverPhoneErrorMessage,
+    quantityErrorMessage,
+    hasReceiverNameError,
+    hasReceiverPhoneError,
+    hasQuantityError,
   } = useReceiverInput();
 
   const product = useProductInfo();
 
   const validateForms = () => {
     validateSenderName(senderName);
+    validateReceiverName(receiverName);
+    validateReceiverPhone(receiverPhone);
+    validateQuantity(quantity);
   };
 
   // TODO: 유효성 검사를 어떻게 하면 좋을지
@@ -73,6 +85,15 @@ function OrderPage() {
           handleReceiverNameChange={handleReceiverNameChange}
           handleReceiverPhoneChange={handleReceiverPhoneChange}
           handleQuantityChange={handleQuantityChange}
+          validateReceiverName={validateReceiverName}
+          validateReceiverPhone={validateReceiverPhone}
+          validateQuantity={validateQuantity}
+          receiverNameErrorMessage={receiverNameErrorMessage}
+          receiverPhoneErrorMessage={receiverPhoneErrorMessage}
+          quantityErrorMessage={quantityErrorMessage}
+          hasReceiverNameError={hasReceiverNameError}
+          hasReceiverPhoneError={hasReceiverPhoneError}
+          hasQuantityError={hasQuantityError}
         />
         <ProductInfo
           product={product}

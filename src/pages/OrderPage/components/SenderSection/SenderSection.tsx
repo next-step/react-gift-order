@@ -59,9 +59,11 @@ function SenderSectionComponent({
             validateSenderName(e.target.value);
           }}
         />
-        <InputLabel>
-          * 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다
-        </InputLabel>
+        {!hasSenderNameError && (
+          <InputLabel>
+            * 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다
+          </InputLabel>
+        )}
       </SendForm>
     </SendSection>
   );

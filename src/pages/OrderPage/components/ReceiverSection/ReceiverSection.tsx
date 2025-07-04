@@ -5,9 +5,18 @@ interface ReceiverSectionProps {
   receiverName: string;
   receiverPhone: string;
   quantity: string;
-  handleReceiverNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleReceiverPhoneChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleQuantityChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleReceiverNameChange: (value: string) => void;
+  handleReceiverPhoneChange: (value: string) => void;
+  handleQuantityChange: (value: string) => void;
+  validateReceiverName: (value: string) => void;
+  validateReceiverPhone: (value: string) => void;
+  validateQuantity: (value: string) => void;
+  receiverNameErrorMessage: string | null;
+  receiverPhoneErrorMessage: string | null;
+  quantityErrorMessage: string | null;
+  hasReceiverNameError: boolean;
+  hasReceiverPhoneError: boolean;
+  hasQuantityError: boolean;
 }
 
 const ReceiverSection = styled.section`
@@ -52,6 +61,15 @@ function ReceiverSectionComponent({
   handleReceiverNameChange,
   handleReceiverPhoneChange,
   handleQuantityChange,
+  validateReceiverName,
+  validateReceiverPhone,
+  validateQuantity,
+  receiverNameErrorMessage,
+  receiverPhoneErrorMessage,
+  quantityErrorMessage,
+  hasReceiverNameError,
+  hasReceiverPhoneError,
+  hasQuantityError,
 }: ReceiverSectionProps) {
   return (
     <ReceiverSection>
@@ -63,7 +81,12 @@ function ReceiverSectionComponent({
             type="text"
             placeholder="이름을 입력하세요."
             value={receiverName}
-            onChange={handleReceiverNameChange}
+            onChange={(e) => {
+              handleReceiverNameChange(e.target.value);
+              validateReceiverName(e.target.value);
+            }}
+            hasError={hasReceiverNameError}
+            errorMessage={receiverNameErrorMessage || undefined}
           />
         </FormField>
         <FormField>
@@ -72,7 +95,12 @@ function ReceiverSectionComponent({
             type="tel"
             placeholder="전화번호를 입력하세요."
             value={receiverPhone}
-            onChange={handleReceiverPhoneChange}
+            onChange={(e) => {
+              handleReceiverPhoneChange(e.target.value);
+              validateReceiverPhone(e.target.value);
+            }}
+            hasError={hasReceiverPhoneError}
+            errorMessage={receiverPhoneErrorMessage || undefined}
           />
         </FormField>
         <FormField>
@@ -81,7 +109,12 @@ function ReceiverSectionComponent({
             type="number"
             min="1"
             value={quantity}
-            onChange={handleQuantityChange}
+            onChange={(e) => {
+              handleQuantityChange(e.target.value);
+              validateQuantity(e.target.value);
+            }}
+            hasError={hasQuantityError}
+            errorMessage={quantityErrorMessage || undefined}
           />
         </FormField>
       </FormContainer>
