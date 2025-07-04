@@ -5,27 +5,27 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export const useLoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [emailError, setemailError] = useState('');
-  const [passwordError, setpasswordError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const [isValid, setIsValid] = useState(false);
 
   const handleEmailBlur = () => {
     if (!email) {
-      setemailError('이메일을 입력해주세요.');
+      setEmailError('이메일을 입력해주세요.');
     } else if (!emailRegex.test(email)) {
-      setemailError('올바른 이메일 형식이 아닙니다.');
+      setEmailError('올바른 이메일 형식이 아닙니다.');
     } else {
-      setemailError('');
+      setEmailError('');
     }
   };
 
   const handlePasswordBlur = () => {
     if (!password) {
-      setpasswordError('비밀번호를 입력해주세요.');
+      setPasswordError('비밀번호를 입력해주세요.');
     } else if (password.length < 8) {
-      setpasswordError('비밀번호는 8자 이상이어야 합니다.');
+      setPasswordError('비밀번호는 8자 이상이어야 합니다.');
     } else {
-      setpasswordError('');
+      setPasswordError('');
     }
   };
 
