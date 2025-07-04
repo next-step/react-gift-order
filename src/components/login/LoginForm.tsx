@@ -1,4 +1,4 @@
-import { Input } from "@/components/common";
+import { ErrorMessage, Input } from "@/components/common";
 import { LoginButton } from "@/components/login";
 import { useLoginForm } from "@/hooks/login/useLoginForm";
 import styled from "@emotion/styled";
@@ -16,15 +16,6 @@ const LoginFormContainer = styled.section(({ theme }) => ({
 const LoginInputWrapper = styled.div(({ theme }) => ({
   width: "100%",
   marginBottom: theme.spacing4,
-}));
-
-const ErrorMessage = styled.div(({ theme }) => ({
-  color: theme.color.red[700],
-  fontSize: theme.typography.label1Regular.fontSize,
-  fontWeight: theme.typography.label1Regular.fontWeight,
-  lineHeight: theme.typography.label1Regular.lineHeight,
-  marginTop: theme.spacing1,
-  minHeight: `calc(${theme.typography.label1Regular.lineHeight} + ${theme.spacing1})`,
 }));
 
 export const LoginForm = () => {
