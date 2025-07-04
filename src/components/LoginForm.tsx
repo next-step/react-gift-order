@@ -1,7 +1,7 @@
 import styled from "@emotion/styled"
 import theme from "@/styles/theme"
 
-const LoginForm = styled.div`
+const LoginForm = styled.form`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
