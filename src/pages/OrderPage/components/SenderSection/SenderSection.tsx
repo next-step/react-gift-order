@@ -3,7 +3,10 @@ import styled from "@emotion/styled";
 
 interface SenderSectionProps {
   senderName: string;
-  handleSenderNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleSenderNameChange: (value: string) => void;
+  validateSenderName: (value: string) => void;
+  senderNameErrorMessage: string | null;
+  hasSenderNameError: boolean;
 }
 
 const SendSection = styled.section`
@@ -37,16 +40,24 @@ const InputLabel = styled.label`
 function SenderSectionComponent({
   senderName,
   handleSenderNameChange,
+  validateSenderName,
+  senderNameErrorMessage,
+  hasSenderNameError,
 }: SenderSectionProps) {
   return (
     <SendSection>
       <SectionTitle>보내는 사람</SectionTitle>
       <SendForm>
         <Input
+          hasError={hasSenderNameError}
+          errorMessage={senderNameErrorMessage || undefined}
           type="text"
           placeholder="이름을 입력해주세요"
           value={senderName}
-          onChange={handleSenderNameChange}
+          onChange={(e) => {
+            handleSenderNameChange(e.target.value);
+            validateSenderName(e.target.value);
+          }}
         />
         <InputLabel>
           * 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다

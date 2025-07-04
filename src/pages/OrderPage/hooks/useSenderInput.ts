@@ -1,14 +1,24 @@
-import { useState } from "react";
+import { useInput } from "@/hooks/useInput";
+import { isNotEmpty } from "@/utils/validation";
+import { useMemo } from "react";
 
-export function useSenderInput() {
-  const [senderName, setSenderName] = useState("");
+export function useSenderInput(initialValue = "") {
+  const senderInput = useInput(initialValue, {
+    isEmpty: (value: string) => isNotEmpty(value),
+  });
 
-  const handleSenderNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSenderName(e.target.value);
-  };
+  const senderNameErrorMessage = useMemo(() => {
+    if (senderInput.errors.isEmpty) {
+      return "이름을 입력해주세요.";
+    }
+    return null;
+  }, [senderInput.errors.isEmpty]);
 
   return {
-    senderName,
-    handleSenderNameChange,
+    senderName: senderInput.value,
+    handleSenderNameChange: senderInput.handleValueChange,
+    validateSenderName: senderInput.validate,
+    senderNameErrorMessage,
+    hasSenderNameError: senderInput.hasError,
   };
 }

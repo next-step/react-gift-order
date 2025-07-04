@@ -1,11 +1,26 @@
 import styled from "@emotion/styled";
+import FormErrorMessage from "@/pages/LoginPage/components/FormErrorMessage";
 
-const StyledInput = styled.input`
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  hasError?: boolean;
+  errorMessage?: string;
+}
+
+const InputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing[1]};
+  width: 100%;
+`;
+
+const StyledInput = styled.input<{ hasError?: boolean }>`
   width: 100%;
   padding: ${({ theme }) => theme.spacing[3]};
   box-sizing: border-box;
 
-  border: 1px solid ${({ theme }) => theme.colors.border.default};
+  border: 1px solid
+    ${({ theme, hasError }) =>
+      hasError ? theme.colors.status.critical : theme.colors.border.default};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
 
   background-color: ${({ theme }) => theme.colors.background.default};
@@ -14,7 +29,10 @@ const StyledInput = styled.input`
 
   &:focus {
     outline: none;
-    border-color: ${({ theme }) => theme.components.form.focusBorderColor};
+    border-color: ${({ theme, hasError }) =>
+      hasError
+        ? theme.colors.status.critical
+        : theme.components.form.focusBorderColor};
   }
 
   &::placeholder {
@@ -28,8 +46,13 @@ const StyledInput = styled.input`
   }
 `;
 
-const Input = (props: React.InputHTMLAttributes<HTMLInputElement>) => (
-  <StyledInput {...props} />
+const Input = ({ hasError, errorMessage, ...props }: InputProps) => (
+  <InputContainer>
+    <StyledInput hasError={hasError} {...props} />
+    {hasError && errorMessage && (
+      <FormErrorMessage errorMessage={errorMessage} />
+    )}
+  </InputContainer>
 );
 
 export default Input;

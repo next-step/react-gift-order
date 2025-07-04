@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useInput } from "@/hooks/useInput";
-import { isNotEmpty, validateEmailFormat } from "../utils/validation";
+import { isNotEmpty } from "@/utils/validation";
+import { validateEmailFormat } from "../utils/validation";
 import { LOGIN_ERROR_MESSAGES } from "../constants/labels";
 
 export function useEmailValidation(initialValue = "") {

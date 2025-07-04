@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useInput } from "@/hooks/useInput";
-import { isNotEmpty, validatePasswordFormat } from "../utils/validation";
+import { isNotEmpty } from "@/utils/validation";
+import { validatePasswordFormat } from "../utils/validation";
 import { LOGIN_ERROR_MESSAGES } from "../constants/labels";
 
 function usePasswordValidation() {

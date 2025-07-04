@@ -16,12 +16,14 @@ import type { TrendingGiftsType } from "@/types/TrendingGiftsType";
 interface ProductInfoProps {
   product: TrendingGiftsType;
   quantity: string;
+  validateForms: () => void;
 }
 
-function ProductInfo({ product, quantity }: ProductInfoProps) {
+function ProductInfo({ product, quantity, validateForms }: ProductInfoProps) {
   const totalPrice = product.price.sellingPrice * parseInt(quantity, 10);
 
   const handleOrder = () => {
+    validateForms();
     // TODO: 주문 처리 로직
   };
 

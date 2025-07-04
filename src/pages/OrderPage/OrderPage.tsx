@@ -21,7 +21,13 @@ function OrderPage() {
   const { selectedCard, message, handleCardSelect, handleMessageChange } =
     useCardSelection(orderCardMockData);
 
-  const { senderName, handleSenderNameChange } = useSenderInput();
+  const {
+    senderName,
+    handleSenderNameChange,
+    validateSenderName,
+    senderNameErrorMessage,
+    hasSenderNameError,
+  } = useSenderInput();
 
   const {
     receiverName,
@@ -33,6 +39,10 @@ function OrderPage() {
   } = useReceiverInput();
 
   const product = useProductInfo();
+
+  const validateForms = () => {
+    validateSenderName(senderName);
+  };
 
   // TODO: 유효성 검사를 어떻게 하면 좋을지
   if (!product) {
@@ -52,6 +62,9 @@ function OrderPage() {
         <SenderSectionComponent
           senderName={senderName}
           handleSenderNameChange={handleSenderNameChange}
+          validateSenderName={validateSenderName}
+          senderNameErrorMessage={senderNameErrorMessage}
+          hasSenderNameError={hasSenderNameError}
         />
         <ReceiverSectionComponent
           receiverName={receiverName}
@@ -61,7 +74,11 @@ function OrderPage() {
           handleReceiverPhoneChange={handleReceiverPhoneChange}
           handleQuantityChange={handleQuantityChange}
         />
-        <ProductInfo product={product} quantity={quantity} />
+        <ProductInfo
+          product={product}
+          quantity={quantity}
+          validateForms={validateForms}
+        />
       </OrderPageContainer>
     </Layout>
   );
