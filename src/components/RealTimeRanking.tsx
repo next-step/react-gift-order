@@ -217,7 +217,7 @@ export function RealTimeRanking({
   };
 
   const handleProductClick = (product: Product) => {
-    // 상세 페이지 이동 등 구현
+    navigate(`/order/${product.id}`);
   };
 
   return (
