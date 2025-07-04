@@ -6,310 +6,6 @@ import { NavigationHeader } from '@/components/NavigationHeader';
 import { messageCardTemplates, rankingProducts } from '@/mock/mockData';
 import type { MessageCardTemplate, GiftOrderForm, Product } from '@/types';
 
-const AppContainer = styled.div`
-  min-height: 100vh;
-  background: ${theme.colors.gray200};
-  display: flex;
-  justify-content: center;
-  padding: 0 ${theme.spacing.spacing4};
-
-  @media (max-width: 768px) {
-    padding: 0;
-  }
-`;
-
-const MobileViewport = styled.div`
-  width: 100%;
-  max-width: 720px;
-  min-height: 100vh;
-  background: ${theme.colors.default};
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-  position: relative;
-
-  @media (max-width: 768px) {
-    max-width: 100%;
-    box-shadow: none;
-  }
-`;
-
-const Separator = styled.div`
-  width: 100%;
-  height: 8px;
-  background: #f5f5f5;
-`;
-
-const FormContainer = styled.div`
-  padding-bottom: 70px;
-`;
-
-const TemplateSelectorContainer = styled.div`
-  background: ${theme.colors.default};
-  padding: ${theme.spacing.spacing4};
-  margin-bottom: ${theme.spacing.spacing3}; // spacing2에서 spacing3으로 증가
-`;
-
-const MessageSection = styled.div`
-  background: ${theme.colors.default};
-  padding: ${theme.spacing.spacing4};
-  margin-bottom: ${theme.spacing.spacing3}; // spacing2에서 spacing3으로 증가
-`;
-
-const FormSection = styled.div`
-  background: ${theme.colors.default};
-  padding: ${theme.spacing.spacing4};
-  margin-bottom: ${theme.spacing.spacing3}; // spacing2에서 spacing3으로 증가
-`;
-
-const ProductSection = styled.div`
-  background: ${theme.colors.default};
-  padding: ${theme.spacing.spacing4};
-  margin-bottom: 0;
-`;
-
-const TemplateThumb = styled.button<{
-  isSelected: boolean;
-  hasError?: boolean;
-}>`
-  flex-shrink: 0;
-  width: 80px;
-  height: 55px;
-  border: 3px solid
-    ${({ isSelected, hasError, theme }) =>
-      hasError ? 'none' : isSelected ? theme.colors.gray1000 : 'none'};
-  border-radius: 10px;
-  background: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    border-color: ${({ hasError, theme }) =>
-      hasError ? 'none' : theme.colors.blue500};
-  }
-
-  &:active {
-    transform: scale(0.95);
-  }
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 10px;
-  }
-`;
-
-const MessageCardPreview = styled.div`
-  width: 100%;
-  max-width: 400px;
-  margin: 0 auto ${theme.spacing.spacing6} auto;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-
-  img {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-`;
-
-const SectionTitle = styled.h3`
-  font-size: ${theme.typography.subtitle1Bold.fontSize};
-  font-weight: ${theme.typography.subtitle1Bold.fontWeight};
-  color: ${theme.colors.textDefault};
-  margin-bottom: ${theme.spacing.spacing4};
-`;
-
-const FormField = styled.div`
-  margin-bottom: ${theme.spacing.spacing4};
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-`;
-const TemplateScroller = styled.div`
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  gap: 8px;
-  padding: 12px 0;
-  margin-bottom: 24px;
-  border-radius: 12px;
-  background: #fff;
-  &::-webkit-scrollbar {
-    height: 8px;
-    border-radius: 8px;
-    background: #f0f0f0;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: #d1d1d1;
-    border-radius: 8px;
-  }
-  &::-webkit-scrollbar-track {
-    background: #f0f0f0;
-    border-radius: 8px;
-  }
-`;
-
-const Input = styled.input<{ hasError?: boolean }>`
-  width: 100%;
-  padding: ${theme.spacing.spacing2};
-  border: 1px solid
-    ${props =>
-      props.hasError ? theme.colors.critical : theme.colors.borderDefault};
-  border-radius: 8px;
-  font-size: ${theme.typography.body1Regular.fontSize};
-  background: ${theme.colors.default};
-
-  &:focus {
-    outline: none;
-    border-color: ${props =>
-      props.hasError ? theme.colors.critical : theme.colors.blue700};
-  }
-
-  &::placeholder {
-    color: ${theme.colors.textPlaceholder};
-  }
-`;
-
-const TextArea = styled.textarea<{ hasError?: boolean }>`
-  width: 100%;
-  min-height: 50px;
-  padding: ${theme.spacing.spacing3};
-  border: 1px solid
-    ${props =>
-      props.hasError ? theme.colors.critical : theme.colors.borderDefault};
-  border-radius: 8px;
-  font-size: ${theme.typography.body1Regular.fontSize};
-  background: ${theme.colors.default};
-  resize: vertical;
-
-  &:focus {
-    outline: none;
-    border-color: ${props =>
-      props.hasError ? theme.colors.critical : theme.colors.blue700};
-  }
-
-  &::placeholder {
-    color: ${theme.colors.textPlaceholder};
-  }
-`;
-
-const ErrorMessage = styled.div`
-  color: ${theme.colors.critical};
-  font-size: ${theme.typography.label2Regular.fontSize};
-  margin-top: ${theme.spacing.spacing1};
-`;
-
-const HelpText = styled.div`
-  color: ${theme.colors.gray700};
-  font-size: ${theme.typography.label2Regular.fontSize};
-  margin-top: ${theme.spacing.spacing1};
-`;
-
-const ProductInfo = styled.div`
-  display: flex;
-  gap: ${theme.spacing.spacing3};
-  padding: ${theme.spacing.spacing4};
-  border: 1px solid ${theme.colors.borderDefault};
-  border-radius: 8px;
-`;
-
-const ProductImage = styled.img`
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 8px;
-`;
-
-const ProductDetails = styled.div`
-  flex: 1;
-`;
-
-const ProductName = styled.div`
-  font-size: ${theme.typography.body2Bold.fontSize};
-  font-weight: ${theme.typography.title2Regular.fontWeight};
-  color: ${theme.colors.textDefault};
-  margin-bottom: ${theme.spacing.spacing1};
-`;
-
-const ProductBrand = styled.div`
-  font-size: ${theme.typography.label1Regular.fontSize};
-  color: ${theme.colors.textSub};
-  margin-bottom: ${theme.spacing.spacing2};
-`;
-
-const ProductPrice = styled.div`
-  font-size: ${theme.typography.body1Bold.fontSize};
-  font-weight: ${theme.typography.body1Bold.fontWeight};
-  color: ${theme.colors.textDefault};
-`;
-
-const OrderButton = styled.button`
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 720px;
-  padding: ${theme.spacing.spacing4};
-  background: ${theme.colors.kakaoYellow};
-  border: none;
-  font-size: ${theme.typography.body1Bold.fontSize};
-  font-weight: ${theme.typography.title1Bold.fontWeight};
-  color: ${theme.colors.gray1000};
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: ${theme.colors.kakaoYellowHover};
-  }
-
-  &:active {
-    background: ${theme.colors.kakaoYellowActive};
-  }
-
-  @media (max-width: 768px) {
-    max-width: 100%;
-  }
-`;
-
-const HorizontalFormField = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: ${theme.spacing.spacing4};
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-`;
-
-const HorizontalLabel = styled.label`
-  min-width: 72px;
-  font-size: ${theme.typography.body1Bold.fontSize};
-  font-weight: ${theme.typography.title2Regular.fontWeight};
-  color: ${theme.colors.textDefault};
-  margin-right: ${theme.spacing.spacing3};
-`;
-
-const HorizontalInput = styled(Input)`
-  flex: 1;
-  margin-bottom: 0;
-  // 에러 메시지가 있을 때 border 색상 강제 적용
-  ${({ hasError, theme }) =>
-    hasError &&
-    `
-      border-color: ${theme.colors.critical} !important;
-      box-shadow: none;
-    `}
-`;
-
-const InputWithErrorWrapper = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-`;
-
 interface GiftOrderPageProps {
   product?: Product;
 }
@@ -348,7 +44,6 @@ export default function GiftOrderPage({
     field: keyof GiftOrderForm,
     value: string | number
   ) => {
-    // 수량 입력 시 0 이하도 허용, 에러는 validateForm에서 처리
     setFormData(prev => ({ ...prev, [field]: value }));
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
@@ -552,3 +247,307 @@ export default function GiftOrderPage({
     </AppContainer>
   );
 }
+
+const AppContainer = styled.div`
+  min-height: 100vh;
+  background: ${theme.colors.gray200};
+  display: flex;
+  justify-content: center;
+  padding: 0 ${theme.spacing.spacing4};
+
+  @media (max-width: 768px) {
+    padding: 0;
+  }
+`;
+
+const MobileViewport = styled.div`
+  width: 100%;
+  max-width: 720px;
+  min-height: 100vh;
+  background: ${theme.colors.default};
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  position: relative;
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+    box-shadow: none;
+  }
+`;
+
+const Separator = styled.div`
+  width: 100%;
+  height: 8px;
+  background: #f5f5f5;
+`;
+
+const FormContainer = styled.div`
+  padding-bottom: 70px;
+`;
+
+const TemplateSelectorContainer = styled.div`
+  background: ${theme.colors.default};
+  padding: ${theme.spacing.spacing4};
+  margin-bottom: ${theme.spacing.spacing3};
+`;
+
+const MessageSection = styled.div`
+  background: ${theme.colors.default};
+  padding: ${theme.spacing.spacing4};
+  margin-bottom: ${theme.spacing.spacing3};
+`;
+
+const FormSection = styled.div`
+  background: ${theme.colors.default};
+  padding: ${theme.spacing.spacing4};
+  margin-bottom: ${theme.spacing.spacing3};
+`;
+
+const ProductSection = styled.div`
+  background: ${theme.colors.default};
+  padding: ${theme.spacing.spacing4};
+  margin-bottom: 0;
+`;
+
+const TemplateThumb = styled.button<{
+  isSelected: boolean;
+  hasError?: boolean;
+}>`
+  flex-shrink: 0;
+  width: 80px;
+  height: 55px;
+  border: 3px solid
+    ${({ isSelected, hasError, theme }) =>
+      hasError ? 'none' : isSelected ? theme.colors.gray1000 : 'none'};
+  border-radius: 10px;
+  background: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: ${({ hasError, theme }) =>
+      hasError ? 'none' : theme.colors.blue500};
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+`;
+
+const MessageCardPreview = styled.div`
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto ${theme.spacing.spacing6} auto;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+`;
+
+const SectionTitle = styled.h3`
+  font-size: ${theme.typography.subtitle1Bold.fontSize};
+  font-weight: ${theme.typography.subtitle1Bold.fontWeight};
+  color: ${theme.colors.textDefault};
+  margin-bottom: ${theme.spacing.spacing4};
+`;
+
+const FormField = styled.div`
+  margin-bottom: ${theme.spacing.spacing4};
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;
+
+const TemplateScroller = styled.div`
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 8px;
+  padding: 12px 0;
+  margin-bottom: 24px;
+  border-radius: 12px;
+  background: #fff;
+  &::-webkit-scrollbar {
+    height: 8px;
+    border-radius: 8px;
+    background: #f0f0f0;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #d1d1d1;
+    border-radius: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 8px;
+  }
+`;
+
+const Input = styled.input<{ hasError?: boolean }>`
+  width: 100%;
+  padding: ${theme.spacing.spacing2};
+  border: 1px solid
+    ${props =>
+      props.hasError ? theme.colors.critical : theme.colors.borderDefault};
+  border-radius: 8px;
+  font-size: ${theme.typography.body1Regular.fontSize};
+  background: ${theme.colors.default};
+
+  &:focus {
+    outline: none;
+    border-color: ${props =>
+      props.hasError ? theme.colors.critical : theme.colors.blue700};
+  }
+
+  &::placeholder {
+    color: ${theme.colors.textPlaceholder};
+  }
+`;
+
+const TextArea = styled.textarea<{ hasError?: boolean }>`
+  width: 100%;
+  min-height: 50px;
+  padding: ${theme.spacing.spacing3};
+  border: 1px solid
+    ${props =>
+      props.hasError ? theme.colors.critical : theme.colors.borderDefault};
+  border-radius: 8px;
+  font-size: ${theme.typography.body1Regular.fontSize};
+  background: ${theme.colors.default};
+  resize: vertical;
+
+  &:focus {
+    outline: none;
+    border-color: ${props =>
+      props.hasError ? theme.colors.critical : theme.colors.blue700};
+  }
+
+  &::placeholder {
+    color: ${theme.colors.textPlaceholder};
+  }
+`;
+
+const ErrorMessage = styled.div`
+  color: ${theme.colors.critical};
+  font-size: ${theme.typography.label2Regular.fontSize};
+  margin-top: ${theme.spacing.spacing1};
+`;
+
+const HelpText = styled.div`
+  color: ${theme.colors.gray700};
+  font-size: ${theme.typography.label2Regular.fontSize};
+  margin-top: ${theme.spacing.spacing1};
+`;
+
+const ProductInfo = styled.div`
+  display: flex;
+  gap: ${theme.spacing.spacing3};
+  padding: ${theme.spacing.spacing4};
+  border: 1px solid ${theme.colors.borderDefault};
+  border-radius: 8px;
+`;
+
+const ProductImage = styled.img`
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+`;
+
+const ProductDetails = styled.div`
+  flex: 1;
+`;
+
+const ProductName = styled.div`
+  font-size: ${theme.typography.body2Bold.fontSize};
+  font-weight: ${theme.typography.title2Regular.fontWeight};
+  color: ${theme.colors.textDefault};
+  margin-bottom: ${theme.spacing.spacing1};
+`;
+
+const ProductBrand = styled.div`
+  font-size: ${theme.typography.label1Regular.fontSize};
+  color: ${theme.colors.textSub};
+  margin-bottom: ${theme.spacing.spacing2};
+`;
+
+const ProductPrice = styled.div`
+  font-size: ${theme.typography.body1Bold.fontSize};
+  font-weight: ${theme.typography.body1Bold.fontWeight};
+  color: ${theme.colors.textDefault};
+`;
+
+const OrderButton = styled.button`
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 720px;
+  padding: ${theme.spacing.spacing4};
+  background: ${theme.colors.kakaoYellow};
+  border: none;
+  font-size: ${theme.typography.body1Bold.fontSize};
+  font-weight: ${theme.typography.title1Bold.fontWeight};
+  color: ${theme.colors.gray1000};
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: ${theme.colors.kakaoYellowHover};
+  }
+
+  &:active {
+    background: ${theme.colors.kakaoYellowActive};
+  }
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+  }
+`;
+
+const HorizontalFormField = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: ${theme.spacing.spacing4};
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;
+
+const HorizontalLabel = styled.label`
+  min-width: 72px;
+  font-size: ${theme.typography.body1Bold.fontSize};
+  font-weight: ${theme.typography.title2Regular.fontWeight};
+  color: ${theme.colors.textDefault};
+  margin-right: ${theme.spacing.spacing3};
+`;
+
+const HorizontalInput = styled(Input)`
+  flex: 1;
+  margin-bottom: 0;
+  ${({ hasError, theme }) =>
+    hasError &&
+    `
+      border-color: ${theme.colors.critical} !important;
+      box-shadow: none;
+    `}
+`;
+
+const InputWithErrorWrapper = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+`;

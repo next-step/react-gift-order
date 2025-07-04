@@ -11,6 +11,28 @@ interface FormFieldProps {
   className?: string;
 }
 
+const FormField: React.FC<FormFieldProps> = ({
+  label,
+  htmlFor,
+  error,
+  helpText,
+  children,
+  direction = 'row',
+  className,
+}) => (
+  <FieldWrapper direction={direction} className={className}>
+    {label && <Label htmlFor={htmlFor}>{label}</Label>}
+    <InputWrapper>
+      {children}
+      {error ? (
+        <ErrorMessage>{error}</ErrorMessage>
+      ) : (
+        helpText && <HelpText>{helpText}</HelpText>
+      )}
+    </InputWrapper>
+  </FieldWrapper>
+);
+
 const FieldWrapper = styled.div<{ direction: 'row' | 'column' }>`
   display: flex;
   flex-direction: ${props => props.direction};
@@ -46,27 +68,5 @@ const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
 `;
-
-const FormField: React.FC<FormFieldProps> = ({
-  label,
-  htmlFor,
-  error,
-  helpText,
-  children,
-  direction = 'row',
-  className,
-}) => (
-  <FieldWrapper direction={direction} className={className}>
-    {label && <Label htmlFor={htmlFor}>{label}</Label>}
-    <InputWrapper>
-      {children}
-      {error ? (
-        <ErrorMessage>{error}</ErrorMessage>
-      ) : (
-        helpText && <HelpText>{helpText}</HelpText>
-      )}
-    </InputWrapper>
-  </FieldWrapper>
-);
 
 export default FormField;
