@@ -1,10 +1,12 @@
+import { URLS } from '@/assets/urls';
 import { useLoginEmailForm } from '@/hooks/useLoginEmailForm';
 import { useLoginPwForm } from '@/hooks/useLoginPwForm';
 import { StyeldLoginInput } from '@/styles/Login/StyeldLoginInput';
 import { StyledLoginButton } from '@/styles/Login/StyledLoginButton';
 import { StyledLoginComponentDiv } from '@/styles/Login/StyledLoginComponentDiv';
 import { StyledLoginKakoLogo } from '@/styles/Login/StyledLoginKakoLogo';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface LoginFormProp {
   onLoginSuccess?: () => void;
@@ -13,18 +15,18 @@ interface LoginFormProp {
 const LoginForm: React.FC<LoginFormProp> = ({ onLoginSuccess }) => {
   const { id, idError, handleIdBlur, handleIdChange } = useLoginEmailForm();
   const { pw, pwError, handlePwBlur, handlePwChange } = useLoginPwForm();
-  //로그인 타입 검사
+  const navigate = useNavigate();
 
-  //const navigate = useNavigate();
-  const [email, setEmail] = useState<string>('');
+  //로그인 타입 검사
 
   const handelLogin = () => {
     const username = id.split('@')[0];
 
     sessionStorage.setItem('username', username);
-    sessionStorage.setItem('email', email);
+    sessionStorage.setItem('email', id);
 
     onLoginSuccess?.();
+    navigate(URLS.home);
   };
 
   const isLoginButtonEnabled = useMemo(() => {

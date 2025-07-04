@@ -3,6 +3,7 @@ import Home from '@pages/Home';
 import Login from '@pages/Login';
 import NotFound from '@pages/NotFound';
 import { URLS } from '@assets/urls';
+import MyPage from '@/pages/MyPage';
 
 const Router = createBrowserRouter([
   {
@@ -12,6 +13,10 @@ const Router = createBrowserRouter([
   {
     path: URLS.login,
     element: <Login />,
+  },
+  {
+    path: URLS.mypage,
+    element: <MyPage />,
   },
   {
     path: '*',

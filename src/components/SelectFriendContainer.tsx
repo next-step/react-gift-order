@@ -33,14 +33,26 @@ const StyledSelectFriendBtnPlus = styled.div`
 
 const StyledSelectFriendP = styled.p`
   width: 100%;
+  ${({ theme }) => theme.typography.title2Bold}
 `;
 
 const SelectFriendContainer = () => {
+  const makeSelectFrinedMessage = () => {
+    let msg = '선물할 친구를 선택해 주세요';
+    const username = sessionStorage.getItem('username');
+    if (username) {
+      msg = username + '님! ' + msg;
+      return msg;
+    } else {
+      return msg;
+    }
+  };
+
   return (
     <StyledSelectFriendOuterContainer>
       <StyledSelectFriendBtn>
         <StyledSelectFriendBtnPlus>+</StyledSelectFriendBtnPlus>
-        <StyledSelectFriendP>선물할 친구를 선택해 주세요</StyledSelectFriendP>
+        <StyledSelectFriendP>{makeSelectFrinedMessage()}</StyledSelectFriendP>
       </StyledSelectFriendBtn>
     </StyledSelectFriendOuterContainer>
   );

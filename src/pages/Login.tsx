@@ -1,4 +1,4 @@
-import LoginForm from '@/components/LoginForm';
+import LoginFormContainer from '@/components/LoginFormContainer';
 import NavigationBar from '@components/NavigationBar';
 import { StyledLoginComponentContainerDiv } from '@styles/Login/StyledLoginComponentContainerDiv';
 import { useNavigate } from 'react-router-dom';
@@ -13,7 +13,7 @@ const Login: React.FC = () => {
     <>
       <NavigationBar />
       <StyledLoginComponentContainerDiv>
-        <LoginForm onLoginSuccess={handleLoginSuccess} />
+        <LoginFormContainer onLoginSuccess={handleLoginSuccess} />
       </StyledLoginComponentContainerDiv>
     </>
   );
