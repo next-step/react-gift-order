@@ -9,7 +9,9 @@ export const NavigationBar = () => {
   const location = useLocation();
   const { isLoggedIn } = useAuth();
 
-  const isShowBackButton = !HIDE_BACK_BUTTON_PATHS.includes(location.pathname);
+  const isShowBackButton = !HIDE_BACK_BUTTON_PATHS.some((prefix) =>
+    location.pathname.startsWith(prefix),
+  );
 
   const handleUserClick = () => {
     if (isLoggedIn) {
