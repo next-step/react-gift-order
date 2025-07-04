@@ -1,23 +1,22 @@
 import { ROUTES } from "@/constants/routes";
 import { useAuth } from "@/contexts/AuthContext";
-import { useCallback } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 
 function useLoginSubmit() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
   const { login } = useAuth();
 
-  const handleSubmit = useCallback(
-    (e: React.FormEvent, email: string) => {
-      e.preventDefault();
-      login(email);
-      const from = location.state?.from || ROUTES.HOME;
-      navigate(from, { replace: true });
-    },
-    // TODO: eslint 경고 확인
-    [navigate, location]
-  );
+  const handleSubmit = (e: React.FormEvent, email: string) => {
+    e.preventDefault();
+    login(email);
+
+    const redirectPath = searchParams.get("redirect");
+    const from = redirectPath || location.state?.from || ROUTES.HOME;
+
+    navigate(from, { replace: true });
+  };
 
   return { handleSubmit };
 }

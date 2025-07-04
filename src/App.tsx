@@ -9,6 +9,7 @@ import { ViewportContainer } from "./App.styles";
 import { AuthProvider } from "./contexts/AuthContext";
 import MyPage from "./pages/MyPage/MyPage";
 import { ROUTES } from "./constants/routes";
+import OrderPage from "./pages/OrderPage/OrderPage";
 
 const globalStyles = css`
   body {
@@ -26,6 +27,7 @@ function App() {
             <Route path={ROUTES.HOME} element={<HomePage />} />
             <Route path={ROUTES.LOGIN} element={<LoginPage />} />
             <Route path={ROUTES.MY} element={<MyPage />} />
+            <Route path={ROUTES.ORDER} element={<OrderPage />} />
             <Route path={ROUTES.NOT_FOUND} element={<NotFoundPage />} />
           </Routes>
         </ViewportContainer>
