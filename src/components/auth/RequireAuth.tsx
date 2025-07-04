@@ -7,9 +7,11 @@ type RequireAuthProps = {
 };
 
 const RequireAuth = ({ children }: RequireAuthProps) => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, isInitialized } = useAuth();
   const location = useLocation();
-
+  if (!isInitialized) {
+    return null;
+  }
   if (!isLoggedIn) {
     return <Navigate to="/login" replace state={{ from: location }} />;
   }

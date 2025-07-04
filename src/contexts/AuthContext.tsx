@@ -6,6 +6,7 @@ type User = {
 };
 
 type AuthContextType = {
+  isInitialized: boolean;
   isLoggedIn: boolean;
   user: User | null;
   login: (userData: User) => void;
@@ -16,6 +17,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,6 +25,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
+    setIsInitialized(true);
   }, []);
 
   const login = (userData: User) => {
@@ -40,6 +43,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     <AuthContext.Provider
       value={{
         isLoggedIn: !!user,
+        isInitialized,
         user,
         login,
         logout,
