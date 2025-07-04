@@ -37,6 +37,8 @@ const OrderPage = () => {
   const [senderError, setSenderError] = useState('');
   const [receiverNameError, setReceiverNameError] = useState('');
   const [receiverPhoneError, setReceiverPhoneError] = useState('');
+  const [messageError, setMessageError] = useState('');
+  const [quantityError, setQuantityError] = useState('');
 
   const product = mockItems[0];
 
@@ -64,6 +66,16 @@ const OrderPage = () => {
       hasError = true;
     }
 
+    if (!message.trim()) {
+      setMessageError('메시지를 입력해주세요.');
+      hasError = true;
+    }
+
+    if (quantity < 1) {
+      setQuantityError('구매 수량은 1개 이상이어야 합니다.');
+      hasError = true;
+    }
+
     if (hasError) return;
 
     alert(
@@ -74,6 +86,7 @@ const OrderPage = () => {
   const handleCardSelect = (card: (typeof cardTemplates)[0]) => {
     setSelectedCard(card);
     setMessage(card.defaultTextMessage);
+    setMessageError('');
   };
 
   return (
@@ -100,11 +113,16 @@ const OrderPage = () => {
         />
       </div>
 
-      <textarea
+        <textarea
         value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        css={messageInputStyle(theme)}
-      />
+        onChange={(e) => {
+            setMessage(e.target.value);
+            if (e.target.value.trim()) setMessageError('');
+        }}
+        placeholder={message.trim() === '' ? '메시지를 입력해주세요.' : ''}
+        css={[messageInputStyle(theme), messageError && errorInputStyle]}
+        />
+        {messageError && <p css={errorMessageStyle}>{messageError}</p>}
 
       <div css={sectionStyle(theme)}>
         <div css={formGroupStyle(theme)}>
@@ -174,12 +192,20 @@ const OrderPage = () => {
 
           <div css={horizontalFormStyle(theme)}>
             <label css={receiverLabelStyle(theme)}>수량</label>
-            <input
-              type="number"
-              min={1}
-              value={quantity}
-              onChange={(e) => setQuantity(Number(e.target.value))}
-            />
+            <div style={{ flex: 1 }}>
+              <input
+                type="number"
+                min={1}
+                value={quantity}
+                onChange={(e) => {
+                  const val = Number(e.target.value);
+                  setQuantity(val);
+                  if (val >= 1) setQuantityError('');
+                }}
+                css={quantityError ? errorInputStyle : undefined}
+              />
+              {quantityError && <p css={errorMessageStyle}>{quantityError}</p>}
+            </div>
           </div>
         </div>
       </div>
