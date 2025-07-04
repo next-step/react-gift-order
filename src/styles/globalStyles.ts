@@ -1,0 +1,29 @@
+import { css } from '@emotion/react';
+
+export const globalStyles = css`
+  #root {
+    background-color: rgb(255, 255, 255);
+    margin: auto 0px;
+    max-width: 720px;
+    height: 100%;
+    width: 100%;
+  }
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    height: 100%;
+    min-width: 320px;
+    width: 100%;
+  }
+
+  @font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
+      format('woff');
+    font-weight: 400;
+    font-style: normal;
+  }
+`;

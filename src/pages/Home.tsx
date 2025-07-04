@@ -7,15 +7,13 @@ import { Spacer } from '@/styles/Spacer';
 
 function Home() {
   return (
-    <>
-      <StyledTopestDiv>
-        <NavigationBar />
-        <SelectFriendContainer />
-        <PresentThemeContainer />
-        <Spacer />
-        <PresentRankingContainer />
-      </StyledTopestDiv>
-    </>
+    <StyledTopestDiv>
+      <NavigationBar />
+      <SelectFriendContainer />
+      <PresentThemeContainer />
+      <Spacer />
+      <PresentRankingContainer />
+    </StyledTopestDiv>
   );
 }
 export default Home;
