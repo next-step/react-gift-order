@@ -1,22 +1,29 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
 import { useState } from "react";
+import type { RefObject } from "react";
 import { MESSAGE_CARD_LIST } from "../../mocks/messagecard_mock";
 import type { MessageCard } from "../../mocks/types";
 
-const MessageCardSection = () => {
+interface Props {
+  inputRef: RefObject<HTMLTextAreaElement>;
+  error?: string;
+}
+
+const MessageCardSection = ({ inputRef, error }: Props) => {
   const [selectedCard, setSelectedCard] = useState<MessageCard>(
     MESSAGE_CARD_LIST[0]
   );
-  const [message, setMessage] = useState(selectedCard.defaultTextMessage);
 
   const handleSelect = (card: MessageCard) => {
     setSelectedCard(card);
-    setMessage(card.defaultTextMessage);
+    if (inputRef.current) {
+      inputRef.current.value = card.defaultTextMessage;
+    }
   };
 
   return (
-    <>
+    <Wrapper>
       <ThumbList>
         {MESSAGE_CARD_LIST.map((card) => (
           <ThumbButton
@@ -31,11 +38,15 @@ const MessageCardSection = () => {
 
       <PreviewImage src={selectedCard.imageUrl} alt="preview" />
 
-      <MessageInput
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-      />
-    </>
+      <MessageInputWrapper>
+        <MessageInput
+          ref={inputRef}
+          placeholder="메시지를 입력해주세요."
+          defaultValue={selectedCard.defaultTextMessage}
+        />
+        {error && <ErrorText>{error}</ErrorText>}
+      </MessageInputWrapper>
+    </Wrapper>
   );
 };
 const Wrapper = styled.div`
@@ -89,7 +100,7 @@ const PreviewImage = styled.img`
 const MessageInput = styled.textarea`
   width: 90%;
   height: 40px;
-  margin: 30px auto;
+  margin: 0 auto 18px;
   border: 1px solid ${({ theme }) => theme.colors.gray600};
   border-radius: 10px;
   padding: 10px;
@@ -99,6 +110,18 @@ const MessageInput = styled.textarea`
     outline: none;
     border-color: ${({ theme }) => theme.colors.gray800};
   }
+`;
+
+const MessageInputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+`;
+
+const ErrorText = styled.p`
+  color: red;
+  font-size: ${({ theme }) => theme.typography.body2Regular.fontSize};
 `;
 
 export default MessageCardSection;

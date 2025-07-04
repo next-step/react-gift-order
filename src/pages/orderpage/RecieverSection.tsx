@@ -1,40 +1,44 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
-import { useState } from "react";
+import type { RefObject } from "react";
 
-const ReceiverInfoSection = () => {
-  const [receiverName, setReceiverName] = useState("");
-  const [receiverPhone, setReceiverPhone] = useState("");
-  const [quantity, setQuantity] = useState(1);
+interface Props {
+  receiverRef: RefObject<HTMLInputElement>;
+  phoneRef: RefObject<HTMLInputElement>;
+  quantityRef: RefObject<HTMLInputElement>;
+  errorReceiver?: string;
+  errorPhone?: string;
+  errorQuantity?: string;
+}
 
+const ReceiverInfoSection = ({
+  receiverRef,
+  phoneRef,
+  quantityRef,
+  errorReceiver,
+  errorPhone,
+  errorQuantity,
+}: Props) => {
   return (
     <>
       <Title>받는 사람</Title>
       <FormRow>
         <Label>이름</Label>
-        <Input
-          value={receiverName}
-          onChange={(e) => setReceiverName(e.target.value)}
-          placeholder="이름을 입력하세요."
-        />
+        <Input ref={receiverRef} placeholder="이름을 입력하세요." />
       </FormRow>
+      {errorReceiver && <ErrorText>{errorReceiver}</ErrorText>}
+
       <FormRow>
         <Label>전화번호</Label>
-        <Input
-          value={receiverPhone}
-          onChange={(e) => setReceiverPhone(e.target.value)}
-          placeholder="전화번호를 입력하세요."
-        />
+        <Input ref={phoneRef} placeholder="전화번호를 입력하세요." />
       </FormRow>
+      {errorPhone && <ErrorText>{errorPhone}</ErrorText>}
+
       <FormRow>
         <Label>수량</Label>
-        <Input
-          type="number"
-          min={1}
-          value={quantity}
-          onChange={(e) => setQuantity(Number(e.target.value))}
-        />
+        <Input type="number" min={1} defaultValue={1} ref={quantityRef} />
       </FormRow>
+      {errorQuantity && <ErrorText>{errorQuantity}</ErrorText>}
     </>
   );
 };
@@ -70,3 +74,10 @@ const Input = styled.input`
 `;
 
 export default ReceiverInfoSection;
+
+const ErrorText = styled.p`
+  margin: 4px 0 12px 70px;
+  color: red;
+  font-size: ${({ theme }) => theme.typography.body2Regular.fontSize};
+  text-align: left;
+`;
