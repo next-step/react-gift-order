@@ -1,11 +1,10 @@
-import NavigationBar from '@/components/NavigationBar';
+import MyPageContainer from '@components/MyPageContainer';
 
 const MyPage = () => {
   return (
-    <div>
-      <NavigationBar />
-      <div>마이페이지</div>
-    </div>
+    <>
+      <MyPageContainer></MyPageContainer>
+    </>
   );
 };
 
