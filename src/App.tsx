@@ -7,8 +7,9 @@ import Login from './pages/Login'
 import NotFound from './pages/NotFound'
 import MyPage from "./pages/MyPage";
 import ProtectedRoute from "./Components/ProtectedRoute";
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { LoginProvider } from "./contexts/LoginContext"
+import Order from './pages/Order'
 
 
 const muiTheme = createTheme()
@@ -29,6 +30,8 @@ function App() {
                   <MyPage />
                 </ProtectedRoute>
               } />
+              <Route path="/order/:id" element={<Order />} />
+              <Route path="/order" element={<Navigate to="/" replace />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
