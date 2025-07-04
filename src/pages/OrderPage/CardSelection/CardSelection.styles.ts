@@ -49,7 +49,10 @@ export const CardPreviewContainer = styled.div`
   align-items: center;
   gap: ${({ theme }) => theme.spacing[10]};
   background-color: ${({ theme }) => theme.colors.background.default};
+
   padding-top: ${({ theme }) => theme.spacing[4]};
+  padding-left: ${({ theme }) => theme.spacing[7]};
+  padding-right: ${({ theme }) => theme.spacing[7]};
 `;
 
 export const MainCardImage = styled.img`
@@ -57,13 +60,14 @@ export const MainCardImage = styled.img`
   max-width: 360px;
   height: 230px;
   border-radius: ${({ theme }) => theme.borderRadius.md};
-  box-shadow: 0px 12px 12px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 12px 12px 0px hsla(0, 0%, 0%, 0.1);
 `;
 
 export const MessageTextArea = styled.textarea`
-  width: 92%;
+  width: 100%;
   height: 40px;
   padding: ${({ theme }) => theme.spacing[3]};
+
   border: 1px solid ${({ theme }) => theme.colors.gray[400]};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   resize: none;

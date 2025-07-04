@@ -1,17 +1,8 @@
 import Layout from "@/layout";
 import { orderCardMockData } from "@/data/orderCardMockData";
-import {
-  CardPreviewContainer,
-  CardSelectorContainer,
-  MainCardImage,
-  MessageTextArea,
-  ThumbnailImage,
-  ThumbnailItem,
-  ThumbnailList,
-} from "./OrderPage.styles";
-import { useState } from "react";
-import type { OrderCardType } from "@/types/OrderCardType";
 import styled from "@emotion/styled";
+import CardSelection from "./CardSelection/CardSelection";
+import { useCardSelection } from "./hooks/useCardSelection";
 
 const OrderPageContainer = styled.div`
   display: flex;
@@ -21,42 +12,19 @@ const OrderPageContainer = styled.div`
 `;
 
 function OrderPage() {
-  const [selectedCard, setSelectedCard] = useState<OrderCardType>(
-    orderCardMockData[0]
-  );
-  const [message, setMessage] = useState(selectedCard.defaultTextMessage);
-
-  const handleCardSelect = (card: OrderCardType) => {
-    setSelectedCard(card);
-    setMessage(card.defaultTextMessage);
-  };
-
-  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setMessage(e.target.value);
-  };
+  const { selectedCard, message, handleCardSelect, handleMessageChange } =
+    useCardSelection(orderCardMockData);
 
   return (
     <Layout>
       <OrderPageContainer>
-        <section>
-          <CardSelectorContainer>
-            <ThumbnailList>
-              {orderCardMockData.map((card) => (
-                <ThumbnailItem
-                  key={card.id}
-                  isSelected={selectedCard.id === card.id}
-                  onClick={() => handleCardSelect(card)}
-                >
-                  <ThumbnailImage src={card.thumbUrl} alt={`card-${card.id}`} />
-                </ThumbnailItem>
-              ))}
-            </ThumbnailList>
-          </CardSelectorContainer>
-          <CardPreviewContainer>
-            <MainCardImage src={selectedCard.imageUrl} alt="selected-card" />
-            <MessageTextArea value={message} onChange={handleMessageChange} />
-          </CardPreviewContainer>
-        </section>
+        <CardSelection
+          cards={orderCardMockData}
+          selectedCard={selectedCard}
+          message={message}
+          onSelect={handleCardSelect}
+          onMessageChange={handleMessageChange}
+        />
       </OrderPageContainer>
     </Layout>
   );
