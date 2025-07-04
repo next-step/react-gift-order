@@ -35,6 +35,7 @@ const Card = styled.div`
   position: relative;
   transition: all 0.2s ease;
   border-radius: 6px;
+  cursor: pointer;
 `;
 
 const RankBadge = styled.div`
