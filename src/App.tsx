@@ -11,6 +11,7 @@ import { Routes, Route } from "react-router-dom";
 import LoginPage from "@/pages/LoginPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import MyPage from "@/pages/MyPage";
+import OrderPage from "@/pages/OrderPage";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/my" element={<MyPage />} />
+          <Route path="/order" element={<OrderPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Layout>

@@ -1,8 +1,9 @@
 /** @jsxImportSource @emotion/react */
-import styled from '@emotion/styled';
-import { useState } from 'react';
-import { MOCK_PRICE_INFO } from './mock';
-import RisingItem from './RisingItem';
+import styled from "@emotion/styled";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { MOCK_PRICE_INFO } from "./mock";
+import RisingItem from "./RisingItem";
 
 const INITIAL_VISIBLE_COUNT = 6;
 
@@ -13,12 +14,19 @@ const items = Array.from({ length: 21 }, (_, i) => ({
 
 export default function RisingList() {
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
+  const navigate = useNavigate();
+
+  const handleItemClick = (item: typeof MOCK_PRICE_INFO & { id: number }) => {
+    navigate("/order", { state: { product: item } });
+  };
 
   return (
     <Wrapper>
       <Grid>
         {items.slice(0, visibleCount).map((item) => (
-          <RisingItem key={item.id} {...item} />
+          <div key={item.id} onClick={() => handleItemClick(item)}>
+            <RisingItem {...item} />
+          </div>
         ))}
       </Grid>
       {visibleCount < items.length && (
