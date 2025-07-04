@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { ChevronLeft, User } from 'lucide-react';
 import { theme } from '@/styles/theme';
 import type { NavigationState } from '@/types';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface NavigationHeaderProps {
   title: string;
@@ -21,6 +22,7 @@ export function NavigationHeader({
 }: NavigationHeaderProps) {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuth();
 
   const handleBackClick = () => {
     if (onBackClick) {
@@ -37,6 +39,8 @@ export function NavigationHeader({
   const handleProfileClick = () => {
     if (onProfileClick) {
       onProfileClick();
+    } else if (user) {
+      navigate('/my');
     } else {
       const navState: NavigationState = { from: location.pathname };
       navigate('/login', {
