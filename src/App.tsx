@@ -3,6 +3,7 @@ import MainPage from '@/pages/MainPage';
 import LoginPage from '@/pages/LoginPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 import MyPage from '@/pages/MyPage';
+import GiftOrderPage from '@/pages/GiftOrderPage';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { ROUTES } from '@/constants/routes';
 
@@ -18,6 +19,14 @@ function App() {
           element={
             <ProtectedRoute>
               <MyPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/order/:productId"
+          element={
+            <ProtectedRoute>
+              <GiftOrderPage />
             </ProtectedRoute>
           }
         />
