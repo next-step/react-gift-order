@@ -1,10 +1,10 @@
-import * as Styles from "@/shared/ui/Input.styled";
+import * as Styles from "@/features/auth/ui/AuthInput.styled";
 
-export interface InputProps extends React.ComponentProps<"input"> {
+export interface AuthInputProps extends React.ComponentProps<"input"> {
     error?: string;
 }
 
-export const Input = ({ error, ...props }: InputProps) => {
+export const AuthInput = ({ error, ...props }: AuthInputProps) => {
     return (
         <>
             <Styles.InputElement type="text" error={error} {...props} />

@@ -2,9 +2,10 @@ import kakaoLogo from "@/app/assets/kakao-logo.svg";
 
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useSignIn } from "@/features/auth/hooks/useSignIn";
+import { AuthInput } from "@/features/auth/ui/AuthInput";
 
 import { useRedirect } from "@/shared/hooks/useRedirect";
-import { Button, Input } from "@/shared/ui";
+import { Button } from "@/shared/ui";
 
 import { VerticalSpacing } from "@/widgets/layouts/Spacing.styled";
 
@@ -37,7 +38,7 @@ export default function SignInPage() {
 
             <Styles.Form>
                 <Styles.FieldSet>
-                    <Input
+                    <AuthInput
                         type="email"
                         width="100%"
                         height="44px"
@@ -49,7 +50,7 @@ export default function SignInPage() {
                 </Styles.FieldSet>
                 <VerticalSpacing size="16px" />
                 <Styles.FieldSet>
-                    <Input
+                    <AuthInput
                         type="password"
                         width="100%"
                         height="44px"

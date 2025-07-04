@@ -1,8 +1,8 @@
-import type { InputProps } from "@/shared/ui/Input";
+import type { AuthInputProps } from "@/features/auth/ui/AuthInput";
 
 import styled from "@emotion/styled";
 
-export const InputElement = styled.input<InputProps>`
+export const InputElement = styled.input<AuthInputProps>`
     width: ${({ width }) => width};
     height: ${({ height }) => height};
 
