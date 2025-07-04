@@ -1,6 +1,8 @@
 import styled from '@emotion/styled';
 import { colors, fontSizes, spaces, radii, shadows } from '@/tokens/designTokens';
 import products from '@/data/products';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Wrap = styled.section`
   padding: ${spaces.lg} ${spaces.md};
@@ -24,6 +26,12 @@ const Card = styled.div`
   border-radius: ${radii.sm};
   box-shadow: ${shadows.card};
   overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
 `;
 
 const Image = styled.img`
@@ -44,6 +52,7 @@ const BrandWrapper = styled.div`
 
 const BrandName = styled.span`
   font-size: ${fontSizes.body};
+  color: ${colors.text};
 `;
 
 const GiftName = styled.h3`
@@ -67,12 +76,23 @@ const BrandLogo = styled.img`
 `;
 
 export default function FeaturedGifts() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const handleProductClick = (productId: number) => {
+    if (user) {
+      navigate(`/order/${productId}`);
+    } else {
+      navigate('/login', { state: { from: `/order/${productId}` } });
+    }
+  };
+
   return (
     <Wrap>
       <Title>추천 선물</Title>
       <Grid>
         {products.map(item => (
-          <Card key={item.id}>
+          <Card key={item.id} onClick={() => handleProductClick(item.id)}>
             <Image src={item.imageURL} alt={item.name} />
             <Content>
               <BrandWrapper>

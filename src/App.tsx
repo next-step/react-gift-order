@@ -10,33 +10,54 @@ import { Container } from '@/styles/Container';
 import { Routes, Route } from 'react-router-dom';
 import Login from '@/pages/Login';
 import NotFound from '@/pages/NotFound';
+import MyPage from '@/pages/MyPage';
+import OrderPage from '@/pages/OrderPage';
+import ProtectedRoute from '@/components/ProtectedRoute';
+import { AuthProvider } from '@/contexts/AuthContext';
 
 function App() {
   return (
-    <Container>
-      <GlobalStyle />
+    <AuthProvider>
+      <Container>
+        <GlobalStyle />
 
-      <Header />
+        <Header />
 
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <>
-              <Hero />
-              <CategoryList />
-              <FeaturedGifts />
-              <SupportBanner />
-              <LiveRanking />
-              <Footer />
-            </>
-          }
-        />
-        <Route path="/login" element={<Login />} />
-        <Route path="*" element={<NotFound />} />
-
-      </Routes>
-    </Container>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <Hero />
+                <CategoryList />
+                <FeaturedGifts />
+                <SupportBanner />
+                <LiveRanking />
+                <Footer />
+              </>
+            }
+          />
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/my"
+            element={
+              <ProtectedRoute>
+                <MyPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/order/:productId"
+            element={
+              <ProtectedRoute>
+                <OrderPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Container>
+    </AuthProvider>
   );
 }
 
