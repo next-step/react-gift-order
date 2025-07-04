@@ -1,11 +1,15 @@
-export interface Price {
-  basicPrice: number;
-  discountRate: number;
-  sellingPrice: number;
-}
-
-export interface BrandInfo {
+export interface Product {
   id: number;
   name: string;
   imageURL: string;
+  price: {
+    basicPrice: number;
+    discountRate: number;
+    sellingPrice: number;
+  };
+  brandInfo: {
+    id: number;
+    name: string;
+    imageURL: string;
+  };
 }

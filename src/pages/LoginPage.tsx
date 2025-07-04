@@ -31,8 +31,19 @@ const LoginPage = () => {
     ) {
       return;
     }
+
     login(email);
-    navigate("/my");
+
+    const state = location.state as {
+      from?: string;
+      product?: unknown;
+    };
+
+    if (state?.from === "/order" && state?.product) {
+      navigate("/order", { state: { product: state.product } });
+    } else {
+      navigate("/my");
+    }
   };
 
   const emailValidation = (value: string) => {

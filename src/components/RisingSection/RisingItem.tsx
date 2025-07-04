@@ -1,21 +1,10 @@
 /** @jsxImportSource @emotion/react */
-import styled from '@emotion/styled';
-import type { Price, BrandInfo } from './types';
+import styled from "@emotion/styled";
+import type { Product } from "./types";
 
-export interface RisingItemProps {
-  id: number;
-  name: string;
-  imageURL: string;
-  price: Price;
-  brandInfo: BrandInfo;
-}
+export default function RisingItem({ product }: { product: Product }) {
+  const { name, imageURL, price, brandInfo } = product;
 
-export default function RisingItem({
-  name,
-  imageURL,
-  price,
-  brandInfo,
-}: RisingItemProps) {
   return (
     <Card>
       <Image src={imageURL} alt={name} />
