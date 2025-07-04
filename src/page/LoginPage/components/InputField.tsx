@@ -46,14 +46,14 @@ export interface InputHook {
 interface InputFieldProps {
   hook: InputHook;
   placeholder: string;
-  type?: React.HTMLInputTypeAttribute; 
+  type?: React.HTMLInputTypeAttribute;
 }
-
+// value, onChange, error, isValid
 const InputField: React.FC<InputFieldProps> = ({ hook, placeholder, type }) => {
-  const { error, ...inputProps } = hook;
+  const { value, error, onChange } = hook;
   return (
     <InputContainer>
-      <Input placeholder={placeholder} type={type} {...inputProps} />
+      <Input placeholder={placeholder} type={type} value={value} onChange={onChange} />
       {error && <P>{error}</P>}
     </InputContainer>
   );

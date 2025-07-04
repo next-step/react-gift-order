@@ -50,8 +50,8 @@ const Button = styled.button`
 
 const LoginPage = () => {
   const navigateBackOrHome = useNavigateBackOrHome();
-  const username = useInput('', 'email');
-  const password = useInput('', 'password');
+  const username = useInput('email');
+  const password = useInput('password');
 
   const isButtonActive = username.isValid && password.isValid;
 

@@ -1,16 +1,19 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { validateEmail, validatePassword } from '../utils/validate';
 
-const useInput = (initialValue: string, type: string) => {
-  const [value, setValue] = useState<string>(initialValue);
+const useInput = (type: string) => {
+  const validator = type === 'email' ? validateEmail : validatePassword;
+
+  const [value, setValue] = useState<string>('');
   const [error, setError] = useState<string>('');
 
-  const isValid = useMemo(() => validatePassword(value) === '', [value]);
-
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-    setError(type === 'email' ? validateEmail : validatePassword);
+    const targetValue = e.target.value;
+    setValue(targetValue);
+    setError(validator(targetValue));
   };
+
+  const isValid = error === '';
 
   return { value, onChange, error, isValid };
 };
