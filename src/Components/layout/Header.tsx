@@ -4,6 +4,7 @@ import type { Theme } from '@emotion/react'
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded'
 import PersonOutlineRoundedIcon from '@mui/icons-material/PersonOutlineRounded'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { useLoginContext } from '../../contexts/LoginContext'
 
 const statusBarStyle = (theme: Theme) => css`
   width: 100%;
@@ -56,6 +57,7 @@ const Header = () => {
   const theme = useTheme()
   const navigate = useNavigate()
   const location = useLocation()
+  const { user } = useLoginContext()
   return (
     <>
       <div css={statusBarStyle(theme)} />
@@ -71,7 +73,7 @@ const Header = () => {
         <button
           css={iconButtonStyle(theme)}
           aria-label="프로필"
-          onClick={() => navigate('/login', { state: { from: location } })}
+          onClick={() => user ? navigate('/my') : navigate('/login', { state: { from: location } })}
         >
           <PersonOutlineRoundedIcon fontSize="inherit" />
         </button>
