@@ -8,8 +8,9 @@ export default function NavigationBar() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, userEmail } = useAuth();
   console.log("로그인 상태:", isLoggedIn);
+  console.log("userEmail:", userEmail);
 
   const handleBack = () => {
     const isInternalReferrer = document.referrer.includes(window.location.host);

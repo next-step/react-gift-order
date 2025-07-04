@@ -31,7 +31,7 @@ const LoginPage = () => {
     ) {
       return;
     }
-    login();
+    login(email);
     navigate(from, { replace: true });
   };
 
