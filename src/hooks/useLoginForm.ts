@@ -5,12 +5,11 @@ export interface LoginState {
   email: string;
   password: string;
 }
-export interface LoginErrors {
-  email?: string;
-  password?: string;
-}
+
+type LoginErrors = Partial<LoginState>;
 
 const emailRegex = /^[0-9a-zA-Z]([.-]?[0-9a-zA-Z])*@[0-9a-zA-Z]([.-]?[0-9a-zA-Z])*\.[a-zA-Z]{2,}$/;
+const MIN_PASSWORD_LENGTH = 8;
 
 export default function useLoginForm() {
   const [values, setValues] = useState<LoginState>({ email: '', password: '' });
@@ -24,7 +23,9 @@ export default function useLoginForm() {
         return;
       case 'password':
         if (!value.trim()) return 'PW를 입력해주세요.';
-        if (value.length < 8) return 'PW는 최소 8글자 이상이어야 합니다.';
+        if (value.length < MIN_PASSWORD_LENGTH) {
+          return `PW는 최소 ${MIN_PASSWORD_LENGTH}글자 이상이어야 합니다.`;
+        }
         return;
     }
   };
@@ -36,7 +37,13 @@ export default function useLoginForm() {
 
   const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setErrors((prev) => ({ ...prev, [name]: validate(name as any, value) }));
+
+    if (name === 'email' || name === 'password') {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: validate(name, value),
+      }));
+    }
   };
 
   const isValid = !validate('email', values.email) && !validate('password', values.password);
