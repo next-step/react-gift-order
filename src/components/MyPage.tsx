@@ -6,17 +6,19 @@ const MyPage: React.FC = () => {
   const { user } = useUserInfo();
   const navigate = useNavigate();
 
-  console.log(user);
-
   useEffect(() => {
-    const email = localStorage.getItem("email");
-    const password = localStorage.getItem("password");
-    if (email && password) {
+    const email = sessionStorage.getItem("email");
+    const password = sessionStorage.getItem("password");
+    if (!email || !password) {
       navigate("/login");
     }
   }, [user, navigate]);
 
-  return <div>My Page</div>;
+  return (
+    <div>
+      <div>마이 페이지</div>
+    </div>
+  );
 };
 
 export default MyPage;
