@@ -10,10 +10,8 @@ export const InputElement = styled.input<InputProps>`
 
     border: none;
     border-bottom: 1px solid;
-    border-color: ${({ theme, error }) => {
-        if (error) return theme.colors.red.red700;
-        else return theme.colors.gray.gray400;
-    }};
+    border-color: ${({ theme, error }) =>
+        error ? theme.colors.red.red700 : theme.colors.gray.gray400};
 
     font-size: 1rem;
 
