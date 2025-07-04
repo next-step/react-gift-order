@@ -1,4 +1,4 @@
-import styled from '@emotion/styled';
+import styled from "@emotion/styled";
 
 export const TrendingGiftsSection = styled.section`
   display: flex;
@@ -43,7 +43,8 @@ export const MoreInfoWrapper = styled.div`
 
 export const MoreInfo = styled.p`
   font-size: ${({ theme }) => theme.typography.label.label1Regular.fontSize};
-  font-weight: ${({ theme }) => theme.typography.label.label1Regular.fontWeight};
+  font-weight: ${({ theme }) =>
+    theme.typography.label.label1Regular.fontWeight};
 `;
 
 export const MainTabButton = styled.button`
@@ -68,7 +69,8 @@ export const TabIconContainer = styled.div<{ isSelected: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   font-size: ${({ theme }) => theme.typography.label.label1Bold.fontSize};
   font-weight: ${({ theme }) => theme.typography.label.label1Bold.fontWeight};
-  color: ${({ isSelected, theme }) => (isSelected ? theme.colors.gray[0] : theme.colors.blue[500])};
+  color: ${({ isSelected, theme }) =>
+    isSelected ? theme.colors.gray[0] : theme.colors.blue[500]};
 `;
 
 export const TabLabel = styled.p<{ isSelected: boolean }>`
