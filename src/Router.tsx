@@ -7,6 +7,7 @@ import MyPage from "@/pages/MyPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import { AuthLayout } from "@/pages/auth/AuthLayout";
 import SignInPage from "@/pages/auth/SignInPage";
+import OrderPage from "@/pages/order/OrderPage";
 
 import { RootLayout } from "@/widgets/layouts";
 
@@ -22,6 +23,14 @@ const router = createRoutesFromElements(
                 <AuthGuard>
                     <MyPage />
                 </AuthGuard>
+            }
+        />
+        <Route
+            path="order/:id"
+            element={
+                // <AuthGuard>
+                <OrderPage />
+                // </AuthGuard>
             }
         />
         <Route path="*" element={<NotFoundPage />} />
