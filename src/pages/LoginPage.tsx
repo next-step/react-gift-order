@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { ROUTE_PATH } from '@/constants/routes';
 import useLoginForm from '../hooks/useLoginForm';
 import Input from '@/components/common/Input';
+import { useAuth } from '@/contexts/AuthContext';
 
 const PageBackground = styled.div`
   height: 100vh;
@@ -66,6 +67,7 @@ function LoginPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const from = searchParams.get('from') || ROUTE_PATH.HOME;
+  const {login} = useAuth();
 
   // 커스텀 훅에서 모든 상태와 핸들러를 받아옴
   const {
@@ -80,6 +82,14 @@ function LoginPage() {
     handlePasswordBlur,
     handleSubmit,
   } = useLoginForm({ onSuccess: () => navigate(from, { replace: true }) });
+
+  const hadleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if() {
+      login({email});
+    }
+  }
 
   return (
     <PageBackground>

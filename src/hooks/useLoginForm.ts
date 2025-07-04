@@ -33,6 +33,9 @@ function useLoginForm({ onSuccess }: UseLoginFormProps) {
   const [pwError, setPwError] = useState('');
   const [isButtonActive, setIsButtonActive] = useState(false);
 
+  const isValidEmail = validateEmail(email) === '';
+  const isValidPassword = validatePassword(password) === '';
+
   // 입력값 변경 시마다 상태 및 에러 메시지, 버튼 활성화 상태 업데이트
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -63,10 +66,7 @@ function useLoginForm({ onSuccess }: UseLoginFormProps) {
   // 폼 제출 핸들러
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // 1. boolean 변수로 명확하게 분리
-    const isValidEmail = validateEmail(email) === '';
-    const isValidPassword = validatePassword(password) === '';
-    // 2. 두 조건이 모두 true일 때만 onSuccess 호출
+
     if (isValidEmail && isValidPassword) {
       onSuccess();
     }
