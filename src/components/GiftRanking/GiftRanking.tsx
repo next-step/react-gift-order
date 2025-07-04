@@ -5,22 +5,25 @@ import {
   MoreButton, Grid, Section, Title,
   SortOptions,
 } from '@/components/GiftRanking/GiftRanking.styles';
-import { categories, sorts, INITIAL_VISIBLE_GIFT_COUNT } from "@/constants/RankingConstants";
+import { categories, sorts, INITIAL_VISIBLE_GIFT_COUNT, TOTAL_GIFT_COUNT } from '@/constants/RankingConstants';
 import FilterButton from '@/components/Common/FilterButton/FilterButton';
 import SortSpan from "@/components/Common/SortOption/SortOption"
 import RankingCard from '@/components/Common/RankingCard/RankingCard';
-import usePersistedState from '@/hooks/usePersistedState.tsx';
+import useSelectedState from '@/hooks/useSelectedState.tsx';
+import { useNavigate } from 'react-router-dom';
 
 export default function GiftRanking() {
+  const navigate = useNavigate();
   const [showCount, setShowCount] = useState(INITIAL_VISIBLE_GIFT_COUNT); // 초기에 6개 보여줌
-  const [category, setCategory] = usePersistedState("giftRankingCategory", "전체");
-  const [sort, setSort] = usePersistedState("giftRankingSort", "받고 싶어한");
+  const [category, setCategory] = useSelectedState("giftRankingCategory", "전체");
+  const [sort, setSort] = useSelectedState("giftRankingSort", "받고 싶어한");
 
   const handleToggle = () => {
-    setShowCount(prev => (prev === 6 ? 21 : 6));
+    setShowCount(prev => (prev === INITIAL_VISIBLE_GIFT_COUNT ? TOTAL_GIFT_COUNT : INITIAL_VISIBLE_GIFT_COUNT));
   };
 
-  const expandedList = Array(21).fill(productList[0]);
+  const expandedList = Array(TOTAL_GIFT_COUNT).fill(productList[0]);
+  localStorage.setItem('expandedList', JSON.stringify(expandedList));
 
   return (
     <Section>
@@ -58,6 +61,12 @@ export default function GiftRanking() {
             name={item.name}
             price={item.price.sellingPrice}
             brand={item.brandInfo.name}
+            onClick={() =>
+              navigate(
+                sessionStorage.getItem('splitedId')
+                ?`/order/${index + 1}`
+                : '/login', { state: { from: `/order/${index + 1}`}}
+              )}
           />
         ))}
       </Grid>
