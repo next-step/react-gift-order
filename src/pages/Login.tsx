@@ -4,6 +4,7 @@ import GlobalStyle from '@/styles/global';
 import NavigationBar from '@components/NavigationBar';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useLoginForm } from '@/hooks/useLoginForm';
+import { useAuth } from '@/hooks/useAuth';
 
 const Wrapper = styled.div(({ theme }) => ({
   width: '100%',
@@ -144,7 +145,11 @@ const Login: React.FC = () => {
     isFormValid,
   } = useLoginForm();
 
+  // 로그인 함수
+  const { login } = useAuth();
+
   const handleClick = () => {
+    login({ email: id });
     navigate(redirectTo, { replace: true });
   };
   return (

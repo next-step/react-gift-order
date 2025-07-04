@@ -1,8 +1,7 @@
 import { createContext, useState, type ReactNode } from 'react';
 
 type User = {
-  id: string;
-  pw: string;
+  email: string;
 };
 
 interface AuthContextType {
