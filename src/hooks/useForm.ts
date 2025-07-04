@@ -54,7 +54,7 @@ const useForm = (config: UseFormOptions) => {
     receivername.isValid &&
     quantity.isValid;
 
-  const handleChange = (field: keyof UseFormOptions, value: string) => {
+  const handleChange = (field: string, value: string) => {
     if (field === "cardmessage") cardmessage.onChange(value);
     if (field === "sendername") sendername.onChange(value);
     if (field === "phone") phone.onChange(value);
@@ -62,7 +62,7 @@ const useForm = (config: UseFormOptions) => {
     if (field === "quantity") quantity.onChange(value);
   };
 
-  const handleBlur = (field: keyof UseFormOptions) => {
+  const handleBlur = (field:string) => {
     if (field === "cardmessage") cardmessage.onBlur();
     if (field === "sendername") sendername.onBlur();
     if (field === "phone") phone.onBlur();

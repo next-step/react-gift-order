@@ -1,4 +1,4 @@
-import type { Validator } from '@/utils/validators';
+import type { Validator } from "@/utils/validators";
 import { useState } from "react";
 
 interface UseInputReturn {
@@ -8,7 +8,6 @@ interface UseInputReturn {
   isValid: boolean;
   error: string | null;
   reset: () => void;
-
 }
 
 interface UseInputOptions {
@@ -16,10 +15,11 @@ interface UseInputOptions {
   validator?: Validator;
 }
 
-const useInput = (options: UseInputOptions = {}): UseInputReturn => {
+export const useInput = (options: UseInputOptions = {}): UseInputReturn => {
   const { initialValue = "", validator } = options;
   const [value, setValue] = useState(initialValue);
   const [isTouched, setIsTouched] = useState(false);
+
   const validationResult = validator ? validator(value) : null;
   const isValid = validationResult === null;
   const error = isTouched ? validationResult : null;
@@ -27,9 +27,11 @@ const useInput = (options: UseInputOptions = {}): UseInputReturn => {
   const handleChange = (input: string) => {
     setValue(input);
   };
+
   const handleBlur = () => {
     setIsTouched(true);
   };
+
   const reset = () => {
     setValue("");
     setIsTouched(false);
@@ -39,9 +41,10 @@ const useInput = (options: UseInputOptions = {}): UseInputReturn => {
     value,
     onChange: handleChange,
     onBlur: handleBlur,
-    isValid: isValid,
+    isValid,
     error,
     reset,
   };
 };
+
 export default useInput;

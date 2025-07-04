@@ -4,7 +4,6 @@ import FriendsBox from '@/components/friendsbox/FriendsBox';
 import Navbar from '@/components/navbar/Navbar';
 import { PaddingLg, PaddingMd } from '@/components/padding/Padding';
 import Ranking from '@/components/ranking/Ranking';
-import React from 'react'
 
 const Main = () => {
   return (

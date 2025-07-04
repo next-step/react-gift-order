@@ -55,6 +55,7 @@ const LoginBtn = styled.button<{ activated: boolean }>`
   opacity: ${({ activated }) => (activated ? 1 : 0.5)};
   cursor: ${({ activated }) => (activated ? "pointer" : "not-allowed")};
 `;
+
 const ValidationMsg = styled.p`
   color: ${({ theme }) => theme.colors.red.red700};
   ${({ theme }) => theme.typography.label2Regular}
