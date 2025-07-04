@@ -1,22 +1,39 @@
-import styled from "@emotion/styled";
+import { forwardRef } from "react";
+
+import * as Styles from "./Input.styled";
 
 export interface InputProps extends React.ComponentProps<"input"> {
     width?: SizeProp;
     height?: SizeProp;
 }
 
-export const Input = styled.input`
-    width: ${({ width }) => width || "100%"};
-    height: ${({ height }) => height || "100%"};
+export const InputElement = forwardRef<HTMLInputElement, InputProps>(
+    ({ width, height, ...props }, ref) => {
+        return <Styles.Input ref={ref} width={width} height={height} {...props} />;
+    },
+);
 
-    border: 1px solid ${({ theme }) => theme.colors.gray.gray300};
-    border-radius: 8px;
+export interface InputFieldGroupProps extends InputProps {
+    id: string;
+    align: "vertical" | "horizontal";
 
-    padding: ${({ theme }) => theme.spacing.spacing3};
+    label?: string;
+    error?: string;
+}
 
-    outline: none;
+export const InputFieldGroup = forwardRef<HTMLInputElement, InputFieldGroupProps>(
+    ({ id, align, label, error, width, height, ...props }, ref) => {
+        return (
+            <>
+                <Styles.InputFieldGroupContainer align={align}>
+                    {label && <Styles.InputLabel htmlFor={id}>{label}</Styles.InputLabel>}
 
-    &:focus {
-        outline: 1px solid ${({ theme }) => theme.colors.gray.gray900};
-    }
-`;
+                    <Styles.InputElementContainer>
+                        <InputElement id={id} ref={ref} width={width} height={height} {...props} />
+                        {error && <Styles.Error>{error}</Styles.Error>}
+                    </Styles.InputElementContainer>
+                </Styles.InputFieldGroupContainer>
+            </>
+        );
+    },
+);
