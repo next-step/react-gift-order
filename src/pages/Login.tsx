@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "@emotion/styled";
 import { useLoginForm } from "../hooks/useLoginForm";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Layout } from "../Components/layout/Layout";
 
 const LoginWrapper = styled.div`
@@ -83,6 +83,7 @@ const LoginButton = styled.button`
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   // 커스텀 훅에서 모든 상태와 핸들러를 받아옴
   const {
     email,
@@ -96,7 +97,14 @@ const Login: React.FC = () => {
     handlePasswordBlur,
     handleSubmit,
   } = useLoginForm({
-    onSuccess: () => navigate("/")
+    onSuccess: () => {
+      const redirect = location.state?.redirect;
+      if (redirect) {
+        navigate(redirect);
+      } else {
+        navigate("/");
+      }
+    }
   });
 
   return (
