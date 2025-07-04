@@ -21,7 +21,7 @@ function OrderPage() {
   const params = useParams();
   const userContext = useContext(UserContext);
 
-  const RequireLogin = (path: string, id: string | undefined) => {
+  const redirectLogin = (path: string, id: string | undefined) => {
     navigate(PATH.LOGIN + `?redirect=${encodeURIComponent(path)}/${id}`);
   };
 
@@ -69,7 +69,7 @@ function OrderPage() {
 
   useEffect(() => {
     if (!userContext?.valid.value) {
-      RequireLogin(PATH.ORDER, params.id);
+      redirectLogin(PATH.ORDER, params.id);
     }
   }, [userContext?.valid.value]);
 

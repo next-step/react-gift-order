@@ -9,13 +9,13 @@ function MyPage() {
   const navigate = useNavigate();
   const userContext = useContext(UserContext);
 
-  const RequireLogin = (path: string) => {
+  const redirectLogin = (path: string) => {
     navigate(PATH.LOGIN + `?redirect=${encodeURIComponent(path)}`);
   };
 
   useEffect(() => {
     if (!userContext?.valid.value) {
-      RequireLogin(PATH.MY);
+      redirectLogin(PATH.MY);
     }
   }, [userContext?.valid.value]);
 
