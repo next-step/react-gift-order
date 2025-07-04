@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
-import { rankingDatas } from '@/data/rankingDatas';
-import { useSearchParams } from 'react-router-dom';
 import { filters, generations } from '@/data/categoryDatas';
+import useSearchParamState from '../hooks/useSearchParamState';
+import useToggleCollapse from '../hooks/useToggleCollapse';
+import { rankingDatas } from '@/data/rankingDatas';
 
 interface ButtonProps {
   isActive: boolean;
@@ -145,38 +145,14 @@ const ToggleButton = styled.button`
 `;
 
 const GiftRanking = () => {
-  const [isCollapsed, setIsCollapsed] = useState(true);
-  const [visibleItemsCount, setVisibleItemsCount] = useState(6);
+  const {
+    handleGenerationGroupClick,
+    handleFilterGroupClick,
+    activeGenerationButton,
+    activeFilterButton,
+  } = useSearchParamState();
 
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const [activeGenerationButton, setActiveGenerationButton] = useState<string>('all');
-  const [activeFilterButton, setActiveFilterButton] = useState<string>('received');
-
-  useEffect(() => {
-    const generation = searchParams.get('generation') ?? 'ALL';
-    const filter = searchParams.get('filter') ?? 'MANY_WISH';
-
-    setActiveGenerationButton(generation);
-    setActiveFilterButton(filter);
-  }, [searchParams]);
-
-  const handleGenerationGroupClick = (id: string) => {
-    setActiveGenerationButton(id);
-    searchParams.set('generation', id);
-    setSearchParams(searchParams, { replace: true });
-  };
-
-  const handleFilterGroupClick = (id: string) => {
-    setActiveFilterButton(id);
-    searchParams.set('filter', id);
-    setSearchParams(searchParams, { replace: true });
-  };
-
-  const toggleCollapse = () => {
-    setIsCollapsed(prev => !prev);
-    setVisibleItemsCount(isCollapsed ? rankingDatas.length : 6);
-  };
+  const { isCollapsed, visibleItemsCount, toggleCollapse } = useToggleCollapse(rankingDatas.length);
 
   return (
     <Section>
