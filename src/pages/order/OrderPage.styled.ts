@@ -56,3 +56,20 @@ export const Label = styled.label`
 export const FieldGroup = styled.div`
     display: flex;
 `;
+
+export const OrderButton = styled.button`
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    width: 100%;
+    height: 48px;
+
+    border: 0;
+
+    font-size: ${({ theme }) => theme.typography.label.label1Bold.size};
+    font-weight: ${({ theme }) => theme.typography.label.label1Bold.weight};
+
+    background-color: ${({ theme }) => theme.colors.semantic.kakaoYellow};
+`;

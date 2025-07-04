@@ -1,11 +1,12 @@
 import { useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import { useParams } from "react-router-dom";
 
 import { cardTemplates } from "@/features/order/constants/cardTemplate";
 import { LetterCard } from "@/features/order/ui/LetterCard";
 import { ProductInfo } from "@/features/order/ui/ProductInfo";
 
-import { Input } from "@/shared/ui/Input";
+import { InputElement as Input, InputFieldGroup } from "@/shared/ui/Input";
 import { TextArea } from "@/shared/ui/TextArea";
 
 import { VerticalSpacing } from "@/widgets/layouts/Spacing.styled";
@@ -78,7 +79,11 @@ export default function OrderPage() {
             <VerticalSpacing size="40px" />
 
             <Styles.FieldSet>
-                <TextArea height="65px" placeholder="메시지를 입력해주세요." />
+                <TextArea
+                    height="65px"
+                    placeholder="메시지를 입력해주세요."
+                    defaultValue={letterCard?.defaultTextMessage}
+                />
             </Styles.FieldSet>
 
             <VerticalSpacing size="32px" />
@@ -95,24 +100,32 @@ export default function OrderPage() {
             <Styles.FieldSet>
                 <Styles.Legend>받는 사람</Styles.Legend>
 
-                <Styles.FieldGroup>
-                    <Styles.Label>이름</Styles.Label>
-                    <Input placeholder="이름을 입력하세요." />
-                </Styles.FieldGroup>
+                <InputFieldGroup
+                    id="receiver_name"
+                    align="horizontal"
+                    label="이름"
+                    placeholder="이름을 입력하세요."
+                />
 
                 <VerticalSpacing size="12px" />
 
-                <Styles.FieldGroup>
-                    <Styles.Label>전화번호</Styles.Label>
-                    <Input placeholder="전화번호를 입력하세요." />
-                </Styles.FieldGroup>
+                <InputFieldGroup
+                    id="phone_number"
+                    align="horizontal"
+                    label="전화번호"
+                    error="올바른 휴대폰 번호를 입력해주세요."
+                />
 
                 <VerticalSpacing size="12px" />
 
-                <Styles.FieldGroup>
-                    <Styles.Label>수량</Styles.Label>
-                    <Input type="number" defaultValue={1} placeholder="이름을 입력하세요." />
-                </Styles.FieldGroup>
+                <InputFieldGroup
+                    id="quantity"
+                    type="number"
+                    align="horizontal"
+                    label="수량"
+                    placeholder="수량을 입력하세요."
+                    error="수량은 1 이상이어야 합니다."
+                />
 
                 <VerticalSpacing size="24px" />
             </Styles.FieldSet>
@@ -130,6 +143,11 @@ export default function OrderPage() {
             </Styles.FieldSet>
 
             <VerticalSpacing size="60px" />
+
+            {createPortal(
+                <Styles.OrderButton>29000원 주문하기</Styles.OrderButton>,
+                document.body as HTMLElement,
+            )}
         </Styles.Container>
     );
 }
