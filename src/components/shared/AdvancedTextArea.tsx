@@ -36,7 +36,7 @@ function AdvancedTextArea({
         }}
         value={valueHookSet.value}
       />
-      <ErrorMessege>{reasonHookSet.value}</ErrorMessege>
+      <ErrorMessage>{reasonHookSet.value}</ErrorMessage>
     </AdvancedTextAreaWrapper>
   );
 }
@@ -60,7 +60,7 @@ const TextArea = styled.textarea<{ valid: boolean }>`
     valid ? theme.colors.gray.gray500 : theme.colors.red.red600};
 `;
 
-const ErrorMessege = styled.p`
+const ErrorMessage = styled.p`
   margin: 5px;
   margin-left: 10px;
   font-size: 12px;

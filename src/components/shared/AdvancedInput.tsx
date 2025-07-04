@@ -39,7 +39,7 @@ function AdvancedInput({
         }}
         value={valueHookSet.value}
       />
-      <ErrorMessege>{reasonHookSet.value}</ErrorMessege>
+      <ErrorMessage>{reasonHookSet.value}</ErrorMessage>
     </AdvancedInputWrapper>
   );
 }
@@ -63,7 +63,7 @@ const InputField = styled.input<{ valid: boolean }>`
     valid ? theme.colors.gray.gray500 : theme.colors.red.red600};
 `;
 
-const ErrorMessege = styled.p`
+const ErrorMessage = styled.p`
   margin: 5px;
   margin-left: 10px;
   font-size: 12px;

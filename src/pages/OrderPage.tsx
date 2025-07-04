@@ -9,11 +9,11 @@ import useOrderState from "@src/hooks/useOrderState";
 import { productMockData } from "@src/mock/productMockData";
 import { PATH } from "@src/router/Router";
 import theme from "@src/styles/kakaoTheme";
-import { createNewMessegeEvaluator } from "@src/utils/evaluator/implementation/messegeEvaluator";
+import { createNewMessageEvaluator } from "../utils/evaluator/implementation/messageEvaluator";
 import { createNewNameEvaluator } from "@src/utils/evaluator/implementation/nameEvaluator";
 import { createNewPNEvaluator } from "@src/utils/evaluator/implementation/phoneNumberEvaluator";
 import { createNewQuantityEvaluator } from "@src/utils/evaluator/implementation/quantityEvaluator";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 function OrderPage() {
@@ -25,7 +25,7 @@ function OrderPage() {
     navigate(PATH.LOGIN + `?redirect=${encodeURIComponent(path)}/${id}`);
   };
 
-  const messegeEvaluator = createNewMessegeEvaluator();
+  const messageEvaluator = createNewMessageEvaluator();
   const nameEvaluator = createNewNameEvaluator();
   const phoneNumberEvaluator = createNewPNEvaluator();
   const quantityEvaluator = createNewQuantityEvaluator();
@@ -34,8 +34,8 @@ function OrderPage() {
   const orderErrorHandler = useOrderErrorHandler();
 
   const orderHandler = () => {
-    const messegeValid = messegeEvaluator.evaluate(orderState.messege.value);
-    const messegeReason = messegeEvaluator.reason();
+    const messageValid = messageEvaluator.evaluate(orderState.message.value);
+    const messageReason = messageEvaluator.reason();
     const senderValid = nameEvaluator.evaluate(orderState.sender.value);
     const senderReason = nameEvaluator.reason();
     const receiverValid = nameEvaluator.evaluate(orderState.receiver.value);
@@ -47,7 +47,7 @@ function OrderPage() {
     const quantityValid = quantityEvaluator.evaluate(orderState.quantity.value);
     const quantityReason = quantityEvaluator.reason();
 
-    orderErrorHandler.messegeValid.setValue(messegeValid);
+    orderErrorHandler.messageValid.setValue(messageValid);
     orderErrorHandler.senderValid.setValue(senderValid);
     orderErrorHandler.receiverValid.setValue(receiverValid);
     orderErrorHandler.phoneNumberValid.setValue(phoneNumberValid);
@@ -55,11 +55,11 @@ function OrderPage() {
 
     if (senderValid && receiverValid && phoneNumberValid && quantityValid) {
       alert(
-        `주문이 완료되었습니다.\n상품명: ${productMockData.name}\n수량: ${orderState.quantity.value}\n발신자 이름: ${orderState.sender.value}\n받는 사람 이름: ${orderState.receiver.value}\n메세지: ${orderState.messege.value}`
+        `주문이 완료되었습니다.\n상품명: ${productMockData.name}\n수량: ${orderState.quantity.value}\n발신자 이름: ${orderState.sender.value}\n받는 사람 이름: ${orderState.receiver.value}\n메세지: ${orderState.message.value}`
       );
       navigate(PATH.MAIN);
     } else {
-      orderErrorHandler.messegeReason.setValue(messegeReason);
+      orderErrorHandler.messageReason.setValue(messageReason);
       orderErrorHandler.senderReason.setValue(senderReason);
       orderErrorHandler.receiverReason.setValue(receiverReason);
       orderErrorHandler.phoneNumberReason.setValue(phoneNumberReason);
@@ -76,10 +76,10 @@ function OrderPage() {
   return (
     <OrderPageWrapper>
       <CardSelector
-        evaluator={messegeEvaluator}
-        validHookSet={orderErrorHandler.messegeValid}
-        reasonHookSet={orderErrorHandler.messegeReason}
-        valueHookSet={orderState.messege}
+        evaluator={messageEvaluator}
+        validHookSet={orderErrorHandler.messageValid}
+        reasonHookSet={orderErrorHandler.messageReason}
+        valueHookSet={orderState.message}
       />
       <InputGroup title="보내는 사람">
         <AdvancedInput

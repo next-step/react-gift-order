@@ -1,6 +1,5 @@
 import styled from "@emotion/styled";
 import { cardTempleteMockData } from "@src/mock/cardTempleteMockData";
-import theme from "@src/styles/kakaoTheme";
 import { useEffect, useState } from "react";
 import AdvancedTextArea from "../shared/AdvancedTextArea";
 import type { Evaluator } from "@src/utils/evaluator/rulesetEvaluator";
@@ -84,21 +83,6 @@ const CardThumbnailWrapper = styled.div`
   display: flex;
   gap: 10px;
   overflow-x: scroll;
-`;
-
-const MessegeArea = styled.textarea`
-  margin: 20px;
-  flex: 1;
-  border: 1px solid ${theme.colors.gray.gray500};
-  border-radius: 10px;
-  background-color: transparent;
-  padding: 10px;
-  outline: none;
-  transition: border-bottom 0.25s ease;
-
-  &:focus {
-    border: 1px solid ${theme.colors.gray.gray700};
-  }
 `;
 
 export default CardSelector;
