@@ -1,0 +1,47 @@
+import React, { createContext, useContext, useState, useEffect } from 'react';
+
+interface User {
+  email: string;
+}
+
+interface AuthContextType {
+  user: User | null;
+  login: (user: User) => void;
+  logout: () => void;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const [user, setUser] = useState<User | null>(null);
+
+  // 새로고침해도 로그인 정보 유지 (localStorage 사용)
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) setUser(JSON.parse(storedUser));
+  }, []);
+
+  useEffect(() => {
+    if (user) localStorage.setItem('user', JSON.stringify(user));
+    else localStorage.removeItem('user'); // 사용자가 로그아웃한다면
+  }, [user]);
+
+  const login = (user: User) => setUser(user);
+  const logout = () => setUser(null);
+
+  return (
+    <AuthContext.Provider value={{ user, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+// Context를 쉽게 사용하기 위한 커스텀 훅
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context)
+    throw new Error('useAuth는 AuthProvider 안에서만 사용해야 해요!');
+  return context;
+};
