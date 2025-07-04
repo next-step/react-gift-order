@@ -1,4 +1,4 @@
-import categoryData from "@/data/categoryData";
+import { categoryData } from "@/data/categoryData.ts";
 import type { Theme } from "@emotion/react";
 import { css } from "@emotion/react";
 import { useTheme } from "@emotion/react";
@@ -12,7 +12,8 @@ const Category = () => {
         <div
           css={categoryItemStyle(theme)}
           key={category.themeId}
-          className="category-item">
+          className="category-item"
+        >
           <img
             src={category.image}
             alt={category.name}

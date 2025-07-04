@@ -1,4 +1,3 @@
-import NavigationBar from "@/components/NavigationBar";
 import { css } from "@emotion/react";
 
 const layoutStyle = css`

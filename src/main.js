@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var jsx_runtime_1 = require("@emotion/react/jsx-runtime");
+var client_1 = require("react-dom/client");
+require("./index.css");
+require("./reset.css");
+var App_1 = require("./App");
+require("pretendard/dist/web/static/pretendard.css");
+var react_router_dom_1 = require("react-router-dom");
+(0, client_1.createRoot)(document.getElementById("root")).render((0, jsx_runtime_1.jsx)(react_router_dom_1.BrowserRouter, { children: (0, jsx_runtime_1.jsx)(App_1.default, {}) }));
