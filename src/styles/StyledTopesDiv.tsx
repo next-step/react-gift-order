@@ -61,6 +61,9 @@ const StyledTopestDiv = styled.div`
   .border-red {
     border-color: ${({ theme }) => theme.palette.red800};
   }
+  .padding-6-12 {
+    padding: 6px 12px;
+  }
 `;
 
 export default StyledTopestDiv;

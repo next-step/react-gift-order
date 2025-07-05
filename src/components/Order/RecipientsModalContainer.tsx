@@ -1,65 +1,55 @@
-import { StyledReceivePersonContainer } from '@/styles/Order/OrderContainer/StyledReceivePersonContainer';
+import { StyledRecipientsModalContainer } from '@styles/Order/OrderContainer/StyledRecipientsModalContainer';
+import styled from '@emotion/styled';
+
+const StyledRecipientsModalContainerBasicLabelDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    border: 1px black solid;
+  }
+`;
+const StyledRecipientsAddModalContainer = styled.div`
+  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 6px 0px 6px 0px;
+  margin: 12px 0px 12px 0px;
+  border: 1px black solid;
+  div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    border: 1px black solid;
+  }
+`;
 
 const RecipientsModalContainer = () => {
   return (
-    <StyledReceivePersonContainer className='receive-person background-default'>
-      <div>
-        <div>
+    <StyledRecipientsModalContainer className='receive-person background-default'>
+      <StyledRecipientsModalContainerBasicLabelDiv>
+        <div className='padding-6-12'>
           <p className='title2Bold'>받는 사람</p>
+          <button>추가</button>
         </div>
-        <div>
-          <p className='basic-label'>이름</p>
+      </StyledRecipientsModalContainerBasicLabelDiv>
+      <StyledRecipientsAddModalContainer>
+        <div className='padding-6-12'>
+          <p className='label2Regular'>받는 사람이 없습니다.</p>
+          <p className='label2Regular'>받는 사람을 추가해 주세요</p>
         </div>
-      </div>
-    </StyledReceivePersonContainer>
+      </StyledRecipientsAddModalContainer>
+    </StyledRecipientsModalContainer>
   );
 };
 
 export default RecipientsModalContainer;
-{
-  /* <StyledReceivePersonContainer className='receive-person background-default'>
-          <div>
-            <p className='title2Bold'>받는 사람</p>
-          </div>
-          <div>
-            <p className='basic-label'>이름</p>
-            <SyltedOrderInput
-              type='text'
-              name='receiveName'
-              className='send-person-name body2Regular'
-              placeholder='이름을 입력하세요'
-              value={receiveName}
-              onChange={handleCommonChange}
-              hasError={!!commonErrorMsgs[1]}
-            />
-          </div>
-          {commonErrorMsgs[1] && <ErrorMsg>{commonErrorMsgs[1]}</ErrorMsg>}
-          <div>
-            <p className='basic-label'>전화번호</p>
-            <SyltedOrderInput
-              type='text'
-              name='receiveTel'
-              className='send-person-name body2Regular'
-              placeholder='전화번호를 입력하세요'
-              value={receiveTel}
-              onChange={(e) => handleCommonChange(e)}
-              hasError={!!commonErrorMsgs[2]}
-            />
-          </div>
-          {commonErrorMsgs[2] && <ErrorMsg>{commonErrorMsgs[2]}</ErrorMsg>}
-          <div>
-            <p className='basic-label'>수량</p>
-            <SyltedOrderInput
-              type='number'
-              name='count'
-              className='send-person-name body2Regular'
-              placeholder='수량을 입력하세요'
-              min='1'
-              value={count}
-              onChange={handleCommonChange}
-              hasError={!!commonErrorMsgs[3]}
-            />
-          </div>
-          {commonErrorMsgs[3] && <ErrorMsg>{commonErrorMsgs[3]}</ErrorMsg>}
-        </StyledReceivePersonContainer> */
-}
