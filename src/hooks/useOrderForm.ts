@@ -1,23 +1,23 @@
 // src/hooks/useCommonOrderForm.ts
 import { useState, useCallback, type ChangeEvent } from 'react';
 
-interface CommonFormValues {
+interface BaiscOrderForm {
   sendName: string;
   receiveName: string;
   receiveTel: string;
   count: number;
 }
 
-interface CommonOrderFormHook {
-  commonFormValues: CommonFormValues;
+interface BaiscOrderFormHook {
+  commonFormValues: BaiscOrderForm;
   commonErrorMsgs: string[];
   handleCommonChange: (e: ChangeEvent<HTMLInputElement>) => void; // input만 처리
   validateCommonForm: () => boolean;
   resetCommonForm: () => void;
 }
 
-export const useCommonOrderForm = (): CommonOrderFormHook => {
-  const [commonFormValues, setCommonFormValues] = useState<CommonFormValues>({
+export const useCommonOrderForm = (): BaiscOrderFormHook => {
+  const [commonFormValues, setCommonFormValues] = useState<BaiscOrderForm>({
     sendName: '',
     receiveName: '',
     receiveTel: '',

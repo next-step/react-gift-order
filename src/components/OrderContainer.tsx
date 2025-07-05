@@ -44,11 +44,12 @@ const StyledReceivePersonContainer = styled.div`
     padding: 5px 10px;
     gap: 14px;
   }
-  p {
+  .basic-label {
     width: 80px;
   }
 `;
 
+//error 구문 존재시 스타일적 변경을 위한 HasErrorProp 타입 사용
 const SyltedOrderInput = styled.input<HasErrorProp>`
   padding: 6px 12px;
   width: 100%;
@@ -124,14 +125,15 @@ const OrderContainer = () => {
   }, [searchParams]);
 
   const handleOrderSubmit = () => {
-    // 각 훅의 유효성 검사를 모두 수행
+    // 각 input에 대한 유효성 검사를 2개의 훅을 통해 수행
     validateCommonForm();
     validateMsg();
   };
 
   return (
     <StyledTopestDiv>
-      {/* OrderCardTemplateContainer에 msg 관련 prop 전달 */}
+      {/* Card 생성 컴포넌트*/}
+      {/* props로 유효성 검사에 필요한 핸들러와 state들을 전달*/}
       <OrderCardTemplateContainer
         msg={msg} // useMsgForm의 msg 값
         onMsgChange={handleMsgChange} // useMsgForm의 handleMsgChange 함수
@@ -150,15 +152,18 @@ const OrderContainer = () => {
           onChange={handleCommonChange} // useCommonOrderForm의 handleCommonChange
           hasError={!!commonErrorMsgs[0]} // commonErrorMsgs 인덱스에 맞게 수정
         />
-        {commonErrorMsgs[0] && <ErrorMsg>{commonErrorMsgs[0]}</ErrorMsg>}
-        <p className='margin-left-20 label2Regular'>* 실제 선물 발송시 발신자이름으로 반영되는 정보입니다.</p>
+        {commonErrorMsgs[0] ? (
+          <ErrorMsg>{commonErrorMsgs[0]}</ErrorMsg>
+        ) : (
+          <p className='margin-left-20 label2Regular'>* 실제 선물 발송시 발신자이름으로 반영되는 정보입니다.</p>
+        )}
       </StyledSendPersonContainer>
       <StyledReceivePersonContainer className='receive-person background-default'>
         <div>
           <p className='title2Bold'>받는 사람</p>
         </div>
         <div>
-          <p>이름</p>
+          <p className='basic-label'>이름</p>
           <SyltedOrderInput
             type='text'
             name='receiveName'
@@ -171,7 +176,7 @@ const OrderContainer = () => {
         </div>
         {commonErrorMsgs[1] && <ErrorMsg>{commonErrorMsgs[1]}</ErrorMsg>}
         <div>
-          <p>전화번호</p>
+          <p className='basic-label'>전화번호</p>
           <SyltedOrderInput
             type='text'
             name='receiveTel'
@@ -187,7 +192,7 @@ const OrderContainer = () => {
         </div>
         {commonErrorMsgs[2] && <ErrorMsg>{commonErrorMsgs[2]}</ErrorMsg>}
         <div>
-          <p>수량</p>
+          <p className='basic-label'>수량</p>
           <SyltedOrderInput
             type='number'
             name='count'
@@ -203,7 +208,7 @@ const OrderContainer = () => {
       </StyledReceivePersonContainer>
 
       <StyledItemInfoContainer className='item-info background-default'>
-        <p className='title2Bold'>상품 정보</p>
+        <p className='title2Bold basic-label'>상품 정보</p>
         {selectedProduct ? (
           <div className='item-info-text'>
             <img src={selectedProduct.imageURL} alt={selectedProduct.name} className='item-info-img' loading='lazy' />
@@ -211,7 +216,7 @@ const OrderContainer = () => {
               <p className='body1Regular'>{selectedProduct.name}</p>
               <p className='label2Regular'>{selectedProduct.brandInfo.name}</p>
 
-              <p className='item-price body2Bold'>
+              <p className='item-price body2Bold basic-label'>
                 <span className='label1Regular'>상품가 </span>
                 {totalPrice.toLocaleString()} 원
               </p>

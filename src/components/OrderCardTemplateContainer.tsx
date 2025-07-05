@@ -6,7 +6,7 @@ import { useEffect, useState, type ChangeEvent } from 'react';
 interface OrderCardTemplateContainerProps {
   msg: string; // msg 필드의 현재 값
   onMsgChange: (e: ChangeEvent<HTMLTextAreaElement>) => void; // msg 입력 변경 핸들러
-  msgError?: string; // msg 필드의 에러 메시지 (선택 사항으로 처리)
+  msgError?: string; // msg 필드의 에러 메시지
   setMsg: (value: string) => void; // useMsgForm에서 받아올 setMsg 함수 추가
 }
 
@@ -66,12 +66,14 @@ const ErrorMessage = styled.p`
 `;
 
 const OrderCardTemplateContainer = ({ msg, onMsgChange, msgError, setMsg }: OrderCardTemplateContainerProps) => {
+  // 목 데이터 템플릿에서 선택된 템플릿을 저장하기 위한 state 값
   const [selectedTemplate, setSelectedTemplate] = useState<OrderTemplate>(ORDER_TEMPLATE_DATA[0]);
 
+  // selectedTemplate
   useEffect(() => {
+    //버그 해결 -> 템플릿을 사용자가 선택하는 경우에만 setMsg를 통해 템플릿의 기본 메시지로 리렌더링
     setMsg(selectedTemplate.defaultTextMessage);
-    console.log('msg 변화');
-  }, [selectedTemplate, setMsg]); // 의존성에 setMsg 추가
+  }, [selectedTemplate, setMsg]);
 
   return (
     <StyledOrderTemplateContainer className='background-default'>
