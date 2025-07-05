@@ -5,6 +5,7 @@ import NotFoundPage from "@/pages/404";
 import { NavigationBar } from "@/pages/home/components/NavigationBar";
 import AuthGuard from "./guards/AuthGuard";
 import MyPage from "@/pages/my";
+import OrderPage from "@/pages/order";
 
 export default function Router() {
   return (
@@ -19,6 +20,14 @@ export default function Router() {
           element={
             <AuthGuard>
               <MyPage />
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/order/:productId"
+          element={
+            <AuthGuard>
+              <OrderPage />
             </AuthGuard>
           }
         />
