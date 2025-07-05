@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import type { Product } from '@/types/Product';
 
@@ -9,6 +10,7 @@ interface Props {
 const Card = styled.li`
   display: flex;
   flex-direction: column;
+  cursor: pointer;
 `;
 
 const ItemImage = styled.div`
@@ -57,10 +59,15 @@ const Price = styled.p`
 `;
 
 export default function RankingProductCard({ item, rank }: Props) {
+  const navigate = useNavigate();
   const isTop3 = rank <= 3;
 
+  const handleClick = () => {
+    navigate(`/order/${item.id}`);
+  };
+
   return (
-    <Card>
+    <Card onClick={handleClick}>
       <ItemImage>
         <img src={item.imageURL} alt={item.name} />
         <RankBadge top3={isTop3}>{rank}</RankBadge>
