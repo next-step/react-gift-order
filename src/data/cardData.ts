@@ -32,14 +32,6 @@ export const cardData = [
     defaultTextMessage: "생일 축하해요!",
   },
   {
-    id: 442,
-    thumbUrl:
-      "https://t1.daumcdn.net/gift/message-card/template/image/20220928_GNKBT.png",
-    imageUrl:
-      "https://t1.daumcdn.net/gift/message-card/template/image/20220928_DXNKZ.png",
-    defaultTextMessage: "축하해요!",
-  },
-  {
     id: 316,
     thumbUrl:
       "https://t1.daumcdn.net/gift/message-card/template/image/20211230_WUHCL.png",
