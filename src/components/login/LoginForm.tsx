@@ -19,43 +19,23 @@ const LoginInputWrapper = styled.div(({ theme }) => ({
 }));
 
 export const LoginForm = () => {
-  const {
-    formData,
-    errors,
-    isFormValid,
-    handleIdChange,
-    handlePasswordChange,
-    handleIdBlur,
-    handlePasswordBlur,
-    handleSubmit,
-  } = useLoginForm();
+  const { isFormValid, handleSubmit, register } = useLoginForm();
+
+  const idField = register("id");
+  const passwordField = register("password");
 
   return (
-    <LoginFormContainer>
+    <LoginFormContainer as="form" onSubmit={handleSubmit}>
       <LoginInputWrapper>
-        <Input
-          placeholder="이메일"
-          type="email"
-          value={formData.id}
-          onChange={e => handleIdChange(e.target.value)}
-          onBlur={handleIdBlur}
-          hasError={!!errors.id}
-        />
-        <ErrorMessage>{errors.id || "\u00A0"}</ErrorMessage>
+        <Input placeholder="이메일" type="email" {...idField} />
+        <ErrorMessage>{idField.error || "\u00A0"}</ErrorMessage>
       </LoginInputWrapper>
 
       <LoginInputWrapper>
-        <Input
-          placeholder="비밀번호"
-          type="password"
-          value={formData.password}
-          onChange={e => handlePasswordChange(e.target.value)}
-          onBlur={handlePasswordBlur}
-          hasError={!!errors.password}
-        />
-        <ErrorMessage>{errors.password || "\u00A0"}</ErrorMessage>
+        <Input placeholder="비밀번호" type="password" {...passwordField} />
+        <ErrorMessage>{passwordField.error || "\u00A0"}</ErrorMessage>
       </LoginInputWrapper>
-      <LoginButton isDisabled={!isFormValid} onClick={handleSubmit} />
+      <LoginButton isDisabled={!isFormValid} />
     </LoginFormContainer>
   );
 };
