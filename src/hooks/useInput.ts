@@ -2,12 +2,12 @@ import { useState, type ChangeEvent } from "react";
 
 type ValidatorType = (value: string) => string | null;
 
-const useInput = (initialValue: string, validator: ValidatorType) => {
+const useInput = (initialValue: string = "", validator: ValidatorType = () => null) => {
   const [value, setValue] = useState(initialValue);
   const [isTouched, setIsTouched] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const onChange = (event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = event.target.value;
     setValue(newValue);
     isTouched && setErrorMsg(validator(newValue));
@@ -18,7 +18,7 @@ const useInput = (initialValue: string, validator: ValidatorType) => {
     setErrorMsg(validator(value));
   };
 
-  return { value, onChange, errorMsg, onBlur };
+  return { value, setValue, onChange, errorMsg, onBlur };
 };
 
 export default useInput;

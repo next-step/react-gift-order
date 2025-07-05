@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
-import Container from "@/components/Container";
-import Divider from "@/components/Divider";
+import Container from "@/components/common/Container";
+import Divider from "@/components/common/Divider";
 import Button from "@/components/common/Button";
 import { useNavigate } from "react-router-dom";
 import { ROUTE_PATH } from "@/components/routes/Routes";

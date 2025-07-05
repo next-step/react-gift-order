@@ -12,7 +12,7 @@ const AuthRoute = ({ authRequired }: AuthRouteProps) => {
 
   if (authRequired) {
     if (!isLoggedIn) {
-      return <Navigate to={`/login?redirect=${location.pathname}`} replace />;
+      return <Navigate to={`${ROUTE_PATH.LOGIN}?redirect=${location.pathname}`} replace />;
     }
   } else {
     if (isLoggedIn) {

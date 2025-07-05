@@ -1,7 +1,7 @@
 import { ROUTE_PATH } from "@/components/routes/Routes";
 import Button from "@/components/common/Button";
-import Container from "@/components/Container";
-import Divider from "@/components/Divider";
+import Container from "@/components/common/Container";
+import Divider from "@/components/common/Divider";
 import styled from "@emotion/styled";
 import type React from "react";
 import useInput from "@/hooks/useInput";
@@ -50,7 +50,14 @@ const Login = () => {
         <Logo>kakao</Logo>
         <Form onSubmit={handleLoginSubmit}>
           <InputWrapper>
-            <Input type="email" placeholder="이메일" onChange={id.onChange} onBlur={id.onBlur} errorMsg={id.errorMsg} />
+            <Input
+              type="email"
+              placeholder="이메일"
+              onChange={id.onChange}
+              onBlur={id.onBlur}
+              errorMsg={id.errorMsg}
+              value={id.value}
+            />
             <ErrorMsg>{id.errorMsg}</ErrorMsg>
           </InputWrapper>
           <InputWrapper>
@@ -60,6 +67,7 @@ const Login = () => {
               onChange={password.onChange}
               onBlur={password.onBlur}
               errorMsg={password.errorMsg}
+              value={password.value}
             />
             <ErrorMsg>{password.errorMsg}</ErrorMsg>
           </InputWrapper>

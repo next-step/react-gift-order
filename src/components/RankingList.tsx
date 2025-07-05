@@ -1,6 +1,6 @@
 import { rankingItemMock } from "@/assets/rankingItemMock";
 import styled from "@emotion/styled";
-import Divider from "@/components/Divider";
+import Divider from "@/components/common/Divider";
 import { useState } from "react";
 import Button from "@/components/common/Button";
 

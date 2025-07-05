@@ -1,4 +1,4 @@
-import Container from "@/components/Container";
+import Container from "@/components/common/Container";
 import styled from "@emotion/styled";
 import { useNavigate } from "react-router-dom";
 import { ROUTE_PATH } from "@/components/routes/Routes";

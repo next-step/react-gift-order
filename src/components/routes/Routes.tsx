@@ -4,6 +4,7 @@ import Login from "@/pages/Login";
 import NotFound from "@/pages/NotFound";
 import Profile from "@/pages/Profile";
 import AuthRoute from "@/components/routes/AuthRoute";
+import Order from "@/pages/Order";
 
 const Routes = () => {
   return (
@@ -14,6 +15,7 @@ const Routes = () => {
       </Route>
       <Route element={<AuthRoute authRequired={true} />}>
         <Route path={ROUTE_PATH.PROFILE} element={<Profile />} />
+        <Route path={ROUTE_PATH.ORDER} element={<Order />} />
       </Route>
       <Route path={ROUTE_PATH.NOT_FOUND} element={<NotFound />} />
     </RouterRoutes>
@@ -24,6 +26,7 @@ export const ROUTE_PATH = {
   HOME: "/",
   LOGIN: "/login",
   PROFILE: "/my",
+  ORDER: "/order/:productId",
   NOT_FOUND: "*",
 } as const;
 
