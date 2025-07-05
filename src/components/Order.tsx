@@ -23,27 +23,30 @@ const Order: React.FC = () => {
   }, []);
 
   return (
-    <div css={CardWrapperStyle(theme)}>
-      <div css={ThumbNailContainerStyle(theme)}>
-        {cardData.map((card) => {
-          return (
-            <GiftCardThumb
-              onClick={() => {
-                setSelectedId(card.id);
-              }}
-              css={ThumbNamilStyle(theme, card.id, selectedId)}
-              src={card.thumbUrl}
-            ></GiftCardThumb>
-          );
-        })}
+    <div css={WrapperStyle(theme)}>
+      <div css={CardWrapperStyle(theme)}>
+        <div css={ThumbNailContainerStyle(theme)}>
+          {cardData.map((card) => {
+            return (
+              <GiftCardThumb
+                onClick={() => {
+                  setSelectedId(card.id);
+                }}
+                css={ThumbNamilStyle(theme, card.id, selectedId)}
+                src={card.thumbUrl}
+              ></GiftCardThumb>
+            );
+          })}
+        </div>
+        <img
+          src={
+            selectedId === undefined
+              ? cardData[0].imageUrl
+              : cardData.find((card) => card.id === selectedId)?.imageUrl
+          }
+        ></img>
       </div>
-      <img
-        src={
-          selectedId === undefined
-            ? cardData[0].imageUrl
-            : cardData.find((card) => card.id === selectedId)?.imageUrl
-        }
-      ></img>
+      <textarea defaultValue="축하해요." css={TextStyle()}></textarea>
     </div>
   );
 };
@@ -74,4 +77,18 @@ const CardWrapperStyle = (theme: Theme) => css`
   justify-content: center;
   align-items: center;
   gap: ${theme.spacing.spacing10};
+`;
+
+const WrapperStyle = (theme: Theme) => css`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: ${theme.spacing.spacing10};
+`;
+
+const TextStyle = () => css`
+  width: 100%;
+  height: 60px;
+  border-radius: 4px;
 `;
