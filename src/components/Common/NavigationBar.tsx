@@ -1,43 +1,12 @@
 // NavigationBar.tsx
+import { StyledNavBackBtn } from '@/styles/Common/StyledNavBackBtn';
+import { StyledNavbar } from '@/styles/Common/StyledNavbar';
+import { StyledNavLoginBtn } from '@/styles/Common/StyledNavLoginBtn';
+import { StyledNavTextDiv } from '@/styles/Common/StyledNavTextDiv';
 import { URLS } from '@assets/urls';
 import { Spacer } from '@styles/Spacer';
-import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-const StyledNavbar = styled.div`
-  position: fixed;
-  min-width: 720px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: ${({ theme }) => theme.sementicPalette.backgroundDefault};
-`;
-const StyledNavBackBtn = styled.button`
-  a {
-    color: black;
-    text-decoration: none;
-  }
-  list-style: none;
-  display: flex;
-  align-items: center;
-  padding: 12px 30px;
-  border: none;
-  background-color: inherit;
-`;
-const StyledNavTextDiv = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 13px 24px;
-  ${({ theme }) => theme.typography.title1Bold};
-`;
-const StyledNavLoginBtn = styled.button`
-  display: flex;
-  align-items: center;
-  padding: 12px 30px;
-  border: none;
-  background-color: ${({ theme }) => theme.sementicPalette.backgroundDefault};
-`;
 
 const NavigationBar = () => {
   const navigate = useNavigate();
