@@ -15,7 +15,7 @@ function App() {
         <Route path={ROUTES.LOGIN} element={<LoginPage />} />
         <Route path={ROUTES.NOT_FOUND} element={<NotFoundPage />} />
         <Route
-          path="/my"
+          path={ROUTES.MY_PAGE}
           element={
             <ProtectedRoute>
               <MyPage />
@@ -23,7 +23,7 @@ function App() {
           }
         />
         <Route
-          path="/order/:productId"
+          path={ROUTES.ORDER_PAGE}
           element={
             <ProtectedRoute>
               <GiftOrderPage />
