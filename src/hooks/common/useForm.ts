@@ -1,4 +1,10 @@
-import { useState, useCallback, useMemo } from "react";
+import {
+  useState,
+  useCallback,
+  useMemo,
+  type FormEvent,
+  type ChangeEvent,
+} from "react";
 import type { ValidationRulesMap, ValidationErrors } from "@/utils/type";
 
 interface UseFormProps<T> {
@@ -67,7 +73,7 @@ export const useForm = <T extends object>({
   }, [values, validateField, validationRules]);
 
   const handleSubmit = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
+    (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (validateAllFields()) {
         onSubmit(values);
@@ -82,7 +88,7 @@ export const useForm = <T extends object>({
         name: field,
         value: values[field],
         onChange: (
-          e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | T[K],
+          e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | T[K],
         ) => {
           const newValue =
             typeof e === "object" &&

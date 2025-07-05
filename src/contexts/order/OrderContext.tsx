@@ -5,6 +5,8 @@ import {
   useCallback,
   type ReactNode,
   useMemo,
+  type FormEvent,
+  type ChangeEvent,
 } from "react";
 import type { Order } from "@/types";
 import { useForm } from "@/hooks/common/useForm";
@@ -25,13 +27,13 @@ interface OrderContextType {
     name: K;
     value: Order[K];
     onChange: (
-      e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | Order[K],
+      e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | Order[K],
     ) => void;
     onBlur: () => void;
     error: string | undefined;
     hasError: boolean;
   };
-  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  handleSubmit: (e: FormEvent<HTMLFormElement>) => void;
   resetOrder: () => void;
   setOrder: (
     newValues: Partial<Order> | ((prev: Order) => Partial<Order>),
