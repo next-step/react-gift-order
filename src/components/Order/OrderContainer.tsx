@@ -93,7 +93,7 @@ const OrderContainer = () => {
             className='send-person-name body2Regular'
             placeholder='전화번호를 입력하세요'
             value={receiveTel}
-            onChange={(e) => handleCommonChange({ ...e, target: { ...e.target, value: e.target.value.replace(/[^0-9]/g, '') } })}
+            onChange={(e) => handleCommonChange(e)}
             hasError={!!commonErrorMsgs[2]}
           />
         </div>
