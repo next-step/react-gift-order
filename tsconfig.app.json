@@ -29,7 +29,7 @@
       "@styles/*": ["src/styles/*"],
       "@assets/*": ["src/assets/*"],
       "@components/*": ["src/components/*"],
-      "@types/*": ["src/types/*"],
+      "@src_types/*": ["src/types/*"],
       "@router/*": ["src/router/*"],
       "@pages/*": ["src/pages/*"],
       "@hooks/*": ["src/hooks/*"],

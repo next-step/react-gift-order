@@ -1,4 +1,4 @@
-import StyledRankingAnyTagItem from '@/styles/Home/RankingTagItem/StyledRankingAnyTagItem';
+import StyledRankingAnyTagItem from '@styles/Home/RankingTagItem/StyledRankingAnyTagItem';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -27,12 +27,7 @@ const RankingAnyTagItem = () => {
     <>
       {ANY_TAG_ITEM_LIST.map((item: string) => {
         return (
-          <StyledRankingAnyTagItem
-            key={item}
-            className='ranking-any-tag-item'
-            onClick={() => handleClick(item)}
-            isSelected={selected === item}
-          >
+          <StyledRankingAnyTagItem key={item} className='ranking-any-tag-item' onClick={() => handleClick(item)} isSelected={selected === item}>
             {item.toLowerCase()}
           </StyledRankingAnyTagItem>
         );

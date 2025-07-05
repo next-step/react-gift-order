@@ -1,4 +1,4 @@
-import { CATEGORY_DATA } from '@/assets/categoryData';
+import { CATEGORY_DATA } from '@assets/categoryData';
 import styled from '@emotion/styled';
 
 const StyledImage = styled.img`

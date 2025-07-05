@@ -1,5 +1,6 @@
 export const URLS = {
   login: '/login',
   home: '/',
-  mypage: 'my',
+  mypage: '/my',
+  order: '/order',
 };

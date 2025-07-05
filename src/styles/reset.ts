@@ -125,10 +125,6 @@ export const reset = css`
     border-collapse: collapse;
     border-spacing: 0;
   }
-
-  * {
-    font-family: 'Pretendard-Regular', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif, 'Noto Sans KR';
-  }
   html {
     scrollbar-gutter: stable;
   }
