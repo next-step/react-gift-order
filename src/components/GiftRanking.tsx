@@ -105,7 +105,7 @@ const rankingTabs = [
   { key: 'wish', label: '위시로 받은' },
 ];
 
-export default function GiftRankingSection() {
+export default function GiftRanking() {
   const [searchParams, setSearchParams] = useSearchParams();
   const initGender = searchParams.get('gender') ?? 'all';
   const initType = searchParams.get('type') ?? 'want';
