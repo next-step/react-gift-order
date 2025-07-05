@@ -17,7 +17,7 @@ const MyPage: React.FC = () => {
     if (!email || !password) {
       navigate("/login");
     }
-  }, [user, navigate]);
+  }, []);
 
   return (
     <div css={ContainerStyle(theme)}>
