@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
 import { NavigationHeader } from '@/components/NavigationHeader';
+import FormField from '@/components/FormField';
 import { messageCardTemplates, rankingProducts } from '@/mock/mockData';
 import type { MessageCardTemplate, GiftOrderForm, Product } from '@/types';
 import { useForm } from '@/hooks/useForm';
@@ -126,21 +127,24 @@ export default function GiftOrderPage({
           <Separator />
 
           <MessageSection>
-            <FormField>
+            <FormField label="메시지" error={errors.message}>
               <TextArea
                 value={formData.message}
                 onChange={e => handleInputChange('message', e.target.value)}
                 placeholder="축하해요"
                 hasError={!!errors.message}
               />
-              {errors.message && <ErrorMessage>{errors.message}</ErrorMessage>}
             </FormField>
           </MessageSection>
           <Separator />
 
           <FormSection>
             <SectionTitle>보내는 사람</SectionTitle>
-            <FormField>
+            <FormField
+              label="발신자 이름"
+              error={errors.senderName}
+              helpText="* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다."
+            >
               <Input
                 type="text"
                 value={formData.senderName}
@@ -148,13 +152,6 @@ export default function GiftOrderPage({
                 placeholder="이름을 입력하세요"
                 hasError={!!errors.senderName}
               />
-              {errors.senderName ? (
-                <ErrorMessage>{errors.senderName}</ErrorMessage>
-              ) : (
-                <HelpText>
-                  * 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.
-                </HelpText>
-              )}
             </FormField>
           </FormSection>
           <Separator />
@@ -359,14 +356,6 @@ const SectionTitle = styled.h3`
   margin-bottom: ${theme.spacing.spacing4};
 `;
 
-const FormField = styled.div`
-  margin-bottom: ${theme.spacing.spacing4};
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-`;
-
 const TemplateScroller = styled.div`
   display: flex;
   flex-wrap: nowrap;
@@ -437,12 +426,6 @@ const TextArea = styled.textarea<{ hasError?: boolean }>`
 
 const ErrorMessage = styled.div`
   color: ${theme.colors.critical};
-  font-size: ${theme.typography.label2Regular.fontSize};
-  margin-top: ${theme.spacing.spacing1};
-`;
-
-const HelpText = styled.div`
-  color: ${theme.colors.gray700};
   font-size: ${theme.typography.label2Regular.fontSize};
   margin-top: ${theme.spacing.spacing1};
 `;
