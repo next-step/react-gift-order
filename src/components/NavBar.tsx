@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { IoIosArrowBack } from 'react-icons/io';
 import { GoPerson } from 'react-icons/go';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
 
 const Nav = styled.header`
   position: sticky;
@@ -23,16 +24,18 @@ const Title = styled.header`
 export default function NavBar() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuth();
+
+  const handleProfile = () => {
+    if (user) navigate('/my');
+    else navigate('/login', { state: { from: location.pathname } });
+  };
 
   return (
     <Nav>
       <IoIosArrowBack size={24} css={{ cursor: 'pointer' }} onClick={() => navigate(-1)} />
       <Title>선물하기</Title>
-      <GoPerson
-        size={24}
-        css={{ cursor: 'pointer' }}
-        onClick={() => navigate('/login', { state: { from: location.pathname } })}
-      />
+      <GoPerson size={24} css={{ cursor: 'pointer' }} onClick={handleProfile} />
     </Nav>
   );
 }
