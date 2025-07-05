@@ -6,7 +6,10 @@ const ErrorMessageContainer = styled.div(({ theme }) => ({
   fontSize: theme.typography.label1Regular.fontSize,
   fontWeight: theme.typography.label1Regular.fontWeight,
   lineHeight: theme.typography.label1Regular.lineHeight,
-  marginTop: theme.spacing1,
+  minHeight: `calc(${theme.typography.label1Regular.lineHeight} + ${theme.spacing1})`,
+}));
+
+export const ErrorPlaceholder = styled.div(({ theme }) => ({
   minHeight: `calc(${theme.typography.label1Regular.lineHeight} + ${theme.spacing1})`,
 }));
 
