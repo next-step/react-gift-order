@@ -1,8 +1,7 @@
 import { Button } from "@/components/common";
-import { ROUTE_PATH } from "@/constants";
+import { useRouter } from "@/hooks/common/useRouter";
 import { getUserInfo, removeUserInfo } from "@/utils";
 import styled from "@emotion/styled";
-import { useNavigate } from "react-router-dom";
 
 const MyPageHeader = styled.p(({ theme }) => ({
   fontSize: `${theme.typography.body1Bold.fontSize}`,
@@ -21,12 +20,12 @@ const MyPageGreet = styled.p(({ theme }) => ({
 }));
 
 export const MyPageSection = () => {
-  const navigate = useNavigate();
+  const { goLoginPage } = useRouter();
   const userInfo = getUserInfo();
 
   const handleLogout = () => {
     removeUserInfo();
-    navigate(ROUTE_PATH.LOGIN);
+    goLoginPage({ redirect: false });
   };
 
   return (

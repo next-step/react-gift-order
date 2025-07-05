@@ -1,10 +1,8 @@
 import { generateMockArray } from "@/__mock__/generate-mock-array";
 import { Button } from "@/components/common";
-import { ROUTE_PATH } from "@/constants";
-import type { ProductType } from "@/types";
+import { useRouter } from "@/hooks/common/useRouter";
 import styled from "@emotion/styled";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 const HotGiftRankingGridContainer = styled.div(({ theme }) => ({
   display: "grid",
@@ -75,23 +73,20 @@ const RANK_CORRECTION_NUMBER = 1;
 
 export const HotGiftRankingGrid = () => {
   const [showMore, setShowMore] = useState(false);
+  const { goOrderPage } = useRouter();
   const INITIAL_SHOW_COUNT = 6;
   const mockData = generateMockArray();
-  const navigate = useNavigate();
   const displayedItems = showMore
     ? mockData
     : mockData.slice(0, INITIAL_SHOW_COUNT);
 
-  const handleProductSelect = (item: ProductType) => {
-    navigate(ROUTE_PATH.ORDER.replace(":id", item.id.toString()));
-  };
   return (
     <>
       <HotGiftRankingGridContainer>
         {displayedItems.map((item, index) => (
           <HotGiftRankingGridItem
             key={item.id}
-            onClick={() => handleProductSelect(item)}
+            onClick={() => goOrderPage(item.id)}
           >
             <HotGiftRankingImageContainer
               src={item.imageURL}
