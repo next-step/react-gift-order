@@ -22,7 +22,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Main />} />
             <Route path="/my" element={<MyPage />} />
-            <Route path="/order" element={<Order />} />
+            <Route path="/order/:id" element={<Order />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </UserInfoProvider>

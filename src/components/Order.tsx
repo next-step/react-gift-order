@@ -6,12 +6,19 @@ import { useTheme } from "@emotion/react";
 import type { Theme } from "@emotion/react";
 import { css } from "@emotion/react";
 import { GiftCardThumb } from "@/components/GiftCardThumb";
+import { useParams } from "react-router-dom";
+import { giftData } from "@/data/giftData";
 
 const Order: React.FC = () => {
   const { setUser } = useUserInfo();
   const navigate = useNavigate();
   const theme = useTheme();
   const [selectedId, setSelectedId] = useState<number>();
+  const { id } = useParams<{ id: string }>();
+
+  const selectedGiftId = id ? parseInt(id, 10) : undefined;
+
+  const selectedGift = giftData.find((gift) => gift.id === selectedGiftId);
 
   useEffect(() => {
     const email = sessionStorage.getItem("email");
@@ -78,18 +85,19 @@ const Order: React.FC = () => {
           </div>
         </div>
       </div>
-      <div>
-        <h2>상품 정보</h2>
-        <div>
-          <img src="your-image-url.png" alt="BBQ 양념치킨 세트" />
-
-          <div>
-            <p>BBQ 양념치킨+크림치즈볼+콜라1.25L</p>
-            <p>BBQ</p>
-            <p>
-              상품가 <strong>29,000</strong>원
-            </p>
-          </div>
+      <div css={productWrapper(theme)}>
+        <img
+          css={productImage(theme)}
+          src={selectedGift?.imageURL}
+          alt={selectedGift?.name}
+        />
+        <div css={productInfo(theme)}>
+          <p css={productName(theme)}>{selectedGift?.name}</p>
+          <p css={productBrand(theme)}>{selectedGift?.brandInfo.name}</p>
+          <p css={productPrice(theme)}>
+            상품가{" "}
+            <strong>{selectedGift?.price.basicPrice.toLocaleString()}</strong>원
+          </p>
         </div>
       </div>
     </div>
@@ -183,9 +191,51 @@ const TextStyle = (theme: Theme) => css`
   font-weight: ${theme.typography.subtitle1Bold.weight};
   line-height: ${theme.typography.subtitle1Bold.lineHeight};
 `;
-
 const TinyTextStyle = () => css`
   font-size: 12px;
   color: #888888;
   margin-top: 4px;
+`;
+
+const productWrapper = (theme: Theme) => css`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: ${theme.spacing.spacing4};
+  border: 1px solid ${theme.colors.semantic.border.default};
+  border-radius: 8px;
+  width: 100%;
+`;
+
+const productImage = (theme: Theme) => css`
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid ${theme.colors.semantic.border.default};
+`;
+
+const productInfo = (theme: Theme) => css`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.spacing.spacing2};
+`;
+
+const productName = (theme: Theme) => css`
+  font-weight: ${theme.typography.subtitle1Bold.weight};
+  font-size: ${theme.typography.subtitle1Bold.size};
+  color: ${theme.colors.semantic.text.default};
+`;
+
+const productBrand = (theme: Theme) => css`
+  font-size: ${theme.typography.body2Regular.size};
+  color: ${theme.colors.semantic.text.sub};
+`;
+
+const productPrice = (theme: Theme) => css`
+  font-size: ${theme.typography.body1Regular.size};
+  color: ${theme.colors.semantic.text.default};
+  strong {
+    font-weight: ${theme.typography.subtitle1Bold.weight};
+  }
 `;

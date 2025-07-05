@@ -2,7 +2,7 @@ import type { Theme } from "@emotion/react";
 import { css } from "@emotion/react";
 import GiftObject from "./GiftObject";
 import { useTheme } from "@emotion/react";
-import giftData from "@/data/giftData";
+import { giftData } from "@/data/giftData";
 import { useNavigate } from "react-router-dom";
 
 const GiftRanking = () => {
