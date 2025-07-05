@@ -8,15 +8,8 @@ import { StyledItemInfoContainer } from '@styles/Order/OrderContainer/StyledItem
 import { StyledOrderButton } from '@styles/Order/OrderContainer/StyledOrderButton';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import RecipientsModal from './RecipientsModalContainer';
-import type { Recipients } from '@/types/Recipients';
 import SenderContainer from './SenderContainer';
-import { useMsgForm } from '@/hooks/useMsgForm';
-
-interface OrderFormValue {
-  msg: string;
-  sendName: string;
-  recipients: Recipients[];
-}
+import type { OrderFormValue } from '@/types/OrderFormValues';
 
 const OrderContainer: FC = () => {
   const [searchParams] = useSearchParams();
@@ -34,7 +27,6 @@ const OrderContainer: FC = () => {
       setSelectedProduct(GOODS_DATA.length > 0 ? GOODS_DATA[0] : null);
     }
   }, [searchParams]);
-  const { msg, handleMsgChange, setMsg } = useMsgForm();
 
   const methods = useForm<OrderFormValue>({
     defaultValues: {
@@ -48,6 +40,7 @@ const OrderContainer: FC = () => {
     register,
     control,
     watch,
+    setValue,
     formState: { errors },
   } = methods;
 
@@ -60,11 +53,7 @@ const OrderContainer: FC = () => {
       {/* Card 생성 컴포넌트*/}
       {/* props로 유효성 검사에 필요한 핸들러와 state들을 전달*/}
       <form onSubmit={handleSubmit(onSubmit)}>
-        <OrderCardTemplateContainer
-          msg={msg} // useMsgForm의 msg 값
-          onMsgChange={handleMsgChange} // useMsgForm의 handleMsgChange 함수
-          setMsg={setMsg}
-        />
+        <OrderCardTemplateContainer register={register} errors={errors} setValue={setValue} />
         <SenderContainer
           register={register} // senderName, senderContact 필드 등록을 위해 register 전달
           errors={errors} // 해당 필드들의 오류 정보 전달

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 
 const StyledTopestDiv = styled.div`
-  background-color: ${({ theme }) => theme.palette.gray200};
+  background-color: ${({ theme }) => theme.palette.gray500};
   width: 720px;
 
   .title1Bold {
@@ -59,7 +59,7 @@ const StyledTopestDiv = styled.div`
     color: ${({ theme }) => theme.palette.red800};
   }
   .border-red {
-    border-color: ${({ theme }) => theme.palette.red800};
+    border-color: ${({ theme }) => theme.palette.red500};
   }
   .padding-6-12 {
     padding: 6px 12px;
