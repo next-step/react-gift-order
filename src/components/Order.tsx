@@ -1,6 +1,4 @@
-import { useUserInfo } from "@/context/UserInfoProvider";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { cardData } from "@/data/cardData";
 import { useTheme } from "@emotion/react";
 import type { Theme } from "@emotion/react";
@@ -10,24 +8,19 @@ import { useParams } from "react-router-dom";
 import { giftData } from "@/data/giftData";
 
 const Order: React.FC = () => {
-  const { setUser } = useUserInfo();
-  const navigate = useNavigate();
   const theme = useTheme();
   const [selectedId, setSelectedId] = useState<number>();
   const { id } = useParams<{ id: string }>();
+  const [quantity, setQuantity] = useState(1);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   const selectedGiftId = id ? parseInt(id, 10) : undefined;
-
   const selectedGift = giftData.find((gift) => gift.id === selectedGiftId);
 
   useEffect(() => {
-    const email = sessionStorage.getItem("email");
-    const password = sessionStorage.getItem("password");
-    setUser({ email, password });
-    if (!email || !password) {
-      navigate("/login");
-    }
-  }, []);
+    const price = Number(selectedGift?.price.sellingPrice || 0);
+    setTotalPrice(quantity * price);
+  }, [quantity]);
 
   return (
     <div css={WrapperStyle(theme)}>
@@ -81,7 +74,12 @@ const Order: React.FC = () => {
           </div>
           <div css={InputRowStyle(theme)}>
             <span>수량</span>
-            <input defaultValue={1}></input>
+            <input
+              type="number"
+              min={1}
+              value={quantity}
+              onChange={(e) => setQuantity(Number(e.target.value))}
+            />
           </div>
         </div>
       </div>
@@ -95,14 +93,29 @@ const Order: React.FC = () => {
           <p css={productName(theme)}>{selectedGift?.name}</p>
           <p css={productBrand(theme)}>{selectedGift?.brandInfo.name}</p>
           <p css={productPrice(theme)}>
-            상품가{" "}
             <strong>{selectedGift?.price.basicPrice.toLocaleString()}</strong>원
           </p>
         </div>
       </div>
+      <div css={fixedBottomStyle(theme)}>
+        <div css={totalPriceBoxStyle}>{totalPrice}주문하기</div>
+      </div>
     </div>
   );
 };
+
+const fixedBottomStyle = (theme: Theme) => css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  position: fixed;
+  max-width: 688px;
+  bottom: 0;
+  padding-bottom: 100px;
+  background-color: ${theme.colors.yellow.yellow500};
+  padding: ${theme.spacing.spacing11};
+`;
 
 export default Order;
 
@@ -143,6 +156,7 @@ const WrapperStyle = (theme: Theme) => css`
   align-items: center;
   width :100%
   height : 80%;
+  margin-bottom : 100px;
   gap: ${theme.spacing.spacing10};
 `;
 
@@ -238,4 +252,10 @@ const productPrice = (theme: Theme) => css`
   strong {
     font-weight: ${theme.typography.subtitle1Bold.weight};
   }
+`;
+
+const totalPriceBoxStyle = (theme: Theme) => css`
+  font-size: ${theme.typography.title2Bold.size};
+  color: ${theme.colors.semantic.text.default};
+  font-weight: ${theme.typography.subtitle1Bold.weight};
 `;
