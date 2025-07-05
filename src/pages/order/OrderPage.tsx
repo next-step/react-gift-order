@@ -8,6 +8,8 @@ import { useOrder } from "@/features/order/hooks/useOrder";
 import { LetterCard } from "@/features/order/ui/LetterCard";
 import { ProductInfo } from "@/features/order/ui/ProductInfo";
 
+import NotFoundPage from "@/pages/NotFoundPage";
+
 import { useRedirect } from "@/shared/hooks/useRedirect";
 import { Input, InputFieldGroup } from "@/shared/ui/Input";
 import { TextArea } from "@/shared/ui/TextArea";
@@ -57,7 +59,7 @@ export default function OrderPage() {
         [selectedLetterCardId],
     );
 
-    const { orderRefs, submit, validationErrors } = useOrder();
+    const { orderRefs, submit, validationErrors, quantity, onQuantityChange } = useOrder();
 
     const onSubmitButtonClick = () => {
         console.log(submit());
@@ -68,7 +70,7 @@ export default function OrderPage() {
         if (!isAuthenticated) navigateWithRedirect("/auth/signin");
     }, [isAuthenticated, navigateWithRedirect]);
 
-    if (!id) return;
+    if (!id) return <NotFoundPage />;
 
     return (
         <Styles.Container>
@@ -149,6 +151,8 @@ export default function OrderPage() {
                     align="horizontal"
                     label="수량"
                     placeholder="수량을 입력하세요."
+                    value={quantity}
+                    onChange={onQuantityChange}
                     error={validationErrors.quantity}
                 />
 
@@ -171,7 +175,7 @@ export default function OrderPage() {
 
             {createPortal(
                 <Styles.OrderButton onClick={() => onSubmitButtonClick()}>
-                    29000원 주문하기
+                    {product.price.sellingPrice * quantity}원 주문하기
                 </Styles.OrderButton>,
                 document.body as HTMLElement,
             )}

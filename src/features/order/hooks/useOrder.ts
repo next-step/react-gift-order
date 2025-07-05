@@ -8,6 +8,13 @@ import { validate } from "@/shared/validations/validate";
 export const useOrder = () => {
     const [validationErrors, setValidationErrors] = useState<ValidationErrors<OrderFormModel>>({});
 
+    const [quantity, setQuantity] = useState<number>(1);
+
+    const onQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const quantity = parseInt(event.target.value);
+        setQuantity(quantity);
+    };
+
     const orderRefs = {
         message: useRef<HTMLTextAreaElement>(null),
         senderName: useRef<HTMLInputElement>(null),
@@ -43,5 +50,7 @@ export const useOrder = () => {
         orderRefs,
         submit,
         validationErrors,
+        quantity,
+        onQuantityChange,
     };
 };
