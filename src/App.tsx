@@ -10,6 +10,7 @@ import NotFound from "@/components/NotFound";
 import Layout from "@/styles/Layout.tsx";
 import MyPage from "@/components/MyPage.tsx";
 import { UserInfoProvider } from "@/context/UserInfoProvider";
+import Order from "@/components/Order";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Main />} />
             <Route path="/my" element={<MyPage />} />
+            <Route path="/order" element={<Order />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </UserInfoProvider>
