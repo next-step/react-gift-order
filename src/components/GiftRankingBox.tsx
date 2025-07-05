@@ -2,15 +2,23 @@ import type { Theme } from "@emotion/react";
 import { css } from "@emotion/react";
 import GiftObject from "./GiftObject";
 import { useTheme } from "@emotion/react";
-import giftData from "@/data/giftData";
+import { giftData } from "@/data/giftData";
+import { useNavigate } from "react-router-dom";
 
 const GiftRanking = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   return (
-    <div css={giftRankingStyle(theme)}>
-      {giftData.map((gift) => (
-        <GiftObject key={gift.id} gift={gift} />
-      ))}
+    <div>
+      <div css={giftRankingStyle(theme)}>
+        {giftData.map((gift) => (
+          <GiftObject
+            key={gift.id}
+            gift={gift}
+            onClick={() => navigate(`/order/${gift.id}`)}
+          />
+        ))}
+      </div>
     </div>
   );
 };

@@ -3,9 +3,11 @@ import { useTheme } from "@emotion/react";
 import { css } from "@emotion/react";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
-import Input from "@/components/Input";
+import Input from "@/components/login/Input";
+import { useUserInfo } from "@/context/UserInfoProvider";
 
 const Login = () => {
+  const { setUser } = useUserInfo();
   const theme = useTheme();
   const navigate = useNavigate();
   const ref = useRef(null);
@@ -76,10 +78,14 @@ const Login = () => {
 
       <button
         onClick={() => {
-          if (window.history.length) {
-            navigate(-1);
-          } else {
-            navigate("/");
+          if (isFormValid) {
+            sessionStorage.setItem("email", email.string);
+            sessionStorage.setItem("password", password.string);
+            setUser({
+              email: email.string,
+              password: password.string,
+            });
+            navigate("/my");
           }
         }}
         ref={ref}
