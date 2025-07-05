@@ -27,11 +27,10 @@ export const CardImage = styled.img`
   height: auto;
   object-fit: cover;
   display: block;
-
 `;
 
 export const EnlargedImageContainer = styled.div`
-  margin: ${({ theme }) => theme.spacing.spacing4};
+  margin: ${({ theme }) => theme.spacing.spacing3};
   text-align: center;
 `;
 
@@ -49,7 +48,6 @@ export const MessageTextarea = styled.textarea`
   padding: 10px;
   border: 1px solid ${({ theme }) => theme.colors.semantic.borderDisabled};
   border-radius: ${({ theme }) => theme.spacing.spacing2};
-
   &:focus {
     border-color: ${({ theme }) => theme.colors.semantic.textDefault};
     outline: none;

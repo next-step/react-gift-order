@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Container, Input, Padding, Hint, InputRow, Label, Button, ErrorMessage, Title } from './styles';
+import { Form, Container, Input, Hint, InputRow, Label, FixedButton, Button, ErrorMessage, Title } from './styles';
 
 interface IFormData {
   senderName: string;
@@ -15,7 +15,11 @@ interface IFormErrors {
   quantity?: string;
 }
 
-function OrderForm() {
+interface OrderFormProps {
+  productPrice: number;
+}
+
+function OrderForm({ productPrice }: OrderFormProps) {
   const [formData, setFormData] = useState<IFormData>({
     senderName: '',
     receiverName: '',
@@ -116,10 +120,13 @@ function OrderForm() {
             onChange={handleChange}
           />
         </InputRow>
-
         {errors.quantity && <ErrorMessage>{errors.quantity}</ErrorMessage>}
       </Container>
-      <Button type="submit">주문하기</Button>
+      <FixedButton>
+        <Button type="submit">
+          {new Intl.NumberFormat('ko-KR').format(formData.quantity * productPrice)}원 주문하기
+        </Button>
+      </FixedButton>
     </Form>
   );
 }

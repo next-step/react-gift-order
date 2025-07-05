@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.spacing4};
+  gap: ${({ theme }) => theme.spacing.spacing3};
 `;
 export const Container = styled.div`
   background-color: ${({ theme }) => theme.colors.semantic.backgroundDefault};
@@ -27,10 +27,6 @@ export const Input = styled.input`
     border-color: ${({ theme }) => theme.colors.semantic.textDefault};
   }
 `;
-export const Padding = styled.div`
-  width: 100%;
-  height: ${({ theme }) => theme.spacing.spacing2};
-`;
 export const Hint = styled.p`
   font: ${({ theme }) => theme.typography.label2Regular};
   color: ${({ theme }) => theme.colors.semantic.textPlaceholder};
@@ -45,16 +41,22 @@ export const InputRow = styled.div`
 `;
 export const Label = styled.p`
   font: ${({ theme }) => theme.typography.title2Regular};
-
   flex: 0 0 60px;
 `;
-
+export const FixedButton = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: ${({ theme }) => theme.zIndex.navigationBar};
+`;
 export const Button = styled.button`
-  padding: 10px;
-  background-color: #ffc107;
-  color: white;
+  padding: ${({ theme }) => theme.spacing.spacing3};
+  width: 100%;
+  background-color: ${({ theme }) => theme.colors.semantic.kakaoYellow};
+  font: ${({ theme }) => theme.typography.title2Bold};
+  color: ${({ theme }) => theme.colors.semantic.textDefault};
   border: none;
-  border-radius: 4px;
   cursor: pointer;
 `;
 
