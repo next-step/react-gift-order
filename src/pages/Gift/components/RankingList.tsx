@@ -3,21 +3,27 @@ import styled from "@emotion/styled";
 import Divider from "@/components/common/Divider";
 import { useState } from "react";
 import Button from "@/components/common/Button";
+import { useNavigate } from "react-router-dom";
+import { ROUTE_PATH } from "@/components/routes/Routes";
 
 const RANKING_LIST_ITEM_VIEW_COUNT = 6;
 
 const RankingList = () => {
+  const navigate = useNavigate();
   const [viewCount, setViewCount] = useState(RANKING_LIST_ITEM_VIEW_COUNT);
   const isCollapsed = viewCount === RANKING_LIST_ITEM_VIEW_COUNT;
   const toggleView = () => {
     const nextViewCount = isCollapsed ? rankingItemMock.length : RANKING_LIST_ITEM_VIEW_COUNT;
     setViewCount(nextViewCount);
   };
+  const goOrderPage = (itemId: number) => {
+    navigate(`${ROUTE_PATH.ORDER}/${itemId}`);
+  };
   return (
     <Container>
       <Content>
         {rankingItemMock.slice(0, viewCount).map((item, index) => (
-          <Item key={item.id}>
+          <Item key={item.id} onClick={() => goOrderPage(item.id)}>
             <ItemRank ranking={index + 1}>{index + 1}</ItemRank>
             <ItemContent>
               <ItemContentImg src={item.imageURL} />
@@ -54,6 +60,7 @@ const Content = styled.div`
 const Item = styled.div`
   width: 100%;
   position: relative;
+  cursor: pointer;
 `;
 type RankingAndTheme = {
   ranking: number;

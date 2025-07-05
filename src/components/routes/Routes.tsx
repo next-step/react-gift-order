@@ -15,7 +15,7 @@ const Routes = () => {
       </Route>
       <Route element={<AuthRoute authRequired={true} />}>
         <Route path={ROUTE_PATH.PROFILE} element={<Profile />} />
-        <Route path={ROUTE_PATH.ORDER} element={<Order />} />
+        <Route path={`${ROUTE_PATH.ORDER}/:productId`} element={<Order />} />
       </Route>
       <Route path={ROUTE_PATH.NOT_FOUND} element={<NotFound />} />
     </RouterRoutes>
@@ -26,7 +26,7 @@ export const ROUTE_PATH = {
   HOME: "/",
   LOGIN: "/login",
   PROFILE: "/my",
-  ORDER: "/order/:productId",
+  ORDER: "/order",
   NOT_FOUND: "*",
 } as const;
 
