@@ -1,86 +1,75 @@
 import { useState, useMemo } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useUserManagement } from './userManagement';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const useLoginForm = () => {
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState('');
+  const [emailValue, setEmailValue] = useState('');
+  const [emailTouched, setEmailTouched] = useState(false);
 
-  const [password, setPassword] = useState('');
-  const [passwordError, setPasswordError] = useState('');
+  const [passwordValue, setPasswordValue] = useState('');
+  const [passwordTouched, setPasswordTouched] = useState(false);
 
   const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || '/';
+  const { login } = useUserManagement();
 
-  // 이메일 변경 핸들러
-  const handleEmailChange = (value: string) => {
-    setEmail(value);
+  const emailError = useMemo(() => {
+    if (!emailTouched) return '';
+    if (!emailValue) return 'ID를 입력해주세요.';
+    if (!EMAIL_REGEX.test(emailValue)) return 'ID는 이메일 형식으로 입력해주세요.';
+    return '';
+  }, [emailValue, emailTouched]);
 
-    if (!value) {
-      setEmailError('ID를 입력해주세요.');
-    } else if (!EMAIL_REGEX.test(value)) {
-      setEmailError('ID는 이메일 형식으로 입력해주세요.');
-    } else {
-      setEmailError('');
-    }
+  const passwordError = useMemo(() => {
+    if (!passwordTouched) return '';
+    if (!passwordValue) return 'PW를 입력해주세요.';
+    if (passwordValue.length < 8) return 'PW는 최소 8글자 이상이어야 합니다.';
+    return '';
+  }, [passwordValue, passwordTouched]);
+
+  const changeEmail = (value: string) => {
+    setEmailValue(value);
   };
 
-  // 이메일 유효성 검사
+  const changePassword = (value: string) => {
+    setPasswordValue(value);
+  };
+
   const validateEmail = () => {
-    if (!email) {
-      setEmailError('ID를 입력해주세요.');
-    } else if (!EMAIL_REGEX.test(email)) {
-      setEmailError('ID는 이메일 형식으로 입력해주세요.');
-    } else {
-      setEmailError('');
-    }
+    setEmailTouched(true);
   };
 
-  // 비밀번호 변경 핸들러
-  const handlePasswordChange = (value: string) => {
-    setPassword(value);
-
-    if (!value) {
-      setPasswordError('PW를 입력해주세요.');
-    } else if (value.length < 8) {
-      setPasswordError('PW는 최소 8글자 이상이어야 합니다.');
-    } else {
-      setPasswordError('');
-    }
-  };
-
-  // 비밀번호 유효성 검사
   const validatePassword = () => {
-    if (!password) {
-      setPasswordError('PW를 입력해주세요.');
-    } else if (password.length < 8) {
-      setPasswordError('PW는 최소 8글자 이상이어야 합니다.');
-    } else {
-      setPasswordError('');
-    }
+    setPasswordTouched(true);
   };
 
   const isValid = useMemo(() => {
-    return EMAIL_REGEX.test(email) && password.length >= 8;
-  }, [email, password]);
+    return EMAIL_REGEX.test(emailValue) && passwordValue.length >= 8;
+  }, [emailValue, passwordValue]);
 
   const goToLogin = () => {
-    navigate(from, { replace: true });
+    if (!isValid) return;
+
+    login(emailValue);
+
+    // 로그인 성공하면 무조건 /my 로 이동
+    navigate('/my', { replace: true });
   };
 
   return {
-    email,
-    emailError,
-    handleEmailChange,
-    validateEmail,
-
-    password,
-    passwordError,
-    handlePasswordChange,
-    validatePassword,
-
+    email: {
+      value: emailValue,
+      error: emailError,
+      onChange: changeEmail,
+      validate: validateEmail,
+    },
+    password: {
+      value: passwordValue,
+      error: passwordError,
+      onChange: changePassword,
+      validate: validatePassword,
+    },
     isValid,
     goToLogin,
   };

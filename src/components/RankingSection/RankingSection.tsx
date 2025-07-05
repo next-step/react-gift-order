@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css, useTheme } from '@emotion/react';
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { FaUser } from 'react-icons/fa';
 import { MdFace2, MdFace, MdFace6 } from 'react-icons/md';
 
@@ -15,8 +15,9 @@ import {
   moreButton,
 } from './RankingSection.style';
 
-import TabButton from '../Shared/TabButton'
+import TabButton from '../Shared/TabButton';
 import RankingCard from '../Shared/RankingCard';
+import { useUserManagement } from '../../pages/Login/userManagement';
 
 const genderTabs = [
   { label: '전체', icon: <FaUser /> },
@@ -29,6 +30,8 @@ const giftTabs = ['받고 싶어한', '많이 선물한', '위시로 받은'];
 
 const RankingSection = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
+  const { user } = useUserManagement();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const initialGender = searchParams.get('gender') || '전체';
@@ -53,9 +56,19 @@ const RankingSection = () => {
   const visibleItems = isExpanded ? mockItems : mockItems.slice(0, 6);
   const toggleExpanded = () => setIsExpanded((prev) => !prev);
 
+  const handleCardClick = (itemId: string) => {
+    if (user) {
+      navigate(`/order?id=${itemId}`);
+    } else {
+      navigate(`/login?redirect=/order?id=${itemId}`);
+    }
+  };
+
   return (
     <section css={sectionWrapper}>
-      <h2 css={css`margin-bottom: ${theme.spacing[3]};`}>실시간 급상승 선물랭킹</h2>
+      <h2 css={css`margin-bottom: ${theme.spacing[3]};`}>
+        실시간 급상승 선물랭킹
+      </h2>
 
       <div css={tabRow}>
         {genderTabs.map(({ label, icon }) => (
@@ -85,15 +98,16 @@ const RankingSection = () => {
 
       <div css={cardGrid}>
         {visibleItems.map((item, i) => (
-          <RankingCard
-            key={item.id}
-            rank={i + 1}
-            imageURL={item.imageURL}
-            brand={item.brand}
-            name={item.name}
-            price={item.price}
-            theme={theme}
-          />
+          <div key={item.id} onClick={() => handleCardClick(item.id.toString())}>
+            <RankingCard
+              rank={i + 1}
+              imageURL={item.imageURL}
+              brand={item.brand}
+              name={item.name}
+              price={item.price}
+              theme={theme}
+            />
+          </div>
         ))}
       </div>
 

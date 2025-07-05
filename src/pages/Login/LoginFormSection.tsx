@@ -8,21 +8,26 @@ import {
   logoStyle,
 } from './Login.style';
 import { useLoginForm } from './useLoginForm';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const LoginFormSection = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  const redirectPath = searchParams.get('redirect') || '/my';
+
   const {
     email,
-    emailError,
-    handleEmailChange,
-    validateEmail,
     password,
-    passwordError,
-    handlePasswordChange,
-    validatePassword,
     isValid,
     goToLogin,
   } = useLoginForm();
+
+  const handleLoginAndRedirect = () => {
+    goToLogin();
+    navigate(redirectPath, { replace: true });
+  };
 
   return (
     <div css={cardStyle(theme)}>
@@ -33,29 +38,29 @@ const LoginFormSection = () => {
         id="email"
         name="email"
         placeholder="이메일"
-        css={inputStyle(theme, !!emailError)}
-        value={email}
-        onChange={(e) => handleEmailChange(e.target.value)}
-        onBlur={validateEmail}
+        css={inputStyle(theme, !!email.error)}
+        value={email.value}
+        onChange={(e) => email.onChange(e.target.value)}
+        onBlur={email.validate}
       />
-      {emailError && <p css={errorTextStyle(theme)}>{emailError}</p>}
+      {email.error && <p css={errorTextStyle(theme)}>{email.error}</p>}
 
       <input
         type="password"
         id="password"
         name="password"
         placeholder="비밀번호"
-        css={inputStyle(theme, !!passwordError)}
-        value={password}
-        onChange={(e) => handlePasswordChange(e.target.value)}
-        onBlur={validatePassword}
+        css={inputStyle(theme, !!password.error)}
+        value={password.value}
+        onChange={(e) => password.onChange(e.target.value)}
+        onBlur={password.validate}
       />
-      {passwordError && <p css={errorTextStyle(theme)}>{passwordError}</p>}
+      {password.error && <p css={errorTextStyle(theme)}>{password.error}</p>}
 
       <button
         css={loginButtonStyle(theme)}
         disabled={!isValid}
-        onClick={goToLogin}
+        onClick={handleLoginAndRedirect}
       >
         로그인
       </button>
