@@ -2,13 +2,22 @@ import styled from '@emotion/styled'
 import { Navbar } from '@/components/Navbar/Navbar'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useLoginForm } from '@/hooks/useLoginForm'
+import { useAuth } from '@/contexts/AuthContext'
+import { useEffect } from 'react'
 
 export function LoginPage() {
   const navigate = useNavigate()
   const location = useLocation()
-  const from = location.state?.from?.pathname || '/'
+  const from = location.state?.from?.pathname || '/my'
 
+  const { login, user } = useAuth()
   const { email, password, validForm } = useLoginForm()
+
+  useEffect(() => {
+    if (user) {
+      navigate('/my', { replace: true })
+    }
+  }, [user, navigate])
 
   const submitLoginForm = (e: React.FormEvent) => {
     e.preventDefault()
@@ -16,6 +25,7 @@ export function LoginPage() {
     password.onBlur()
 
     if (validForm) {
+      login(email.value)
       navigate(from, { replace: true })
     }
   }
