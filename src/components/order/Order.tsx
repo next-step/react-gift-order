@@ -125,12 +125,14 @@ const Order: React.FC = () => {
       <div css={FormSectionWrapperStyle(theme)}>
         <p css={TextStyle(theme)}>보내는 사람</p>
         <div css={InputRowStyle(theme)}>
-          <input
-            type=""
-            ref={SenderNameRef}
-            placeholder="이름을 입력하세요."
-          ></input>
-          {senderError && <p css={ErrorMessageStyle}>{senderError}</p>}
+          <div css={InputWrapperStyle}>
+            <input
+              type=""
+              ref={SenderNameRef}
+              placeholder="이름을 입력하세요."
+            ></input>
+            {senderError && <p css={ErrorMessageStyle}>{senderError}</p>}
+          </div>
         </div>
         <p css={TinyTextStyle}>
           * 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.
