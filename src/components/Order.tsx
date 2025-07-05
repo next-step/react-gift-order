@@ -5,6 +5,7 @@ import { cardData } from "@/data/cardData";
 import { useTheme } from "@emotion/react";
 import type { Theme } from "@emotion/react";
 import { css } from "@emotion/react";
+import { GiftCardThumb } from "@/components/GiftCardThumb";
 
 const Order: React.FC = () => {
   const { setUser } = useUserInfo();
@@ -26,14 +27,13 @@ const Order: React.FC = () => {
       <div css={ThumbNailContainerStyle(theme)}>
         {cardData.map((card) => {
           return (
-            <>
-              <img
-                key={card.id}
-                onClick={() => setSelectedId(card.id)}
-                css={ThumbNamilStyle(theme, card.id, selectedId)}
-                src={card.thumbUrl}
-              ></img>
-            </>
+            <GiftCardThumb
+              onClick={() => {
+                setSelectedId(card.id);
+              }}
+              css={ThumbNamilStyle(theme, card.id, selectedId)}
+              src={card.thumbUrl}
+            ></GiftCardThumb>
           );
         })}
       </div>
@@ -56,8 +56,8 @@ const ThumbNamilStyle = (
   selectedId: number | undefined
 ) => css`
   padding: ${theme.spacing.spacing0};
-  border: ${selectedId === cardId ? "3px solid" : "none"};
-  border-radius:;
+  border: ${selectedId === cardId ? "3px solid black" : "none"};
+  border-radius: 4px;
 `;
 
 const ThumbNailContainerStyle = (theme: Theme) => css`
