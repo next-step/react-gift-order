@@ -1,8 +1,7 @@
-import { cardTemplate } from "@/__mock__";
 import { ErrorMessage } from "@/components/common";
+import { useCardTemplate } from "@/hooks/order/useCardTemplate";
 import { useOrder } from "@/hooks/order/useOrder";
 import styled from "@emotion/styled";
-import { useEffect } from "react";
 
 const SelectedCardContainer = styled.div(({ theme }) => ({
   display: "flex",
@@ -48,28 +47,19 @@ const MessageInput = styled.textarea<{ hasError?: boolean }>(
 );
 
 export const SelectedCardView = () => {
-  const { order, setOrder, register } = useOrder();
+  const { register } = useOrder();
   const messageField = register("message");
-
-  useEffect(() => {
-    if (!order.cardTemplate) {
-      setOrder(prev => ({
-        ...prev,
-        cardTemplate: cardTemplate[0],
-        message: cardTemplate[0].defaultTextMessage,
-      }));
-    }
-  }, [order.cardTemplate, setOrder]);
+  const currentCardTemplate = useCardTemplate();
 
   return (
     <SelectedCardContainer>
       <SelectedCardImage
-        id={String(order.cardTemplate?.id)}
-        src={order.cardTemplate?.imageUrl}
+        id={String(currentCardTemplate.cardTemplate?.id)}
+        src={currentCardTemplate.cardTemplate?.imageUrl}
         alt="선택된 카드 이미지"
       />
       <MessageInput
-        placeholder={order.cardTemplate?.defaultTextMessage}
+        placeholder={currentCardTemplate.cardTemplate?.defaultTextMessage}
         value={messageField.value}
         onChange={messageField.onChange}
         onBlur={messageField.onBlur}
