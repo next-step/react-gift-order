@@ -50,7 +50,12 @@ const PresentItem = ({ isVisible }: { isVisible: boolean }) => {
   const navigate = useNavigate();
 
   const handleItemClick = (item: Goods) => {
-    navigate(`${URLS.order}?productId=${item.id}`);
+    if (!sessionStorage.getItem('email')) {
+      sessionStorage.setItem('redirectProductId', item.id);
+      navigate(URLS.login);
+    } else {
+      navigate(`${URLS.order}?productId=${item.id}`);
+    }
   };
 
   return (

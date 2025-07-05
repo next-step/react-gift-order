@@ -24,9 +24,15 @@ const LoginForm: React.FC<LoginFormProp> = ({ onLoginSuccess }) => {
 
     sessionStorage.setItem('username', username);
     sessionStorage.setItem('email', id);
-
     onLoginSuccess?.();
-    navigate(URLS.home);
+
+    const redirectProductId = sessionStorage.getItem('redirectProductId');
+    if (redirectProductId) {
+      sessionStorage.removeItem('redirectProductItem');
+      navigate(`${URLS.order}?productId=${redirectProductId}`);
+    } else {
+      navigate(URLS.home);
+    }
   };
 
   const isLoginButtonEnabled = useMemo(() => {

@@ -1,5 +1,8 @@
 import { ORDER_TEMPLATE_DATA, type OrderTemplate } from '@assets/orderTemplateData';
 import type { HasErrorProp } from '@types/hasError';
+//TODO
+//'@types/hasError' 이부분에 vsc가 빨간줄로 Cannot import type declaration files. Consider importing 'hasError' instead of '@types/hasError'.ts(6137)
+//라는 오류문을 보여주는데 혹시 해결하는 방법을 알 수 있을까요?
 import styled from '@emotion/styled';
 import { useEffect, useState, type ChangeEvent } from 'react';
 
