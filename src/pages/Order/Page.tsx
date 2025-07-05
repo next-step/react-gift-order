@@ -18,7 +18,11 @@ const Order = () => {
   const navigate = useNavigate();
   const { productId } = useParams();
   const product = rankingItemMock.find((item) => item.id === Number(productId));
-  if (!product) navigate(ROUTE_PATH.HOME);
+  useEffect(() => {
+    if (!product) {
+      navigate(ROUTE_PATH.HOME);
+    }
+  }, [product, navigate]);
 
   const [selectedCard, setSelectedCard] = useState(orderCardMock[0]);
 

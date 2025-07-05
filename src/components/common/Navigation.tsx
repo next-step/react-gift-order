@@ -4,6 +4,7 @@ import Profile from "@/components/icons/Profile";
 import { useLocation, useNavigate } from "react-router-dom";
 import Button from "@/components/common/Button";
 import { ROUTE_PATH } from "@/components/routes/Routes";
+import { checkValidPath } from "@/utils/checkValidPath";
 
 const Navigation = () => {
   const location = useLocation();
@@ -19,7 +20,7 @@ const Navigation = () => {
     navigate(ROUTE_PATH.HOME);
   };
   const goLogin = () => {
-    const isValidPath = (Object.values(ROUTE_PATH) as string[]).includes(location.pathname);
+    const isValidPath = checkValidPath(location.pathname);
     const loginPath = isValidPath ? ROUTE_PATH.LOGIN + `?redirect=${location.pathname}` : ROUTE_PATH.LOGIN;
     navigate(loginPath);
   };

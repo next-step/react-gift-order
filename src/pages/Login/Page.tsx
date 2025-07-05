@@ -5,11 +5,12 @@ import Divider from "@/components/common/Divider";
 import styled from "@emotion/styled";
 import type React from "react";
 import useStringInput from "@/hooks/useStringInput";
-import { matchPath, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useCallback } from "react";
 import { setCookieValue } from "@/utils/cookie";
 import { getIdError, getPasswordError } from "@/utils/errorMessage";
 import { AUTH_COOKIE_KEY, useAuth } from "@/contexts/authContext";
+import { checkValidPath } from "@/utils/checkValidPath";
 
 const Login = () => {
   const id = useStringInput("", getIdError);
@@ -20,7 +21,7 @@ const Login = () => {
 
   const getRedirectUrl = useCallback(() => {
     const path = searchParams.get("redirect")?.trim();
-    if (path && checkValidRoute(path)) {
+    if (path && checkValidPath(path)) {
       return path;
     } else {
       return ROUTE_PATH.HOME;
@@ -79,13 +80,6 @@ const Login = () => {
       </Content>
     </Container>
   );
-};
-
-const checkValidRoute = (path: string): boolean => {
-  return Object.values(ROUTE_PATH).some((pattern) => {
-    const match = matchPath({ path: pattern, end: true }, path);
-    return match !== null;
-  });
 };
 
 const Content = styled.div`
