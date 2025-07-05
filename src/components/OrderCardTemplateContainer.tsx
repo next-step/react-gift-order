@@ -1,5 +1,5 @@
 import { ORDER_TEMPLATE_DATA, type OrderTemplate } from '@/assets/orderTemplateData';
-import type { HasErrorProp } from '@/types/HasError';
+import type { HasErrorProp } from '@/types/hasError';
 import styled from '@emotion/styled';
 import { useEffect, useState, type ChangeEvent } from 'react';
 
@@ -69,11 +69,9 @@ const OrderCardTemplateContainer = ({ msg, onMsgChange, msgError, setMsg }: Orde
   const [selectedTemplate, setSelectedTemplate] = useState<OrderTemplate>(ORDER_TEMPLATE_DATA[0]);
 
   useEffect(() => {
-    // 현재 msg prop의 값이 선택된 템플릿의 기본 메시지와 다를 때만 업데이트
-    if (msg !== selectedTemplate.defaultTextMessage) {
-      setMsg(selectedTemplate.defaultTextMessage); // setMsg 함수 직접 호출
-    }
-  }, [selectedTemplate, msg, setMsg]); // 의존성에 setMsg 추가
+    setMsg(selectedTemplate.defaultTextMessage);
+    console.log('msg 변화');
+  }, [selectedTemplate, setMsg]); // 의존성에 setMsg 추가
 
   return (
     <StyledOrderTemplateContainer className='background-default'>

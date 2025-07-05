@@ -7,7 +7,7 @@ import { GOODS_DATA, type Goods } from '@/assets/goodsData';
 import { Spacer } from '@styles/Spacer';
 import { ErrorMsg } from '@styles/ErrorMsg';
 import { useCommonOrderForm } from '@/hooks/useOrderForm';
-import type { HasErrorProp } from '@/types/HasError';
+import type { HasErrorProp } from '@/types/hasError';
 import { useMsgForm } from '@/hooks/useMsgForm';
 
 const StyledSendPersonContainer = styled.div`
@@ -108,9 +108,7 @@ const OrderContainer = () => {
 
   // 분리된 두 훅 사용
   const { commonFormValues, commonErrorMsgs, handleCommonChange, validateCommonForm } = useCommonOrderForm();
-
   const { msg, msgError, handleMsgChange, validateMsg, setMsg } = useMsgForm();
-
   const { sendName, receiveName, receiveTel, count } = commonFormValues;
 
   const totalPrice = selectedProduct ? selectedProduct.price.sellingPrice * count : 0;
