@@ -1,6 +1,6 @@
 import { useAuth } from "@/hooks/useAuth";
 import styled from "@emotion/styled";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 type RankingCardProps = {
   rank: number;

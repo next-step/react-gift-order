@@ -1,4 +1,3 @@
-// src/pages/home/components/RankingSection.tsx
 import styled from "@emotion/styled";
 import { RankingFilter } from "@/pages/home/components/RankingFilter";
 import { RankingTab } from "@/pages/home/components/RankingTab";
