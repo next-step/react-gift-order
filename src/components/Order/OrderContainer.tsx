@@ -93,9 +93,6 @@ const OrderContainer = () => {
             className='send-person-name body2Regular'
             placeholder='전화번호를 입력하세요'
             value={receiveTel}
-            // 전화번호 필드만 추가적인 replace 로직이 있으므로, 여기서 별도로 함수를 만들거나
-            // handleCommonChange 내부에서 name에 따라 다르게 처리할 수 있습니다.
-            // 여기서는 임시로 익명 함수를 사용합니다.
             onChange={(e) => handleCommonChange({ ...e, target: { ...e.target, value: e.target.value.replace(/[^0-9]/g, '') } })}
             hasError={!!commonErrorMsgs[2]}
           />
