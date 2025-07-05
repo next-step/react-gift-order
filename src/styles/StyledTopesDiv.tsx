@@ -55,6 +55,12 @@ const StyledTopestDiv = styled.div`
   .background-default {
     background-color: ${({ theme }) => theme.sementicPalette.backgroundDefault};
   }
+  .font-red {
+    color: ${({ theme }) => theme.palette.red800};
+  }
+  .border-red {
+    border-color: ${({ theme }) => theme.palette.red800};
+  }
 `;
 
 export default StyledTopestDiv;
