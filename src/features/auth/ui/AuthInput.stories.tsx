@@ -1,13 +1,13 @@
-import { Input } from "@/shared/ui/Input";
+import { AuthInput } from "@/features/auth/ui/AuthInput";
 
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-const meta: Meta<typeof Input> = {
-    component: Input,
+const meta: Meta<typeof AuthInput> = {
+    component: AuthInput,
 };
 
 export default meta;
-type Story = StoryObj<typeof Input>;
+type Story = StoryObj<typeof AuthInput>;
 
 export const Default: Story = {
     args: {
@@ -15,5 +15,5 @@ export const Default: Story = {
         height: "50px",
         placeholder: "Placeholder",
     },
-    render: (args) => <Input {...args} />,
+    render: (args) => <AuthInput {...args} />,
 };

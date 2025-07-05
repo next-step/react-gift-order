@@ -10,7 +10,12 @@ export default defineConfig({
         react({
             jsxImportSource: "@emotion/react",
             babel: {
-                plugins: ["@emotion/babel-plugin"],
+                presets: ["@babel/preset-typescript"],
+                plugins: [
+                    "@emotion/babel-plugin",
+                    ["@babel/plugin-proposal-decorators", { legacy: true }],
+                    ["@babel/plugin-proposal-class-properties", { loose: true }],
+                ],
             },
         }),
         ViteImageOptimizer(),

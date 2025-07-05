@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 export type UseInputOptions = {
     onChange?: (value: string) => void;
@@ -11,13 +11,11 @@ export const useInput = ({
     onBlur: onBlurCallback,
     onFocus: onFocusCallback,
 }: UseInputOptions) => {
-    const inputRef = useRef<HTMLInputElement | null>(null);
     const [value, setValue] = useState<string>("");
     const [errorMessage, setErrorMessage] = useState<string>("");
 
     const onBlur: React.FocusEventHandler<HTMLInputElement> = (event) => {
         const target = event.currentTarget;
-        if (target.value !== value) setValue(target.value);
         if (onBlurCallback) onBlurCallback(target.value);
     };
 
@@ -29,12 +27,10 @@ export const useInput = ({
 
     const onFocus: React.FocusEventHandler<HTMLInputElement> = (event) => {
         const target = event.currentTarget;
-        if (target.value !== value) setValue(target.value);
         if (onFocusCallback) onFocusCallback(target.value);
     };
 
     return {
-        inputRef,
         value,
         setValue,
         errorMessage,

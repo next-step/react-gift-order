@@ -1,35 +1,52 @@
-import type { InputProps } from "@/shared/ui/Input";
+import { type InputFieldGroupProps, type InputProps } from "@/shared/ui/Input";
 
 import styled from "@emotion/styled";
 
-export const InputElement = styled.input<InputProps>`
-    width: ${({ width }) => width};
-    height: ${({ height }) => height};
+export const Input = styled.input<InputProps>`
+    width: ${({ width }) => width || "100%"};
+    height: ${({ height }) => height || "40px"};
 
-    padding: 8px 0px;
-
-    border: none;
-    border-bottom: 1px solid;
+    border: 1px solid;
     border-color: ${({ theme, error }) => {
-        if (error) return theme.colors.red.red700;
-        else return theme.colors.gray.gray400;
+        if (error) return theme.colors.red.red600;
+        return theme.colors.gray.gray300;
     }};
 
-    font-size: 1rem;
+    border-radius: 8px;
+
+    padding: ${({ theme }) => theme.spacing.spacing3};
 
     outline: none;
 
-    transition: border-color 100ms ease-in-out;
-
     &:focus {
-        border-color: ${({ theme }) => theme.colors.gray.gray900};
+        outline: 1px solid ${({ theme }) => theme.colors.gray.gray900};
     }
 `;
 
-export const InputErrorMessage = styled.p`
-    height: 4px;
-    margin-top: 4px;
+export const InputLabel = styled.label`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 
-    color: ${({ theme }) => theme.colors.red.red700};
-    font-size: ${({ theme }) => theme.typography.label.label2Bold.size};
+    min-width: 70px;
+`;
+
+export const InputFieldGroupContainer = styled.div<Pick<InputFieldGroupProps, "align">>`
+    display: flex;
+    flex-direction: ${({ align }) => (align === "vertical" ? "column" : "row")};
+`;
+
+export const InputElementContainer = styled.div`
+    width: 100%;
+`;
+
+export const Error = styled.p`
+    width: 100%;
+
+    margin: 8px 0px;
+    margin-left: 8px;
+
+    color: ${({ theme }) => theme.colors.red.red600};
+    font-size: ${({ theme }) => theme.typography.label.label2Regular.size};
+    font-weight: ${({ theme }) => theme.typography.label.label2Regular.weight};
 `;
