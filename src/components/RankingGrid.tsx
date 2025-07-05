@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import type { GiftItem } from '@/types';
 import { GiftCard } from '@/components/GiftCard';

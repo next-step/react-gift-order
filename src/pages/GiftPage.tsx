@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { useState } from 'react';
 import { Layout } from '@/components/Layout';
 import { NavBar } from '@/components/NavBar';
@@ -30,23 +29,29 @@ export const GiftPage = () => {
     setSort(s);
   };
 
-  const base: RankingItem[] =
-    gender === 'FEMALE'
-      ? rankingFemale
-      : gender === 'MALE'
-      ? rankingMale
-      : gender === 'TEEN'
-      ? rankingTeen
-      : rankingAll;
+  const genderMap: Record<GenderFilter, RankingItem[]> = {
+    ALL: rankingAll,
+    FEMALE: rankingFemale,
+    MALE: rankingMale,
+    TEEN: rankingTeen,
+  };
 
-  // const sortFieldMap: Record<SortFilter, keyof RankingItem> = {
-  //   GIVE: 'give',       
-  //   WANT: 'want',       
-  //   RECEIVE: 'receive', 
-  // };
-  // const key = sortFieldMap[sort];
+  const base = genderMap[gender];
+  
+  type RankField = 'give' | 'want' | 'receive';
+  type RankStatItem = RankingItem & Record<RankField, number>; 
 
-  // const list = [...base].sort((a, b) => Number(b[key]) - Number(a[key]));
+  const sortFieldMap: Record<SortFilter, RankField> = {
+    GIVE: 'give',
+    WANT: 'want',
+    RECEIVE: 'receive',
+  };
+  const key = sortFieldMap[sort];
+
+  const list = ([...base] as RankStatItem[]).sort(
+    (a, b) => b[key] - a[key]
+  );
+
 
   return (
     <Layout>
@@ -54,8 +59,8 @@ export const GiftPage = () => {
       <FriendSelectBar />
       <CategoryGrid />
       <Banner />
-      <RankingTabs onChange={handleTab} />
-      {/* <RankingGrid items={list} /> */}
+      <RankingTabs gender={gender} sort={sort} onChange={handleTab}/>
+      <RankingGrid items={list} />
     </Layout>
   );
 };
