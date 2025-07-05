@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
@@ -15,10 +14,6 @@ export default function GiftOrderPage({
   product = rankingProducts[0],
 }: GiftOrderPageProps) {
   const navigate = useNavigate();
-
-  const [selectedTemplate, setSelectedTemplate] = useState<MessageCardTemplate>(
-    messageCardTemplates[0]
-  );
 
   const initialFormData: GiftOrderForm = {
     message: messageCardTemplates[0].defaultTextMessage,
@@ -73,7 +68,6 @@ export default function GiftOrderPage({
   };
 
   const updateTemplateSelection = (template: MessageCardTemplate) => {
-    setSelectedTemplate(template);
     handleChange('message', template.defaultTextMessage);
     handleChange('selectedTemplate', template);
   };
@@ -110,7 +104,7 @@ export default function GiftOrderPage({
               {messageCardTemplates.map(template => (
                 <TemplateThumb
                   key={template.id}
-                  isSelected={selectedTemplate.id === template.id}
+                  isSelected={formData.selectedTemplate.id === template.id}
                   onClick={() => handleTemplateSelect(template)}
                   hasError={!!errors.recipientPhone}
                 >
@@ -124,7 +118,7 @@ export default function GiftOrderPage({
 
             <MessageCardPreview>
               <img
-                src={selectedTemplate.imageUrl || '/placeholder.svg'}
+                src={formData.selectedTemplate.imageUrl || '/placeholder.svg'}
                 alt="선택된 메시지 카드"
               />
             </MessageCardPreview>
