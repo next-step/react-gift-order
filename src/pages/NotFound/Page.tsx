@@ -1,7 +1,7 @@
-import Container from "@/components/Container";
+import Container from "@/components/common/Container";
 import styled from "@emotion/styled";
 import { useNavigate } from "react-router-dom";
-import { ROUTE_PATH } from "@/App";
+import { ROUTE_PATH } from "@/components/routes/Routes";
 import Button from "@/components/common/Button";
 
 const NOT_FOUND_IMG_URL = "https://gift-s.kakaocdn.net/dn/gift/webapp/images/m640/img_not_found.png";

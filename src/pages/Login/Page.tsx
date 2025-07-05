@@ -1,39 +1,45 @@
-import { ROUTE_PATH } from "@/App";
+import { ROUTE_PATH } from "@/components/routes/Routes";
 import Button from "@/components/common/Button";
-import Container from "@/components/Container";
-import Divider from "@/components/Divider";
+import Container from "@/components/common/Container";
+import Divider from "@/components/common/Divider";
 import styled from "@emotion/styled";
 import type React from "react";
-import useInput from "@/hooks/useInput";
+import useStringInput from "@/hooks/useStringInput";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import type { ThemeType } from "@/types/ThemeType";
-import theme from "@/styles/theme/theme";
-
-const ERROR_MSG_ID_EMPTY = "ID를 입력해주세요.";
-const ERROR_MSG_ID_FORM = "ID는 이메일 형식으로 입력해주세요.";
-const ERROR_MSG_PASSWORD_EMPTY = "PW를 입력해주세요.";
-const ERROR_MSG_PASSWORD_FORM = "PW는 최소 8글자 이상이어야 합니다.";
+import { useCallback } from "react";
+import { setCookieValue } from "@/utils/cookie";
+import { getIdError, getPasswordError } from "@/utils/errorMessage";
+import { AUTH_COOKIE_KEY, useAuth } from "@/contexts/authContext";
+import { checkValidPath } from "@/utils/checkValidPath";
 
 const Login = () => {
-  const id = useInput("", isValidId);
-  const password = useInput("", isValidPassword);
+  const id = useStringInput("", getIdError);
+  const password = useStringInput("", getPasswordError);
   const navigate = useNavigate();
-  const [redirectUrl] = useSearchParams();
+  const [searchParams] = useSearchParams();
+  const { setAuth } = useAuth();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const getRedirectUrl = useCallback(() => {
+    const path = searchParams.get("redirect")?.trim();
+    if (path && checkValidPath(path)) {
+      return path;
+    } else {
+      return ROUTE_PATH.HOME;
+    }
+  }, [searchParams]);
+
+  const handleLoginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const redirect = () => {
-      const path = redirectUrl.get("redirect")?.trim();
-      if (path && (Object.values(ROUTE_PATH) as string[]).includes(path)) {
-        return path;
-      } else {
-        return ROUTE_PATH.HOME;
-      }
-    };
-    if (redirect() === ROUTE_PATH.LOGIN) {
+
+    setCookieValue(AUTH_COOKIE_KEY, id.value);
+    const userName = id.value ? id.value?.split("@")[0] : undefined;
+    setAuth({ isLoggedIn: true, userName: userName, userEmail: id.value });
+
+    const redirectUrl = getRedirectUrl();
+    if (redirectUrl === ROUTE_PATH.LOGIN) {
       navigate(ROUTE_PATH.HOME);
     } else {
-      navigate(`${redirect()}`);
+      navigate(`${redirectUrl}`);
     }
   };
 
@@ -43,7 +49,7 @@ const Login = () => {
     <Container>
       <Content>
         <Logo>kakao</Logo>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleLoginSubmit}>
           <InputWrapper>
             <Input
               type="email"
@@ -51,7 +57,7 @@ const Login = () => {
               onChange={id.onChange}
               onBlur={id.onBlur}
               errorMsg={id.errorMsg}
-              theme={theme}
+              value={id.value}
             />
             <ErrorMsg>{id.errorMsg}</ErrorMsg>
           </InputWrapper>
@@ -62,9 +68,9 @@ const Login = () => {
               onChange={password.onChange}
               onBlur={password.onBlur}
               errorMsg={password.errorMsg}
-              theme={theme}
+              value={password.value}
             />
-            <ErrorMsg>{password.errorMsg}</ErrorMsg>
+            {password.errorMsg && <ErrorMsg>{password.errorMsg}</ErrorMsg>}
           </InputWrapper>
           <Divider />
           <Button fullWidth={true} type="submit" disabled={!isValidIdAndPassword}>
@@ -74,20 +80,6 @@ const Login = () => {
       </Content>
     </Container>
   );
-};
-
-const isValidId = (id: string) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  let msg: string | null = null;
-  if (!id) msg = ERROR_MSG_ID_EMPTY;
-  else if (!emailRegex.test(id)) msg = ERROR_MSG_ID_FORM;
-  return msg;
-};
-const isValidPassword = (password: string) => {
-  let msg: string | null = null;
-  if (!password) msg = ERROR_MSG_PASSWORD_EMPTY;
-  else if (password.length < 8) msg = ERROR_MSG_PASSWORD_FORM;
-  return msg;
 };
 
 const Content = styled.div`
@@ -126,7 +118,6 @@ const InputWrapper = styled.div`
 
 type InputType = {
   errorMsg: string | null;
-  theme: ThemeType;
 };
 const Input = styled.input<InputType>`
   width: 100%;
