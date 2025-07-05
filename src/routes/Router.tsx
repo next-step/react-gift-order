@@ -3,6 +3,7 @@ import GiftShop from '@/pages/GiftShop';
 import Login from '@/pages/Login';
 import NotFound from '@/pages/NotFound';
 import { UserInfoProvider } from '@/providers/UserInfoProvider';
+import MyPage from '@/pages/MyPage';
 
 const Router = () => {
   return (
@@ -11,6 +12,7 @@ const Router = () => {
         <Routes>
           <Route path="/" element={<GiftShop />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/my" element={<MyPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
