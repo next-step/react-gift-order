@@ -20,7 +20,7 @@ export const StyledSendPersonContainer = styled.div`
     padding-bottom: 20px;
   }
   textarea {
-    width: 90%;
+    width: 95%;
     padding: 4px 12px;
     border-radius: 5px;
     &:focus {
@@ -29,6 +29,6 @@ export const StyledSendPersonContainer = styled.div`
   }
   p {
     margin-top: 6px;
-    width: 90%;
+    width: 95%;
   }
 `;

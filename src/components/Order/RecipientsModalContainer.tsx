@@ -8,7 +8,7 @@ const StyledRecipientsModalContainerBasicLabelDiv = styled.div`
   width: 100%;
 
   div {
-    width: 90%;
+    width: 95%;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -17,7 +17,7 @@ const StyledRecipientsModalContainerBasicLabelDiv = styled.div`
 
   p {
     margin-top: 6px;
-    width: 90%;
+    width: 95%;
   }
 `;
 const StyledRecipientsAddModalContainer = styled.div`
@@ -31,7 +31,7 @@ const StyledRecipientsAddModalContainer = styled.div`
   margin-bottom: 20px;
 
   div {
-    width: 90%;
+    width: 95%;
     height: 80%;
     display: flex;
     flex-direction: column;

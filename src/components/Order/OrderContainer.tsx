@@ -10,6 +10,7 @@ import { useForm, type SubmitHandler } from 'react-hook-form';
 import RecipientsModal from './RecipientsModalContainer';
 import SenderContainer from './SenderContainer';
 import type { OrderFormValue } from '@/types/OrderFormValues';
+import RecipientsModalContainer from './RecipientsModalContainer';
 
 const OrderContainer: FC = () => {
   const [searchParams] = useSearchParams();
@@ -58,7 +59,7 @@ const OrderContainer: FC = () => {
           register={register} // senderName, senderContact 필드 등록을 위해 register 전달
           errors={errors} // 해당 필드들의 오류 정보 전달
         />
-        <RecipientsModal />
+        <RecipientsModalContainer />
 
         <StyledItemInfoContainer className='item-info background-default'>
           <p className='title2Bold basic-label'>상품 정보</p>

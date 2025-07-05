@@ -54,10 +54,10 @@ const StyledOrderCardContainer = styled.div`
   }
   p {
     margin-top: 6px;
-    width: 90%;
+    width: 95%;
   }
   textarea {
-    width: 90%;
+    width: 95%;
     padding: 4px 12px;
     border-radius: 5px;
     &:focus {
