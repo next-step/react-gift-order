@@ -4,25 +4,24 @@ import Divider from "@/components/common/Divider";
 import Button from "@/components/common/Button";
 import { useNavigate } from "react-router-dom";
 import { ROUTE_PATH } from "@/components/routes/Routes";
-import { clearCookieValue, getCookieValue } from "@/utils/cookie";
+import { clearCookieValue } from "@/utils/cookie";
+import { AUTH_COOKIE_KEY, useAuth } from "@/contexts/authContext";
 
 const Profile = () => {
+  const { auth, setAuth } = useAuth();
   const navigate = useNavigate();
-  const goLogin = () => {
+  const logout = () => {
+    clearCookieValue(AUTH_COOKIE_KEY);
+    setAuth({ isLoggedIn: false });
     navigate(ROUTE_PATH.LOGIN);
   };
-  const logout = () => {
-    clearCookieValue("userId");
-    goLogin();
-  };
-  const userId = getCookieValue("userId");
-  const userName = userId ? userId?.split("@")[0] : null;
+
   return (
     <Container>
       <Content>
         <Title>마이 페이지</Title>
-        <UserInfo>{userName} 님 안녕하세요</UserInfo>
-        <UserInfo>이메일 주소는 {userId}입니다.</UserInfo>
+        <UserInfo>{auth.userName} 님 안녕하세요</UserInfo>
+        <UserInfo>이메일 주소는 {auth.userEmail}입니다.</UserInfo>
         <Divider />
         <Button variant="secondary" size="small" onClick={logout}>
           로그아웃

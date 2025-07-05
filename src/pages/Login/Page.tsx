@@ -5,20 +5,22 @@ import Divider from "@/components/common/Divider";
 import styled from "@emotion/styled";
 import type React from "react";
 import useStringInput from "@/hooks/useStringInput";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { matchPath, useNavigate, useSearchParams } from "react-router-dom";
 import { useCallback } from "react";
 import { setCookieValue } from "@/utils/cookie";
 import { getIdError, getPasswordError } from "@/utils/errorMessage";
+import { AUTH_COOKIE_KEY, useAuth } from "@/contexts/authContext";
 
 const Login = () => {
   const id = useStringInput("", getIdError);
   const password = useStringInput("", getPasswordError);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { setAuth } = useAuth();
 
   const getRedirectUrl = useCallback(() => {
     const path = searchParams.get("redirect")?.trim();
-    if (path && (Object.values(ROUTE_PATH) as string[]).includes(path)) {
+    if (path && checkValidRoute(path)) {
       return path;
     } else {
       return ROUTE_PATH.HOME;
@@ -28,7 +30,9 @@ const Login = () => {
   const handleLoginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    setCookieValue("userId", id.value);
+    setCookieValue(AUTH_COOKIE_KEY, id.value);
+    const userName = id.value ? id.value?.split("@")[0] : undefined;
+    setAuth({ isLoggedIn: true, userName: userName, userEmail: id.value });
 
     const redirectUrl = getRedirectUrl();
     if (redirectUrl === ROUTE_PATH.LOGIN) {
@@ -75,6 +79,13 @@ const Login = () => {
       </Content>
     </Container>
   );
+};
+
+const checkValidRoute = (path: string): boolean => {
+  return Object.values(ROUTE_PATH).some((pattern) => {
+    const match = matchPath({ path: pattern, end: true }, path);
+    return match !== null;
+  });
 };
 
 const Content = styled.div`
