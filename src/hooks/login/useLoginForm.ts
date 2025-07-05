@@ -4,18 +4,18 @@ import { setUserInfo } from "@/utils/storage";
 import { useRouter } from "@/hooks/common/useRouter";
 import { useForm } from "@/hooks/common/useForm";
 import { loginValidationRules } from "@/utils/login-validator";
-import { useMemo } from "react";
+import type { ChangeEvent, FormEvent } from "react";
 
 interface UseLoginFormProps {
   errors: ValidationErrors<FormData>;
   isFormValid: boolean;
-  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  handleSubmit: (e: FormEvent<HTMLFormElement>) => void;
   register: <K extends keyof FormData>(
     field: K,
   ) => {
     name: K;
     value: FormData[K];
-    onChange: (e: React.ChangeEvent<HTMLInputElement> | FormData[K]) => void;
+    onChange: (e: ChangeEvent<HTMLInputElement> | FormData[K]) => void;
     onBlur: () => void;
     error: string | undefined;
     hasError: boolean;
