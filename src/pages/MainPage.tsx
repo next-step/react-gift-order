@@ -9,10 +9,6 @@ import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
 
 export default function MainPage() {
-  const handleBackClick = (): void => {
-    // 뒤로 가기 기능 구현
-  };
-
   const handleAddFriend = (): void => {
     // 친구 추가 기능 구현
   };
@@ -20,7 +16,7 @@ export default function MainPage() {
   return (
     <AppContainer>
       <MobileViewport>
-        <NavigationHeader title="선물하기" onBackClick={handleBackClick} />
+        <NavigationHeader title="선물하기" />
 
         <FriendSelector onAddFriend={handleAddFriend} />
 

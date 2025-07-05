@@ -7,6 +7,19 @@ interface ThemeItemProps {
   onClick: (theme: GiftTheme) => void;
 }
 
+export function GiftThemeItem({ theme, onClick }: ThemeItemProps) {
+  const handleClick = () => {
+    onClick(theme);
+  };
+
+  return (
+    <StyledThemeItem onClick={handleClick}>
+      <ThemeImage src={theme.image} alt={theme.name} />
+      <ThemeName>{theme.name}</ThemeName>
+    </StyledThemeItem>
+  );
+}
+
 const StyledThemeItem = styled.button`
   display: flex;
   flex-direction: column;
@@ -44,16 +57,3 @@ const ThemeName = styled.span`
     font-size: 10px;
   }
 `;
-
-export function GiftThemeItem({ theme, onClick }: ThemeItemProps) {
-  const handleClick = () => {
-    onClick(theme);
-  };
-
-  return (
-    <StyledThemeItem onClick={handleClick}>
-      <ThemeImage src={theme.image} alt={theme.name} />
-      <ThemeName>{theme.name}</ThemeName>
-    </StyledThemeItem>
-  );
-}

@@ -26,3 +26,19 @@ export interface NavigationState {
 
 export type TargetFilter = '전체' | '여성이' | '남성이' | '청소년이';
 export type CategoryFilter = '받고 싶어한' | '많이 선물한' | '위시로 받은';
+
+export interface MessageCardTemplate {
+  id: number;
+  thumbUrl: string;
+  imageUrl: string;
+  defaultTextMessage: string;
+}
+
+export interface GiftOrderForm {
+  message: string;
+  senderName: string;
+  recipientName: string;
+  recipientPhone: string;
+  quantity: number;
+  selectedTemplate: MessageCardTemplate;
+}

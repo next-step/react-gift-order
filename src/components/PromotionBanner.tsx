@@ -6,6 +6,20 @@ interface PromotionBannerProps {
   title: string;
 }
 
+export function PromotionBanner({ subtitle, title }: PromotionBannerProps) {
+  return (
+    <BannerContainer>
+      <Banner>
+        <BannerSubtitle>{subtitle}</BannerSubtitle>
+        <BannerTitle>
+          {title}
+          <Emoji>🎉</Emoji>
+        </BannerTitle>
+      </Banner>
+    </BannerContainer>
+  );
+}
+
 const BannerContainer = styled.div`
   padding: 0 ${theme.spacing.spacing4} ${theme.spacing.spacing4};
 `;
@@ -49,17 +63,3 @@ const Emoji = styled.span`
   margin-left: ${theme.spacing.spacing1};
   font-size: 1.2em;
 `;
-
-export function PromotionBanner({ subtitle, title }: PromotionBannerProps) {
-  return (
-    <BannerContainer>
-      <Banner>
-        <BannerSubtitle>{subtitle}</BannerSubtitle>
-        <BannerTitle>
-          {title}
-          <Emoji>🎉</Emoji>
-        </BannerTitle>
-      </Banner>
-    </BannerContainer>
-  );
-}
