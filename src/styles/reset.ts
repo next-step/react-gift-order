@@ -13,9 +13,9 @@ const reset = css`
     text-size-adjust: none;
   }
 
-  body{
+  body {
     margin: 0;
-    padding: 0; 
+    padding: 0;
   }
   h1,
   h2,

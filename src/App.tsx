@@ -1,7 +1,7 @@
 import { ThemeProvider } from '@emotion/react';
 import GlobalStyle from '@/styles/globalStyle';
 import GlobalReset from '@/styles/GlobalReset';
-import {theme} from '@/styles/theme';
+import { theme } from '@/styles/theme';
 import { Router } from '@/Components/Router/Router';
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <GlobalReset />
       <GlobalStyle />
-      <Router />  
+      <Router />
     </ThemeProvider>
   );
 }

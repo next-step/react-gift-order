@@ -1,8 +1,8 @@
 import { ButtonGroup, FilterItem, Label } from '@/Components/Filter/GenderStyle';
 
 const genderOptions = [
-  { key: '전체', label: '전체', icon: 'ALL' }, 
-  { key: '여성이', label: '여성이', icon: '👩🏻' }, 
+  { key: '전체', label: '전체', icon: 'ALL' },
+  { key: '여성이', label: '여성이', icon: '👩🏻' },
   { key: '남성이', label: '남성이', icon: '👨🏻' },
   { key: '청소년이', label: '청소년이', icon: '👦🏻' },
 ];
