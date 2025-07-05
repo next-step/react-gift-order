@@ -5,6 +5,7 @@ import { theme } from '@/styles/theme';
 import { NavigationHeader } from '@/components/NavigationHeader';
 import { messageCardTemplates, rankingProducts } from '@/mock/mockData';
 import type { MessageCardTemplate, GiftOrderForm, Product } from '@/types';
+import { useForm } from '@/hooks/useForm';
 
 interface GiftOrderPageProps {
   product?: Product;
@@ -18,72 +19,74 @@ export default function GiftOrderPage({
   const [selectedTemplate, setSelectedTemplate] = useState<MessageCardTemplate>(
     messageCardTemplates[0]
   );
-  const [formData, setFormData] = useState<GiftOrderForm>({
+
+  const initialFormData: GiftOrderForm = {
     message: messageCardTemplates[0].defaultTextMessage,
     senderName: '',
     recipientName: '',
     recipientPhone: '',
     quantity: 1,
     selectedTemplate: messageCardTemplates[0],
-  });
+  };
 
-  const [errors, setErrors] = useState<
-    Partial<Record<keyof GiftOrderForm, string>>
-  >({});
+  const validateForm = (values: GiftOrderForm) => {
+    const errors: Partial<Record<keyof GiftOrderForm, string>> = {};
+
+    if (!values.message.trim()) {
+      errors.message = '메시지를 입력해주세요.';
+    }
+
+    if (!values.senderName.trim()) {
+      errors.senderName = '이름을 입력해주세요.';
+    }
+
+    if (!values.recipientName.trim()) {
+      errors.recipientName = '이름을 입력해주세요.';
+    }
+
+    if (!values.recipientPhone.trim()) {
+      errors.recipientPhone = '전화번호를 입력해주세요.';
+    } else {
+      const phoneRegex = /^010(-?\d{4})-?(\d{4})$/;
+      if (!phoneRegex.test(values.recipientPhone)) {
+        errors.recipientPhone = '올바른 전화번호 형식이 아닙니다.';
+      }
+    }
+
+    if (values.quantity < 1) {
+      errors.quantity = '구매 수량은 1개 이상이어야 합니다.';
+    }
+
+    return errors;
+  };
+
+  const {
+    values: formData,
+    errors,
+    handleChange,
+    validateForm: validate,
+  } = useForm(initialFormData, validateForm);
 
   const handleTemplateSelect = (template: MessageCardTemplate) => {
+    // 템플릿 선택 시 관련 상태들을 함께 업데이트
+    updateTemplateSelection(template);
+  };
+
+  const updateTemplateSelection = (template: MessageCardTemplate) => {
     setSelectedTemplate(template);
-    setFormData(prev => ({
-      ...prev,
-      message: template.defaultTextMessage,
-      selectedTemplate: template,
-    }));
+    handleChange('message', template.defaultTextMessage);
+    handleChange('selectedTemplate', template);
   };
 
   const handleInputChange = (
     field: keyof GiftOrderForm,
     value: string | number
   ) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
-    }
-  };
-
-  const validateForm = (): boolean => {
-    const newErrors: Partial<Record<keyof GiftOrderForm, string>> = {};
-
-    if (!formData.message.trim()) {
-      newErrors.message = '메시지를 입력해주세요.';
-    }
-
-    if (!formData.senderName.trim()) {
-      newErrors.senderName = '이름을 입력해주세요.';
-    }
-
-    if (!formData.recipientName.trim()) {
-      newErrors.recipientName = '이름을 입력해주세요.';
-    }
-
-    if (!formData.recipientPhone.trim()) {
-      newErrors.recipientPhone = '전화번호를 입력해주세요.';
-    } else {
-      const phoneRegex = /^010(-?\d{4})-?(\d{4})$/;
-      if (!phoneRegex.test(formData.recipientPhone)) {
-        newErrors.recipientPhone = '올바른 전화번호 형식이 아닙니다.';
-      }
-    }
-
-    if (formData.quantity < 1) {
-      newErrors.quantity = '구매 수량은 1개 이상이어야 합니다.';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    handleChange(field, value);
   };
 
   const handleSubmit = () => {
-    if (validateForm()) {
+    if (validate()) {
       const orderMsg = `주문이 완료되었습니다!\n\n상품명: ${displayProductName}\n구매수량: ${formData.quantity}\n발신자 이름: ${formData.senderName}\n메시지: ${formData.message}`;
       alert(orderMsg);
       navigate('/');
