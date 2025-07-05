@@ -8,17 +8,16 @@ const StyledLoginButton = styled.div(({ theme }) => ({
 
 interface LoginButtonProps {
   isDisabled: boolean;
-  onClick: () => void;
 }
 
-export const LoginButton = ({ isDisabled, onClick }: LoginButtonProps) => {
+export const LoginButton = ({ isDisabled }: LoginButtonProps) => {
   return (
     <StyledLoginButton>
       <Button
         variant="primary"
         size="large"
         width="390px"
-        onClick={onClick}
+        type="submit"
         disabled={isDisabled}
       >
         로그인
