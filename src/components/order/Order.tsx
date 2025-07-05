@@ -3,8 +3,6 @@ import { cardData } from "@/data/cardData";
 import { useTheme } from "@emotion/react";
 import { GiftCardThumb } from "@/components/GiftCardThumb";
 import { useParams } from "react-router-dom";
-import { css } from "@emotion/react";
-import type { Theme } from "@emotion/react";
 import { giftData } from "@/data/giftData";
 import {
   ThumbNailStyle,
@@ -25,6 +23,9 @@ import {
   productPrice,
   totalPriceBoxStyle,
   fixedBottomStyle,
+  SubmitStyle,
+  InputWrapperStyle,
+  ErrorMessageStyle,
 } from "@/components/order/Order.style";
 
 const Order: React.FC = () => {
@@ -204,27 +205,3 @@ const Order: React.FC = () => {
 };
 
 export default Order;
-
-const SubmitStyle = (theme: Theme) => css`
-  width: 100%;
-  padding: ${theme.spacing.spacing4}
-  color: black;
-  font-size: ${theme.typography.title1Regular.size};
-  font-weight: ${theme.typography.title1Regular.weight};
-  border: none;
-  cursor: pointer;
-  text-align: center;
-`;
-
-const InputWrapperStyle = () => css`
-  display: flex;
-  flex-direction: column;
-  flex: 1; /* 라벨을 제외한 나머지 공간 모두 차지 */
-  gap: 4px; /* 입력창과 에러 메시지 사이 간격 */
-`;
-
-const ErrorMessageStyle = css`
-  font-size: 12px;
-  color: red;
-  margin: 4px 0 0 4px; // 위는 약간 띄우고, 왼쪽 정렬 느낌
-`;

@@ -152,3 +152,27 @@ export const fixedBottomStyle = (theme: Theme) => css`
   background-color: ${theme.colors.yellow.yellow500};
   padding: ${theme.spacing.spacing11};
 `;
+
+export const SubmitStyle = (theme: Theme) => css`
+  width: 100%;
+  padding: ${theme.spacing.spacing4}
+  color: black;
+  font-size: ${theme.typography.title1Regular.size};
+  font-weight: ${theme.typography.title1Regular.weight};
+  border: none;
+  cursor: pointer;
+  text-align: center;
+`;
+
+export const InputWrapperStyle = () => css`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 4px;
+`;
+
+export const ErrorMessageStyle = css`
+  font-size: 12px;
+  color: red;
+  margin: 4px 0 0 4px;
+`;
