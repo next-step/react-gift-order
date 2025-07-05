@@ -29,10 +29,11 @@ const Order: React.FC = () => {
           {cardData.map((card) => {
             return (
               <GiftCardThumb
+                key={card.id}
                 onClick={() => {
                   setSelectedId(card.id);
                 }}
-                css={ThumbNamilStyle(theme, card.id, selectedId)}
+                css={ThumbNailStyle(theme, card.id, selectedId)}
                 src={card.thumbUrl}
               ></GiftCardThumb>
             );
@@ -77,20 +78,36 @@ const Order: React.FC = () => {
           </div>
         </div>
       </div>
+      <div>
+        <h2>상품 정보</h2>
+        <div>
+          <img src="your-image-url.png" alt="BBQ 양념치킨 세트" />
+
+          <div>
+            <p>BBQ 양념치킨+크림치즈볼+콜라1.25L</p>
+            <p>BBQ</p>
+            <p>
+              상품가 <strong>29,000</strong>원
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
 export default Order;
 
-const ThumbNamilStyle = (
+const ThumbNailStyle = (
   theme: Theme,
   cardId: number,
   selectedId: number | undefined
 ) => css`
+  flex-shrink: 0;
   padding: ${theme.spacing.spacing0};
   border: ${selectedId === cardId ? "3px solid black" : "none"};
   border-radius: 4px;
+  flex-shrink: 0;
 `;
 
 const ThumbNailContainerStyle = (theme: Theme) => css`
@@ -102,10 +119,12 @@ const ThumbNailContainerStyle = (theme: Theme) => css`
 `;
 
 const CardWrapperStyle = (theme: Theme) => css`
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
   gap: ${theme.spacing.spacing10};
 `;
 
@@ -114,6 +133,8 @@ const WrapperStyle = (theme: Theme) => css`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width :100%
+  height : 80%;
   gap: ${theme.spacing.spacing10};
 `;
 
@@ -126,12 +147,11 @@ const MessageStyle = (theme: Theme) => css`
 
 const FormSectionWrapperStyle = (theme: Theme) => css`
   width: 100%;
-  padding: ${theme.spacing.spacing8}; // 안쪽 여백
-  background-color:${theme.colors.gray.gray200}
+  padding: ${theme.spacing.spacing8};
   border-radius: 8px;
   display: flex;
   flex-direction: column;
-  gap: ${theme.spacing.spacing3}
+  gap: ${theme.spacing.spacing3};
 `;
 
 const ReceiverFormStyle = (theme: Theme) => css`
@@ -145,17 +165,16 @@ const InputRowStyle = (theme: Theme) => css`
   flex-direction: row;
   align-items: center;
   gap: ${theme.spacing.spacing10};
-  
 
   span {
     width: 70px;
   }
   input {
     flex: 1;
-    padding: ${theme.spacing.spacing8}
-    border: 1px solid
+    padding: ${theme.spacing.spacing8};
+    border: 1px solid;
     border-radius: 8px;
-    height : 50px;
+    height: 30px;
   }
 `;
 
