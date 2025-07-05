@@ -1,4 +1,3 @@
-import { useNavigate, useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
 
 const Button = styled.button<{ disabled: boolean }>`
@@ -19,19 +18,8 @@ interface LoginButtonProps {
 }
 
 const LoginButton = ({ disabled }: LoginButtonProps) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const from = location.state?.from?.pathname || '/';
-
-  const handleLogin = () => {
-    if (!disabled) {
-      navigate(from, { replace: true });
-    }
-  };
-
   return (
-    <Button disabled={disabled} onClick={handleLogin}>
+    <Button type="submit" disabled={disabled}>
       로그인
     </Button>
   );

@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import LogoImg from '@/Assets/icons/logo.png';
 import LoginButton from '@/Components/Login/LoginButton';
 import { useLoginForm } from '@/Hooks/useLoginForm';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Container = styled.div`
   width: 100%;
@@ -51,27 +52,53 @@ const LoginForm = () => {
     handlePasswordBlur,
   } = useLoginForm();
 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/';
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isValid) return;
+
+    navigate(from, { replace: true });
+  };
+
   return (
     <Container>
       <Logo src={LogoImg} alt="로고" />
-      <EmailInput
-        type="email"
-        placeholder="이메일"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        onBlur={handleEmailBlur}
-      />
-      {emailError && <ErrorMessage>{emailError}</ErrorMessage>}
-      <PwInput
-        type="password"
-        placeholder="비밀번호"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        onBlur={handlePasswordBlur}
-      />
-      {passwordError && <ErrorMessage>{passwordError}</ErrorMessage>}
-      <LoginButton disabled={!isValid} />
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <EmailInput
+          type="email"
+          placeholder="이메일"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          onBlur={handleEmailBlur}
+          autoComplete="off"
+        />
+        {emailError && <ErrorMessage>{emailError}</ErrorMessage>}
+
+        <PwInput
+          type="password"
+          placeholder="비밀번호"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          onBlur={handlePasswordBlur}
+          autoComplete="off"
+        />
+        {passwordError && <ErrorMessage>{passwordError}</ErrorMessage>}
+
+        <LoginButton disabled={!isValid} />
+      </form>
     </Container>
   );
 };
+
 export default LoginForm;
