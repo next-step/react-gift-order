@@ -10,6 +10,7 @@ import GiftMain from "./pages/GiftMain";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import MyPage from "./pages/MyPage";
+import OrderPage from "./pages/OrderPage";
 
 const App = () => {
   return (
@@ -20,6 +21,14 @@ const App = () => {
           <Routes>
             <Route path="/" element={<GiftMain />} />
             <Route path="/login" element={<Login />} />
+            <Route
+              path="/order/:id"
+              element={
+                <RequireAuth>
+                  <OrderPage />
+                </RequireAuth>
+              }
+            />
             <Route
               path="/my"
               element={
