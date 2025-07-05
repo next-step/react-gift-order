@@ -1,10 +1,10 @@
 import { Route, Routes as RouterRoutes } from "react-router-dom";
-import Gift from "@/pages/Gift";
-import Login from "@/pages/Login";
-import NotFound from "@/pages/NotFound";
-import Profile from "@/pages/Profile";
+import Gift from "@/pages/Gift/Page";
+import Login from "@/pages/Login/Page";
+import NotFound from "@/pages/NotFound/Page";
+import Profile from "@/pages/Profile/Page";
 import AuthRoute from "@/components/routes/AuthRoute";
-import Order from "@/pages/Order";
+import Order from "@/pages/Order/Page";
 
 const Routes = () => {
   return (

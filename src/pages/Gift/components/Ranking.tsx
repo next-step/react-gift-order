@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import RankingList from "@/components/RankingList";
+import RankingList from "@/pages/Gift/components/RankingList";
 import { rankingRankCategoryList, rankingTargetCategory } from "@/assets/rankingCategory";
 import { useSearchParams } from "react-router-dom";
 
