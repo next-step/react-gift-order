@@ -6,16 +6,17 @@ import Input from "@/pages/Order/components/Input";
 interface SenderProps {
   senderInput: string;
   onChangeSenderInput: (event: ChangeEvent<HTMLInputElement>) => void;
+  errorMsg: string | null;
 }
 
-const Sender = ({ senderInput, onChangeSenderInput }: SenderProps) => {
+const Sender = ({ senderInput, onChangeSenderInput, errorMsg }: SenderProps) => {
   return (
     <Content>
       <Divider spacing="1rem" />
       <Title>보내는 사람</Title>
       <Divider spacing="1rem" />
-      <Input placeholder="이름을 입력하세요." onChange={onChangeSenderInput} value={senderInput} />
-      <Msg>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</Msg>
+      <Input placeholder="이름을 입력하세요." onChange={onChangeSenderInput} value={senderInput} errorMsg={errorMsg} />
+      {!errorMsg && <Msg>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</Msg>}
       <Divider spacing="1.5rem" />
     </Content>
   );

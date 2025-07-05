@@ -6,13 +6,26 @@ import Input from "@/pages/Order/components/Input";
 interface RecipientProps {
   name: string;
   onChangeName: (event: ChangeEvent<HTMLInputElement>) => void;
+  errorMsgName: string | null;
   phone: string;
   onChangePhone: (event: ChangeEvent<HTMLInputElement>) => void;
-  count: string;
-  onChangeCount: (event: ChangeEvent<HTMLInputElement>) => void;
+  errorMsgPhone: string | null;
+  quantity: number;
+  onChangeQuantity: (event: ChangeEvent<HTMLInputElement>) => void;
+  errorMsgQuantity: string | null;
 }
 
-const Recipient = ({ name, onChangeName, phone, onChangePhone, count, onChangeCount }: RecipientProps) => {
+const Recipient = ({
+  name,
+  onChangeName,
+  errorMsgName,
+  phone,
+  onChangePhone,
+  errorMsgPhone,
+  quantity: count,
+  onChangeQuantity: onChangeCount,
+  errorMsgQuantity: errorMsgCount,
+}: RecipientProps) => {
   return (
     <Content>
       <Divider spacing="1rem" />
@@ -20,17 +33,19 @@ const Recipient = ({ name, onChangeName, phone, onChangePhone, count, onChangeCo
       <Divider spacing="1rem" />
       <InputWrapper>
         <InputTitle>이름</InputTitle>
-        <Input placeholder="이름을 입력하세요." value={name} onChange={onChangeName} />
+        <InputWrapper>
+          <Input placeholder="이름을 입력하세요." value={name} onChange={onChangeName} errorMsg={errorMsgName} />
+        </InputWrapper>
       </InputWrapper>
       <Divider spacing="0.5rem" />
       <InputWrapper>
         <InputTitle>전화번호</InputTitle>
-        <Input placeholder="전화번호를 입력하세요." value={phone} onChange={onChangePhone} />
+        <Input placeholder="전화번호를 입력하세요." value={phone} onChange={onChangePhone} errorMsg={errorMsgPhone} />
       </InputWrapper>
       <Divider spacing="0.5rem" />
       <InputWrapper>
         <InputTitle>수량</InputTitle>
-        <Input placeholder="여긴 임시 수량" value={count} onChange={onChangeCount} />
+        <Input type="number" value={count} onChange={onChangeCount} errorMsg={errorMsgCount} />
       </InputWrapper>
       <Divider spacing="1.5rem" />
     </Content>

@@ -3,7 +3,7 @@ import Container from "@/components/common/Container";
 import Divider from "@/components/common/Divider";
 import { orderCardMock } from "@/assets/orderCardMock";
 import { useEffect, useState } from "react";
-import useInput from "@/hooks/useInput";
+import useStringInput from "@/hooks/useStringInput";
 import { rankingItemMock } from "@/assets/rankingItemMock";
 import { useNavigate, useParams } from "react-router-dom";
 import { ROUTE_PATH } from "@/components/routes/Routes";
@@ -11,6 +11,8 @@ import Card from "./components/Card";
 import Sender from "./components/Sender";
 import Recipient from "./components/Recipient";
 import Product from "./components/Product";
+import useNumberInput from "@/hooks/useNumberInput";
+import { getMessageError, getNameError, getPhoneError, getQuantityError } from "@/utils/errorMessage";
 
 const Order = () => {
   const navigate = useNavigate();
@@ -20,41 +22,67 @@ const Order = () => {
 
   const [selectedCard, setSelectedCard] = useState(orderCardMock[0]);
 
-  const messageInput = useInput();
-  const senderInput = useInput();
-  const recipientNameInput = useInput();
-  const recipientPhoneInput = useInput();
-  const recipientCountInput = useInput();
+  const messageInput = useStringInput("", getMessageError);
+  const senderInput = useStringInput("", getNameError);
+  const recipientNameInput = useStringInput("", getNameError);
+  const recipientPhoneInput = useStringInput("", getPhoneError);
+  const recipientQuantityInput = useNumberInput(1, getQuantityError);
 
-  const totalPrice = product ? product.price.sellingPrice * Number(recipientCountInput.value) : 0;
+  const totalPrice = product ? product.price.sellingPrice * recipientQuantityInput.value : 0;
+
+  const handleOrderSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const isValidMessage = messageInput.validate();
+    const isValidSender = senderInput.validate();
+    const isValidRecipientName = recipientNameInput.validate();
+    const isValidRecipientPhone = recipientPhoneInput.validate();
+    const isValidRecipientCount = recipientQuantityInput.validate();
+
+    const isValidOrder =
+      isValidMessage && isValidSender && isValidRecipientName && isValidRecipientPhone && isValidRecipientCount;
+
+    if (isValidOrder) {
+      alertOrderInfo(messageInput.value, product?.name as string, recipientQuantityInput.value, senderInput.value);
+      navigate(ROUTE_PATH.HOME);
+    }
+    console.log(recipientQuantityInput.value, recipientQuantityInput.errorMsg, recipientQuantityInput.validate());
+  };
 
   useEffect(() => {
     messageInput.setValue(selectedCard.defaultTextMessage);
   }, [selectedCard]);
   return (
     <Container>
-      <Content>
+      <Content onSubmit={handleOrderSubmit}>
         <Card
           selectedCard={selectedCard}
           setSelectedCard={setSelectedCard}
           message={messageInput.value}
           onChangeMessage={messageInput.onChange}
+          errorMsg={messageInput.errorMsg}
         />
         <Divider spacing="0.5rem" fill={false} />
-        <Sender senderInput={senderInput.value} onChangeSenderInput={senderInput.onChange} />
+        <Sender
+          senderInput={senderInput.value}
+          onChangeSenderInput={senderInput.onChange}
+          errorMsg={senderInput.errorMsg}
+        />
         <Divider spacing="0.5rem" fill={false} />
         <Recipient
           name={recipientNameInput.value}
           onChangeName={recipientNameInput.onChange}
+          errorMsgName={recipientNameInput.errorMsg}
           phone={recipientPhoneInput.value}
           onChangePhone={recipientPhoneInput.onChange}
-          count={recipientCountInput.value}
-          onChangeCount={recipientCountInput.onChange}
+          errorMsgPhone={recipientPhoneInput.errorMsg}
+          quantity={recipientQuantityInput.value}
+          onChangeQuantity={recipientQuantityInput.onChange}
+          errorMsgQuantity={recipientQuantityInput.errorMsg}
         />
         <Divider spacing="0.5rem" fill={false} />
         {product && <Product product={product} />}
         <Divider spacing="3.125rem" />
-        <OrderBtn>{totalPrice}원 주문하기</OrderBtn>
+        <OrderBtn type="submit">{totalPrice}원 주문하기</OrderBtn>
       </Content>
     </Container>
   );
@@ -62,7 +90,18 @@ const Order = () => {
 
 export default Order;
 
-const Content = styled.div`
+const alertOrderInfo = (message: string, productName: string, quantity: number, sender: string) => {
+  const msg = `
+    주문이 완료되었습니다.
+    상품명: ${productName}
+    구매 수량: ${quantity}
+    발신자 이름: ${sender}
+    메시지: ${message}
+  `;
+  alert(msg);
+};
+
+const Content = styled.form`
   background-color: ${({ theme }) => theme.color.backgroundColor.default};
   width: 100%;
   display: flex;

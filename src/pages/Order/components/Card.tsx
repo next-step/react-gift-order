@@ -3,14 +3,16 @@ import Divider from "@/components/common/Divider";
 import type { orderCardType } from "@/types/orderCardType";
 import styled from "@emotion/styled";
 import type { ChangeEvent } from "react";
+import ErrorMsg from "./ErrorMsg";
 
 interface CardProps {
   selectedCard: orderCardType;
   setSelectedCard: (card: orderCardType) => void;
   message: string;
   onChangeMessage: (event: ChangeEvent<HTMLTextAreaElement>) => void;
+  errorMsg: string | null;
 }
-const Card = ({ selectedCard, setSelectedCard, message, onChangeMessage }: CardProps) => {
+const Card = ({ selectedCard, setSelectedCard, message, onChangeMessage, errorMsg }: CardProps) => {
   return (
     <Container>
       <Divider spacing="0.75rem" />
@@ -31,6 +33,7 @@ const Card = ({ selectedCard, setSelectedCard, message, onChangeMessage }: CardP
       <Divider spacing="2.5rem" />
       <CardMsgInputWrapper>
         <CardMsgInput value={message} onChange={onChangeMessage} />
+        {errorMsg && <ErrorMsg>{errorMsg}</ErrorMsg>}
       </CardMsgInputWrapper>
       <Divider spacing="2rem" />
     </Container>
@@ -75,6 +78,7 @@ const CardMsgInputWrapper = styled.div`
   width: 100%;
   padding: 0 ${({ theme }) => theme.spacing.spacing4};
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 `;
@@ -90,6 +94,6 @@ const CardMsgInput = styled.textarea`
   outline: none;
   resize: none;
   &:focus {
-    outline: 1px solid ${({ theme }) => theme.color.gray900};
+    border: 1px solid ${({ theme }) => theme.color.gray900};
   }
 `;

@@ -4,19 +4,15 @@ import Container from "@/components/common/Container";
 import Divider from "@/components/common/Divider";
 import styled from "@emotion/styled";
 import type React from "react";
-import useInput from "@/hooks/useInput";
+import useStringInput from "@/hooks/useStringInput";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useCallback } from "react";
 import { setCookieValue } from "@/utils/cookie";
-
-const ERROR_MSG_ID_EMPTY = "ID를 입력해주세요.";
-const ERROR_MSG_ID_FORM = "ID는 이메일 형식으로 입력해주세요.";
-const ERROR_MSG_PASSWORD_EMPTY = "PW를 입력해주세요.";
-const ERROR_MSG_PASSWORD_FORM = "PW는 최소 8글자 이상이어야 합니다.";
+import { getIdError, getPasswordError } from "@/utils/errorMessage";
 
 const Login = () => {
-  const id = useInput("", getIdError);
-  const password = useInput("", getPasswordError);
+  const id = useStringInput("", getIdError);
+  const password = useStringInput("", getPasswordError);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
@@ -69,7 +65,7 @@ const Login = () => {
               errorMsg={password.errorMsg}
               value={password.value}
             />
-            <ErrorMsg>{password.errorMsg}</ErrorMsg>
+            {password.errorMsg && <ErrorMsg>{password.errorMsg}</ErrorMsg>}
           </InputWrapper>
           <Divider />
           <Button fullWidth={true} type="submit" disabled={!isValidIdAndPassword}>
@@ -79,20 +75,6 @@ const Login = () => {
       </Content>
     </Container>
   );
-};
-
-const getIdError = (id: string) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  let errorMsg: string | null = null;
-  if (!id) errorMsg = ERROR_MSG_ID_EMPTY;
-  else if (!emailRegex.test(id)) errorMsg = ERROR_MSG_ID_FORM;
-  return errorMsg;
-};
-const getPasswordError = (password: string) => {
-  let errorMsg: string | null = null;
-  if (!password) errorMsg = ERROR_MSG_PASSWORD_EMPTY;
-  else if (password.length < 8) errorMsg = ERROR_MSG_PASSWORD_FORM;
-  return errorMsg;
 };
 
 const Content = styled.div`
