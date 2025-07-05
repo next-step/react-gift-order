@@ -8,16 +8,15 @@ import { useNavigate } from "react-router-dom";
 const GiftRanking = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-
   return (
-    <div
-      onClick={() => {
-        navigate("/order");
-      }}
-    >
+    <div>
       <div css={giftRankingStyle(theme)}>
         {giftData.map((gift) => (
-          <GiftObject key={gift.id} gift={gift} />
+          <GiftObject
+            key={gift.id}
+            gift={gift}
+            onClick={() => navigate(`/order/${gift.id}`)}
+          />
         ))}
       </div>
     </div>

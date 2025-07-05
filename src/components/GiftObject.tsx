@@ -18,10 +18,15 @@ interface Gift {
   };
 }
 
-const GiftObject = ({ gift }: { gift: Gift }) => {
+interface GiftObjectProps {
+  gift: Gift;
+  onClick?: () => void; // 선택적 onClick prop 추가
+}
+
+const GiftObject = ({ gift, onClick }: GiftObjectProps) => {
   const theme = useTheme();
   return (
-    <div css={giftStyle(theme)}>
+    <div onClick={onClick} css={giftStyle(theme)}>
       <img src={gift.imageURL} css={imageStyle()} />
       <div css={textContainerStyle()}>
         <p css={brandStyle(theme)}>{gift.brandInfo.name}</p>
