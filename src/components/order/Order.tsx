@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cardData } from "@/data/cardData";
 import { useTheme } from "@emotion/react";
 import { GiftCardThumb } from "@/components/GiftCardThumb";
@@ -23,7 +23,7 @@ import {
   productPrice,
   totalPriceBoxStyle,
   fixedBottomStyle,
-} from "@/components/Order.style";
+} from "@/components/order/Order.style";
 
 const Order: React.FC = () => {
   const theme = useTheme();
@@ -31,6 +31,10 @@ const Order: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [quantity, setQuantity] = useState(1);
   const [totalPrice, setTotalPrice] = useState(0);
+  const SenderNameRef = useRef(null);
+  const ReceiverNameRef = useRef(null);
+  const PhoneNumberRef = useRef(null);
+  const CountRef = useRef(null);
 
   const selectedGiftId = id ? parseInt(id, 10) : undefined;
   const selectedGift = giftData.find((gift) => gift.id === selectedGiftId);
@@ -74,7 +78,7 @@ const Order: React.FC = () => {
       <div css={FormSectionWrapperStyle(theme)}>
         <p css={TextStyle(theme)}>보내는 사람</p>
         <div css={InputRowStyle(theme)}>
-          <input placeholder="이름을 입력하세요."></input>
+          <input ref={SenderNameRef} placeholder="이름을 입력하세요."></input>
         </div>
         <p css={TinyTextStyle}>
           * 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.
@@ -86,15 +90,22 @@ const Order: React.FC = () => {
         <div css={ReceiverFormStyle(theme)}>
           <div css={InputRowStyle(theme)}>
             <span>이름</span>
-            <input placeholder="이름을 입력하세요."></input>
+            <input
+              ref={ReceiverNameRef}
+              placeholder="이름을 입력하세요."
+            ></input>
           </div>
           <div css={InputRowStyle(theme)}>
             <span>전화번호</span>
-            <input placeholder="전화번호를 입력하세요."></input>
+            <input
+              ref={PhoneNumberRef}
+              placeholder="전화번호를 입력하세요."
+            ></input>
           </div>
           <div css={InputRowStyle(theme)}>
             <span>수량</span>
             <input
+              ref={CountRef}
               type="number"
               min={1}
               value={quantity}
