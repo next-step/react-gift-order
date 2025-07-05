@@ -2,6 +2,7 @@ import { MIN_PASSWORD_LENGTH } from "@/constants/validation";
 import { ERROR_MESSAGES } from "@/constants/messages";
 
 export const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const phoneRegex = /^010\d{8}$/;
 
 export function validateEmail(email: string): string {
   if (!email) {
@@ -19,6 +20,37 @@ export function validatePassword(pw: string): string {
   }
   if (pw.length < MIN_PASSWORD_LENGTH) {
     return ERROR_MESSAGES.LOGIN.PW_TOO_SHORT(MIN_PASSWORD_LENGTH);
+  }
+  return "";
+}
+
+export function validateName(name: string): string {
+  if (!name.trim()) {
+    return ERROR_MESSAGES.VALIDATE.NAME;
+  }
+  return "";
+}
+
+export function validateMessage(message: string): string {
+  if (!message.trim()) {
+    return ERROR_MESSAGES.VALIDATE.MESSGE;
+  }
+  return "";
+}
+
+export function validatePhone(phone: string): string {
+  if (!phone) {
+    return ERROR_MESSAGES.VALIDATE.PHONE;
+  }
+  if (!phoneRegex.test(phone)) {
+    return ERROR_MESSAGES.VALIDATE.PHONE_TYPE;
+  }
+  return "";
+}
+
+export function validateQuantity(quantity: number): string {
+  if (quantity < 1) {
+    return ERROR_MESSAGES.VALIDATE.QUANTITY;
   }
   return "";
 }
