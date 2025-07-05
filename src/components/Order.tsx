@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { cardData } from "@/data/cardData";
 import { useTheme } from "@emotion/react";
-import type { Theme } from "@emotion/react";
-import { css } from "@emotion/react";
 import { GiftCardThumb } from "@/components/GiftCardThumb";
 import { useParams } from "react-router-dom";
 import { giftData } from "@/data/giftData";
