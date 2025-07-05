@@ -52,6 +52,10 @@ const StyledOrderCardContainer = styled.div`
     align-items: center;
     padding-bottom: 20px;
   }
+  p {
+    margin-top: 6px;
+    width: 90%;
+  }
   textarea {
     width: 90%;
     padding: 4px 12px;
@@ -59,10 +63,6 @@ const StyledOrderCardContainer = styled.div`
     &:focus {
       outline: none;
     }
-  }
-  p {
-    margin-top: 6px;
-    width: 90%;
   }
 `;
 

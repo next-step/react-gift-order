@@ -59,10 +59,13 @@ const StyledTopestDiv = styled.div`
     color: ${({ theme }) => theme.palette.red800};
   }
   .border-red {
-    border-color: ${({ theme }) => theme.palette.red500};
+    border: 1px ${({ theme }) => theme.palette.red800} solid;
   }
   .padding-6-12 {
     padding: 6px 12px;
+  }
+  .margin-left-20 {
+    margin-left: 20px;
   }
 `;
 
