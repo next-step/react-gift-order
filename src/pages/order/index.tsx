@@ -47,13 +47,13 @@ export default function OrderPage() {
       return;
     }
 
-    const alertMessage = `
-        주문이 완료되었습니다.
-        상품명: ${product.name}
-        구매 수량: ${receiverInfo.quantity}
-        발신자 이름: ${senderName}
-        메시지: ${message}
-        `;
+    const alertMessage = [
+      `주문이 완료되었습니다.`,
+      `상품명: ${product.name}`,
+      `구매 수량: ${receiverInfo.quantity}`,
+      `발신자 이름: ${senderName}`,
+      `메시지: ${message}`,
+    ].join("\n");
 
     window.alert(alertMessage.trim());
 
