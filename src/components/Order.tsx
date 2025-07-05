@@ -22,35 +22,56 @@ const Order: React.FC = () => {
   }, []);
 
   return (
-    <div css={thumbNailContainerStyle(theme)}>
-      {cardData.map((card) => {
-        return (
-          <img
-            key={card.id}
-            onClick={() => setSelectedId(card.id)}
-            css={thumbNamilStyle(theme, card.id, selectedId)}
-            src={card.thumbUrl}
-          ></img>
-        );
-      })}
+    <div css={CardWrapperStyle(theme)}>
+      <div css={ThumbNailContainerStyle(theme)}>
+        {cardData.map((card) => {
+          return (
+            <>
+              <img
+                key={card.id}
+                onClick={() => setSelectedId(card.id)}
+                css={ThumbNamilStyle(theme, card.id, selectedId)}
+                src={card.thumbUrl}
+              ></img>
+            </>
+          );
+        })}
+      </div>
+      <img
+        src={
+          selectedId === undefined
+            ? cardData[0].imageUrl
+            : cardData.find((card) => card.id === selectedId)?.imageUrl
+        }
+      ></img>
     </div>
   );
 };
 
 export default Order;
 
-const thumbNamilStyle = (
+const ThumbNamilStyle = (
   theme: Theme,
   cardId: number,
   selectedId: number | undefined
 ) => css`
   padding: ${theme.spacing.spacing0};
   border: ${selectedId === cardId ? "3px solid" : "none"};
+  border-radius:;
 `;
 
-const thumbNailContainerStyle = (theme: Theme) => css`
+const ThumbNailContainerStyle = (theme: Theme) => css`
   display: flex;
   overflow-x: auto;
   white-space: nowrap;
-  padding: ${theme.spacing.spacing5};
+  width: 100%;
+  gap: ${theme.spacing.spacing5};
+`;
+
+const CardWrapperStyle = (theme: Theme) => css`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: ${theme.spacing.spacing10};
 `;
