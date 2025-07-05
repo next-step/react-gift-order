@@ -23,7 +23,6 @@ const EmailInput = styled.input`
   outline: none;
   border-bottom: 1px solid ${({ theme }) => theme.color.semantic.border.default};
   font-size: 1rem;
-  margin-bottom: 1rem;
 `;
 
 const PwInput = styled.input`
@@ -35,9 +34,8 @@ const PwInput = styled.input`
   font-size: 1rem;
 `;
 const ErrorMessage = styled.div`
-  color: red;
+  color: ${({ theme }) => theme.color.red.red700};
   font-size: 0.875rem;
-  margin-top: 0.5rem;
 `;
 
 const LoginForm = () => {

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -7,7 +7,7 @@ export const useLoginForm = () => {
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const [isValid, setIsValid] = useState(false);
+  
 
   const handleEmailBlur = () => {
     if (!email) {
@@ -29,9 +29,8 @@ export const useLoginForm = () => {
     }
   };
 
-  useEffect(() => {
-    setIsValid(!emailError && !passwordError && Boolean(email) && password.length >= 8);
-  }, [email, password, emailError, passwordError]);
+  const isValid =
+    !emailError && !passwordError && Boolean(email) && password.length >= 8;
 
   return {
     email,
