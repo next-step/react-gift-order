@@ -1,8 +1,7 @@
 import { Button } from "@/components/common";
-import { ROUTE_PATH } from "@/constants";
+import { useRouter } from "@/hooks/common/useRouter";
 import { getUserInfo, removeUserInfo } from "@/utils";
 import styled from "@emotion/styled";
-import { useNavigate } from "react-router-dom";
 
 const MyPageHeader = styled.p(({ theme }) => ({
   fontSize: `${theme.typography.body1Bold.fontSize}`,
@@ -21,19 +20,20 @@ const MyPageGreet = styled.p(({ theme }) => ({
 }));
 
 export const MyPageSection = () => {
-  const navigate = useNavigate();
+  const { goLoginPage } = useRouter();
   const userInfo = getUserInfo();
-  const userName = userInfo ? userInfo.email.split("@")[0] : "";
 
   const handleLogout = () => {
     removeUserInfo();
-    navigate(ROUTE_PATH.LOGIN);
+    goLoginPage({ redirect: false });
   };
 
   return (
     <>
       <MyPageHeader>마이 페이지</MyPageHeader>
-      <MyPageGreet>{userName ? `${userName}님 안녕하세요!` : ""}</MyPageGreet>
+      <MyPageGreet>
+        {userInfo ? `${userInfo.userName}님 안녕하세요!` : ""}
+      </MyPageGreet>
       <MyPageGreet>
         {userInfo ? `이메일 주소는 ${userInfo.email}입니다.` : ""}
       </MyPageGreet>

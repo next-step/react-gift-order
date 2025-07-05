@@ -1,5 +1,6 @@
 import { generateMockArray } from "@/__mock__/generate-mock-array";
 import { Button } from "@/components/common";
+import { useRouter } from "@/hooks/common/useRouter";
 import styled from "@emotion/styled";
 import { useState } from "react";
 
@@ -72,9 +73,9 @@ const RANK_CORRECTION_NUMBER = 1;
 
 export const HotGiftRankingGrid = () => {
   const [showMore, setShowMore] = useState(false);
+  const { goOrderPage } = useRouter();
   const INITIAL_SHOW_COUNT = 6;
   const mockData = generateMockArray();
-
   const displayedItems = showMore
     ? mockData
     : mockData.slice(0, INITIAL_SHOW_COUNT);
@@ -83,7 +84,10 @@ export const HotGiftRankingGrid = () => {
     <>
       <HotGiftRankingGridContainer>
         {displayedItems.map((item, index) => (
-          <HotGiftRankingGridItem key={item.id}>
+          <HotGiftRankingGridItem
+            key={item.id}
+            onClick={() => goOrderPage(item.id)}
+          >
             <HotGiftRankingImageContainer
               src={item.imageURL}
             ></HotGiftRankingImageContainer>

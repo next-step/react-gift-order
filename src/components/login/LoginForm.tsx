@@ -1,4 +1,4 @@
-import { Input } from "@/components/common";
+import { ErrorMessage, Input } from "@/components/common";
 import { LoginButton } from "@/components/login";
 import { useLoginForm } from "@/hooks/login/useLoginForm";
 import styled from "@emotion/styled";
@@ -18,52 +18,24 @@ const LoginInputWrapper = styled.div(({ theme }) => ({
   marginBottom: theme.spacing4,
 }));
 
-const ErrorMessage = styled.div(({ theme }) => ({
-  color: theme.color.red[700],
-  fontSize: theme.typography.label1Regular.fontSize,
-  fontWeight: theme.typography.label1Regular.fontWeight,
-  lineHeight: theme.typography.label1Regular.lineHeight,
-  marginTop: theme.spacing1,
-}));
-
 export const LoginForm = () => {
-  const {
-    formData,
-    errors,
-    isFormValid,
-    handleIdChange,
-    handlePasswordChange,
-    handleIdBlur,
-    handlePasswordBlur,
-    handleSubmit,
-  } = useLoginForm();
+  const { isFormValid, handleSubmit, register } = useLoginForm();
+
+  const idField = register("id");
+  const passwordField = register("password");
 
   return (
-    <LoginFormContainer>
+    <LoginFormContainer as="form" onSubmit={handleSubmit}>
       <LoginInputWrapper>
-        <Input
-          placeholder="이메일"
-          type="email"
-          value={formData.id}
-          onChange={e => handleIdChange(e.target.value)}
-          onBlur={handleIdBlur}
-          hasError={!!errors.id}
-        />
-        {errors.id && <ErrorMessage>{errors.id}</ErrorMessage>}
+        <Input placeholder="이메일" type="email" {...idField} />
+        <ErrorMessage>{idField.error || "\u00A0"}</ErrorMessage>
       </LoginInputWrapper>
 
       <LoginInputWrapper>
-        <Input
-          placeholder="비밀번호"
-          type="password"
-          value={formData.password}
-          onChange={e => handlePasswordChange(e.target.value)}
-          onBlur={handlePasswordBlur}
-          hasError={!!errors.password}
-        />
-        {errors.password && <ErrorMessage>{errors.password}</ErrorMessage>}
+        <Input placeholder="비밀번호" type="password" {...passwordField} />
+        <ErrorMessage>{passwordField.error || "\u00A0"}</ErrorMessage>
       </LoginInputWrapper>
-      <LoginButton isDisabled={!isFormValid} onClick={handleSubmit} />
+      <LoginButton isDisabled={!isFormValid} />
     </LoginFormContainer>
   );
 };
