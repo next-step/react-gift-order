@@ -1,6 +1,6 @@
 // NavigationBar.tsx
-import { URLS } from '@/assets/urls';
-import { Spacer } from '@/styles/Spacer';
+import { URLS } from '@assets/urls';
+import { Spacer } from '@styles/Spacer';
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';

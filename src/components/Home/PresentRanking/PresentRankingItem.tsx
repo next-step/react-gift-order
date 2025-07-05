@@ -1,6 +1,6 @@
-import { GOODS_DATA } from '@/assets/goodsData';
-import type { Goods } from '@/assets/goodsData';
-import { URLS } from '@/assets/urls';
+import { GOODS_DATA } from '@assets/goodsData';
+import type { Goods } from '@assets/goodsData';
+import { URLS } from '@assets/urls';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 

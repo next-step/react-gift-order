@@ -1,6 +1,6 @@
-import NavigationBar from '@/components/NavigationBar';
-import OrderContainer from '@/components/OrderContainer';
-import StyledTopestDiv from '@/styles/StyledTopesDiv';
+import NavigationBar from '@components/Common/NavigationBar';
+import OrderContainer from '@components/Order/OrderContainer';
+import StyledTopestDiv from '@styles/StyledTopesDiv';
 
 const Order = () => {
   return (

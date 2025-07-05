@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import PresentRankingItem from './PresentRankingItem';
-import RankingTagContainer from './RankingTagContainer';
+import PresentRankingItem from '@components/Home/PresentRanking/PresentRankingItem';
+import RankingTagContainer from '@components/Home/PresentRanking/RankingTagContainer';
 import { useState } from 'react';
 
 const StyledPresentRankingContainer = styled.div`
@@ -51,9 +51,7 @@ const PresentRankingContainer = () => {
         <PresentRankingItem isVisible={isVisible}></PresentRankingItem>
       </StyledPrsentRankingDiv>
       <StyledPresenetRankingAddItemBtnDiv>
-        <StyledPresenetRankingAddItemBtn onClick={handelToogle}>
-          {isVisible ? '닫기' : '더보기'}
-        </StyledPresenetRankingAddItemBtn>
+        <StyledPresenetRankingAddItemBtn onClick={handelToogle}>{isVisible ? '닫기' : '더보기'}</StyledPresenetRankingAddItemBtn>
       </StyledPresenetRankingAddItemBtnDiv>
     </StyledPresentRankingContainer>
   );

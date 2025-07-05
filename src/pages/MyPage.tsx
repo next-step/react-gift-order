@@ -1,5 +1,5 @@
-import StyledTopestDiv from '@/styles/StyledTopesDiv';
-import MyPageContainer from '@components/MyPageContainer';
+import StyledTopestDiv from '@styles/StyledTopesDiv';
+import MyPageContainer from '@components/MyPage/MyPageContainer';
 
 const MyPage = () => {
   return (

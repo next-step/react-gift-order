@@ -1,107 +1,17 @@
-import StyledTopestDiv from '@/styles/StyledTopesDiv';
-import styled from '@emotion/styled';
-import OrderCardTemplateContainer from '@components/OrderCardTemplateContainer';
+import StyledTopestDiv from '@styles/StyledTopesDiv';
+import OrderCardTemplateContainer from '@components/Order/OrderCardTemplateContainer';
 import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { GOODS_DATA, type Goods } from '@/assets/goodsData';
+import { GOODS_DATA, type Goods } from '@assets/goodsData';
 import { Spacer } from '@styles/Spacer';
 import { ErrorMsg } from '@styles/ErrorMsg';
-import { useCommonOrderForm } from '@/hooks/useOrderForm';
-import type { HasErrorProp } from '@/types/hasError';
-import { useMsgForm } from '@/hooks/useMsgForm';
-
-const StyledSendPersonContainer = styled.div`
-  width: 100%;
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
-  padding: 10px 0px;
-
-  input {
-    padding: 3px 8px;
-    margin: 5px 10px;
-    height: 30px;
-  }
-  p {
-    margin: 5px 10px;
-  }
-  .margin-left-20 {
-    margin-left: 20px;
-  }
-`;
-const StyledReceivePersonContainer = styled.div`
-  width: 100%;
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
-  padding: 10px 0px;
-
-  div {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 5px 10px;
-    gap: 14px;
-  }
-  .basic-label {
-    width: 80px;
-  }
-`;
-
-//error 구문 존재시 스타일적 변경을 위한 HasErrorProp 타입 사용
-const SyltedOrderInput = styled.input<HasErrorProp>`
-  padding: 6px 12px;
-  width: 100%;
-  border: 1px solid ${({ theme, hasError }) => (hasError ? theme.palette.red600 : theme.palette.gray300)};
-  &:focus {
-    outline: none;
-    border-color: ${({ theme, hasError }) => (hasError ? theme.palette.red600 : theme.palette.blue500)};
-  }
-`;
-
-const StyledOrderButton = styled.button`
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  height: 50px;
-  border: none;
-  background-color: ${({ theme }) => theme.sementicPalette.kakaoYellow};
-  color: black;
-  font-weight: bold;
-  font-size: 18px;
-  left: 50%;
-  transform: translateX(-50%);
-  max-width: 720px;
-`;
-
-const StyledItemInfoContainer = styled.div`
-  width: 100%;
-  min-height: 150px;
-  padding: 10px 0px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  .item-info-text {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-left: 10px;
-    border: 1px solid black;
-    padding: 6px 10px;
-    border-radius: 10px;
-  }
-
-  .item-info-img {
-    width: 70px;
-    height: 70px;
-    border: 1px solid #eee;
-  }
-  p {
-    margin: 5px 10px;
-  }
-`;
+import { useCommonOrderForm } from '@hooks/useOrderForm';
+import { useMsgForm } from '@hooks/useMsgForm';
+import { StyledSendPersonContainer } from '@styles/Order/OrderContainer/StyledSendPersonContainer';
+import { SyltedOrderInput } from '@styles/Order/OrderContainer/SyltedOrderInput';
+import { StyledReceivePersonContainer } from '@styles/Order/OrderContainer/StyledReceivePersonContainer';
+import { StyledItemInfoContainer } from '@styles/Order/OrderContainer/StyledItemInfoContainer';
+import { StyledOrderButton } from '@styles/Order/OrderContainer/StyledOrderButton';
 
 const OrderContainer = () => {
   const [searchParams] = useSearchParams();

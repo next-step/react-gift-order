@@ -1,5 +1,5 @@
-import LoginFormContainer from '@/components/LoginFormContainer';
-import NavigationBar from '@components/NavigationBar';
+import LoginFormContainer from '@components/Login/LoginFormContainer';
+import NavigationBar from '@components/Common/NavigationBar';
 import { StyledLoginComponentContainerDiv } from '@styles/Login/StyledLoginComponentContainerDiv';
 import { useNavigate } from 'react-router-dom';
 import { URLS } from '@assets/urls';

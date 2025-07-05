@@ -1,5 +1,5 @@
-import { ORDER_TEMPLATE_DATA, type OrderTemplate } from '@/assets/orderTemplateData';
-import type { HasErrorProp } from '@/types/hasError';
+import { ORDER_TEMPLATE_DATA, type OrderTemplate } from '@assets/orderTemplateData';
+import type { HasErrorProp } from '@types/hasError';
 import styled from '@emotion/styled';
 import { useEffect, useState, type ChangeEvent } from 'react';
 

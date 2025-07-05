@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import NavigationBar from './NavigationBar';
-import { URLS } from '@/assets/urls';
+import NavigationBar from '@components/Common/NavigationBar';
+import { URLS } from '@assets/urls';
 
 const MyPage = () => {
   const navigate = useNavigate();
