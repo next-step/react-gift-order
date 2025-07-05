@@ -1,5 +1,5 @@
 import { useUserInfo } from "@/context/UserInfoProvider";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { cardData } from "@/data/cardData";
 import { useTheme } from "@emotion/react";
@@ -10,6 +10,7 @@ const Order: React.FC = () => {
   const { setUser } = useUserInfo();
   const navigate = useNavigate();
   const theme = useTheme();
+  const [selectedId, setSelectedId] = useState<number>();
 
   useEffect(() => {
     const email = sessionStorage.getItem("email");
@@ -23,7 +24,14 @@ const Order: React.FC = () => {
   return (
     <div css={thumbNailContainerStyle(theme)}>
       {cardData.map((card) => {
-        return <img css={thumbNamilStyle(theme)} src={card.thumbUrl}></img>;
+        return (
+          <img
+            key={card.id}
+            onClick={() => setSelectedId(card.id)}
+            css={thumbNamilStyle(theme, card.id, selectedId)}
+            src={card.thumbUrl}
+          ></img>
+        );
       })}
     </div>
   );
@@ -31,8 +39,13 @@ const Order: React.FC = () => {
 
 export default Order;
 
-const thumbNamilStyle = (theme: Theme) => css`
-  padding: ${theme.spacing.spacing1};
+const thumbNamilStyle = (
+  theme: Theme,
+  cardId: number,
+  selectedId: number | undefined
+) => css`
+  padding: ${theme.spacing.spacing0};
+  border: ${selectedId === cardId ? "3px solid" : "none"};
 `;
 
 const thumbNailContainerStyle = (theme: Theme) => css`
