@@ -3,6 +3,8 @@ import { cardData } from "@/data/cardData";
 import { useTheme } from "@emotion/react";
 import { GiftCardThumb } from "@/components/GiftCardThumb";
 import { useParams } from "react-router-dom";
+import { css } from "@emotion/react";
+import type { Theme } from "@emotion/react";
 import { giftData } from "@/data/giftData";
 import {
   ThumbNailStyle,
@@ -31,10 +33,54 @@ const Order: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [quantity, setQuantity] = useState(1);
   const [totalPrice, setTotalPrice] = useState(0);
-  const SenderNameRef = useRef(null);
-  const ReceiverNameRef = useRef(null);
-  const PhoneNumberRef = useRef(null);
-  const CountRef = useRef(null);
+  const SenderNameRef = useRef<HTMLInputElement>(null);
+  const ReceiverNameRef = useRef<HTMLInputElement>(null);
+  const PhoneNumberRef = useRef<HTMLInputElement>(null);
+  const CountRef = useRef<HTMLInputElement>(null);
+
+  const [senderError, setSenderError] = useState("");
+  const [receiverError, setReceiverError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
+  const [countError, setCountError] = useState("");
+
+  const handleSubmit = () => {
+    const sender = SenderNameRef.current?.value.trim() ?? "";
+    const receiver = ReceiverNameRef.current?.value.trim() ?? "";
+    const phone = PhoneNumberRef.current?.value.trim() ?? "";
+    const count = CountRef.current?.value.trim() ?? "";
+
+    let isValid = true;
+
+    if (sender === "") {
+      setSenderError("보내는 사람 이름을 입력해주세요.");
+      isValid = false;
+    } else {
+      setSenderError("");
+    }
+
+    if (receiver === "") {
+      setReceiverError("받는 사람 이름을 입력해주세요.");
+      isValid = false;
+    } else {
+      setReceiverError("");
+    }
+
+    if (!/^01[016789]-?\d{3,4}-?\d{4}$/.test(phone)) {
+      setPhoneError("유효한 전화번호를 입력해주세요.");
+      isValid = false;
+    } else {
+      setPhoneError("");
+    }
+
+    if (Number(count) < 1) {
+      setCountError("수량은 최소 1개입니다.");
+      isValid = false;
+    } else {
+      setCountError("");
+    }
+    if (!isValid) return;
+    alert("통과!");
+  };
 
   const selectedGiftId = id ? parseInt(id, 10) : undefined;
   const selectedGift = giftData.find((gift) => gift.id === selectedGiftId);
@@ -78,7 +124,12 @@ const Order: React.FC = () => {
       <div css={FormSectionWrapperStyle(theme)}>
         <p css={TextStyle(theme)}>보내는 사람</p>
         <div css={InputRowStyle(theme)}>
-          <input ref={SenderNameRef} placeholder="이름을 입력하세요."></input>
+          <input
+            type=""
+            ref={SenderNameRef}
+            placeholder="이름을 입력하세요."
+          ></input>
+          {senderError && <p css={ErrorMessageStyle}>{senderError}</p>}
         </div>
         <p css={TinyTextStyle}>
           * 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.
@@ -90,27 +141,37 @@ const Order: React.FC = () => {
         <div css={ReceiverFormStyle(theme)}>
           <div css={InputRowStyle(theme)}>
             <span>이름</span>
-            <input
-              ref={ReceiverNameRef}
-              placeholder="이름을 입력하세요."
-            ></input>
+            <div css={InputWrapperStyle}>
+              <input
+                ref={ReceiverNameRef}
+                placeholder="이름을 입력하세요."
+              ></input>
+              {receiverError && <p css={ErrorMessageStyle}> {receiverError}</p>}
+            </div>
           </div>
           <div css={InputRowStyle(theme)}>
             <span>전화번호</span>
-            <input
-              ref={PhoneNumberRef}
-              placeholder="전화번호를 입력하세요."
-            ></input>
+            <div css={InputWrapperStyle}>
+              <input
+                ref={PhoneNumberRef}
+                placeholder="전화번호를 입력하세요."
+              ></input>
+              {phoneError && <p css={ErrorMessageStyle}>{phoneError}</p>}
+            </div>
           </div>
+
           <div css={InputRowStyle(theme)}>
             <span>수량</span>
-            <input
-              ref={CountRef}
-              type="number"
-              min={1}
-              value={quantity}
-              onChange={(e) => setQuantity(Number(e.target.value))}
-            />
+            <div css={InputWrapperStyle}>
+              <input
+                ref={CountRef}
+                type="number"
+                min={1}
+                value={quantity}
+                onChange={(e) => setQuantity(Number(e.target.value))}
+              />
+              {countError && <p css={ErrorMessageStyle}>{countError}</p>}
+            </div>
           </div>
         </div>
       </div>
@@ -129,8 +190,13 @@ const Order: React.FC = () => {
         </div>
       </div>
       <div css={fixedBottomStyle(theme)}>
-        <div onClick={() => {}} css={totalPriceBoxStyle}>
-          {totalPrice}주문하기
+        <div
+          onClick={() => {
+            handleSubmit();
+          }}
+          css={totalPriceBoxStyle}
+        >
+          <p css={SubmitStyle(theme)}>{totalPrice}원 주문하기</p>
         </div>
       </div>
     </div>
@@ -138,3 +204,27 @@ const Order: React.FC = () => {
 };
 
 export default Order;
+
+const SubmitStyle = (theme: Theme) => css`
+  width: 100%;
+  padding: ${theme.spacing.spacing4}
+  color: black;
+  font-size: ${theme.typography.title1Regular.size};
+  font-weight: ${theme.typography.title1Regular.weight};
+  border: none;
+  cursor: pointer;
+  text-align: center;
+`;
+
+const InputWrapperStyle = () => css`
+  display: flex;
+  flex-direction: column;
+  flex: 1; /* 라벨을 제외한 나머지 공간 모두 차지 */
+  gap: 4px; /* 입력창과 에러 메시지 사이 간격 */
+`;
+
+const ErrorMessageStyle = css`
+  font-size: 12px;
+  color: red;
+  margin: 4px 0 0 4px; // 위는 약간 띄우고, 왼쪽 정렬 느낌
+`;

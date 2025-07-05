@@ -64,13 +64,15 @@ export const ReceiverFormStyle = (theme: Theme) => css`
 
 export const InputRowStyle = (theme: Theme) => css`
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: ${theme.spacing.spacing10};
+  flex-direction: row; /* 👈 column을 row로 변경 */
+  align-items: flex-start; /* 👈 라벨과 입력창 상단 정렬 */
+  gap: ${theme.spacing.spacing4};
 
   span {
     width: 70px;
+    padding-top: 15px; /* 라벨이 입력창과 세로 중앙에 오도록 미세조정 */
   }
+
   input {
     flex: 1;
     padding: ${theme.spacing.spacing8};
