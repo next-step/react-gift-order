@@ -48,4 +48,3 @@ declare module '@emotion/react' {
     };
   }
 }
-
