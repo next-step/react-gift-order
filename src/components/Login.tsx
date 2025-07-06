@@ -4,6 +4,7 @@ import kakao_logo from '@src/assets/icons/kakao_logo.svg';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useLoginForm from '@src/hooks/useLoginForm';
 import LoginInput from '@src/components/LoginInput';
+import { useUserInfo } from '@/contexts/AuthContext';
 
 const mainStyle = css`
   width: 100%;
@@ -53,6 +54,7 @@ const spacer48 = css`
 `;
 
 const Login = () => {
+  const { setUser } = useUserInfo();
   const {
     formValue,
     setFormValue,
@@ -78,6 +80,8 @@ const Login = () => {
   };
 
   const formSubmitted = () => {
+    const name = formValue.email.split('@')[0];
+    setUser({ name: name, email: formValue.email });
     const from = location.state?.from?.pathname || '/';
     navigate(from, { replace: true });
   };
