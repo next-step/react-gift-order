@@ -196,7 +196,7 @@ const TAB_KEY = 'ranking_selected_tab'
 
 const RankingSection = () => {
   const navigate = useNavigate();
-  const { user } = useLoginContext();
+  const { isLoggedIn } = useLoginContext();
   // localStorage에서 초기값 불러오기
   const getInitialFilter = () => {
     const saved = localStorage.getItem(FILTER_KEY)
@@ -253,7 +253,7 @@ const RankingSection = () => {
           <Card
             key={item.id}
             onClick={() => {
-              if (user) {
+              if (isLoggedIn) {
                 navigate(`/order/${item.id}`);
               } else {
                 navigate('/login', { state: { redirect: `/order/${item.id}` } });

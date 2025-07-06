@@ -7,6 +7,7 @@ export interface User {
 
 interface LoginContextType {
   user: User | null;
+  isLoggedIn: boolean;
   login: (user: User) => void;
   logout: () => void;
 }
@@ -26,6 +27,9 @@ const isValidUser = (data: unknown): data is User => {
 
 export function LoginProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+
+  // 로그인 상태를 boolean으로 계산
+  const isLoggedIn = !!user;
 
   useEffect(() => {
     const stored = sessionStorage.getItem("user");
@@ -63,9 +67,10 @@ export function LoginProvider({ children }: { children: ReactNode }) {
   // Context value 메모이제이션
   const contextValue = useMemo(() => ({
     user,
+    isLoggedIn,
     login,
     logout,
-  }), [user, login, logout]);
+  }), [user, isLoggedIn, login, logout]);
 
   return (
     <LoginContext.Provider value={contextValue}>

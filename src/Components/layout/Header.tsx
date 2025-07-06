@@ -57,7 +57,7 @@ const Header = () => {
   const theme = useTheme()
   const navigate = useNavigate()
   const location = useLocation()
-  const { user } = useLoginContext()
+  const { isLoggedIn } = useLoginContext()
   return (
     <>
       <div css={statusBarStyle(theme)} />
@@ -73,7 +73,7 @@ const Header = () => {
         <button
           css={iconButtonStyle(theme)}
           aria-label="프로필"
-          onClick={() => user ? navigate('/my') : navigate('/login', { state: { from: location } })}
+          onClick={() => isLoggedIn ? navigate('/my') : navigate('/login', { state: { from: location } })}
         >
           <PersonOutlineRoundedIcon fontSize="inherit" />
         </button>
