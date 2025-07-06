@@ -20,8 +20,7 @@ export const GlobalResetStyle = css`
   button,
   input,
   optgroup,
-  select,
-  textarea {
+  select {
     all: unset;
   }
   button {
