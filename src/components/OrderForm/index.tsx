@@ -17,9 +17,11 @@ interface IFormErrors {
 
 interface OrderFormProps {
   productPrice: number;
+  productName: string;
+  message: string;
 }
 
-function OrderForm({ productPrice }: OrderFormProps) {
+function OrderForm({ productPrice, productName, message }: OrderFormProps) {
   const [formData, setFormData] = useState<IFormData>({
     senderName: '',
     receiverName: '',
@@ -75,7 +77,13 @@ function OrderForm({ productPrice }: OrderFormProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      alert(JSON.stringify(formData));
+      alert(
+        `주문이 완료되었습니다.
+상품명: ${productName}
+구매 수량: ${formData.quantity}
+발신자 이름: ${formData.senderName}
+메시지: ${message}`,
+      );
     }
   };
 

@@ -10,7 +10,11 @@ import {
 } from './styles';
 import { messageCards } from './mockData';
 
-function MessageCard() {
+interface MessageCardProps {
+  onMessageChange: (message: string) => void;
+}
+
+function MessageCard({ onMessageChange }: MessageCardProps) {
   const [selectedCardId, setSelectedCardId] = useState<number>(messageCards[0].id);
   const [message, setMessage] = useState('');
 
@@ -18,9 +22,17 @@ function MessageCard() {
 
   useEffect(() => {
     if (selectedCardData) {
-      setMessage(selectedCardData.defaultTextMessage);
+      const defaultMessage = selectedCardData.defaultTextMessage;
+      setMessage(defaultMessage);
+      onMessageChange(defaultMessage);
     }
-  }, [selectedCardData]);
+  }, [selectedCardData, onMessageChange]);
+
+  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newMessage = e.target.value;
+    setMessage(newMessage);
+    onMessageChange(newMessage);
+  };
 
   return (
     <Container>
@@ -43,7 +55,7 @@ function MessageCard() {
           />
           <MessageTextarea
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={handleMessageChange}
           />
         </EnlargedImageContainer>
       )}

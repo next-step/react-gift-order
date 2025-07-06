@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Container, Title, Box, Image, Label, ProductName, ProductBrand, Price, PriceName, ProductPrice } from './styles';
 import OrderForm from '@/components/OrderForm';
@@ -9,11 +9,12 @@ import { mockItem } from '@/components/GiftRanking/mockItem';
 function OrderPage() {
   const { productId } = useParams<{ productId: string }>();
   const product = { ...mockItem, id: parseInt(productId || '1') };
+  const [message, setMessage] = useState('');
 
   return (
     <>
-      <MessageCard />
-      <OrderForm productPrice={product.price} />
+      <MessageCard onMessageChange={setMessage} />
+      <OrderForm productPrice={product.price} productName={product.name} message={message} />
       <Container>
         <Title>주문하기</Title>
         <Box>
