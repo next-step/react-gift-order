@@ -1,64 +1,49 @@
-import { useInput } from "@/hooks/useInput";
-import { isNotEmpty } from "@/utils/validation";
-import { useMemo } from "react";
-import { validatePhoneNumber, validateQuantity } from "../utils/validation";
+import { useReceiverNameInput } from "./receiverInput/useReceiverNameInput";
+import { useReceiverPhoneInput } from "./receiverInput/useReceiverPhoneInput";
+import { useReceiverQuantityInput } from "./receiverInput/useReceiverQuantityInput";
 
 export function useReceiverInput() {
-  const receiverNameInput = useInput("", {
-    isEmpty: (value: string) => isNotEmpty(value),
-  });
-  const receiverPhoneInput = useInput("", {
-    isEmpty: (value: string) => isNotEmpty(value),
-    invalidFormat: (value: string) => validatePhoneNumber(value),
-  });
-  const quantityInput = useInput("1", {
-    invalidFormat: (value: string) => validateQuantity(value),
-  });
+  const {
+    receiverName,
+    handleReceiverNameChange,
+    validateReceiverName,
+    receiverNameErrorMessage,
+    hasReceiverNameError,
+  } = useReceiverNameInput();
 
-  const receiverNameErrorMessage = useMemo(() => {
-    if (receiverNameInput.errors.isEmpty) {
-      return "이름을 입력해주세요.";
-    }
-    return null;
-  }, [receiverNameInput.errors.isEmpty]);
+  const {
+    receiverPhone,
+    handleReceiverPhoneChange,
+    validateReceiverPhone,
+    receiverPhoneErrorMessage,
+    hasReceiverPhoneError,
+  } = useReceiverPhoneInput();
 
-  const receiverPhoneErrorMessage = useMemo(() => {
-    if (receiverPhoneInput.errors.isEmpty) {
-      return "전화번호를 입력해주세요.";
-    }
-    if (receiverPhoneInput.errors.invalidFormat) {
-      return "올바른 전화번호 형식이 아닙니다.";
-    }
-    return null;
-  }, [
-    receiverPhoneInput.errors.isEmpty,
-    receiverPhoneInput.errors.invalidFormat,
-  ]);
-
-  const quantityErrorMessage = useMemo(() => {
-    if (quantityInput.errors.invalidFormat) {
-      return "구매 수량은 1개 이상이어야 합니다.";
-    }
-    return null;
-  }, [quantityInput.errors.invalidFormat]);
+  const {
+    quantity,
+    handleQuantityChange,
+    validateQuantity,
+    quantityErrorMessage,
+    hasQuantityError,
+  } = useReceiverQuantityInput();
 
   return {
-    receiverName: receiverNameInput.value,
-    handleReceiverNameChange: receiverNameInput.handleValueChange,
-    validateReceiverName: receiverNameInput.validate,
+    receiverName,
+    handleReceiverNameChange,
+    validateReceiverName,
     receiverNameErrorMessage,
-    hasReceiverNameError: receiverNameInput.hasError,
+    hasReceiverNameError,
 
-    receiverPhone: receiverPhoneInput.value,
-    handleReceiverPhoneChange: receiverPhoneInput.handleValueChange,
-    validateReceiverPhone: receiverPhoneInput.validate,
+    receiverPhone,
+    handleReceiverPhoneChange,
+    validateReceiverPhone,
     receiverPhoneErrorMessage,
-    hasReceiverPhoneError: receiverPhoneInput.hasError,
+    hasReceiverPhoneError,
 
-    quantity: quantityInput.value,
-    handleQuantityChange: quantityInput.handleValueChange,
-    validateQuantity: quantityInput.validate,
+    quantity,
+    handleQuantityChange,
+    validateQuantity,
     quantityErrorMessage,
-    hasQuantityError: quantityInput.hasError,
+    hasQuantityError,
   };
 }
