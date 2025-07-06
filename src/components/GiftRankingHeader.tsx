@@ -19,6 +19,10 @@ const GiftRankingHeader = () => {
     const initRank = searchParams.get("rankType") || "MANY_WISH";
     setTarget(initTarget);
     setRank(initRank);
+    const params = new URLSearchParams(location.search);
+    params.set("target", initTarget);
+    params.set("rankType", initRank);
+    navigate(`${location.pathname}?${params.toString()}`);
   }, []);
 
   const handleTargetClick = (newTarget: string) => {
