@@ -38,11 +38,10 @@ const StyledSelectFriendP = styled.p`
 
 const SelectFriendContainer = () => {
   const makeSelectFrinedMessage = () => {
-    let msg = '선물할 친구를 선택해 주세요';
+    const msg = '선물할 친구를 선택해 주세요';
     const username = sessionStorage.getItem('username');
     if (username) {
-      msg = username + '님! ' + msg;
-      return msg;
+      return username + '님! ' + msg;
     } else {
       return msg;
     }
