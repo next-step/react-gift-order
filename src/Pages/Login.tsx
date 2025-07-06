@@ -1,6 +1,6 @@
 import kakaologo from '@/assets/icons/kakaologo.svg';
 import InputBox from '@/components/Common/InputBox';
-import Header from '@/components/Header';
+import Header from '@/components/Common/Header';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import { useLoginForm } from '@/hooks/useLoginForm';

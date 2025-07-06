@@ -25,7 +25,7 @@ export default Header;
 
 const HeaderWrapper = styled.div`
   height: 56px;
-  position: fixed;
+  position: sticky;
   top: 0;
   width: 100%;
   max-width: 720px;

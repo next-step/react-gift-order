@@ -1,4 +1,4 @@
-import Header from '@/components/Header';
+import Header from '@/components/Common/Header';
 import styled from '@emotion/styled';
 import { FiPlus } from 'react-icons/fi';
 import { mockThemeList } from '@/mocks/themeListMock';
@@ -42,7 +42,6 @@ const Home = () => {
 export default Home;
 
 const HomeContainer = styled.main`
-  padding-top: 56px;
   width: 100%;
   max-width: 720px;
   height: 100vh;
