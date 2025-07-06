@@ -65,7 +65,7 @@ const Order: React.FC = () => {
     }
 
     if (!/^01[016789]-?\d{3,4}-?\d{4}$/.test(phone)) {
-      setPhoneError("유효한 전화번호를 입력해주세요.");
+      setPhoneError("유효한 전화번호를 입력해주세요. ex.(010-0000-0000)");
       isValid = false;
     } else {
       setPhoneError("");
