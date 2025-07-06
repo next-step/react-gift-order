@@ -45,32 +45,47 @@ const GiftRankingHeader = () => {
     <>
       <div css={textStyle(theme)}>실시간 급상승 선물랭킹</div>
       <div css={containerStyle}>
-        <div
-          onClick={() => handleTargetClick("ALL")}
-          css={[
-            iconStyle(theme),
-            target == "ALL" && selectedTargetStyle(theme),
-          ]}
-        >
-          ALL
+        <div css={filterContainerStyle()}>
+          <div
+            onClick={() => handleTargetClick("ALL")}
+            css={[
+              iconStyle(theme),
+              target == "ALL" && selectedTargetStyle(theme),
+            ]}
+          >
+            ALL
+          </div>
+          <p css={target === "ALL" ? selectedTargetStyle(theme) : undefined}>
+            전체
+          </p>
         </div>
-        <div
-          onClick={() => handleTargetClick("WOMAN")}
-          css={[
-            iconStyle(theme),
-            target == "WOMAN" && selectedTargetStyle(theme),
-          ]}
-        >
-          👩🏻
+
+        <div css={filterContainerStyle()}>
+          <div
+            onClick={() => handleTargetClick("WOMAN")}
+            css={[
+              iconStyle(theme),
+              target == "WOMAN" && selectedTargetStyle(theme),
+            ]}
+          >
+            👩🏻
+          </div>
+          <p css={target === "WOMAN" ? selectedTargetStyle(theme) : undefined}>
+            여성이
+          </p>
         </div>
-        <div
-          onClick={() => handleTargetClick("MAN")}
-          css={[
-            iconStyle(theme),
-            target == "MAN" && selectedTargetStyle(theme),
-          ]}
-        >
-          👨🏻
+
+        <div css={filterContainerStyle()}>
+          <div
+            onClick={() => handleTargetClick("MAN")}
+            css={[
+              iconStyle(theme),
+              target == "MAN" && selectedTargetStyle(theme),
+            ]}
+          >
+            👨🏻
+          </div>
+          <p css={target == "MAN" && selectedTargetStyle(theme)}>남성이</p>
         </div>
       </div>
       <div css={tabContainerStyle(theme)}>
@@ -132,17 +147,15 @@ const containerStyle = css`
 const iconStyle = (theme: Theme) => css`
   font-size: 24px;
   cursor: pointer;
-  border-radius: 20%;
-  width: 36px;
-  height: 36px;
+  padding: 10px;
+  border-radius: 16px;
   background-color: ${theme.colors.blue.blue100};
 `;
-
 const tabContainerStyle = (theme: Theme) => css`
   display: flex;
   justify-content: space-between;
   border-radius: 8px;
-  padding: 10px;
+  padding: ${theme.spacing.spacing4};
   width: 100%;
   border: 1px solid ${theme.colors.semantic.border.default};
   background-color: ${theme.colors.blue.blue100};
@@ -159,10 +172,17 @@ const tabItemStyle = () => css`
 `;
 
 const selectedTargetStyle = (theme: Theme) => css`
-  color: ${theme.colors.blue.blue500};
+  color: ${theme.colors.blue.blue700};
 `;
 
 const selectedRankStyle = (theme: Theme) => css`
   color: ${theme.colors.blue.blue500};
-  font-weight: 600;
+  font-weight: ${theme.typography.body1Bold.weight};
+`;
+
+const filterContainerStyle = () => css`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
