@@ -9,6 +9,7 @@ const Scroll = styled.div`
   padding-top: 12px;
   background: #fff;
   padding-left: 16px;
+  padding-right: 16px;
 
   &::-webkit-scrollbar {
     height: 16px;
