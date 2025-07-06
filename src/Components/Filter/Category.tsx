@@ -10,11 +10,7 @@ const Category = ({ selectedCategory, onChange }: CategoryProps) => {
   return (
     <TabGroup>
       {categoryOptions.map((option) => (
-        <Tab
-          key={option}
-          active={selectedCategory === option}
-          onClick={() => onChange(option)}
-        >
+        <Tab key={option} active={selectedCategory === option} onClick={() => onChange(option)}>
           {option}
         </Tab>
       ))}

@@ -21,10 +21,8 @@ const NotFound = () => {
       <div>NotFound</div>
       <div>페이지를 찾을 수 없습니다.</div>
       <div>잘못된 경로입니다.</div>
-      
-      <Button onClick={() => navigate('/')}>
-        홈으로 돌아가기
-      </Button>
+
+      <Button onClick={() => navigate('/')}>홈으로 돌아가기</Button>
     </Layout>
   );
 };

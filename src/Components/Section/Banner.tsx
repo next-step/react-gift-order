@@ -38,16 +38,13 @@ const Text = styled.div`
 `;
 
 const SelectFriend = () => {
-
   return (
     <Wrapper>
       <Container>
         <IconWrapper>
           <FaPlus color="black" size={16} />
         </IconWrapper>
-        <Text>
-          선물할 친구를 선택해 주세요.
-        </Text>
+        <Text>선물할 친구를 선택해 주세요.</Text>
       </Container>
     </Wrapper>
   );

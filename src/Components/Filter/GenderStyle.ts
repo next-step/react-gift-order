@@ -20,9 +20,8 @@ export const FilterItem = styled.button<{ active: boolean }>`
 
   background-color: ${({ active, theme }) =>
     active ? theme.color.blue.blue700 : theme.color.blue.blue200};
-    
-  color: ${({ active, theme }) =>
-    active ? theme.color.blue.blue00 : theme.color.blue.blue800};
+
+  color: ${({ active, theme }) => (active ? theme.color.blue.blue00 : theme.color.blue.blue800)};
 
   font-size: 20px;
   cursor: pointer;
@@ -33,7 +32,6 @@ export const Label = styled.div<{ active: boolean }>`
   margin-top: 6px;
   font-size: 13px;
   font-weight: ${({ active }) => (active ? 'bold' : 'normal')};
-  color: ${({ active, theme }) =>
-    active ? theme.color.blue.blue700 : theme.color.gray.gray700};
+  color: ${({ active, theme }) => (active ? theme.color.blue.blue700 : theme.color.gray.gray700)};
   text-align: center;
 `;
