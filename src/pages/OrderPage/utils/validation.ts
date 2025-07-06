@@ -1,5 +1,7 @@
+import { PHONE_NUMBER_REGEX } from "../constants/phoneNumberRegex";
+
 export const validatePhoneNumber = (phoneNumber: string) => {
-  return /^010\d{8}$/.test(phoneNumber);
+  return PHONE_NUMBER_REGEX.KOREAN.test(phoneNumber);
 };
 
 export const validateQuantity = (quantity: string) => {
