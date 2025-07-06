@@ -9,6 +9,8 @@ import ReceiverSectionComponent from "./components/ReceiverSection/ReceiverSecti
 import { useReceiverInput } from "./hooks/useReceiverInput";
 import ProductInfo from "./components/ProductInfo/ProductInfo";
 import { useProductInfo } from "./hooks/useProductInfo";
+import { ROUTES } from "@/constants/routes";
+import { useNavigate } from "react-router-dom";
 
 const OrderPageContainer = styled.div`
   display: flex;
@@ -18,6 +20,8 @@ const OrderPageContainer = styled.div`
 `;
 
 function OrderPage() {
+  const navigate = useNavigate();
+
   const {
     selectedCard,
     message,
@@ -54,8 +58,6 @@ function OrderPage() {
     hasQuantityError,
   } = useReceiverInput();
 
-  const product = useProductInfo();
-
   const validateForms = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -66,8 +68,10 @@ function OrderPage() {
     validateQuantity(quantity);
   };
 
-  // TODO: 유효성 검사를 어떻게 하면 좋을지
+  const product = useProductInfo();
+
   if (!product) {
+    navigate(ROUTES.NOT_FOUND);
     return;
   }
 
