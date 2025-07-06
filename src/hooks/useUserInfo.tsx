@@ -1,7 +1,7 @@
 import { UserInfoContext } from '@/contexts/UserInfoContext';
 import { useContext } from 'react';
 
-export const useUserInfo = () => {
+const useUserInfo = () => {
   const context = useContext(UserInfoContext);
 
   if (!context) {
@@ -10,3 +10,5 @@ export const useUserInfo = () => {
     return context;
   }
 };
+
+export default useUserInfo;

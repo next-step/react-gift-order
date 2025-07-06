@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import type { GiftItemDataType } from '@/types/giftItems';
 import giftItemData from '@/mock_data/giftItems';
-import { GiftCard } from './GiftCard';
+import { GiftItemCard } from './GiftItemCard';
 import { Header } from './Header';
 import { MoreButton } from './MoreButton';
 
@@ -50,7 +50,7 @@ export const GiftList = () => {
         <List>
           {giftItems.map((item, i) => {
             return (
-              <GiftCard
+              <GiftItemCard
                 key={i}
                 id={i + 1}
                 image={item.imageURL}

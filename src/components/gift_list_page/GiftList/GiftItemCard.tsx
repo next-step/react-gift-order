@@ -1,7 +1,11 @@
-import type { GiftCardType } from '@/types/giftItems';
 import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom';
+import useUserInfo from '@/hooks/useUserInfo';
+import type { GiftItemCardType } from '@/types/giftItems';
 
-const Card = styled.div`
+const Card = styled.button`
+  all: unset;
+  cursor: pointer;
   display: flex;
   position: relative;
   flex-direction: column;
@@ -49,9 +53,20 @@ const Price = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing.spacing5};
 `;
 
-export const GiftCard = ({ id, image, brandName, price }: GiftCardType) => {
+export const GiftItemCard = ({ id, image, brandName, price }: GiftItemCardType) => {
+  const navigate = useNavigate();
+  const { user } = useUserInfo();
+
   return (
-    <Card>
+    <Card
+      onClick={() => {
+        if (user.id) {
+          navigate(`/order/${id}`);
+        } else {
+          navigate('/login', { state: { from: `/order/${id}` } });
+        }
+      }}
+    >
       <Rank rank={id}>{id}</Rank>
       <Image src={image} />
       <Name1>{brandName}</Name1>

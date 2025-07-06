@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import BackArrow from '@/assets/chevron_left.svg?react';
 import User from '@/assets/user.svg?react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useUserInfo } from '@/hooks/useUserInfo';
+import useUserInfo from '@/hooks/useUserInfo';
 
 interface TopNavBarType {
   title: string;
@@ -47,18 +47,16 @@ export const TopNavBar = ({ title, mainPath }: TopNavBarType) => {
       >
         <BackArrow width={svgSize} height={svgSize} fill="black" style={{ marginLeft: '10px' }} />
       </Btn>
-      <Btn>
-        <Text
-          onClick={() => {
-            if (url.pathname !== mainPath) {
-              navigate(mainPath);
-            } else {
-              navigate(0);
-            }
-          }}
-        >
-          {title}
-        </Text>
+      <Btn
+        onClick={() => {
+          if (url.pathname !== mainPath) {
+            navigate(mainPath);
+          } else {
+            navigate(0);
+          }
+        }}
+      >
+        <Text>{title}</Text>
       </Btn>
       <Btn
         onClick={() => {

@@ -14,7 +14,7 @@ export interface GiftItemDataType {
   };
 }
 
-export interface GiftCardType {
+export interface GiftItemCardType {
   id: number;
   image: string;
   brandName: string;
