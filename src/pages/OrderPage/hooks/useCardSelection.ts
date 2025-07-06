@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import type { OrderCardType } from "@/types/OrderCardType";
 import { isNotEmpty } from "@/utils/validation";
 import { useInput } from "@/hooks/useInput";
+import { VALIDATE_LABELS } from "../constants/validateLabels";
 
 export function useCardSelection(initialCards: OrderCardType[]) {
   const [selectedCard, setSelectedCard] = useState<OrderCardType>(
@@ -19,7 +20,7 @@ export function useCardSelection(initialCards: OrderCardType[]) {
 
   const messageErrorMessage = useMemo(() => {
     if (messageInput.errors.isEmpty) {
-      return "메시지를 입력해주세요.";
+      return VALIDATE_LABELS.MESSAGE_EMPTY;
     }
     return null;
   }, [messageInput.errors.isEmpty]);

@@ -2,6 +2,7 @@ import { useInput } from "@/hooks/useInput";
 import { isNotEmpty } from "@/utils/validation";
 import { useMemo } from "react";
 import { validatePhoneNumber } from "../../utils/validation";
+import { VALIDATE_LABELS } from "../../constants/validateLabels";
 
 export function useReceiverPhoneInput() {
   const receiverPhoneInput = useInput("", {
@@ -11,10 +12,10 @@ export function useReceiverPhoneInput() {
 
   const receiverPhoneErrorMessage = useMemo(() => {
     if (receiverPhoneInput.errors.isEmpty) {
-      return "전화번호를 입력해주세요.";
+      return VALIDATE_LABELS.PHONE_EMPTY;
     }
     if (receiverPhoneInput.errors.invalidFormat) {
-      return "올바른 전화번호 형식이 아닙니다.";
+      return VALIDATE_LABELS.PHONE_INVALID;
     }
     return null;
   }, [

@@ -1,6 +1,7 @@
 import { useInput } from "@/hooks/useInput";
 import { validateQuantity } from "../../utils/validation";
 import { useMemo } from "react";
+import { VALIDATE_LABELS } from "../../constants/validateLabels";
 
 export function useReceiverQuantityInput() {
   const quantityInput = useInput("1", {
@@ -9,7 +10,7 @@ export function useReceiverQuantityInput() {
 
   const quantityErrorMessage = useMemo(() => {
     if (quantityInput.errors.invalidFormat) {
-      return "구매 수량은 1개 이상이어야 합니다.";
+      return VALIDATE_LABELS.QUANTITY_INVALID;
     }
     return null;
   }, [quantityInput.errors.invalidFormat]);

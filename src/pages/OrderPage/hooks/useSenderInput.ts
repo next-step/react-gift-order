@@ -1,6 +1,7 @@
 import { useInput } from "@/hooks/useInput";
 import { isNotEmpty } from "@/utils/validation";
 import { useMemo } from "react";
+import { VALIDATE_LABELS } from "../constants/validateLabels";
 
 export function useSenderInput(initialValue = "") {
   const senderInput = useInput(initialValue, {
@@ -9,7 +10,7 @@ export function useSenderInput(initialValue = "") {
 
   const senderNameErrorMessage = useMemo(() => {
     if (senderInput.errors.isEmpty) {
-      return "이름을 입력해주세요.";
+      return VALIDATE_LABELS.NAME_EMPTY;
     }
     return null;
   }, [senderInput.errors.isEmpty]);
