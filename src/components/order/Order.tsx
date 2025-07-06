@@ -1,12 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { cardData } from "@/data/cardData";
 import { useTheme } from "@emotion/react";
-import { GiftCardThumb } from "@/components/GiftCardThumb";
 import { useParams } from "react-router-dom";
 import { giftData } from "@/data/giftData";
+import CardView from "@/components/order/CardView";
 import {
-  ThumbNailStyle,
-  ThumbNailContainerStyle,
   CardWrapperStyle,
   WrapperStyle,
   MessageStyle,
@@ -101,20 +99,11 @@ const Order: React.FC = () => {
   return (
     <div css={WrapperStyle(theme)}>
       <div css={CardWrapperStyle(theme)}>
-        <div css={ThumbNailContainerStyle(theme)}>
-          {cardData.map((card) => {
-            return (
-              <GiftCardThumb
-                key={card.id}
-                onClick={() => {
-                  setSelectedId(card.id);
-                }}
-                css={ThumbNailStyle(theme, card.id, selectedId)}
-                src={card.thumbUrl}
-              ></GiftCardThumb>
-            );
-          })}
-        </div>
+        <CardView
+          theme={theme}
+          selectedId={selectedId}
+          onSelect={setSelectedId}
+        ></CardView>
         <img
           src={
             selectedId === undefined
