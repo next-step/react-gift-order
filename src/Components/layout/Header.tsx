@@ -4,7 +4,7 @@ import type { Theme } from '@emotion/react'
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded'
 import PersonOutlineRoundedIcon from '@mui/icons-material/PersonOutlineRounded'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { useLoginContext } from '../../contexts/LoginContext'
+import { useLoginContext } from '@/contexts/LoginContext'
 
 const statusBarStyle = (theme: Theme) => css`
   width: 100%;

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import AddIcon from '@mui/icons-material/Add'
-import { useLoginContext } from '../contexts/LoginContext'
+import { useLoginContext } from '@/contexts/LoginContext'
 
 const Section = styled.section`
   width: 100%;

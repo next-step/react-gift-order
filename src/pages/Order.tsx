@@ -1,9 +1,9 @@
 import { useReducer } from "react";
-import { Layout } from "../Components/layout/Layout";
+import { Layout } from "@/Components/layout/Layout";
 import styled from "@emotion/styled";
-import { cardTemplates } from "../Components/cardTemplates";
+import { cardTemplates } from "@/Components/cardTemplates";
 import { useParams } from "react-router-dom";
-import { products } from "../data/products";
+import { products } from "@/data/products";
 
 // ===== 타입 정의 =====
 interface OrderState {

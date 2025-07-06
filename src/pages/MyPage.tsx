@@ -1,8 +1,8 @@
 import React from "react";
-import { useLoginContext } from "../contexts/LoginContext";
+import { useLoginContext } from "@/contexts/LoginContext";
 import { useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
-import { Layout } from "../Components/layout/Layout";
+import { Layout } from "@/Components/layout/Layout";
 
 const Wrapper = styled.div`
   width: 100%;

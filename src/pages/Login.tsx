@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "@emotion/styled";
-import { useLoginForm } from "../hooks/useLoginForm";
+import { useLoginForm } from "@/hooks/useLoginForm";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Layout } from "../Components/layout/Layout";
+import { Layout } from "@/Components/layout/Layout";
 
 const LoginWrapper = styled.div`
   flex: 1;

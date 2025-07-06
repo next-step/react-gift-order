@@ -1,9 +1,9 @@
-import { useState } from 'react'
 import styled from '@emotion/styled'
-import PersonIcon from '@mui/icons-material/Person'
 import { useNavigate } from 'react-router-dom'
-import { useLoginContext } from '../contexts/LoginContext'
-import { products } from '../data/products'
+import { useState, useEffect } from 'react'
+import { useLoginContext } from '@/contexts/LoginContext'
+import { products } from '@/data/products'
+import PersonIcon from '@mui/icons-material/Person'
 
 // 타입 정의
 export type FilterKey = 'all' | 'female' | 'male' | 'teen'
