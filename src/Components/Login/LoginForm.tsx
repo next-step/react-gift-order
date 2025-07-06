@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import LogoImg from '@/Assets/icons/logo.png';
-import LoginButton from '@/Components/Login/LoginButton';
-import { useLoginForm } from '@/Hooks/useLoginForm';
+import LoginButton from '@/components/login/LoginButton';
+import { useLoginForm } from '@/hooks/useLoginForm';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const Container = styled.div`

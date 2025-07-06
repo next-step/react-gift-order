@@ -1,4 +1,4 @@
-import { ButtonGroup, FilterItem, Label } from '@/Components/Filter/GenderStyle';
+import { ButtonGroup, FilterItem, Label } from '@/components/filter/Gender.style';
 
 const genderOptions = [
   { key: '전체', label: '전체', icon: 'ALL' },

@@ -1,4 +1,4 @@
-import Layout from '@/Components/Layout/Layout';
+import Layout from '@/components/layout/Layout';
 import Gender from './Gender';
 import Category from './Category';
 import styled from '@emotion/styled';

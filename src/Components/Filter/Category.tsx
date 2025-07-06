@@ -1,4 +1,4 @@
-import { TabGroup, Tab } from '@/Components/Filter/CategoryStyle';
+import { TabGroup, Tab } from '@/components/filter/Category.style';
 
 const categoryOptions = ['받고 싶어한', '많이 선물한', '위시로 받은'];
 interface CategoryProps {

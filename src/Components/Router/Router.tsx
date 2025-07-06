@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from '@/Components/Pages/Home';
-import Login from '@/Components/Pages/Login';
-import NotFound from '@/Components/Pages/NotFound';
+import Home from '@/components/pages/Home';
+import Login from '@/components/pages/Login';
+import NotFound from '@/components/pages/NotFound';
 
 export const Router = () => {
   return (

@@ -1,6 +1,6 @@
-import GiftItem from '@/Components/GiftRanking/GiftItem';
-import { GiftList } from '@/Components/GiftRanking/GiftList';
-import { GridWrapper } from '@/Components/GiftRanking/GridStyle';
+import GiftItem from '@/components/gift-ranking/GiftItem';
+import { GiftList } from '@/components/gift-ranking/GiftList';
+import { GridWrapper } from '@/components/gift-ranking/Grid.style';
 
 const GiftGrid = () => {
   return (

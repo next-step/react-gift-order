@@ -1,6 +1,6 @@
-import { DataCategory } from '@/Components/Category/DataCategory';
-import { Grid, Item, ImageStyle } from '@/Components/Category/GiftCategoryGrid';
-import { Wrapper, Title } from '@/Components/Category/GiftCategoryStyle';
+import { DataCategory } from '@/components/category/DataCategory';
+import { Grid, Item, ImageStyle } from '@/components/category/GiftCategoryGrid';
+import { Wrapper, Title } from '@/components/category/GiftCategory.style';
 
 const GiftCategoryList = () => {
   return (

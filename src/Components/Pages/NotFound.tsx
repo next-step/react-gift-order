@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
-import Layout from '@/Components/Layout/Layout';
+import Layout from '@/components/layout/Layout';
 
 const Button = styled.button`
   margin-top: 2rem;

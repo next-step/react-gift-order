@@ -1,6 +1,6 @@
-import NavigationBar from '@/Components/NavigationBar/NavigationBar';
-import Layout from '@/Components/Layout/Layout';
-import LoginForm from '@/Components/Login/Login';
+import NavigationBar from '@/components/navigation-bar/NavigationBar';
+import Layout from '@/components/layout/Layout';
+import LoginForm from '@/components/login/Login';
 
 const Login = () => {
   return (
