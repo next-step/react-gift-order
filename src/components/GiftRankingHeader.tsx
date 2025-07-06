@@ -1,6 +1,5 @@
 import { css } from "@emotion/react";
 import type { Theme } from "@emotion/react";
-import { IoAppsOutline, IoWomanOutline, IoManOutline } from "react-icons/io5";
 import { useTheme } from "@emotion/react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -40,23 +39,39 @@ const GiftRankingHeader = () => {
     params.set("rankType", newRank);
     navigate(`${location.pathname}?${params.toString()}`);
   };
-
+  //👩🏻
+  //
   return (
     <>
       <div css={textStyle(theme)}>실시간 급상승 선물랭킹</div>
       <div css={containerStyle}>
-        <IoWomanOutline
-          onClick={() => handleTargetClick("WOMAN")}
-          css={[iconStyle, target == "WOMAN" && selectedTargetStyle(theme)]}
-        />
-        <IoManOutline
-          onClick={() => handleTargetClick("MAN")}
-          css={[iconStyle, target == "MAN" && selectedTargetStyle(theme)]}
-        />
-        <IoAppsOutline
+        <div
           onClick={() => handleTargetClick("ALL")}
-          css={[iconStyle(), target == "ALL" && selectedTargetStyle(theme)]}
-        />
+          css={[
+            iconStyle(theme),
+            target == "ALL" && selectedTargetStyle(theme),
+          ]}
+        >
+          ALL
+        </div>
+        <div
+          onClick={() => handleTargetClick("WOMAN")}
+          css={[
+            iconStyle(theme),
+            target == "WOMAN" && selectedTargetStyle(theme),
+          ]}
+        >
+          👩🏻
+        </div>
+        <div
+          onClick={() => handleTargetClick("MAN")}
+          css={[
+            iconStyle(theme),
+            target == "MAN" && selectedTargetStyle(theme),
+          ]}
+        >
+          👨🏻
+        </div>
       </div>
       <div css={tabContainerStyle(theme)}>
         <div
@@ -114,12 +129,13 @@ const containerStyle = css`
   border-radius: 16px;
 `;
 
-const iconStyle = () => css`
+const iconStyle = (theme: Theme) => css`
   font-size: 24px;
   cursor: pointer;
   border-radius: 20%;
   width: 36px;
   height: 36px;
+  background-color: ${theme.colors.blue.blue100};
 `;
 
 const tabContainerStyle = (theme: Theme) => css`
