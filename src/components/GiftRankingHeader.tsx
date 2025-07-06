@@ -45,7 +45,7 @@ const GiftRankingHeader = () => {
     <>
       <div css={textStyle(theme)}>실시간 급상승 선물랭킹</div>
       <div css={containerStyle}>
-        <div css={filterContainerStyle()}>
+        <div css={filterContainerStyle(theme)}>
           <div
             onClick={() => handleTargetClick("ALL")}
             css={[
@@ -60,7 +60,7 @@ const GiftRankingHeader = () => {
           </p>
         </div>
 
-        <div css={filterContainerStyle()}>
+        <div css={filterContainerStyle(theme)}>
           <div
             onClick={() => handleTargetClick("WOMAN")}
             css={[
@@ -75,7 +75,7 @@ const GiftRankingHeader = () => {
           </p>
         </div>
 
-        <div css={filterContainerStyle()}>
+        <div css={filterContainerStyle(theme)}>
           <div
             onClick={() => handleTargetClick("MAN")}
             css={[
@@ -92,7 +92,7 @@ const GiftRankingHeader = () => {
         <div
           onClick={() => handleRankClick("MANY-WANT")}
           css={[
-            tabItemStyle(),
+            tabItemStyle(theme),
             rankType == "MANY-WANT" && selectedRankStyle(theme),
           ]}
         >
@@ -101,7 +101,7 @@ const GiftRankingHeader = () => {
         <div
           onClick={() => handleRankClick("MANY-GIVE")}
           css={[
-            tabItemStyle(),
+            tabItemStyle(theme),
             rankType == "MANY-GIVE" && selectedRankStyle(theme),
           ]}
         >
@@ -110,7 +110,7 @@ const GiftRankingHeader = () => {
         <div
           onClick={() => handleRankClick("MANY-WISH")}
           css={[
-            tabItemStyle(),
+            tabItemStyle(theme),
             rankType == "MANY-WISH" && selectedRankStyle(theme),
           ]}
         >
@@ -124,8 +124,8 @@ const GiftRankingHeader = () => {
 export default GiftRankingHeader;
 
 const textStyle = (theme: Theme) => css`
-  padding: 16px;
-  font-size: 1.25rem;
+  padding: ${theme.spacing.spacing4};
+  font-size: ${theme.typography.subtitle1Bold.size};
   font-weight: ${theme.typography.subtitle1Bold.weight};
   line-height: ${theme.typography.subtitle1Bold.lineHeight};
   color: ${theme.colors.semantic.text.default};
@@ -133,41 +133,46 @@ const textStyle = (theme: Theme) => css`
   text-align: left;
 `;
 
-const containerStyle = css`
+const containerStyle = (theme: Theme) => css`
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: row;
-  gap: 200px;
+  gap: ${theme.spacing.spacing16};
   width: 100%;
-  min-height: 80px;
-  border-radius: 16px;
+  min-height: ${theme.spacing.spacing10}; // 40px
+  border-radius: ${theme.spacing.spacing2}; // 8px
 `;
 
 const iconStyle = (theme: Theme) => css`
-  font-size: 24px;
+  width: ${theme.spacing.spacing10}; // 40px
+  height: ${theme.spacing.spacing10};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: ${theme.typography.title2Regular.size};
+  line-height: 1;
   cursor: pointer;
-  padding: 10px;
-  border-radius: 16px;
+  border-radius: 50%;
   background-color: ${theme.colors.blue.blue100};
 `;
 const tabContainerStyle = (theme: Theme) => css`
   display: flex;
   justify-content: space-between;
-  border-radius: 8px;
+  border-radius: ${theme.spacing.spacing2};
   padding: ${theme.spacing.spacing4};
   width: 100%;
   border: 1px solid ${theme.colors.semantic.border.default};
   background-color: ${theme.colors.blue.blue100};
 `;
 
-const tabItemStyle = () => css`
+const tabItemStyle = (theme: Theme) => css`
   flex: 1;
-  padding: 12px 16px;
+  padding: ${theme.spacing.spacing3} ${theme.spacing.spacing4};
   text-align: center;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
+  border-radius: ${theme.spacing.spacing1};
+  font-size: ${theme.typography.body2Regular.size};
+  font-weight: ${theme.typography.body2Regular.weight};
   cursor: pointer;
 `;
 
@@ -180,9 +185,10 @@ const selectedRankStyle = (theme: Theme) => css`
   font-weight: ${theme.typography.body1Bold.weight};
 `;
 
-const filterContainerStyle = () => css`
+const filterContainerStyle = (theme: Theme) => css`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: ${theme.spacing.spacing2}; // 8px
 `;
