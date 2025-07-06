@@ -101,8 +101,8 @@ export const Trend = () => {
 
       {/* 실시간 급상승 상품 컨테이너 */}
       <ProductContainer>
-        {displayProducts.map((product, index) => (
-          <ProductItem key={product.id} product={product} index={index} />
+        {displayProducts.map((product) => (
+          <ProductItem key={product.id} product={product} />
         ))}
       </ProductContainer>
 

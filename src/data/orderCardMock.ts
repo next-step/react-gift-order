@@ -1,4 +1,4 @@
-export const orderMock = [
+export const orderCardMock = [
   {
     id: 904,
     thumbUrl: 'https://t1.daumcdn.net/gift/message-card/template/image/20240124_VGPJE.png',

@@ -13,4 +13,9 @@ export const baseStyles = css`
     /* 기본 테두리 색상 */
     border-color: ${theme.semanticColors.border.default};
   }
+
+  /* placeholder 색상 설정 */
+  *::placeholder {
+    color: ${theme.semanticColors.text.placeholder};
+  }
 `

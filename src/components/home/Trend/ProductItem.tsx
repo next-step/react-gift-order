@@ -24,11 +24,7 @@ export const ProductItem = ({ product }: { product: Product }) => {
   }
 
   return (
-    <ProductItemContainer
-      onClick={() => {
-        handleProductClick()
-      }}
-    >
+    <ProductItemContainer onClick={handleProductClick}>
       <ProductRank rank={product.id}>{product.id}</ProductRank>
       <ProductImage src={product.imageURL} alt={product.name} />
       <ProductTitleContainer>

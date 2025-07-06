@@ -1,10 +1,12 @@
-import { PageContainer, Typography } from '@/components/common'
+import { PageContainer } from '@/components/common'
 import type { Product } from '@/components/home/Trend/types'
 import { productListMock } from '@/data/productListMock'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { NotFound } from './NotFound'
 import styled from '@emotion/styled'
+import { theme } from '@/styles/theme'
+import { OrderCardSection } from '@/components/order/OrderCardSection'
 
 // * 주문하기 페이지
 export const Order = () => {
@@ -24,10 +26,16 @@ export const Order = () => {
   // * 상품 정보가 있을 경우
   return (
     <OrderContainer>
-      <Typography variant="title1Bold">주문하기</Typography>
-      <Typography variant="subtitle1Regular">
-        No{productInfo.id}. {productInfo.name}
-      </Typography>
+      {/* 주문하기 카드 섹션 */}
+      <OrderCardSection />
+      {/* 보내는 사람 폼 섹션 */}
+      {/* <SenderForm /> */}
+      {/* 받는 사람 폼 섹션 */}
+      {/* <RecieverForm /> */}
+      {/* 상품 정보 섹션 */}
+      {/* <ProductInfo /> */}
+      {/* 주문하기 버튼 */}
+      {/* <OrderButton /> */}
     </OrderContainer>
   )
 }
@@ -35,4 +43,5 @@ export const Order = () => {
 // * 주문하기 페이지 컨테이너
 const OrderContainer = styled(PageContainer)`
   justify-content: start;
+  background-color: ${theme.semanticColors.background.disabled};
 `
