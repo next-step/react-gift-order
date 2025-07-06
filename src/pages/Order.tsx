@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Layout } from "../Components/layout/Layout";
 import styled from "@emotion/styled";
 import { cardTemplates } from "../Components/cardTemplates";
 import { useParams } from "react-router-dom";
 import { products } from "../data/products";
 
+// ===== 카드 미리보기 관련 스타일 =====
 const PreviewWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -35,6 +36,7 @@ const MessageInput = styled.textarea`
   background: #fafafa;
 `;
 
+// ===== 카드 선택 관련 스타일 =====
 const CardList = styled.div`
   display: flex;
   flex-direction: row;
@@ -78,9 +80,9 @@ const Thumb = styled.img<{ selected: boolean }>`
   transition: border 0.2s, box-shadow 0.2s;
 `;
 
+// ===== 주문 버튼 스타일 =====
 const OrderButton = styled.button`
   width: 100%;
-  max-width: 320px;
   background: #f7e244;
   color: #222;
   font-size: 1.2rem;
@@ -102,6 +104,7 @@ const OrderButton = styled.button`
   }
 `;
 
+// ===== 보내는 사람 섹션 스타일 =====
 const SenderSection = styled.section`
   background: #fafbfc;
   border-radius: 12px;
@@ -135,6 +138,7 @@ const SenderGuide = styled.div`
   margin-left: 2px;
 `;
 
+// ===== 받는 사람 섹션 스타일 =====
 const ReceiverSection = styled.section`
   background: #fafbfc;
   border-radius: 12px;
@@ -174,6 +178,7 @@ const ReceiverInput = styled.input`
   }
 `;
 
+// ===== 상품 정보 섹션 스타일 =====
 const ProductSection = styled.section`
   background: #fafbfc;
   border-radius: 12px;
@@ -231,6 +236,7 @@ const ProductPrice = styled.div`
   margin-top: 4px;
 `;
 
+// ===== 레이아웃 관련 스타일 =====
 const FixedFooter = styled.div`
   position: fixed;
   left: 0;
@@ -254,6 +260,7 @@ const PageWrapper = styled.div`
   height: 100vh;
 `;
 
+// ===== 에러 메시지 스타일 =====
 const ErrorMessage = styled.div`
   color: #e74c3c;
   font-size: 1rem;
@@ -261,6 +268,7 @@ const ErrorMessage = styled.div`
 `;
 
 const Order = () => {
+  // ===== 상태 관리 =====
   const { id } = useParams();
   const product = products.find(p => String(p.id) === String(id));
   const [selectedId, setSelectedId] = useState<number | null>(cardTemplates[0]?.id ?? null);
@@ -274,6 +282,7 @@ const Order = () => {
 
   const selectedCard = cardTemplates.find(card => card.id === selectedId);
 
+  // ===== 이벤트 핸들러 =====
   // 카드 선택 시 메시지 입력란에 기본 메시지 세팅
   const handleSelect = (id: number) => {
     setSelectedId(id);
@@ -298,6 +307,7 @@ const Order = () => {
 
   return (
     <Layout>
+      {/* ===== 카드 선택 섹션 ===== */}
       <h2>카드 템플릿 선택</h2>
       <CardList>
         {cardTemplates.map(card => (
@@ -310,6 +320,8 @@ const Order = () => {
           </CardItem>
         ))}
       </CardList>
+
+      {/* ===== 카드 미리보기 섹션 ===== */}
       <PreviewWrapper>
         {selectedCard && (
           <>
@@ -326,6 +338,8 @@ const Order = () => {
           </>
         )}
       </PreviewWrapper>
+
+      {/* ===== 보내는 사람 섹션 ===== */}
       <SenderSection>
         <SenderTitle>보내는 사람</SenderTitle>
         <SenderInput
@@ -340,6 +354,8 @@ const Order = () => {
         {senderError && <ErrorMessage>{senderError}</ErrorMessage>}
         <SenderGuide>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</SenderGuide>
       </SenderSection>
+
+      {/* ===== 받는 사람 섹션 ===== */}
       <ReceiverSection>
         <ReceiverTitle>받는 사람</ReceiverTitle>
         <ReceiverRow>
@@ -373,6 +389,8 @@ const Order = () => {
           />
         </ReceiverRow>
       </ReceiverSection>
+
+      {/* ===== 상품 정보 섹션 ===== */}
       <ProductSection>
         <ProductTitle>상품 정보</ProductTitle>
         {product ? (
@@ -388,6 +406,8 @@ const Order = () => {
           <div>상품 정보를 불러올 수 없습니다.</div>
         )}
       </ProductSection>
+
+      {/* ===== 고정 푸터 (주문 버튼) ===== */}
       <PageWrapper>
         <FixedFooter>
           <OrderButton type="button" onClick={handleOrder} disabled={!message.trim()}>
