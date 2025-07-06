@@ -70,15 +70,22 @@ export const Price = styled.span`
   color: ${({ theme }) => theme.colors.text.default};
 `;
 
-export const OrderButton = styled.button`
+export const OrderButtonContainer = styled.div`
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  width: 100%;
   height: 3.2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   z-index: ${({ theme }) => theme.zIndex.fixed};
+  background-color: transparent;
+`;
 
+export const OrderButton = styled.button`
+  width: 48.3%;
+  height: 100%;
   background-color: ${({ theme }) => theme.colors.brand.kakaoYellow};
   border: none;
   border-radius: 0;
