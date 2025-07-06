@@ -1,40 +1,32 @@
-import { orderCardMock } from '@/data/orderCardMock'
 import { theme } from '@/styles/theme'
 import { typographyInput } from '@/styles/typography'
 import styled from '@emotion/styled'
-import { useEffect, useState } from 'react'
+import type { CardData } from './types'
+import { ORDER_FORM_PLACEHOLDER } from '@/data/orderContent'
+import { Typography } from '../common'
 
-type CardData = {
-  id: number
-  thumbUrl: string
-  imageUrl: string
-  defaultTextMessage: string
+type OrderCardSectionProps = {
+  cardList: CardData[]
+  selectedCard: CardData
+  cardMessage: string
+  onCardSelect: (card: CardData) => void
+  onMessageChange: (message: string) => void
+  messageError?: string | null
 }
 
 // * 주문하기 카드 섹션
-export const OrderCardSection = () => {
-  // * 카드 목 데이터를 가져와 제일 첫 카드를 디폴트 값으로 지정
-  // ! 추후 진짜 데이터를 가져온다면 로직 변경이 필요
-  const cardList: CardData[] = orderCardMock
-  const [selectedCard, setSelectedCard] = useState<CardData>(cardList[0])
-  const [cardMessage, setCardMessage] = useState(cardList[0].defaultTextMessage)
-
-  // * 카드 선택 핸들러
-  const handleCardSelect = (card: CardData) => {
-    setSelectedCard(card)
-  }
-
+export const OrderCardSection = ({
+  cardList,
+  selectedCard,
+  cardMessage,
+  onCardSelect,
+  onMessageChange,
+  messageError,
+}: OrderCardSectionProps) => {
   // * 메시지 변경 핸들러
-  const handleMessageChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    // * 메시지 입력 시 상태 업데이트
-    setCardMessage(event.target.value)
+  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    onMessageChange(e.target.value)
   }
-
-  useEffect(() => {
-    // * 새로운 디폴트 메시지 지정
-    const newCardMessage = selectedCard.defaultTextMessage
-    setCardMessage(newCardMessage)
-  }, [selectedCard])
 
   return (
     <SectionContainer>
@@ -43,7 +35,7 @@ export const OrderCardSection = () => {
           return (
             <CardThumbnail
               key={card.id}
-              onClick={() => handleCardSelect(card)}
+              onClick={() => onCardSelect(card)}
               isSelected={selectedCard?.id === card.id}
             >
               <CardThumbnailImage src={card.thumbUrl} alt={`No.${card.id} Card Thumbnail`} />
@@ -57,25 +49,17 @@ export const OrderCardSection = () => {
           alt={`selected card No.${selectedCard.id}`}
         />
       </SelectedCard>
-      <CardMessageArea
-        placeholder={ORDER_FORM_PLACEHOLDER.card_message}
-        value={cardMessage}
-        onChange={handleMessageChange}
-      />
+      <MessageContainer>
+        <CardMessageArea
+          placeholder={ORDER_FORM_PLACEHOLDER.card_message}
+          value={cardMessage}
+          onChange={handleMessageChange}
+          hasError={!!messageError}
+        />
+        {messageError && <ErrorMessage variant="label2Regular">{messageError}</ErrorMessage>}
+      </MessageContainer>
     </SectionContainer>
   )
-}
-
-// * 주문하기 폼 placeholder
-const ORDER_FORM_PLACEHOLDER = {
-  card_message: '메시지를 입력해주세요.',
-  sender: {
-    name: '이름을 입력하세요.',
-  },
-  reciever: {
-    name: '이름을 입력하세요.',
-    phone: '전화번호를 입력하세요.',
-  },
 }
 
 // * 섹션 컨테이너 : section 시맨틱 태그
@@ -83,7 +67,8 @@ const SectionContainer = styled.section`
   width: 100%;
   height: fit-content;
 
-  padding: ${theme.spacing.spacing3} 0;
+  padding-top: ${theme.spacing.spacing3};
+  padding-bottom: ${theme.spacing.spacing8};
 
   background-color: ${theme.semanticColors.background.default};
 
@@ -185,21 +170,43 @@ const SelectedCardImage = styled.img`
   height: 100%;
 `
 
-// * 카드 메시지 영역
-const CardMessageArea = styled.textarea`
+// * 메시지 컨테이너
+const MessageContainer = styled.div`
   width: 95%;
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.spacing.spacing1};
+`
+
+// * 카드 메시지 영역
+const CardMessageArea = styled.textarea<{ hasError: boolean }>`
+  width: 100%;
   min-height: 3.875rem;
 
   padding: ${theme.spacing.spacing2} ${theme.spacing.spacing3};
-  margin: ${theme.spacing.spacing3} 0;
-  border: 1px solid ${theme.semanticColors.border.default};
+  margin-top: ${theme.spacing.spacing3};
+  border: 1px solid
+    ${({ hasError }) =>
+      hasError ? theme.semanticColors.status.critical : theme.semanticColors.border.default};
   border-radius: ${theme.spacing.spacing2};
 
   &:focus {
-    border-color: ${theme.colors.gray.gray400};
+    outline: none;
+    border-color: ${({ hasError }) =>
+      hasError ? theme.semanticColors.status.critical : theme.colors.gray.gray400};
+  }
+
+  &::placeholder {
+    color: ${theme.semanticColors.text.placeholder};
   }
 
   transition: border-color 200ms;
 
   ${typographyInput}
+`
+
+// * 에러 메시지
+const ErrorMessage = styled(Typography)`
+  color: ${theme.semanticColors.status.critical};
+  margin-left: ${theme.spacing.spacing2};
 `

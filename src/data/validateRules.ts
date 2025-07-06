@@ -39,4 +39,28 @@ export const VALIDATE_RULES = {
     required: { value: true, errorMsg: 'PW를 입력해주세요.' },
     minLength: { value: 8, errorMsg: 'PW는 최소 8글자 이상이어야 합니다.' },
   },
+  // * 주문하기 관련 유효성 검증 규칙
+  message: {
+    required: { value: true, errorMsg: '메시지를 입력해주세요.' },
+  },
+  name: {
+    required: { value: true, errorMsg: '이름을 입력해주세요.' },
+  },
+  phone: {
+    required: { value: true, errorMsg: '전화번호를 입력해주세요.' },
+    regex: {
+      value: /^010\d{8}$/,
+      errorMsg: '올바른 전화번호 형식이 아닙니다.',
+    },
+  },
+  quantity: {
+    required: { value: true, errorMsg: '수량을 입력해주세요.' },
+    custom: {
+      value: (value: string) => {
+        const num = Number(value)
+        return !isNaN(num) && num >= 1
+      },
+      errorMsg: '구매 수량은 1개 이상이어야 합니다.',
+    },
+  },
 } as const satisfies Record<string, Rule>
