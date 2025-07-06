@@ -35,8 +35,7 @@ export const WrapperStyle = (theme: Theme) => css`
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 80%;
-  margin-bottom: 100px;
+  padding-bottom: 120px;
   gap: ${theme.spacing.spacing10};
 `;
 
@@ -148,7 +147,6 @@ export const fixedBottomStyle = (theme: Theme) => css`
   position: fixed;
   max-width: 688px;
   bottom: 0;
-  padding-bottom: 100px;
   background-color: ${theme.colors.yellow.yellow500};
   padding: ${theme.spacing.spacing11};
 `;
