@@ -2,12 +2,34 @@ import { theme } from '@/styles/theme'
 import { typographyMixin } from '@/components/common'
 import styled from '@emotion/styled'
 import type { Product } from './types'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '@/contexts/AuthContext'
+import { ROUTH_PATH } from '@/Router'
 
 // * 실시간 급상승 상품 아이템 컴포넌트
-export const ProductItem = ({ product, index }: { product: Product; index: number }) => {
+export const ProductItem = ({ product }: { product: Product }) => {
+  const navigate = useNavigate()
+  const { isLogin } = useAuth()
+
+  // * 상품 클릭시 핸들러
+  const handleProductClick = () => {
+    // * 로그인 유무에 따른 페이지 이동
+    if (isLogin) {
+      // * 로그인 (유) -> 주문하기 페이지
+      navigate(`${ROUTH_PATH.ORDER}/${product.id}`)
+    } else {
+      // * 로그인 (무) -> 로그인 페이지 (로그인 이후 from을 남겨 )
+      navigate(ROUTH_PATH.LOGIN, { state: { from: `${ROUTH_PATH.ORDER}/${product.id}` } })
+    }
+  }
+
   return (
-    <ProductItemContainer>
-      <ProductRank rank={index + 1}>{index + 1}</ProductRank>
+    <ProductItemContainer
+      onClick={() => {
+        handleProductClick()
+      }}
+    >
+      <ProductRank rank={product.id}>{product.id}</ProductRank>
       <ProductImage src={product.imageURL} alt={product.name} />
       <ProductTitleContainer>
         <ProductBrand>{product.brandInfo.name}</ProductBrand>
@@ -43,6 +65,8 @@ const ProductItemContainer = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   gap: ${theme.spacing.spacing2};
+
+  cursor: pointer;
 `
 
 // * 실시간 급상승 상품 랭크
