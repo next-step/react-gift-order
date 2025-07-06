@@ -1,7 +1,4 @@
 import { ORDER_TEMPLATE_DATA, type OrderTemplate } from '@assets/orderTemplateData';
-//'@types/hasError' 이부분에 vsc가 빨간줄로 Cannot import type declaration files. Consider importing 'hasError' instead of '@types/hasError'.ts(6137)
-//라는 오류문을 보여주는데 혹시 해결하는 방법을 알 수 있을까요?
-// 해결 -> @types라는 경로는 node_modules에 있는 @types를 가져오려고 하기 때문에 오류가 발생
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
 import type { FieldErrors, UseFormRegister, UseFormSetValue } from 'react-hook-form';

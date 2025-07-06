@@ -6,15 +6,12 @@ import { StyledNavTextDiv } from '@/styles/Common/StyledNavTextDiv';
 import { URLS } from '@assets/urls';
 import { Spacer } from '@styles/Spacer';
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const NavigationBar = () => {
   const navigate = useNavigate();
   const [loginMessage, setLoginMessage] = useState('로그인');
-  const LOGIN_URL = URLS.login;
-  const MyPage = URLS.mypage;
   const isLogined = sessionStorage.getItem('username');
-  const location = useLocation();
 
   const handelBack = () => {
     const referrer = document.referrer; // 이전 페이지의 URL
@@ -39,9 +36,9 @@ const NavigationBar = () => {
   };
   const handelLogin = () => {
     if (isLogined) {
-      navigate(MyPage);
+      navigate(URLS.mypage);
     } else {
-      navigate(LOGIN_URL);
+      navigate(URLS.login);
     }
   };
   useEffect(() => {
