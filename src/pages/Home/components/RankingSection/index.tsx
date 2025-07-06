@@ -1,12 +1,15 @@
 import { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { rankingItems, genderItems, actionItems } from '@/data/ranking';
 import ItemCard from '@/components/common/ItemCard';
+import { useAuth } from '@/contexts/AuthContext';
 import * as S from './styles';
 
 const RankingSection = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isExpanded, setIsExpanded] = useState(false);
+  const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
   
   // URL에서 필터 값 읽기 (기본값 설정)
   const selectedGender = searchParams.get('gender') || 'ALL';
@@ -26,6 +29,14 @@ const RankingSection = () => {
       newParams.set('action', action);
       return newParams;
     });
+  };
+
+  const handleItemCardClick = () => {
+    if (isLoggedIn) {
+      navigate('/order');
+    } else {
+      navigate('/login');
+    }
   };
 
   return (
@@ -69,6 +80,7 @@ const RankingSection = () => {
             price={item.price.sellingPrice}
             rank={index + 1}
             variant="product"
+            onClick={handleItemCardClick}
           />
         ))}
       </S.Grid>

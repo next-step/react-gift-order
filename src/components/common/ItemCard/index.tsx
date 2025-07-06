@@ -5,6 +5,7 @@ interface BaseItemCardProps {
   imageUrl: string;
   title: string;
   variant: 'category' | 'product'; 
+  onClick?: () => void;
 }
 
 // 리뷰, 늘어날 가능성있는 부분 분리해서 사용 
@@ -17,12 +18,12 @@ interface RankingItemCardProps {
 type ItemCardProps = BaseItemCardProps & RankingItemCardProps;
 
 const ItemCard = (props: ItemCardProps) => {
-  const { imageUrl, title, subtitle, price, rank, variant } = props;
+  const { imageUrl, title, subtitle, price, rank, variant, onClick } = props;
   
   const isProductCard = variant === 'product';
   
   return (
-    <S.Card>
+    <S.Card onClick={onClick}>
       {isProductCard && rank !== undefined && <S.RankBadge rank={rank}>{rank}</S.RankBadge>}
       <S.Image src={imageUrl} alt={title} variant={variant} />
       
