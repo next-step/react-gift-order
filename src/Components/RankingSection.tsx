@@ -126,6 +126,7 @@ const Card = styled.article`
   flex-direction: column;
   align-items: flex-start;
   position: relative;
+  cursor: pointer;
 `
 
 const RankBadge = styled.span`
@@ -258,7 +259,6 @@ const RankingSection = () => {
                 navigate('/login', { state: { redirect: `/order/${item.id}` } });
               }
             }}
-            style={{ cursor: 'pointer' }}
           >
             <RankBadge>{item.id}</RankBadge>
             <ProductImg src={item.imageUrl} alt={item.name} />
