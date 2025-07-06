@@ -14,7 +14,7 @@ function GiftBanner() {
   const { user, isLoggedIn } = useAuth();
 
   const bannerMessage = isLoggedIn
-    ? `${getUserName(user?.email)}님! ${GIFT_BANNER_LABELS.BANNER_MESSAGE}`
+    ? `${getUserName(user.email)}님! ${GIFT_BANNER_LABELS.BANNER_MESSAGE}`
     : GIFT_BANNER_LABELS.BANNER_MESSAGE;
 
   return (

@@ -5,21 +5,14 @@ interface User {
   email: string;
 }
 
-type LoggedInState = {
-  user: User;
-  isLoggedIn: true;
+type AuthState =
+  | { user: null; isLoggedIn: false }
+  | { user: User; isLoggedIn: true };
+
+type AuthContextType = AuthState & {
   login: (email: string) => void;
   logout: () => void;
 };
-
-type LoggedOutState = {
-  user: null;
-  isLoggedIn: false;
-  login: (email: string) => void;
-  logout: () => void;
-};
-
-type AuthContextType = LoggedInState | LoggedOutState;
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -28,14 +21,20 @@ const SESSION_KEYS = deepFreeze({
 } as const);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [authState, setAuthState] = useState<AuthState>({
+    user: null,
+    isLoggedIn: false,
+  });
 
   useEffect(() => {
     const savedUser = sessionStorage.getItem(SESSION_KEYS.USER);
     if (savedUser) {
       try {
         const parsedUser = JSON.parse(savedUser);
-        setUser(parsedUser);
+        setAuthState({
+          user: parsedUser,
+          isLoggedIn: true,
+        });
       } catch (error) {
         console.error("sessionStorage 로드 실패:", error);
         sessionStorage.removeItem(SESSION_KEYS.USER);
@@ -46,28 +45,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = (email: string) => {
     const newUser: User = { email };
 
-    setUser(newUser);
+    setAuthState({
+      user: newUser,
+      isLoggedIn: true,
+    });
     sessionStorage.setItem(SESSION_KEYS.USER, JSON.stringify(newUser));
   };
 
   const logout = () => {
-    setUser(null);
+    setAuthState({
+      user: null,
+      isLoggedIn: false,
+    });
     sessionStorage.removeItem(SESSION_KEYS.USER);
   };
 
-  const value: AuthContextType = user
-    ? {
-        user,
-        login,
-        logout,
-        isLoggedIn: true,
-      }
-    : {
-        user: null,
-        login,
-        logout,
-        isLoggedIn: false,
-      };
+  const value: AuthContextType = {
+    ...authState,
+    login,
+    logout,
+  };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
