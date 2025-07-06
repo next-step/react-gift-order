@@ -1,6 +1,8 @@
 import styled from '@emotion/styled';
 import { products } from '@/data/products';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 const List = styled.ul`
   display: grid;
@@ -60,14 +62,27 @@ function ProductList() {
 
   // 더보기/접기 버튼 노출 조건
   const isAllVisible = visibleCount >= filtered.length;
-  const isFolded =
-    visibleCount === DEFAULT_VISIBLE && filtered.length > DEFAULT_VISIBLE;
+
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const handleItemClick = (id: number) => {
+    if (user && user.name) {
+      navigate(`/order/${id}`);
+    } else {
+      navigate(`/login?from=${encodeURIComponent(`/order/${id}`)}`);
+    }
+  };
 
   return (
     <>
       <List>
-        {visibleProducts.map((p, idx) => (
-          <Item key={p.id}>
+        {visibleProducts.map((p) => (
+          <Item
+            key={p.id}
+            onClick={() => handleItemClick(p.id)}
+            style={{ cursor: 'pointer' }}
+          >
             {/* 상품 이미지 */}
             <img
               src={p.imageURL}
