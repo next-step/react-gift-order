@@ -6,7 +6,7 @@ import { StyledNavTextDiv } from '@/styles/Common/StyledNavTextDiv';
 import { URLS } from '@assets/urls';
 import { Spacer } from '@styles/Spacer';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const NavigationBar = () => {
   const navigate = useNavigate();
@@ -14,9 +14,28 @@ const NavigationBar = () => {
   const LOGIN_URL = URLS.login;
   const MyPage = URLS.mypage;
   const isLogined = sessionStorage.getItem('username');
+  const location = useLocation();
 
   const handelBack = () => {
-    navigate(-1);
+    const referrer = document.referrer; // 이전 페이지의 URL
+    const currentOrigin = window.location.origin;
+
+    if (referrer) {
+      // referrer가 존재한다면, 해당 URL의 origin을 파싱합니다.
+      const referrerUrl = new URL(referrer);
+      const referrerOrigin = referrerUrl.origin;
+
+      if (referrerOrigin !== currentOrigin) {
+        // 이전 페이지의 origin이 현재 우리 사이트의 origin과 다르면
+        navigate(URLS.home); // 또는 navigate('/')
+      } else {
+        // 이전 페이지의 origin이 우리 사이트와 같으면
+        navigate(-1);
+      }
+    } else {
+      console.log('referrer 없음. 홈으로 이동합니다.');
+      navigate(URLS.home); // 또는 navigate('/')
+    }
   };
   const handelLogin = () => {
     if (isLogined) {
