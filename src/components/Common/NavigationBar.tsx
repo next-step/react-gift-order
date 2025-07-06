@@ -10,7 +10,9 @@ import { useNavigate } from 'react-router-dom';
 
 const NavigationBar = () => {
   const navigate = useNavigate();
-  const [loginMessage, setLoginMessage] = useState('로그인');
+  type LoginMessgageTypes = '로그인' | '마이페이지';
+
+  const [loginMessage, setLoginMessage] = useState<LoginMessgageTypes>('로그인');
   const isLogined = sessionStorage.getItem('username');
 
   const handelBack = () => {
