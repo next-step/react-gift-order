@@ -8,6 +8,7 @@ interface AuthContextType {
   isLoggedIn: boolean;
   userInfo: UserInfo | null;
   login: (email: string, password: string) => void;
+  logout: () => void;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);

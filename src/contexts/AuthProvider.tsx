@@ -22,11 +22,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setUserInfo(newuserInfo);
     sessionStorage.setItem('kakaotech/userInfo', JSON.stringify(newuserInfo));
   };
+
+  const logout = () => {
+    setUserInfo(null);
+    sessionStorage.removeItem('kakaotech/userInfo');
+  };
+
   //React 최소상태: isLoggedIn은 useInfo에 종속적이므로 별도 상태없이 변수로 분리했습니다.
   const isLoggedIn = !!userInfo;
 
   //프로젝트가 어떻게 커질지 몰라 useMemo처리했는데, 멘토님이라면 객체 vs useMemo로 하실지 궁급합니다.
-  const value = useMemo(() => ({isLoggedIn, userInfo, login}), [userInfo]);
+  const value = useMemo(() => ({isLoggedIn, userInfo, login, logout}), [userInfo]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
