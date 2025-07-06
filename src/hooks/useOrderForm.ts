@@ -4,10 +4,13 @@ import { useState, useCallback, type ChangeEvent } from 'react';
 interface BaiscOrderForm {
   sendName: string;
 }
+type CommonErrorMsgs = {
+  [K in keyof BaiscOrderForm]?: string; // 모든 필드를 optional로 하여 에러가 없으면 빈 문자열이나 undefined가 되도록 합니다.
+};
 
 interface BaiscOrderFormHook {
   commonFormValues: BaiscOrderForm;
-  commonErrorMsgs: string[];
+  commonErrorMsgs: CommonErrorMsgs;
   handleCommonChange: (e: ChangeEvent<HTMLInputElement>) => void; // input만 처리
   validateCommonForm: () => boolean;
   resetCommonForm: () => void;
@@ -19,7 +22,7 @@ export const useCommonOrderForm = (): BaiscOrderFormHook => {
   });
 
   // 에러 메시지 배열 인덱스: 0: sendName, 1: receiveName, 2: receiveTel, 3: count
-  const [commonErrorMsgs, setCommonErrorMsgs] = useState<string[]>(['', '', '', '']);
+  const [commonErrorMsgs, setCommonErrorMsgs] = useState<CommonErrorMsgs>({});
 
   const handleCommonChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -31,25 +34,22 @@ export const useCommonOrderForm = (): BaiscOrderFormHook => {
       }));
 
       // 입력 시 해당 필드의 에러 메시지 바로 초기화
-      const fieldNames = ['sendName'];
-      const fieldIndex = fieldNames.indexOf(name);
-      if (fieldIndex !== -1 && commonErrorMsgs[fieldIndex]) {
-        setCommonErrorMsgs((prevErrors) => {
-          const newErrors = [...prevErrors];
-          newErrors[fieldIndex] = '';
-          return newErrors;
-        });
+      if (commonErrorMsgs[name as keyof BaiscOrderForm]) {
+        setCommonErrorMsgs((prevErrors) => ({
+          ...prevErrors,
+          [name]: '', // 해당 필드의 에러 메시지를 빈 문자열로 설정
+        }));
       }
     },
     [commonErrorMsgs]
   ); // 의존성 배열에 commonErrorMsgs 추가
 
   const validateCommonForm = useCallback((): boolean => {
-    const localErrorMsgs: string[] = ['', '', '', '']; // 4개의 필드에 맞게 초기화
+    const localErrorMsgs: CommonErrorMsgs = {};
     let isValid = true;
 
     if (commonFormValues.sendName.trim() === '') {
-      localErrorMsgs[0] = '보내는 사람 이름을 입력해주세요.';
+      localErrorMsgs.sendName = '보내는 사람 이름을 입력해주세요.';
       isValid = false;
     }
 
@@ -61,7 +61,7 @@ export const useCommonOrderForm = (): BaiscOrderFormHook => {
     setCommonFormValues({
       sendName: '',
     });
-    setCommonErrorMsgs(['', '', '', '']);
+    setCommonErrorMsgs({});
   }, []);
 
   return {
