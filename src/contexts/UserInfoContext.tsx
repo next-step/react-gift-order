@@ -1,19 +1,22 @@
 import { createContext, useState, useEffect, useContext } from "react";
 
-const UserInfoContext = createContext<{
+type UserInfo = {
   email: string | null;
   name: string | null;
-} | null>(null);
+};
+
+type UserInfoContextType = UserInfo & {
+  setUserInfo: React.Dispatch<React.SetStateAction<UserInfo | null>>;
+};
+
+const UserInfoContext = createContext<UserInfoContextType | null>(null);
 
 export const UserInfoProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
-  const [userInfo, setUserInfo] = useState<{
-    email: string;
-    name: string;
-  } | null>(null);
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
   useEffect(() => {
     const sessionUserInfo = sessionStorage.getItem("kakaotech/userInfo");
@@ -26,11 +29,14 @@ export const UserInfoProvider = ({
 
   return (
     <UserInfoContext.Provider
-      value={{ email: userInfo?.email || null, name: userInfo?.name || null }}
+      value={{
+        email: userInfo?.email || null,
+        name: userInfo?.name || null,
+        setUserInfo,
+      }}
     >
       {children}
     </UserInfoContext.Provider>
   );
 };
-
 export const useUserInfo = () => useContext(UserInfoContext);

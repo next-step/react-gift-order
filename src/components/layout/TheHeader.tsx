@@ -4,22 +4,31 @@ import Logo from "@/components/UI/Logo";
 import User from "@/components/UI/User";
 import { useLocation, useNavigate } from "react-router";
 import { ROUTE_PATH } from "@/routes/paths";
+import { useUserInfo } from "@/contexts/UserInfoContext";
 
 const TheHeader = () => {
   const navigate = useNavigate();
-  const { pathname } = useLocation();
+  const location = useLocation();
+  const user = useUserInfo();
 
   const handleClickBack = () => {
     navigate(-1);
   };
   const handleClickLogo = () => {
-    if (pathname !== ROUTE_PATH.HOME) {
+    if (location.pathname !== ROUTE_PATH.HOME) {
       navigate(ROUTE_PATH.HOME);
     }
   };
   const handleClickUser = () => {
-    if (pathname !== ROUTE_PATH.LOGIN) {
-      navigate(ROUTE_PATH.LOGIN, { state: { from: pathname } });
+    if (
+      location.pathname !== ROUTE_PATH.MY_PAGE &&
+      location.pathname !== ROUTE_PATH.LOGIN
+    ) {
+      if (user?.email) {
+        navigate(ROUTE_PATH.MY_PAGE);
+      } else {
+        navigate(`${ROUTE_PATH.LOGIN}?redirect=${location.pathname}`);
+      }
     }
   };
 

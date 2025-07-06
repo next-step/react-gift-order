@@ -4,12 +4,14 @@ import { useLocation, useNavigate } from "react-router";
 import useFormInput from "@/hooks/useFormInput";
 import { checkEmailError, checkPasswordError } from "@/utils/validation";
 import ErrorMessage from "./ErrorMessage";
+import { useUserInfo } from "@/contexts/UserInfoContext";
 
 const LoginForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const emailInput = useFormInput(checkEmailError);
   const passwordInput = useFormInput(checkPasswordError);
+  const user = useUserInfo();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -20,8 +22,14 @@ const LoginForm = () => {
         email: emailInput.value,
       }),
     );
+    user?.setUserInfo({
+      email: emailInput.value,
+      name: emailInput.value.split("@")[0],
+    });
 
-    navigate(location.state?.from || ROUTE_PATH.HOME);
+    const redirectPath = new URLSearchParams(location.search).get("redirect");
+
+    navigate(redirectPath || ROUTE_PATH.HOME);
   };
 
   return (
