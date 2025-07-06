@@ -32,7 +32,7 @@ interface FilterButtonProps {
   label: string;
 }
 
-const FilterButton: React.FC<FilterButtonProps> = ({ active, onClick, icon, label }) => (
+const FilterButton = ({ active, onClick, icon, label }: FilterButtonProps) => (
   <Button active={active} onClick={onClick}>
     {icon}
     <Label>{label}</Label>

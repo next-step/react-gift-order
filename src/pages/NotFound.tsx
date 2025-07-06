@@ -38,7 +38,7 @@ const HomeButton = styled.button`
   }
 `;
 
-const NotFound: React.FC = () => {
+const NotFound = () => {
   const navigate = useNavigate();
   return (
     <Layout>

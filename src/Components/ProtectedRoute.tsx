@@ -1,12 +1,11 @@
-import React from "react";
-import { useLoginContext } from "../contexts/LoginContext";
-import { Navigate } from "react-router-dom";
+import { useLoginContext } from '@/contexts/LoginContext'
+import { Navigate } from 'react-router-dom'
 
 interface Props {
   children: React.ReactNode;
 }
 
-const ProtectedRoute: React.FC<Props> = ({ children }) => {
+const ProtectedRoute = ({ children }: Props) => {
   const { user } = useLoginContext();
   if (!user) {
     // 로그인하지 않은 경우 /login으로 리다이렉트

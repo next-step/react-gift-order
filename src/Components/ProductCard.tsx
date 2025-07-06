@@ -64,7 +64,7 @@ interface ProductCardProps {
   price: string;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ rank, image, brand, name, price }) => (
+const ProductCard = ({ rank, image, brand, name, price }: ProductCardProps) => (
   <Card>
     {rank && <RankBadge>{rank}</RankBadge>}
     <ProductImg src={image} alt={name} />

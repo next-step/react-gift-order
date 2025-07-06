@@ -81,7 +81,7 @@ const LoginButton = styled.button`
   }
 `;
 
-const Login: React.FC = () => {
+const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   // 커스텀 훅에서 모든 상태와 핸들러를 받아옴

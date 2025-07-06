@@ -260,7 +260,7 @@ const ErrorMessage = styled.div`
   margin: 4px 0 8px 4px;
 `;
 
-const Order: React.FC = () => {
+const Order = () => {
   const { id } = useParams();
   const product = products.find(p => String(p.id) === String(id));
   const [selectedId, setSelectedId] = useState<number | null>(cardTemplates[0]?.id ?? null);

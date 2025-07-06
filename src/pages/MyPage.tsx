@@ -63,7 +63,7 @@ const LogoutButton = styled.button`
   }
 `;
 
-const MyPage: React.FC = () => {
+const MyPage = () => {
   const { user, logout } = useLoginContext();
   const navigate = useNavigate();
 

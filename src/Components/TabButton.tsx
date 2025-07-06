@@ -19,7 +19,7 @@ interface TabButtonProps {
   children: React.ReactNode;
 }
 
-const TabButton: React.FC<TabButtonProps> = ({ active, onClick, children }) => (
+const TabButton = ({ active, onClick, children }: TabButtonProps) => (
   <Button active={active} onClick={onClick}>
     {children}
   </Button>
