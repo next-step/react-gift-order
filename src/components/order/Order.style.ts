@@ -8,7 +8,7 @@ export const ThumbNailStyle = (
 ) => css`
   flex-shrink: 0;
   padding: ${theme.spacing.spacing0};
-  border: ${selectedId === cardId ? "3px solid black" : "none"};
+  border: 3px solid ${selectedId === cardId ? "black" : "transparent"};
   border-radius: 4px;
 `;
 
