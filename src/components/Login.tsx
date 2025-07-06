@@ -53,12 +53,31 @@ const spacer48 = css`
 `;
 
 const Login = () => {
-  const { formValue, handleChange, handleBlur, isError, loginActivated } =
-    useLoginForm();
+  const {
+    formValue,
+    setFormValue,
+    isError,
+    setIsError,
+    validateField,
+    loginActivated,
+  } = useLoginForm();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const loginClicked = () => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    const field = name as 'email' | 'password';
+
+    setFormValue((prev) => ({ ...prev, [field]: value }));
+    setIsError((prev) => ({ ...prev, [field]: validateField(field, value) }));
+  };
+
+  const handleBlur = (field: 'email' | 'password') => {
+    const value = formValue[field];
+    setIsError((prev) => ({ ...prev, [field]: validateField(field, value) }));
+  };
+
+  const formSubmitted = () => {
     const from = location.state?.from?.pathname || '/';
     navigate(from, { replace: true });
   };
@@ -67,7 +86,7 @@ const Login = () => {
     <main css={mainStyle}>
       <img css={logoStyle} src={kakao_logo} alt="카카오 공식 로고" />
       <section css={sectionStyle}>
-        <form action="">
+        <form onSubmit={formSubmitted}>
           <LoginInput
             name="email"
             type="email"
@@ -92,12 +111,7 @@ const Login = () => {
 
           <div css={spacer48} />
 
-          <button
-            type="submit"
-            css={buttonStyle}
-            onClick={loginClicked}
-            disabled={!loginActivated}
-          >
+          <button css={buttonStyle} disabled={!loginActivated}>
             로그인
           </button>
         </form>
