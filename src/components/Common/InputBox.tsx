@@ -6,7 +6,7 @@ type InputBoxProps = {
   placeholder?: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onBlur?: () => void;
+  onBlur?: React.FocusEventHandler;
   error?: string;
 };
 
@@ -48,7 +48,7 @@ const StyledInput = styled.input<{ hasError: boolean }>`
     ${({ theme, hasError }) => (hasError ? theme.colors.critical : theme.colors.gray500)};
   padding: ${({ theme }) => theme.spacing.spacing2};
   font-size: ${({ theme }) => theme.font.body1Regular.size};
-
+  background-color: ${({ theme }) => theme.colors.backgroundDefault};
   &:focus {
     outline: none;
     border-bottom-color: ${({ theme }) => theme.colors.gray700};
@@ -61,7 +61,7 @@ const StyledInput = styled.input<{ hasError: boolean }>`
 `;
 
 const ErrorText = styled.span`
-  color: red;
+  color: ${({ theme }) => theme.colors.critical};
   font-size: ${({ theme }) => theme.font.label2Regular.size};
   margin-top: 4px;
 `;
