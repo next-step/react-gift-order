@@ -60,10 +60,10 @@ const OrderContainer = () => {
           placeholder='이름을 입력하세요'
           value={sendName}
           onChange={handleCommonChange} // useCommonOrderForm의 handleCommonChange
-          hasError={!!commonErrorMsgs[0]} // commonErrorMsgs 인덱스에 맞게 수정
+          hasError={!!commonErrorMsgs.sendName} // commonErrorMsgs 인덱스에 맞게 수정
         />
-        {commonErrorMsgs[0] ? (
-          <ErrorMsg>{commonErrorMsgs[0]}</ErrorMsg>
+        {commonErrorMsgs.sendName ? (
+          <ErrorMsg>{commonErrorMsgs.sendName}</ErrorMsg>
         ) : (
           <p className='margin-left-20 label2Regular'>* 실제 선물 발송시 발신자이름으로 반영되는 정보입니다.</p>
         )}
@@ -81,10 +81,10 @@ const OrderContainer = () => {
             placeholder='이름을 입력하세요'
             value={receiveName}
             onChange={handleCommonChange}
-            hasError={!!commonErrorMsgs[1]}
+            hasError={!!commonErrorMsgs.receiveName}
           />
         </div>
-        {commonErrorMsgs[1] && <ErrorMsg>{commonErrorMsgs[1]}</ErrorMsg>}
+        {commonErrorMsgs.receiveName && <ErrorMsg>{commonErrorMsgs.receiveName}</ErrorMsg>}
         <div>
           <p className='basic-label'>전화번호</p>
           <SyltedOrderInput
@@ -94,10 +94,10 @@ const OrderContainer = () => {
             placeholder='전화번호를 입력하세요'
             value={receiveTel}
             onChange={(e) => handleCommonChange(e)}
-            hasError={!!commonErrorMsgs[2]}
+            hasError={!!commonErrorMsgs.receiveTel}
           />
         </div>
-        {commonErrorMsgs[2] && <ErrorMsg>{commonErrorMsgs[2]}</ErrorMsg>}
+        {commonErrorMsgs.receiveTel && <ErrorMsg>{commonErrorMsgs.receiveTel}</ErrorMsg>}
         <div>
           <p className='basic-label'>수량</p>
           <SyltedOrderInput
@@ -108,10 +108,10 @@ const OrderContainer = () => {
             min='1'
             value={count}
             onChange={handleCommonChange}
-            hasError={!!commonErrorMsgs[3]}
+            hasError={!!commonErrorMsgs.count}
           />
         </div>
-        {commonErrorMsgs[3] && <ErrorMsg>{commonErrorMsgs[3]}</ErrorMsg>}
+        {commonErrorMsgs.count && <ErrorMsg>{commonErrorMsgs.count}</ErrorMsg>}
       </StyledReceivePersonContainer>
 
       <StyledItemInfoContainer className='item-info background-default'>
