@@ -9,6 +9,7 @@ interface InputProps {
   onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
   css: SerializedStyles;
   message: string;
+  className?: string;
 }
 
 const Input = ({
@@ -18,14 +19,16 @@ const Input = ({
   onBlur,
   onChange,
   message,
+  className,
 }: InputProps) => {
   return (
-    <div>
+    <div css={wrapperStyle}>
       <input
         type={type}
         placeholder={placeholder}
         onChange={onChange}
         onBlur={onBlur}
+        className={className}
         css={css}
       />
       <p css={errorMessageStyle}>{message}</p>
@@ -37,6 +40,13 @@ const errorMessageStyle = (theme: Theme) => css`
   color: ${theme.colors.red.red700};
   font-size: ${theme.typography.label2Regular.size};
   margin-top: ${theme.spacing.spacing1};
+  padding-bottom: ${theme.spacing.spacing10};
+`;
+
+const wrapperStyle = css`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 `;
 
 export default Input;

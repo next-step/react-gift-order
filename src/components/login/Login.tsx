@@ -65,7 +65,6 @@ const Login = () => {
           placeholder="이메일"
           message={email.message}
         ></Input>
-
         <Input
           onChange={password.onChange}
           onBlur={password.onBlur}
@@ -126,14 +125,15 @@ const inputContainerStyle = (theme: Theme) => css`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  width: 80%;
   gap: ${theme.spacing.spacing8};
   padding: ${theme.spacing.spacing6};
+  padding: ${theme.spacing.spacing0};
 `;
 
 const inputStyle = (theme: Theme) => css`
-  width: 60%;
-  padding: ${theme.spacing.spacing4};
+  width: 100%;
+  padding: ${theme.spacing.spacing8};
   border: none;
   border-bottom: 1px solid ${theme.colors.gray.gray500};
   font-size: ${theme.typography.body1Regular.size};
@@ -151,4 +151,5 @@ const containerStyle = () => css`
   align-items: center;
   justify-content: center;
   height: 100vh;
+  width: 100%;
 `;
