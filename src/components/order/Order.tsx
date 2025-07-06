@@ -37,13 +37,16 @@ const Order: React.FC = () => {
   const SenderNameRef = useRef<HTMLInputElement>(null);
   const ReceiverNameRef = useRef<HTMLInputElement>(null);
   const PhoneNumberRef = useRef<HTMLInputElement>(null);
+  const GiftMessageRef = useRef<HTMLTextAreaElement>(null);
 
+  const [messageError, setMessageError] = useState("");
   const [senderError, setSenderError] = useState("");
   const [receiverError, setReceiverError] = useState("");
   const [phoneError, setPhoneError] = useState("");
   const [countError, setCountError] = useState("");
 
   const handleSubmit = () => {
+    const msg = GiftMessageRef.current?.value.trim() ?? "";
     const sender = SenderNameRef.current?.value.trim() ?? "";
     const receiver = ReceiverNameRef.current?.value.trim() ?? "";
     const phone = PhoneNumberRef.current?.value.trim() ?? "";
@@ -77,8 +80,14 @@ const Order: React.FC = () => {
     } else {
       setCountError("");
     }
+    if (msg === "") {
+      setMessageError("메시지를 입력해주세요.");
+      isValid = false;
+    } else {
+      setMessageError("");
+    }
     if (!isValid) return;
-    alert("통과!");
+    alert("결제 완료!");
   };
 
   const selectedGiftId = id ? parseInt(id, 10) : undefined;
@@ -88,8 +97,6 @@ const Order: React.FC = () => {
     const price = Number(selectedGift?.price.sellingPrice || 0);
     setTotalPrice(quantity * price);
   }, [selectedGift?.price.sellingPrice, quantity]);
-
-  // const nameValidator = () => {};
 
   return (
     <div css={WrapperStyle(theme)}>
@@ -117,7 +124,8 @@ const Order: React.FC = () => {
         ></img>
       </div>
       <div css={MessageStyle(theme)}>
-        <textarea defaultValue="축하해요."></textarea>
+        <textarea ref={GiftMessageRef} defaultValue="축하해요."></textarea>
+        {messageError && <p css={ErrorMessageStyle}>{messageError}</p>}
       </div>
 
       <div css={FormSectionWrapperStyle(theme)}>
