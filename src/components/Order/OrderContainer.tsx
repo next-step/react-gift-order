@@ -7,7 +7,6 @@ import { Spacer } from '@styles/Spacer';
 import { StyledItemInfoContainer } from '@styles/Order/OrderContainer/StyledItemInfoContainer';
 import { StyledOrderButton } from '@styles/Order/OrderContainer/StyledOrderButton';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import RecipientsModal from './RecipientsModalContainer';
 import SenderContainer from './SenderContainer';
 import type { OrderFormValue } from '@/types/OrderFormValues';
 import RecipientsModalContainer from './RecipientsModalContainer';
@@ -48,6 +47,7 @@ const OrderContainer: FC = () => {
   const onSubmit: SubmitHandler<OrderFormValue> = (data) => {
     alert(`Name: ${data.sendName}, Message: ${data.msg}`);
   };
+  const currentRecipients = watch('recipients');
 
   return (
     <StyledTopestDiv>
@@ -59,7 +59,7 @@ const OrderContainer: FC = () => {
           register={register} // senderName, senderContact 필드 등록을 위해 register 전달
           errors={errors} // 해당 필드들의 오류 정보 전달
         />
-        <RecipientsModalContainer />
+        <RecipientsModalContainer control={control} errors={errors} currentRecipients={currentRecipients} />
 
         <StyledItemInfoContainer className='item-info background-default'>
           <p className='title2Bold basic-label'>상품 정보</p>
