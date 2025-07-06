@@ -12,7 +12,7 @@ const GiftRankingHeader = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const location = useLocation();
-  ("");
+
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const initTarget = searchParams.get("target") || "ALL";
