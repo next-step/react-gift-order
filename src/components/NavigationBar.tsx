@@ -19,7 +19,8 @@ const NavigationBar = () => {
           }
         }}
         css={iconButtonStyles(theme)}
-        aria-label="뒤로가기">
+        aria-label="뒤로가기"
+      >
         <IoArrowBackOutline />
       </button>
 
@@ -27,10 +28,11 @@ const NavigationBar = () => {
 
       <button
         onClick={() => {
-          navigate("/login");
+          navigate("/my");
         }}
         css={iconButtonStyles(theme)}
-        aria-label="프로필">
+        aria-label="프로필"
+      >
         <IoPersonOutline />
       </button>
     </div>
