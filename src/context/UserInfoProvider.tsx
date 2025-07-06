@@ -2,7 +2,6 @@ import { createContext, useContext, useState, type ReactNode } from "react";
 
 type User = {
   email: string | null;
-  password: string | null;
 };
 
 type UserInfoContextType = {

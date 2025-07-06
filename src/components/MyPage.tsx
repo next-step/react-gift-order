@@ -12,9 +12,8 @@ const MyPage: React.FC = () => {
 
   useEffect(() => {
     const email = sessionStorage.getItem("email");
-    const password = sessionStorage.getItem("password");
-    setUser({ email, password });
-    if (!email || !password) {
+    setUser({ email });
+    if (!email) {
       navigate("/login");
     }
   }, []);
@@ -29,7 +28,6 @@ const MyPage: React.FC = () => {
       <button
         onClick={() => {
           sessionStorage.removeItem("email");
-          sessionStorage.removeItem("password");
           navigate("/login");
         }}
         css={buttonStyle(theme)}

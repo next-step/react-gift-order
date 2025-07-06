@@ -79,10 +79,8 @@ const Login = () => {
         onClick={() => {
           if (isFormValid) {
             sessionStorage.setItem("email", email.string);
-            sessionStorage.setItem("password", password.string);
             setUser({
               email: email.string,
-              password: password.string,
             });
             navigate("/my");
           }
