@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useMemo, useCallback } from "react";
 import type { ReactNode } from "react";
 
 export interface User {
@@ -48,18 +48,27 @@ export function LoginProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const login = (userInfo: User) => {
+  // login 함수 메모이제이션
+  const login = useCallback((userInfo: User) => {
     setUser(userInfo);
     sessionStorage.setItem("user", JSON.stringify(userInfo));
-  };
+  }, []);
 
-  const logout = () => {
+  // logout 함수 메모이제이션
+  const logout = useCallback(() => {
     setUser(null);
     sessionStorage.removeItem("user");
-  };
+  }, []);
+
+  // Context value 메모이제이션
+  const contextValue = useMemo(() => ({
+    user,
+    login,
+    logout,
+  }), [user, login, logout]);
 
   return (
-    <LoginContext.Provider value={{ user, login, logout }}>
+    <LoginContext.Provider value={contextValue}>
       {children}
     </LoginContext.Provider>
   );
