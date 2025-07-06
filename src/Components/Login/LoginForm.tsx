@@ -54,7 +54,7 @@ const LoginForm = () => {
   } = useLoginForm();
 
   const { login } = useAuth();
-  
+
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/';

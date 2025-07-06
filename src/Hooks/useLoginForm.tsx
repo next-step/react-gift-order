@@ -7,7 +7,6 @@ export const useLoginForm = () => {
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  
 
   const handleEmailBlur = () => {
     if (!email) {
@@ -29,8 +28,7 @@ export const useLoginForm = () => {
     }
   };
 
-  const isValid =
-    !emailError && !passwordError && Boolean(email) && password.length >= 8;
+  const isValid = !emailError && !passwordError && Boolean(email) && password.length >= 8;
 
   return {
     email,

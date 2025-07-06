@@ -24,7 +24,6 @@ const LoginIcon = () => {
   };
 
   return <User onClick={handleClick} />;
-
 };
 
 export default LoginIcon;
