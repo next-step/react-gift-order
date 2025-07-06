@@ -2,7 +2,7 @@ import { ThemeProvider } from '@emotion/react';
 import GlobalStyle from '@/styles/globalStyle';
 import GlobalReset from '@/styles/GlobalReset';
 import { theme } from '@/styles/theme';
-import { Router } from '@/components/router/Router';
+import { Router } from '@/router/Router';
 
 function App() {
   return (

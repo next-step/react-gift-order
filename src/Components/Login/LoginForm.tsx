@@ -3,6 +3,7 @@ import LogoImg from '@/Assets/icons/logo.png';
 import LoginButton from '@/components/login/LoginButton';
 import { useLoginForm } from '@/hooks/useLoginForm';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '@/context/AuthContext';
 
 const Container = styled.div`
   width: 100%;
@@ -52,6 +53,8 @@ const LoginForm = () => {
     handlePasswordBlur,
   } = useLoginForm();
 
+  const { login } = useAuth();
+  
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/';
@@ -59,6 +62,9 @@ const LoginForm = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!isValid) return;
+
+    const userData = { email: email };
+    login(userData);
 
     navigate(from, { replace: true });
   };
