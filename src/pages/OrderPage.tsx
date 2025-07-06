@@ -6,6 +6,7 @@ import MobileLayout from '@/layouts/MobileLayout';
 import NavBar from '@/components/NavBar';
 import CardPicker from '@/components/order/CardPicker';
 import CardMessage from '@/components/order/CardMessage';
+import SenderInfo from '@/components/order/SenderInfo';
 
 import { products } from '@/mock/productsData';
 import { cardTemplates } from '@/mock/cardTemplates';
@@ -22,6 +23,7 @@ export default function OrderPage() {
   const product = products.find((p) => p.id === Number(id));
   const [tpl, setTpl] = useState(cardTemplates[0]);
   const [message, setMessage] = useState(tpl.defaultTextMessage);
+  const [sender, setSender] = useState('');
 
   if (!product) return <div>상품을 찾을 수 없습니다.</div>;
 
@@ -42,6 +44,8 @@ export default function OrderPage() {
         <CardMessage tpl={tpl} message={message} onMessageChange={setMessage} />
 
         {/* 보내는 사람 */}
+        <SenderInfo sender={sender} onChange={setSender} />
+
         {/* 받는 사람 */}
         {/* 상품 정보 */}
       </Wrapper>

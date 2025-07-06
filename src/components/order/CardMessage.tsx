@@ -7,6 +7,7 @@ const Content = styled.section`
   flex-direction: column;
   align-items: center;
   background: #fff;
+  margin-bottom: 8px;
 `;
 
 const BigImg = styled.img`
