@@ -98,7 +98,7 @@ const OrderCardTemplateContainer = ({ msg, onMsgChange, msgError, setMsg }: Orde
           className='body2Regular'
           value={msg}
           onChange={onMsgChange} // 이제 handleMsgChange가 textarea 이벤트만 받도록 명확히 함
-        ></textarea>
+        />
         {msgError && <ErrorMessage>{msgError}</ErrorMessage>}
       </StyledOrderCardContainer>
     </StyledOrderTemplateContainer>
