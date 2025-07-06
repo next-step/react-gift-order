@@ -1,3 +1,4 @@
+import PRODUCT_INFO_CONSTANTS from "../../constants/productInfo";
 import {
   ProductSection,
   SectionTitle,
@@ -23,20 +24,24 @@ function ProductInfo({ product, quantity }: ProductInfoProps) {
 
   return (
     <ProductSection>
-      <SectionTitle>상품 정보</SectionTitle>
+      <SectionTitle>{PRODUCT_INFO_CONSTANTS.TITLE}</SectionTitle>
       <ProductContainer>
         <ProductImage src={product.imageURL} alt={product.name} />
         <ProductDetails>
           <ProductName>{product.name}</ProductName>
           <BrandName>{product.brandInfo.name}</BrandName>
           <PriceContainer>
-            <PriceLabel>상품가</PriceLabel>
-            <Price>{product.price.sellingPrice.toLocaleString()}원</Price>
+            <PriceLabel>{PRODUCT_INFO_CONSTANTS.PRICE_LABEL}</PriceLabel>
+            <Price>
+              {product.price.sellingPrice.toLocaleString()}
+              {PRODUCT_INFO_CONSTANTS.WON}
+            </Price>
           </PriceContainer>
         </ProductDetails>
       </ProductContainer>
       <OrderButton type="submit">
-        {totalPrice.toLocaleString()}원 주문하기
+        {totalPrice.toLocaleString()}
+        {PRODUCT_INFO_CONSTANTS.WON} {PRODUCT_INFO_CONSTANTS.ORDER_BUTTON_LABEL}
       </OrderButton>
     </ProductSection>
   );
