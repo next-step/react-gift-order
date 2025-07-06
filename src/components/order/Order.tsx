@@ -37,7 +37,6 @@ const Order: React.FC = () => {
   const SenderNameRef = useRef<HTMLInputElement>(null);
   const ReceiverNameRef = useRef<HTMLInputElement>(null);
   const PhoneNumberRef = useRef<HTMLInputElement>(null);
-  const CountRef = useRef<HTMLInputElement>(null);
 
   const [senderError, setSenderError] = useState("");
   const [receiverError, setReceiverError] = useState("");
@@ -48,7 +47,6 @@ const Order: React.FC = () => {
     const sender = SenderNameRef.current?.value.trim() ?? "";
     const receiver = ReceiverNameRef.current?.value.trim() ?? "";
     const phone = PhoneNumberRef.current?.value.trim() ?? "";
-    const count = CountRef.current?.value.trim() ?? "";
 
     let isValid = true;
 
@@ -73,7 +71,7 @@ const Order: React.FC = () => {
       setPhoneError("");
     }
 
-    if (Number(count) < 1) {
+    if (Number(quantity) < 1) {
       setCountError("수량은 최소 1개입니다.");
       isValid = false;
     } else {
@@ -167,7 +165,6 @@ const Order: React.FC = () => {
             <span>수량</span>
             <div css={InputWrapperStyle}>
               <input
-                ref={CountRef}
                 type="number"
                 min={1}
                 value={quantity}
