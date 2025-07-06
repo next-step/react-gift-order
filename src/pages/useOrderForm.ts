@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function useFormField(initial = "") {
+export default function useOrderForm(initial = "") {
   const [value, setValue] = useState(initial);
   const [error, setError] = useState(false);
 
@@ -15,5 +15,12 @@ export default function useFormField(initial = "") {
     return !hasError;
   };
 
-  return { value, onChange, error, validate };
+  const phonevalidate = () => {
+    const phoneRegex = /^01[016789]-?\d{3,4}-?\d{4}$/;
+    const isValid = phoneRegex.test(value.trim());
+    setError(!isValid);
+    return isValid;
+  };
+  
+  return { value, onChange, error, validate, phonevalidate };
 }

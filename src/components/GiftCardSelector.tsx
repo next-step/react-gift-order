@@ -2,15 +2,25 @@ import Spacing from "@/components/Spacing";
 import styled from "@emotion/styled";
 import { ordercard } from "@/data/ordercard";
 import { useState, useEffect } from "react";
+import ErrorMessage from "./ErrorMessage";
 
-export default function GiftCardSelector() {
+type Props = {
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  error: boolean;
+};
+
+export default function GiftCardSelector({ value, onChange, error }: Props) {
   const [selectedCardIndex, setSelectedCardIndex] = useState(0);
-  const [text, setText] = useState(ordercard[0].defaultTextMessage);
   
   useEffect(() => {
-    setText(ordercard[selectedCardIndex].defaultTextMessage);
-  }, [selectedCardIndex]);
-  
+    onChange({
+      target: {
+        value: ordercard[selectedCardIndex].defaultTextMessage,
+      },
+    } as React.ChangeEvent<HTMLTextAreaElement>);
+  }, [selectedCardIndex, onChange]);
+
   return (
     <GiftCardWrapper>
       <GiftBox>
@@ -44,9 +54,13 @@ export default function GiftCardSelector() {
         <TextWrapper>
           <Text
             placeholder="메시지를 입력해주세요."
-            value={text}
-            onChange={(e) => setText(e.target.value)}
+            value={value}
+            onChange={onChange}
+            error={error}
           />
+          {error && (
+            <ErrorMessage>메시지를 입력해주세요.</ErrorMessage>
+          )}
         </TextWrapper>
       </TextBox>
       <Spacing height="32px" />
@@ -148,7 +162,7 @@ const TextWrapper = styled.div`
   width: 100%;
 `;
 
-const Text = styled.textarea`
+const Text = styled.textarea<{ error?: boolean }>`
   width: 100%;
   box-sizing: border-box;
   color: ${({ theme }) => theme.colors.gray[900]};
@@ -159,7 +173,9 @@ const Text = styled.textarea`
   padding: 8px 12px;
   border-width: 1px;
   border-radius: 8px;
-  border-color: ${({ theme }) => theme.colors.gray[400]};
+  border-color: ${({ theme, error }) => 
+    error? theme.colors.state.critical 
+  : theme.colors.gray[400]};
 
   &:focus {
     outline: none;
