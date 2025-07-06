@@ -20,7 +20,7 @@ interface Gift {
 
 interface GiftObjectProps {
   gift: Gift;
-  onClick?: () => void; // 선택적 onClick prop 추가
+  onClick?: () => void;
 }
 
 const GiftObject = ({ gift, onClick }: GiftObjectProps) => {
