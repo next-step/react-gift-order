@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { useState } from 'react'
 import { ranking } from '@/data/ranking'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 import Spacing from './Spacing'
 
 const genderOptions = [
@@ -17,6 +17,8 @@ type Gender = 'ALL' | '여성' | '남성' | '청소년'
 type RankType = '받고 싶어한' | '많이 선물한' | '위시로 받은'
 
 export default function TimeRanking() {
+  const navigate = useNavigate();
+
   const [searchParams, setSearchParams] = useSearchParams()
   const [selectedGender, setSelectedGender] = useState(() => searchParams.get('gender') || 'ALL')
   const [selectedRankType, setSelectedRankType] = useState(() => searchParams.get('rankType') || '받고 싶어한')
@@ -32,6 +34,15 @@ export default function TimeRanking() {
     setSelectedRankType(value)
     searchParams.set('rankType', value)
     setSearchParams(searchParams)
+  }
+
+  const goToOrder = (itemId: number) => {
+    const userInfo = sessionStorage.getItem("userInfo");
+    if (userInfo)
+      navigate(`/order/${itemId}`);
+    else 
+      navigate('/login', {
+      state: { from: `/order/${itemId}`}});
   }
 
   const filteredRanking = ranking.filter(() => true)
@@ -75,7 +86,7 @@ export default function TimeRanking() {
 
       <CardGrid>
         {itemsToShow.map((item, index) => (
-          <Card key={`${item.id}-${index}`}>
+          <Card key={`${item.id}-${index}`} onClick={() => goToOrder(item.id)}>
             <RankLabel>{index + 1}</RankLabel>
             <Image src={item.imageURL} alt={item.name} />
             <Spacing height="12px" />
@@ -178,6 +189,7 @@ const CardGrid = styled.div`
 
 const Card = styled.div`
   position: relative;
+  cursor: pointer;
 `
 
 const RankLabel = styled.div`

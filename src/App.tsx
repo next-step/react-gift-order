@@ -6,7 +6,8 @@ import HomePage from '@/pages/HomePage'
 import LoginPage from '@/pages/Login/LoginPage'
 import NotFoundPage from '@/pages/NotfoundPage'
 import { MainLayout } from './components/MainLayout'
-import MyPage from './pages/MyPage'
+import MyPage from '@/pages/MyPage'
+import OrderPage from '@/pages/OrderPage'
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/login" element={<MainLayout><LoginPage /></MainLayout>} />
           <Route path="*" element={<MainLayout><NotFoundPage /></MainLayout>} />
           <Route path="/my" element={<MainLayout><MyPage /></MainLayout>} />
+          <Route path="/order/:itemId" element={<MainLayout><OrderPage /></MainLayout>} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
