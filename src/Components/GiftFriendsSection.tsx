@@ -43,7 +43,7 @@ const GuideText = styled.div`
 
 const GiftFriendsSection = () => {
   const { user } = useLoginContext();
-  const userId = user ? user.email.split('@')[0] : '';
+  const username = user ? user.email.split('@')[0] : '';
   return (
     <Section>
       <Card>
@@ -51,7 +51,7 @@ const GiftFriendsSection = () => {
           <PlusIcon fontSize="inherit" />
         </AddCircle>
         <GuideText>
-          {userId ? `${userId}님! 선물할 친구를 선택해 주세요.` : '선물할 친구를 선택해 주세요.'}
+          {username ? `${username}님! 선물할 친구를 선택해 주세요.` : '선물할 친구를 선택해 주세요.'}
         </GuideText>
       </Card>
     </Section>

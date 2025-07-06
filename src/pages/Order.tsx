@@ -1,9 +1,118 @@
-import { useState } from "react";
+import { useReducer } from "react";
 import { Layout } from "../Components/layout/Layout";
 import styled from "@emotion/styled";
 import { cardTemplates } from "../Components/cardTemplates";
 import { useParams } from "react-router-dom";
 import { products } from "../data/products";
+
+// ===== 타입 정의 =====
+interface OrderState {
+  selectedId: number | null;
+  message: string;
+  sender: string;
+  receiverName: string;
+  receiverPhone: string;
+  quantity: number;
+  messageError: string;
+  senderError: string;
+}
+
+type OrderAction =
+  | { type: 'SELECT_CARD'; payload: number }
+  | { type: 'UPDATE_MESSAGE'; payload: string }
+  | { type: 'UPDATE_SENDER'; payload: string }
+  | { type: 'UPDATE_RECEIVER_NAME'; payload: string }
+  | { type: 'UPDATE_RECEIVER_PHONE'; payload: string }
+  | { type: 'UPDATE_QUANTITY'; payload: number }
+  | { type: 'SET_MESSAGE_ERROR'; payload: string }
+  | { type: 'SET_SENDER_ERROR'; payload: string }
+  | { type: 'CLEAR_MESSAGE_ERROR' }
+  | { type: 'CLEAR_SENDER_ERROR' };
+
+// ===== 초기 상태 =====
+const initialState: OrderState = {
+  selectedId: cardTemplates[0]?.id ?? null,
+  message: cardTemplates[0]?.defaultTextMessage ?? "",
+  sender: "",
+  receiverName: "",
+  receiverPhone: "",
+  quantity: 1,
+  messageError: "",
+  senderError: "",
+};
+
+// ===== 리듀서 함수 =====
+const orderReducer = (state: OrderState, action: OrderAction): OrderState => {
+  switch (action.type) {
+    case 'SELECT_CARD':
+      const selectedCard = cardTemplates.find(card => card.id === action.payload);
+      return {
+        ...state,
+        selectedId: action.payload,
+        message: selectedCard?.defaultTextMessage ?? "",
+        messageError: "", // 카드 선택 시 메시지 에러 초기화
+      };
+    
+    case 'UPDATE_MESSAGE':
+      return {
+        ...state,
+        message: action.payload,
+        messageError: "", // 메시지 입력 시 에러 초기화
+      };
+    
+    case 'UPDATE_SENDER':
+      return {
+        ...state,
+        sender: action.payload,
+        senderError: "", // 발신자 입력 시 에러 초기화
+      };
+    
+    case 'UPDATE_RECEIVER_NAME':
+      return {
+        ...state,
+        receiverName: action.payload,
+      };
+    
+    case 'UPDATE_RECEIVER_PHONE':
+      return {
+        ...state,
+        receiverPhone: action.payload,
+      };
+    
+    case 'UPDATE_QUANTITY':
+      return {
+        ...state,
+        quantity: action.payload,
+      };
+    
+    case 'SET_MESSAGE_ERROR':
+      return {
+        ...state,
+        messageError: action.payload,
+      };
+    
+    case 'SET_SENDER_ERROR':
+      return {
+        ...state,
+        senderError: action.payload,
+      };
+    
+    case 'CLEAR_MESSAGE_ERROR':
+      return {
+        ...state,
+        messageError: "",
+      };
+    
+    case 'CLEAR_SENDER_ERROR':
+      return {
+        ...state,
+        senderError: "",
+      };
+    
+    default:
+      return state;
+  }
+};
 
 // ===== 카드 미리보기 관련 스타일 =====
 const PreviewWrapper = styled.div`
@@ -271,37 +380,28 @@ const Order = () => {
   // ===== 상태 관리 =====
   const { id } = useParams();
   const product = products.find(p => String(p.id) === String(id));
-  const [selectedId, setSelectedId] = useState<number | null>(cardTemplates[0]?.id ?? null);
-  const [message, setMessage] = useState(cardTemplates[0]?.defaultTextMessage ?? "");
-  const [sender, setSender] = useState("");
-  const [receiverName, setReceiverName] = useState("");
-  const [receiverPhone, setReceiverPhone] = useState("");
-  const [quantity, setQuantity] = useState(1);
-  const [messageError, setMessageError] = useState("");
-  const [senderError, setSenderError] = useState("");
+  const [state, dispatch] = useReducer(orderReducer, initialState);
 
-  const selectedCard = cardTemplates.find(card => card.id === selectedId);
+  const selectedCard = cardTemplates.find(card => card.id === state.selectedId);
 
   // ===== 이벤트 핸들러 =====
   // 카드 선택 시 메시지 입력란에 기본 메시지 세팅
   const handleSelect = (id: number) => {
-    setSelectedId(id);
-    const card = cardTemplates.find(c => c.id === id);
-    setMessage(card?.defaultTextMessage || "");
+    dispatch({ type: 'SELECT_CARD', payload: id });
   };
 
   const handleOrder = () => {
-    if (!message.trim()) {
-      setMessageError("메시지를 입력해주세요.");
+    if (!state.message.trim()) {
+      dispatch({ type: 'SET_MESSAGE_ERROR', payload: "메시지를 입력해주세요." });
       return;
     } else {
-      setMessageError("");
+      dispatch({ type: 'CLEAR_MESSAGE_ERROR' });
     }
-    if (!sender.trim()) {
-      setSenderError("보내는 사람 이름을 입력해주세요.");
+    if (!state.sender.trim()) {
+      dispatch({ type: 'SET_SENDER_ERROR', payload: "보내는 사람 이름을 입력해주세요." });
       return;
     } else {
-      setSenderError("");
+      dispatch({ type: 'CLEAR_SENDER_ERROR' });
     }
   };
 
@@ -313,10 +413,10 @@ const Order = () => {
         {cardTemplates.map(card => (
           <CardItem
             key={card.id}
-            selected={selectedId === card.id}
+            selected={state.selectedId === card.id}
             onClick={() => handleSelect(card.id)}
           >
-            <Thumb src={card.thumbUrl} alt={card.defaultTextMessage} selected={selectedId === card.id} />
+            <Thumb src={card.thumbUrl} alt={card.defaultTextMessage} selected={state.selectedId === card.id} />
           </CardItem>
         ))}
       </CardList>
@@ -327,14 +427,14 @@ const Order = () => {
           <>
             <PreviewImage src={selectedCard.imageUrl} alt={selectedCard.defaultTextMessage} />
             <MessageInput
-              value={message}
+              value={state.message}
               onChange={e => {
-                setMessage(e.target.value);
-                if (messageError) setMessageError("");
+                dispatch({ type: 'UPDATE_MESSAGE', payload: e.target.value });
+                if (state.messageError) dispatch({ type: 'CLEAR_MESSAGE_ERROR' });
               }}
               placeholder="메시지를 입력하세요."
             />
-            {messageError && <ErrorMessage>{messageError}</ErrorMessage>}
+            {state.messageError && <ErrorMessage>{state.messageError}</ErrorMessage>}
           </>
         )}
       </PreviewWrapper>
@@ -345,13 +445,13 @@ const Order = () => {
         <SenderInput
           type="text"
           placeholder="이름을 입력하세요."
-          value={sender}
+          value={state.sender}
           onChange={e => {
-            setSender(e.target.value);
-            if (senderError) setSenderError("");
+            dispatch({ type: 'UPDATE_SENDER', payload: e.target.value });
+            if (state.senderError) dispatch({ type: 'CLEAR_SENDER_ERROR' });
           }}
         />
-        {senderError && <ErrorMessage>{senderError}</ErrorMessage>}
+        {state.senderError && <ErrorMessage>{state.senderError}</ErrorMessage>}
         <SenderGuide>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</SenderGuide>
       </SenderSection>
 
@@ -364,8 +464,8 @@ const Order = () => {
             id="receiverName"
             type="text"
             placeholder="이름을 입력하세요."
-            value={receiverName}
-            onChange={e => setReceiverName(e.target.value)}
+            value={state.receiverName}
+            onChange={e => dispatch({ type: 'UPDATE_RECEIVER_NAME', payload: e.target.value })}
           />
         </ReceiverRow>
         <ReceiverRow>
@@ -374,8 +474,8 @@ const Order = () => {
             id="receiverPhone"
             type="tel"
             placeholder="전화번호를 입력하세요."
-            value={receiverPhone}
-            onChange={e => setReceiverPhone(e.target.value)}
+            value={state.receiverPhone}
+            onChange={e => dispatch({ type: 'UPDATE_RECEIVER_PHONE', payload: e.target.value })}
           />
         </ReceiverRow>
         <ReceiverRow>
@@ -384,8 +484,8 @@ const Order = () => {
             id="quantity"
             type="number"
             min={1}
-            value={quantity}
-            onChange={e => setQuantity(Number(e.target.value))}
+            value={state.quantity}
+            onChange={e => dispatch({ type: 'UPDATE_QUANTITY', payload: Number(e.target.value) })}
           />
         </ReceiverRow>
       </ReceiverSection>
@@ -410,7 +510,7 @@ const Order = () => {
       {/* ===== 고정 푸터 (주문 버튼) ===== */}
       <PageWrapper>
         <FixedFooter>
-          <OrderButton type="button" onClick={handleOrder} disabled={!message.trim()}>
+          <OrderButton type="button" onClick={handleOrder} disabled={!state.message.trim()}>
             주문하기
           </OrderButton>
         </FixedFooter>
