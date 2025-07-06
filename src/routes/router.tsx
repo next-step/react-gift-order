@@ -3,6 +3,7 @@ import MainPage from '@/pages/MainPage';
 import LoginPage from '@/pages/LoginPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 import Header from '@/components/Header';
+import Mypage from '@/pages/MyPage';
 import { ROUTE_PATH } from '@/constants/routes';
 
 export const router = createBrowserRouter([
@@ -21,6 +22,15 @@ export const router = createBrowserRouter([
       <>
         <Header />
         <LoginPage />
+      </>
+    ),
+  },
+  {
+    path: ROUTE_PATH.MY,
+    element: (
+      <>
+        <Header />
+        <Mypage />
       </>
     ),
   },

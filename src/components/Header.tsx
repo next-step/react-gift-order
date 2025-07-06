@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FiChevronLeft, FiUser } from 'react-icons/fi';
 import { ROUTE_PATH } from '@/constants/routes';
+import { useAuth } from '@/contexts/AuthContext';
 
 const HeaderBar = styled.header`
   position: fixed; // 화면에 고정
@@ -43,12 +44,17 @@ const IconButton = styled.button`
 function Header() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuth();
 
   const handleLoginClick = () => {
-    if (location.pathname !== ROUTE_PATH.LOGIN) {
-      navigate(
-        `${ROUTE_PATH.LOGIN}?from=${encodeURIComponent(location.pathname)}`,
-      );
+    if (user && user.name) {
+      navigate('/my');
+    } else {
+      if (location.pathname !== ROUTE_PATH.LOGIN) {
+        navigate(
+          `${ROUTE_PATH.LOGIN}?from=${encodeURIComponent(location.pathname)}`,
+        );
+      }
     }
   };
 

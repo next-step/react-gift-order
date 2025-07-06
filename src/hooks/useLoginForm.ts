@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 
 // useLoginForm.ts 파일 상단에 추가
 export const MIN_PASSWORD_LENGTH = 8;
@@ -32,6 +33,8 @@ function useLoginForm({ onSuccess }: UseLoginFormProps) {
   const [emailError, setEmailError] = useState('');
   const [pwError, setPwError] = useState('');
   const [isButtonActive, setIsButtonActive] = useState(false);
+
+  const { login } = useAuth();
 
   const isValidEmail = validateEmail(email) === '';
   const isValidPassword = validatePassword(password) === '';
@@ -68,6 +71,9 @@ function useLoginForm({ onSuccess }: UseLoginFormProps) {
     e.preventDefault();
 
     if (isValidEmail && isValidPassword) {
+      // email에서 @ 앞부분을 name으로 사용
+      const name = email.split('@')[0];
+      login({ email, name });
       onSuccess();
     }
   };

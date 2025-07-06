@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Box = styled.div`
   height: 43px;
@@ -31,10 +32,11 @@ const Plus = styled.span`
 `;
 
 function FriendSelectBox() {
+  const { user } = useAuth();
   return (
     <Box>
       <Plus>+</Plus>
-      선물할 친구를 선택해 주세요.
+      {user && user.name ? `${user.name}님! ` : ''}선물할 친구를 선택해 주세요.
     </Box>
   );
 }
