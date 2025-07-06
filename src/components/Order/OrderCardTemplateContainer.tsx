@@ -107,7 +107,7 @@ const OrderCardTemplateContainer = ({
             {...register('msg', { required: '메시지는 필수입니다.' })}
             className={`body2Regular ${errors.msg ? 'border-red' : ''}`}
             placeholder='메시지를 입력해주세요'
-          ></textarea>
+          />
           {errors.msg && (
             <p className='label2Regular font-red margin-left-20'>
               {errors.msg.message?.toString()}
