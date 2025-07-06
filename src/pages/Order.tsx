@@ -78,12 +78,6 @@ const Thumb = styled.img<{ selected: boolean }>`
   transition: border 0.2s, box-shadow 0.2s;
 `;
 
-const Message = styled.div`
-  font-size: 0.95rem;
-  color: #333;
-  text-align: center;
-`;
-
 const OrderButton = styled.button`
   width: 100%;
   max-width: 320px;
@@ -277,9 +271,6 @@ const Order: React.FC = () => {
   const [quantity, setQuantity] = useState(1);
   const [messageError, setMessageError] = useState("");
   const [senderError, setSenderError] = useState("");
-  const [receiverNameError, setReceiverNameError] = useState("");
-  const [receiverPhoneError, setReceiverPhoneError] = useState("");
-  const [quantityError, setQuantityError] = useState("");
 
   const selectedCard = cardTemplates.find(card => card.id === selectedId);
 
@@ -291,50 +282,18 @@ const Order: React.FC = () => {
   };
 
   const handleOrder = () => {
-    let hasError = false;
-
     if (!message.trim()) {
       setMessageError("메시지를 입력해주세요.");
-      hasError = true;
+      return;
     } else {
       setMessageError("");
     }
-
     if (!sender.trim()) {
       setSenderError("보내는 사람 이름을 입력해주세요.");
-      hasError = true;
+      return;
     } else {
       setSenderError("");
     }
-
-    if (!receiverName.trim()) {
-      setReceiverNameError("받는 사람 이름을 입력해주세요.");
-      hasError = true;
-    } else {
-      setReceiverNameError("");
-    }
-
-    if (!receiverPhone.trim()) {
-      setReceiverPhoneError("전화번호를 입력해주세요.");
-      hasError = true;
-    } else if (!/^010\d{8}$/.test(receiverPhone)) {
-      setReceiverPhoneError("전화번호는 010으로 시작하는 11자리 숫자여야 합니다.");
-      hasError = true;
-    } else {
-      setReceiverPhoneError("");
-    }
-
-    if (!quantity || quantity < 1) {
-      setQuantityError("수량은 1개 이상이어야 합니다.");
-      hasError = true;
-    } else {
-      setQuantityError("");
-    }
-
-    if (hasError) return;
-
-    // TODO: 실제 주문 처리
-    console.log({ message, sender, receiverName, receiverPhone, quantity, product });
   };
 
   return (
@@ -390,13 +349,9 @@ const Order: React.FC = () => {
             type="text"
             placeholder="이름을 입력하세요."
             value={receiverName}
-            onChange={e => {
-              setReceiverName(e.target.value);
-              if (receiverNameError) setReceiverNameError("");
-            }}
+            onChange={e => setReceiverName(e.target.value)}
           />
         </ReceiverRow>
-        {receiverNameError && <ErrorMessage>{receiverNameError}</ErrorMessage>}
         <ReceiverRow>
           <ReceiverLabel htmlFor="receiverPhone">전화번호</ReceiverLabel>
           <ReceiverInput
@@ -404,13 +359,9 @@ const Order: React.FC = () => {
             type="tel"
             placeholder="전화번호를 입력하세요."
             value={receiverPhone}
-            onChange={e => {
-              setReceiverPhone(e.target.value);
-              if (receiverPhoneError) setReceiverPhoneError("");
-            }}
+            onChange={e => setReceiverPhone(e.target.value)}
           />
         </ReceiverRow>
-        {receiverPhoneError && <ErrorMessage>{receiverPhoneError}</ErrorMessage>}
         <ReceiverRow>
           <ReceiverLabel htmlFor="quantity">수량</ReceiverLabel>
           <ReceiverInput
@@ -418,13 +369,9 @@ const Order: React.FC = () => {
             type="number"
             min={1}
             value={quantity}
-            onChange={e => {
-              setQuantity(Number(e.target.value));
-              if (quantityError) setQuantityError("");
-            }}
+            onChange={e => setQuantity(Number(e.target.value))}
           />
         </ReceiverRow>
-        {quantityError && <ErrorMessage>{quantityError}</ErrorMessage>}
       </ReceiverSection>
       <ProductSection>
         <ProductTitle>상품 정보</ProductTitle>
@@ -443,7 +390,7 @@ const Order: React.FC = () => {
       </ProductSection>
       <PageWrapper>
         <FixedFooter>
-          <OrderButton type="button" onClick={handleOrder}>
+          <OrderButton type="button" onClick={handleOrder} disabled={!message.trim()}>
             주문하기
           </OrderButton>
         </FixedFooter>

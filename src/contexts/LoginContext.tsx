@@ -13,6 +13,17 @@ interface LoginContextType {
 
 const LoginContext = createContext<LoginContextType | undefined>(undefined);
 
+// 데이터 유효성 검증 함수
+const isValidUser = (data: unknown): data is User => {
+  return (
+    typeof data === 'object' &&
+    data !== null &&
+    'email' in data &&
+    typeof (data as any).email === 'string' &&
+    (data as any).email.length > 0
+  );
+};
+
 export function LoginProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
 
@@ -20,8 +31,18 @@ export function LoginProvider({ children }: { children: ReactNode }) {
     const stored = sessionStorage.getItem("user");
     if (stored) {
       try {
-        setUser(JSON.parse(stored));
+        const parsedData = JSON.parse(stored);
+        // 데이터 유효성 검증
+        if (isValidUser(parsedData)) {
+          setUser(parsedData);
+        } else {
+          console.warn("저장된 사용자 데이터가 유효하지 않습니다:", parsedData);
+          sessionStorage.removeItem("user");
+          setUser(null);
+        }
       } catch (e) {
+        console.error("사용자 데이터 파싱 중 오류 발생:", e);
+        sessionStorage.removeItem("user");
         setUser(null);
       }
     }
