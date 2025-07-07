@@ -19,4 +19,4 @@ export const ORDER_ERROR_MESSAGE = {
   QUANTITY: {
     INVALID_QUANTITY: "구매 수량은 1개 이상이어야 합니다.",
   },
-};
+} as const;
