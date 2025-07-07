@@ -8,12 +8,12 @@ import type { Recipient } from '@/types/Recipient';
 // Props 타입 정의
 interface RecipientsItemProps {
   index: number; // 배열 인덱스
-  id: number;
+  id: string;
   register: UseFormRegister<RecipientsModalFormData>; // 모달 내부 폼의 register 타입
   errors: FieldErrors<RecipientsModalFormData>; // 모달 내부 폼의 errors 타입
-  onRemove: (id: number) => void;
+  onRemove: (id: string) => void;
   getValues: () => RecipientsModalFormData;
-  existedRecipients: Recipient[];
+  allRecipientsInModal: (Recipient & { id?: string })[];
 }
 
 const StyledRecipientsItemContainerHeader = styled.div`
@@ -55,13 +55,18 @@ const RecipientsItem: React.FC<RecipientsItemProps> = ({
   errors,
   onRemove,
   id,
-  existedRecipients,
+  allRecipientsInModal,
 }) => {
   return (
     <div>
       <StyledRecipientsItemContainerHeader>
         <p className='body1Bold'>받는 사람 {index + 1}</p>
-        <button onClick={() => onRemove(id)}>삭제</button>
+        {/* 필드가 1개 이상일 때만 삭제 버튼 표시 */}
+        {allRecipientsInModal.length > 1 && (
+          <button type='button' onClick={() => onRemove(id)}>
+            삭제
+          </button>
+        )}
       </StyledRecipientsItemContainerHeader>
       <StyledRecipientsItem>
         <label className='body2Regular' htmlFor={`newRecipients[${index}].name`}>
@@ -101,11 +106,16 @@ const RecipientsItem: React.FC<RecipientsItemProps> = ({
                 if (!isValidedTel) {
                   return '전화번호 형식이 올바르지 않습니다. (예: 01012345678)';
                 }
-                // 이미 추가된 전화번호
-                const isInExisted = existedRecipients.some((rec) => rec.receiveTel === currentTel);
-                if (isInExisted) {
+
+                // 현재 모달 내의 다른 필드들과 중복 검사
+                const duplicateInModal = allRecipientsInModal.some(
+                  (rec, i) => i !== index && rec.receiveTel === currentTel
+                );
+
+                if (duplicateInModal) {
                   return '이미 추가된 연락처입니다.';
                 }
+                return true;
               },
             })}
             className={errors.newRecipients?.[index]?.receiveTel ? 'input-error' : ''}
@@ -127,6 +137,7 @@ const RecipientsItem: React.FC<RecipientsItemProps> = ({
             type='number'
             {...register(`newRecipients.${index}.count`, {
               required: `받는 사람 ${index + 1}의 수량은 필수입니다.`,
+              valueAsNumber: true, // 숫자로 변환하여 저장
               validate: (value: number) => {
                 if (value <= 0) {
                   return '1개 이상 수량을 선택해주세요';

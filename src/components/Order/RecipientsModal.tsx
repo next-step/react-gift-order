@@ -1,7 +1,7 @@
 // @components/Order/RecipientsModal.tsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
-import { useForm, type SubmitHandler } from 'react-hook-form'; // useForm, SubmitHandler, FieldErrors 임포트
+import { useFieldArray, useForm, type SubmitHandler } from 'react-hook-form'; // useForm, SubmitHandler, FieldErrors 임포트
 import RecipientsItem from './RecipientsItem'; // 다음 단계에서 구현할 개별 아이템 컴포넌트
 import type { Recipient } from '@/types/Recipient'; // Recipient 타입 임포트
 import type { RecipientsModalFormData } from '@/types/RecipientsModalFormData';
@@ -97,46 +97,72 @@ const ModalFooter = styled.div`
 `;
 
 const RecipientsModal: React.FC<RecipientsModalProps> = ({ onClose, onAdd, existedRecipients }) => {
-  // 각 필드 그룹에 고유한 키를 주기 위해 { id: number } 객체를 사용
-  const [fieldSets, setFieldSets] = useState([{ id: 0 }]);
-  const nextId = React.useRef(1); // 고유 ID 생성을 위한 ref
-
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
     getValues,
+    control,
   } = useForm<RecipientsModalFormData>({
     defaultValues: {
-      newRecipients: [{ receiveName: '', receiveTel: '', count: 0 }],
+      newRecipients: [], // 초기값은 비어있지만, useEffect에서 existedRecipients로 채워질 것
     },
   });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'newRecipients',
+  });
+
+  // 고유 ID 생성을 위한 ref. existedRecipients의 길이부터 시작하여 중복 방지.
+  const nextIdRef = useRef(0);
+
   useEffect(() => {
-    console.log('리렌더링 실행');
+    // existedRecipients에 고유 ID를 부여하여 필드 초기화
+    // 기존 데이터에 ID가 없다면 새로 부여하고, 있다면 기존 ID를 사용
+    const initialFields = existedRecipients.map((rec, index) => ({
+      ...rec,
+      id: rec.id || `${Date.now()}-${index}`, // 고유 ID가 없다면 생성
+    }));
     reset({
-      newRecipients: existedRecipients,
+      newRecipients: initialFields,
     });
-    setFieldSets(existedRecipients.map((_, idx) => ({ id: idx })));
-    nextId.current = existedRecipients.length;
+    // 다음 ID는 현재 필드 수만큼 설정
+    nextIdRef.current =
+      initialFields.length > 0
+        ? Math.max(...initialFields.map((f) => Number(f.id.split('-')[1]) || 0)) + 1
+        : 0;
   }, [existedRecipients, reset]);
 
   const handleAddPersonField = () => {
-    setFieldSets((existedRecipients) => [...existedRecipients, { id: nextId.current++ }]);
+    if (fields.length >= 10) {
+      alert('최대 10명까지 추가할 수 있습니다.');
+      return;
+    }
+    // 새로운 필드에 고유 ID 부여
+    append({
+      receiveName: '',
+      receiveTel: '',
+      count: 0,
+      id: `${Date.now()}-${nextIdRef.current++}`,
+    });
   };
 
-  const handleRemovePersonField = () => {
-    setFieldSets(existedRecipients.map((_, idx) => ({ id: idx })));
-    console.log('modal item 삭제 함수 실행');
+  const handleRemovePersonField = (idToRemove: string) => {
+    // id를 기반으로 해당 필드의 인덱스를 찾아 제거
+    const indexToRemove = fields.findIndex((field) => field.id === idToRemove);
+    if (indexToRemove !== -1) {
+      remove(indexToRemove);
+    }
   };
 
   const onSubmit: SubmitHandler<RecipientsModalFormData> = (data) => {
-    // 유효한 받는 사람만 필터링 (이름과 연락처가 모두 있는 경우)
     if (data.newRecipients.length > 0) {
-      onAdd(data.newRecipients); // 부모 컴포넌트(RecipientsModalContainer)로 유효한 받는 사람 목록 전달
+      // 최종적으로 모달에서 확정된 Recipients 목록을 상위 컴포넌트로 전달
+      onAdd(data.newRecipients);
       onClose();
     } else {
-      // 모든 필드가 비어있는 경우
       alert('최소 한 명의 받는 사람 정보를 입력해주세요.');
     }
   };
@@ -153,16 +179,18 @@ const RecipientsModal: React.FC<RecipientsModalProps> = ({ onClose, onAdd, exist
           </button>
         </ModalHeader>
         <ModalBody>
-          {fieldSets.map((fieldSet, index) => (
+          {fields.map((field, index) => (
             <RecipientsItem
-              key={fieldSet.id} // 고유 ID를 key로 사용
-              id={fieldSet.id}
+              key={field.id}
+              id={field.id as string} // field.id는 useFieldArray에서 string을 반환
               index={index}
               register={register}
               errors={errors}
-              onRemove={handleRemovePersonField}
+              onRemove={handleRemovePersonField} // 모달 내부의 remove 함수 전달
               getValues={getValues}
-              existedRecipients={existedRecipients}
+              // existedRecipients 대신 현재 모달의 모든 필드 (allNewRecipients)를 전달하여 중복 검사에 활용
+              allRecipientsInModal={fields as Recipient[]}
+              // 초기 데이터는 field 자체를 전달 (이미 useFieldArray에 의해 관리되고 있으므로)
             />
           ))}
         </ModalBody>

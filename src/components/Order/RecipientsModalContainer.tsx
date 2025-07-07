@@ -61,7 +61,7 @@ const RecipientsModalContainer: FC<RecipientsModalContainerProps> = ({
   currentRecipients,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { fields, append } = useFieldArray({
+  const { fields, replace } = useFieldArray({
     control,
     name: 'recipients', // OrderFormValue에 정의된 필드 이름과 일치
   });
@@ -69,10 +69,10 @@ const RecipientsModalContainer: FC<RecipientsModalContainerProps> = ({
   const handleCloseModal = () => setIsModalOpen(false);
 
   // AddRecipientsModal에서 새로운 Recipient[]를 받아와서 append
-  const handleAddRecipients = (newRecipients: Recipient[]) => {
-    console.log('추가할 recipients', newRecipients);
-    newRecipients.forEach((rec) => append(rec));
-    console.log('추가 후 recipients', newRecipients);
+  const handleAddRecipients = (finalRecipients: Recipient[]) => {
+    console.log('추가할 recipients', finalRecipients);
+    replace(finalRecipients);
+    console.log('추가 후 recipients', finalRecipients);
   };
 
   return (
