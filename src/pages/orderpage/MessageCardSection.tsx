@@ -1,25 +1,27 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
-import { useState } from "react";
-import type { RefObject } from "react";
+import { useState, useEffect } from "react";
 import { MESSAGE_CARD_LIST } from "../../mocks/messagecard_mock";
 import type { MessageCard } from "../../mocks/types";
 
 interface Props {
-  inputRef: RefObject<HTMLTextAreaElement>;
+  value: string;
+  onChange: (value: string) => void;
   error?: string;
 }
 
-const MessageCardSection = ({ inputRef, error }: Props) => {
+const MessageCardSection = ({ value, onChange, error }: Props) => {
   const [selectedCard, setSelectedCard] = useState<MessageCard>(
     MESSAGE_CARD_LIST[0]
   );
 
+  useEffect(() => {
+    onChange(MESSAGE_CARD_LIST[0].defaultTextMessage);
+  }, []);
+
   const handleSelect = (card: MessageCard) => {
     setSelectedCard(card);
-    if (inputRef.current) {
-      inputRef.current.value = card.defaultTextMessage;
-    }
+    onChange(card.defaultTextMessage);
   };
 
   return (
@@ -40,9 +42,9 @@ const MessageCardSection = ({ inputRef, error }: Props) => {
 
       <MessageInputWrapper>
         <MessageInput
-          ref={inputRef}
           placeholder="메시지를 입력해주세요."
-          defaultValue={selectedCard.defaultTextMessage}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
         />
         {error && <ErrorText>{error}</ErrorText>}
       </MessageInputWrapper>

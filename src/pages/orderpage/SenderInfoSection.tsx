@@ -1,22 +1,18 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
-import { useState } from "react";
-
 interface Props {
-  inputRef: React.RefObject<HTMLInputElement>;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   error?: string;
 }
 
-const SenderInfoSection = ({ inputRef, error }: Props) => {
-  const [senderName, setSenderName] = useState("");
-
+const SenderInfoSection = ({ value, onChange, error }: Props) => {
   return (
     <>
       <Title>보내는 사람 이름</Title>
       <SenderNameInput
-        ref={inputRef}
-        value={senderName}
-        onChange={(e) => setSenderName(e.target.value)}
+        value={value}
+        onChange={onChange}
         placeholder="이름을 입력하세요"
       />
       {error && <ErrorMessage>{error}</ErrorMessage>}

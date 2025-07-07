@@ -1,20 +1,24 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
-import type { RefObject } from "react";
-
 interface Props {
-  receiverRef: RefObject<HTMLInputElement>;
-  phoneRef: RefObject<HTMLInputElement>;
-  quantityRef: RefObject<HTMLInputElement>;
+  receiver: string;
+  onChangeReceiver: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  phone: string;
+  onChangePhone: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  quantity: number;
+  onChangeQuantity: (e: React.ChangeEvent<HTMLInputElement>) => void;
   errorReceiver?: string;
   errorPhone?: string;
   errorQuantity?: string;
 }
 
 const ReceiverInfoSection = ({
-  receiverRef,
-  phoneRef,
-  quantityRef,
+  receiver,
+  onChangeReceiver,
+  phone,
+  onChangePhone,
+  quantity,
+  onChangeQuantity,
   errorReceiver,
   errorPhone,
   errorQuantity,
@@ -24,19 +28,32 @@ const ReceiverInfoSection = ({
       <Title>받는 사람</Title>
       <FormRow>
         <Label>이름</Label>
-        <Input ref={receiverRef} placeholder="이름을 입력하세요." />
+        <Input
+          value={receiver}
+          onChange={onChangeReceiver}
+          placeholder="이름을 입력하세요."
+        />
       </FormRow>
       {errorReceiver && <ErrorText>{errorReceiver}</ErrorText>}
 
       <FormRow>
         <Label>전화번호</Label>
-        <Input ref={phoneRef} placeholder="전화번호를 입력하세요." />
+        <Input
+          value={phone}
+          onChange={onChangePhone}
+          placeholder="전화번호를 입력하세요."
+        />
       </FormRow>
       {errorPhone && <ErrorText>{errorPhone}</ErrorText>}
 
       <FormRow>
         <Label>수량</Label>
-        <Input type="number" min={1} defaultValue={1} ref={quantityRef} />
+        <Input
+          type="number"
+          min={1}
+          value={quantity}
+          onChange={onChangeQuantity}
+        />
       </FormRow>
       {errorQuantity && <ErrorText>{errorQuantity}</ErrorText>}
     </>

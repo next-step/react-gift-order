@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import MessageCardSection from "./MessageCardSection";
 import SenderInfoSection from "./SenderInfoSection";
@@ -14,29 +14,29 @@ const OrderPage = () => {
   const navigate = useNavigate();
   const { product } = location.state || {};
 
-  const messageRef = useRef<HTMLTextAreaElement>(null!);
-  const senderRef = useRef<HTMLTextAreaElement>(null!);
-  const receiverRef = useRef<HTMLInputElement>(null!);
-  const phoneRef = useRef<HTMLInputElement>(null!);
-  const quantityRef = useRef<HTMLInputElement>(null!);
+  const [message, setMessage] = useState("");
+  const [sender, setSender] = useState("");
+  const [receiver, setReceiver] = useState("");
+  const [phone, setPhone] = useState("");
+  const [quantity, setQuantity] = useState(1);
 
   const { validate, errors } = useOrderValidation({
-    messageRef,
-    senderRef,
-    receiverRef,
-    phoneRef,
-    quantityRef,
+    message,
+    sender,
+    receiver,
+    phone,
+    quantity,
   });
 
   const handleSubmit = () => {
     const isValid = validate();
     if (isValid && product) {
       const orderInfo = {
-        message: messageRef.current?.value,
-        sender: senderRef.current?.value,
-        receiver: receiverRef.current?.value,
-        phone: phoneRef.current?.value,
-        quantity: quantityRef.current?.value,
+        message,
+        sender,
+        receiver,
+        phone,
+        quantity,
       };
 
       alert(
@@ -57,14 +57,25 @@ const OrderPage = () => {
 
   return (
     <Form>
-      <MessageCardSection inputRef={messageRef} error={errors.message} />
-      <SenderInfoSection inputRef={senderRef} error={errors.sender} />
+      <MessageCardSection
+        value={message}
+        onChange={setMessage}
+        error={errors.message}
+      />
+      <SenderInfoSection
+        value={sender}
+        onChange={(e) => setSender(e.target.value)}
+        error={errors.sender}
+      />
       <ReceiverInfoSection
-        receiverRef={receiverRef}
-        phoneRef={phoneRef}
+        receiver={receiver}
+        onChangeReceiver={(e) => setReceiver(e.target.value)}
+        phone={phone}
+        onChangePhone={(e) => setPhone(e.target.value)}
+        quantity={quantity}
+        onChangeQuantity={(e) => setQuantity(parseInt(e.target.value))}
         errorReceiver={errors.receiver}
         errorPhone={errors.phone}
-        quantityRef={quantityRef}
         errorQuantity={errors.quantity}
       />
       <ProductSummarySection product={product} />
