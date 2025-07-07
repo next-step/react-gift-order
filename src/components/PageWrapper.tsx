@@ -8,7 +8,7 @@ const pageWrapperStyle = css({
   maxWidth: 720,
   margin: '0 auto',
   alignItems: 'center',
-  paddingTop: `calc(${spacing.spacing14} + 8px)`, // 헤더 높이 + 추가 여백
+  //paddingTop: `calc(${spacing.spacing14} + 8px)`, // 헤더 높이 + 추가 여백
 })
 
 interface PageWrapperProps {
