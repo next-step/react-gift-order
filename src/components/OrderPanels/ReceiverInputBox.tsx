@@ -1,29 +1,67 @@
 import styled from "@emotion/styled";
 import AdvancedInput from "@src/components/shared/AdvancedInput";
-import useOrderErrorHandler from "@src/hooks/useOrderErrorHandler";
-import useOrderState from "@src/hooks/useOrderState";
+import useReceiverErrorHandler from "@src/hooks/useReceiverErrorHandler";
+import useReceiverState from "@src/hooks/useReceiverState";
 import { createNewNameEvaluator } from "@src/utils/evaluator/implementation/nameEvaluator";
 import { createNewPNEvaluator } from "@src/utils/evaluator/implementation/phoneNumberEvaluator";
 import { createNewQuantityEvaluator } from "@src/utils/evaluator/implementation/quantityEvaluator";
+import { useEffect } from "react";
 
 type ReceiverInputBoxProps = {
+  id: string;
   no: number;
-  onRemove: () => void;
+  receiverData: {
+    receiver: string;
+    phoneNumber: string;
+    quantity: string;
+    duplicate: boolean;
+  };
+  onChange: (
+    id: string,
+    field: "name" | "phoneNumber" | "quantity",
+    value: string
+  ) => void;
+  onRemove: (id: string) => void;
 };
 
-function ReceiverInputBox({ no, onRemove }: ReceiverInputBoxProps) {
+function ReceiverInputBox({
+  id,
+  no,
+  receiverData,
+  onChange,
+  onRemove
+}: ReceiverInputBoxProps) {
   const nameEvaluator = createNewNameEvaluator();
   const phoneNumberEvaluator = createNewPNEvaluator();
   const quantityEvaluator = createNewQuantityEvaluator();
 
-  const orderState = useOrderState();
-  const orderErrorHandler = useOrderErrorHandler();
+  const receiverState = useReceiverState();
+  const receiverErrorHandler = useReceiverErrorHandler();
+
+  useEffect(() => {
+    onChange(id, "name", receiverState.receiver.value);
+  }, [receiverState.receiver.value]);
+
+  useEffect(() => {
+    onChange(id, "phoneNumber", receiverState.phoneNumber.value);
+  }, [receiverState.phoneNumber.value]);
+
+  useEffect(() => {
+    onChange(id, "quantity", receiverState.quantity.value);
+  }, [receiverState.quantity.value]);
+
+  useEffect(() => {
+    receiverErrorHandler.phoneNumberValid.setValue(!receiverData.duplicate);
+    receiverErrorHandler.phoneNumberReason.setValue(
+      receiverData.duplicate ? "중복된 전화번호가 있습니다." : null
+    );
+  }, [receiverData.duplicate]);
 
   return (
     <InputGroupWrapper>
       <TitleP>
         {`받는 사람 ${no}`}
-        <RemoveButton onClick={onRemove}>✕</RemoveButton>
+        <RemoveButton onClick={() => onRemove(id)}>✕</RemoveButton>
       </TitleP>
       <InputCaptionPairWrapper>
         <Caption>이름</Caption>
@@ -31,9 +69,9 @@ function ReceiverInputBox({ no, onRemove }: ReceiverInputBoxProps) {
           placeholder="이름을 입력하세요."
           type="text"
           evaluator={nameEvaluator}
-          validHookSet={orderErrorHandler.receiverValid}
-          reasonHookSet={orderErrorHandler.receiverReason}
-          valueHookSet={orderState.receiver}
+          validHookSet={receiverErrorHandler.receiverValid}
+          reasonHookSet={receiverErrorHandler.receiverReason}
+          valueHookSet={receiverState.receiver}
         />
       </InputCaptionPairWrapper>
       <InputCaptionPairWrapper>
@@ -42,9 +80,9 @@ function ReceiverInputBox({ no, onRemove }: ReceiverInputBoxProps) {
           placeholder="전화번호를 입력하세요."
           type="text"
           evaluator={phoneNumberEvaluator}
-          validHookSet={orderErrorHandler.phoneNumberValid}
-          reasonHookSet={orderErrorHandler.phoneNumberReason}
-          valueHookSet={orderState.phoneNumber}
+          validHookSet={receiverErrorHandler.phoneNumberValid}
+          reasonHookSet={receiverErrorHandler.phoneNumberReason}
+          valueHookSet={receiverState.phoneNumber}
         />
       </InputCaptionPairWrapper>
       <InputCaptionPairWrapper>
@@ -53,9 +91,9 @@ function ReceiverInputBox({ no, onRemove }: ReceiverInputBoxProps) {
           placeholder=""
           type="number"
           evaluator={quantityEvaluator}
-          validHookSet={orderErrorHandler.quantityValid}
-          reasonHookSet={orderErrorHandler.quantityReason}
-          valueHookSet={orderState.quantity}
+          validHookSet={receiverErrorHandler.quantityValid}
+          reasonHookSet={receiverErrorHandler.quantityReason}
+          valueHookSet={receiverState.quantity}
         />
       </InputCaptionPairWrapper>
     </InputGroupWrapper>

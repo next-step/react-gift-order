@@ -2,23 +2,59 @@ import styled from "@emotion/styled";
 import theme from "@src/styles/kakaoTheme";
 import type { StateHook } from "@src/hooks/stateHookType";
 import ReceiverInputBox from "./ReceiverInputBox";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type ReceiverModalWindowProps = {
   open: StateHook<boolean>;
 };
 
+type Receiver = {
+  id: string;
+  receiver: string;
+  phoneNumber: string;
+  quantity: string;
+  duplicate: boolean;
+};
+
 function ReceiverModalWindow({ open }: ReceiverModalWindowProps) {
-  const [list, setList] = useState<number[]>([]);
+  const [list, setList] = useState<Receiver[]>([]);
 
   const closeModal = () => open.setValue(false);
+
   const commit = () => {
     //commit logic
     closeModal();
   };
+
+  const ADD_LIMIT = 10;
   const add = () => {
-    setList((prev) => [...prev, 1]);
+    if (list.length >= ADD_LIMIT) return;
+    const newReceiver: Receiver = {
+      id: crypto.randomUUID(),
+      receiver: "",
+      phoneNumber: "",
+      quantity: "",
+      duplicate: false
+    };
+    setList((prev) => [...prev, newReceiver]);
   };
+
+  useEffect(() => {
+    const phoneCount = new Map<string, number>();
+
+    list.forEach(({ phoneNumber }) => {
+      if (!phoneNumber) return;
+      phoneCount.set(phoneNumber, (phoneCount.get(phoneNumber) || 0) + 1);
+    });
+
+    setList((prev) =>
+      prev.map((receiver) => ({
+        ...receiver,
+        duplicate:
+          !!receiver.phoneNumber && phoneCount.get(receiver.phoneNumber)! > 1
+      }))
+    );
+  }, [list.map((r) => r.phoneNumber).join(",")]);
 
   return (
     <ModalWindowWrapper>
@@ -27,15 +63,28 @@ function ReceiverModalWindow({ open }: ReceiverModalWindowProps) {
       <GraySub>* 받는 사람의 전화번호를 중복으로 입력할 수 없어요.</GraySub>
       <AddButton onClick={add}>추가하기</AddButton>
       <ReceiverList>
-        {list?.map((no, index: number) => (
-          <ReceiverInputBox
-            key={index}
-            no={index}
-            onRemove={() => {
-              setList((prev) => prev.filter((_, i) => i !== index));
-            }}
-          />
-        ))}
+        {list?.map((receiver: Receiver, index: number) => {
+          return (
+            <ReceiverInputBox
+              key={receiver.id}
+              id={receiver.id}
+              no={index}
+              receiverData={receiver}
+              onChange={(id, field, value) => {
+                setList((prev) =>
+                  prev.map((receiver) =>
+                    receiver.id === id
+                      ? { ...receiver, [field]: value }
+                      : receiver
+                  )
+                );
+              }}
+              onRemove={(id) => {
+                setList((prev) => prev.filter((r) => id !== r.id));
+              }}
+            />
+          );
+        })}
       </ReceiverList>
       <ButtonHorizontalLayout>
         <CancelButton onClick={closeModal}>취소</CancelButton>
