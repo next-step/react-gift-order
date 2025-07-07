@@ -9,6 +9,7 @@ interface User {
 interface UserInfoContextType {
   user: User | undefined;
   setUser: React.Dispatch<React.SetStateAction<User | undefined>>;
+  loading: boolean;
 }
 
 const UserInfoContext = createContext<UserInfoContextType | undefined>(
@@ -17,12 +18,14 @@ const UserInfoContext = createContext<UserInfoContextType | undefined>(
 
 export function UserInfoProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | undefined>(undefined);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const savedUser = sessionStorage.getItem('user');
     if (savedUser) {
       setUser(JSON.parse(savedUser));
     }
+    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -34,7 +37,7 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
   }, [user]);
 
   return (
-    <UserInfoContext.Provider value={{ user, setUser }}>
+    <UserInfoContext.Provider value={{ user, setUser, loading }}>
       {children}
     </UserInfoContext.Provider>
   );

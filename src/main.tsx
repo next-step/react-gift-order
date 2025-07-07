@@ -9,10 +9,10 @@ import { UserInfoProvider } from '@src/contexts/AuthContext';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
-      <UserInfoProvider>
+    <UserInfoProvider>
+      <BrowserRouter>
         <App />
-      </UserInfoProvider>
-    </BrowserRouter>
+      </BrowserRouter>
+    </UserInfoProvider>
   </StrictMode>
 );
