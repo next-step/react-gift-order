@@ -2,7 +2,7 @@ import type { AuthInputProps } from "@/features/auth/ui/AuthInput";
 
 import styled from "@emotion/styled";
 
-export const InputElement = styled.input<AuthInputProps>`
+export const AuthInputElement = styled.input<AuthInputProps>`
     width: ${({ width }) => width};
     height: ${({ height }) => height};
 
@@ -24,7 +24,7 @@ export const InputElement = styled.input<AuthInputProps>`
     }
 `;
 
-export const InputErrorMessage = styled.p`
+export const AuthInputErrorMessage = styled.p`
     height: 4px;
     margin-top: 4px;
 
