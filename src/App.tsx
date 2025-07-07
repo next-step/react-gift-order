@@ -4,6 +4,7 @@ import HomePage from '@/pages/HomePage';
 import LoginPage from '@/pages/LoginPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 import { ROUTES } from '@/constants/routes';
+import MyPage from './pages/Mypage';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Routes>
           <Route path={ROUTES.HOME} element={<HomePage />} />
           <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+          <Route path={ROUTES.MY} element={<MyPage />} />
           <Route path={ROUTES.NOT_FOUND} element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>

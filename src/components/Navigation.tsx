@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import PresentLogo from '@/assets/present.webp';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface NavigationProps {
   showLoginButton?: boolean;
@@ -9,6 +10,7 @@ interface NavigationProps {
 const Navigation = ({ showLoginButton = true }: NavigationProps) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   return (
     <Nav>
@@ -41,11 +43,11 @@ const Navigation = ({ showLoginButton = true }: NavigationProps) => {
       <div>
         <IconButton
           onClick={() =>
-            navigate('/login', {
-              state: { from: location },
-            })
+            user
+              ? navigate('/my')
+              : navigate('/login', { state: { from: location } })
           }
-          aria-label="로그인"
+          aria-label={user ? '마이페이지' : '로그인'}
           disabled={!showLoginButton}
         >
           <svg
