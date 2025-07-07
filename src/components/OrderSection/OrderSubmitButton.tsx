@@ -1,23 +1,36 @@
 import styled from '@emotion/styled';
+import Button from '@/components/common/Button';
 
 interface OrderSubmitButtonProps {
   amount: number;
+  onClick?: () => void;
 }
 
-const OrderSubmitButton = ({ amount }: OrderSubmitButtonProps) => {
-  return <Button type="button">{amount.toLocaleString()}원 주문하기</Button>;
+const OrderSubmitButton = ({ amount, onClick }: OrderSubmitButtonProps) => {
+  return (
+    <OrderSubmitButtonWrapper>
+      <Button
+        backgroundColor="#FFE812"
+        height="56px"
+        borderRadius="0"
+        onClick={onClick}
+      >
+        {amount.toLocaleString()}원 주문하기
+      </Button>
+    </OrderSubmitButtonWrapper>
+  );
 };
 
 export default OrderSubmitButton;
 
-const Button = styled.button`
+const OrderSubmitButtonWrapper = styled.div`
   width: 100%;
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
   padding: ${({ theme }) => theme.spacing[4]};
-  margin-top: ${({ theme }) => theme.spacing[8]};
-  border-radius: 8px;
-  background-color: ${({ theme }) => theme.color.semantic.kakaoYellow};
-  color: ${({ theme }) => theme.color.semantic.text.default};
-  ${({ theme }) => theme.typography.title.title2Bold};
-  border: none;
-  cursor: pointer;
+  background-color: ${({ theme }) => theme.color.semantic.background.default};
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05);
+  z-index: 100;
 `;

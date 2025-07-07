@@ -23,6 +23,64 @@ const OrderPage = () => {
   const [receiverPhone, setReceiverPhone] = useState('');
   const [quantity, setQuantity] = useState(1);
 
+  const [senderError, setSenderError] = useState('');
+  const [receiverNameError, setReceiverNameError] = useState('');
+  const [receiverPhoneError, setReceiverPhoneError] = useState('');
+  const [quantityError, setQuantityError] = useState('');
+
+  const totalPrice = product.price.sellingPrice * quantity;
+
+  const validateSender = () => {
+    if (!senderName.trim()) {
+      setSenderError('이름을 입력해주세요.');
+      return false;
+    }
+    setSenderError('');
+    return true;
+  };
+
+  const validateReceiverName = () => {
+    if (!receiverName.trim()) {
+      setReceiverNameError('이름을 입력해주세요.');
+      return false;
+    }
+    setReceiverNameError('');
+    return true;
+  };
+
+  const validateReceiverPhone = () => {
+    const phoneRegex = /^01[0-9]{8,9}$/;
+    if (!receiverPhone.trim()) {
+      setReceiverPhoneError('전화번호를 입력해주세요.');
+      return false;
+    } else if (!phoneRegex.test(receiverPhone)) {
+      setReceiverPhoneError('올바른 전화번호 형식이 아닙니다.');
+      return false;
+    }
+    setReceiverPhoneError('');
+    return true;
+  };
+
+  const validateQuantity = () => {
+    if (quantity < 1) {
+      setQuantityError('구매 수량은 1개 이상이어야 합니다.');
+      return false;
+    }
+    setQuantityError('');
+    return true;
+  };
+
+  const handleSubmit = () => {
+    const senderValid = validateSender();
+    const nameValid = validateReceiverName();
+    const phoneValid = validateReceiverPhone();
+    const quantityValid = validateQuantity();
+
+    const isValid = senderValid && nameValid && phoneValid && quantityValid;
+
+    if (!isValid) return;
+  };
+
   return (
     <>
       <Navigation />
@@ -36,25 +94,39 @@ const OrderPage = () => {
           <MessageInput value={selectedCard.defaultTextMessage} />
 
           <SenderForm
-            senderName={senderName}
-            onChange={setSenderName}
-            errorMessage={!senderName ? '이름을 입력해주세요.' : ''}
+            value={senderName}
+            onChange={e => {
+              setSenderName(e.target.value);
+              if (senderError) validateSender();
+            }}
+            error={senderError}
           />
 
           <ReceiverForm
-            receiverName={receiverName}
-            receiverPhone={receiverPhone}
+            name={receiverName}
+            phone={receiverPhone}
             quantity={quantity}
-            onChangeName={setReceiverName}
-            onChangePhone={setReceiverPhone}
-            onChangeQuantity={setQuantity}
-            errorName={!receiverName ? '이름을 입력해주세요.' : ''}
-            errorPhone={!receiverPhone ? '전화번호를 입력해주세요.' : ''}
+            onNameChange={e => {
+              setReceiverName(e.target.value);
+              if (receiverNameError) validateReceiverName();
+            }}
+            onPhoneChange={e => {
+              setReceiverPhone(e.target.value);
+              if (receiverPhoneError) validateReceiverPhone();
+            }}
+            onQuantityChange={e => {
+              const value = Number(e.target.value);
+              setQuantity(value);
+              if (quantityError) validateQuantity();
+            }}
+            nameError={receiverNameError}
+            phoneError={receiverPhoneError}
+            quantityError={quantityError}
           />
 
           <ProductInfo product={product} />
 
-          <OrderSubmitButton amount={product.price.sellingPrice} />
+          <OrderSubmitButton amount={totalPrice} onClick={handleSubmit} />
         </Section>
       </Main>
     </>
