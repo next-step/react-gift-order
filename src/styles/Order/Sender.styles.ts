@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-
 export const SenderContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -19,8 +18,8 @@ export const SenderTitle = styled.div`
 
 export const SenderInput = styled.input`
   ${({ theme }) => `
-    font-size : ${theme.typography.title2Bold.fontSize};
-    font-weight : ${theme.typography.title2Bold.fontWeight};
+    font-size : ${theme.typography.body2Regular.fontSize};
+    font-weight : ${theme.typography.body2Regular.fontWeight};
     border: 2px solid ${theme.colors.gray300};
     color: ${theme.colors.gray500}
   `}

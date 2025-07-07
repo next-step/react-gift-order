@@ -15,7 +15,13 @@ import {
   SenderInput,
   SenderInfo,
 } from '@/styles/Order/Sender.styles';
-import { RecieverContainer } from '@/styles/Order/Reciever.styles';
+import {
+  RecieverContainer,
+  RecieverTitle,
+  InputContainer,
+  RecieverInputLabel,
+  RecieverInput,
+} from '@/styles/Order/Reciever.styles';
 import { orders } from '@/mocks/mockorder';
 
 function Order() {
@@ -56,19 +62,19 @@ function Order() {
         <SenderInfo>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</SenderInfo>
       </SenderContainer>
       <RecieverContainer>
-        받는 사람
-        <div>
-          <div>이름</div>
-          <div>인풋</div>
-        </div>
-        <div>
-          <div>전화번호</div>
-          <div>input</div>
-        </div>
-        <div>
-          <div>수량</div>
-          <div>input</div>
-        </div>
+        <RecieverTitle>받는 사람</RecieverTitle>
+        <InputContainer>
+          <RecieverInputLabel>이름</RecieverInputLabel>
+          <RecieverInput placeholder="이름을 입력하세요." />
+        </InputContainer>
+        <InputContainer>
+          <RecieverInputLabel>전화번호</RecieverInputLabel>
+          <RecieverInput placeholder="전화번호를 입력하세요." />
+        </InputContainer>
+        <InputContainer>
+          <RecieverInputLabel>수량</RecieverInputLabel>
+          <RecieverInput type="number" />
+        </InputContainer>
       </RecieverContainer>
       <div>
         상품정보
