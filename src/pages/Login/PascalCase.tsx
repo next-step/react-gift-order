@@ -1,5 +1,6 @@
-import { createContext, useState, useEffect, useContext } from 'react';
+import { createContext, useContext } from 'react';
 import type { ReactNode } from 'react';
+import { useState, useEffect } from 'react';
 
 interface User {
   email: string;
@@ -15,25 +16,31 @@ const PascalCaseContext = createContext<PascalCaseType | undefined>(undefined);
 
 const LOCAL_STORAGE_KEY = 'kakao-login-user';
 
-export const PascalCaseProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+// ✅ useStorageState 훅 정의
+function useStorageState<T>(key: string, initialValue: T) {
+  const [state, setState] = useState<T>(() => {
+    const stored = localStorage.getItem(key);
+    return stored ? JSON.parse(stored) : initialValue;
+  });
 
   useEffect(() => {
-    const savedUser = localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
-  }, []);
+    localStorage.setItem(key, JSON.stringify(state));
+  }, [key, state]);
+
+  return [state, setState] as const;
+}
+
+export const PascalCaseProvider = ({ children }: { children: ReactNode }) => {
+  // ✅ 기존 useState + useEffect → useStorageState로 대체
+  const [user, setUser] = useStorageState<User | null>(LOCAL_STORAGE_KEY, null);
 
   const login = (email: string) => {
     const userData = { email };
     setUser(userData);
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(userData));
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem(LOCAL_STORAGE_KEY);
   };
 
   return (
