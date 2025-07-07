@@ -116,6 +116,7 @@ const RecipientsModal: React.FC<RecipientsModalProps> = ({ onClose, onAdd }) => 
 
   const handleAddPersonField = () => {
     setFieldSets((prev) => [...prev, { id: nextId.current++ }]);
+    onClose();
   };
   const handleRemovePersonField = (id: number) => {
     setFieldSets((prev) => prev.filter((field) => field.id !== id));

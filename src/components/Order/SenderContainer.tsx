@@ -22,8 +22,16 @@ const SenderContainer = ({ register, errors }: SenderContainerProps) => {
           className={errors.sendName ? 'border-red' : ''}
           placeholder='이름을 입력하세요'
         />
-        {errors.sendName && <p className='margin-left-20 label2Regular font-red'>{errors.sendName.message?.toString()}</p>}
-        {!errors.sendName && <p className='margin-left-20 label2Regular'>* 실제 선물 발송시 발신자이름으로 반영되는 정보입니다.</p>}
+        {errors.sendName && (
+          <p className='margin-left-20 label2Regular font-red'>
+            {errors.sendName.message?.toString()}
+          </p>
+        )}
+        {!errors.sendName && (
+          <p className='margin-left-20 label2Regular'>
+            * 실제 선물 발송시 발신자이름으로 반영되는 정보입니다.
+          </p>
+        )}
       </div>
     </StyledSendPersonContainer>
   );

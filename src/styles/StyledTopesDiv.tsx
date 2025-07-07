@@ -70,6 +70,7 @@ const StyledTopestDiv = styled.div`
   .error-message {
     color: ${({ theme }) => theme.palette.red600};
     margin-top: 10px;
+    ${({ theme }) => theme.typography.label2Regular}
   }
   .input-error {
     border-color: red;

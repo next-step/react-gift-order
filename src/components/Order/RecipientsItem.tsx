@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import styled from '@emotion/styled';
 import { type UseFormRegister, type FieldErrors } from 'react-hook-form';
@@ -42,8 +43,6 @@ const StyledInputErrorMsgContainer = styled.div`
     border-radius: 5px;
     &:focus {
       outline: none;
-      border-color: #007bff;
-      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
     }
   }
 `;

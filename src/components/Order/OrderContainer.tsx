@@ -33,6 +33,7 @@ const OrderContainer: FC = () => {
       msg: '',
       sendName: '',
       recipients: [],
+      total_count: 0,
     },
   });
   const {
@@ -48,6 +49,16 @@ const OrderContainer: FC = () => {
     alert(`Name: ${data.sendName}, Message: ${data.msg}`);
   };
   const currentRecipients = watch('recipients');
+  const totalCount = currentRecipients.reduce(
+    (sum, recipient) => sum + Number(recipient.count || 0),
+    0
+  );
+
+  useEffect(() => {
+    setValue('total_count', totalCount);
+  }, [currentRecipients, setValue]);
+
+  const totalPrice = selectedProduct ? totalCount * selectedProduct.price.sellingPrice : 0;
 
   return (
     <StyledTopestDiv>
@@ -80,8 +91,9 @@ const OrderContainer: FC = () => {
                 <p className='label2Regular'>{selectedProduct.brandInfo.name}</p>
 
                 <p className='item-price body2Bold basic-label'>
-                  <span className='label1Regular'>상품가 </span>
-                  {/* {totalPrice.toLocaleString()} 원 */}
+                  <span className='label1Regular'>
+                    상품가 {selectedProduct.price.sellingPrice}원
+                  </span>
                 </p>
               </div>
             </div>
@@ -91,7 +103,7 @@ const OrderContainer: FC = () => {
         </StyledItemInfoContainer>
 
         <StyledOrderButton type='submit' className='order body1Bold'>
-          {/* {selectedProduct ? `${count}개 구매하기 (${totalPrice.toLocaleString()}원)` : '상품을 선택해주세요'} */}
+          {selectedProduct ? `${totalPrice}원 주문하기 (${totalCount}개)` : '상품을 선택해주세요'}
         </StyledOrderButton>
         <Spacer />
       </form>
