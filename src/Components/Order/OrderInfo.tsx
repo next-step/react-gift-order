@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { useOrderForm } from '@/hooks/useOrderForm';
+import { useNavigate } from 'react-router-dom';
 
 const Wrapper = styled.div`
   display: flex;
@@ -107,15 +108,17 @@ const GiftForm = () => {
     message: '',
   });
 
+  const navigate = useNavigate();
   const handleSubmit = () => {
     if (validate()) {
       alert(
         `주문이 완료되었습니다.
-상품명: BBQ 양념치킨+크림치즈볼+콜라1.25L
-구매 수량: ${values.quantity}
-발신자 이름: ${values.sender}
-메시지: ${values.message}`
+        상품명: BBQ 양념치킨+크림치즈볼+콜라1.25L
+        구매 수량: ${values.quantity}
+        발신자 이름: ${values.sender}
+        메시지: ${values.message}`
       );
+      navigate('/');
     }
   };
 
