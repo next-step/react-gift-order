@@ -1,4 +1,6 @@
 import styled from '@emotion/styled';
+import { useContext } from 'react';
+import { UserInfoContext } from '@/pages/Login';
 
 const FriendSelectorWrapper = styled.div`
   width: auto;
@@ -45,12 +47,15 @@ const FriendSelectorBoxText = styled.p`
 `;
 
 function FriendSelector() {
+  const user = useContext(UserInfoContext);
+  const userId = sessionStorage.getItem('userId')?.split('@')[0] ?? '';
+
   return (
     <FriendSelectorWrapper>
       <FriendSelectorBox>
         <FriendSelectorBoxBtn></FriendSelectorBoxBtn>
         <FriendSelectorBoxText>
-          선물할 친구를 선택해 주세요.
+          {userId && userId+'님! '}선물할 친구를 선택해 주세요.
         </FriendSelectorBoxText>
       </FriendSelectorBox>
     </FriendSelectorWrapper>

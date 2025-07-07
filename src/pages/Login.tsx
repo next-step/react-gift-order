@@ -109,7 +109,12 @@ function Login() {
     e.preventDefault();
     if (!isFormValid) return;
 
-    setUserInfo({ id: id.value, pw: pw.value});
+    const nextUser = {id: id.value, pw: pw.value};
+
+    setUserInfo(nextUser);
+
+    sessionStorage.setItem('userId',nextUser.id);
+    // sessionStorage.setItem('userPw',`${userInfo?.pw}`);
 
     navigate(from, { replace: true });
   };
