@@ -62,3 +62,32 @@
 - 모든 기능은 useState와 커스텀 훅만으로 구현
 - Form/Validation 라이브러리 미사용
 - 기능별로 커밋을 쪼개어 협업 및 코드리뷰에 용이하게 관리
+
+---
+
+## 7/7 수정사항
+1. 인증(Context) 관련 파일 분리
+기존에는 AuthContext.tsx 파일 하나에 인증 관련 코드(useAuth, AuthProvider, AuthContext 등)가 모두 들어있었음.
+이를 역할별로 아래와 같이 4개의 파일로 분리함:
+src/contexts/AuthTypes.ts : 타입 정의만 따로 분리
+src/contexts/AuthContext.tsx : Context 객체만 export
+src/contexts/useAuth.ts : useAuth 훅만 export (default export)
+src/contexts/AuthProvider.tsx : AuthProvider 컴포넌트만 export (default export)
+
+2. ProtectedRoute HOC 폴더로 이동
+로그인 체크 등 재사용 가능한 HOC(고차 컴포넌트)인 ProtectedRoute를
+src/components/ProtectedRoute.tsx → src/hoc/ProtectedRoute.tsx로 이동
+기존 components 폴더의 ProtectedRoute 파일은 삭제
+
+3. import 경로 일괄 수정
+useAuth를 사용하는 모든 파일에서 import 경로를
+@/contexts/AuthContext → @/contexts/useAuth로 변경
+적용 파일: FeaturedGifts.tsx, Header.tsx, Hero.tsx, Login.tsx, MyPage.tsx
+AuthProvider를 사용하는 곳도
+@/contexts/AuthContext → @/contexts/AuthProvider로 변경
+ProtectedRoute를 사용하는 곳도
+@/components/ProtectedRoute → @/hoc/ProtectedRoute로 변경
+
+4. ProtectedRoute 내부 로직 개선
+useAuth를 실제로 사용하여,
+로그인하지 않은 사용자는 <Navigate to="/login" />로 리다이렉트하도록 구현
