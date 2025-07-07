@@ -11,7 +11,18 @@ const LoginFormSection = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.[LOCATION_STATE_KEYS.FROM] ?? ROUTES.HOME;
+
+  type FromState = {
+    pathname: string;
+    search?: string;
+  };
+
+  const fromState = location.state?.[LOCATION_STATE_KEYS.FROM] as
+    | FromState
+    | undefined;
+  const redirectTo = fromState
+    ? fromState.pathname + (fromState.search ?? '')
+    : ROUTES.HOME;
 
   const {
     email,
@@ -41,8 +52,6 @@ const LoginFormSection = () => {
     e.preventDefault();
 
     login({ email });
-
-    const redirectTo = from ? from.pathname + from.search : '/';
     navigate(redirectTo, { replace: true });
   };
 
