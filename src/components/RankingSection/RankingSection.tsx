@@ -8,6 +8,9 @@ import { Button } from '@/components/common/Button';
 import { tabs, filters, products } from '@/mock/mockData';
 import type { TabId, FilterId } from '@/types';
 import { useSearchParams } from 'react-router';
+import { ROUTE_PATH } from '@/shared/RoutePath';
+import { useNavigate } from 'react-router';
+import { useAuth } from '@/contexts/AuthContext';
 
 const RankingHeader = styled.h2`
   font-size: 18px;
@@ -32,7 +35,8 @@ const isValidFilterId = (filterId: string | null): filterId is FilterId => {
 
 export const RankingSection = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-
+  const { user } = useAuth();
+  const navigate = useNavigate();
   // URL 파라미터에서 값을 가져오고 유효성 검증
   const tabParam = searchParams.get('tab');
   const filterParam = searchParams.get('filter');
@@ -65,6 +69,13 @@ export const RankingSection = () => {
     }
   };
 
+  const handleProductClick = () => {
+    if (user) {
+      navigate(ROUTE_PATH.ORDER);
+    } else {
+      navigate(ROUTE_PATH.LOGIN);
+    }
+  };
   const displayedProducts = isExpanded ? products : products.slice(0, itemsPerPage);
   const buttonText = isExpanded ? '접기' : '더보기';
 
@@ -78,10 +89,7 @@ export const RankingSection = () => {
         onFilterChange={handleFilterChange}
       />
 
-      <ProductGrid
-        products={displayedProducts}
-        onProductClick={(product) => console.log('제품클릭', product)}
-      />
+      <ProductGrid products={displayedProducts} onProductClick={handleProductClick} />
       <ButtonContainer>
         <Button onClick={handleToggleView}>{buttonText}</Button>
       </ButtonContainer>
