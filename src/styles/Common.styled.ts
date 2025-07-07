@@ -121,6 +121,15 @@ export const SubText = styled.p`
     text-align: left;
 `
 
+export const ErrorText = styled.p`
+    font-size: 0.75rem;
+    font-weight: 400;
+    line-height: 1rem;
+    color: red;
+    margin: 0px;
+    text-align: left;
+`
+
 export const LowField = styled.div`
   display: flex;
   -webkit-box-pack: start;

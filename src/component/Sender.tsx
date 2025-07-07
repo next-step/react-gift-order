@@ -1,10 +1,14 @@
-import { DefaultComponentDiv, EmptyDiv12h, EmptyDiv24h, EmptyDiv4h, EmptyDiv8h, SideBlankDiv, SimpleInput, SubText, SubTitle } from '@/styles/Common.styled';
-import { useState } from 'react';
+import { DefaultComponentDiv, EmptyDiv12h, EmptyDiv24h, EmptyDiv4h, EmptyDiv8h, ErrorText, SideBlankDiv, SimpleInput, SubText, SubTitle } from '@/styles/Common.styled';
 
 
-const Sender = () => {
-    const [senderName, setSenderName] = useState('');
+interface SenderProps {
+    value: string;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onBlur: () => void;
+    error: string | null;
+}
 
+const Sender: React.FC<SenderProps> = ({ value, onChange, onBlur, error }) => {
     return (
         <DefaultComponentDiv>
             <SideBlankDiv>
@@ -14,15 +18,25 @@ const Sender = () => {
                 <SimpleInput
                     type="text"
                     placeholder="이름을 입력하세요."
-                    value={senderName}
-                    onChange={(e) => setSenderName(e.target.value)}
+                    value={value}
+                    onChange={onChange}
+                    onBlur={onBlur}
                 />
-                <EmptyDiv4h />
-                <SubText>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</SubText>
+                {error ? (
+                    <>
+                        <EmptyDiv4h />
+                        <ErrorText>{error}</ErrorText>
+                    </>
+                ) : (
+                    <>
+                        <EmptyDiv4h />
+                        <SubText>* 실제 선물 발송 시 발신자 이름으로 반영되는 정보입니다.</SubText>
+                    </>
+                )}
                 <EmptyDiv24h />
             </SideBlankDiv>
         </DefaultComponentDiv>
     );
-}
+};
 
-export default Sender
+export default Sender;

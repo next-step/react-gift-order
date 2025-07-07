@@ -1,8 +1,13 @@
 import { DefaultComponentDiv, OrderButton, Price, ProductBox, ProductImage, ProductInfo, ProductName, SubText, SubTitle } from '@/styles/Common.styled'
 
-const OrderCheck = () => {
+import React from 'react';
 
-    
+interface OrderCheckProps {
+  onOrder: () => void;
+  message: string;
+}
+
+const OrderCheck: React.FC<OrderCheckProps> = ({ onOrder, message }) => {
   return (
     <DefaultComponentDiv>
       <SubTitle>상품 정보</SubTitle>
@@ -21,9 +26,13 @@ const OrderCheck = () => {
         </ProductInfo>
       </ProductBox>
 
-      <OrderButton>29,000원 주문하기</OrderButton>
+      {message && (
+        <SubText style={{ color: 'green', marginTop: '12px' }}>{message}</SubText>
+      )}
+
+      <OrderButton onClick={onOrder}>29,000원 주문하기</OrderButton>
     </DefaultComponentDiv>
   );
-}
+};
 
-export default OrderCheck
+export default OrderCheck;
