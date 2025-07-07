@@ -6,11 +6,13 @@ import * as S from './styles';
 interface SenderSectionProps {
   senderName: string;
   onSenderNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  error?: string;
 }
 
 const SenderSection: React.FC<SenderSectionProps> = ({
   senderName,
   onSenderNameChange,
+  error,
 }) => {
   return (
     <S.Container>
@@ -24,6 +26,7 @@ const SenderSection: React.FC<SenderSectionProps> = ({
           onChange={onSenderNameChange}
           description="* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다."
           layout="vertical"
+          error={error}
         />
       </S.FormContent>
     </S.Container>

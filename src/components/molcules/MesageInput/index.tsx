@@ -6,9 +6,10 @@ interface MessageInputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   placeholder?: string;
+  error?: string;
 }
 
-const MessageInput: React.FC<MessageInputProps> = ({ value, onChange, placeholder }) => {
+const MessageInput: React.FC<MessageInputProps> = ({ value, onChange, placeholder, error }) => {
   return (
     <S.Container>
       <S.Wrapper>
@@ -17,6 +18,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ value, onChange, placeholde
           onChange={onChange}
           placeholder={placeholder}
         />
+        {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
       </S.Wrapper>
     </S.Container>
   );

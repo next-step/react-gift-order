@@ -13,6 +13,7 @@ interface InputFieldProps {
   description?: string;
   labelMinWidth?: string;
   layout?: 'vertical' | 'horizontal';
+  error?: string;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -24,6 +25,7 @@ const InputField: React.FC<InputFieldProps> = ({
   description,
   labelMinWidth,
   layout = 'vertical',
+  error,
 }) => {
   return (
     <S.Container layout={layout}>
@@ -45,6 +47,11 @@ const InputField: React.FC<InputFieldProps> = ({
         <Text variant="description" style={{ marginLeft: '0.5rem' }}>
           {description}
         </Text>
+      )}
+      {error && (
+        <S.ErrorMessage>
+          {error}
+        </S.ErrorMessage>
       )}
     </S.Container>
   );

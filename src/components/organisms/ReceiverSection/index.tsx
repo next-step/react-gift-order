@@ -10,6 +10,9 @@ interface ReceiverSectionProps {
   onReceiverNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onReceiverPhoneChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onQuantityChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  receiverNameError?: string;
+  receiverPhoneError?: string;
+  quantityError?: string;
 }
 
 const ReceiverSection: React.FC<ReceiverSectionProps> = ({
@@ -19,6 +22,9 @@ const ReceiverSection: React.FC<ReceiverSectionProps> = ({
   onReceiverNameChange,
   onReceiverPhoneChange,
   onQuantityChange,
+  receiverNameError,
+  receiverPhoneError,
+  quantityError,
 }) => {
   return (
     <S.Container>
@@ -34,6 +40,7 @@ const ReceiverSection: React.FC<ReceiverSectionProps> = ({
             onChange={onReceiverNameChange}
             labelMinWidth="3.75rem"
             layout="horizontal"
+            error={receiverNameError}
           />
         </S.FormRow>
         <S.FormSpacer />
@@ -46,6 +53,7 @@ const ReceiverSection: React.FC<ReceiverSectionProps> = ({
             type="tel"
             labelMinWidth="3.75rem"
             layout="horizontal"
+            error={receiverPhoneError}
           />
         </S.FormRow>
         <S.FormSpacer />
@@ -58,6 +66,7 @@ const ReceiverSection: React.FC<ReceiverSectionProps> = ({
             type="number"
             labelMinWidth="3.75rem"
             layout="horizontal"
+            error={quantityError}
           />
         </S.FormRow>
       </S.FormContent>

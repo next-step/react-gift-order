@@ -15,6 +15,14 @@ interface Order {
   defaultTextMessage: string;
 }
 
+interface ValidationErrors {
+  message: string;
+  senderName: string;
+  receiverName: string;
+  receiverPhone: string;
+  quantity: string;
+}
+
 interface OrderTemplateProps {
   orders: Order[];
   selectedCardId: number;
@@ -25,12 +33,14 @@ interface OrderTemplateProps {
   receiverPhone: string;
   quantity: string;
   product?: RankingItem;
+  errors: ValidationErrors;
   onCardClick: (id: number) => void;
   onMessageChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onSenderNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onReceiverNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onReceiverPhoneChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onQuantityChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onOrder: () => void;
 }
 
 const OrderTemplate: React.FC<OrderTemplateProps> = ({
@@ -43,12 +53,14 @@ const OrderTemplate: React.FC<OrderTemplateProps> = ({
   receiverPhone,
   quantity,
   product,
+  errors,
   onCardClick,
   onMessageChange,
   onSenderNameChange,
   onReceiverNameChange,
   onReceiverPhoneChange,
   onQuantityChange,
+  onOrder,
 }) => {
   return (
     <>
@@ -75,6 +87,7 @@ const OrderTemplate: React.FC<OrderTemplateProps> = ({
               value={message}
               onChange={onMessageChange}
               placeholder="메시지를 입력하세요"
+              error={errors.message}
             />
           </S.FirstSection>
           
@@ -83,6 +96,7 @@ const OrderTemplate: React.FC<OrderTemplateProps> = ({
           <SenderSection
             senderName={senderName}
             onSenderNameChange={onSenderNameChange}
+            error={errors.senderName}
           />
           
           <S.Spacer />
@@ -94,6 +108,9 @@ const OrderTemplate: React.FC<OrderTemplateProps> = ({
             onReceiverNameChange={onReceiverNameChange}
             onReceiverPhoneChange={onReceiverPhoneChange}
             onQuantityChange={onQuantityChange}
+            receiverNameError={errors.receiverName}
+            receiverPhoneError={errors.receiverPhone}
+            quantityError={errors.quantity}
           />
           
           {product && (
@@ -105,7 +122,7 @@ const OrderTemplate: React.FC<OrderTemplateProps> = ({
         </S.Container>
       </S.ContentWrapper>
       
-      <S.FixedBottomButton onClick={() => console.log('주문하기 클릭')}>
+      <S.FixedBottomButton onClick={onOrder}>
         {product ? `${product.price.sellingPrice.toLocaleString()}원 결제하기` : '선물하기'}
       </S.FixedBottomButton>
     </>
