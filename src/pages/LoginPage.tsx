@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Section } from '@/components/layout';
 import { Button, ErrorMessage } from '@/components/common';
-import { useLoginForm } from '@/hooks';
+import { useLoginForm, useAuth } from '@/hooks';
 
 const LoginContainer = styled.div`
   display: flex;
@@ -87,22 +87,31 @@ const LoginPage = () => {
     onSubmit,
   } = useLoginForm();
 
+  const { login, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
   // LoginPage의 책임: 로그인 성공 후 처리
-  const handleLoginSuccess = ({
+  const handleLoginSuccess = async ({
     email,
     password,
   }: {
     email: string;
     password: string;
   }) => {
-    console.log('로그인 성공:', { email, password });
+    try {
+      // AuthContext의 login 함수 호출
+      await login(email, password);
 
-    // 이전 페이지로 이동하거나 홈으로 이동
-    const from = location.state?.from || '/';
-    navigate(from, { replace: true });
+      console.log('로그인 성공:', { email });
+
+      // 이전 페이지로 이동하거나 홈으로 이동
+      const from = location.state?.from || '/';
+      navigate(from, { replace: true });
+    } catch (error) {
+      console.error('로그인 실패:', error);
+      // TODO: 에러 메시지 표시 (나중에 추가)
+    }
   };
 
   return (
@@ -147,9 +156,9 @@ const LoginPage = () => {
               variant="primary"
               size="lg"
               fullWidth
-              disabled={!isFormValid}
+              disabled={!isFormValid || loading}
             >
-              로그인
+              {loading ? '로그인 중...' : '로그인'}
             </Button>
           </ButtonContainer>
         </LoginForm>

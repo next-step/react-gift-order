@@ -1,16 +1,19 @@
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { MobileLayout } from '@/components/layout';
 import { NavigationBar } from '@/components/navigation';
-import { HomePage, LoginPage, NotFoundPage } from '@/pages';
+import { HomePage, LoginPage, MyPage, NotFoundPage } from '@/pages';
+import { useAuth } from '@/hooks';
 
 // 라우트 경로 상수 선언
 const ROUTE_HOME = '/';
 const ROUTE_LOGIN = '/login';
+const ROUTE_MY = '/my';
 const ROUTE_NOT_FOUND = '*';
 
 function App() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   const getNavigationConfig = () => {
     switch (location.pathname) {
@@ -23,6 +26,12 @@ function App() {
       case ROUTE_LOGIN:
         return {
           title: '로그인',
+          showBackButton: true,
+          showProfileButton: false,
+        };
+      case ROUTE_MY:
+        return {
+          title: '마이페이지',
           showBackButton: true,
           showProfileButton: false,
         };
@@ -42,9 +51,15 @@ function App() {
   };
 
   const handleProfileClick = () => {
-    navigate('/login', {
-      state: { from: location.pathname },
-    });
+    if (isAuthenticated) {
+      // 로그인 상태면 마이페이지로 이동
+      navigate(ROUTE_MY);
+    } else {
+      // 비로그인 상태면 로그인 페이지로 이동
+      navigate(ROUTE_LOGIN, {
+        state: { from: location.pathname },
+      });
+    }
   };
 
   return (
@@ -60,6 +75,7 @@ function App() {
       <Routes>
         <Route path={ROUTE_HOME} element={<HomePage />} />
         <Route path={ROUTE_LOGIN} element={<LoginPage />} />
+        <Route path={ROUTE_MY} element={<MyPage />} />
         <Route path={ROUTE_NOT_FOUND} element={<NotFoundPage />} />
       </Routes>
     </MobileLayout>
