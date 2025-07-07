@@ -34,12 +34,12 @@ function ProductCard({
 
   const handleClick = () => {
     const redirectPath = ROUTES.ORDER.replace(":id", id.toString());
-    if (isLoggedIn) {
-      navigate(redirectPath);
-      return;
-    }
 
-    navigate(`${ROUTES.LOGIN}?redirect=${encodeURIComponent(redirectPath)}`);
+    navigate(
+      isLoggedIn
+        ? redirectPath
+        : `${ROUTES.LOGIN}?redirect=${encodeURIComponent(redirectPath)}`
+    );
   };
 
   return (
