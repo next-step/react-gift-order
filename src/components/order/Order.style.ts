@@ -153,6 +153,7 @@ export const fixedBottomStyle = (theme: Theme) => css`
 
 export const SubmitStyle = (theme: Theme) => css`
   width: 100%;
+  height : 50%
   padding: ${theme.spacing.spacing4};
   color: black;
   font-size: ${theme.typography.title1Regular.size};
