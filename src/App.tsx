@@ -4,6 +4,7 @@ import { NotFoundPage } from '@/pages/NotFoundPage'
 import { Home } from '@/pages/Home'
 import { MyPage } from '@/pages/MyPage'
 import { PrivateRoute } from '@/routes/PrivateRoute'
+import { OrderPage } from '@/pages/OrderPage'
 
 function App() {
   return (
@@ -15,6 +16,14 @@ function App() {
         element={
           <PrivateRoute>
             <MyPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/order/:id"
+        element={
+          <PrivateRoute>
+            <OrderPage />
           </PrivateRoute>
         }
       />
