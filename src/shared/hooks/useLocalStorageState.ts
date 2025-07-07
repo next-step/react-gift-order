@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 
+import { JSONSerializer } from "@/shared/utils/json";
+
 export type SerializablePrimitive = string | number | boolean | null | undefined;
 export type SerializableArray = SerializableValue[];
 export type SerializableValue = SerializablePrimitive | SerializableArray | SerializableRecord;
@@ -16,7 +18,7 @@ export const useLocalStorageState = <T extends SerializableValue>(key: string, i
     const [state, setState] = useState<T>(() => {
         try {
             const stored = localStorage.getItem(key);
-            return stored ? JSON.parse(stored) : initialValue;
+            return stored ? JSONSerializer.parse<T>(stored) : initialValue;
         } catch {
             return initialValue;
         }
@@ -24,7 +26,7 @@ export const useLocalStorageState = <T extends SerializableValue>(key: string, i
 
     useEffect(() => {
         try {
-            localStorage.setItem(key, JSON.stringify(state));
+            localStorage.setItem(key, JSONSerializer.stringify(state));
         } catch {
             console.warn(`[useLocalStorageState] 로컬 스토리지 저장 실패 : ${key}`);
         }
