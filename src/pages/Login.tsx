@@ -35,6 +35,7 @@ function Login({ onLogin }: LoginProps) {
     if (!isValidForm()) return;
     setLoginInfo(id);
     localStorage.setItem('id', id);
+    localStorage.setItem('name', id.split('@')[0]);
     onLogin();
   }
 
