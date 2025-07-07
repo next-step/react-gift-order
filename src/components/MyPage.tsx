@@ -12,9 +12,11 @@ const MyPage: React.FC = () => {
 
   useEffect(() => {
     const email = sessionStorage.getItem("email");
-    setUser({ email });
+
     if (!email) {
       navigate("/login");
+    } else {
+      setUser({ email });
     }
   }, []);
 
