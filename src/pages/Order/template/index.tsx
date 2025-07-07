@@ -51,56 +51,64 @@ const OrderTemplate: React.FC<OrderTemplateProps> = ({
   onQuantityChange,
 }) => {
   return (
-    <S.Container>
-      <S.FirstSection>
-        <CardCarousel
-          orders={orders}
-          selectedCardId={selectedCardId}
-          onCardClick={onCardClick}
-        />
-        
-        <S.PreviewContainer>
-          <S.PreviewImageContainer>
-            <Image
-              src={selectedCard?.imageUrl || ''}
-              alt={`${selectedCard?.id}번 메시지 카드`}
-              variant="preview"
+    <>
+      <S.ContentWrapper>
+        <S.Container>
+          <S.FirstSection>
+            <CardCarousel
+              orders={orders}
+              selectedCardId={selectedCardId}
+              onCardClick={onCardClick}
             />
-          </S.PreviewImageContainer>
-        </S.PreviewContainer>
-        
-        <MessageInput
-          value={message}
-          onChange={onMessageChange}
-          placeholder="메시지를 입력하세요"
-        />
-      </S.FirstSection>
-      
-      <S.Spacer />
-      
-      <SenderSection
-        senderName={senderName}
-        onSenderNameChange={onSenderNameChange}
-      />
-      
-      <S.Spacer />
-      
-      <ReceiverSection
-        receiverName={receiverName}
-        receiverPhone={receiverPhone}
-        quantity={quantity}
-        onReceiverNameChange={onReceiverNameChange}
-        onReceiverPhoneChange={onReceiverPhoneChange}
-        onQuantityChange={onQuantityChange}
-      />
-      
-      {product && (
-        <>
+            
+            <S.PreviewContainer>
+              <S.PreviewImageContainer>
+                <Image
+                  src={selectedCard?.imageUrl || ''}
+                  alt={`${selectedCard?.id}번 메시지 카드`}
+                  variant="preview"
+                />
+              </S.PreviewImageContainer>
+            </S.PreviewContainer>
+            
+            <MessageInput
+              value={message}
+              onChange={onMessageChange}
+              placeholder="메시지를 입력하세요"
+            />
+          </S.FirstSection>
+          
           <S.Spacer />
-          <ProductInfo product={product} />
-        </>
-      )}
-    </S.Container>
+          
+          <SenderSection
+            senderName={senderName}
+            onSenderNameChange={onSenderNameChange}
+          />
+          
+          <S.Spacer />
+          
+          <ReceiverSection
+            receiverName={receiverName}
+            receiverPhone={receiverPhone}
+            quantity={quantity}
+            onReceiverNameChange={onReceiverNameChange}
+            onReceiverPhoneChange={onReceiverPhoneChange}
+            onQuantityChange={onQuantityChange}
+          />
+          
+          {product && (
+            <>
+              <S.Spacer />
+              <ProductInfo product={product} />
+            </>
+          )}
+        </S.Container>
+      </S.ContentWrapper>
+      
+      <S.FixedBottomButton onClick={() => console.log('주문하기 클릭')}>
+        {product ? `${product.price.sellingPrice.toLocaleString()}원 결제하기` : '선물하기'}
+      </S.FixedBottomButton>
+    </>
   );
 };
 

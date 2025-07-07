@@ -26,3 +26,28 @@ export const PreviewImageContainer = styled.div`
   overflow: hidden;
   background: ${({ theme }) => theme.semantic.background.default};
 `;
+
+export const FixedBottomButton = styled.button`
+  position: fixed;
+  bottom: 0;
+  width: 720px;
+  height: 60px;
+  background-color: ${({ theme }) => theme.semantic.brand.kakaoYellow};
+  color: ${({ theme }) => theme.colors.gray[900]};
+  border: none;
+  ${({ theme }) => theme.typography.body1Bold};
+  cursor: pointer;
+  z-index: 1000;
+  
+  &:hover {
+    background-color: ${({ theme }) => theme.semantic.brand.kakaoYellowHover};
+  }
+  
+  &:active {
+    background-color: ${({ theme }) => theme.semantic.brand.kakaoYellowActive};
+  }
+`;
+
+export const ContentWrapper = styled.div`
+  padding-bottom: 70px;
+`;
