@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
-import { OrderStateProvider } from "./OrderStateContext";
-import { OrderFormProvider } from "./OrderFormContext";
-import { OrderCalculationProvider } from "./OrderCalculationContext";
-import { OrderValidationProvider } from "./OrderValidationContext";
+import { OrderStateProvider } from "@/contexts/order/OrderStateContext";
+import { OrderFormProvider } from "@/contexts/order/OrderFormContext";
+import { OrderCalculationProvider } from "@/contexts/order/OrderCalculationContext";
+import { OrderValidationProvider } from "@/contexts/order/OrderValidationContext";
 
 interface OrderProviderWrapperProps {
   children: ReactNode;

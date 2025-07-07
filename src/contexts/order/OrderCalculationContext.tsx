@@ -1,6 +1,6 @@
 import { createContext, useContext, useCallback, type ReactNode } from "react";
-import { useOrderState } from "./OrderStateContext";
-import type { OrderCalculationContextType } from "./types";
+import { useOrderState } from "@/contexts/order/OrderStateContext";
+import type { OrderCalculationContextType } from "@/contexts/order/types";
 
 const OrderCalculationContext = createContext<
   OrderCalculationContextType | undefined

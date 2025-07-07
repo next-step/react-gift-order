@@ -9,8 +9,11 @@ import type { Order } from "@/types";
 import type { Register } from "@/types/form-register-type";
 import { useForm } from "@/hooks/common/useForm";
 import { orderValidationRules } from "@/contexts/order";
-import { useOrderState } from "./OrderStateContext";
-import type { OrderFormContextType, OrderFormChangeEvent } from "./types";
+import { useOrderState } from "@/contexts/order";
+import type {
+  OrderFormContextType,
+  OrderFormChangeEvent,
+} from "@/contexts/order";
 
 const OrderFormContext = createContext<OrderFormContextType | undefined>(
   undefined,

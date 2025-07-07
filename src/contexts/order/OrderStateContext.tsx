@@ -7,7 +7,7 @@ import {
 } from "react";
 import type { Order } from "@/types";
 import { initialState } from "@/contexts/order";
-import type { OrderStateContextType } from "./types";
+import type { OrderStateContextType } from "@/contexts/order";
 
 const OrderStateContext = createContext<OrderStateContextType | undefined>(
   undefined,
