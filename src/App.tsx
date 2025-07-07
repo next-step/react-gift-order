@@ -3,8 +3,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import HomePage from '@/pages/HomePage';
 import LoginPage from '@/pages/LoginPage';
 import NotFoundPage from '@/pages/NotFoundPage';
-import { ROUTES } from '@/constants/routes';
 import MyPage from './pages/Mypage';
+import OrderPage from '@/pages/OrderPage';
+import { ROUTES } from '@/constants/routes';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path={ROUTES.HOME} element={<HomePage />} />
           <Route path={ROUTES.LOGIN} element={<LoginPage />} />
           <Route path={ROUTES.MY} element={<MyPage />} />
+          <Route path={ROUTES.ORDER} element={<OrderPage />} />
           <Route path={ROUTES.NOT_FOUND} element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
