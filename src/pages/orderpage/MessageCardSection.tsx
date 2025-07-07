@@ -6,22 +6,28 @@ import type { MessageCard } from "../../mocks/types";
 
 interface Props {
   value: string;
-  onChange: (value: string) => void;
+  onSelect: (text: string) => void;
+  onChangeMessage: (text: string) => void;
   error?: string;
 }
 
-const MessageCardSection = ({ value, onChange, error }: Props) => {
+const MessageCardSection = ({
+  value,
+  onSelect,
+  onChangeMessage,
+  error,
+}: Props) => {
   const [selectedCard, setSelectedCard] = useState<MessageCard>(
     MESSAGE_CARD_LIST[0]
   );
 
   useEffect(() => {
-    onChange(MESSAGE_CARD_LIST[0].defaultTextMessage);
+    onSelect(MESSAGE_CARD_LIST[0].defaultTextMessage);
   }, []);
 
   const handleSelect = (card: MessageCard) => {
     setSelectedCard(card);
-    onChange(card.defaultTextMessage);
+    onSelect(card.defaultTextMessage);
   };
 
   return (
@@ -31,6 +37,7 @@ const MessageCardSection = ({ value, onChange, error }: Props) => {
           <ThumbButton
             key={card.id}
             onClick={() => handleSelect(card)}
+            type="button"
             selected={selectedCard.id === card.id}
           >
             <ThumbImg src={card.thumbUrl} alt="thumb" height={50} />
@@ -44,7 +51,7 @@ const MessageCardSection = ({ value, onChange, error }: Props) => {
         <MessageInput
           placeholder="메시지를 입력해주세요."
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => onChangeMessage(e.target.value)}
         />
         {error && <ErrorText>{error}</ErrorText>}
       </MessageInputWrapper>
@@ -99,9 +106,8 @@ const PreviewImage = styled.img`
   box-shadow: 0 6px 8px lightgray;
 `;
 
-const MessageInput = styled.textarea`
+const MessageInput = styled.input`
   width: 90%;
-  height: 40px;
   margin: 0 auto 18px;
   border: 1px solid ${({ theme }) => theme.colors.gray600};
   border-radius: 10px;

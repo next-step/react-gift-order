@@ -48,12 +48,7 @@ const ReceiverInfoSection = ({
 
       <FormRow>
         <Label>수량</Label>
-        <Input
-          type="number"
-          min={1}
-          value={quantity}
-          onChange={onChangeQuantity}
-        />
+        <Input type="number" value={quantity} onChange={onChangeQuantity} />
       </FormRow>
       {errorQuantity && <ErrorText>{errorQuantity}</ErrorText>}
     </>
