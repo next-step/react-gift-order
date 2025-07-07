@@ -4,7 +4,7 @@ import { FormField } from "@/components/order/FormField";
 import { css } from "@emotion/react";
 
 export const OrderFormSection = () => {
-  const { form, setField, errors } = useOrderForm();
+  const { values, updateField, errors } = useOrderForm();
 
   return (
     <section css={sectionStyle}>
@@ -13,8 +13,8 @@ export const OrderFormSection = () => {
       <FormField label="메시지" error={errors.message}>
         <textarea
           id="message"
-          value={form.message}
-          onChange={(e) => setField("message", e.target.value)}
+          value={values.message}
+          onChange={(e) => updateField("message", e.target.value)}
           placeholder="받는 분께 전달할 메시지를 입력하세요"
         />
       </FormField>
@@ -23,8 +23,8 @@ export const OrderFormSection = () => {
         <input
           type="text"
           id="senderName"
-          value={form.senderName}
-          onChange={(e) => setField("senderName", e.target.value)}
+          value={values.senderName}
+          onChange={(e) => updateField("senderName", e.target.value)}
           placeholder="보내는 사람 이름"
         />
       </FormField>
@@ -33,8 +33,8 @@ export const OrderFormSection = () => {
         <input
           type="text"
           id="receiverName"
-          value={form.receiverName}
-          onChange={(e) => setField("receiverName", e.target.value)}
+          value={values.receiverName}
+          onChange={(e) => updateField("receiverName", e.target.value)}
           placeholder="받는 사람 이름"
         />
       </FormField>
@@ -43,8 +43,8 @@ export const OrderFormSection = () => {
         <input
           type="tel"
           id="receiverPhone"
-          value={form.receiverPhone}
-          onChange={(e) => setField("receiverPhone", e.target.value)}
+          value={values.receiverPhone}
+          onChange={(e) => updateField("receiverPhone", e.target.value)}
           placeholder="01012345678"
         />
       </FormField>
@@ -54,9 +54,9 @@ export const OrderFormSection = () => {
           type="number"
           id="quantity"
           min={1}
+          value={values.quantity}
+          onChange={(e) => updateField("quantity", Number(e.target.value))}
           placeholder="수량을 입력하세요"
-          value={form.quantity}
-          onChange={(e) => setField("quantity", Number(e.target.value))}
         />
       </FormField>
     </section>
