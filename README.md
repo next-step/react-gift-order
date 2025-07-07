@@ -90,4 +90,4 @@ ProtectedRoute를 사용하는 곳도
 
 4. ProtectedRoute 내부 로직 개선
 useAuth를 실제로 사용하여,
-로그인하지 않은 사용자는 <Navigate to="/login" />로 리다이렉트하도록 구현
+로그인하지 않은 사용자는 "<Navigate to="/login" />"로 리다이렉트하도록 구현
