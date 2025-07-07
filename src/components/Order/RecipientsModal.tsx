@@ -15,7 +15,7 @@ interface RecipientsModalProps {
   existedRecipients: Recipient[];
 }
 
-const ModalOverlay = styled.div`
+const StyledModalMainContainer = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -28,7 +28,7 @@ const ModalOverlay = styled.div`
   z-index: 1000;
 `;
 
-const ModalContent = styled.div`
+const StyeldModalContent = styled.div`
   background: white;
   padding: 30px;
   border-radius: 10px;
@@ -40,7 +40,7 @@ const ModalContent = styled.div`
   overflow-y: auto; /* 내용이 넘칠 경우 스크롤 */
 `;
 
-const ModalHeader = styled.div`
+const SteyldModalHeader = styled.div`
   display: flex;
   flex-direction: column;
 
@@ -56,8 +56,9 @@ const ModalHeader = styled.div`
   }
 `;
 
-const ModalBody = styled.div`
+const StyledModalBody = styled.div`
   margin-bottom: 20px;
+  min-height: 100px;
   /* 각 RecipientsItem 간의 간격 */
   & > div {
     margin-bottom: 20px;
@@ -71,12 +72,13 @@ const ModalBody = styled.div`
   }
 `;
 
-const ModalFooter = styled.div`
+const StyledRecipientsModalFooterBtnContainer = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   gap: 10px;
   button {
     border: 1px solid transparent;
+    width: 50%;
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
@@ -150,17 +152,17 @@ const RecipientsModal: React.FC<RecipientsModalProps> = ({ onClose, onAdd, exist
   };
 
   return (
-    <ModalOverlay onClick={onClose}>
-      <ModalContent onClick={(e) => e.stopPropagation()}>
-        <ModalHeader>
+    <StyledModalMainContainer onClick={onClose}>
+      <StyeldModalContent onClick={(e) => e.stopPropagation()}>
+        <SteyldModalHeader>
           <h2 className='title1Bold'>받는 사람</h2>
           <p className='body2Regular'>* 최대 10명까지 추가할 수 있어요</p>
           <p className='body2Regular'>* 받는 사람의 전화번호를 중복으로 입력할 수 없어요</p>
           <button type='button' onClick={handleAddPersonField} className='add-person-field'>
             추가하기
           </button>
-        </ModalHeader>
-        <ModalBody>
+        </SteyldModalHeader>
+        <StyledModalBody>
           {fields.map((field, index) => (
             <RecipientsItem
               key={field.id}
@@ -175,8 +177,8 @@ const RecipientsModal: React.FC<RecipientsModalProps> = ({ onClose, onAdd, exist
               // 초기 데이터는 field 자체를 전달 (이미 useFieldArray에 의해 관리되고 있으므로)
             />
           ))}
-        </ModalBody>
-        <ModalFooter>
+        </StyledModalBody>
+        <StyledRecipientsModalFooterBtnContainer>
           <button type='button' className='cancel' onClick={onClose}>
             취소
           </button>
@@ -187,9 +189,9 @@ const RecipientsModal: React.FC<RecipientsModalProps> = ({ onClose, onAdd, exist
           >
             {fields.length}명 완료
           </button>
-        </ModalFooter>
-      </ModalContent>
-    </ModalOverlay>
+        </StyledRecipientsModalFooterBtnContainer>
+      </StyeldModalContent>
+    </StyledModalMainContainer>
   );
 };
 
