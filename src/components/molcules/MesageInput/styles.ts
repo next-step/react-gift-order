@@ -8,5 +8,4 @@ export const Container = styled.div`
 
 export const Wrapper = styled.div`
   width: 100%;
-  padding: 0 ${({ theme }) => theme.spacing.spacing5};
 `;

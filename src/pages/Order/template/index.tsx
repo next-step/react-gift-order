@@ -2,6 +2,8 @@ import React from 'react';
 import Image from '@/components/atoms/Image';
 import MessageInput from '@/components/molcules/MesageInput';
 import CardCarousel from '@/components/organisms/CardCarousel';
+import SenderSection from '@/components/organisms/SenderSection';
+import ReceiverSection from '@/components/organisms/ReceiverSection';
 import * as S from './styles';
 
 interface Order {
@@ -16,8 +18,16 @@ interface OrderTemplateProps {
   selectedCardId: number;
   selectedCard: Order | undefined;
   message: string;
+  senderName: string;
+  receiverName: string;
+  receiverPhone: string;
+  quantity: string;
   onCardClick: (id: number) => void;
   onMessageChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onSenderNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onReceiverNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onReceiverPhoneChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onQuantityChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const OrderTemplate: React.FC<OrderTemplateProps> = ({
@@ -25,32 +35,59 @@ const OrderTemplate: React.FC<OrderTemplateProps> = ({
   selectedCardId,
   selectedCard,
   message,
+  senderName,
+  receiverName,
+  receiverPhone,
+  quantity,
   onCardClick,
   onMessageChange,
+  onSenderNameChange,
+  onReceiverNameChange,
+  onReceiverPhoneChange,
+  onQuantityChange,
 }) => {
   return (
     <S.Container>
-      <CardCarousel
-        orders={orders}
-        selectedCardId={selectedCardId}
-        onCardClick={onCardClick}
-      />
+      <S.FirstSection>
+        <CardCarousel
+          orders={orders}
+          selectedCardId={selectedCardId}
+          onCardClick={onCardClick}
+        />
+        
+        <S.PreviewContainer>
+          <S.PreviewImageContainer>
+            <Image
+              src={selectedCard?.imageUrl || ''}
+              alt={`${selectedCard?.id}번 메시지 카드`}
+              variant="preview"
+            />
+          </S.PreviewImageContainer>
+        </S.PreviewContainer>
+        
+        <MessageInput
+          value={message}
+          onChange={onMessageChange}
+          placeholder="메시지를 입력하세요"
+        />
+      </S.FirstSection>
+      
       <S.Spacer />
       
-      <S.PreviewContainer>
-        <S.PreviewImageContainer>
-          <Image
-            src={selectedCard?.imageUrl || ''}
-            alt={`${selectedCard?.id}번 메시지 카드`}
-            variant="preview"
-          />
-        </S.PreviewImageContainer>
-      </S.PreviewContainer>
+      <SenderSection
+        senderName={senderName}
+        onSenderNameChange={onSenderNameChange}
+      />
       
-      <MessageInput
-        value={message}
-        onChange={onMessageChange}
-        placeholder="메시지를 입력하세요"
+      <S.Spacer />
+      
+      <ReceiverSection
+        receiverName={receiverName}
+        receiverPhone={receiverPhone}
+        quantity={quantity}
+        onReceiverNameChange={onReceiverNameChange}
+        onReceiverPhoneChange={onReceiverPhoneChange}
+        onQuantityChange={onQuantityChange}
       />
     </S.Container>
   );

@@ -1,0 +1,33 @@
+import React from 'react';
+import Label from '@/components/atoms/Label';
+import InputField from '@/components/molcules/InputField';
+import * as S from './styles';
+
+interface SenderSectionProps {
+  senderName: string;
+  onSenderNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const SenderSection: React.FC<SenderSectionProps> = ({
+  senderName,
+  onSenderNameChange,
+}) => {
+  return (
+    <S.Container>
+      <S.SectionTitle>
+        <Label variant="bold">보내는 사람</Label>
+      </S.SectionTitle>
+      <S.FormContent>
+        <InputField
+          placeholder="이름을 입력하세요."
+          value={senderName}
+          onChange={onSenderNameChange}
+          description="* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다."
+          layout="vertical"
+        />
+      </S.FormContent>
+    </S.Container>
+  );
+};
+
+export default SenderSection; 
