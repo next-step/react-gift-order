@@ -4,6 +4,7 @@ import { theme } from '@/theme/theme';
 import productData from '../data/productData';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
 
 const Wrapper = styled.section`
   padding: 0px 16px;
@@ -270,9 +271,18 @@ const PresentRanking: React.FC = () => {
   const presentTypes = ['받고 싶어한', '많이 선물한', '위시로 받은'];
 
   const navigate = useNavigate();
+  const { user } = useAuth();
+
   const goOrder = () => {
-    navigate('/Order');
+    if (user) {
+      navigate('/Order');
+    } else {
+      navigate('/login', {
+        state: { from: { pathname: '/Order' } },
+      });
+    }
   };
+
   return (
     <ThemeProvider theme={theme}>
       <Wrapper>
