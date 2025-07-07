@@ -1,4 +1,4 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import styled from "@emotion/styled";
 import LoginButton from "../components/common/BaseButton";
 import KakaoLogo from "../components/common/KakaoLogo";
@@ -7,8 +7,9 @@ import { useAuth } from "../contexts/AuthContext";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const { login } = useAuth();
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/my";
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -23,18 +24,7 @@ const LoginPage = () => {
 
     login(email);
 
-    const state = location.state as {
-      from?: string;
-      product?: { id: number };
-    };
-
-    if (state?.from) {
-      navigate(state.from, {
-        state: state.product ? { product: state.product } : undefined,
-      });
-    } else {
-      navigate("/my");
-    }
+    navigate(redirectTo);
   };
 
   const emailValidation = (value: string) => {

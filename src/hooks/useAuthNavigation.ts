@@ -9,7 +9,7 @@ export default function useAuthNavigation() {
     if (isLoggedIn) {
       navigate(targetPath);
     } else {
-      navigate("/login", { state: { from: targetPath } });
+      navigate(`/login?redirect=${encodeURIComponent(targetPath)}`);
     }
   };
 
