@@ -1,6 +1,6 @@
-import { useReducer } from "react";
+import { useReducer, useMemo } from "react";
 
-type OrderFormState = {
+export type OrderFormState = {
   message: string;
   senderName: string;
   receiverName: string;
@@ -9,9 +9,15 @@ type OrderFormState = {
   selectedCardId: number | null;
 };
 
-type Action =
-  | { type: "SET_FIELD"; field: keyof OrderFormState; value: string | number | null }
-  | { type: "RESET" };
+type SetFieldAction = {
+  type: "SET_FIELD";
+  field: keyof OrderFormState;
+  value: string | number | null;
+};
+
+type ResetAction = { type: "RESET" };
+
+type Action = SetFieldAction | ResetAction;
 
 const initialState: OrderFormState = {
   message: "",
@@ -33,36 +39,39 @@ const reducer = (state: OrderFormState, action: Action): OrderFormState => {
   }
 };
 
+const validate = (state: OrderFormState) => {
+  const isPhoneValid = /^010\d{8}$/.test(state.receiverPhone);
+
+  return {
+    message: state.message.trim() === "" ? "메시지를 입력해주세요." : undefined,
+    senderName: state.senderName.trim() === "" ? "보내는 사람 이름을 입력해주세요." : undefined,
+    receiverName: state.receiverName.trim() === "" ? "받는 사람 이름을 입력해주세요." : undefined,
+    receiverPhone: !isPhoneValid ? "전화번호는 01012345678 형식이어야 해요." : undefined,
+    quantity: state.quantity < 1 ? "수량은 1개 이상이어야 해요." : undefined,
+  };
+};
+
 export const useOrderForm = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const setField = (field: keyof OrderFormState, value: string | number | null) => {
+  const updateField = (field: keyof OrderFormState, value: string | number | null) => {
     dispatch({ type: "SET_FIELD", field, value });
   };
 
   const resetForm = () => dispatch({ type: "RESET" });
 
-  const isPhoneValid = /^010\d{8}$/.test(state.receiverPhone);
-  const isFormValid =
-    state.message.trim() !== "" &&
-    state.senderName.trim() !== "" &&
-    state.receiverName.trim() !== "" &&
-    isPhoneValid &&
-    state.quantity >= 1;
+  const errors = useMemo(() => validate(state), [state]);
 
-  const errors = {
-    message: state.message.trim() === "" ? "메시지를 입력해주세요." : null,
-    senderName: state.senderName.trim() === "" ? "보내는 사람 이름을 입력해주세요." : null,
-    receiverName: state.receiverName.trim() === "" ? "받는 사람 이름을 입력해주세요." : null,
-    receiverPhone: !isPhoneValid ? "전화번호는 01012345678 형식이어야 해요." : null,
-    quantity: state.quantity < 1 ? "수량은 1개 이상이어야 해요." : null,
-  };
+  const isFormValid = useMemo(
+    () => Object.values(errors).every((error) => error === undefined),
+    [errors]
+  );
 
   return {
-    form: state,
-    setField,
+    values: state,
+    updateField,
     resetForm,
-    isFormValid,
     errors,
+    isFormValid,
   };
 };
