@@ -8,6 +8,8 @@ const GiftRankingHeader = () => {
   const [target, setTarget] = useState("ALL");
   const [rankType, setRank] = useState("MANY_WISH");
 
+  type RANK_TYPE = "MANY_WISH" | "MANY_GIVE" | "MANY_WANT";
+
   const navigate = useNavigate();
   const theme = useTheme();
   const location = useLocation();
@@ -15,7 +17,7 @@ const GiftRankingHeader = () => {
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const initTarget = searchParams.get("target") || "ALL";
-    const initRank = searchParams.get("rankType") || "MANY_WISH";
+    const initRank = (searchParams.get("rankType") as RANK_TYPE) || "MANY_WISH";
     setTarget(initTarget);
     setRank(initRank);
     const params = new URLSearchParams(location.search);
@@ -90,28 +92,28 @@ const GiftRankingHeader = () => {
       </div>
       <div css={tabContainerStyle(theme)}>
         <div
-          onClick={() => handleRankClick("MANY-WANT")}
+          onClick={() => handleRankClick("MANY_WANT")}
           css={[
             tabItemStyle(theme),
-            rankType == "MANY-WANT" && selectedRankStyle(theme),
+            rankType == "MANY_WANT" && selectedRankStyle(theme),
           ]}
         >
           받고 싶어한
         </div>
         <div
-          onClick={() => handleRankClick("MANY-GIVE")}
+          onClick={() => handleRankClick("MANY_GIVE")}
           css={[
             tabItemStyle(theme),
-            rankType == "MANY-GIVE" && selectedRankStyle(theme),
+            rankType == "MANY_GIVE" && selectedRankStyle(theme),
           ]}
         >
           많이 선물한
         </div>
         <div
-          onClick={() => handleRankClick("MANY-WISH")}
+          onClick={() => handleRankClick("MANY_WISH")}
           css={[
             tabItemStyle(theme),
-            rankType == "MANY-WISH" && selectedRankStyle(theme),
+            rankType == "MANY_WISH" && selectedRankStyle(theme),
           ]}
         >
           위시로 받은
