@@ -8,6 +8,7 @@ import CardPicker from '@/components/order/CardPicker';
 import CardMessage from '@/components/order/CardMessage';
 import SenderInfo from '@/components/order/SenderInfo';
 import ReceiverInfo from '@/components/order/ReceiverInfo';
+import ProductInfo from '@/components/order/ProductInfo';
 
 import { products } from '@/mock/productsData';
 import { cardTemplates } from '@/mock/cardTemplates';
@@ -52,6 +53,7 @@ export default function OrderPage() {
         <ReceiverInfo value={receiver} onChange={setReceiver} />
 
         {/* 상품 정보 */}
+        <ProductInfo product={product} />
       </Wrapper>
     </MobileLayout>
   );
