@@ -149,9 +149,11 @@ const Login: React.FC = () => {
   const { login } = useAuth();
 
   const handleClick = () => {
-    login({ email: id });
+    const mockToken = 'mock-jwt-token';
+    login({ email: id }, mockToken);
     navigate(redirectTo, { replace: true });
   };
+
   return (
     <>
       <GlobalStyle />
