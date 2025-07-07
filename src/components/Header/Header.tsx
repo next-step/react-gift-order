@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { colors, typography, spacing } from '@/styles/tokens';
 import { useNavigate } from 'react-router';
 import { ROUTE_PATH } from '@/shared/RoutePath';
+import { useAuth } from '@/contexts/AuthContext';
 
 const HeaderContainer = styled.header`
   position: sticky;
@@ -45,13 +46,18 @@ interface HeaderProps {
 }
 
 export const Header = ({ title }: HeaderProps) => {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const handleBack = () => {
     navigate(-1);
   };
 
   const handleLogin = () => {
-    navigate(ROUTE_PATH.LOGIN);
+    if (user) {
+      navigate(ROUTE_PATH.MY_PAGE);
+    } else {
+      navigate(ROUTE_PATH.LOGIN);
+    }
   };
   return (
     <HeaderContainer>
