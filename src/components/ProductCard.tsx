@@ -1,18 +1,19 @@
 import styled from "@emotion/styled";
+import { useNavigate } from "react-router";
 
 interface ProductCardProps {
-    item: {
-        id: number | string;
-        name: string;
-        imageURL: string;
-        price: {
-            sellingPrice: number;
-        };
-        brandInfo: {
-            name: string;
-        };
+  item: {
+    id: number | string;
+    name: string;
+    imageURL: string;
+    price: {
+      sellingPrice: number;
     };
-    rank?: number;
+    brandInfo: {
+      name: string;
+    };
+  };
+  rank?: number;
 }
 
 const Card = styled.div`
@@ -54,13 +55,18 @@ const Price = styled.p`
 `;
 
 export default function ProductCard({ item, rank }: ProductCardProps) {
-    return (
-        <Card>
-            {rank !== undefined && <RankBadge>{rank}</RankBadge>}
-            <Image src={item.imageURL} alt={item.name} />
-            <Brand>{item.brandInfo.name}</Brand>
-            <Name>{item.name}</Name>
-            <Price>{item.price.sellingPrice.toLocaleString()}원</Price>
-        </Card>
-    );
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/order/${rank}`);
+  }
+  return (
+    <Card onClick={handleClick}>
+      {rank !== undefined && <RankBadge>{rank}</RankBadge>}
+      <Image src={item.imageURL} alt={item.name} />
+      <Brand>{item.brandInfo.name}</Brand>
+      <Name>{item.name}</Name>
+      <Price>{item.price.sellingPrice.toLocaleString()}원</Price>
+    </Card>
+  );
 }
