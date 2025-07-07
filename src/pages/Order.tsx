@@ -1,15 +1,21 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { OrderContainer } from '@/styles/Order/Order.styles';
 import {
-  OrderContainer,
   CardContainer,
   ThumbContainer,
   ThumbImgWrapper,
   ThumbImg,
   Image,
   InputTextArea,
+} from '@/styles/Order/Thumbnail.styles';
+import {
   SenderContainer,
-} from '@/styles/Order.styles';
+  SenderTitle,
+  SenderInput,
+  SenderInfo,
+} from '@/styles/Order/Sender.styles';
+import { RecieverContainer } from '@/styles/Order/Reciever.styles';
 import { orders } from '@/mocks/mockorder';
 
 function Order() {
@@ -31,7 +37,7 @@ function Order() {
       <CardContainer>
         <ThumbContainer>
           {orders.map((order) => (
-            <ThumbImgWrapper clicked={currentId == order.id}>
+            <ThumbImgWrapper key={order.id} clicked={currentId == order.id}>
               <ThumbImg
                 key={order.id}
                 src={order.thumbUrl}
@@ -45,11 +51,11 @@ function Order() {
         <InputTextArea value={text} onChange={handleChange} />
       </CardContainer>
       <SenderContainer>
-        보내는 사람
-        <div>이름 입력</div>
-        <div>* 설명</div>
+        <SenderTitle>보내는 사람</SenderTitle>
+        <SenderInput placeholder="이름 입력" />
+        <SenderInfo>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</SenderInfo>
       </SenderContainer>
-      <div>
+      <RecieverContainer>
         받는 사람
         <div>
           <div>이름</div>
@@ -63,7 +69,7 @@ function Order() {
           <div>수량</div>
           <div>input</div>
         </div>
-      </div>
+      </RecieverContainer>
       <div>
         상품정보
         <div>

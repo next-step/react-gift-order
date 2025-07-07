@@ -1,16 +1,5 @@
 import styled from '@emotion/styled';
 
-export const OrderContainer = styled.div`
-  display: flex;
-  max-width: 720px;
-  width: 100%;
-  min-height: 100vh;
-  flex-direction: column;
-  justify-content: left;
-  background-color: ${({ theme }) => `${theme.colors.gray300}`};
-  padding-top: 45px;
-`;
-
 export const CardContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -18,7 +7,7 @@ export const CardContainer = styled.div`
   gap: 15px;
   align-items: center;
   width: 100%;
-  padding: 20px;
+  padding: 15px;
   margin-bottom: 10px;
 `;
 
@@ -66,8 +55,4 @@ export const InputTextArea = styled.textarea`
     border-color: ${({ theme }) => theme.colors.gray900};
     outline: none;
   }
-`;
-
-export const SenderContainer = styled.div`
-  background-color: white;
 `;
