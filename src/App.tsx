@@ -1,6 +1,7 @@
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { MobileLayout } from '@/components/layout';
 import { NavigationBar } from '@/components/navigation';
+import { PrivateRoute } from '@/components/common';
 import { HomePage, LoginPage, MyPage, NotFoundPage } from '@/pages';
 import { useAuth } from '@/hooks';
 
@@ -75,7 +76,14 @@ function App() {
       <Routes>
         <Route path={ROUTE_HOME} element={<HomePage />} />
         <Route path={ROUTE_LOGIN} element={<LoginPage />} />
-        <Route path={ROUTE_MY} element={<MyPage />} />
+        <Route
+          path={ROUTE_MY}
+          element={
+            <PrivateRoute>
+              <MyPage />
+            </PrivateRoute>
+          }
+        />
         <Route path={ROUTE_NOT_FOUND} element={<NotFoundPage />} />
       </Routes>
     </MobileLayout>
