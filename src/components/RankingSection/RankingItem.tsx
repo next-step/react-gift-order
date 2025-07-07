@@ -4,6 +4,7 @@ import type { GiftItem } from '@/types/gift';
 type RankingItemProps = GiftItem & {
   rank: number;
   highlightCondition?: (rank: number) => boolean;
+  onClick?: () => void;
 };
 
 const RankingItem = ({
@@ -13,9 +14,10 @@ const RankingItem = ({
   brandInfo,
   rank,
   highlightCondition = (rank) => rank <= 3,
+  onClick,
 }: RankingItemProps) => {
   return (
-    <ItemWrapper>
+    <ItemWrapper onClick={onClick}>
       <ImageWrapper>
         <ProductImage src={imageURL} alt={name} />
         <RankBadge isTop={highlightCondition(rank)}>{rank}</RankBadge>
