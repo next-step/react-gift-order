@@ -44,7 +44,7 @@ const initialState: OrderState = {
 // ===== 리듀서 함수 =====
 const orderReducer = (state: OrderState, action: OrderAction): OrderState => {
   switch (action.type) {
-    case 'SELECT_CARD':
+    case 'SELECT_CARD': {
       const selectedCard = cardTemplates.find(card => card.id === action.payload);
       return {
         ...state,
@@ -52,63 +52,63 @@ const orderReducer = (state: OrderState, action: OrderAction): OrderState => {
         message: selectedCard?.defaultTextMessage ?? "",
         messageError: "", // 카드 선택 시 메시지 에러 초기화
       };
-    
-    case 'UPDATE_MESSAGE':
+    }
+    case 'UPDATE_MESSAGE': {
       return {
         ...state,
         message: action.payload,
         messageError: "", // 메시지 입력 시 에러 초기화
       };
-    
-    case 'UPDATE_SENDER':
+    }
+    case 'UPDATE_SENDER': {
       return {
         ...state,
         sender: action.payload,
         senderError: "", // 발신자 입력 시 에러 초기화
       };
-    
-    case 'UPDATE_RECEIVER_NAME':
+    }
+    case 'UPDATE_RECEIVER_NAME': {
       return {
         ...state,
         receiverName: action.payload,
       };
-    
-    case 'UPDATE_RECEIVER_PHONE':
+    }
+    case 'UPDATE_RECEIVER_PHONE': {
       return {
         ...state,
         receiverPhone: action.payload,
       };
-    
-    case 'UPDATE_QUANTITY':
+    }
+    case 'UPDATE_QUANTITY': {
       return {
         ...state,
         quantity: action.payload,
       };
-    
-    case 'SET_MESSAGE_ERROR':
+    }
+    case 'SET_MESSAGE_ERROR': {
       return {
         ...state,
         messageError: action.payload,
       };
-    
-    case 'SET_SENDER_ERROR':
+    }
+    case 'SET_SENDER_ERROR': {
       return {
         ...state,
         senderError: action.payload,
       };
-    
-    case 'CLEAR_MESSAGE_ERROR':
+    }
+    case 'CLEAR_MESSAGE_ERROR': {
       return {
         ...state,
         messageError: "",
       };
-    
-    case 'CLEAR_SENDER_ERROR':
+    }
+    case 'CLEAR_SENDER_ERROR': {
       return {
         ...state,
         senderError: "",
       };
-    
+    }
     default:
       return state;
   }
