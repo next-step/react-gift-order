@@ -63,13 +63,13 @@ export const ReceiverFormStyle = (theme: Theme) => css`
 
 export const InputRowStyle = (theme: Theme) => css`
   display: flex;
-  flex-direction: row; /* 👈 column을 row로 변경 */
-  align-items: flex-start; /* 👈 라벨과 입력창 상단 정렬 */
+  flex-direction: row;
+  align-items: flex-start; 
   gap: ${theme.spacing.spacing4};
 
   span {
     width: 70px;
-    padding-top: 15px; /* 라벨이 입력창과 세로 중앙에 오도록 미세조정 */
+    padding-top: 15px;
   }
 
   input {
@@ -87,7 +87,7 @@ export const TextStyle = (theme: Theme) => css`
   line-height: ${theme.typography.subtitle1Bold.lineHeight};
 `;
 
-export const TinyTextStyle = () => css`
+export const TinyTextStyle = css`
   font-size: 12px;
   color: #888888;
   margin-top: 4px;
@@ -162,7 +162,7 @@ export const SubmitStyle = (theme: Theme) => css`
   text-align: center;
 `;
 
-export const InputWrapperStyle = () => css`
+export const InputWrapperStyle = css`
   display: flex;
   flex-direction: column;
   flex: 1;
