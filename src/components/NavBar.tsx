@@ -2,6 +2,7 @@ import { ArrowLeft, User } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { css } from '@emotion/react';
 import { palette, spacing } from '@/styles/theme';
+import { useAuth } from '@/contexts/AuthContext';
 
 const headerStyle = css`
   position: sticky;
@@ -17,6 +18,7 @@ const headerStyle = css`
 export const NavBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { isLoggedIn } = useAuth();
 
   const goBack = () => {
     if (window.history.state && window.history.state.idx > 0) {
@@ -27,10 +29,10 @@ export const NavBar = () => {
   };
 
   const goProfile = () => {
-    if (location.pathname !== '/login') {
-      navigate('/login', { state: { from: location.pathname } });
+    if (isLoggedIn) {
+      navigate('/my');
     } else {
-      navigate('/');
+      navigate('/login', { state: { from: location.pathname } });
     }
   };
 

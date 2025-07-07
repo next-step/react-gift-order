@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { validateId, validatePw } from '@/utils/validation';
+import { useAuth } from '@/contexts/AuthContext'; 
 
 export const useLoginForm = () => {
   const [id, setId] = useState('');
@@ -8,6 +9,7 @@ export const useLoginForm = () => {
   const [idError, setIdError] = useState('');
   const [pwError, setPwError] = useState('');
   const [touched, setTouched] = useState({ id: false, pw: false });
+  const { login } = useAuth(); 
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -37,6 +39,7 @@ export const useLoginForm = () => {
   //로그인 버튼 눌렀을 때
   const onSubmit = () => {
     if (!isValid) return;
+    login('dummy-token');
     navigate(from, { replace: true });
   };
 
