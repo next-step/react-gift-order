@@ -18,9 +18,9 @@ interface ReceiverSectionProps {
   validateReceiverName: (value: string) => void;
   validateReceiverPhone: (value: string) => void;
   validateQuantity: (value: string) => void;
-  receiverNameErrorMessage: string | null;
-  receiverPhoneErrorMessage: string | null;
-  quantityErrorMessage: string | null;
+  receiverNameErrorMessage: string;
+  receiverPhoneErrorMessage: string;
+  quantityErrorMessage: string;
   hasReceiverNameError: boolean;
   hasReceiverPhoneError: boolean;
   hasQuantityError: boolean;
@@ -74,10 +74,7 @@ function ReceiverSectionComponent({
               validateReceiverPhone(e.target.value);
             }}
             hasError={hasReceiverPhoneError}
-            errorMessage={
-              receiverPhoneErrorMessage ||
-              RECEIVER_SECTION_CONSTANTS.PHONE_ERROR
-            }
+            errorMessage={receiverPhoneErrorMessage}
           />
         </FormField>
         <FormField>

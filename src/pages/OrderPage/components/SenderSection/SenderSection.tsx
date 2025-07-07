@@ -6,7 +6,7 @@ interface SenderSectionProps {
   senderName: string;
   handleSenderNameChange: (value: string) => void;
   validateSenderName: (value: string) => void;
-  senderNameErrorMessage: string | null;
+  senderNameErrorMessage: string;
   hasSenderNameError: boolean;
 }
 
@@ -51,9 +51,7 @@ function SenderSectionComponent({
       <SendForm>
         <Input
           hasError={hasSenderNameError}
-          errorMessage={
-            senderNameErrorMessage || SENDER_SECTION_CONSTANTS.NAME_ERROR
-          }
+          errorMessage={senderNameErrorMessage}
           type="text"
           placeholder={SENDER_SECTION_CONSTANTS.NAME_PLACEHOLDER}
           value={senderName}

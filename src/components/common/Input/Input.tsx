@@ -46,13 +46,15 @@ const StyledInput = styled.input<{ hasError?: boolean }>`
   }
 `;
 
-const Input = ({ hasError, errorMessage, ...props }: InputProps) => (
-  <InputContainer>
-    <StyledInput hasError={hasError} {...props} />
-    {hasError && errorMessage && (
-      <FormErrorMessage errorMessage={errorMessage} />
-    )}
-  </InputContainer>
-);
+const Input = ({ hasError, errorMessage, ...props }: InputProps) => {
+  const showErrorMessage = hasError && errorMessage;
+
+  return (
+    <InputContainer>
+      <StyledInput hasError={hasError} {...props} />
+      {showErrorMessage && <FormErrorMessage errorMessage={errorMessage} />}
+    </InputContainer>
+  );
+};
 
 export default Input;
