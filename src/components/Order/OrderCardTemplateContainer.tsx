@@ -70,7 +70,11 @@ const StyledOrderTemplateContainer = styled.div`
   width: 100%;
 `;
 
-const OrderCardTemplateContainer = ({ register, errors, setValue }: OrderCardTemplateContainerProps) => {
+const OrderCardTemplateContainer = ({
+  register,
+  errors,
+  setValue,
+}: OrderCardTemplateContainerProps) => {
   // 목 데이터 템플릿에서 선택된 템플릿을 저장하기 위한 state 값
   const [selectedTemplate, setSelectedTemplate] = useState<OrderTemplate>(ORDER_TEMPLATE_DATA[0]);
 
@@ -80,7 +84,7 @@ const OrderCardTemplateContainer = ({ register, errors, setValue }: OrderCardTem
   }, [selectedTemplate, setValue]);
 
   return (
-    <StyledOrderTemplateContainer className='background-default'>
+    <StyledOrderTemplateContainer className='background-default margin-bottom-10'>
       <StyledOrderCardSideScrollConntainer>
         {ORDER_TEMPLATE_DATA.map((template: OrderTemplate, index: number) => (
           <img
@@ -95,7 +99,11 @@ const OrderCardTemplateContainer = ({ register, errors, setValue }: OrderCardTem
 
       <StyledOrderCardContainer className='order-template-card'>
         <div className='card-image'>
-          <img src={selectedTemplate.imageUrl} alt={`메시지 카드 ${selectedTemplate.id}`} loading='lazy' />
+          <img
+            src={selectedTemplate.imageUrl}
+            alt={`메시지 카드 ${selectedTemplate.id}`}
+            loading='lazy'
+          />
         </div>
         <div>
           <textarea
@@ -103,7 +111,11 @@ const OrderCardTemplateContainer = ({ register, errors, setValue }: OrderCardTem
             className={`body2Regular ${errors.msg ? 'border-red' : ''}`}
             placeholder='메시지를 입력해주세요'
           ></textarea>
-          {errors.msg && <p className='label2Regular font-red margin-left-20'>{errors.msg.message?.toString()}</p>}
+          {errors.msg && (
+            <p className='label2Regular font-red margin-left-20'>
+              {errors.msg.message?.toString()}
+            </p>
+          )}
         </div>
       </StyledOrderCardContainer>
     </StyledOrderTemplateContainer>

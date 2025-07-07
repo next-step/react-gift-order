@@ -10,7 +10,7 @@ interface SenderContainerProps {
 
 const SenderContainer = ({ register, errors }: SenderContainerProps) => {
   return (
-    <StyledSendPersonContainer className='send-person background-default'>
+    <StyledSendPersonContainer className='send-person background-default margin-bottom-10'>
       <div>
         <p className='title2Bold'>보내는 사람</p>
       </div>

@@ -61,8 +61,7 @@ const RecipientsItem: React.FC<RecipientsItemProps> = ({
     <div>
       <StyledRecipientsItemContainerHeader>
         <p className='body1Bold'>받는 사람 {index + 1}</p>
-        {/* 필드가 1개 이상일 때만 삭제 버튼 표시 */}
-        {allRecipientsInModal.length > 1 && (
+        {allRecipientsInModal.length >= 1 && (
           <button type='button' onClick={() => onRemove(id)}>
             삭제
           </button>
@@ -100,7 +99,6 @@ const RecipientsItem: React.FC<RecipientsItemProps> = ({
               required: `받는 사람 ${index + 1}의 연락처는 필수입니다.`,
               validate: (value: string) => {
                 const currentTel = value.trim();
-
                 const isValidedTel = /^010\d{8}$/.test(currentTel);
 
                 if (!isValidedTel) {

@@ -76,6 +76,18 @@ const StyledTopestDiv = styled.div`
     border-color: red;
     box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.25);
   }
+  .background-gray300 {
+    background-color: ${({ theme }) => theme.palette.gray300};
+  }
+  .margin-bottom-10 {
+    margin-bottom: 10px;
+  }
+  .border-1px-black {
+    border: 1px solid black;
+  }
+  .background-kakaoyellow {
+    background-color: ${({ theme }) => theme.sementicPalette.kakaoYellow};
+  }
 `;
 
 export default StyledTopestDiv;

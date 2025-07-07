@@ -76,23 +76,10 @@ const ModalFooter = styled.div`
   justify-content: flex-end;
   gap: 10px;
   button {
+    border: 1px solid transparent;
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
-    &.cancel {
-      background-color: #ccc;
-      color: #333;
-    }
-    &.add {
-      background-color: #28a745;
-      color: white;
-    }
-    &.add-person-field {
-      background-color: #007bff;
-      color: white;
-      margin-top: 10px;
-      width: 100%;
-    }
   }
 `;
 
@@ -158,13 +145,8 @@ const RecipientsModal: React.FC<RecipientsModalProps> = ({ onClose, onAdd, exist
   };
 
   const onSubmit: SubmitHandler<RecipientsModalFormData> = (data) => {
-    if (data.newRecipients.length > 0) {
-      // 최종적으로 모달에서 확정된 Recipients 목록을 상위 컴포넌트로 전달
-      onAdd(data.newRecipients);
-      onClose();
-    } else {
-      alert('최소 한 명의 받는 사람 정보를 입력해주세요.');
-    }
+    onAdd(data.newRecipients);
+    onClose();
   };
 
   return (
@@ -198,8 +180,12 @@ const RecipientsModal: React.FC<RecipientsModalProps> = ({ onClose, onAdd, exist
           <button type='button' className='cancel' onClick={onClose}>
             취소
           </button>
-          <button type='button' className='add' onClick={handleSubmit(onSubmit)}>
-            추가하기
+          <button
+            type='button'
+            className='add background-kakaoyellow'
+            onClick={handleSubmit(onSubmit)}
+          >
+            {fields.length}명 완료
           </button>
         </ModalFooter>
       </ModalContent>
