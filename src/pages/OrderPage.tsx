@@ -5,22 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useLocation, useNavigate } from 'react-router';
 import { cardData, products } from '@/mock/mockData';
 import { Header } from '@/components/Header/Header';
-
-interface FormData {
-  message: string;
-  senderName: string;
-  receiverName: string;
-  receiverPhone: string;
-  quantity: number;
-}
-
-interface FormErrors {
-  message?: string;
-  senderName?: string;
-  receiverName?: string;
-  receiverPhone?: string;
-  quantity?: string;
-}
+import { useOrderForm } from '@/hooks/useOrderForm';
 
 const Container = styled.div`
   max-width: 720px;
@@ -304,7 +289,7 @@ export const OrderPage: React.FC = () => {
 
   // 상품 정보 찾기 (없으면 첫 번째 상품)
   const selectedProduct = products.find((p) => p.id === productId) || products[0];
-  console.log(selectedProduct);
+
   useEffect(() => {
     if (!user) {
       navigate('/login');
@@ -312,73 +297,22 @@ export const OrderPage: React.FC = () => {
   }, [user, navigate]);
 
   const [selectedCard, setSelectedCard] = useState<number>(cardData[0].id); // 첫 번째 카드 기본 선택
-
   const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
-
-  const [formData, setFormData] = useState<FormData>({
-    message: '축하해요.',
-    senderName: '',
-    receiverName: '',
-    receiverPhone: '',
-    quantity: 1,
-  });
-
-  const [formErrors, setFormErrors] = useState<FormErrors>({});
 
   // 선택된 카드의 기본 메시지로 초기화
   const selectedCardData = cardData.find((card) => card.id === selectedCard);
+
+  // useOrderForm 커스텀 훅 사용
+  const { formData, formErrors, validateForm, handleInputChange, setMessage } = useOrderForm(
+    selectedCardData?.defaultTextMessage || '축하해요.',
+  );
 
   // 카드 선택 시 기본 메시지 업데이트
   const handleCardSelect = (cardId: number) => {
     setSelectedCard(cardId);
     const card = cardData.find((c) => c.id === cardId);
     if (card && card.defaultTextMessage) {
-      setFormData((prev) => ({
-        ...prev,
-        message: card.defaultTextMessage,
-      }));
-    }
-  };
-
-  const validatePhone = (phone: string): boolean => /^010\d{8}$/.test(phone);
-
-  const validateForm = (): boolean => {
-    const errors: FormErrors = {};
-    let isValid = true;
-
-    if (!formData.message.trim()) {
-      errors.message = '메시지를 입력해주세요.';
-      isValid = false;
-    }
-
-    if (!formData.senderName.trim()) {
-      errors.senderName = '보내는 사람 이름을 입력해주세요.';
-      isValid = false;
-    }
-
-    if (!formData.receiverName.trim()) {
-      errors.receiverName = '받는 사람 이름을 입력해주세요.';
-      isValid = false;
-    }
-
-    if (!formData.receiverPhone.trim() || !validatePhone(formData.receiverPhone)) {
-      errors.receiverPhone = '올바른 전화번호를 입력해주세요. (예: 01012341234)';
-      isValid = false;
-    }
-
-    if (!formData.quantity || formData.quantity < 1) {
-      errors.quantity = '수량은 1개 이상이어야 합니다.';
-      isValid = false;
-    }
-
-    setFormErrors(errors);
-    return isValid;
-  };
-
-  const handleInputChange = (field: keyof FormData, value: string | number) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-    if (formErrors[field]) {
-      setFormErrors((prev) => ({ ...prev, [field]: undefined }));
+      setMessage(card.defaultTextMessage);
     }
   };
 
