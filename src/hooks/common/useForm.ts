@@ -24,6 +24,21 @@ export const useForm = <T extends object>({
     {} as Record<keyof T, boolean>,
   );
 
+  const getEventValue = <T>(
+    eventOrValue: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | T,
+  ): T | string => {
+    if (
+      typeof eventOrValue === "object" &&
+      eventOrValue !== null &&
+      "target" in eventOrValue
+    ) {
+      return (
+        eventOrValue as ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+      ).target.value;
+    }
+    return eventOrValue as T;
+  };
+
   const validateField = useCallback(
     <K extends keyof T>(field: K, value: T[K]) => {
       const rules = validationRules[field];
@@ -39,12 +54,10 @@ export const useForm = <T extends object>({
     <K extends keyof T>(field: K, value: T[K]) => {
       setValues(prev => ({ ...prev, [field]: value }));
       setTouched(prev => ({ ...prev, [field]: true }));
-      if (touched[field] || errors[field]) {
-        const error = validateField(field, value);
-        setErrors(prev => ({ ...prev, [field]: error }));
-      }
+      const error = validateField(field, value);
+      setErrors(prev => ({ ...prev, [field]: error }));
     },
-    [validateField, touched, errors],
+    [validateField],
   );
 
   const handleBlur = useCallback(
@@ -57,25 +70,33 @@ export const useForm = <T extends object>({
   );
 
   const validateAllFields = useCallback(() => {
-    const newErrors: ValidationErrors<T> = {};
-    let isValid = true;
-    for (const key in validationRules) {
+    const newTouched = Object.keys(validationRules).reduce(
+      (acc, key) => {
+        acc[key as keyof T] = true;
+        return acc;
+      },
+      {} as Record<keyof T, boolean>,
+    );
+    setTouched(prev => ({ ...prev, ...newTouched }));
+
+    const newErrors = Object.keys(validationRules).reduce((acc, key) => {
       const field = key as keyof T;
       const error = validateField(field, values[field]);
       if (error) {
-        newErrors[field] = error;
-        isValid = false;
+        acc[field] = error;
       }
-      setTouched(prev => ({ ...prev, [field]: true }));
-    }
+      return acc;
+    }, {} as ValidationErrors<T>);
+
     setErrors(newErrors);
-    return isValid;
+    return Object.keys(newErrors).length === 0;
   }, [values, validateField, validationRules]);
 
   const handleSubmit = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      if (validateAllFields()) {
+      const isFormValid = validateAllFields();
+      if (isFormValid) {
         onSubmit(values);
       }
     },
@@ -83,29 +104,21 @@ export const useForm = <T extends object>({
   );
 
   const register = useCallback(
-    <K extends keyof T>(field: K) => {
-      return {
-        name: field,
-        value: values[field],
-        onChange: (
-          e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | T[K],
-        ) => {
-          const newValue =
-            typeof e === "object" &&
-            e !== null &&
-            "target" in e &&
-            (e.target instanceof HTMLInputElement ||
-              e.target instanceof HTMLTextAreaElement)
-              ? e.target.value
-              : e;
-
-          handleChange(field, newValue as T[K]);
-        },
-        onBlur: () => handleBlur(field),
-        error: touched[field] ? errors[field] : undefined,
-        hasError: Boolean(errors[field]),
-      };
-    },
+    <K extends keyof T>(field: K) => ({
+      name: String(field),
+      value: values[field],
+      onChange: (
+        eventOrValue:
+          | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+          | T[K],
+      ) => {
+        const newValue = getEventValue(eventOrValue);
+        handleChange(field, newValue as T[K]);
+      },
+      onBlur: () => handleBlur(field),
+      error: touched[field] ? errors[field] : undefined,
+      hasError: !!errors[field] && !!touched[field],
+    }),
     [values, errors, touched, handleChange, handleBlur],
   );
 
@@ -116,14 +129,10 @@ export const useForm = <T extends object>({
   }, [initialValues]);
 
   const getFormValidity = useCallback(() => {
-    for (const key in validationRules) {
+    return Object.keys(validationRules).every(key => {
       const field = key as keyof T;
-      const error = validateField(field, values[field]);
-      if (error) {
-        return false;
-      }
-    }
-    return true;
+      return !validateField(field, values[field]);
+    });
   }, [values, validateField, validationRules]);
 
   const formIsValid = useMemo(() => getFormValidity(), [getFormValidity]);
