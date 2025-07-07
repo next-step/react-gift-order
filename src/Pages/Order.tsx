@@ -16,8 +16,7 @@ const Order = () => {
   const item = mockGiftItems.find((item) => item.id === id);
 
   const { selectedCard, selectCard } = useCardSelection();
-  const { senderName, receiverName, receiverPhoneNumber } = useOrderForm();
-  const [quantity, setQuantity] = useState('1');
+  const { senderName, receiverName, receiverPhoneNumber, itemCount } = useOrderForm();
   const [textMessage, setTextMessage] = useState(selectedCard?.defaultTextMessage);
   const navigate = useNavigate();
 
@@ -27,10 +26,12 @@ const Order = () => {
     const isSenderNameValid = senderName.validate();
     const isReceiverNameValid = receiverName.validate();
     const isPhoneValid = receiverPhoneNumber.validate();
+    const isItemCountValid = itemCount.validate();
 
-    if (isSenderNameValid && isReceiverNameValid && isPhoneValid) {
+    const valid = isSenderNameValid && isReceiverNameValid && isPhoneValid && isItemCountValid;
+    if (valid) {
       alert(
-        `주문이 완료되었습니다.\n상품명: ${item?.name}\n구매 수량: ${quantity}\n발신자 이름: ${senderName.value}\n메시지: ${textMessage}`
+        `주문이 완료되었습니다.\n상품명: ${item?.name}\n구매 수량: ${itemCount.value}\n발신자 이름: ${senderName.value}\n메시지: ${textMessage}`
       );
       navigate('/');
     }
@@ -97,8 +98,10 @@ const Order = () => {
             <InfoTitle>수량</InfoTitle>
             <BorderInputBox
               type="number"
-              value={quantity}
-              onChange={(e) => setQuantity(e.target.value)}
+              value={itemCount.value.toString()}
+              onChange={itemCount.onChange}
+              message={itemCount.error}
+              isError={Boolean(itemCount.error)}
               placeholder="수량을 입력하세요"
             />
           </ReceiverInputWrapper>
@@ -107,16 +110,16 @@ const Order = () => {
         <SectionContainer>
           <SectionTitle>상품 정보</SectionTitle>
           <ItemWrapper>
-            <ItemImg src={item?.imageURL} />
+            <ItemImg src={item.imageURL} />
             <ItemTextInfoWrapper>
-              <ItemBrand>{item?.brandInfo.name}</ItemBrand>
-              <ItemName>{item?.name}</ItemName>
-              <ItemPrice>{item?.price.sellingPrice.toLocaleString()}원</ItemPrice>
+              <ItemBrand>{item.brandInfo.name}</ItemBrand>
+              <ItemName>{item.name}</ItemName>
+              <ItemPrice>{item.price.sellingPrice.toLocaleString()}원</ItemPrice>
             </ItemTextInfoWrapper>
           </ItemWrapper>
         </SectionContainer>
         <OrderButton onClick={handleOrderSubmit}>
-          {item?.price.sellingPrice.toLocaleString()}원 주문하기
+          {item.price.sellingPrice.toLocaleString()}원 주문하기
         </OrderButton>
       </OrderContainer>
     </>

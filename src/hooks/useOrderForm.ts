@@ -12,14 +12,21 @@ const validatePhone = (value: string) => {
   return '';
 };
 
+const validateCount = (value: number) => {
+  if (value <= 0) return '구매 수량은 1개 이상이어야 합니다.';
+  return '';
+};
+
 export const useOrderForm = () => {
-  const senderName = useDeferredValidationInput(validateName);
-  const receiverName = useDeferredValidationInput(validateName);
-  const receiverPhoneNumber = useDeferredValidationInput(validatePhone);
+  const senderName = useDeferredValidationInput(validateName, '');
+  const receiverName = useDeferredValidationInput(validateName, '');
+  const receiverPhoneNumber = useDeferredValidationInput(validatePhone, '');
+  const itemCount = useDeferredValidationInput(validateCount, 1);
 
   return {
     senderName,
     receiverName,
     receiverPhoneNumber,
+    itemCount,
   };
 };
