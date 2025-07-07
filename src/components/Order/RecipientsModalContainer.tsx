@@ -56,7 +56,10 @@ interface RecipientsModalContainerProps {
   currentRecipients: Recipient[];
 }
 
-const RecipientsModalContainer: FC<RecipientsModalContainerProps> = ({ control }) => {
+const RecipientsModalContainer: FC<RecipientsModalContainerProps> = ({
+  control,
+  currentRecipients,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { fields, append, remove } = useFieldArray({
     control,
@@ -101,7 +104,13 @@ const RecipientsModalContainer: FC<RecipientsModalContainerProps> = ({ control }
         </StyledRecipientsAddModalContainer>
       )}
 
-      {isModalOpen && <RecipientsModal onClose={handleCloseModal} onAdd={handleAddRecipients} />}
+      {isModalOpen && (
+        <RecipientsModal
+          onClose={handleCloseModal}
+          onAdd={handleAddRecipients}
+          existedRecipients={currentRecipients}
+        />
+      )}
     </StyledRecipientsModalContainer>
   );
 };

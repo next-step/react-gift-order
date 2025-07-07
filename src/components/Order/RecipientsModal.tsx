@@ -12,6 +12,7 @@ import type { RecipientsModalFormData } from '@/types/RecipientsModalFormData';
 interface RecipientsModalProps {
   onClose: () => void;
   onAdd: (newRecipients: Recipient[]) => void;
+  existedRecipients: Recipient[];
 }
 
 const ModalOverlay = styled.div`
@@ -95,19 +96,17 @@ const ModalFooter = styled.div`
   }
 `;
 
-const RecipientsModal: React.FC<RecipientsModalProps> = ({ onClose, onAdd }) => {
-  // 모달 내부에 표시될 받는 사람 입력 필드의 개수를 관리
+const RecipientsModal: React.FC<RecipientsModalProps> = ({ onClose, onAdd, existedRecipients }) => {
   // 각 필드 그룹에 고유한 키를 주기 위해 { id: number } 객체를 사용
   const [fieldSets, setFieldSets] = useState([{ id: 0 }]);
   const nextId = React.useRef(1); // 고유 ID 생성을 위한 ref
 
-  // 모달 내부 폼을 위한 useForm 인스턴스
-  // newRecipients 배열을 관리합니다.
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    getValues,
   } = useForm<RecipientsModalFormData>({
     defaultValues: {
       newRecipients: [{ receiveName: '', receiveTel: '', count: 0 }],
@@ -161,6 +160,8 @@ const RecipientsModal: React.FC<RecipientsModalProps> = ({ onClose, onAdd }) => 
               register={register}
               errors={errors}
               onRemove={handleRemovePersonField}
+              getValues={getValues}
+              existedRecipients={existedRecipients}
             />
           ))}
         </ModalBody>

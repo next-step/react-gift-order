@@ -56,7 +56,7 @@ const OrderContainer: FC = () => {
 
   useEffect(() => {
     setValue('total_count', totalCount);
-  }, [currentRecipients, setValue]);
+  }, [currentRecipients, setValue, totalCount]);
 
   const totalPrice = selectedProduct ? totalCount * selectedProduct.price.sellingPrice : 0;
 
