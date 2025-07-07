@@ -122,7 +122,7 @@ const Order: React.FC = () => {
         <div css={InputRowStyle(theme)}>
           <div css={InputWrapperStyle}>
             <input
-              type=""
+              type="text"
               ref={SenderNameRef}
               placeholder="이름을 입력하세요."
             ></input>
