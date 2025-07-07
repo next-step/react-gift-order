@@ -4,7 +4,7 @@ import { NotFoundPage } from '@/pages/NotFoundPage'
 import { Home } from '@/pages/Home'
 import { MyPage } from '@/pages/MyPage'
 import { PrivateRoute } from '@/routes/PrivateRoute'
-import { OrderPage } from '@/pages/OrderPage'
+import { OrderPage } from '@/pages/OrderPage/OrderPage'
 
 function App() {
   return (
