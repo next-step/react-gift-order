@@ -5,8 +5,10 @@ import { LOCATION_STATE_KEYS } from '@/constants/navigationState';
 import { ROUTES } from '@/constants/routes';
 import useLoginForm from '@/hooks/useLoginForm';
 import InputField from '@/components/common/InputField';
+import { useAuth } from '@/contexts/AuthContext';
 
 const LoginFormSection = () => {
+  const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.[LOCATION_STATE_KEYS.FROM] ?? ROUTES.HOME;
@@ -37,6 +39,8 @@ const LoginFormSection = () => {
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    login({ email });
 
     const redirectTo = from ? from.pathname + from.search : '/';
     navigate(redirectTo, { replace: true });
