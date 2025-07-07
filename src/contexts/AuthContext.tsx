@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState } from "react";
 
 interface User {
   email: string;
@@ -19,27 +19,22 @@ const SESSION_KEYS = {
   USER: "kakao_gift_user",
 } as const;
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [authState, setAuthState] = useState<AuthState>({
-    user: null,
-    isLoggedIn: false,
-  });
-
-  useEffect(() => {
+const getInitialAuthState = (): AuthState => {
+  try {
     const savedUser = sessionStorage.getItem(SESSION_KEYS.USER);
     if (savedUser) {
-      try {
-        const parsedUser = JSON.parse(savedUser);
-        setAuthState({
-          user: parsedUser,
-          isLoggedIn: true,
-        });
-      } catch (error) {
-        console.error("sessionStorage 로드 실패:", error);
-        sessionStorage.removeItem(SESSION_KEYS.USER);
-      }
+      const parsedUser = JSON.parse(savedUser);
+      return { user: parsedUser, isLoggedIn: true };
     }
-  }, []);
+  } catch (error) {
+    console.error("sessionStorage 로드 실패:", error);
+    sessionStorage.removeItem(SESSION_KEYS.USER);
+  }
+  return { user: null, isLoggedIn: false };
+};
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [authState, setAuthState] = useState<AuthState>(getInitialAuthState());
 
   const login = (email: string) => {
     const newUser: User = { email };
