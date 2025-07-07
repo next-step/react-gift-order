@@ -35,13 +35,26 @@ const AddReceiverModal = ({ onClose }: { onClose: () => void }) => {
     { name: string; phone: string; quantity: string }[]
   >([{ name: '', phone: '', quantity: '' }]);
 
-  const isValidPhoneNumber = (phone: string) =>
-    /^010-\d{4}-\d{4}$/.test(phone);
+  // 전화번호 유효성 검사 (하이픈 없이 01012341234 형태)
+  const isValidPhoneNumber = (phone: string) => /^010\d{8}$/.test(phone);
+
+  // 중복 전화번호 검사
+  const isDuplicatePhone = (phone: string, index: number) => {
+    return receivers.some(
+      (receiver, i) => i !== index && receiver.phone === phone
+    );
+  };
 
   const addReceiver = () => {
     if (receivers.length >= 10) return;
     setReceivers((prev) => [...prev, { name: '', phone: '', quantity: 1 }]);
     setErrors((prev) => [...prev, { name: '', phone: '', quantity: '' }]);
+  };
+
+  // 삭제 기능
+  const removeReceiver = (index: number) => {
+    setReceivers((prev) => prev.filter((_, i) => i !== index));
+    setErrors((prev) => prev.filter((_, i) => i !== index));
   };
 
   const updateReceiver = (
@@ -55,14 +68,35 @@ const AddReceiverModal = ({ onClose }: { onClose: () => void }) => {
     } else {
       updatedReceivers[index][field] = value;
     }
+
     setReceivers(updatedReceivers);
 
     const updatedErrors = [...errors];
-    if (field === 'name' && value.trim()) updatedErrors[index].name = '';
-    if (field === 'phone' && isValidPhoneNumber(value))
-      updatedErrors[index].phone = '';
-    if (field === 'quantity' && Number(value) >= 1)
-      updatedErrors[index].quantity = '';
+
+    if (field === 'name') {
+      updatedErrors[index].name = value.trim() ? '' : '이름을 입력해주세요.';
+    }
+
+    if (field === 'phone') {
+      if (!value.trim()) {
+        updatedErrors[index].phone = '전화번호를 입력해주세요.';
+      } else if (!isValidPhoneNumber(value)) {
+        updatedErrors[index].phone = '올바른 전화번호 형식이 아닙니다.';
+      } else if (isDuplicatePhone(value, index)) {
+        updatedErrors[index].phone = '중복된 전화번호입니다.';
+      } else {
+        updatedErrors[index].phone = '';
+      }
+    }
+
+    if (field === 'quantity') {
+      if (Number(value) < 1) {
+        updatedErrors[index].quantity = '수량은 1개 이상이어야 합니다.';
+      } else {
+        updatedErrors[index].quantity = '';
+      }
+    }
+
     setErrors(updatedErrors);
   };
 
@@ -123,8 +157,32 @@ const AddReceiverModal = ({ onClose }: { onClose: () => void }) => {
         </button>
 
         {receivers.map((receiver, index) => (
-          <div key={index}>
-            <h4 style={{ marginTop: '16px' }}>받는 사람 {index + 1}</h4>
+          <div key={index} css={{ marginTop: '20px' }}>
+            <h4
+              css={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                marginBottom: '8px',
+              }}
+            >
+              받는 사람 {index + 1}
+              <button
+                type="button"
+                onClick={() => removeReceiver(index)}
+                css={{
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '18px',
+                  lineHeight: 1,
+                  padding: 0,
+                }}
+                aria-label={`받는 사람 ${index + 1} 삭제`}
+              >
+                X
+              </button>
+            </h4>
 
             <div css={horizontalFormStyle(theme)}>
               <label css={receiverLabelStyle(theme)}>이름</label>
@@ -149,7 +207,7 @@ const AddReceiverModal = ({ onClose }: { onClose: () => void }) => {
               <div style={{ flex: 1 }}>
                 <input
                   type="text"
-                  placeholder="전화번호를 입력하세요."
+                  placeholder="전화번호를 입력하세요"
                   value={receiver.phone}
                   onChange={(e) =>
                     updateReceiver(index, 'phone', e.target.value)
