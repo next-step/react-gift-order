@@ -61,11 +61,20 @@ const NavBarLoginBtn = styled.button`
 
 function NavBar() {
   const navigate = useNavigate();
+  const userId = sessionStorage.getItem('userId')?.split('@')[0] ?? '';
+
+  function loginRoute() {
+    if(userId !== '') {
+      navigate('/my')
+    } else {
+      navigate('/login')
+    }
+  }
   return (
     <NavBarWrapper>
       <NavBarBackBtn onClick={() => navigate('/')}></NavBarBackBtn>
       <NavBarTitle>선물하기</NavBarTitle>
-      <NavBarLoginBtn onClick={() => navigate('/login')}></NavBarLoginBtn>
+      <NavBarLoginBtn onClick={loginRoute}></NavBarLoginBtn>
     </NavBarWrapper>
   );
 }
