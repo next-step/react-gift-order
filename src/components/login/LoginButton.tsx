@@ -1,13 +1,12 @@
 import Text from '@/common/Text';
 import styled from '@emotion/styled';
 
-const LoginButton = ({
-  onClick,
-  disabled = false,
-}: {
+type LoginButtonProps = {
   onClick: () => void;
   disabled?: boolean;
-}) => {
+};
+
+const LoginButton = ({ onClick, disabled = false }: LoginButtonProps) => {
   return (
     <StyledButton onClick={onClick} disabled={disabled}>
       <Text size="label1" weight="regular">
