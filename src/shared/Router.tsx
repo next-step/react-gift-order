@@ -4,6 +4,7 @@ import Login from '@/Pages/Login';
 import NotFound from '@/Pages/NotFound';
 import MyPage from '@/Pages/MyPage';
 import LoginProtectedRoute from '@/shared/LoginProtectedRoute';
+import Order from '@/Pages/Order';
 
 const Router = () => {
   return (
@@ -15,6 +16,14 @@ const Router = () => {
         element={
           <LoginProtectedRoute>
             <MyPage />
+          </LoginProtectedRoute>
+        }
+      />
+      <Route
+        path="/order/:itemId"
+        element={
+          <LoginProtectedRoute>
+            <Order />
           </LoginProtectedRoute>
         }
       />

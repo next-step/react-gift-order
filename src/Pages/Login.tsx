@@ -2,18 +2,21 @@ import kakaologo from '@/assets/icons/kakaologo.svg';
 import InputBox from '@/components/Common/InputBox';
 import Header from '@/components/Common/Header';
 import styled from '@emotion/styled';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useLoginForm } from '@/hooks/useLoginForm';
 import { useAuthContext } from '@/contexts/useAuthContext';
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/';
+
   const { email, password, isFormValid } = useLoginForm();
   const { login } = useAuthContext();
 
   const handleLogin = () => {
     login({ email: email.value });
-    navigate('/');
+    navigate(from);
   };
 
   return (
