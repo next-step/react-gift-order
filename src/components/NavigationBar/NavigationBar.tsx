@@ -2,10 +2,9 @@ import BackIconSvg from "./icons/back.svg";
 import ProfileIconSvg from "./icons/profile.svg";
 import {
   UnstyledButton,
-  LeftIcon,
   NavigationSection,
   SectionTitle,
-  ProfileIcon,
+  Icon,
 } from "./NavigationBar.styles";
 import { NAVIGATION_BAR_LABELS } from "./constants/labels";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -24,18 +23,20 @@ function NavigationBar() {
   return (
     <NavigationSection>
       <UnstyledButton onClick={() => navigate(-1)}>
-        <LeftIcon
+        <Icon
           src={BackIconSvg}
           alt={NAVIGATION_BAR_LABELS.BACK_BUTTON_ALT}
+          size="24px"
         />
       </UnstyledButton>
       <UnstyledButton onClick={() => navigate("/")}>
         <SectionTitle>{NAVIGATION_BAR_LABELS.SECTION_TITLE}</SectionTitle>
       </UnstyledButton>
       <UnstyledButton onClick={handleProfileClick}>
-        <ProfileIcon
+        <Icon
           src={ProfileIconSvg}
           alt={NAVIGATION_BAR_LABELS.PROFILE_BUTTON_ALT}
+          size="20px"
         />
       </UnstyledButton>
     </NavigationSection>

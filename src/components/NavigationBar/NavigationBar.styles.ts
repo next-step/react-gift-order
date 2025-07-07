@@ -27,12 +27,7 @@ export const UnstyledButton = styled.button`
   background-color: transparent;
 `;
 
-export const LeftIcon = styled.img`
-  width: 24px;
-  height: 24px;
-`;
-
-export const ProfileIcon = styled.img`
-  width: 20px;
-  height: 20px;
+export const Icon = styled.img<{ size: string }>`
+  width: ${({ size }) => size};
+  height: ${({ size }) => size};
 `;
