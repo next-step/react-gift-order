@@ -1,9 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
+import { useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { colors } from '../styles/colors'
 import Header from '@/components/Header'
 import { typography } from '../styles/typography'
+import { useAuth } from '@/contexts/AuthContext'
 
 import GlobalStyle from '@/styles/GlobalStyle'
 import { useInput, validateEmail, validatePassword } from '@/hooks/useInput'
@@ -68,6 +70,7 @@ const errorTextStyle = css({
 const LoginPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
+  const { login, isAuthenticated } = useAuth() // 인증 컨텍스트 사용
 
   const { 
     inputRef: emailRef, 
@@ -85,6 +88,13 @@ const LoginPage = () => {
     handleChange: handlePasswordChange 
   } = useInput(validatePassword)
 
+  // 이미 로그인된 사용자는 리디렉션
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/', { replace: true })
+    }
+  }, [isAuthenticated, navigate])
+
   // 뒤로가기 버튼 클릭
   const handleBack = () => {
     navigate('/')
@@ -92,6 +102,11 @@ const LoginPage = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // 로그인 처리
+    login(emailValue, passwordValue)
+    
+    // 원래 가려던 페이지 또는 홈으로 이동
     const from = (location.state as any)?.from || '/'
     navigate(from, { replace: true })
   }
