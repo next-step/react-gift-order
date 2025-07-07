@@ -111,24 +111,24 @@ export const productImage = (theme: Theme) => css`
   border: 1px solid ${theme.colors.semantic.border.default};
 `;
 
-export const productInfo = (theme: Theme) => css`
+export const productInfoStyle = (theme: Theme) => css`
   display: flex;
   flex-direction: column;
   gap: ${theme.spacing.spacing2};
 `;
 
-export const productName = (theme: Theme) => css`
+export const productNameStyle = (theme: Theme) => css`
   font-weight: ${theme.typography.subtitle1Bold.weight};
   font-size: ${theme.typography.subtitle1Bold.size};
   color: ${theme.colors.semantic.text.default};
 `;
 
-export const productBrand = (theme: Theme) => css`
+export const productBrandStyle = (theme: Theme) => css`
   font-size: ${theme.typography.body2Regular.size};
   color: ${theme.colors.semantic.text.sub};
 `;
 
-export const productPrice = (theme: Theme) => css`
+export const productPriceStyle = (theme: Theme) => css`
   font-size: ${theme.typography.body1Regular.size};
   color: ${theme.colors.semantic.text.default};
   strong {

@@ -15,10 +15,10 @@ import {
   TinyTextStyle,
   productWrapper,
   productImage,
-  productInfo,
-  productName,
-  productBrand,
-  productPrice,
+  productInfoStyle,
+  productNameStyle,
+  productBrandStyle,
+  productPriceStyle,
   totalPriceBoxStyle,
   fixedBottomStyle,
   SubmitStyle,
@@ -178,10 +178,10 @@ const Order: React.FC = () => {
           src={selectedGift?.imageURL}
           alt={selectedGift?.name}
         />
-        <div css={productInfo(theme)}>
-          <p css={productName(theme)}>{selectedGift?.name}</p>
-          <p css={productBrand(theme)}>{selectedGift?.brandInfo.name}</p>
-          <p css={productPrice(theme)}>
+        <div css={productInfoStyle(theme)}>
+          <p css={productNameStyle(theme)}>{selectedGift?.name}</p>
+          <p css={productBrandStyle(theme)}>{selectedGift?.brandInfo.name}</p>
+          <p css={productPriceStyle(theme)}>
             <strong>{selectedGift?.price.basicPrice.toLocaleString()}</strong>원
           </p>
         </div>
