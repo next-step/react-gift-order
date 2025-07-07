@@ -4,3 +4,9 @@ export {
   isValidPassword,
   getPasswordErrorMessage,
 } from './validation';
+
+export {
+  saveAuthToStorage,
+  loadAuthFromStorage,
+  removeAuthFromStorage,
+} from './storage';
