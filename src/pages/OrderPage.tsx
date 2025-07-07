@@ -151,6 +151,15 @@ const orderButton = css({
   marginBottom: spacing.spacing6,
 });
 
+// 오류 메시지 스타일
+const errorMessage = css({
+  color: colors.critical,
+  fontSize: '12px',
+  marginTop: '-8px',
+  marginBottom: spacing.spacing3,
+  marginLeft: '70px',
+});
+
 // 페이지 컨테이너 스타일
 const pageContainer = css({
   maxWidth: '720px',
@@ -167,6 +176,19 @@ const OrderPage = () => {
   const [selectedCard, setSelectedCard] = useState<OrderCard>(orderCardsData[0]);
   const [message, setMessage] = useState(orderCardsData[0].defaultTextMessage);
   
+  // 폼 입력 상태 관리
+  const [senderName, setSenderName] = useState('');
+  const [receiverName, setReceiverName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [quantity, setQuantity] = useState(1);
+  
+  // 오류 메시지 상태
+  const [messageError, setMessageError] = useState('');
+  const [senderNameError, setSenderNameError] = useState('');
+  const [receiverNameError, setReceiverNameError] = useState('');
+  const [phoneNumberError, setPhoneNumberError] = useState('');
+  const [quantityError, setQuantityError] = useState('');
+  
   // 로그인 체크
   useEffect(() => {
     if (!isAuthenticated) {
@@ -182,8 +204,57 @@ const OrderPage = () => {
   
   // 주문하기 핸들러
   const handleOrder = () => {
-    alert('주문이 완료되었습니다!');
-    navigate('/');
+    let isValid = true;
+
+    // 메시지 유효성 검사
+    if (!message.trim()) {
+      setMessageError(`메시지는 반드시 입력되어야해요`);
+      isValid = false;
+    } else {
+      setMessageError('');
+    }
+
+    // 보내는 사람 유효성 검사
+    if (!senderName.trim()) {
+      setSenderNameError('보내는 사람 이름이 반드시 입력되어야해요');
+      isValid = false;
+    } else {
+      setSenderNameError('');
+    }
+
+    // 받는 사람 유효성 검사
+    if (!receiverName.trim()) {
+      setReceiverNameError(`받는 사람 이름이 반드시 입력되어야해요`);
+      isValid = false;
+    } else {
+      setReceiverNameError('');
+    }
+
+    // 전화번호 유효성 검사 (010으로 시작, 11자리, 숫자)
+    const phoneRegex = /^010\d{8}$/;
+    if (!phoneNumber.trim()) {
+      setPhoneNumberError(`받는사람 전화번호가 반드시 입력되어야해요`);
+      isValid = false;
+    } else if (!phoneRegex.test(phoneNumber)) {
+      setPhoneNumberError('전화번호는 010으로 시작하는 11자리 숫자여야 해요.');
+      isValid = false;
+    } else {
+      setPhoneNumberError('');
+    }
+
+    // 수량 유효성 검사
+    if (quantity < 1) {
+      setQuantityError('수량은 1개 이상이어야 해요.');
+      isValid = false;
+    } else {
+      setQuantityError('');
+    }
+
+    // 모든 유효성 검사를 통과했을 때만 주문 완료
+    if (isValid) {
+      alert(`\n주문 정보:\n- 상품명: ${product.name}\n- 구매수량: ${quantity}개\n- 발신자: ${senderName}\n- 메시지: ${message}\n- 수신자: ${receiverName}\n\n주문이 완료되었습니다!`);
+      navigate('/');
+    }
   };
   
   return (
@@ -225,27 +296,56 @@ const OrderPage = () => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
+        {messageError && <div css={errorMessage}>{messageError}</div>}
 
         <h2 css={sectionTitle}>보내는 사람</h2>
         <div css={inputContainer}>
           <div css={inputLabel}>이름</div>
-          <input css={inputField} type="text" placeholder="이름을 입력하세요." />
+          <input 
+            css={inputField} 
+            type="text" 
+            placeholder="이름을 입력하세요." 
+            value={senderName}
+            onChange={(e) => setSenderName(e.target.value)}
+          />
         </div>
+        {senderNameError && <div css={errorMessage}>{senderNameError}</div>}
         
         {/* 받는 사람 정보 */}
         <h2 css={sectionTitle}>받는 사람</h2>
         <div css={inputContainer}>
           <div css={inputLabel}>이름</div>
-          <input css={inputField} type="text" placeholder="이름을 입력하세요." />
+          <input 
+            css={inputField} 
+            type="text" 
+            placeholder="이름을 입력하세요." 
+            value={receiverName}
+            onChange={(e) => setReceiverName(e.target.value)}
+          />
         </div>
+        {receiverNameError && <div css={errorMessage}>{receiverNameError}</div>}
         <div css={inputContainer}>
           <div css={inputLabel}>전화번호</div>
-          <input css={inputField} type="text" placeholder="전화번호를 입력하세요." />
+          <input 
+            css={inputField} 
+            type="text" 
+            placeholder="전화번호를 입력하세요." 
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+          />
         </div>
+        {phoneNumberError && <div css={errorMessage}>{phoneNumberError}</div>}
         <div css={inputContainer}>
           <div css={inputLabel}>수량</div>
-          <input css={quantityInput} type="number" min="1" defaultValue="1" />
+          <input 
+            css={quantityInput} 
+            type="number" 
+            min="1" 
+            value={quantity}
+            onChange={(e) => setQuantity(Number(e.target.value))}
+          />
         </div>
+        {quantityError && <div css={errorMessage}>{quantityError}</div>}
         
         {/* 상품 정보 */}
         <h2 css={sectionTitle}>상품 정보</h2>
