@@ -55,8 +55,7 @@ const LoginContainer = styled.main`
   align-items: center;
   display: flex;
   background-color: ${({ theme }) => theme.colors.backgroundDefault};
-  height: 100vh;
-  width: 100%;
+  height: calc(100vh - 56px);
 `;
 
 const LoginSection = styled.section`

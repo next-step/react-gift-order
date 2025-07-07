@@ -50,7 +50,6 @@ export default Home;
 const HomeContainer = styled.main`
   width: 100%;
   max-width: 720px;
-  height: 100vh;
   background-color: ${({ theme }) => theme.colors.backgroundDefault};
   overflow-y: auto;
   margin: 0 auto;
