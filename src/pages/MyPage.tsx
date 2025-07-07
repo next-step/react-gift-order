@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { useNavigate } from 'react-router-dom'
+import Layout from '@/Layout'
 import { useAuth } from '@/contexts/AuthContext'
 import { colors } from '@/theme/color'
 import { typography } from '@/theme/typography'
@@ -44,9 +45,11 @@ export default function MyPage() {
   }
 
   return (
-    <Container>
-      <Title>마이페이지</Title>
-      <Button onClick={handleLogout}>로그아웃</Button>
-    </Container>
+    <Layout>
+      <Container>
+        <Title>마이페이지</Title>
+        <Button onClick={handleLogout}>로그아웃</Button>
+      </Container>
+    </Layout>
   )
 }
