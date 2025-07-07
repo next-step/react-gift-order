@@ -5,10 +5,12 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { colors } from '../styles/colors'
 import Header from '@/components/Header'
 import { typography } from '../styles/typography'
+
 import { useAuth } from '@/contexts/AuthContext'
 
 import GlobalStyle from '@/styles/GlobalStyle'
 import { useInput, validateEmail, validatePassword } from '@/hooks/useInput'
+
 
 const wrapperStyle = css({
   maxWidth: 720,
@@ -67,9 +69,11 @@ const errorTextStyle = css({
   marginTop: 4,
 })
 
+
 const LoginPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
+
   const { login, isAuthenticated } = useAuth() // 인증 컨텍스트 사용
 
   const { 
@@ -95,6 +99,7 @@ const LoginPage = () => {
     }
   }, [isAuthenticated, navigate])
 
+
   // 뒤로가기 버튼 클릭
   const handleBack = () => {
     navigate('/')
@@ -110,6 +115,7 @@ const LoginPage = () => {
     const from = (location.state as any)?.from || '/'
     navigate(from, { replace: true })
   }
+
 
   // 실시간으로 업데이트되는 버튼 상태
   const isLoginButtonDisabled = 

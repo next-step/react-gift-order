@@ -3,6 +3,7 @@ import { useRef, useState } from 'react'
 export function useInput(validate: (value: string) => string | null) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [error, setError] = useState<string | null>(null)
+
   const [value, setValue] = useState<string>('') // 입력값 상태 추가
 
   const handleBlur = () => {
@@ -21,9 +22,7 @@ export function useInput(validate: (value: string) => string | null) {
   const checkAndSetError = () => {
     const currentValue = inputRef.current?.value || ''
     const err = validate(currentValue)
-    setError(err)
-    return err
-  }
+
 
   return { 
     inputRef, 
