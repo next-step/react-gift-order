@@ -149,7 +149,7 @@ export const theme = {
     subtitle1Regular: {
       fontSize: "1rem",
       fontWeight: 400,
-      lineHeight: "1.5rem", // 24px
+      lineHeight: "1.375rem", // 22px
     },
     subtitle2Bold: {
       fontSize: "0.875rem", // 14px

@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 import { useLocation, useNavigate } from "react-router";
 import useFormInput from "@/hooks/useFormInput";
 import { checkEmailError, checkPasswordError } from "@/utils/validation";
-import ErrorMessage from "./ErrorMessage";
+import ErrorMessage from "../common/ErrorMessage";
 import { useUserInfo } from "@/contexts/UserInfoContext";
 
 const LoginForm = () => {
