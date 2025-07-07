@@ -5,6 +5,7 @@ import { theme } from '@/theme/theme';
 import ChevronLeftIcon from '@/assets/ChevronLeftIcon';
 import User from '@/assets/User';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
 
 const Container = styled.nav`
   display: flex;
@@ -74,6 +75,7 @@ const LogoButton = styled.button`
 `;
 const NavigationBar: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const handleBack = () => {
     if (window.history.length > 1) {
@@ -87,6 +89,15 @@ const NavigationBar: React.FC = () => {
   const goHome = () => {
     navigate('/', { replace: true });
   };
+
+  const goMyPageOrLogin = () => {
+    if (user) {
+      navigate('/MyPage');
+    } else {
+      navigate('/login');
+    }
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Wrapper>
@@ -108,11 +119,7 @@ const NavigationBar: React.FC = () => {
             </LogoButton>
           </CenterSection>
           <MyPageSection>
-            <MyPageButton
-              onClick={() => {
-                navigate('/login');
-              }}
-            >
+            <MyPageButton onClick={goMyPageOrLogin}>
               <User />
             </MyPageButton>
           </MyPageSection>

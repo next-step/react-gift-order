@@ -1,5 +1,6 @@
 import Home from '@/pages/Home';
 import Login from '@/pages/Login';
+import MyPage from '@/pages/MyPage';
 import NotFound from '@/pages/NotFound';
 import { Route, Routes as RouterRoutes } from 'react-router';
 
@@ -9,6 +10,7 @@ export const Routes = () => {
       <Route path={ROUTE_PATH.HOME} element={<Home />} />
       <Route path={ROUTE_PATH.LOGIN} element={<Login />} />
       <Route path={ROUTE_PATH.NOT_FOUND} element={<NotFound />} />
+      <Route path={ROUTE_PATH.MY_PAGE} element={<MyPage />} />
     </RouterRoutes>
   );
 };
@@ -17,4 +19,5 @@ export const ROUTE_PATH = {
   HOME: '/',
   LOGIN: '/login',
   NOT_FOUND: '*',
+  MY_PAGE: '/Mypage',
 };
