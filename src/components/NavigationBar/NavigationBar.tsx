@@ -29,7 +29,7 @@ function NavigationBar() {
           size="24px"
         />
       </UnstyledButton>
-      <UnstyledButton onClick={() => navigate("/")}>
+      <UnstyledButton onClick={() => navigate(ROUTES.HOME)}>
         <SectionTitle>{NAVIGATION_BAR_LABELS.SECTION_TITLE}</SectionTitle>
       </UnstyledButton>
       <UnstyledButton onClick={handleProfileClick}>
