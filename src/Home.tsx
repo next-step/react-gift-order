@@ -1,26 +1,34 @@
 import NaviBar from "@/components/NaviBar"
 import { Outlet, useNavigate } from "react-router-dom"
-import Button from "@/components/Button"
+import ButtonWithImg from "@/components/ButtonWithImg"
 import backarrow from "@/assets/back-arrow.svg"
 import person from "@/assets/person.png"
-import Layout from "./components/Layout"
-import Title from "./components/Title"
-import Screen from "./components/Screen"
-import Box from "./components/Box"
+import Layout from "@/components/Layout"
+import Screen from "@/components/Screen"
+import Box from "@/components/Box"
+import TitleIcon from "@/assets/Title_icon.webp"
+import { useAuth } from "@/context/AuthContext"
 
 const Home = () => {
   const navigate = useNavigate()
+  const { isLoggedIn } = useAuth()
 
   const handleGoBack = (): void => {
     navigate(-1)
   }
-
+  const handleMypage = (): void => {
+    if (!isLoggedIn) {
+      navigate(`/login`)
+    } else {
+      navigate(`/my`)
+    }
+  }
   return (
     <Screen>
       <Layout>
         <NaviBar>
           <Box direction="left">
-            <Button
+            <ButtonWithImg
               src={backarrow}
               onClick={handleGoBack}
               width="40px"
@@ -28,12 +36,17 @@ const Home = () => {
             />
           </Box>
           <Box direction="center">
-            <Title>선물하기</Title>
+            <ButtonWithImg
+              src={TitleIcon}
+              onClick={() => navigate(`/`)}
+              width="100%"
+              height="40px"
+            />
           </Box>
           <Box direction="right">
-            <Button
+            <ButtonWithImg
               src={person}
-              onClick={() => navigate(`/Login`)}
+              onClick={handleMypage}
               width="40px"
               height="40px"
             />

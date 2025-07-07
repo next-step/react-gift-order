@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react"
+import { useState, useMemo, useCallback } from "react"
 import mock_present from "@/mock_present"
 import Grid from "@/components/Grid"
 import Card from "@/components/Card"
@@ -7,6 +7,8 @@ import IndexBadge from "@/components/IndexBadge"
 import ProductImage from "./ProductImage"
 import MoreButton from "./MoreButton"
 import theme from "@/styles/theme"
+import { useAuth } from "@/context/AuthContext"
+import { useNavigate } from "react-router-dom"
 
 const VISIBLE_COUNT = 6
 
@@ -19,17 +21,32 @@ const generateMockProducts = () => {
 
 const ProductGrid = () => {
   const [showAll, setShowAll] = useState(false)
-
   const products = useMemo(() => generateMockProducts(), [])
 
   const visibleCount = showAll ? products.length : VISIBLE_COUNT
   const visibleProducts = products.slice(0, visibleCount)
+  const navigate = useNavigate()
+  const { isLoggedIn } = useAuth()
 
+  const handleGoOrder = useCallback(
+    (id: number) => {
+      if (!isLoggedIn) {
+        navigate("/login")
+      } else {
+        navigate(`/order/${id}`)
+      }
+    },
+    [isLoggedIn, navigate]
+  )
   return (
     <>
       <Grid gap="spacing2">
         {visibleProducts.map((item, idx) => (
-          <Card key={item.id} borderRadius="spacing02">
+          <Card
+            key={item.id}
+            borderRadius="spacing02"
+            onClick={() => handleGoOrder(item.id)}
+          >
             <IndexBadge backGroundColor={idx < 3 ? "critical" : "gray400"}>
               {idx + 1}
             </IndexBadge>

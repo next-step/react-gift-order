@@ -1,9 +1,7 @@
-import PlusButton from "@/components/PlusButton"
 import PresentWho from "@/components/PresentWho"
-import PresentWhoBackGround from "@/components/PresentWhoBackGround"
 import PresentLayout from "@/components/PresentLayout"
 import Text from "@/components/Text"
-import plusicon from "@/assets/Plus_icon.png"
+import PlusNewPerson from "./PlusNewPerson"
 import PresentCardStyle from "@/components/PresentCardStyle"
 import { useContext } from "react"
 import { PresentThemeContext } from "@/context/PresentThemeContext"
@@ -46,29 +44,7 @@ const PresentList = () => {
 const Categories = () => {
   return (
     <Layout>
-      <PresentWhoBackGround>
-        <PresentWho
-          color="gray00"
-          padding="spacing4"
-          margin="spacing0"
-          border="spacing18"
-        >
-          <PlusButton
-            src={plusicon}
-            backGroundColor="kakaoYellow"
-            borderRadius="spacing4"
-            padding="spacing2"
-          ></PlusButton>
-          <Text
-            variant="subtitle1Bold"
-            margin="spacing2"
-            padding="spacing2"
-            marginTop="spacing1"
-          >
-            선물할 친구를 선택해 주세요
-          </Text>
-        </PresentWho>
-      </PresentWhoBackGround>
+      <PlusNewPerson />
 
       <Layout>
         <Blank height="24px" />

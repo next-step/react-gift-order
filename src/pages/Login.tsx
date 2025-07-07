@@ -1,14 +1,15 @@
 import LoginForm from "@/components/LoginForm"
 import InputBlank from "@/components/InputBlank"
 import MoreButton from "@/components/MoreButton"
-import { useNavigate, useNavigationType } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import Blank from "@/components/Blank"
 import Icon from "@/assets/Icon.svg?react"
 import { useInput } from "@/hooks/useInput"
 import { useState } from "react"
 import type { FormEvent, FocusEventHandler } from "react"
 import type { ValueType } from "@/interfaces/ValueType"
-import { useValid, validateEmail, validatePassword } from "@/hooks/useValid"
+import { CheckValid, validateEmail, validatePassword } from "@/hooks/CheckValid"
+import { useAuth } from "@/context/AuthContext"
 
 const Login = () => {
   const form: ValueType = {
@@ -17,15 +18,16 @@ const Login = () => {
   }
 
   const [data, onChange] = useInput(form)
-  const { isEmailValid, isPasswordValid } = useValid(data)
+  const { isEmailValid, isPasswordValid } = CheckValid(data)
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {}
   )
-
+  const { login } = useAuth()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const from = location.state?.from?.pathname || "/my"
   const handleBlur: FocusEventHandler<HTMLInputElement> = (e) => {
-    const { name, value } = e.target as HTMLInputElement & {
-      name: keyof ValueType
-    }
+    const { name, value } = e.target
     setErrors((prev) => ({
       ...prev,
       email: name === "email" ? validateEmail(value) : prev.email,
@@ -36,9 +38,7 @@ const Login = () => {
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     onChange(e)
 
-    const { name, value } = e.target as HTMLInputElement & {
-      name: keyof ValueType
-    }
+    const { name, value } = e.target
 
     if (name === "email" && errors.email !== undefined) {
       setErrors((prev) => ({ ...prev, email: validateEmail(value) }))
@@ -48,18 +48,18 @@ const Login = () => {
     }
   }
 
-  const navigate = useNavigate()
-  const navigationType = useNavigationType()
+  const handleLogin = () => {
+    const loginSuccess = login(data.email, data.password)
 
-  const handleGoBack = () => {
-    if (navigationType === "PUSH") {
-      navigate(-1)
+    if (loginSuccess) {
+      navigate(from, { replace: true })
     } else {
-      navigate("/", { replace: true })
+      console.log("login failed")
     }
   }
   const submitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    handleLogin()
   }
 
   return (
@@ -90,7 +90,7 @@ const Login = () => {
         ></InputBlank>
         <MoreButton
           background="kakaoYellow"
-          onClick={handleGoBack}
+          onClick={handleLogin}
           disabled={!isEmailValid || !isPasswordValid}
         >
           로그인
