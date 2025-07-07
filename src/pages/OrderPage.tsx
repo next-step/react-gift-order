@@ -15,6 +15,7 @@ import { createNewPNEvaluator } from "@src/utils/evaluator/implementation/phoneN
 import { createNewQuantityEvaluator } from "@src/utils/evaluator/implementation/quantityEvaluator";
 import { useContext, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import BatchReceiverInput from "@src/components/OrderPanels/BatchReceiverInput";
 
 function OrderPage() {
   const navigate = useNavigate();
@@ -92,7 +93,8 @@ function OrderPage() {
         />
         <Sub>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</Sub>
       </InputGroup>
-      <InputGroup title="받는 사람">
+      <BatchReceiverInput />
+      {/* <InputGroup title="받는 사람">
         <InputCaptionPairWrapper>
           <Caption>이름</Caption>
           <AdvancedInput
@@ -126,7 +128,7 @@ function OrderPage() {
             valueHookSet={orderState.quantity}
           />
         </InputCaptionPairWrapper>
-      </InputGroup>
+      </InputGroup> */}
       <InputGroup title="상품 정보">
         <ProductCard />
       </InputGroup>

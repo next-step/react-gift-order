@@ -29,11 +29,7 @@ function AdvancedInput({
         onChange={(e) => {
           const valid = evaluator.evaluate(e.target.value);
           const reason = evaluator.reason();
-          if (!validHookSet.value) {
-            reasonHookSet.setValue(reason);
-          } else {
-            reasonHookSet.setValue(null);
-          }
+          reasonHookSet.setValue(valid ? null : reason);
           validHookSet.setValue(valid);
           valueHookSet.setValue(e.target.value);
         }}
