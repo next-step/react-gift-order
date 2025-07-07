@@ -1,10 +1,11 @@
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import MobileLayout from '@/layouts/MobileLayout';
 import NavBar from '@/components/NavBar';
 import logo from '@/assets/logo.svg';
 import KakaoButton from '@/components/common/KakaoButton';
 import useLoginForm from '@/hooks/useLoginForm';
+import { useAuth } from '@/hooks/useAuth';
 
 const Wrapper = styled.div`
   display: flex;
@@ -64,13 +65,17 @@ const ButtonWrapper = styled.div`
 
 export default function LoginPage() {
   const { values, errors, handleChange, handleBlur, isValid } = useLoginForm();
+  const { login, user } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
-  const from = (location.state as { from?: string })?.from || '/';
+  const { state } = useLocation();
+  const from = (state as { from?: string })?.from || '/';
+
+  if (user) return <Navigate to="/my" replace />;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!isValid) return;
+    login(values.email);
     navigate(from, { replace: true });
   };
 

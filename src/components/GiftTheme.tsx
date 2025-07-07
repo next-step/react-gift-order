@@ -20,7 +20,7 @@ const Grid = styled.ul`
   cursor: pointer;
 `;
 
-export default function GiftThemeSection() {
+export default function GiftTheme() {
   return (
     <Wrapper>
       <Title>선물 테마</Title>
