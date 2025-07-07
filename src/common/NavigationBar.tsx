@@ -3,7 +3,7 @@ import { IoIosArrowBack } from 'react-icons/io';
 import { LuUserRound } from 'react-icons/lu';
 import { useNavigate } from 'react-router-dom';
 import Text from '@/common/Text';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '@/context/AuthContext';
 
 const NavigationBar = () => {
   const navigate = useNavigate();

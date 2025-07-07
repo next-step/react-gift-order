@@ -1,4 +1,4 @@
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '@/context/AuthContext';
 import styled from '@emotion/styled';
 import NavigationBar from '@/common/NavigationBar';
 import Text from '@/common/Text';

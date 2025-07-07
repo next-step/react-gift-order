@@ -1,9 +1,9 @@
 import { Route, Routes } from 'react-router-dom';
-import GiftHome from '../pages/GiftHome';
-import Login from '../pages/Login';
-import NotFound from '../pages/NotFound';
-import MyPage from '../pages/MyPage';
-import PrivateRoute from './PrivateRoute';
+import GiftHome from '@/pages/GiftHome';
+import Login from '@/pages/Login';
+import NotFound from '@/pages/NotFound';
+import MyPage from '@/pages/MyPage';
+import PrivateRoute from '@/router/PrivateRoute';
 import ProductOrder from '@/pages/ProductOrder';
 
 export const Router = () => {

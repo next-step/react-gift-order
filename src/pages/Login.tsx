@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
-import { useLoginForm } from '../hooks/useLoginForm';
+import { useLoginForm } from '@/hooks/useLoginForm';
 import NavigationBar from '@/common/NavigationBar';
 import Input from '@/common/Input';
 import LoginButton from '@/components/login/LoginButton';
