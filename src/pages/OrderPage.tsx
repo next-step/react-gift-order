@@ -4,6 +4,7 @@ import { messageCards } from '@/data/messageCards';
 import { mockProducts } from '@/data/products';
 import Navigation from '@/components/Navigation';
 import { useState } from 'react';
+import CardSelector from '@/components/OrderSection/CardSelector';
 
 const OrderPage = () => {
   const { id } = useParams();
@@ -17,23 +18,10 @@ const OrderPage = () => {
       <Navigation />
       <Main>
         <Section>
-          <CardSlider>
-            {messageCards.map(card => (
-              <CardImage
-                key={card.id}
-                src={card.imageUrl}
-                isSelected={card.id === selectedCardId}
-                onClick={() => setSelectedCardId(card.id)}
-              />
-            ))}
-          </CardSlider>
-
-          <PreviewCard>
-            <SelectedImage
-              src={selectedCard.imageUrl}
-              alt="선택된 메시지 카드"
-            />
-          </PreviewCard>
+          <CardSelector
+            selectedCardId={selectedCardId}
+            onSelect={setSelectedCardId}
+          />
 
           <TextAreaWrapper>
             <Input
