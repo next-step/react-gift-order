@@ -1,5 +1,5 @@
 import kakaologo from '@/assets/icons/kakaologo.svg';
-import InputBox from '@/components/Common/InputBox';
+import InputBox from '@/components/Common/UnderLineInputBox';
 import Header from '@/components/Common/Header';
 import styled from '@emotion/styled';
 import { useNavigate, useLocation } from 'react-router-dom';
