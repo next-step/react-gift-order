@@ -215,8 +215,8 @@ function RealtimeGiftRank() {
   ];
 
   useEffect(() => {
-    const savedGrop = localStorage.getItem('selectedGroup');
-    const savedType = localStorage.getItem('rankingType');
+    const savedGrop = sessionStorage.getItem('selectedGroup');
+    const savedType = sessionStorage.getItem('rankingType');
 
     if (savedGrop) {
       setSelectedGroup(savedGrop);
@@ -228,11 +228,11 @@ function RealtimeGiftRank() {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('selectedGroup', selectedGroup);
+    sessionStorage.setItem('selectedGroup', selectedGroup);
   }, [selectedGroup]);
 
   useEffect(() => {
-    localStorage.setItem('rankingType', selectRankingType);
+    sessionStorage.setItem('rankingType', selectRankingType);
   }, [selectRankingType]);
 
   return (
