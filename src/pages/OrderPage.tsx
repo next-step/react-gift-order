@@ -26,15 +26,30 @@ const OrderPage = () => {
   const { id } = useParams<{ id: string }>();
   const gift = gifts.find(gift => gift.id.toString() === id) as Gift;
 
+  const handleOrder = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    alert(
+      [
+        "주문이 완료되었습니다.",
+        `상품명: ${gift.name}`,
+        "구매 수량: aaa",
+        "보낸 사람: aaa",
+        "메시지: aaa.",
+      ].join("\n"),
+    );
+  };
+
   return (
     <>
       <TheHeader />
       <Main>
-        <CardSection />
-        <SendSection />
-        <ReceiverSection />
-        <GiftInformationSection selectedGift={gift} />
-        <p>선택한 선물의 ID: {id}</p>
+        <form onSubmit={handleOrder}>
+          <CardSection />
+          <SendSection />
+          <ReceiverSection />
+          <GiftInformationSection selectedGift={gift} />
+          <Button>{gift.price.sellingPrice}원 주문하기</Button>
+        </form>
       </Main>
     </>
   );
@@ -47,4 +62,23 @@ const Main = styled.main`
   flex-direction: column;
   background-color: ${({ theme }) => theme.colors.gray.gray200};
   gap: ${({ theme }) => theme.spacing.spacing2};
+  padding-bottom: 3.125rem;
+`;
+
+const Button = styled.button`
+  z-index: 100;
+  width: 100%;
+  max-width: 720px;
+  height: 3.125rem;
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: ${({ theme }) => theme.spacing.spacing0} auto;
+  background-color: ${({ theme }) => theme.colors.semantic.kakaoYellow};
+  color: ${({ theme }) => theme.colors.semantic.text.default};
+  font-size: ${({ theme }) => theme.typography.title2Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.title2Bold.fontWeight};
+  line-height: ${({ theme }) => theme.typography.title2Bold.lineHeight};
 `;
