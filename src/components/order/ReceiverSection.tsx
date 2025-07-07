@@ -23,37 +23,45 @@ const ReceiverSection = ({
       <SectionTitle>받는 사람</SectionTitle>
       <InputDiv>
         <InputTitle>이름</InputTitle>
-        <Input
-          error={!!receiverInput.error}
-          type="text"
-          value={receiverInput.value}
-          placeholder="이름을 입력해주세요."
-          onChange={receiverInput.onChange}
-        />
+        <InputErrorDiv>
+          <Input
+            error={!!receiverInput.error}
+            type="text"
+            value={receiverInput.value}
+            placeholder="이름을 입력해주세요."
+            onChange={receiverInput.onChange}
+          />
+          {receiverInput.error && (
+            <ErrorMessage message={receiverInput.error} />
+          )}
+        </InputErrorDiv>
       </InputDiv>
-      {receiverInput.error && <ErrorMessage message={receiverInput.error} />}
       <InputDiv>
         <InputTitle>전화번호</InputTitle>
-        <Input
-          error={!!phoneInput.error}
-          type="text"
-          value={phoneInput.value}
-          placeholder="전화번호를 입력해주세요."
-          onChange={phoneInput.onChange}
-        />
+        <InputErrorDiv>
+          <Input
+            error={!!phoneInput.error}
+            type="text"
+            value={phoneInput.value}
+            placeholder="전화번호를 입력해주세요."
+            onChange={phoneInput.onChange}
+          />
+          {phoneInput.error && <ErrorMessage message={phoneInput.error} />}
+        </InputErrorDiv>
       </InputDiv>
-      {phoneInput.error && <ErrorMessage message={phoneInput.error} />}
       <InputDiv>
         <InputTitle>수량</InputTitle>
-        <Input
-          error={!!countInput.error}
-          type="number"
-          value={countInput.value}
-          placeholder="수량을 입력해주세요."
-          onChange={countInput.onChange}
-        />
+        <InputErrorDiv>
+          <Input
+            error={!!countInput.error}
+            type="number"
+            value={countInput.value}
+            placeholder="수량을 입력해주세요."
+            onChange={countInput.onChange}
+          />
+          {countInput.error && <ErrorMessage message={countInput.error} />}
+        </InputErrorDiv>
       </InputDiv>
-      {countInput.error && <ErrorMessage message={countInput.error} />}
     </Section>
   );
 };
@@ -87,6 +95,12 @@ const InputTitle = styled.p`
   font-size: ${({ theme }) => theme.typography.subtitle1Regular.fontSize};
   font-weight: ${({ theme }) => theme.typography.subtitle1Regular.fontWeight};
   line-height: ${({ theme }) => theme.typography.subtitle1Regular.lineHeight};
+`;
+
+const InputErrorDiv = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Input = styled.input<{ error: boolean }>`
