@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 
 const MessageInputContainer = styled.div`
-  background-color: ${({ theme }) => theme.colors.semantic.background.fill};
+  background-color: ${({ theme }) => theme.colors.semantic.background.default};
   padding: ${({ theme }) => theme.spacing.spacing4} ${({ theme }) => theme.spacing.spacing3};
   margin-bottom: ${({ theme }) => theme.spacing.spacing4};
 
@@ -26,7 +26,6 @@ const MessageInputContainer = styled.div`
 const MessageInput = () => {
   return (
     <MessageInputContainer>
-      <h3>메시지 입력</h3>
       <textarea placeholder="메시지를 입력해주세요." defaultValue="축하해요."></textarea>
     </MessageInputContainer>
   );

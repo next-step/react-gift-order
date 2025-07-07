@@ -8,16 +8,13 @@ import OrderButton from './components/OrderButton';
 
 const Section = styled.section`
   width: 100%;
-  max-width: 950px;
+  max-width: 720px;
   padding-bottom: 3.125rem;
-  background-color: rgb(255, 255, 255);
+  background-color: ${({ theme }) => theme.colors.semantic.background.default};
 `;
 
 const OrderPage = () => {
-
-  const handleSubmit =()=>{
-    
-  };
+  const handleSubmit = () => {};
   return (
     <Section>
       <form onSubmit={handleSubmit}>

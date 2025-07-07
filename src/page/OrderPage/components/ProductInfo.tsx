@@ -1,12 +1,13 @@
 import styled from '@emotion/styled';
 
 const ProductInfoContainer = styled.div`
-  background-color: ${({ theme }) => theme.colors.semantic.background.fill};
+  background-color: ${({ theme }) => theme.colors.semantic.background.default};
   padding: ${({ theme }) => theme.spacing.spacing4} ${({ theme }) => theme.spacing.spacing3};
   margin-bottom: ${({ theme }) => theme.spacing.spacing4};
 
   display: flex;
-  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 
   img {
     width: 80px;
@@ -45,16 +46,34 @@ const ProductInfoContainer = styled.div`
   }
 `;
 
+const ItemContainer = styled.div`
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 0.5rem;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgb(238, 239, 241);
+  display: flex;
+  gap: 12px;
+`;
+
 const ProductInfo = () => {
   return (
     <ProductInfoContainer>
       <h3>상품 정보</h3>
-      <img alt="product" src="https://st.kakaocdn.net/product/gift/product/20231030175450_53e90ee9708f45ffa45b3f7b4bc01c7c.jpg" />
-      <div>
-        <p>BBQ 양념치킨+크림치즈볼+콜라1.25L</p>
-        <p>BBQ</p>
-        <p><span>상품가 </span>29000원</p>
-      </div>
+
+      <ItemContainer>
+        <img
+          alt="product"
+          src="https://st.kakaocdn.net/product/gift/product/20231030175450_53e90ee9708f45ffa45b3f7b4bc01c7c.jpg"
+        />
+        <div>
+          <p>BBQ 양념치킨+크림치즈볼+콜라1.25L</p>
+          <p>BBQ</p>
+          <p>
+            <span>상품가 </span>29000원
+          </p>
+        </div>
+      </ItemContainer>
     </ProductInfoContainer>
   );
 };

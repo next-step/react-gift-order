@@ -1,8 +1,8 @@
-import useInput from '@/page/LoginPage/hooks/useInput';
+import useInput from '@/hooks/useInput';
 import styled from '@emotion/styled';
 
 const SenderInfoContainer = styled.div`
-  background-color: ${({ theme }) => theme.colors.semantic.background.fill};
+  background-color: ${({ theme }) => theme.colors.semantic.background.default};
   padding: ${({ theme }) => theme.spacing.spacing4} ${({ theme }) => theme.spacing.spacing3};
   margin-bottom: ${({ theme }) => theme.spacing.spacing4};
 
@@ -30,16 +30,11 @@ const SenderInfoContainer = styled.div`
 `;
 
 const SenderInfo = () => {
-  const { value, onChange, onBlur, error } = useInput('text');
+  const { error } = useInput('text');
   return (
     <SenderInfoContainer>
       <h3>보내는 사람</h3>
-      <input
-        placeholder="이름을 입력하세요."
-        onChange={onChange}
-        onBlur={onBlur}
-        value={value}
-      />
+      <input placeholder="이름을 입력하세요." />
       {error ? <p>{error}</p> : <p>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</p>}
     </SenderInfoContainer>
   );

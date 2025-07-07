@@ -1,8 +1,8 @@
-import useInput from '@/page/LoginPage/hooks/useInput';
+import useInput from '@/hooks/useInput';
 import styled from '@emotion/styled';
 
 const ReceiverInfoContainer = styled.div`
-  background-color: ${({ theme }) => theme.colors.semantic.background.fill};
+  background-color: ${({ theme }) => theme.colors.semantic.background.default};
   padding: ${({ theme }) => theme.spacing.spacing4} ${({ theme }) => theme.spacing.spacing3};
   margin-bottom: ${({ theme }) => theme.spacing.spacing4};
 
@@ -41,35 +41,25 @@ const ReceiverInfoContainer = styled.div`
 `;
 
 const ReceiverInfo = () => {
-  const { value, onChange, onBlur, error } = useInput('text');
+  const nameInput = useInput('text');
+  const phoneInput = useInput('number');
+
   return (
     <ReceiverInfoContainer>
       <h3>받는 사람</h3>
       <div>
         <p>이름</p>
-        <input placeholder="이름을 입력하세요." onChange={onChange} onBlur={onBlur} value={value} />
-        {error && <p>{error}</p>}
+        <input placeholder="이름을 입력하세요." />
+        {nameInput.error && <p>{nameInput.error}</p>}
       </div>
       <div>
         <p>전화번호</p>
-        <input
-          placeholder="전화번호를 입력하세요."
-          onChange={onChange}
-          onBlur={onBlur}
-          value={value}
-        />
-        {error && <p>{error}</p>}
+        <input placeholder="전화번호를 입력하세요." />
+        {phoneInput.error && <p>{phoneInput.error}</p>}
       </div>
       <div>
         <p>수량</p>
-        <input
-          placeholder="수량을 입력하세요."
-          type="number"
-          onChange={onChange}
-          onBlur={onBlur}
-          value={value}
-        />
-        {error && <p>{error}</p>}
+        <input placeholder="수량을 입력하세요." type="number" defaultValue="1" />
       </div>
     </ReceiverInfoContainer>
   );
