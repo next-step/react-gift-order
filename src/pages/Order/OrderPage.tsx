@@ -20,9 +20,73 @@ import {
   sectionStyle,
   receiverLabelStyle,
   helperTextStyle,
+  receiverAddGuideStyle,
   errorInputStyle,
   errorMessageStyle,
 } from './OrderPage.style';
+
+const AddReceiverModal = ({ onClose }: { onClose: () => void }) => {
+  const theme = useTheme();
+
+  return (
+    <div
+      css={{
+        position: 'fixed',
+        top: 0, left: 0, right: 0, bottom: 0,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 1000,
+      }}
+      onClick={onClose} // 배경 클릭 시 닫기
+    >
+      <div
+        css={{
+          backgroundColor: 'white',
+          padding: '20px',
+          borderRadius: '8px',
+          minWidth: '300px',
+          boxShadow: '0 0 10px rgba(0,0,0,0.3)',
+        }}
+        onClick={(e) => e.stopPropagation()} // 모달 내부 클릭은 닫기 방지
+      >
+        <h3 css={{ marginTop: 0 }}>받는 사람 추가</h3>
+        <p css={receiverAddGuideStyle(theme)}>* 최대 10명까지 추가 할 수 있어요.</p>
+        <p css={receiverAddGuideStyle(theme)}>* 받는 사람의 전화번호를 중복으로 입력할 수 없어요.</p>
+        <button
+          type="button"
+          onClick={() => alert('추가 기능 구현 예정')}
+          css={{
+            backgroundColor: theme.color.gray.gray200,
+            color: 'white',
+            padding: '8px 16px',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            marginTop: '12px',
+          }}
+        >
+          추가하기
+        </button>
+        <button
+          type="button"
+          onClick={onClose}
+          css={{
+            marginLeft: 10,
+            padding: '8px 16px',
+            borderRadius: '6px',
+            border: '1px solid #ccc',
+            cursor: 'pointer',
+            backgroundColor: 'white',
+          }}
+        >
+          닫기
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const OrderPage = () => {
   const theme = useTheme();
@@ -39,6 +103,8 @@ const OrderPage = () => {
   const [receiverPhoneError, setReceiverPhoneError] = useState('');
   const [messageError, setMessageError] = useState('');
   const [quantityError, setQuantityError] = useState('');
+
+  const [isAddReceiverModalOpen, setIsAddReceiverModalOpen] = useState(false);
 
   const product = mockItems[0];
 
@@ -158,7 +224,7 @@ const OrderPage = () => {
             <label>받는 사람</label>
             <button
               type="button"
-              onClick={() => alert('받는 사람 추가 기능은 준비 중입니다.')}
+              onClick={() => setIsAddReceiverModalOpen(true)}
               style={{
                 background: theme.color.gray.gray300,
                 color: theme.color.gray.gray1000,
@@ -253,6 +319,10 @@ const OrderPage = () => {
       <button css={orderButtonStyle(theme)} onClick={submitOrder}>
         {(product.price * quantity).toLocaleString()}원 주문하기
       </button>
+
+      {isAddReceiverModalOpen && (
+        <AddReceiverModal onClose={() => setIsAddReceiverModalOpen(false)} />
+      )}
     </div>
   );
 };

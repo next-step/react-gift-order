@@ -113,6 +113,11 @@ export const helperTextStyle = (theme: ThemeType) => css`
   margin-top: ${theme.spacing[1]};
 `;
 
+export const receiverAddGuideStyle = (theme: ThemeType) => css`
+  font-size: ${theme.typography.label2Regular.fontSize};
+  color: ${theme.color.gray.gray1000};
+`;
+
 export const productInfoStyle = (theme: ThemeType) => css`
   display: flex;
   align-items: center;
