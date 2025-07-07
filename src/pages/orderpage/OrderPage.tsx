@@ -1,18 +1,19 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import MessageCardSection from "./MessageCardSection";
 import SenderInfoSection from "./SenderInfoSection";
 import ReceiverInfoSection from "./RecieverSection";
 import ProductSummarySection from "./ProductSummarySection";
 import useOrderValidation from "../../hooks/useOrderValidation";
 import OrderButton from "../../components/common/BaseButton";
+import { MOCK_PRODUCTS } from "../../mocks/products_list_mock";
 
 const OrderPage = () => {
-  const location = useLocation();
   const navigate = useNavigate();
-  const { product } = location.state || {};
+  const { id } = useParams<{ id: string }>();
+  const product = MOCK_PRODUCTS.find((item) => item.id === Number(id));
 
   const [message, setMessage] = useState("");
   const [sender, setSender] = useState("");

@@ -4,18 +4,10 @@ import styled from "@emotion/styled";
 import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { MOCK_PRICE_INFO } from "../../mocks/product_mock";
+import { MOCK_PRODUCTS } from "../../mocks/products_list_mock";
 import RisingItem from "./RisingItem";
 
 const INITIAL_VISIBLE_COUNT = 6;
-
-const items: (Product & { id: number })[] = Array.from(
-  { length: 21 },
-  (_, i) => ({
-    ...MOCK_PRICE_INFO,
-    id: i + 1,
-  })
-);
 
 export default function RisingList() {
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
@@ -24,23 +16,23 @@ export default function RisingList() {
 
   const handleItemClick = (item: Product & { id: number }) => {
     if (!isLoggedIn) {
-      navigate("/login", { state: { from: "/order", product: item } });
+      navigate(`/login`, { state: { from: `/order/${item.id}` } });
     } else {
-      navigate("/order", { state: { product: item } });
+      navigate(`/order/${item.id}`);
     }
   };
 
   return (
     <Wrapper>
       <Grid>
-        {items.slice(0, visibleCount).map((item) => (
+        {MOCK_PRODUCTS.slice(0, visibleCount).map((item) => (
           <div key={item.id} onClick={() => handleItemClick(item)}>
             <RisingItem product={item} />
           </div>
         ))}
       </Grid>
-      {visibleCount < items.length && (
-        <MoreButton onClick={() => setVisibleCount(items.length)}>
+      {visibleCount < MOCK_PRODUCTS.length && (
+        <MoreButton onClick={() => setVisibleCount(MOCK_PRODUCTS.length)}>
           더보기
         </MoreButton>
       )}
