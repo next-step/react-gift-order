@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import MessageCardSection from "./MessageCardSection";
 import SenderInfoSection from "./SenderInfoSection";
@@ -12,7 +12,7 @@ import { MOCK_PRODUCTS } from "../../mocks/products_list_mock";
 
 const OrderPage = () => {
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams();
   const product = MOCK_PRODUCTS.find((item) => item.id === Number(id));
 
   const [message, setMessage] = useState("");
@@ -28,6 +28,14 @@ const OrderPage = () => {
     phone,
     quantity,
   });
+
+  if (!product) {
+    useEffect(() => {
+      navigate("/notfound", { replace: true });
+    }, []);
+
+    return null;
+  }
 
   const handleSubmit = () => {
     const isValid = validate();
@@ -47,14 +55,6 @@ const OrderPage = () => {
       navigate("/", { replace: true });
     }
   };
-
-  useEffect(() => {
-    if (!product) {
-      navigate("/notfound", { replace: true });
-    }
-  }, [product, navigate]);
-
-  if (!product) return null;
 
   return (
     <Form>

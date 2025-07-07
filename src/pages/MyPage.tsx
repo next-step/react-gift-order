@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import LogoutButton from "../components/common/BaseButton";
 
 const MyPage = () => {
-  const { isLoggedIn, userEmail, logout } = useAuth();
+  const { isLoggedIn, userEmail, userName, logout } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const MyPage = () => {
   return (
     <Wrapper>
       <MyPageTitle>마이페이지</MyPageTitle>
-      <MyPageBody>{userEmail?.split("@")[0]}님 안녕하세요!</MyPageBody>
+      <MyPageBody>{userName}님 안녕하세요!</MyPageBody>
       <MyPageBody>이메일주소는 {userEmail}입니다.</MyPageBody>
       <LogoutButton
         color="yellow"
