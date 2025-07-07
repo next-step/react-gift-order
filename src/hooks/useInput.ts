@@ -22,7 +22,8 @@ export function useInput(validate: (value: string) => string | null) {
   const checkAndSetError = () => {
     const currentValue = inputRef.current?.value || ''
     const err = validate(currentValue)
-
+    setError(err)
+  }
 
   return { 
     inputRef, 
