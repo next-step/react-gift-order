@@ -6,19 +6,21 @@ import NavigationBar from '@/common/NavigationBar';
 import Input from '@/common/Input';
 import LoginButton from '@/components/login/LoginButton';
 
-const validators: Record<string, (value: string) => string | null> = {
-  id: (value: string) => {
-    if (value.trim() === '') return 'ID를 입력해주세요.';
-    if (!value.includes('@') || !value.includes('.'))
-      return 'ID는 이메일 형식으로 입력해주세요.';
-    return null;
-  },
-  password: (value: string) => {
-    if (value.trim() === '') return 'PW를 입력해주세요.';
-    if (value.length < 8) return 'PW는 최소 8글자 이상이어야 합니다.';
-    return null;
-  },
-};
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const validators: Record<'id' | 'password', (value: string) => string | null> =
+  {
+    id: (value: string) => {
+      if (value.trim() === '') return 'ID를 입력해주세요.';
+      if (!emailRegex.test(value)) return '유효한 이메일 형식이 아닙니다.';
+      return null;
+    },
+    password: (value: string) => {
+      if (value.trim() === '') return 'PW를 입력해주세요.';
+      if (value.length < 8) return 'PW는 최소 8글자 이상이어야 합니다.';
+      return null;
+    },
+  };
 
 type FormErrors = {
   id: string | null;
@@ -36,10 +38,11 @@ const LoginForm = () => {
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    const validator = validators[name];
+    const fieldName = name as keyof FormErrors;
+    const validator = validators[fieldName];
     if (!validator) return;
     const errorMessage = validator(value);
-    setErrors((prev) => ({ ...prev, [name]: errorMessage }));
+    setErrors((prev) => ({ ...prev, [fieldName]: errorMessage }));
   };
 
   const isFormValid =
