@@ -3,6 +3,8 @@ import styled from '@emotion/styled'
 import NavBar from '@/components/NavBar'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { spacing } from '@/theme/spacing'
+import { useAuth } from '@/contexts/AuthContext'
+
 
 const Container = styled.div`
   max-width: 720px;
@@ -16,14 +18,19 @@ interface LayoutProps extends PropsWithChildren {
 const Layout = ({ children, logoSrc }: LayoutProps) => {
   const navigate = useNavigate()
   const location = useLocation()
-
+  const { isLoggedIn } = useAuth()
 
   const handleBack = () => {
     navigate(-1)
   }
 
   const handleLoginClick = () => {
-    navigate('/login', { state: { from: location.pathname } })  }
+    if (isLoggedIn) {
+      navigate('/profile')
+    } else {
+      navigate('/login', { state: { from: location.pathname } })
+    }
+  }
   return (
     <Container>
       <NavBar
