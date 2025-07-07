@@ -2,7 +2,10 @@ import {useNavigate} from 'react-router-dom'
 import styled from "@emotion/styled";
 import arrowLeftIcon from "../../assets/icons/arrow_left.svg";
 import myIcon from "../../assets/icons/my.svg";
+import { useAuth } from '@/contexts/AuthContext';
+import { ROUTE_PATH } from '@/routes/Router';
 const Navbar = () => {
+  const {user} = useAuth()
   const navigate = useNavigate();
   const NavbarWrapper = styled.nav`
     display: flex;
@@ -19,6 +22,13 @@ const Navbar = () => {
   const handleLink =(path:string)=>{
     navigate(path);
   }
+  const handleMyBtn =()=>{
+     if(!user.isLoggedIn) handleLink(ROUTE_PATH.LOGIN);
+     else{
+      handleLink(ROUTE_PATH.MY)
+     }
+
+  }
   return (
     <NavbarWrapper>
       <div>
@@ -28,7 +38,7 @@ const Navbar = () => {
       </div>
       <div>선물하기</div>
       <div>
-        <Button onClick={()=>{handleLink("/login")}}>
+        <Button onClick={handleMyBtn}>
           <img src={myIcon} alt="" />
         </Button>
       </div>
