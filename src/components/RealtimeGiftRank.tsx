@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import itemList from '../mocks/iteml_list.mock';
 
@@ -133,6 +134,8 @@ const RealtimeItem = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  cursor: pointer;
 `;
 const RealtimeItemImg = styled.img`
   width: 100%;
@@ -157,13 +160,25 @@ const RealtimeItemPriceTitle = styled.p`
   line-height: ${({ theme }) => theme.typography['label1Bold'].lineHeight};
 `;
 
-function RealtimeRankItemList({ collapsed }: { collapsed: boolean }) {
+function RealtimeRankItemList({ collapsed, setItemInfo }: { collapsed: boolean ,setItemInfo: object}) {
   const visibleItems = collapsed ? itemList.slice(0, 6) : itemList;
+  const navigate = useNavigate();
+  const userId = sessionStorage.getItem('userId')?.split('@')[0] ?? '';
+
+  function routeToOrder(brandInfo:any, id:any,imageURL:any, name:any, price:any) {
+    if(userId !== '') {
+      sessionStorage.setItem('selectedItem',JSON.stringify({brandInfo,id,imageURL,name,price}));
+
+      navigate('/Order');
+    } else {
+      navigate('/login');
+    }
+  }
 
   return (
     <>
       {visibleItems.map((item) => (
-        <RealtimeItem key={item.id}>
+        <RealtimeItem key={item.id} onClick={() => routeToOrder(item.brandInfo,item.id,item.imageURL,item.name,item.price)}>
           <RealtimeItemImg
             src={item.imageURL}
             alt={item.name}
@@ -200,6 +215,7 @@ function RealtimeGiftRank() {
   const [selectedGroup, setSelectedGroup] = useState(''); // 전체, 여성이, 남성이, 청소년이중 하나를 선택했다는 것을 저장하기 위한 state
   const [selectRankingType, setSelectRankingType] = useState(''); // 받고 싶어한, 많이 선물한, 위시로 받은중 하나를 선택했다는 것을 저장하기 위한 state
   const [isCollapsed, setIsCollapsed] = useState(true); // 실시간 급상승 선물랭킹을 더보기 줄이기 할 수 있는 버튼의 상태를 저장하기 위한 state
+  const [itemInfo, setItemInfo] = useState({});
 
   const rankGroup = [
     { group: 'ALL', label: 'ALL', text: '전체' },
@@ -265,7 +281,7 @@ function RealtimeGiftRank() {
           ))}
         </RealtimeRankNav2Wrapper>
         <RealtimeRankItemWrapper>
-          <RealtimeRankItemList collapsed={isCollapsed}></RealtimeRankItemList>
+          <RealtimeRankItemList collapsed={isCollapsed} setItemInfo={setItemInfo}></RealtimeRankItemList>
         </RealtimeRankItemWrapper>
       </RealtimeRankWrapper>
       <ExtraBtnWrapper>
