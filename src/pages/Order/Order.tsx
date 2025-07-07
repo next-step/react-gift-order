@@ -15,17 +15,17 @@ function Order() {
     currentId,
     currentOrder,
     text,
-    sender,
-    reciever,
     count,
     cost,
+    errors,
     handleTextChange,
     handleThumbClick,
     handleSenderChange,
     handleCountChange,
     handleRecieverNameChange,
     handleRecieverPhoneChange,
-    handlecheckInput,
+    validate,
+    SubmitOrder,
   } = useOrder(item);
 
   return (
@@ -34,18 +34,20 @@ function Order() {
         currentId={currentId}
         currentOrder={currentOrder}
         text={text}
+        errors={errors}
         handleTextChange={handleTextChange}
         handleThumbClick={handleThumbClick}
       />
-      <Sender sender={sender} handleSenderChange={handleSenderChange} />
+      <Sender errors={errors} handleSenderChange={handleSenderChange} />
       <Reciever
         count={count}
+        errors={errors}
         handleCountChange={handleCountChange}
         handleRecieverNameChange={handleRecieverNameChange}
         handleRecieverPhoneChange={handleRecieverPhoneChange}
       />
       <ItemInfo item={item} />
-      <OrderBtn cost={cost} handlecheckInput={handlecheckInput} />
+      <OrderBtn cost={cost} handlecheckInput={validate} SubmitOrder={SubmitOrder} />
     </OrderContainer>
   );
 }

@@ -9,16 +9,25 @@ import {
 import { ErrorContainer } from '@/styles/ErrorContainer.styles';
 import { orders } from '@/mocks/mockorder';
 import type { ordersType } from '@/mocks/mockorder';
+import type { ErrorType } from '@/hooks/useOrder';
 
 type CardsProps = {
   currentId: number;
   currentOrder: ordersType | undefined;
   text: string;
+  errors: ErrorType;
   handleTextChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   handleThumbClick: (id: number) => void;
 };
 
-function Cards({ currentId, currentOrder, text, handleTextChange, handleThumbClick }: CardsProps) {
+function Cards({
+  currentId,
+  currentOrder,
+  text,
+  errors,
+  handleTextChange,
+  handleThumbClick,
+}: CardsProps) {
   return (
     <CardContainer>
       <ThumbContainer>
@@ -35,7 +44,7 @@ function Cards({ currentId, currentOrder, text, handleTextChange, handleThumbCli
       </ThumbContainer>
       {currentOrder && <Image src={currentOrder.imageUrl} alt="image" />}
       <InputTextArea value={text} onChange={handleTextChange} />
-      {text.length == 0 && <ErrorContainer>메세지를 입력해주세요.</ErrorContainer>}
+      {errors.text && <ErrorContainer>{errors.text}</ErrorContainer>}
     </CardContainer>
   );
 }
