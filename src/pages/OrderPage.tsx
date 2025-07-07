@@ -11,6 +11,11 @@ import ReceiverForm from '@/components/OrderSection/ReceiverForm';
 import ProductInfo from '@/components/OrderSection/ProductInfo';
 import OrderSubmitButton from '@/components/OrderSection/OrderSubmitButton';
 import { useNavigate } from 'react-router-dom';
+import {
+  PHONE_REGEX,
+  MIN_QUANTITY,
+  ERROR_MESSAGES,
+} from '@/constants/validation';
 
 const OrderPage = () => {
   const navigate = useNavigate();
@@ -39,7 +44,7 @@ const OrderPage = () => {
 
   const validateTextMessage = () => {
     if (!textMessage.trim()) {
-      setTextMessageError('메시지를 입력해주세요.');
+      setTextMessageError(ERROR_MESSAGES.EMPTY_MESSAGE);
       return false;
     }
     setTextMessageError('');
@@ -48,7 +53,7 @@ const OrderPage = () => {
 
   const validateSender = () => {
     if (!senderName.trim()) {
-      setSenderError('이름을 입력해주세요.');
+      setSenderError(ERROR_MESSAGES.EMPTY_SENDER);
       return false;
     }
     setSenderError('');
@@ -57,7 +62,7 @@ const OrderPage = () => {
 
   const validateReceiverName = () => {
     if (!receiverName.trim()) {
-      setReceiverNameError('이름을 입력해주세요.');
+      setReceiverNameError(ERROR_MESSAGES.EMPTY_RECEIVER_NAME);
       return false;
     }
     setReceiverNameError('');
@@ -65,12 +70,11 @@ const OrderPage = () => {
   };
 
   const validateReceiverPhone = () => {
-    const phoneRegex = /^01[0-9]{8,9}$/;
     if (!receiverPhone.trim()) {
-      setReceiverPhoneError('전화번호를 입력해주세요.');
+      setReceiverPhoneError(ERROR_MESSAGES.EMPTY_RECEIVER_PHONE);
       return false;
-    } else if (!phoneRegex.test(receiverPhone)) {
-      setReceiverPhoneError('올바른 전화번호 형식이 아닙니다.');
+    } else if (!PHONE_REGEX.test(receiverPhone)) {
+      setReceiverPhoneError(ERROR_MESSAGES.INVALID_PHONE);
       return false;
     }
     setReceiverPhoneError('');
@@ -78,8 +82,8 @@ const OrderPage = () => {
   };
 
   const validateQuantity = () => {
-    if (quantity < 1) {
-      setQuantityError('구매 수량은 1개 이상이어야 합니다.');
+    if (quantity < MIN_QUANTITY) {
+      setQuantityError(ERROR_MESSAGES.INVALID_QUANTITY);
       return false;
     }
     setQuantityError('');
