@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { products } from '@/data/products'
 import type { Product } from '@/data/products'
 import {
@@ -26,6 +27,8 @@ export type Gender = (typeof genderList)[number]['label']
 export type Type = (typeof typeList)[number]
 
 const TrendingGiftRanking = () => {
+  const navigate = useNavigate()
+
   const [searchParams, setSearchParams] = useSearchParams()
 
   const selectedGender = searchParams.get('gender') ?? genderList[0].label
@@ -51,6 +54,7 @@ const TrendingGiftRanking = () => {
 
   const handleProductSelect = (product: Product) => {
     setSelectedProduct(product)
+    navigate(`/order?productId=${product.id}`)
   }
 
   const handleToggleView = () => {
@@ -63,7 +67,6 @@ const TrendingGiftRanking = () => {
     }
   }
 
-  // 피드백 : 유효하지 않은 쿼리 스트링의 경우 처리
   useEffect(() => {
     const params = new URLSearchParams(searchParams)
     let isValid = true
@@ -80,18 +83,6 @@ const TrendingGiftRanking = () => {
 
     if (!isValid) setSearchParams(params, { replace: true })
   }, [searchParams, selectedGender, selectedType, setSearchParams])
-
-  useEffect(() => {
-    console.log('선택된 Gender:', selectedGender)
-  }, [selectedGender])
-
-  useEffect(() => {
-    console.log('선택된 Type:', selectedType)
-  }, [selectedType])
-
-  useEffect(() => {
-    console.log('선택된 Product:', selectedProduct)
-  }, [selectedProduct])
 
   return (
     <Container>
