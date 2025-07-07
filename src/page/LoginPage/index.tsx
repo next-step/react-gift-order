@@ -1,7 +1,9 @@
 import styled from '@emotion/styled';
-import useNavigateBackOrHome from '@/hooks/useNavigateBackOrHome';
 import useInput from './hooks/useInput';
 import InputField from './components/InputField';
+import { useUserInfo } from '@/contexts/UserInfoContext';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/routes/routes';
 
 const Container = styled.div`
   display: flex;
@@ -49,7 +51,8 @@ const Button = styled.button`
 `;
 
 const LoginPage = () => {
-  const navigateBackOrHome = useNavigateBackOrHome();
+  const { login } = useUserInfo();
+  const navigate = useNavigate();
   const username = useInput('email');
   const password = useInput('password');
 
@@ -57,7 +60,11 @@ const LoginPage = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    navigateBackOrHome();
+
+    if (!username.isValid || !password.isValid) return;
+
+    login(username.value, password.value);
+    navigate(ROUTES.MY);
   };
 
   return (
