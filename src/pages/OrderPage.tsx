@@ -19,8 +19,8 @@ import { rankingList } from "@/mock/rankingList";
 const Form = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: ${({ theme }) => theme.colors.gray100}; // 회색 배경
-  padding: 16px 0 120px; // 상단, 하단 여백
+  background-color: ${({ theme }) => theme.colors.gray100};
+  padding: 16px 0 120px;
 `;
 
 const Container = styled.div`
@@ -33,7 +33,7 @@ const Container = styled.div`
 
 const SectionCard = styled.section`
   width: 100%;
-  background-color: #fff; // 흰색 카드
+  background-color: #fff;
   padding: 20px;
   border-radius: 12px;
   margin-bottom: 12px;

@@ -29,9 +29,11 @@ export default function OrderSummary({
 }
 
 const Container = styled.div`
-  width: 90%;
-  margin: 0 auto;
+  width: 100%;
+  padding: 0 1px;
+  box-sizing: border-box;
 `;
+
 
 const Wrapper = styled.div`
   display: flex;

@@ -109,6 +109,7 @@ const Input = styled.input`
   padding: 10px;
   border: 1px solid ${({ theme }) => theme.colors.gray600};
   border-radius: 10px;
+  color: black;
   font-size: ${({ theme }) => theme.typography.subtitle1Regular.fontSize};
   &:focus {
     outline: none;
