@@ -6,8 +6,10 @@ import type { RecipientsModalFormData } from '@/types/RecipientsModalFormData'; 
 // Props 타입 정의
 interface RecipientsItemProps {
   index: number; // 배열 인덱스
+  id: number;
   register: UseFormRegister<RecipientsModalFormData>; // 모달 내부 폼의 register 타입
   errors: FieldErrors<RecipientsModalFormData>; // 모달 내부 폼의 errors 타입
+  onRemove: (id: number) => void;
 }
 
 const StyledRecipientsItemContainerHeader = styled.div`
@@ -43,18 +45,20 @@ const StyledInputErrorMsgContainer = styled.div`
       border-color: #007bff;
       box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
     }
-    &.input-error {
-      border-color: red;
-      box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.25);
-    }
   }
 `;
-const RecipientsItem: React.FC<RecipientsItemProps> = ({ index, register, errors }) => {
+const RecipientsItem: React.FC<RecipientsItemProps> = ({
+  index,
+  register,
+  errors,
+  onRemove,
+  id,
+}) => {
   return (
     <div>
       <StyledRecipientsItemContainerHeader>
         <p className='body1Bold'>받는 사람 {index + 1}</p>
-        <button>삭제</button>
+        <button onClick={() => onRemove(id)}>삭제</button>
       </StyledRecipientsItemContainerHeader>
       <StyledRecipientsItem>
         <label className='body2Regular' htmlFor={`newRecipients[${index}].name`}>

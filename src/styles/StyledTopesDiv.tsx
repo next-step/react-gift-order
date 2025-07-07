@@ -67,6 +67,14 @@ const StyledTopestDiv = styled.div`
   .margin-left-20 {
     margin-left: 20px;
   }
+  .error-message {
+    color: ${({ theme }) => theme.palette.red600};
+    margin-top: 10px;
+  }
+  .input-error {
+    border-color: red;
+    box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.25);
+  }
 `;
 
 export default StyledTopestDiv;

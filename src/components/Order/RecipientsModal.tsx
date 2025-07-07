@@ -117,6 +117,10 @@ const RecipientsModal: React.FC<RecipientsModalProps> = ({ onClose, onAdd }) => 
   const handleAddPersonField = () => {
     setFieldSets((prev) => [...prev, { id: nextId.current++ }]);
   };
+  const handleRemovePersonField = (id: number) => {
+    setFieldSets((prev) => prev.filter((field) => field.id !== id));
+    console.log('modal item 삭제 함수 실행');
+  };
 
   const onSubmit: SubmitHandler<RecipientsModalFormData> = (data) => {
     // 유효한 받는 사람만 필터링 (이름과 연락처가 모두 있는 경우)
@@ -151,9 +155,11 @@ const RecipientsModal: React.FC<RecipientsModalProps> = ({ onClose, onAdd }) => 
           {fieldSets.map((fieldSet, index) => (
             <RecipientsItem
               key={fieldSet.id} // 고유 ID를 key로 사용
+              id={fieldSet.id}
               index={index}
               register={register}
               errors={errors}
+              onRemove={handleRemovePersonField}
             />
           ))}
         </ModalBody>
