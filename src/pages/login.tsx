@@ -8,13 +8,8 @@ import { typography } from '../styles/typography'
 import { useAuth } from '@/contexts/AuthContext'
 
 import GlobalStyle from '@/styles/GlobalStyle'
+import PageWrapper from '@/components/PageWrapper'
 import { useInput, validateEmail, validatePassword } from '@/hooks/useInput'
-
-const wrapperStyle = css({
-  maxWidth: 720,
-  margin: '0 auto',
-  alignItems: 'center'
-})
 
 const formStyle = css({
   width: 360,
@@ -119,49 +114,50 @@ const LoginPage = () => {
     !!passwordError
 
   return (
-    <div css={wrapperStyle}>
+    <>
       <GlobalStyle />
       <Header onBack={handleBack} />
-
-      <form css={formStyle} onSubmit={handleLogin} noValidate>
-        <div css={logoStyle}>kakao</div>
-        <div css={inputWrapStyle}>
-          <input
-            css={inputStyle}
-            ref={emailRef}
-            type="email"
-            placeholder="이메일"
-            required
-            onBlur={handleEmailBlur}
-            onChange={handleEmailChange}
-          />
-          {emailError && (
-            <div id="email-error" css={errorTextStyle}>{emailError}</div>
-          )}
-        </div>
-        <div css={inputWrapStyle}>
-          <input
-            css={inputStyle}
-            ref={passwordRef}
-            type="password"
-            placeholder="비밀번호"
-            required
-            onBlur={handlePasswordBlur}
-            onChange={handlePasswordChange}
-          />
-          {passwordError && (
-            <div id="password-error" css={errorTextStyle}>{passwordError}</div>
-          )}
-        </div>
-        <button
-          css={buttonStyle(isLoginButtonDisabled)}
-          type="submit"
-          disabled={isLoginButtonDisabled}
-        >
-          로그인
-        </button>
-      </form>
-    </div>
+      <PageWrapper>
+        <form css={formStyle} onSubmit={handleLogin} noValidate>
+          <div css={logoStyle}>kakao</div>
+          <div css={inputWrapStyle}>
+            <input
+              css={inputStyle}
+              ref={emailRef}
+              type="email"
+              placeholder="이메일"
+              required
+              onBlur={handleEmailBlur}
+              onChange={handleEmailChange}
+            />
+            {emailError && (
+              <div id="email-error" css={errorTextStyle}>{emailError}</div>
+            )}
+          </div>
+          <div css={inputWrapStyle}>
+            <input
+              css={inputStyle}
+              ref={passwordRef}
+              type="password"
+              placeholder="비밀번호"
+              required
+              onBlur={handlePasswordBlur}
+              onChange={handlePasswordChange}
+            />
+            {passwordError && (
+              <div id="password-error" css={errorTextStyle}>{passwordError}</div>
+            )}
+          </div>
+          <button
+            css={buttonStyle(isLoginButtonDisabled)}
+            type="submit"
+            disabled={isLoginButtonDisabled}
+          >
+            로그인
+          </button>
+        </form>
+      </PageWrapper>
+    </>
   )
 }
 

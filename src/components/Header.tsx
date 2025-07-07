@@ -3,7 +3,7 @@ import { css } from '@emotion/react'
 import { colors } from '../styles/colors'
 import { typography } from '../styles/typography'
 import { spacing } from '../styles/spacing'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 
 const headerStyle = css({
@@ -14,6 +14,7 @@ const headerStyle = css({
   borderBottom: `1px solid ${colors.borderDefault}`,
   position: 'relative',
   background: colors.backgroundDefault,
+  
 })
 
 const buttonStyle = (side: 'left' | 'right') => css({
@@ -34,7 +35,6 @@ interface HeaderProps {
 
 const Header = ({ onBack }: HeaderProps) => {
   const navigate = useNavigate()
-  const location = useLocation()
   const { isAuthenticated } = useAuth()
   
   const handleProfileClick = () => {
@@ -48,7 +48,8 @@ const Header = ({ onBack }: HeaderProps) => {
   
   // 뒤로가기 핸들러
   const handleBackClick = () => {
-    // React Router의 useLocation으로 현재 경로 확인
+    // 현재 위치 가져오기 위해 location 객체 사용
+    const location = window.location;
     const isHomePage = location.pathname === '/';
     
     // 홈페이지에서는 뒤로가기를 무시
