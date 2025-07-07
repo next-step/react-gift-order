@@ -3,6 +3,8 @@ import { useState, useMemo } from 'react'
 import { Navbar } from '@/components/Navbar/Navbar'
 import { cardMock } from '@/pages/OrderPage/cardMock'
 import { Layout } from '@/components/Layout/Layout'
+import { useParams } from 'react-router-dom'
+import { productMock } from '@/components/Product/productMock'
 
 export function OrderPage() {
   const [selectedCard, setSelectedCard] = useState(cardMock[0])
@@ -13,7 +15,17 @@ export function OrderPage() {
   const [quantity, setQuantity] = useState(1)
   const [isSubmitted, setIsSubmitted] = useState(false)
 
-  const price = 29000
+  const { id } = useParams<{ id: string }>()
+  const product = useMemo(
+    () => productMock.find((p) => p.id === Number(id)),
+    [id]
+  )
+
+  if (!product) return <div>상품을 찾을 수 없습니다.</div>
+
+  const price = product.price.sellingPrice
+  const productName = product.name
+  const brandName = product.brandInfo.name
 
   const senderError = useMemo(() => {
     if (!sender) return '보내는 사람 이름을 입력해주세요.'
@@ -56,7 +68,7 @@ export function OrderPage() {
 
     if (isFormValid) {
       alert(`주문이 완료되었습니다.
-        상품명: 치킨
+        상품명: ${productName}
         구매 수량: ${quantity}
         발신자 이름: ${sender}
         메시지: ${message}`)
@@ -155,8 +167,8 @@ export function OrderPage() {
                   alt="상품 이미지"
                 />
                 <ProductDetails>
-                  <ProductName>BBQ 양념치킨+크림치즈볼+콜라1.25L</ProductName>
-                  <ProductBrand>브랜드: BBQ</ProductBrand>
+                  <ProductName>{productName}</ProductName>
+                  <ProductBrand>{brandName}</ProductBrand>
                   <ProductPrice>{price.toLocaleString()}원</ProductPrice>
                 </ProductDetails>
               </ProductBox>
