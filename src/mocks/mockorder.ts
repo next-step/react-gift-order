@@ -1,3 +1,10 @@
+export type ordersType = {
+  id: number;
+  thumbUrl: string;
+  imageUrl: string;
+  defaultTextMessage: string;
+};
+
 export const orders = [
   {
     id: 904,

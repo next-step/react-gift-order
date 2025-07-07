@@ -42,15 +42,13 @@ function Order() {
   const item: mockItemType = location.state?.item;
   const [currentId, setCurrentId] = useState(orders[0].id);
   const [text, setText] = useState<string>(orders[0].defaultTextMessage);
-  const [count, setCount] = useState<number>(1);
-  const [cost, setCost] = useState<number>(count * item.price.basicPrice);
+  const [count, setCount] = useState<number>(0);
 
   function handleTextChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     setText(e.target.value);
   }
   function handleCountChange(e: React.ChangeEvent<HTMLInputElement>) {
     setCount(Number(e.target.value));
-    setCost(count * item.price.basicPrice);
   }
   function handleThumbClick(id: number) {
     setCurrentId(id);
@@ -92,7 +90,7 @@ function Order() {
         </InputContainer>
         <InputContainer>
           <RecieverInputLabel>수량</RecieverInputLabel>
-          <RecieverInput type="number" value={count} onChange={handleCountChange} />
+          <RecieverInput type="number" value={count} onChange={() => handleCountChange} />
         </InputContainer>
       </RecieverContainer>
       <ItemInfoContainer>
@@ -109,7 +107,7 @@ function Order() {
           </DetailContainer>
         </ItemContainer>
       </ItemInfoContainer>
-      <OrderBtn cost={cost} />
+      <OrderBtn />
     </OrderContainer>
   );
 }
