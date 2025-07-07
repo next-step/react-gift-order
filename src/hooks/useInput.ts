@@ -31,12 +31,10 @@ export const useInput = (options: UseInputOptions = {}): UseInputReturn => {
   const handleBlur = () => {
     setIsTouched(true);
   };
-
   const reset = () => {
     setValue("");
     setIsTouched(false);
   };
-
   return {
     value,
     onChange: handleChange,
