@@ -10,7 +10,7 @@ import styled from "@emotion/styled";
 const ReceiverSection = () => {
   const receiverInput = useFormInput(checkNameError);
   const phoneInput = useFormInput(checkPhoneError);
-  const countInput = useFormInput(checkCountError);
+  const countInput = useFormInput(checkCountError, "1");
 
   return (
     <Section>
@@ -42,7 +42,7 @@ const ReceiverSection = () => {
         <Input
           error={!!countInput.error}
           type="number"
-          value={countInput.value || 1}
+          value={countInput.value}
           placeholder="수량을 입력해주세요."
           onChange={countInput.onChange}
         />

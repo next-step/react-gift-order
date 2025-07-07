@@ -1,7 +1,9 @@
 import { useState } from "react";
 
-const useFormInput = (validator: (value: string) => string) => {
-  const [value, setValue] = useState("");
+type ValidatorFunction = (value: string) => string;
+
+const useFormInput = (validator: ValidatorFunction, initialValue = "") => {
+  const [value, setValue] = useState(initialValue);
   const [error, setError] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
