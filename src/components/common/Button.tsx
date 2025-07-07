@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
-import type { ButtonHTMLAttributes, ReactNode } from "react";
+import type { Theme } from "@emotion/react";
+import type { ButtonHTMLAttributes, ReactNode, CSSProperties } from "react";
 
 type ButtonVariant = "primary" | "secondary" | "outlined";
 type ButtonSize = "medium" | "large";
@@ -10,7 +11,38 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   width: string;
   children: ReactNode;
 }
-//TODO : 버튼 컴포넌트 별도의 스타일 파일로 분리해서 로직 및 스타일 분리? variants가 늘어난다면 props 관리 필요
+
+type VariantStyle = {
+  backgroundColor: CSSProperties["backgroundColor"];
+  color: CSSProperties["color"];
+  border: CSSProperties["border"];
+};
+
+const getVariantStyles = (
+  variant: ButtonVariant,
+  theme: Theme,
+): VariantStyle => {
+  //필요하면 object 형식으로 추가하기 -> danger같은 위험 버튼
+  const styles: Record<ButtonVariant, VariantStyle> = {
+    primary: {
+      backgroundColor: theme.color.yellow[600],
+      color: theme.color.gray[900],
+      border: "none",
+    },
+    secondary: {
+      backgroundColor: theme.color.gray[0],
+      color: theme.color.gray[900],
+      border: "1px solid rgb(220,222,227)",
+    },
+    outlined: {
+      backgroundColor: theme.color.gray[300],
+      color: theme.color.gray[900],
+      border: "none",
+    },
+  };
+  return styles[variant];
+};
+
 const StyledButton = styled.button<ButtonProps>(
   ({ theme, variant = "primary", size = "medium", width = "auto" }) => ({
     display: "flex",
@@ -29,22 +61,7 @@ const StyledButton = styled.button<ButtonProps>(
       padding: `${theme.spacing4} ${theme.spacing6}`,
     }),
 
-    ...(variant === "primary" && {
-      backgroundColor: theme.color.yellow[600],
-      color: theme.color.gray[900],
-      border: "none",
-    }),
-    ...(variant === "secondary" && {
-      backgroundColor: theme.color.gray[0],
-      color: theme.color.gray[900],
-      border: "1px solid rgb(220,222,227)",
-    }),
-
-    ...(variant === "outlined" && {
-      backgroundColor: theme.color.gray[300],
-      color: theme.color.gray[900],
-      border: "none",
-    }),
+    ...getVariantStyles(variant, theme),
 
     "&:disabled": {
       cursor: "not-allowed",
