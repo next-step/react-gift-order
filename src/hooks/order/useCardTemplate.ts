@@ -15,7 +15,7 @@ export const useCardTemplate = () => {
         message: defaultTemplate?.defaultTextMessage,
       }));
     }
-  }, []);
+  }, [order.cardTemplate, setOrder]);
 
   const setCardTemplate = (template: CardTemplateType) => {
     setOrder(prev => ({
