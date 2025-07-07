@@ -8,7 +8,7 @@ import { useOrderForm } from '@/hooks/useOrderForm';
 import BorderInputBox from '@/components/Common/BorderInputBox';
 import { useParams, useNavigate } from 'react-router-dom';
 import { mockGiftItems } from '@/mocks/itemListMock';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const Order = () => {
   const { itemId } = useParams<{ itemId: string }>();
@@ -17,7 +17,12 @@ const Order = () => {
 
   const { selectedCard, selectCard } = useCardSelection();
   const { senderName, receiverName, receiverPhoneNumber, itemCount } = useOrderForm();
-  const [textMessage, setTextMessage] = useState(selectedCard?.defaultTextMessage);
+  const [textMessage, setTextMessage] = useState('');
+  useEffect(() => {
+    if (selectedCard?.defaultTextMessage) {
+      setTextMessage(selectedCard.defaultTextMessage);
+    }
+  }, [selectedCard]);
   const navigate = useNavigate();
 
   if (!item) return <p>상품 정보를 찾을 수 없습니다.</p>;
