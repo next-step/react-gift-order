@@ -109,10 +109,11 @@ const RecipientsModal: React.FC<RecipientsModalProps> = ({ onClose, onAdd, exist
     getValues,
   } = useForm<RecipientsModalFormData>({
     defaultValues: {
-      newRecipients: existedRecipients,
+      newRecipients: [{ receiveName: '', receiveTel: '', count: 0 }],
     },
   });
   useEffect(() => {
+    console.log('리렌더링 실행');
     reset({
       newRecipients: existedRecipients,
     });
@@ -121,26 +122,19 @@ const RecipientsModal: React.FC<RecipientsModalProps> = ({ onClose, onAdd, exist
   }, [existedRecipients, reset]);
 
   const handleAddPersonField = () => {
-    setFieldSets((prev) => [...prev, { id: nextId.current++ }]);
-    onClose();
+    setFieldSets((existedRecipients) => [...existedRecipients, { id: nextId.current++ }]);
   };
-  const handleRemovePersonField = (id: number) => {
-    setFieldSets((prev) => prev.filter((field) => field.id !== id));
+
+  const handleRemovePersonField = () => {
+    setFieldSets(existedRecipients.map((_, idx) => ({ id: idx })));
     console.log('modal item 삭제 함수 실행');
   };
 
   const onSubmit: SubmitHandler<RecipientsModalFormData> = (data) => {
     // 유효한 받는 사람만 필터링 (이름과 연락처가 모두 있는 경우)
-    const validRecipients = data.newRecipients.filter(
-      (rec) => rec.receiveName && rec.receiveTel && rec.count
-    );
-    if (validRecipients.length > 0) {
-      onAdd(validRecipients); // 부모 컴포넌트(RecipientsModalContainer)로 유효한 받는 사람 목록 전달
-      // 모달 닫기 전에 폼 상태 초기화
-      reset({
-        newRecipients: [{ receiveName: '', receiveTel: '', count: 0 }],
-      });
-      setFieldSets([{ id: 0 }]); // 필드 세트도 초기화
+    if (data.newRecipients.length > 0) {
+      onAdd(data.newRecipients); // 부모 컴포넌트(RecipientsModalContainer)로 유효한 받는 사람 목록 전달
+      onClose();
     } else {
       // 모든 필드가 비어있는 경우
       alert('최소 한 명의 받는 사람 정보를 입력해주세요.');

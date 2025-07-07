@@ -55,7 +55,6 @@ const RecipientsItem: React.FC<RecipientsItemProps> = ({
   errors,
   onRemove,
   id,
-  getValues,
   existedRecipients,
 }) => {
   return (
@@ -95,7 +94,6 @@ const RecipientsItem: React.FC<RecipientsItemProps> = ({
             {...register(`newRecipients.${index}.receiveTel`, {
               required: `받는 사람 ${index + 1}의 연락처는 필수입니다.`,
               validate: (value: string) => {
-                const allRecipients = getValues().newRecipients;
                 const currentTel = value.trim();
 
                 const isValidedTel = /^010\d{8}$/.test(currentTel);
@@ -108,15 +106,6 @@ const RecipientsItem: React.FC<RecipientsItemProps> = ({
                 if (isInExisted) {
                   return '이미 추가된 연락처입니다.';
                 }
-
-                const isInCurrent = allRecipients.some((rec, i) => {
-                  if (i === index) return false;
-                  return rec.receiveTel === currentTel;
-                });
-                if (isInCurrent) {
-                  return '같은 연락처가 여러 번 입력되었습니다.';
-                }
-                return true;
               },
             })}
             className={errors.newRecipients?.[index]?.receiveTel ? 'input-error' : ''}
