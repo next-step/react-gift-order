@@ -1,6 +1,6 @@
 import { ErrorMessage, Input } from "@/components/common";
 import { LoginButton } from "@/components/login";
-import { NON_BREAKING_LINE } from "@/constants";
+import { NON_BREAKING_SPACE } from "@/constants";
 import { useLoginForm } from "@/hooks/login/useLoginForm";
 import styled from "@emotion/styled";
 
@@ -29,12 +29,12 @@ export const LoginForm = () => {
     <LoginFormContainer as="form" onSubmit={handleSubmit}>
       <LoginInputWrapper>
         <Input placeholder="이메일" type="email" {...idField} />
-        <ErrorMessage>{idFieldError || NON_BREAKING_LINE}</ErrorMessage>
+        <ErrorMessage>{idFieldError || NON_BREAKING_SPACE}</ErrorMessage>
       </LoginInputWrapper>
 
       <LoginInputWrapper>
         <Input placeholder="비밀번호" type="password" {...passwordField} />
-        <ErrorMessage>{passwordFieldError || NON_BREAKING_LINE}</ErrorMessage>
+        <ErrorMessage>{passwordFieldError || NON_BREAKING_SPACE}</ErrorMessage>
       </LoginInputWrapper>
       <LoginButton isDisabled={!isFormValid} />
     </LoginFormContainer>
