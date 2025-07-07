@@ -1,6 +1,7 @@
 import GiftsPage from '@/page/GiftPage';
 import LoginPage from '@/page/LoginPage';
 import MyPage from '@/page/MyPage';
+import OrderPage from '@/page/OrderPage';
 import NotFound from '@/page/NotFound';
 import { Route, Routes } from 'react-router-dom';
 import { ROUTES } from './routes';
@@ -11,7 +12,15 @@ const AppRouter = () => {
     <Routes>
       <Route path={ROUTES.HOME} element={<GiftsPage />} />
       <Route path={ROUTES.LOGIN} element={<LoginPage />} />
-      <Route path={ROUTES.MY} element={<RequireAuth><MyPage /></RequireAuth>} />
+      <Route
+        path={ROUTES.MY}
+        element={
+          <RequireAuth>
+            <MyPage />
+          </RequireAuth>
+        }
+      />
+      <Route path={ROUTES.ORDER} element={<OrderPage />} />
       <Route path={ROUTES.NOTFOUND} element={<NotFound />} />
     </Routes>
   );

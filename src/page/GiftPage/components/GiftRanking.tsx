@@ -3,6 +3,9 @@ import { filters, generations } from '@/data/categoryDatas';
 import useSearchParamState from '../hooks/useSearchParamState';
 import useToggleCollapse from '../hooks/useToggleCollapse';
 import { rankingDatas } from '@/data/rankingDatas';
+import { useUserInfo } from '@/contexts/UserInfoContext';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/routes/routes';
 
 interface ButtonProps {
   isActive: boolean;
@@ -153,6 +156,16 @@ const GiftRanking = () => {
   } = useSearchParamState();
 
   const { isCollapsed, visibleItemsCount, toggleCollapse } = useToggleCollapse(rankingDatas.length);
+  const { isLoggedIn } = useUserInfo();
+
+  const navigate = useNavigate();
+  const handleItemClick = () => {
+    if (isLoggedIn) {
+      navigate(ROUTES.ORDER);
+    } else {
+      navigate(ROUTES.LOGIN);
+    }
+  };
 
   return (
     <Section>
@@ -190,7 +203,7 @@ const GiftRanking = () => {
           <RankItem key={rank.id}>
             <RankNumber>{rank.id}</RankNumber>
 
-            <ItemContainer>
+            <ItemContainer onClick={handleItemClick}>
               <Image src={rank.image} alt={rank.name} />
               <ItemName>{rank.name}</ItemName>
               <ItemSubName>{rank.subName}</ItemSubName>
