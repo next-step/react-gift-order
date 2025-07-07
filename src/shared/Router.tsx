@@ -3,7 +3,7 @@ import Home from '@/Pages/Home';
 import Login from '@/Pages/Login';
 import NotFound from '@/Pages/NotFound';
 import MyPage from '@/Pages/MyPage';
-import LoginProtectedRoute from './LoginProtectedRoute';
+import LoginProtectedRoute from '@/shared/LoginProtectedRoute';
 
 const Router = () => {
   return (
