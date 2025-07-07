@@ -1,8 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import { css, useTheme } from "@emotion/react";
+import { useNavigate } from "react-router-dom";
 import type { ThemeType } from "@/styles/theme/theme";
 
 interface RankingItemCardProps {
+  id: number;
   rank: number;
   imageURL: string;
   brandName: string;
@@ -11,6 +13,7 @@ interface RankingItemCardProps {
 }
 
 export const RankingCard = ({
+  id,
   rank,
   imageURL,
   brandName,
@@ -18,9 +21,24 @@ export const RankingCard = ({
   price,
 }: RankingItemCardProps) => {
   const theme = useTheme();
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/order/${id}`, {
+  state: {
+    product: {
+      id,
+      imageURL,
+      name: productName,
+      brandInfo: { name: brandName },        
+      price: { sellingPrice: price },      
+    },
+  },
+});
+  };
 
   return (
-    <div css={itemStyle}>
+    <div css={itemStyle} onClick={handleClick}>
       <span css={rankBadge(theme, rank)}>{rank}</span>
       <img css={itemImg(theme)} src={imageURL} alt={productName} />
       <p css={brandNameStyle(theme)}>{brandName}</p>
