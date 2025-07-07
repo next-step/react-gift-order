@@ -1,7 +1,8 @@
 import { giftMessageCardTemplatesData } from '@/mock_data/giftMessageCardTemplates';
 import styled from '@emotion/styled';
 import { GiftMessageCard } from './GiftMessageCard';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import useOrderInfo from '@/hooks/useOrderInfo';
 
 const Container = styled.div`
   display: flex;
@@ -40,35 +41,80 @@ const Card = styled.div<{ image: string }>`
   background-size: contain;
 `;
 
-const MessageInputField = styled.textarea<{ isClicked: boolean }>`
+const InputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: ${({ theme }) => theme.spacing.spacing10};
+  margin-bottom: ${({ theme }) => theme.spacing.spacing9};
+  width: 100%;
+  height: auto;
+`;
+
+const MessageInputField = styled.textarea<{ messageInputFieldStyle: string }>`
   all: unset;
   display: flex;
   width: calc(100% - 2rem);
   height: 3.9rem;
   box-sizing: border-box;
-  margin-top: ${({ theme }) => theme.spacing.spacing10};
   margin-left: 1rem;
-  margin-bottom: ${({ theme }) => theme.spacing.spacing9};
   padding: 0.75rem;
   font-size: 1rem;
   white-space: pre-wrap;
   resize: both;
   border-radius: 0.5rem;
-  border-color: ${({ theme, isClicked }) =>
-    isClicked ? theme.colors.gray800 : theme.colors.gray400};
+  border-color: ${({ theme, messageInputFieldStyle }) => {
+    if (messageInputFieldStyle === 'idle') {
+      return theme.colors.gray400;
+    } else if (messageInputFieldStyle === 'isClicked') {
+      return theme.colors.gray800;
+    } else {
+      return theme.colors.red700;
+    }
+  }};
   border-style: solid;
   border-width: 1px;
+  transition: border-color 0.3s;
+`;
+
+const ErrorText = styled.div`
+  ${({ theme }) => theme.typography.label2Regular}
+  margin-top: 0.6rem;
+  margin-left: ${({ theme }) => theme.spacing.spacing6};
+  color: ${({ theme }) => theme.colors.red700};
 `;
 
 export const GiftMessageCardTemplates = () => {
   const giftMessageCards = giftMessageCardTemplatesData;
   const [selectedCard, setSelectedCard] = useState(0);
-  const [message, setMessage] = useState('');
+  const [messageInputFieldStyle, setMessageInputFieldStyle] = useState('idle');
   const [isClicked, setIsClicked] = useState(false);
+  const { setIsFirstTry, message, setMessage, error } = useOrderInfo();
+
+  const handleInputFieldStyle = useCallback(() => {
+    let inputStatus = '';
+
+    if (isClicked) {
+      inputStatus = 'isClicked';
+    } else {
+      if (error.messageError) {
+        inputStatus = 'error';
+      } else {
+        inputStatus = 'idle';
+      }
+    }
+
+    setMessageInputFieldStyle(inputStatus);
+  }, [isClicked, error]);
 
   useEffect(() => {
     setMessage(giftMessageCards[selectedCard].defaultTextMessage);
-  }, [giftMessageCards, selectedCard]);
+  }, [setMessage, giftMessageCards, selectedCard]);
+
+  useEffect(() => {
+    handleInputFieldStyle();
+  }, [handleInputFieldStyle]);
 
   return (
     <Container>
@@ -86,15 +132,20 @@ export const GiftMessageCardTemplates = () => {
         })}
       </List>
       <Card image={giftMessageCards[selectedCard].imageUrl} />
-      <MessageInputField
-        isClicked={isClicked}
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        onFocus={() => setIsClicked(true)}
-        onBlur={() => {
-          setIsClicked(false);
-        }}
-      />
+      <InputContainer>
+        <MessageInputField
+          messageInputFieldStyle={messageInputFieldStyle}
+          value={message}
+          onChange={(e) => {
+            setMessage(e.target.value);
+            error.setTargetMessage('modifying..');
+            setIsFirstTry(false);
+          }}
+          onFocus={() => setIsClicked(true)}
+          onBlur={() => setIsClicked(false)}
+        />
+        {error.messageError && <ErrorText>{error.messageError}</ErrorText>}
+      </InputContainer>
     </Container>
   );
 };
