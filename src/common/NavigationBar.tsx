@@ -3,25 +3,31 @@ import { IoIosArrowBack } from 'react-icons/io';
 import { LuUserRound } from 'react-icons/lu';
 import { useNavigate } from 'react-router-dom';
 import Text from '@/common/Text';
+import { useAuth } from '../context/AuthContext';
 
 const NavigationBar = () => {
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
 
-  const navigataBack = () => {
+  const navigateBack = () => {
     navigate(-1);
   };
 
-  const navigataLogin = () => {
-    navigate('/login');
+  const handleAuthClick = () => {
+    if (isLoggedIn) {
+      navigate('/my');
+    } else {
+      navigate('/login');
+    }
   };
 
   return (
     <Layout>
-      <IoIosArrowBack size={25} onClick={navigataBack} />
+      <IoIosArrowBack size={25} onClick={navigateBack} />
       <Text size="title1" weight="bold">
         선물하기
       </Text>
-      <LuUserRound size={25} onClick={navigataLogin} />
+      <LuUserRound size={25} onClick={handleAuthClick} />
     </Layout>
   );
 };

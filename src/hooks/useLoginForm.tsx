@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 interface LoginFormState {
   id: string;
@@ -11,6 +12,8 @@ export const useLoginForm = () => {
     password: '',
   });
 
+  const { login } = useAuth();
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({
@@ -19,8 +22,15 @@ export const useLoginForm = () => {
     }));
   };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    login(form.id);
+  };
+
   return {
     form,
     handleChange,
+    handleSubmit,
   };
 };

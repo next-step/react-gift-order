@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useLoginForm } from '../hooks/useLoginForm';
 import NavigationBar from '@/common/NavigationBar';
 import Input from '@/common/Input';
@@ -28,8 +27,7 @@ type FormErrors = {
 };
 
 const LoginForm = () => {
-  const { form, handleChange } = useLoginForm();
-  const navigate = useNavigate();
+  const { form, handleChange, handleSubmit } = useLoginForm();
 
   const [errors, setErrors] = useState<FormErrors>({
     id: null,
@@ -51,41 +49,38 @@ const LoginForm = () => {
     errors.id === null &&
     errors.password === null;
 
-  const loginRedirect = () => {
-    navigate('/');
-  };
-
   return (
     <Layout>
       <NavigationBar />
       <Logo>kakao</Logo>
+      <FormWrapper onSubmit={handleSubmit}>
+        <InputWrapper>
+          <Input
+            name="id"
+            placeholder="이메일"
+            value={form.id}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            hasError={!!errors.id}
+          />
+          {errors.id && <ErrorText>{errors.id}</ErrorText>}
+        </InputWrapper>
 
-      <FormWrapper>
-        <Input
-          name="id"
-          placeholder="이메일"
-          value={form.id}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          hasError={!!errors.id}
-        />
-        {errors.id && <ErrorText>{errors.id}</ErrorText>}
+        <InputWrapper>
+          <Input
+            name="password"
+            type="password"
+            placeholder="비밀번호"
+            value={form.password}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            hasError={!!errors.password}
+          />
+          {errors.password && <ErrorText>{errors.password}</ErrorText>}
+        </InputWrapper>
+
+        <LoginButton type="submit" disabled={!isFormValid} />
       </FormWrapper>
-
-      <FormWrapper>
-        <Input
-          name="password"
-          type="password"
-          placeholder="비밀번호"
-          value={form.password}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          hasError={!!errors.password}
-        />
-        {errors.password && <ErrorText>{errors.password}</ErrorText>}
-      </FormWrapper>
-
-      <LoginButton onClick={loginRedirect} disabled={!isFormValid} />
     </Layout>
   );
 };
@@ -107,17 +102,25 @@ const Logo = styled.div`
   margin-bottom: 40px;
 `;
 
-const FormWrapper = styled.div`
+const FormWrapper = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  max-width: 388px;
+  width: 100%;
+`;
+
+const InputWrapper = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  max-width: 388px;
-  width: 100%;
 `;
 
 const ErrorText = styled.div`
   color: ${({ theme }) => theme.colors.red700};
   font-size: ${({ theme }) => theme.typography.fontSizes.label2};
-  margin-top: -12px;
-  margin-bottom: 12px;
+  margin-top: 4px;
+  padding-left: 4px;
 `;

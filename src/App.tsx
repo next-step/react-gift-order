@@ -1,4 +1,5 @@
 import { ThemeProvider } from '@emotion/react';
+import { BrowserRouter } from 'react-router-dom';
 import { Router } from '@/router/Router';
 import { Global } from '@emotion/react';
 import reset from '@/styles/reset';
@@ -8,10 +9,12 @@ import { AuthProvider } from '@/context/AuthContext';
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <AuthProvider>
-        <Global styles={reset} />
-        <Router />
-      </AuthProvider>
+      <BrowserRouter>
+        <AuthProvider>
+          <Global styles={reset} />
+          <Router />
+        </AuthProvider>
+      </BrowserRouter>
     </ThemeProvider>
   );
 }

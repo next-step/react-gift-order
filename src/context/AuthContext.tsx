@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface User {
   name: string;
@@ -9,7 +10,7 @@ interface User {
 interface AuthContextType {
   isLoggedIn: boolean;
   user: User | null;
-  login: (userData: User) => void;
+  login: (email: string) => void;
   logout: () => void;
 }
 
@@ -18,6 +19,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     try {
@@ -28,21 +30,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setIsLoggedIn(true);
       }
     } catch (error) {
-      console.error('Failed to parse user data from sessionStorage', error);
+      console.error(error);
       sessionStorage.removeItem('user');
     }
   }, []);
 
-  const login = (userData: User) => {
+  const login = (email: string) => {
+    const name = email.split('@')[0];
+    const userData: User = { name, email };
+
     setUser(userData);
     setIsLoggedIn(true);
     sessionStorage.setItem('user', JSON.stringify(userData));
+    navigate('/');
   };
 
   const logout = () => {
     setUser(null);
     setIsLoggedIn(false);
     sessionStorage.removeItem('user');
+    navigate('/login');
   };
 
   const value = {
@@ -58,7 +65,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error('useAuth는 반드시 <AuthProvider> 안에서 사용해야 합니다.');
   }
   return context;
 };
