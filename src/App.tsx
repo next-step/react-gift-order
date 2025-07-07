@@ -5,11 +5,11 @@ import { ThemeProvider } from "@emotion/react";
 import { theme } from "./styles/theme/theme";
 import { AuthProvider } from "./contexts/AuthContext";
 import RequireAuth from "./components/auth/RequireAuth";
-import TestOrderFormPage from "./pages/TestOrderFormPage";
 import GiftMain from "./pages/GiftMain";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import MyPage from "./pages/MyPage";
+import OrderPage from "@/pages/OrderPage";
 
 const App = () => {
   return (
@@ -28,9 +28,8 @@ const App = () => {
                 </RequireAuth>
               }
             />
-            <Route path="/test-order-form" element={<TestOrderFormPage />} />
-
             <Route path="*" element={<NotFound />} />
+            <Route path="/order/:id" element={<RequireAuth><OrderPage /></RequireAuth>} />
           </Routes>
         </AuthProvider>
       </BrowserRouter>
