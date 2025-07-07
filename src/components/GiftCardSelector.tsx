@@ -32,7 +32,7 @@ export default function GiftCardSelector({ value, onChange, error }: Props) {
                 src={card.thumbUrl}
                 isSelected={selectedCardIndex === index}
                 onClick={() => setSelectedCardIndex(index)}
-              ></GiftCard>
+              />
             ))}
             <GiftcardEndBox />
           </GiftcardGird>
