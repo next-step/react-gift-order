@@ -5,9 +5,12 @@ import { validateEmailFormat } from "../utils/validation";
 import { LOGIN_ERROR_MESSAGES } from "../constants/labels";
 
 export function useEmailValidation(initialValue = "") {
-  const emailInput = useInput(initialValue, {
-    isEmpty: (value: string) => isNotEmpty(value),
-    invalidFormat: (value: string) => validateEmailFormat(value),
+  const emailInput = useInput({
+    initialValue,
+    validators: {
+      isEmpty: (value: string) => isNotEmpty(value),
+      invalidFormat: (value: string) => validateEmailFormat(value),
+    },
   });
 
   const emailErrorMessage = useMemo(() => {

@@ -5,9 +5,12 @@ import { validatePasswordFormat } from "../utils/validation";
 import { LOGIN_ERROR_MESSAGES } from "../constants/labels";
 
 function usePasswordValidation() {
-  const passwordInput = useInput("", {
-    isEmpty: (value: string) => isNotEmpty(value),
-    invalidFormat: (value: string) => validatePasswordFormat(value),
+  const passwordInput = useInput({
+    initialValue: "",
+    validators: {
+      isEmpty: (value: string) => isNotEmpty(value),
+      invalidFormat: (value: string) => validatePasswordFormat(value),
+    },
   });
 
   const passwordErrorMessage = useMemo(() => {

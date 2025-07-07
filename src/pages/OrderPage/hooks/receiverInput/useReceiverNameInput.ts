@@ -4,8 +4,11 @@ import { isNotEmpty } from "@/utils/validation";
 import { VALIDATE_LABELS } from "../../constants/validateLabels";
 
 export function useReceiverNameInput() {
-  const receiverNameInput = useInput("", {
-    isEmpty: (value: string) => isNotEmpty(value),
+  const receiverNameInput = useInput({
+    initialValue: "",
+    validators: {
+      isEmpty: (value: string) => isNotEmpty(value),
+    },
   });
 
   const receiverNameErrorMessage = useMemo(() => {

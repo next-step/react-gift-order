@@ -5,9 +5,12 @@ import { validatePhoneNumber } from "../../utils/validation";
 import { VALIDATE_LABELS } from "../../constants/validateLabels";
 
 export function useReceiverPhoneInput() {
-  const receiverPhoneInput = useInput("", {
-    isEmpty: (value: string) => isNotEmpty(value),
-    invalidFormat: (value: string) => validatePhoneNumber(value),
+  const receiverPhoneInput = useInput({
+    initialValue: "",
+    validators: {
+      isEmpty: (value: string) => isNotEmpty(value),
+      invalidFormat: (value: string) => validatePhoneNumber(value),
+    },
   });
 
   const receiverPhoneErrorMessage = useMemo(() => {

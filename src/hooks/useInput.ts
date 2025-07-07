@@ -2,6 +2,11 @@ import { useState } from "react";
 
 type ValidatorMap = Record<string, (value: string) => boolean>;
 
+interface UseInputParams<T extends ValidatorMap> {
+  initialValue?: string;
+  validators: T;
+}
+
 /**
  * 범용 입력 필드 상태 관리 및 검증 훅
  *
@@ -17,10 +22,10 @@ type ValidatorMap = Record<string, (value: string) => boolean>;
  *   - validate: 검증 실행 함수
  *   - hasError: 하나라도 에러가 있는지 여부
  */
-export function useInput<T extends ValidatorMap>(
+export function useInput<T extends ValidatorMap>({
   initialValue = "",
-  validators: T
-) {
+  validators,
+}: UseInputParams<T>) {
   const [value, setValue] = useState(initialValue);
   const [errors, setErrors] = useState<{ [K in keyof T]: boolean }>(() => {
     const initialErrors = {} as { [K in keyof T]: boolean };

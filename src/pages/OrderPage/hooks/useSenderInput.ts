@@ -4,8 +4,11 @@ import { useMemo } from "react";
 import { VALIDATE_LABELS } from "../constants/validateLabels";
 
 export function useSenderInput(initialValue = "") {
-  const senderInput = useInput(initialValue, {
-    isEmpty: (value: string) => isNotEmpty(value),
+  const senderInput = useInput({
+    initialValue,
+    validators: {
+      isEmpty: (value: string) => isNotEmpty(value),
+    },
   });
 
   const senderNameErrorMessage = useMemo(() => {

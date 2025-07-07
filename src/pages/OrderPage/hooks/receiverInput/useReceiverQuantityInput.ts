@@ -4,8 +4,11 @@ import { useMemo } from "react";
 import { VALIDATE_LABELS } from "../../constants/validateLabels";
 
 export function useReceiverQuantityInput() {
-  const quantityInput = useInput("1", {
-    invalidFormat: (value: string) => validateQuantity(value),
+  const quantityInput = useInput({
+    initialValue: "1",
+    validators: {
+      invalidFormat: (value: string) => validateQuantity(value),
+    },
   });
 
   const quantityErrorMessage = useMemo(() => {

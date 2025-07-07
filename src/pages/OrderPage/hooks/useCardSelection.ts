@@ -9,8 +9,11 @@ export function useCardSelection(initialCards: OrderCardType[]) {
     initialCards[0]
   );
 
-  const messageInput = useInput(initialCards[0].defaultTextMessage, {
-    isEmpty: (value: string) => isNotEmpty(value),
+  const messageInput = useInput({
+    initialValue: initialCards[0].defaultTextMessage,
+    validators: {
+      isEmpty: (value: string) => isNotEmpty(value),
+    },
   });
 
   const handleCardSelect = (card: OrderCardType) => {
