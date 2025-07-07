@@ -44,9 +44,12 @@ const InputWrapper = styled.div(({ theme }) => ({
 export const ReceiverInfoSection = () => {
   const { register } = useOrderContext();
 
-  const receiverNameField = register("receiverName");
-  const receiverPhoneField = register("receiverPhone");
-  const quantityField = register("quantity");
+  const { error: receiverNameFieldError, ...receiverNameField } =
+    register("receiverName");
+  const { error: receiverPhoneFieldError, ...receiverPhoneField } =
+    register("receiverPhone");
+  const { error: receiverQuantityError, ...receiverQuantityField } =
+    register("quantity");
 
   return (
     <ReceiverInfoContainer>
@@ -58,13 +61,10 @@ export const ReceiverInfoSection = () => {
           <Input
             placeholder="이름을 입력하세요"
             variant="outlined"
-            value={receiverNameField.value}
-            onChange={receiverNameField.onChange}
-            onBlur={receiverNameField.onBlur}
-            hasError={receiverNameField.hasError}
+            {...receiverNameField}
           />
-          {receiverNameField.error ? (
-            <ErrorMessage>{receiverNameField.error}</ErrorMessage>
+          {receiverNameFieldError ? (
+            <ErrorMessage>{receiverNameFieldError}</ErrorMessage>
           ) : (
             <ErrorPlaceholder />
           )}
@@ -77,14 +77,11 @@ export const ReceiverInfoSection = () => {
           <Input
             placeholder="전화번호를 입력하세요"
             variant="outlined"
-            value={receiverPhoneField.value}
-            onChange={receiverPhoneField.onChange}
-            onBlur={receiverPhoneField.onBlur}
-            hasError={receiverPhoneField.hasError}
+            {...receiverPhoneField}
             type="tel"
           />
-          {receiverPhoneField.error ? (
-            <ErrorMessage>{receiverPhoneField.error}</ErrorMessage>
+          {receiverPhoneFieldError ? (
+            <ErrorMessage>{receiverPhoneFieldError}</ErrorMessage>
           ) : (
             <ErrorPlaceholder />
           )}
@@ -99,13 +96,10 @@ export const ReceiverInfoSection = () => {
             variant="outlined"
             type="number"
             min={1}
-            value={quantityField.value}
-            onChange={e => quantityField.onChange(Number(e.target.value))}
-            onBlur={quantityField.onBlur}
-            hasError={quantityField.hasError}
+            {...receiverQuantityField}
           />
-          {quantityField.error && (
-            <ErrorMessage>{quantityField.error}</ErrorMessage>
+          {receiverQuantityError && (
+            <ErrorMessage>{receiverQuantityError}</ErrorMessage>
           )}
         </InputWrapper>
       </ReceiverInfoInput>

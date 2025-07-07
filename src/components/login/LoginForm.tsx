@@ -1,5 +1,6 @@
 import { ErrorMessage, Input } from "@/components/common";
 import { LoginButton } from "@/components/login";
+import { NON_BREAKING_LINE } from "@/constants";
 import { useLoginForm } from "@/hooks/login/useLoginForm";
 import styled from "@emotion/styled";
 
@@ -21,19 +22,19 @@ const LoginInputWrapper = styled.div(({ theme }) => ({
 export const LoginForm = () => {
   const { isFormValid, handleSubmit, register } = useLoginForm();
 
-  const idField = register("id");
-  const passwordField = register("password");
+  const { error: idFieldError, ...idField } = register("id");
+  const { error: passwordFieldError, ...passwordField } = register("password");
 
   return (
     <LoginFormContainer as="form" onSubmit={handleSubmit}>
       <LoginInputWrapper>
         <Input placeholder="이메일" type="email" {...idField} />
-        <ErrorMessage>{idField.error || "\u00A0"}</ErrorMessage>
+        <ErrorMessage>{idFieldError || NON_BREAKING_LINE}</ErrorMessage>
       </LoginInputWrapper>
 
       <LoginInputWrapper>
         <Input placeholder="비밀번호" type="password" {...passwordField} />
-        <ErrorMessage>{passwordField.error || "\u00A0"}</ErrorMessage>
+        <ErrorMessage>{passwordFieldError || NON_BREAKING_LINE}</ErrorMessage>
       </LoginInputWrapper>
       <LoginButton isDisabled={!isFormValid} />
     </LoginFormContainer>
