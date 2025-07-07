@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { ErrorMessage, Input } from "@/components/common";
-import { useOrder } from "@/hooks/order/useOrder";
+import { useOrderContext } from "@/hooks/order/useOrderContext";
 
 const SenderInfoContainer = styled.div(({ theme }) => ({
   display: "flex",
@@ -35,7 +35,7 @@ const InputWrapper = styled.div(({ theme }) => ({
 }));
 
 export const SenderInfoSection = () => {
-  const { register } = useOrder();
+  const { register } = useOrderContext();
   const senderNameField = register("senderName");
 
   return (

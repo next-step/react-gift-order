@@ -1,6 +1,6 @@
 import { cardTemplate } from "@/__mock__";
 import styled from "@emotion/styled";
-import { useOrder } from "@/hooks/order/useOrder";
+import { useOrderContext } from "@/hooks/order/useOrderContext";
 import { useCardTemplate } from "@/hooks/order/useCardTemplate";
 
 const CardSelectorContainer = styled.section(({ theme }) => ({
@@ -31,7 +31,7 @@ const CardThumbnail = styled.img<{ isSelected: boolean }>(({ isSelected }) => ({
 
 export const CardSelectorBar = () => {
   const cards = cardTemplate;
-  const { order } = useOrder();
+  const { order } = useOrderContext();
   const { setCardTemplate } = useCardTemplate();
 
   return (

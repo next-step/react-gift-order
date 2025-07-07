@@ -1,6 +1,6 @@
 import { ErrorMessage, Input } from "@/components/common";
 import styled from "@emotion/styled";
-import { useOrder } from "@/hooks/order/useOrder";
+import { useOrderContext } from "@/hooks/order/useOrderContext";
 import { ErrorPlaceholder } from "@/components/common/ErrorMessage";
 
 const ReceiverInfoContainer = styled.div(({ theme }) => ({
@@ -42,7 +42,7 @@ const InputWrapper = styled.div(({ theme }) => ({
 }));
 
 export const ReceiverInfoSection = () => {
-  const { register } = useOrder();
+  const { register } = useOrderContext();
 
   const receiverNameField = register("receiverName");
   const receiverPhoneField = register("receiverPhone");

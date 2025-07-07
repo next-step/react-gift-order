@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { generateMockArray } from "@/__mock__/generate-mock-array";
 import { useRouter } from "@/hooks/common/useRouter";
-import { useOrder } from "@/hooks/order/useOrder";
+import { useOrderContext } from "@/hooks/order/useOrderContext";
 import type { Order } from "@/types";
 
 export const useOrderPageLogic = () => {
@@ -14,7 +14,7 @@ export const useOrderPageLogic = () => {
     validateAllFields,
     isOrderComplete,
     getValidationErrors,
-  } = useOrder();
+  } = useOrderContext();
   const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
