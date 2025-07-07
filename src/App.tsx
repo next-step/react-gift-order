@@ -23,11 +23,22 @@ const Home = () => (
   </main>
 );
 
+// 로그인 안 한 상태면 마이 페이지 접근 불가(login페이지로 넘어감)
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user } = PascalCase();
 
   if (!user) {
     return <Navigate to="/login" replace />;
+  }
+  return <>{children}</>;
+};
+
+// 로그인한 상태면 로그인 페이지 접근 불가(my페이지로 넘어감)
+const RedirectIfLoggedIn = ({ children }: { children: React.ReactNode }) => {
+  const { user } = PascalCase();
+
+  if (user) {
+    return <Navigate to="/my" replace />;
   }
   return <>{children}</>;
 };
@@ -40,8 +51,16 @@ function App() {
         <NavBar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/order" element={<OrderPage />} />
+
+          <Route
+            path="/login"
+            element={
+              <RedirectIfLoggedIn>
+                <LoginPage />
+              </RedirectIfLoggedIn>
+            }
+          />
+
           <Route
             path="/my"
             element={
@@ -50,6 +69,8 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          <Route path="/order" element={<OrderPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </PascalCaseProvider>
