@@ -1,0 +1,522 @@
+import { useReducer } from "react";
+import { Layout } from "@/Components/layout/Layout";
+import styled from "@emotion/styled";
+import { cardTemplates } from "@/Components/cardTemplates";
+import { useParams } from "react-router-dom";
+import { products } from "@/data/products";
+
+// ===== 타입 정의 =====
+interface OrderState {
+  selectedId: number | null;
+  message: string;
+  sender: string;
+  receiverName: string;
+  receiverPhone: string;
+  quantity: number;
+  messageError: string;
+  senderError: string;
+}
+
+type OrderAction =
+  | { type: 'SELECT_CARD'; payload: number }
+  | { type: 'UPDATE_MESSAGE'; payload: string }
+  | { type: 'UPDATE_SENDER'; payload: string }
+  | { type: 'UPDATE_RECEIVER_NAME'; payload: string }
+  | { type: 'UPDATE_RECEIVER_PHONE'; payload: string }
+  | { type: 'UPDATE_QUANTITY'; payload: number }
+  | { type: 'SET_MESSAGE_ERROR'; payload: string }
+  | { type: 'SET_SENDER_ERROR'; payload: string }
+  | { type: 'CLEAR_MESSAGE_ERROR' }
+  | { type: 'CLEAR_SENDER_ERROR' };
+
+// ===== 초기 상태 =====
+const initialState: OrderState = {
+  selectedId: cardTemplates[0]?.id ?? null,
+  message: cardTemplates[0]?.defaultTextMessage ?? "",
+  sender: "",
+  receiverName: "",
+  receiverPhone: "",
+  quantity: 1,
+  messageError: "",
+  senderError: "",
+};
+
+// ===== 리듀서 함수 =====
+const orderReducer = (state: OrderState, action: OrderAction): OrderState => {
+  switch (action.type) {
+    case 'SELECT_CARD': {
+      const selectedCard = cardTemplates.find(card => card.id === action.payload);
+      return {
+        ...state,
+        selectedId: action.payload,
+        message: selectedCard?.defaultTextMessage ?? "",
+        messageError: "", // 카드 선택 시 메시지 에러 초기화
+      };
+    }
+    case 'UPDATE_MESSAGE': {
+      return {
+        ...state,
+        message: action.payload,
+        messageError: "", // 메시지 입력 시 에러 초기화
+      };
+    }
+    case 'UPDATE_SENDER': {
+      return {
+        ...state,
+        sender: action.payload,
+        senderError: "", // 발신자 입력 시 에러 초기화
+      };
+    }
+    case 'UPDATE_RECEIVER_NAME': {
+      return {
+        ...state,
+        receiverName: action.payload,
+      };
+    }
+    case 'UPDATE_RECEIVER_PHONE': {
+      return {
+        ...state,
+        receiverPhone: action.payload,
+      };
+    }
+    case 'UPDATE_QUANTITY': {
+      return {
+        ...state,
+        quantity: action.payload,
+      };
+    }
+    case 'SET_MESSAGE_ERROR': {
+      return {
+        ...state,
+        messageError: action.payload,
+      };
+    }
+    case 'SET_SENDER_ERROR': {
+      return {
+        ...state,
+        senderError: action.payload,
+      };
+    }
+    case 'CLEAR_MESSAGE_ERROR': {
+      return {
+        ...state,
+        messageError: "",
+      };
+    }
+    case 'CLEAR_SENDER_ERROR': {
+      return {
+        ...state,
+        senderError: "",
+      };
+    }
+    default:
+      return state;
+  }
+};
+
+// ===== 카드 미리보기 관련 스타일 =====
+const PreviewWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 32px;
+`;
+
+const PreviewImage = styled.img`
+  width: 220px;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  margin-bottom: 16px;
+`;
+
+const MessageInput = styled.textarea`
+  width: 100%;
+  max-width: 320px;
+  min-height: 60px;
+  font-size: 1.1rem;
+  padding: 12px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 10px;
+  resize: none;
+  box-sizing: border-box;
+  margin-bottom: 8px;
+  background: #fafafa;
+`;
+
+// ===== 카드 선택 관련 스타일 =====
+const CardList = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  margin: 0 0 24px 0;
+  overflow-x: auto;
+  padding: 8px 0 8px 0;
+  scrollbar-width: thin;
+  &::-webkit-scrollbar {
+    height: 6px;
+    background: #f0f0f0;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #e0e0e0;
+    border-radius: 4px;
+  }
+`;
+
+const CardItem = styled.div<{ selected: boolean }>`
+  flex: 0 0 auto;
+  width: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 10px;
+  border: 2px solid ${({ selected }) => selected ? '#f7e244' : 'transparent'};
+  background: ${({ selected }) => selected ? '#fffbe6' : 'transparent'};
+  box-shadow: ${({ selected }) => selected ? '0 2px 8px #ffe14a' : 'none'};
+  transition: border 0.2s, background 0.2s, box-shadow 0.2s;
+`;
+
+const Thumb = styled.img<{ selected: boolean }>`
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-bottom: 4px;
+  border: 2px solid ${({ selected }) => selected ? '#f7e244' : '#eee'};
+  box-shadow: ${({ selected }) => selected ? '0 2px 8px #ffe14a' : 'none'};
+  transition: border 0.2s, box-shadow 0.2s;
+`;
+
+// ===== 주문 버튼 스타일 =====
+const OrderButton = styled.button`
+  width: 100%;
+  background: #f7e244;
+  color: #222;
+  font-size: 1.2rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  padding: 18px 0;
+  margin-top: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  &:hover:enabled {
+    background: #ffe14a;
+  }
+  &:disabled {
+    background: #f0f0f0;
+    color: #b0b3ba;
+    cursor: not-allowed;
+  }
+`;
+
+// ===== 보내는 사람 섹션 스타일 =====
+const SenderSection = styled.section`
+  background: #fafbfc;
+  border-radius: 12px;
+  padding: 24px 16px 16px 16px;
+  margin-bottom: 24px;
+`;
+
+const SenderTitle = styled.h3`
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+`;
+
+const SenderInput = styled.input`
+  width: 100%;
+  font-size: 1.1rem;
+  padding: 16px 18px;
+  border: 1.5px solid #d6dbe1;
+  border-radius: 16px;
+  outline: none;
+  margin-bottom: 8px;
+  background: #fff;
+  &::placeholder {
+    color: #b0b3ba;
+  }
+`;
+
+const SenderGuide = styled.div`
+  font-size: 0.95rem;
+  color: #b0b3ba;
+  margin-left: 2px;
+`;
+
+// ===== 받는 사람 섹션 스타일 =====
+const ReceiverSection = styled.section`
+  background: #fafbfc;
+  border-radius: 12px;
+  padding: 24px 16px 16px 16px;
+  margin-bottom: 24px;
+`;
+
+const ReceiverTitle = styled.h3`
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+`;
+
+const ReceiverRow = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+`;
+
+const ReceiverLabel = styled.label`
+  width: 80px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #222;
+`;
+
+const ReceiverInput = styled.input`
+  flex: 1;
+  font-size: 1.1rem;
+  padding: 14px 16px;
+  border: 1.5px solid #d6dbe1;
+  border-radius: 12px;
+  outline: none;
+  background: #fff;
+  &::placeholder {
+    color: #b0b3ba;
+  }
+`;
+
+// ===== 상품 정보 섹션 스타일 =====
+const ProductSection = styled.section`
+  background: #fafbfc;
+  border-radius: 12px;
+  padding: 24px 16px 16px 16px;
+  margin-bottom: 24px;
+`;
+
+const ProductTitle = styled.h3`
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+`;
+
+const ProductBox = styled.div`
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 18px;
+  padding: 18px 20px;
+  gap: 18px;
+`;
+
+const ProductImg = styled.img`
+  width: 72px;
+  height: 72px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: #f0f0f0;
+`;
+
+const ProductInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+`;
+
+const ProductName = styled.div`
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 2px;
+`;
+
+const ProductBrand = styled.div`
+  font-size: 0.98rem;
+  color: #888;
+  margin-bottom: 2px;
+`;
+
+const ProductPrice = styled.div`
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #222;
+  margin-top: 4px;
+`;
+
+// ===== 레이아웃 관련 스타일 =====
+const FixedFooter = styled.div`
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100vw;
+  max-width: 720px;
+  margin: 0 auto;
+  background: #fff;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.04);
+  padding: 0 16px 24px 16px;
+  z-index: 100;
+  @media (min-width: 720px) {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+`;
+
+const PageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+`;
+
+// ===== 에러 메시지 스타일 =====
+const ErrorMessage = styled.div`
+  color: #e74c3c;
+  font-size: 1rem;
+  margin: 4px 0 8px 4px;
+`;
+
+const Order = () => {
+  // ===== 상태 관리 =====
+  const { id } = useParams();
+  const product = products.find(p => String(p.id) === String(id));
+  const [state, dispatch] = useReducer(orderReducer, initialState);
+
+  const selectedCard = cardTemplates.find(card => card.id === state.selectedId);
+
+  // ===== 이벤트 핸들러 =====
+  // 카드 선택 시 메시지 입력란에 기본 메시지 세팅
+  const handleSelect = (id: number) => {
+    dispatch({ type: 'SELECT_CARD', payload: id });
+  };
+
+  const handleOrder = () => {
+    if (!state.message.trim()) {
+      dispatch({ type: 'SET_MESSAGE_ERROR', payload: "메시지를 입력해주세요." });
+      return;
+    } else {
+      dispatch({ type: 'CLEAR_MESSAGE_ERROR' });
+    }
+    if (!state.sender.trim()) {
+      dispatch({ type: 'SET_SENDER_ERROR', payload: "보내는 사람 이름을 입력해주세요." });
+      return;
+    } else {
+      dispatch({ type: 'CLEAR_SENDER_ERROR' });
+    }
+  };
+
+  return (
+    <Layout>
+      {/* ===== 카드 선택 섹션 ===== */}
+      <h2>카드 템플릿 선택</h2>
+      <CardList>
+        {cardTemplates.map(card => (
+          <CardItem
+            key={card.id}
+            selected={state.selectedId === card.id}
+            onClick={() => handleSelect(card.id)}
+          >
+            <Thumb src={card.thumbUrl} alt={card.defaultTextMessage} selected={state.selectedId === card.id} />
+          </CardItem>
+        ))}
+      </CardList>
+
+      {/* ===== 카드 미리보기 섹션 ===== */}
+      <PreviewWrapper>
+        {selectedCard && (
+          <>
+            <PreviewImage src={selectedCard.imageUrl} alt={selectedCard.defaultTextMessage} />
+            <MessageInput
+              value={state.message}
+              onChange={e => {
+                dispatch({ type: 'UPDATE_MESSAGE', payload: e.target.value });
+                if (state.messageError) dispatch({ type: 'CLEAR_MESSAGE_ERROR' });
+              }}
+              placeholder="메시지를 입력하세요."
+            />
+            {state.messageError && <ErrorMessage>{state.messageError}</ErrorMessage>}
+          </>
+        )}
+      </PreviewWrapper>
+
+      {/* ===== 보내는 사람 섹션 ===== */}
+      <SenderSection>
+        <SenderTitle>보내는 사람</SenderTitle>
+        <SenderInput
+          type="text"
+          placeholder="이름을 입력하세요."
+          value={state.sender}
+          onChange={e => {
+            dispatch({ type: 'UPDATE_SENDER', payload: e.target.value });
+            if (state.senderError) dispatch({ type: 'CLEAR_SENDER_ERROR' });
+          }}
+        />
+        {state.senderError && <ErrorMessage>{state.senderError}</ErrorMessage>}
+        <SenderGuide>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</SenderGuide>
+      </SenderSection>
+
+      {/* ===== 받는 사람 섹션 ===== */}
+      <ReceiverSection>
+        <ReceiverTitle>받는 사람</ReceiverTitle>
+        <ReceiverRow>
+          <ReceiverLabel htmlFor="receiverName">이름</ReceiverLabel>
+          <ReceiverInput
+            id="receiverName"
+            type="text"
+            placeholder="이름을 입력하세요."
+            value={state.receiverName}
+            onChange={e => dispatch({ type: 'UPDATE_RECEIVER_NAME', payload: e.target.value })}
+          />
+        </ReceiverRow>
+        <ReceiverRow>
+          <ReceiverLabel htmlFor="receiverPhone">전화번호</ReceiverLabel>
+          <ReceiverInput
+            id="receiverPhone"
+            type="tel"
+            placeholder="전화번호를 입력하세요."
+            value={state.receiverPhone}
+            onChange={e => dispatch({ type: 'UPDATE_RECEIVER_PHONE', payload: e.target.value })}
+          />
+        </ReceiverRow>
+        <ReceiverRow>
+          <ReceiverLabel htmlFor="quantity">수량</ReceiverLabel>
+          <ReceiverInput
+            id="quantity"
+            type="number"
+            min={1}
+            value={state.quantity}
+            onChange={e => dispatch({ type: 'UPDATE_QUANTITY', payload: Number(e.target.value) })}
+          />
+        </ReceiverRow>
+      </ReceiverSection>
+
+      {/* ===== 상품 정보 섹션 ===== */}
+      <ProductSection>
+        <ProductTitle>상품 정보</ProductTitle>
+        {product ? (
+          <ProductBox>
+            <ProductImg src={product.imageUrl} alt={product.name} />
+            <ProductInfo>
+              <ProductName>{product.name}</ProductName>
+              <ProductBrand>{product.brand}</ProductBrand>
+              <ProductPrice>상품가 <b>{product.price.toLocaleString()}원</b></ProductPrice>
+            </ProductInfo>
+          </ProductBox>
+        ) : (
+          <div>상품 정보를 불러올 수 없습니다.</div>
+        )}
+      </ProductSection>
+
+      {/* ===== 고정 푸터 (주문 버튼) ===== */}
+      <PageWrapper>
+        <FixedFooter>
+          <OrderButton type="button" onClick={handleOrder} disabled={!state.message.trim()}>
+            주문하기
+          </OrderButton>
+        </FixedFooter>
+      </PageWrapper>
+    </Layout>
+  );
+};
+
+export default Order; 

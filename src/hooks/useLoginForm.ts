@@ -1,6 +1,12 @@
 import { useInput } from "./useInput";
+import { useLoginContext } from "../contexts/LoginContext";
 
-export function useLoginForm() {
+interface UseLoginFormOptions {
+  onSuccess?: () => void;
+}
+
+export function useLoginForm(options?: UseLoginFormOptions) {
+  const { login } = useLoginContext();
   const validateEmail = (value: string) => {
     if (!value) return "ID를 입력해주세요.";
     const emailRegex = /^[\w.-]+@[\w.-]+\.[A-Za-z]{2,}$/;
@@ -25,11 +31,12 @@ export function useLoginForm() {
     e.preventDefault();
     
     if (isFormValid) {
-      console.log("로그인 시도:", { 
-        email: emailInput.value, 
-        password: passwordInput.value 
-      });
-      // 로그인 성공 API 추가
+      // 1. Context에 로그인 정보 저장
+      login({ email: emailInput.value });
+      // 2. 그 후에 onSuccess(navigate) 실행
+      if (options && options.onSuccess) {
+        options.onSuccess();
+      }
     }
   };
 

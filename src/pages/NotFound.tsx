@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "@emotion/styled";
 import { Layout } from "@/Components/layout/Layout";
 import { useNavigate } from "react-router-dom";
@@ -38,7 +37,7 @@ const HomeButton = styled.button`
   }
 `;
 
-const NotFound: React.FC = () => {
+const NotFound = () => {
   const navigate = useNavigate();
   return (
     <Layout>
