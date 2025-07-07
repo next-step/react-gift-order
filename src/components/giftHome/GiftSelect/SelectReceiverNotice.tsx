@@ -1,13 +1,18 @@
 import styled from '@emotion/styled';
 import Text from '@/common/Text';
+import { useAuth } from '@/context/AuthContext';
 
 const SelectReceiverNotice = () => {
+  const { user } = useAuth();
+
   return (
     <Layout>
       <Content>
         <SelectReceiveBtn></SelectReceiveBtn>
         <Text size="subtitle1" weight="bold">
-          선물할 친구를 선택해주세요.
+          {user
+            ? `${user.name}님! 선물할 친구를 선택해주세요.`
+            : '선물할 친구를 선택해주세요.'}
         </Text>
       </Content>
     </Layout>
