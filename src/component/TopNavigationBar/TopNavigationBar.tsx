@@ -1,10 +1,13 @@
 import NavArrowLeftIcon from '@/assets/icons/nav-arrow-left.svg?react'
 import ProfileIcon from '@/assets/icons/profile.svg?react'
 import { Nav, Icon } from './TopNavigationBar.styles'
-import { useNavigate } from 'react-router-dom'
+import { useUserContext } from '@/contexts/UserContext'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 const TopNavigationBar: React.FC = () => {
   const navigate = useNavigate()
+  const location = useLocation()
+  const { isLoggedIn } = useUserContext()
 
   const handleGoBack = () => {
     if (window.history.length > 1) {
@@ -14,9 +17,15 @@ const TopNavigationBar: React.FC = () => {
     }
   }
 
-  const handleLGoLogin = () => {
-    if (location.pathname !== '/login') {
-      navigate('/login')
+  const handleGoLogin = () => {
+    if (isLoggedIn) {
+      if (location.pathname !== '/my') {
+        navigate('/my')
+      }
+    } else {
+      if (location.pathname !== '/login') {
+        navigate('/login')
+      }
     }
   }
 
@@ -26,7 +35,7 @@ const TopNavigationBar: React.FC = () => {
         <NavArrowLeftIcon />
       </Icon>
       <div>선물하기</div>
-      <Icon onClick={handleLGoLogin}>
+      <Icon onClick={handleGoLogin}>
         <ProfileIcon />
       </Icon>
     </Nav>
