@@ -2,31 +2,39 @@ import { useState } from 'react';
 import { getEmailError, getPasswordError } from '@/utils/validators';
 
 const useLoginForm = () => {
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordError, setPasswordError] = useState('');
+  const [userInfo, setUserInfo] = useState({
+    email: '',
+    password: '',
+  });
 
-  const validateEmail = (value: string) => {
-    const error = getEmailError(value);
-    setEmailError(error);
+  const [errors, setErrors] = useState({
+    email: '',
+    password: '',
+  });
+
+  const handleChange = (field: 'email' | 'password', value: string) => {
+    setUserInfo(prev => ({ ...prev, [field]: value }));
   };
 
-  const validatePassword = (value: string) => {
-    const error = getPasswordError(value);
-    setPasswordError(error);
+  const validateEmail = () => {
+    const error = getEmailError(userInfo.email);
+    setErrors(prev => ({ ...prev, email: error }));
+    return !error;
   };
 
-  const isValidForm = !emailError && !passwordError;
+  const validatePassword = () => {
+    const error = getPasswordError(userInfo.password);
+    setErrors(prev => ({ ...prev, password: error }));
+    return !error;
+  };
+
+  const isValidForm = !errors.email && !errors.password;
 
   return {
-    email,
-    setEmail,
-    emailError,
+    userInfo,
+    handleChange,
+    errors,
     validateEmail,
-    password,
-    setPassword,
-    passwordError,
     validatePassword,
     isValidForm,
   };

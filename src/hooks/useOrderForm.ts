@@ -5,81 +5,110 @@ import {
   ERROR_MESSAGES,
 } from '@/constants/validation';
 
-export const useOrderForm = (unitPrice: number) => {
-  const [senderName, setSenderName] = useState('');
-  const [receiverName, setReceiverName] = useState('');
-  const [receiverPhone, setReceiverPhone] = useState('');
-  const [quantity, setQuantity] = useState(1);
+type FormFields = 'senderName' | 'receiverName' | 'receiverPhone' | 'quantity';
 
-  const [senderError, setSenderError] = useState('');
-  const [receiverNameError, setReceiverNameError] = useState('');
-  const [receiverPhoneError, setReceiverPhoneError] = useState('');
-  const [quantityError, setQuantityError] = useState('');
+interface FormValues {
+  senderName: string;
+  receiverName: string;
+  receiverPhone: string;
+  quantity: number;
+}
+
+interface FormErrors {
+  senderName: string;
+  receiverName: string;
+  receiverPhone: string;
+  quantity: string;
+}
+
+export const useOrderForm = (unitPrice: number) => {
+  const [formValues, setFormValues] = useState<FormValues>({
+    senderName: '',
+    receiverName: '',
+    receiverPhone: '',
+    quantity: 1,
+  });
+
+  const [formErrors, setFormErrors] = useState<FormErrors>({
+    senderName: '',
+    receiverName: '',
+    receiverPhone: '',
+    quantity: '',
+  });
+
+  const handleChange = (field: FormFields, value: string | number) => {
+    setFormValues(prev => ({ ...prev, [field]: value }));
+  };
 
   const validateSender = () => {
-    if (!senderName.trim()) {
-      setSenderError(ERROR_MESSAGES.EMPTY_SENDER);
+    if (!formValues.senderName.trim()) {
+      setFormErrors(prev => ({
+        ...prev,
+        senderName: ERROR_MESSAGES.EMPTY_SENDER,
+      }));
       return false;
     }
-    setSenderError('');
+    setFormErrors(prev => ({ ...prev, senderName: '' }));
     return true;
   };
 
   const validateReceiverName = () => {
-    if (!receiverName.trim()) {
-      setReceiverNameError(ERROR_MESSAGES.EMPTY_RECEIVER_NAME);
+    if (!formValues.receiverName.trim()) {
+      setFormErrors(prev => ({
+        ...prev,
+        receiverName: ERROR_MESSAGES.EMPTY_RECEIVER_NAME,
+      }));
       return false;
     }
-    setReceiverNameError('');
+    setFormErrors(prev => ({ ...prev, receiverName: '' }));
     return true;
   };
 
   const validateReceiverPhone = () => {
-    if (!receiverPhone.trim()) {
-      setReceiverPhoneError(ERROR_MESSAGES.EMPTY_RECEIVER_PHONE);
+    const phone = formValues.receiverPhone.trim();
+    if (!phone) {
+      setFormErrors(prev => ({
+        ...prev,
+        receiverPhone: ERROR_MESSAGES.EMPTY_RECEIVER_PHONE,
+      }));
       return false;
-    } else if (!PHONE_REGEX.test(receiverPhone)) {
-      setReceiverPhoneError(ERROR_MESSAGES.INVALID_PHONE);
+    } else if (!PHONE_REGEX.test(phone)) {
+      setFormErrors(prev => ({
+        ...prev,
+        receiverPhone: ERROR_MESSAGES.INVALID_PHONE,
+      }));
       return false;
     }
-    setReceiverPhoneError('');
+    setFormErrors(prev => ({ ...prev, receiverPhone: '' }));
     return true;
   };
 
   const validateQuantity = () => {
-    if (quantity < MIN_QUANTITY) {
-      setQuantityError(ERROR_MESSAGES.INVALID_QUANTITY);
+    if (formValues.quantity < MIN_QUANTITY) {
+      setFormErrors(prev => ({
+        ...prev,
+        quantity: ERROR_MESSAGES.INVALID_QUANTITY,
+      }));
       return false;
     }
-    setQuantityError('');
+    setFormErrors(prev => ({ ...prev, quantity: '' }));
     return true;
   };
 
   const validateForm = () => {
-    const senderValid = validateSender();
-    const nameValid = validateReceiverName();
-    const phoneValid = validateReceiverPhone();
-    const quantityValid = validateQuantity();
-
-    return senderValid && nameValid && phoneValid && quantityValid;
+    const s = validateSender();
+    const n = validateReceiverName();
+    const p = validateReceiverPhone();
+    const q = validateQuantity();
+    return s && n && p && q;
   };
 
-  const totalPrice = unitPrice * quantity;
+  const totalPrice = unitPrice * formValues.quantity;
 
   return {
-    senderName,
-    setSenderName,
-    receiverName,
-    setReceiverName,
-    receiverPhone,
-    setReceiverPhone,
-    quantity,
-    setQuantity,
-
-    senderError,
-    receiverNameError,
-    receiverPhoneError,
-    quantityError,
+    formValues,
+    formErrors,
+    handleChange,
 
     validateSender,
     validateReceiverName,

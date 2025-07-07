@@ -33,18 +33,9 @@ const OrderPage = () => {
   }, [selectedCardId]);
 
   const {
-    senderName,
-    setSenderName,
-    receiverName,
-    setReceiverName,
-    receiverPhone,
-    setReceiverPhone,
-    quantity,
-    setQuantity,
-    senderError,
-    receiverNameError,
-    receiverPhoneError,
-    quantityError,
+    formValues,
+    formErrors,
+    handleChange,
     validateSender,
     validateReceiverName,
     validateReceiverPhone,
@@ -69,8 +60,8 @@ const OrderPage = () => {
     alert(
       `주문이 완료되었습니다.\n` +
         `상품명: ${product.name}\n` +
-        `구매 수량: ${quantity}\n` +
-        `발신자 이름: ${senderName}\n` +
+        `구매 수량: ${formValues.quantity}\n` +
+        `발신자 이름: ${formValues.senderName}\n` +
         `메시지: ${textMessage}`
     );
 
@@ -95,33 +86,33 @@ const OrderPage = () => {
             error={textMessageError}
           />
           <SenderForm
-            value={senderName}
+            value={formValues.senderName}
             onChange={e => {
-              setSenderName(e.target.value);
-              if (senderError) validateSender();
+              handleChange('senderName', e.target.value);
+              if (formErrors.senderName) validateSender();
             }}
-            error={senderError}
+            error={formErrors.senderName}
           />
           <ReceiverForm
-            name={receiverName}
-            phone={receiverPhone}
-            quantity={quantity}
+            name={formValues.receiverName}
+            phone={formValues.receiverPhone}
+            quantity={formValues.quantity}
             onNameChange={e => {
-              setReceiverName(e.target.value);
-              if (receiverNameError) validateReceiverName();
+              handleChange('receiverName', e.target.value);
+              if (formErrors.receiverName) validateReceiverName();
             }}
             onPhoneChange={e => {
-              setReceiverPhone(e.target.value);
-              if (receiverPhoneError) validateReceiverPhone();
+              handleChange('receiverPhone', e.target.value);
+              if (formErrors.receiverPhone) validateReceiverPhone();
             }}
             onQuantityChange={e => {
               const value = Number(e.target.value);
-              setQuantity(value);
-              if (quantityError) validateQuantity();
+              handleChange('quantity', value);
+              if (formErrors.quantity) validateQuantity();
             }}
-            nameError={receiverNameError}
-            phoneError={receiverPhoneError}
-            quantityError={quantityError}
+            nameError={formErrors.receiverName}
+            phoneError={formErrors.receiverPhone}
+            quantityError={formErrors.quantity}
           />
           <ProductInfo product={product} />
           <OrderSubmitButton amount={totalPrice} onClick={handleSubmit} />

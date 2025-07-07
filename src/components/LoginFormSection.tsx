@@ -25,33 +25,22 @@ const LoginFormSection = () => {
     : ROUTES.HOME;
 
   const {
-    email,
-    setEmail,
-    emailError,
+    userInfo,
+    handleChange,
+    errors,
     validateEmail,
-    password,
-    setPassword,
-    passwordError,
     validatePassword,
     isValidForm,
   } = useLoginForm();
 
-  const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setEmail(value);
-    validateEmail(value);
-  };
-
-  const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setPassword(value);
-    validatePassword(value);
-  };
-
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    login({ email });
+    const isEmailOk = validateEmail();
+    const isPasswordOk = validatePassword();
+    if (!isEmailOk || !isPasswordOk) return;
+
+    login({ email: userInfo.email });
     navigate(redirectTo, { replace: true });
   };
 
@@ -62,18 +51,18 @@ const LoginFormSection = () => {
         <InputWrapper>
           <InputField
             type="email"
-            value={email}
-            onChange={handleEmail}
-            onBlur={() => validateEmail(email)}
-            error={emailError}
+            value={userInfo.email}
+            onChange={e => handleChange('email', e.target.value)}
+            onBlur={validateEmail}
+            error={errors.email}
             placeholder="이메일"
           />
           <InputField
             type="password"
-            value={password}
-            onChange={handlePassword}
-            onBlur={() => validatePassword(password)}
-            error={passwordError}
+            value={userInfo.password}
+            onChange={e => handleChange('password', e.target.value)}
+            onBlur={validatePassword}
+            error={errors.password}
             placeholder="비밀번호"
           />
         </InputWrapper>
