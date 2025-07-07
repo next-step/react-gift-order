@@ -16,8 +16,6 @@ import PromoBanner from './components/PromoBanner';
 import RealtimeGiftRank from './components/RealtimeGiftRank';
 
 function App() {
-  
-
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />

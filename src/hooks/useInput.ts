@@ -7,14 +7,14 @@ export function useInput(validator: Validator) {
   const [error, setError] = useState(''); // 현재 에러 메시지
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if(validator(value.trim()) !== '') {
+    if (validator(value.trim()) !== '') {
       setError(validator(value.trim()));
     }
-    if(error) {
+    if (error) {
       const msg = validator(value.trim());
       setError(msg);
     }
-    
+
     setValue(e.target.value);
   };
 

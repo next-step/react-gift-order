@@ -6,17 +6,16 @@ import theme from '../styles/theme';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 
-
 function My() {
-    const userId = sessionStorage.getItem('userId')?.split('@')[0] ?? '';
-    const userEmail = sessionStorage.getItem('userId') ?? '';
-    const navigate = useNavigate();
+  const userId = sessionStorage.getItem('userId')?.split('@')[0] ?? '';
+  const userEmail = sessionStorage.getItem('userId') ?? '';
+  const navigate = useNavigate();
 
-    function logOut() {
-        sessionStorage.removeItem('userId');
-        navigate('/login');
-    };
-    return (
+  function logOut() {
+    sessionStorage.removeItem('userId');
+    navigate('/login');
+  }
+  return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
       <Layout>
@@ -27,7 +26,7 @@ function My() {
         <button onClick={logOut}>로그아웃</button>
       </Layout>
     </ThemeProvider>
-    );
+  );
 }
 
 export default My;

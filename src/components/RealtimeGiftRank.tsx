@@ -160,14 +160,29 @@ const RealtimeItemPriceTitle = styled.p`
   line-height: ${({ theme }) => theme.typography['label1Bold'].lineHeight};
 `;
 
-function RealtimeRankItemList({ collapsed, setItemInfo }: { collapsed: boolean ,setItemInfo: object}) {
+function RealtimeRankItemList({
+  collapsed,
+  setItemInfo,
+}: {
+  collapsed: boolean;
+  setItemInfo: object;
+}) {
   const visibleItems = collapsed ? itemList.slice(0, 6) : itemList;
   const navigate = useNavigate();
   const userId = sessionStorage.getItem('userId')?.split('@')[0] ?? '';
 
-  function routeToOrder(brandInfo:any, id:any,imageURL:any, name:any, price:any) {
-    if(userId !== '') {
-      sessionStorage.setItem('selectedItem',JSON.stringify({brandInfo,id,imageURL,name,price}));
+  function routeToOrder(
+    brandInfo: any,
+    id: any,
+    imageURL: any,
+    name: any,
+    price: any,
+  ) {
+    if (userId !== '') {
+      sessionStorage.setItem(
+        'selectedItem',
+        JSON.stringify({ brandInfo, id, imageURL, name, price }),
+      );
 
       navigate('/Order');
     } else {
@@ -178,7 +193,18 @@ function RealtimeRankItemList({ collapsed, setItemInfo }: { collapsed: boolean ,
   return (
     <>
       {visibleItems.map((item) => (
-        <RealtimeItem key={item.id} onClick={() => routeToOrder(item.brandInfo,item.id,item.imageURL,item.name,item.price)}>
+        <RealtimeItem
+          key={item.id}
+          onClick={() =>
+            routeToOrder(
+              item.brandInfo,
+              item.id,
+              item.imageURL,
+              item.name,
+              item.price,
+            )
+          }
+        >
           <RealtimeItemImg
             src={item.imageURL}
             alt={item.name}
@@ -281,7 +307,10 @@ function RealtimeGiftRank() {
           ))}
         </RealtimeRankNav2Wrapper>
         <RealtimeRankItemWrapper>
-          <RealtimeRankItemList collapsed={isCollapsed} setItemInfo={setItemInfo}></RealtimeRankItemList>
+          <RealtimeRankItemList
+            collapsed={isCollapsed}
+            setItemInfo={setItemInfo}
+          ></RealtimeRankItemList>
         </RealtimeRankItemWrapper>
       </RealtimeRankWrapper>
       <ExtraBtnWrapper>

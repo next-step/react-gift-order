@@ -64,10 +64,10 @@ function NavBar() {
   const userId = sessionStorage.getItem('userId')?.split('@')[0] ?? '';
 
   function loginRoute() {
-    if(userId !== '') {
-      navigate('/my')
+    if (userId !== '') {
+      navigate('/my');
     } else {
-      navigate('/login')
+      navigate('/login');
     }
   }
   return (

@@ -17,7 +17,6 @@ import {
   PW_TOO_SHORT,
 } from '@/constants/messages';
 
-
 const LoginFormWrapper = styled.div`
   height: 100vh;
   padding: 0 150px;
@@ -92,7 +91,9 @@ const validatePassword = (v: string) => {
   return v.length >= 8 ? '' : PW_TOO_SHORT;
 };
 
-export const UserInfoContext = createContext<{id: string; pw: string} | null>(null);
+export const UserInfoContext = createContext<{ id: string; pw: string } | null>(
+  null,
+);
 
 function Login() {
   const navigate = useNavigate();
@@ -101,7 +102,9 @@ function Login() {
 
   const id = useInput(validateEmail);
   const pw = useInput(validatePassword);
-  const [userInfo, setUserInfo] = useState<{id: string; pw: string } | null>(null);
+  const [userInfo, setUserInfo] = useState<{ id: string; pw: string } | null>(
+    null,
+  );
 
   const isFormValid = id.isValid && pw.isValid;
 
@@ -109,11 +112,11 @@ function Login() {
     e.preventDefault();
     if (!isFormValid) return;
 
-    const nextUser = {id: id.value, pw: pw.value};
+    const nextUser = { id: id.value, pw: pw.value };
 
     setUserInfo(nextUser);
 
-    sessionStorage.setItem('userId',nextUser.id);
+    sessionStorage.setItem('userId', nextUser.id);
     // sessionStorage.setItem('userPw',`${userInfo?.pw}`);
 
     navigate(from, { replace: true });
@@ -123,36 +126,36 @@ function Login() {
     <ThemeProvider theme={theme}>
       <GlobalStyle />
       <UserInfoContext.Provider value={userInfo}>
-      <Layout>
-        <NavBar></NavBar>
-        <LoginFormWrapper>
-          <LoginForm>
-            <LoginFormTitle>KAKAO</LoginFormTitle>
-            <LoginFormInput
-              placeholder="이메일"
-              type="email"
-              value={id.value}
-              onChange={id.onChange}
-              onBlur={id.onBlur}
-              invalid={id.error}
-            ></LoginFormInput>
-            {id.error && <LoginFormErrorText>{id.error}</LoginFormErrorText>}
-            <LoginFormInput
-              placeholder="비밀번호"
-              type="password"
-              value={pw.value}
-              onChange={pw.onChange}
-              onBlur={pw.onBlur}
-              invalid={pw.error}
-            ></LoginFormInput>
-            {pw.error && <LoginFormErrorText>{pw.error}</LoginFormErrorText>}
-            <LoginFormBtn onClick={handleLogin} disabled={!isFormValid}>
-              로그인
-            </LoginFormBtn>
-          </LoginForm>
-        </LoginFormWrapper>
-      </Layout>
-      </UserInfoContext.Provider> 
+        <Layout>
+          <NavBar></NavBar>
+          <LoginFormWrapper>
+            <LoginForm>
+              <LoginFormTitle>KAKAO</LoginFormTitle>
+              <LoginFormInput
+                placeholder="이메일"
+                type="email"
+                value={id.value}
+                onChange={id.onChange}
+                onBlur={id.onBlur}
+                invalid={id.error}
+              ></LoginFormInput>
+              {id.error && <LoginFormErrorText>{id.error}</LoginFormErrorText>}
+              <LoginFormInput
+                placeholder="비밀번호"
+                type="password"
+                value={pw.value}
+                onChange={pw.onChange}
+                onBlur={pw.onBlur}
+                invalid={pw.error}
+              ></LoginFormInput>
+              {pw.error && <LoginFormErrorText>{pw.error}</LoginFormErrorText>}
+              <LoginFormBtn onClick={handleLogin} disabled={!isFormValid}>
+                로그인
+              </LoginFormBtn>
+            </LoginForm>
+          </LoginFormWrapper>
+        </Layout>
+      </UserInfoContext.Provider>
     </ThemeProvider>
   );
 }

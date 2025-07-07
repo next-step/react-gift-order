@@ -52,7 +52,7 @@ function FriendSelector() {
       <FriendSelectorBox>
         <FriendSelectorBoxBtn></FriendSelectorBoxBtn>
         <FriendSelectorBoxText>
-          {userId && userId+'님! '}선물할 친구를 선택해 주세요.
+          {userId && userId + '님! '}선물할 친구를 선택해 주세요.
         </FriendSelectorBoxText>
       </FriendSelectorBox>
     </FriendSelectorWrapper>

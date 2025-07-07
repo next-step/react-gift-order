@@ -15,8 +15,8 @@ createRoot(document.getElementById('root')!).render(
         <Route path="/" element={<App />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/NotFound" element={<NotFound />} />
-        <Route path='/My' element={<My />} />
-        <Route path='/Order' element={<Order />} />
+        <Route path="/My" element={<My />} />
+        <Route path="/Order" element={<Order />} />
         <Route path="*" element={<Navigate to="/NotFound" replace />} />
       </Routes>
     </BrowserRouter>
