@@ -1,5 +1,5 @@
 import { useUserInfo } from "@/context/UserInfoProvider";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Theme } from "@emotion/react";
 import { useTheme } from "@emotion/react";
@@ -10,6 +10,8 @@ const MyPage: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
 
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const email = sessionStorage.getItem("email");
 
@@ -18,7 +20,12 @@ const MyPage: React.FC = () => {
     } else {
       setUser({ email });
     }
+    setIsLoading(false);
   }, []);
+
+  if (isLoading) {
+    return null; // 로딩 중일 땐 아무것도 안 보여줌
+  }
 
   return (
     <div css={ContainerStyle(theme)}>
