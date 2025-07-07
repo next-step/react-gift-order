@@ -5,6 +5,7 @@ import { mockProducts } from '@/data/products';
 import Navigation from '@/components/Navigation';
 import { useState } from 'react';
 import CardSelector from '@/components/OrderSection/CardSelector';
+import MessageInput from '@/components/OrderSection/MessageInput';
 
 const OrderPage = () => {
   const { id } = useParams();
@@ -23,12 +24,7 @@ const OrderPage = () => {
             onSelect={setSelectedCardId}
           />
 
-          <TextAreaWrapper>
-            <Input
-              placeholder="메시지를 입력해주세요."
-              value={selectedCard.defaultTextMessage}
-            />
-          </TextAreaWrapper>
+          <MessageInput value={selectedCard.defaultTextMessage} />
 
           <SenderSection>
             <Label>보내는 사람</Label>
@@ -131,56 +127,9 @@ const Input = styled.input`
   ${({ theme }) => theme.typography.body.body2Regular};
 `;
 
-const TextAreaWrapper = styled.div`
-  padding: ${({ theme }) => theme.spacing[5]};
-  background-color: ${({ theme }) => theme.color.gray[100]};
-  border-radius: 8px;
-
-  textarea {
-    width: 100%;
-    padding: ${({ theme }) => theme.spacing[3]};
-    border-radius: 6px;
-    border: 1px solid ${({ theme }) => theme.color.gray[300]};
-    background-color: ${({ theme }) => theme.color.semantic.background.default};
-    ${({ theme }) => theme.typography.body.body2Regular};
-    resize: none;
-    color: ${({ theme }) => theme.color.semantic.text.default};
-  }
-`;
-
 const ValidationMessage = styled.p`
   color: ${({ theme }) => theme.color.red[600]};
   ${({ theme }) => theme.typography.label.label2Regular};
-`;
-
-const CardSlider = styled.div`
-  display: flex;
-  overflow-x: auto;
-  gap: ${({ theme }) => theme.spacing[2]};
-  padding: ${({ theme }) => theme.spacing[2]} 0;
-`;
-
-const CardImage = styled.img<{ isSelected: boolean }>`
-  height: 56px;
-  border-radius: 8px;
-  cursor: pointer;
-  flex-shrink: 0;
-  border: ${({ isSelected, theme }) =>
-    isSelected ? `2px solid ${theme.color.semantic.kakaoYellow}` : 'none'};
-`;
-
-const PreviewCard = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: ${({ theme }) => theme.spacing[5]};
-`;
-
-const SelectedImage = styled.img`
-  width: 100%;
-  max-width: 360px;
-  max-height: 300px;
-  border-radius: 16px;
-  object-fit: contain;
 `;
 
 const ProductInfoSection = styled.div``;
