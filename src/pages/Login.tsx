@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, createContext, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import GlobalStyle from '../styles/GlobalStyle';
 import { ThemeProvider } from '@emotion/react';
@@ -16,6 +16,7 @@ import {
   PW_REQUIRED,
   PW_TOO_SHORT,
 } from '@/constants/messages';
+
 
 const LoginFormWrapper = styled.div`
   height: 100vh;
@@ -91,6 +92,8 @@ const validatePassword = (v: string) => {
   return v.length >= 8 ? '' : PW_TOO_SHORT;
 };
 
+export const UserInfoContext = createContext<{id: string; pw: string} | null>(null);
+
 function Login() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -98,18 +101,23 @@ function Login() {
 
   const id = useInput(validateEmail);
   const pw = useInput(validatePassword);
+  const [userInfo, setUserInfo] = useState<{id: string; pw: string } | null>(null);
 
   const isFormValid = id.isValid && pw.isValid;
 
   const handleLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (!isFormValid) return;
+
+    setUserInfo({ id: id.value, pw: pw.value});
+
     navigate(from, { replace: true });
   };
 
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
+      <UserInfoContext.Provider value={userInfo}>
       <Layout>
         <NavBar></NavBar>
         <LoginFormWrapper>
@@ -139,6 +147,7 @@ function Login() {
           </LoginForm>
         </LoginFormWrapper>
       </Layout>
+      </UserInfoContext.Provider> 
     </ThemeProvider>
   );
 }
