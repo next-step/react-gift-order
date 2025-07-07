@@ -14,7 +14,7 @@ function My() {
 
     function logOut() {
         sessionStorage.removeItem('userId');
-        navigate('/');
+        navigate('/login');
     };
     return (
     <ThemeProvider theme={theme}>
