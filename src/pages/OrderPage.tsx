@@ -1,5 +1,6 @@
+import CardThumbnail from "./CardThumbnail"
 const OrderPage = () => {
-  return <div>order page</div>
+  return <CardThumbnail />
 }
 
 export default OrderPage
