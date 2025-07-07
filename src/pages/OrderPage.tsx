@@ -1,27 +1,24 @@
 import styled from '@emotion/styled';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { messageCards } from '@/data/messageCards';
 import { mockProducts } from '@/data/products';
 import Navigation from '@/components/Navigation';
-import { useState } from 'react';
 import CardSelector from '@/components/OrderSection/CardSelector';
 import MessageInput from '@/components/OrderSection/MessageInput';
 import SenderForm from '@/components/OrderSection/SenderForm';
 import ReceiverForm from '@/components/OrderSection/ReceiverForm';
 import ProductInfo from '@/components/OrderSection/ProductInfo';
 import OrderSubmitButton from '@/components/OrderSection/OrderSubmitButton';
-import { useNavigate } from 'react-router-dom';
-import {
-  PHONE_REGEX,
-  MIN_QUANTITY,
-  ERROR_MESSAGES,
-} from '@/constants/validation';
+import { useOrderForm } from '@/hooks/useOrderForm';
+import { ERROR_MESSAGES } from '@/constants/validation';
 
 const OrderPage = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
 
-  const { id } = useParams();
   const product = mockProducts[Number(id) - 1];
+  if (!product) return <div>잘못된 접근입니다.</div>;
 
   const [selectedCardId, setSelectedCardId] = useState(messageCards[0].id);
   const selectedCard = messageCards.find(card => card.id === selectedCardId)!;
@@ -29,18 +26,32 @@ const OrderPage = () => {
   const [textMessage, setTextMessage] = useState(
     selectedCard.defaultTextMessage
   );
-  const [senderName, setSenderName] = useState('');
-  const [receiverName, setReceiverName] = useState('');
-  const [receiverPhone, setReceiverPhone] = useState('');
-  const [quantity, setQuantity] = useState(1);
-
   const [textMessageError, setTextMessageError] = useState('');
-  const [senderError, setSenderError] = useState('');
-  const [receiverNameError, setReceiverNameError] = useState('');
-  const [receiverPhoneError, setReceiverPhoneError] = useState('');
-  const [quantityError, setQuantityError] = useState('');
 
-  const totalPrice = product.price.sellingPrice * quantity;
+  useEffect(() => {
+    setTextMessage(selectedCard.defaultTextMessage);
+  }, [selectedCardId]);
+
+  const {
+    senderName,
+    setSenderName,
+    receiverName,
+    setReceiverName,
+    receiverPhone,
+    setReceiverPhone,
+    quantity,
+    setQuantity,
+    senderError,
+    receiverNameError,
+    receiverPhoneError,
+    quantityError,
+    validateSender,
+    validateReceiverName,
+    validateReceiverPhone,
+    validateQuantity,
+    validateForm,
+    totalPrice,
+  } = useOrderForm(product.price.sellingPrice);
 
   const validateTextMessage = () => {
     if (!textMessage.trim()) {
@@ -51,55 +62,8 @@ const OrderPage = () => {
     return true;
   };
 
-  const validateSender = () => {
-    if (!senderName.trim()) {
-      setSenderError(ERROR_MESSAGES.EMPTY_SENDER);
-      return false;
-    }
-    setSenderError('');
-    return true;
-  };
-
-  const validateReceiverName = () => {
-    if (!receiverName.trim()) {
-      setReceiverNameError(ERROR_MESSAGES.EMPTY_RECEIVER_NAME);
-      return false;
-    }
-    setReceiverNameError('');
-    return true;
-  };
-
-  const validateReceiverPhone = () => {
-    if (!receiverPhone.trim()) {
-      setReceiverPhoneError(ERROR_MESSAGES.EMPTY_RECEIVER_PHONE);
-      return false;
-    } else if (!PHONE_REGEX.test(receiverPhone)) {
-      setReceiverPhoneError(ERROR_MESSAGES.INVALID_PHONE);
-      return false;
-    }
-    setReceiverPhoneError('');
-    return true;
-  };
-
-  const validateQuantity = () => {
-    if (quantity < MIN_QUANTITY) {
-      setQuantityError(ERROR_MESSAGES.INVALID_QUANTITY);
-      return false;
-    }
-    setQuantityError('');
-    return true;
-  };
-
   const handleSubmit = () => {
-    const senderValid = validateSender();
-    const nameValid = validateReceiverName();
-    const phoneValid = validateReceiverPhone();
-    const quantityValid = validateQuantity();
-    const messageValid = validateTextMessage();
-
-    const isValid =
-      senderValid && nameValid && phoneValid && quantityValid && messageValid;
-
+    const isValid = validateForm() && validateTextMessage();
     if (!isValid) return;
 
     alert(
@@ -122,7 +86,6 @@ const OrderPage = () => {
             selectedCardId={selectedCardId}
             onSelect={setSelectedCardId}
           />
-
           <MessageInput
             value={textMessage}
             onChange={e => {
@@ -131,7 +94,6 @@ const OrderPage = () => {
             }}
             error={textMessageError}
           />
-
           <SenderForm
             value={senderName}
             onChange={e => {
@@ -140,7 +102,6 @@ const OrderPage = () => {
             }}
             error={senderError}
           />
-
           <ReceiverForm
             name={receiverName}
             phone={receiverPhone}
@@ -162,9 +123,7 @@ const OrderPage = () => {
             phoneError={receiverPhoneError}
             quantityError={quantityError}
           />
-
           <ProductInfo product={product} />
-
           <OrderSubmitButton amount={totalPrice} onClick={handleSubmit} />
         </Section>
       </Main>
