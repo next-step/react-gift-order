@@ -10,7 +10,9 @@ const ProductCard = () => {
 
   const handleClick = () => {
     if (isLoggedIn) {
-      navigate(`/order/${id}`);
+      navigate(`/order/${id}`, {
+        state: { imageURL, name, price, brandInfo },
+      });
     } else {
       navigate('/login');
     }

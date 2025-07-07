@@ -5,6 +5,7 @@ import ReceiverInfoSection from '@/components/ProductOrder/ReceiverInfoSection';
 import styled from '@emotion/styled';
 import { useLocation } from 'react-router-dom';
 import ProductInfo from '@/components/giftHome/GiftThemes/ProductInfo';
+import OrderBtn from '@/components/ProductOrder/OrderBtn';
 
 const ProductOrder = () => {
   const location = useLocation();
@@ -22,6 +23,7 @@ const ProductOrder = () => {
           price={price}
           brandInfo={brandInfo}
         />
+        <OrderBtn price={price.basicPrice} onClick={() => {}} />
       </Content>
     </Layout>
   );
