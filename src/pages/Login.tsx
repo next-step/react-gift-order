@@ -8,6 +8,7 @@ import useInput from "@/hooks/useInput";
 import { emailValidator, passwordValidator } from "@/utils/validators";
 import { useAuth } from '@/contexts/AuthContext';
 
+
 const LoginWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -78,6 +79,7 @@ const Login = () => {
         JSON.stringify({ username: username, isLoggedIn: true })
       );
       navigate("/");
+
     }
   };
   return (
