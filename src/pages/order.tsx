@@ -4,6 +4,7 @@ import MessageCard from '../components/MessageCard';
 import styled from '@emotion/styled';
 import { orderCardTemplates } from '../data/orderCardTemplateMock';
 import { giftItem } from '../components/RankingGrid';
+import { useInputWithValidation } from '../hooks/useInputValidation';
 
 const MessaageWrapper = styled.div`
   padding: 8px 20px;
@@ -52,6 +53,7 @@ const BottomOrderButton = styled.div`
   font-size: 18px;
   font-weight: bold;
   color: black;
+  cursor: pointer;
 `;
 
 const OrderInfoWrapper = styled.div`
@@ -92,22 +94,77 @@ const FieldLabel = styled.div`
 const Input = styled.input`
   flex: 1;
   padding: 12px 16px;
-  border: 1px solid #dcdcdc;
+  border: 1px solid '#dcdcdc';
   border-radius: 6px;
   font-size: 14px;
+  flex-direction: column;
 
   &::placeholder {
     color: #b0b0b0;
   }
+  &:focus {
+    border: 1px solid #dcdcdc;
+  }
 `;
+
+const ErrorText = styled.div`
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+`;
+
+const validateName = (value: string) => {
+  if (!value.trim()) return '이름을 입력해주세요';
+
+  return '';
+};
+
+const validatePhoneNum = (value: string) => {
+  if (!value) return '전화번호를 입력해주세요';
+  const phoneRegex = /^010[0-9]{8}$/;
+  return phoneRegex.test(value)
+    ? ''
+    : '올바른 전화번호 형식이 아닙니다.';
+};
+
+const validateQuantity = (value: string) => {
+  const num = Number(value);
+  if (num < 1) return '구매 수량은 1개 이상이어야 합니다.';
+  return '';
+};
 
 const Order = () => {
   const [selected, setSelected] = useState(
     orderCardTemplates[0].imageUrl
   );
-  const [quantity, setQuantity] = useState(1);
   const product = giftItem;
-  const priceSum = product.price.sellingPrice * quantity;
+
+  const [message, setMessage] = useState('축하해요.');
+
+  const sendorNameInput = useInputWithValidation('', validateName);
+  const receiverNameInput = useInputWithValidation('', validateName);
+  const receiverPhoneInput = useInputWithValidation(
+    '',
+    validatePhoneNum
+  );
+  const quantityInput = useInputWithValidation('', validateQuantity);
+
+  const priceSum =
+    product.price.sellingPrice * Number(quantityInput.value);
+
+  const isFormValid =
+    sendorNameInput.isValid &&
+    receiverNameInput.isValid &&
+    receiverPhoneInput.isValid &&
+    quantityInput.isValid;
+
+  const handleOrder = () => {
+    if (!isFormValid) return;
+
+    alert(
+      `주문이 완료되었습니다.\n 상품명: ${product.name}\n 구매 수량: ${quantityInput.value}\n 발신자 이름: ${sendorNameInput.value}\n 메시지: ${message}\n`
+    );
+  };
 
   return (
     <>
@@ -124,7 +181,8 @@ const Order = () => {
 
             <MessageInput
               placeholder="메시지를 입력해주세요."
-              defaultValue="축하해요."
+              value={message}
+              onChange={e => setMessage(e.target.value)}
             />
           </MainWrapper>
         </SectionBox>
@@ -133,7 +191,15 @@ const Order = () => {
       <OrderInfoWrapper>
         <Section>
           <Label>보내는 사람</Label>
-          <Input type="text" placeholder="이름을 입력하세요." />
+          <Input
+            type="text"
+            placeholder="이름을 입력하세요."
+            onChange={e => sendorNameInput.setValue(e.target.value)}
+            onBlur={sendorNameInput.handleBlur}
+          />
+          {!sendorNameInput.isValid && (
+            <ErrorText>{sendorNameInput.error}</ErrorText>
+          )}
           <Description>
             * 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.
           </Description>
@@ -144,21 +210,37 @@ const Order = () => {
 
           <Row>
             <FieldLabel>이름</FieldLabel>
-            <Input type="text" placeholder="이름을 입력하세요." />
+            <Input
+              type="text"
+              placeholder="이름을 입력하세요."
+              onChange={e =>
+                receiverNameInput.setValue(e.target.value)
+              }
+              onBlur={receiverNameInput.handleBlur}
+            />
+            <ErrorText>{receiverNameInput.error}</ErrorText>
           </Row>
 
           <Row>
             <FieldLabel>전화번호</FieldLabel>
-            <Input type="tel" placeholder="전화번호를 입력하세요." />
+            <Input
+              type="tel"
+              placeholder="전화번호를 입력하세요."
+              onChange={e =>
+                receiverPhoneInput.setValue(e.target.value)
+              }
+              onBlur={receiverPhoneInput.handleBlur}
+            />
+            <ErrorText>{receiverPhoneInput.error}</ErrorText>
           </Row>
 
           <Row>
             <FieldLabel>수량</FieldLabel>
             <Input
               type="number"
-              value={quantity}
-              onChange={e => setQuantity(Number(e.target.value))}
+              onChange={e => quantityInput.setValue(e.target.value)}
             />
+            <ErrorText>{quantityInput.error}</ErrorText>
           </Row>
           <Label>상품 정보</Label>
           <img src={product.imageURL} alt={product.name} width={80} />
@@ -176,7 +258,9 @@ const Order = () => {
           </div>
         </Section>
       </OrderInfoWrapper>
-      <BottomOrderButton>{priceSum}원 주문하기</BottomOrderButton>
+      <BottomOrderButton onClick={handleOrder}>
+        {priceSum}원 주문하기
+      </BottomOrderButton>
     </>
   );
 };
