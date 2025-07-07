@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import type { Product } from '@/types/product';
+import { useNavigate } from 'react-router-dom';
 
 interface ProductCardProps {
   item: Product;
@@ -7,8 +8,14 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ item, rank }: ProductCardProps) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/order/${rank}`);
+  };
+
   return (
-    <Card>
+    <Card onClick={handleClick}>
       <RankBadge rank={rank}>{rank}</RankBadge>
       <Image src={item.imageURL} alt={item.name} />
       <Brand>{item.brandInfo.name}</Brand>
