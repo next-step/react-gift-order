@@ -1,10 +1,10 @@
 import { cardTemplate } from "@/__mock__";
-import { useOrderContext } from "@/hooks/order/useOrderContext";
+import { useOrderState } from "@/contexts/order";
 import type { CardTemplateType } from "@/types";
 import { useEffect } from "react";
 
 export const useCardTemplate = () => {
-  const { order, setOrder } = useOrderContext();
+  const { order, setOrder } = useOrderState();
 
   useEffect(() => {
     if (!order.cardTemplate) {

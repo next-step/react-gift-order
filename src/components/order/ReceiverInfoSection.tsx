@@ -1,7 +1,7 @@
 import { ErrorMessage, Input } from "@/components/common";
 import styled from "@emotion/styled";
-import { useOrderContext } from "@/hooks/order/useOrderContext";
 import { ErrorPlaceholder } from "@/components/common/ErrorMessage";
+import { useOrderForm } from "@/contexts/order";
 
 const ReceiverInfoContainer = styled.div(({ theme }) => ({
   display: "flex",
@@ -42,7 +42,7 @@ const InputWrapper = styled.div(({ theme }) => ({
 }));
 
 export const ReceiverInfoSection = () => {
-  const { register } = useOrderContext();
+  const { register } = useOrderForm();
 
   const { error: receiverNameFieldError, ...receiverNameField } =
     register("receiverName");

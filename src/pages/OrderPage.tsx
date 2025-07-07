@@ -7,6 +7,7 @@ import {
   SelectedCardView,
   SenderInfoSection,
 } from "@/components/order";
+import { OrderProviderWrapper } from "@/contexts/order";
 import { useOrderPageLogic } from "@/hooks/order/useOrderPageLogic";
 import styled from "@emotion/styled";
 
@@ -17,7 +18,7 @@ const BlankSpace = styled.div(({ theme }) => ({
   backgroundColor: theme.color.gray[100],
 }));
 
-export const OrderPage = () => {
+const OrderPageContent = () => {
   const { order, handleOrderSubmit } = useOrderPageLogic();
 
   return (
@@ -32,5 +33,13 @@ export const OrderPage = () => {
       <OrderProductInfoSection product={order.product} />
       <OrderButton onClick={handleOrderSubmit} />
     </OrderLayout>
+  );
+};
+
+export const OrderPage = () => {
+  return (
+    <OrderProviderWrapper>
+      <OrderPageContent />
+    </OrderProviderWrapper>
   );
 };

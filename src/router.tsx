@@ -1,7 +1,6 @@
 import { PrivateRoute, PublicRoute } from "@/components/auth";
 import { Header } from "@/components/main";
 import { ROUTE_PATH } from "@/constants";
-import { OrderProvider } from "@/contexts/order/OrderContext";
 import { LoginPage, MainPage, MyPage, NotFoundPage, OrderPage } from "@/pages";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 
@@ -25,14 +24,7 @@ const Router = () => {
           </Route>
           <Route element={<PrivateRoute />}>
             <Route path={ROUTE_PATH.MY} element={<MyPage />} />
-            <Route
-              path={ROUTE_PATH.ORDER}
-              element={
-                <OrderProvider>
-                  <OrderPage />
-                </OrderProvider>
-              }
-            />
+            <Route path={ROUTE_PATH.ORDER} element={<OrderPage />} />
           </Route>
           <Route path={ROUTE_PATH.ERROR} element={<NotFoundPage />} />
         </Route>

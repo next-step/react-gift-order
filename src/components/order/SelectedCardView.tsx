@@ -1,6 +1,6 @@
 import { ErrorMessage } from "@/components/common";
+import { useOrderForm } from "@/contexts/order";
 import { useCardTemplate } from "@/hooks/order/useCardTemplate";
-import { useOrderContext } from "@/hooks/order/useOrderContext";
 import styled from "@emotion/styled";
 
 const SelectedCardContainer = styled.div(({ theme }) => ({
@@ -47,7 +47,7 @@ const MessageInput = styled.textarea<{ hasError?: boolean }>(
 );
 
 export const SelectedCardView = () => {
-  const { register } = useOrderContext();
+  const { register } = useOrderForm();
   const { error: messageFieldError, ...messageField } = register("message");
   const currentCardTemplate = useCardTemplate();
 

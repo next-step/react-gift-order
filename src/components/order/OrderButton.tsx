@@ -1,5 +1,5 @@
 import { Button } from "@/components/common";
-import { useOrderContext } from "@/hooks/order/useOrderContext";
+import { useOrderCalculation } from "@/contexts/order";
 import styled from "@emotion/styled";
 
 interface OrderButtonProps {
@@ -23,8 +23,8 @@ const OrderButtonText = styled.span(({ theme }) => ({
   color: theme.color.gray[900],
 }));
 export const OrderButton = ({ onClick }: OrderButtonProps) => {
-  const { calculateTotalPrice } = useOrderContext();
-  const totalPrice = calculateTotalPrice();
+  const { totalPrice } = useOrderCalculation();
+
   return (
     <OrderButtonContainer>
       <Button variant="primary" size="large" width="100%" onClick={onClick}>

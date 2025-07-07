@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { ErrorMessage, Input } from "@/components/common";
-import { useOrderContext } from "@/hooks/order/useOrderContext";
+import { useOrderForm } from "@/contexts/order";
 
 const SenderInfoContainer = styled.div(({ theme }) => ({
   display: "flex",
@@ -35,7 +35,7 @@ const InputWrapper = styled.div(({ theme }) => ({
 }));
 
 export const SenderInfoSection = () => {
-  const { register } = useOrderContext();
+  const { register } = useOrderForm();
   const { error: senderNameFieldError, ...senderNameField } =
     register("senderName");
 

@@ -2,19 +2,19 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { generateMockArray } from "@/__mock__/generate-mock-array";
 import { useRouter } from "@/hooks/common/useRouter";
-import { useOrderContext } from "@/hooks/order/useOrderContext";
 import type { Order } from "@/types";
+import {
+  useOrderState,
+  useOrderForm,
+  useOrderValidation,
+} from "@/contexts/order";
 
 export const useOrderPageLogic = () => {
   const { goHomePage } = useRouter();
-  const {
-    order,
-    setOrder,
-    resetOrder,
-    validateAllFields,
-    isOrderComplete,
-    getValidationErrors,
-  } = useOrderContext();
+  const { order, setOrder, resetOrder } = useOrderState();
+  const { validateAllFields } = useOrderForm();
+  const { isOrderComplete, getValidationErrors } = useOrderValidation();
+
   const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
