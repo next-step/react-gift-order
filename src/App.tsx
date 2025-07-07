@@ -8,13 +8,13 @@ import Home from './pages/Home';
 import NotFoundPage from './pages/NotFoundPage';
 import { AuthProvider } from './contexts/AuthContext';
 import MyPage from './pages/MyPage';
-import Order from './pages/order';
+import Order from './pages/Order';
 
 const containerStyle = css`
   max-width: 720px;
   margin: 0 auto;
   padding: 16px;
-  background-color: ${theme.colors.backgroundDefault};
+  background-color: transparent;
   justify-content: center;
   align-items: center;
 `;

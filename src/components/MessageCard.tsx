@@ -1,6 +1,10 @@
 import styled from '@emotion/styled';
 import { orderCardTemplates } from '../data/orderCardTemplateMock';
 
+const Wrapper = styled.div`
+  padding-bottom: 12px;
+`;
+
 const ScrollContainer = styled.div`
   display: flex;
   overflow-x: auto;
@@ -24,19 +28,23 @@ type Props = {
 
 const MessageCard = ({ selected, onSelect }: Props) => {
   return (
-    <ScrollContainer>
-      {orderCardTemplates.map(card => {
-        return (
-          <Thumbnail
-            key={card.id}
-            src={card.imageUrl}
-            alt={card.defaultTextMessage}
-            selected={selected === card.imageUrl}
-            onClick={() => onSelect(card.imageUrl)}
-          />
-        );
-      })}
-    </ScrollContainer>
+    <Wrapper>
+      <ScrollContainer>
+        {orderCardTemplates.map(card => {
+          return (
+            <>
+              <Thumbnail
+                key={card.id}
+                src={card.imageUrl}
+                alt={card.defaultTextMessage}
+                selected={selected === card.imageUrl}
+                onClick={() => onSelect(card.imageUrl)}
+              />
+            </>
+          );
+        })}
+      </ScrollContainer>
+    </Wrapper>
   );
 };
 

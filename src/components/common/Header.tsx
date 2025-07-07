@@ -9,6 +9,7 @@ const HeaderContainer = styled.header`
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
+  max-width: 720px;
 
   background-color: ${({ theme }) => theme.colors.backgroundDefault};
 `;
@@ -27,7 +28,12 @@ export const Header = () => {
 
   return (
     <HeaderContainer>
-      <FiArrowLeft size={20} />
+      <FiArrowLeft
+        size={20}
+        onClick={() => {
+          navigate(-1);
+        }}
+      />
       <Title>선물하기</Title>
       <FiUser size={20} onClick={handleClick} />
     </HeaderContainer>
