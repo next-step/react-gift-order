@@ -9,6 +9,7 @@ import CardMessage from '@/components/order/CardMessage';
 import SenderInfo from '@/components/order/SenderInfo';
 import ReceiverInfo from '@/components/order/ReceiverInfo';
 import ProductInfo from '@/components/order/ProductInfo';
+import OrderButton from '@/components/order/OrderButton';
 
 import { products } from '@/mock/productsData';
 import { cardTemplates } from '@/mock/cardTemplates';
@@ -54,6 +55,13 @@ export default function OrderPage() {
 
         {/* 상품 정보 */}
         <ProductInfo product={product} />
+
+        {/* 주문하기 버튼 */}
+        <OrderButton
+          priceSum={product.price.sellingPrice}
+          qty={receiver.qty}
+          onClick={() => console.log('주문')}
+        />
       </Wrapper>
     </MobileLayout>
   );
