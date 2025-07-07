@@ -6,16 +6,19 @@ import {
 } from '@/styles/Mypage.styles';
 import { LoginInfoContext } from '@/contexts/LoginInfoContext';
 import { useContext, useEffect, useState } from 'react';
-
+import useLoginForm from '@/hooks/useLoginForm';
 type MyPageProps = {
   onLogin: () => void;
 };
 
 function Mypage({ onLogin }: MyPageProps) {
+  const { logOut } = useLoginForm();
   const { loginInfo, setLoginInfo } = useContext(LoginInfoContext);
   const [name, setName] = useState<string>('');
   function logout() {
     setLoginInfo('');
+    console.log(loginInfo);
+    logOut();
     localStorage.setItem('id', '');
     localStorage.setItem('name', '');
     onLogin();

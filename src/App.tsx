@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { Providers } from '@/Providers';
 import { AppWrapper } from '@/styles/App.styles';
 import { Routes, Route } from 'react-router-dom';
@@ -10,26 +10,27 @@ import Login from '@/pages/Login';
 import Mypage from '@/pages/Mypage';
 import Order from '@/pages/Order/Order';
 import NotFound from '@/NotFound';
+import { LoginInfoContext } from '@/contexts/LoginInfoContext';
 
 function App() {
-  const [loginInfo, setLoginInfo] = useState<string>('');
+  const { loginInfo, setLoginInfo } = useContext(LoginInfoContext);
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    const id = localStorage.getItem('id') || '';
+    if (loginInfo !== id) setLoginInfo(id);
+  }, []);
 
   function handleBackClick() {
     if (location.pathname !== '/') navigate(-1);
   }
 
   function handleLoginClick() {
-    if (loginInfo == '') navigate('/login');
-    else {
-      navigate('/my');
-    }
+    const id = localStorage.getItem('id') || '';
+    if (!id) navigate('/login');
+    else navigate('/my');
   }
-
-  useEffect(() => {
-    setLoginInfo(localStorage.getItem('id') || '');
-  }, []);
 
   return (
     <Providers>

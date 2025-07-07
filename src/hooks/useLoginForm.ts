@@ -51,6 +51,10 @@ function useLoginForm() {
   function isValidForm() {
     return handleCheckId() && handleCheckPw();
   }
+  function logOut() {
+    setId('');
+    setPw('');
+  }
 
   const isValid = validateId(id).ok && validatePw(pw).ok;
   // const isValid = idError === '' && pwError === '' && id !== '' && pw.length >= 8;
@@ -66,6 +70,7 @@ function useLoginForm() {
     handleIdBlur: () => handleCheckId(),
     handlePwBlur: () => handleCheckPw(),
     isValidForm,
+    logOut,
   };
 }
 
