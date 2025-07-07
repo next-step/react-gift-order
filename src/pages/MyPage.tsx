@@ -1,4 +1,3 @@
-import React from "react";
 import { useLoginContext } from "@/contexts/LoginContext";
 import { useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";

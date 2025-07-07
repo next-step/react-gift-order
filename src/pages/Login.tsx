@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "@emotion/styled";
 import { useLoginForm } from "@/hooks/useLoginForm";
 import { useNavigate, useLocation } from "react-router-dom";

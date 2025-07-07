@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { useNavigate } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useLoginContext } from '@/contexts/LoginContext'
 import { products } from '@/data/products'
 import PersonIcon from '@mui/icons-material/Person'
