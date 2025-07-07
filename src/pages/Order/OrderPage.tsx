@@ -113,16 +113,16 @@ const OrderPage = () => {
         />
       </div>
 
-        <textarea
+      <textarea
         value={message}
         onChange={(e) => {
-            setMessage(e.target.value);
-            if (e.target.value.trim()) setMessageError('');
+          setMessage(e.target.value);
+          if (e.target.value.trim()) setMessageError('');
         }}
         placeholder={message.trim() === '' ? '메시지를 입력해주세요.' : ''}
         css={[messageInputStyle(theme), messageError && errorInputStyle]}
-        />
-        {messageError && <p css={errorMessageStyle}>{messageError}</p>}
+      />
+      {messageError && <p css={errorMessageStyle}>{messageError}</p>}
 
       <div css={sectionStyle(theme)}>
         <div css={formGroupStyle(theme)}>
@@ -148,7 +148,30 @@ const OrderPage = () => {
 
       <div css={sectionStyle(theme)}>
         <div css={formGroupStyle(theme)}>
-          <label>받는 사람</label>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <label>받는 사람</label>
+            <button
+              type="button"
+              onClick={() => alert('받는 사람 추가 기능은 준비 중입니다.')}
+              style={{
+                background: theme.color.gray.gray300,
+                color: theme.color.gray.gray1000,
+                padding: '6px 12px',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: '14px',
+              }}
+            >
+              + 추가
+            </button>
+          </div>
 
           <div css={horizontalFormStyle(theme)}>
             <label css={receiverLabelStyle(theme)}>이름</label>
