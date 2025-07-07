@@ -1,7 +1,7 @@
-import type { Recipients } from './Recipients';
+import type { Recipient } from './Recipient';
 
 export interface OrderFormValue {
   msg: string;
   sendName: string;
-  recipients: Recipients[];
+  recipients: Recipient[];
 }

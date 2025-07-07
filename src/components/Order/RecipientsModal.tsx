@@ -1,14 +1,12 @@
 // @components/Order/RecipientsModal.tsx
 import React, { useState } from 'react';
-import styled from 'styled-components';
-import { useForm, SubmitHandler, FieldErrors } from 'react-hook-form'; // useForm, SubmitHandler, FieldErrors 임포트
+import styled from '@emotion/styled';
+import { useForm, type SubmitHandler } from 'react-hook-form'; // useForm, SubmitHandler, FieldErrors 임포트
 import RecipientsItem from './RecipientsItem'; // 다음 단계에서 구현할 개별 아이템 컴포넌트
-import type { Recipient } from '@/types/OrderFormValues'; // Recipient 타입 임포트
+import type { Recipient } from '@/types/Recipient'; // Recipient 타입 임포트
+import type { RecipientsModalFormData } from '@/types/RecipientsModalFormData';
 
 // RecipientsModal 내부 폼의 데이터 타입
-interface RecipientsModalFormData {
-  newRecipients: Recipient[]; // 모달 내부에서만 사용될 임시 배열
-}
 
 // Props 타입 정의: 모달 닫기 함수와 받는 사람 추가 완료 시 호출될 콜백
 interface RecipientsModalProps {
@@ -117,7 +115,7 @@ const RecipientsModal: React.FC<RecipientsModalProps> = ({ onClose, onAdd }) => 
     reset,
   } = useForm<RecipientsModalFormData>({
     defaultValues: {
-      newRecipients: [{ name: '', contact: '' }],
+      newRecipients: [{ receiveName: '', receiveTel: '', count: 0 }],
     },
   });
 
@@ -127,12 +125,14 @@ const RecipientsModal: React.FC<RecipientsModalProps> = ({ onClose, onAdd }) => 
 
   const onSubmit: SubmitHandler<RecipientsModalFormData> = (data) => {
     // 유효한 받는 사람만 필터링 (이름과 연락처가 모두 있는 경우)
-    const validRecipients = data.newRecipients.filter((rec) => rec.name && rec.contact);
+    const validRecipients = data.newRecipients.filter(
+      (rec) => rec.receiveName && rec.receiveTel && rec.count
+    );
     if (validRecipients.length > 0) {
       onAdd(validRecipients); // 부모 컴포넌트(RecipientsModalContainer)로 유효한 받는 사람 목록 전달
       // 모달 닫기 전에 폼 상태 초기화
       reset({
-        newRecipients: [{ name: '', contact: '' }],
+        newRecipients: [{ receiveName: '', receiveTel: '', count: 0 }],
       });
       setFieldSets([{ id: 0 }]); // 필드 세트도 초기화
     } else {

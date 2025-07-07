@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { type UseFormRegister, type FieldErrors } from 'react-hook-form';
-import RecipientsModalFormData from './RecipientsModal'; // 타입 임포트 (RecipientsModal에서 정의한 폼 데이터 타입)
+import type { RecipientsModalFormData } from '@/types/RecipientsModalFormData'; // 타입 임포트 (RecipientsModal에서 정의한 폼 데이터 타입)
 
 // Props 타입 정의
 interface RecipientsItemProps {
@@ -56,20 +56,32 @@ const RecipientsItem: React.FC<RecipientsItemProps> = ({ index, register, errors
         <input
           id={`newRecipients[${index}].name`}
           type='text'
-          {...register(`newRecipients.${index}.name`, { required: `받는 사람 ${index + 1}의 이름은 필수입니다.` })}
-          className={errors.newRecipients?.[index]?.name ? 'input-error' : ''}
+          {...register(`newRecipients.${index}.receiveName`, {
+            required: `받는 사람 ${index + 1}의 이름은 필수입니다.`,
+          })}
+          className={errors.newRecipients?.[index]?.receiveName ? 'input-error' : ''}
         />
-        {errors.newRecipients?.[index]?.name && <p className='error-message'>{(errors.newRecipients[index].name as any)?.message}</p>}
+        {errors.newRecipients?.[index]?.receiveName && (
+          <p className='error-message'>
+            {(errors.newRecipients[index].receiveName as any)?.message}
+          </p>
+        )}
       </div>
       <div>
-        <label htmlFor={`newRecipients[${index}].contact`}>연락처</label>
+        <label htmlFor={`newRecipients[${index}].receiveTel`}>연락처</label>
         <input
-          id={`newRecipients[${index}].contact`}
+          id={`newRecipients[${index}].receiveTel`}
           type='text'
-          {...register(`newRecipients.${index}.contact`, { required: `받는 사람 ${index + 1}의 연락처는 필수입니다.` })}
-          className={errors.newRecipients?.[index]?.contact ? 'input-error' : ''}
+          {...register(`newRecipients.${index}.receiveTel`, {
+            required: `받는 사람 ${index + 1}의 연락처는 필수입니다.`,
+          })}
+          className={errors.newRecipients?.[index]?.receiveTel ? 'input-error' : ''}
         />
-        {errors.newRecipients?.[index]?.contact && <p className='error-message'>{(errors.newRecipients[index].contact as any)?.message}</p>}
+        {errors.newRecipients?.[index]?.receiveTel && (
+          <p className='error-message'>
+            {(errors.newRecipients[index].receiveTel as any)?.message}
+          </p>
+        )}
       </div>
     </StyledRecipientsItem>
   );
