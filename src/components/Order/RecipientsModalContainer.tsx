@@ -61,7 +61,7 @@ const RecipientsModalContainer: FC<RecipientsModalContainerProps> = ({
   currentRecipients,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append } = useFieldArray({
     control,
     name: 'recipients', // OrderFormValue에 정의된 필드 이름과 일치
   });
@@ -91,16 +91,20 @@ const RecipientsModalContainer: FC<RecipientsModalContainerProps> = ({
         </StyledRecipientsAddModalContainer>
       ) : (
         <StyledRecipientsAddModalContainer>
-          <ul>
-            {fields.map((field, index) => (
-              <li key={field.id}>
-                {field.receiveName} ({field.receiveTel}){field.count}
-                <button type='button' onClick={() => remove(index)} className='remove-button'>
-                  삭제
-                </button>
-              </li>
-            ))}
-          </ul>
+          <table>
+            <thead>
+              <tr></tr>
+            </thead>
+            <tbody>
+              {fields.map((field) => (
+                <tr key={field.id}>
+                  <td>{field.receiveName}</td>
+                  <td>{field.receiveTel}</td>
+                  <td>{field.count}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </StyledRecipientsAddModalContainer>
       )}
 

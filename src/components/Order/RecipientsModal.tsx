@@ -1,5 +1,5 @@
 // @components/Order/RecipientsModal.tsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { useForm, type SubmitHandler } from 'react-hook-form'; // useForm, SubmitHandler, FieldErrors 임포트
 import RecipientsItem from './RecipientsItem'; // 다음 단계에서 구현할 개별 아이템 컴포넌트
@@ -109,9 +109,16 @@ const RecipientsModal: React.FC<RecipientsModalProps> = ({ onClose, onAdd, exist
     getValues,
   } = useForm<RecipientsModalFormData>({
     defaultValues: {
-      newRecipients: [{ receiveName: '', receiveTel: '', count: 0 }],
+      newRecipients: existedRecipients,
     },
   });
+  useEffect(() => {
+    reset({
+      newRecipients: existedRecipients,
+    });
+    setFieldSets(existedRecipients.map((_, idx) => ({ id: idx })));
+    nextId.current = existedRecipients.length;
+  }, [existedRecipients, reset]);
 
   const handleAddPersonField = () => {
     setFieldSets((prev) => [...prev, { id: nextId.current++ }]);
