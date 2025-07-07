@@ -12,25 +12,23 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<PageWrapper><LoginPage /></PageWrapper>} />
-          <Route path="/" element={<PageWrapper><HomePage /></PageWrapper>} />
-          <Route path="/my" element={
-            <ProtectedRoute>
-              <PageWrapper>
+        <PageWrapper>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/" element={<HomePage />} />
+            <Route path="/my" element={
+              <ProtectedRoute>
                 <MyPage />
-              </PageWrapper>
-            </ProtectedRoute>
-          } />
-          <Route path="/order/:productId" element={
-            <ProtectedRoute>
-              <PageWrapper>
+              </ProtectedRoute>
+            } />
+            <Route path="/order/:productId" element={
+              <ProtectedRoute>
                 <OrderPage />
-              </PageWrapper>
-            </ProtectedRoute>
-          } />
-          <Route path="*" element={<PageWrapper><NotFound /></PageWrapper>} />
-        </Routes>
+              </ProtectedRoute>
+            } />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </PageWrapper>
       </BrowserRouter>
     </AuthProvider>
   )
