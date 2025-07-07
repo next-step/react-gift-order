@@ -13,14 +13,16 @@ const Scroll = styled.div`
 
   &::-webkit-scrollbar {
     height: 16px;
-    border: 4px solid #000;
   }
   &::-webkit-scrollbar-track {
-    background: ${({ theme }) => theme.colors.gray[200]};
+    background: ${({ theme }) => theme.colors.gray[300]};
+    border: 4px solid ${({ theme }) => theme.colors.gray[100]};
   }
   &::-webkit-scrollbar-thumb {
     background: ${({ theme }) => theme.colors.gray[600]};
-    border-radius: 3px;
+    border-radius: 10px;
+    border: 4px solid transparent;
+    background-clip: content-box;
   }
 `;
 
