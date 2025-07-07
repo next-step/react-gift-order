@@ -2,11 +2,14 @@ import { useState } from "react";
 
 type ValidatorFunction = (value: string) => string;
 
-const useFormInput = (validator: ValidatorFunction, initialValue = "") => {
+const useFormInput = <T extends HTMLInputElement | HTMLTextAreaElement>(
+  validator: ValidatorFunction,
+  initialValue = "",
+) => {
   const [value, setValue] = useState(initialValue);
   const [error, setError] = useState("");
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<T>) => {
     const newValue = e.target.value;
     setValue(newValue);
     if (!validator(newValue)) {
@@ -26,6 +29,7 @@ const useFormInput = (validator: ValidatorFunction, initialValue = "") => {
 
   return {
     value,
+    setValue,
     error,
     onChange: handleChange,
     onBlur: handleBlur,

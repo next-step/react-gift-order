@@ -18,6 +18,13 @@ export const checkPasswordError = (newPassword: string): string => {
   return "";
 };
 
+export const checkMessageError = (message: string): string => {
+  if (!message.trim()) {
+    return "메시지를 입력해주세요.";
+  }
+  return "";
+};
+
 export const checkNameError = (name: string): string => {
   if (!name.trim()) {
     return "이름을 입력해주세요.";

@@ -1,18 +1,26 @@
 import styled from "@emotion/styled";
+import ErrorMessage from "../common/ErrorMessage";
 
 type CardTextareaProps = {
-  message: string;
-  onChange: (value: string) => void;
+  messageInput: {
+    value: string;
+    setValue: (value: string) => void;
+    error: string;
+    onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    onBlur: () => void;
+  };
 };
 
-const CardTextarea = ({ message, onChange }: CardTextareaProps) => {
+const CardTextarea = ({ messageInput }: CardTextareaProps) => {
   return (
     <TextareaDiv>
       <Textarea
+        error={!!messageInput.error}
         placeholder="카드 메시지를 입력해주세요."
-        value={message}
-        onChange={e => onChange(e.target.value)}
+        value={messageInput.value}
+        onChange={messageInput.onChange}
       />
+      {messageInput.error && <ErrorMessage message={messageInput.error} />}
     </TextareaDiv>
   );
 };
@@ -23,7 +31,7 @@ const TextareaDiv = styled.div`
   padding: ${({ theme }) => theme.spacing.spacing4};
 `;
 
-const Textarea = styled.textarea`
+const Textarea = styled.textarea<{ error: boolean }>`
   display: block;
   width: 100%;
   font-size: ${({ theme }) => theme.typography.body1Regular.fontSize};
@@ -33,9 +41,10 @@ const Textarea = styled.textarea`
   border-radius: 8px;
   padding: ${({ theme }) =>
     `${theme.spacing.spacing2} ${theme.spacing.spacing3}`};
-  border: 1px solid ${({ theme }) => theme.colors.gray.gray400};
-  margin: ${({ theme }) =>
-    `${theme.spacing.spacing2} 0 ${theme.spacing.spacing4}`};
+  border: 1px solid
+    ${({ theme, error }) =>
+      error ? theme.colors.red.red500 : theme.colors.gray.gray400};
+  margin: ${({ theme }) => `${theme.spacing.spacing2} 0`};
 
   &:focus {
     outline: none;

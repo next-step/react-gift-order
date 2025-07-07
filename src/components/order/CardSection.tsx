@@ -8,15 +8,19 @@ import CardTextarea from "./CardTextarea";
 type CardSectionProps = {
   selectedCard: Card;
   setSelectedCard: (card: Card) => void;
-  cardMessage: string;
-  setCardMessage: (msg: string) => void;
+  messageInput: {
+    value: string;
+    setValue: (value: string) => void;
+    error: string;
+    onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    onBlur: () => void;
+  };
 };
 
 const CardSection = ({
   selectedCard,
   setSelectedCard,
-  cardMessage,
-  setCardMessage,
+  messageInput,
 }: CardSectionProps) => {
   return (
     <Section>
@@ -31,7 +35,7 @@ const CardSection = ({
         ))}
       </CardList>
       <CardGif selectedCard={selectedCard} />
-      <CardTextarea message={cardMessage} onChange={setCardMessage} />
+      <CardTextarea messageInput={messageInput} />
     </Section>
   );
 };

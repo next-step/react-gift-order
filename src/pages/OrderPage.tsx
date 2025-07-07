@@ -10,6 +10,7 @@ import {
   checkNameError,
   checkCountError,
   checkPhoneError,
+  checkMessageError,
 } from "@/utils/validation";
 import styled from "@emotion/styled";
 import CardSection from "@/components/order/CardSection";
@@ -22,16 +23,14 @@ const OrderPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [selectedCard, setSelectedCard] = useState<Card>(cards[0]);
-  const [cardMessage, setCardMessage] = useState<string>(
-    selectedCard.defaultTextMessage,
-  );
+  const messageInput = useFormInput(checkMessageError);
   const senderInput = useFormInput(checkNameError);
   const receiverInput = useFormInput(checkNameError);
   const phoneInput = useFormInput(checkPhoneError);
   const countInput = useFormInput(checkCountError, "1");
 
   useEffect(() => {
-    setCardMessage(selectedCard.defaultTextMessage);
+    messageInput.setValue(selectedCard.defaultTextMessage);
   }, [selectedCard]);
 
   useEffect(() => {
@@ -48,11 +47,18 @@ const OrderPage = () => {
 
   const handleOrder = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const messageError = messageInput.validate();
     const senderError = senderInput.validate();
     const receiverError = receiverInput.validate();
     const phoneError = phoneInput.validate();
     const countError = countInput.validate();
-    if (senderError || receiverError || phoneError || countError) {
+    if (
+      messageError ||
+      senderError ||
+      receiverError ||
+      phoneError ||
+      countError
+    ) {
       return;
     }
 
@@ -62,7 +68,7 @@ const OrderPage = () => {
         `상품명: ${gift.name}`,
         `구매 수량: ${countInput.value}`,
         `보낸 사람: ${senderInput.value}`,
-        `메시지: ${cardMessage}`,
+        `메시지: ${messageInput.value}`,
       ].join("\n"),
     );
     navigate(ROUTE_PATH.HOME, { replace: true });
@@ -72,12 +78,11 @@ const OrderPage = () => {
     <>
       <TheHeader />
       <Main>
-        <form onSubmit={handleOrder}>
+        <Form onSubmit={handleOrder}>
           <CardSection
             selectedCard={selectedCard}
             setSelectedCard={setSelectedCard}
-            cardMessage={cardMessage}
-            setCardMessage={setCardMessage}
+            messageInput={messageInput}
           />
           <SendSection senderInput={senderInput} />
           <ReceiverSection
@@ -89,7 +94,7 @@ const OrderPage = () => {
           <Button>
             {gift.price.sellingPrice * Number(countInput.value)}원 주문하기
           </Button>
-        </form>
+        </Form>
       </Main>
     </>
   );
@@ -101,8 +106,13 @@ const Main = styled.main`
   display: flex;
   flex-direction: column;
   background-color: ${({ theme }) => theme.colors.gray.gray200};
-  gap: ${({ theme }) => theme.spacing.spacing2};
   padding-bottom: 3.125rem;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing.spacing2};
 `;
 
 const Button = styled.button`
