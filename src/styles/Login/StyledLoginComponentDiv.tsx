@@ -5,6 +5,7 @@ export const StyledLoginComponentDiv = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin: -50px;
   height: 100vh;
   width: 55%;
   p {

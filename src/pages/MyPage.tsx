@@ -1,10 +1,12 @@
-import NavigationBar from '@/components/NavigationBar';
+import StyledTopestDiv from '@styles/StyledTopesDiv';
+import MyPageContainer from '@components/MyPage/MyPageContainer';
 
 const MyPage = () => {
-  return;
-  <>
-    <NavigationBar />
-  </>;
+  return (
+    <StyledTopestDiv>
+      <MyPageContainer></MyPageContainer>
+    </StyledTopestDiv>
+  );
 };
 
 export default MyPage;

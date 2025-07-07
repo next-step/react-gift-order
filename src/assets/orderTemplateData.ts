@@ -1,3 +1,10 @@
+export interface OrderTemplate {
+  id: number;
+  thumbUrl: string;
+  imageUrl: string;
+  defaultTextMessage: string;
+}
+
 export const ORDER_TEMPLATE_DATA = [
   {
     id: 904,
