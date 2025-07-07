@@ -40,18 +40,18 @@ function ReceiverModalWindow({ open }: ReceiverModalWindowProps) {
   };
 
   useEffect(() => {
-    const phoneCount = new Map<string, number>();
+    const phoneMap = new Map<string, number>();
 
     list.forEach(({ phoneNumber }) => {
       if (!phoneNumber) return;
-      phoneCount.set(phoneNumber, (phoneCount.get(phoneNumber) || 0) + 1);
+      phoneMap.set(phoneNumber, (phoneMap.get(phoneNumber) || 0) + 1);
     });
 
     setList((prev) =>
       prev.map((receiver) => ({
         ...receiver,
         duplicate:
-          !!receiver.phoneNumber && phoneCount.get(receiver.phoneNumber)! > 1
+          !!receiver.phoneNumber && phoneMap.get(receiver.phoneNumber)! > 1
       }))
     );
   }, [list.map((r) => r.phoneNumber).join(",")]);
