@@ -20,11 +20,19 @@ const validators: Record<string, (value: string) => string | null> = {
   },
 };
 
+type FormErrors = {
+  id: string | null;
+  password: string | null;
+};
+
 const LoginForm = () => {
   const { form, handleChange } = useLoginForm();
   const navigate = useNavigate();
 
-  const [errors, setErrors] = useState<{ [key: string]: string | null }>({});
+  const [errors, setErrors] = useState<FormErrors>({
+    id: null,
+    password: null,
+  });
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -34,9 +42,11 @@ const LoginForm = () => {
     setErrors((prev) => ({ ...prev, [name]: errorMessage }));
   };
 
-  const isFormValid = (): boolean => {
-    return !validators.id(form.id) && !validators.password(form.password);
-  };
+  const isFormValid =
+    form.id.trim() !== '' &&
+    form.password.trim() !== '' &&
+    errors.id === null &&
+    errors.password === null;
 
   const loginRedirect = () => {
     navigate('/');
@@ -72,7 +82,7 @@ const LoginForm = () => {
         {errors.password && <ErrorText>{errors.password}</ErrorText>}
       </FormWrapper>
 
-      <LoginButton onClick={loginRedirect} disabled={!isFormValid()} />
+      <LoginButton onClick={loginRedirect} disabled={!isFormValid} />
     </Layout>
   );
 };
