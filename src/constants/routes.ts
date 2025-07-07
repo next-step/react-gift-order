@@ -1,9 +1,7 @@
-import { deepFreeze } from "@/utils/deepFreeze";
-
-export const ROUTES = deepFreeze({
+export const ROUTES = {
   HOME: "/",
   LOGIN: "/login",
   MY: "/my",
   ORDER: "/order/:id",
   NOT_FOUND: "*",
-} as const);
+} as const;

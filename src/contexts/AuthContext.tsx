@@ -1,4 +1,3 @@
-import { deepFreeze } from "@/utils/deepFreeze";
 import { createContext, useContext, useState, useEffect } from "react";
 
 interface User {
@@ -16,9 +15,9 @@ type AuthContextType = AuthState & {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const SESSION_KEYS = deepFreeze({
+const SESSION_KEYS = {
   USER: "kakao_gift_user",
-} as const);
+} as const;
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [authState, setAuthState] = useState<AuthState>({
