@@ -7,6 +7,7 @@ interface InputOrderProps {
   value: string | number;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   type?: string;
+  error?: string;
 }
 
 const InputOrder: React.FC<InputOrderProps> = ({
@@ -15,49 +16,53 @@ const InputOrder: React.FC<InputOrderProps> = ({
   value,
   onChange,
   type = 'text',
+  error,
 }) => {
   return (
-    <Row>
+    <Container>
       <Label>{label}</Label>
       <Input
+        type={type}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        type={type}
+        hasError={!!error}
       />
-    </Row>
+      {error && <ErrorMessage>{error}</ErrorMessage>}
+    </Container>
   );
 };
 
 export default InputOrder;
 
-const Row = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 12px;
-  gap: 12px;
+const Container = styled.div`
+  margin-bottom: 16px;
 `;
 
 const Label = styled.label`
-  width: 80px;
+  display: block;
   font-size: 14px;
-  color: #333;
   font-weight: 500;
+  margin-bottom: 8px;
+  color: #333;
 `;
 
-const Input = styled.input`
-  flex: 1;
+const Input = styled.input<{ hasError: boolean }>`
+  width: 100%;
   padding: 12px;
+  border: 1px solid ${(props) => (props.hasError ? '#ff4757' : '#ddd')};
+  border-radius: 8px;
   font-size: 14px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  outline: none;
 
   &:focus {
-    border-color: #000;
+    outline: none;
+    border-color: ${(props) => (props.hasError ? '#ff4757' : '#fee500')};
   }
+`;
 
-  &::placeholder {
-    color: #bbb;
-  }
+const ErrorMessage = styled.p`
+  color: #ff4757;
+  font-size: 12px;
+  margin-top: 4px;
+  margin-bottom: 0;
 `;

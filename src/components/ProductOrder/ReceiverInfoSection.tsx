@@ -2,11 +2,17 @@ import InputOrder from '@/common/InputOrder';
 import useOrderForm from '@/hooks/useOrderForm';
 import styled from '@emotion/styled';
 
-const ReceiverInfoSection = () => {
-  const receiverName = useOrderForm('');
-  const receiverPhone = useOrderForm('');
-  const quantity = useOrderForm(1);
+interface ReceiverInfoSectionProps {
+  receiverName: ReturnType<typeof useOrderForm>;
+  receiverPhone: ReturnType<typeof useOrderForm>;
+  quantity: ReturnType<typeof useOrderForm>;
+}
 
+const ReceiverInfoSection: React.FC<ReceiverInfoSectionProps> = ({
+  receiverName,
+  receiverPhone,
+  quantity,
+}) => {
   return (
     <Section>
       <Title>받는 사람</Title>
@@ -15,18 +21,21 @@ const ReceiverInfoSection = () => {
         placeholder="이름을 입력하세요."
         value={receiverName.value}
         onChange={receiverName.onChange}
+        error={receiverName.error}
       />
       <InputOrder
         label="전화번호"
         placeholder="전화번호를 입력하세요."
         value={receiverPhone.value}
         onChange={receiverPhone.onChange}
+        error={receiverPhone.error}
       />
       <InputOrder
         label="수량"
         type="number"
         value={quantity.value}
         onChange={quantity.onChange}
+        error={quantity.error}
       />
     </Section>
   );
