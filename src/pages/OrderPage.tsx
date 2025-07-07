@@ -166,6 +166,7 @@ const OrderPage = () => {
   };
 
   const handleOrder = () => {
+    if (!product) return;
     let valid = true;
     if (!message.trim()) {
       setMessageError('메시지를 입력해주세요.');
