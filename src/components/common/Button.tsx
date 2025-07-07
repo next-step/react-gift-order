@@ -79,6 +79,7 @@ export const Button = ({
   width = "auto",
   disabled,
   children,
+  type = "button",
   ...props
 }: ButtonProps) => {
   return (
@@ -87,6 +88,7 @@ export const Button = ({
       size={size}
       width={width}
       disabled={disabled}
+      type={type}
       {...props}
     >
       {children}
