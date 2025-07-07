@@ -19,7 +19,7 @@ function Item({ index, itemData }: ItemProps) {
   const navigate = useNavigate();
 
   function handleItemClick(itemId: number) {
-    navigate(`/order/${itemId}`);
+    navigate(`/order/${itemId}`, { state: { item: itemData } });
   }
 
   return (

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { OrderContainer } from '@/styles/Order/Order.styles';
 import {
   CardContainer,
@@ -22,10 +22,23 @@ import {
   RecieverInputLabel,
   RecieverInput,
 } from '@/styles/Order/Reciever.styles';
+import {
+  ItemInfoContainer,
+  ItemInfoTitle,
+  ItemContainer,
+  ItemImg,
+  DetailContainer,
+  DeatilTitle,
+  DetailCompany,
+  DetailPrice,
+  DetailPriceContainer,
+} from '@/styles/Order/ItemInfo.styles';
 import { orders } from '@/mocks/mockorder';
+import type { mockItemType } from '@/mocks/mockItem';
 
 function Order() {
-  const { orderId } = useParams();
+  const location = useLocation();
+  const item: mockItemType = location.state?.item;
   const [currentId, setCurrentId] = useState(orders[0].id);
   const [text, setText] = useState<string>(orders[0].defaultTextMessage);
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -37,7 +50,7 @@ function Order() {
   }
 
   const currentOrder = orders.find((order) => order.id === currentId);
-
+  console.log(item);
   return (
     <OrderContainer>
       <CardContainer>
@@ -76,19 +89,21 @@ function Order() {
           <RecieverInput type="number" />
         </InputContainer>
       </RecieverContainer>
-      <div>
-        상품정보
-        <div>
-          회색 보더
-          <div>image</div>
-          <div>
-            <div>이름</div>
-            <div>회사</div>
-            <div>상품가</div>
-          </div>
-        </div>
-      </div>
-      {orderId}
+      <ItemInfoContainer>
+        <ItemInfoTitle>상품 정보</ItemInfoTitle>
+        <ItemContainer>
+          <ItemImg src={item.imageURL} />
+          <DetailContainer>
+            <DeatilTitle>{item.name}</DeatilTitle>
+            <DetailCompany>{item.brandInfo.name}</DetailCompany>
+            <DetailPriceContainer>
+              <p>상품가</p>
+              <DetailPrice>{item.price.basicPrice}</DetailPrice>
+            </DetailPriceContainer>
+          </DetailContainer>
+        </ItemContainer>
+      </ItemInfoContainer>
+      <button></button>
     </OrderContainer>
   );
 }
