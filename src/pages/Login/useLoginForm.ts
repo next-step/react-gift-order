@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUserManagement } from './userManagement';
+import { PascalCase } from './PascalCase';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -12,7 +12,7 @@ export const useLoginForm = () => {
   const [passwordTouched, setPasswordTouched] = useState(false);
 
   const navigate = useNavigate();
-  const { login } = useUserManagement();
+  const { login } = PascalCase();
 
   const emailError = useMemo(() => {
     if (!emailTouched) return '';
@@ -53,7 +53,6 @@ export const useLoginForm = () => {
 
     login(emailValue);
 
-    // 로그인 성공하면 무조건 /my 로 이동
     navigate('/my', { replace: true });
   };
 

@@ -17,7 +17,7 @@ import {
 
 import TabButton from '../Shared/TabButton';
 import RankingCard from '../Shared/RankingCard';
-import { useUserManagement } from '../../pages/Login/userManagement';
+import { useUserManagement } from '../../pages/Login/PascalCase';
 
 const genderTabs = [
   { label: '전체', icon: <FaUser /> },

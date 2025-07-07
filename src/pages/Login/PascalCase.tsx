@@ -5,17 +5,17 @@ interface User {
   email: string;
 }
 
-interface UserManagementType {
+interface PascalCaseType {
   user: User | null;
   login: (email: string) => void;
   logout: () => void;
 }
 
-const UserManagementContext = createContext<UserManagementType | undefined>(undefined);
+const PascalCaseContext = createContext<PascalCaseType | undefined>(undefined);
 
 const LOCAL_STORAGE_KEY = 'kakao-login-user';
 
-export const UserManagementProvider = ({ children }: { children: ReactNode }) => {
+export const PascalCaseProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -37,14 +37,14 @@ export const UserManagementProvider = ({ children }: { children: ReactNode }) =>
   };
 
   return (
-    <UserManagementContext.Provider value={{ user, login, logout }}>
+    <PascalCaseContext.Provider value={{ user, login, logout }}>
       {children}
-    </UserManagementContext.Provider>
+    </PascalCaseContext.Provider>
   );
 };
 
-export const useUserManagement = () => {
-  const context = useContext(UserManagementContext);
-  if (!context) throw new Error('useUserManagement must be used within UserManagementProvider');
+export const PascalCase = () => {
+  const context = useContext(PascalCaseContext);
+  if (!context) throw new Error('PascalCase must be used within UserManagementProvider');
   return context;
 };

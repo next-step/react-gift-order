@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import styled from '@emotion/styled';
 import { FaPlus } from 'react-icons/fa';
-import { useUserManagement } from '../pages/Login/userManagement';
+import { useUserManagement } from '../pages/Login/PascalCase';
 
 const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.color.gray.gray300};
