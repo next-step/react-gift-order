@@ -38,7 +38,6 @@ function App() {
           showProfileButton: false,
         };
       default:
-        // /order/123 등 동적 라우트는 startsWith로 체크
         if (location.pathname.startsWith('/order/')) {
           return {
             title: '선물하기',
@@ -93,7 +92,14 @@ function App() {
             </PrivateRoute>
           }
         />
-        <Route path={ROUTE_ORDER} element={<OrderPage />} />
+        <Route
+          path={ROUTE_ORDER}
+          element={
+            <PrivateRoute>
+              <OrderPage />
+            </PrivateRoute>
+          }
+        />
         <Route path={ROUTE_NOT_FOUND} element={<NotFoundPage />} />
       </Routes>
     </MobileLayout>
