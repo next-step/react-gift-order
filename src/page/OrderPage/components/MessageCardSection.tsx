@@ -1,8 +1,9 @@
 import styled from '@emotion/styled';
-import { messageCardDatas } from '@/data/messageCardDatas';
+import { messageCardDatas, type MessageCard } from '@/data/messageCardDatas';
+import { useState } from 'react';
 
 const MessageCardContainer = styled.div`
-  background-color: ${({ theme }) => theme.colors.semantic.background.fill};
+  background-color: ${({ theme }) => theme.colors.semantic.background.default};
   padding: ${({ theme }) => theme.spacing.spacing4} ${({ theme }) => theme.spacing.spacing3};
   margin-bottom: ${({ theme }) => theme.spacing.spacing4};
 `;
@@ -16,8 +17,8 @@ const MessageCardList = styled.div`
 
 const MessageCardItem = styled.div`
   flex-shrink: 0;
-  width: 100px; /* Adjust as needed */
-  height: 100px; /* Adjust as needed */
+  width: 100px;
+  height: 80px;
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid ${({ theme }) => theme.colors.colorScale.gray[200]};
@@ -29,17 +30,43 @@ const MessageCardItem = styled.div`
   }
 `;
 
+const SelectedCardItem = styled.div`
+  width: 100%;
+  max-width: 360px;
+  height: 240px;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 39px 20px -30px;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`;
+
+const SelectedCardContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
 const MessageCardSection = () => {
+  const [selected, setSelected] = useState<MessageCard>(messageCardDatas[0][0]);
+
   return (
     <MessageCardContainer>
-      <h3>메시지 카드 선택</h3>
       <MessageCardList>
-        {messageCardDatas[0].map((card) => (
-          <MessageCardItem key={card.id}>
+        {messageCardDatas[0].map(card => (
+          <MessageCardItem key={card.id} onClick={() => setSelected(card)}>
             <img src={card.thumbUrl} alt={card.defaultTextMessage} />
           </MessageCardItem>
         ))}
       </MessageCardList>
+      <SelectedCardContainer>
+        <SelectedCardItem>
+          <img src={selected.thumbUrl} alt={selected.defaultTextMessage} />
+        </SelectedCardItem>
+      </SelectedCardContainer>
     </MessageCardContainer>
   );
 };
