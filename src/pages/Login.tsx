@@ -6,29 +6,25 @@ import NavigationBar from '@/common/NavigationBar';
 import Input from '@/common/Input';
 import LoginButton from '@/components/login/LoginButton';
 
+const validators: Record<string, (value: string) => string | null> = {
+  id: (value: string) => {
+    if (value.trim() === '') return 'ID를 입력해주세요.';
+    if (!value.includes('@') || !value.includes('.'))
+      return 'ID는 이메일 형식으로 입력해주세요.';
+    return null;
+  },
+  password: (value: string) => {
+    if (value.trim() === '') return 'PW를 입력해주세요.';
+    if (value.length < 8) return 'PW는 최소 8글자 이상이어야 합니다.';
+    return null;
+  },
+};
+
 const LoginForm = () => {
   const { form, handleChange } = useLoginForm();
   const navigate = useNavigate();
 
   const [errors, setErrors] = useState<{ [key: string]: string | null }>({});
-
-  const loginRedirect = () => {
-    navigate('/');
-  };
-
-  const validators: Record<string, (value: string) => string | null> = {
-    id: (value: string) => {
-      if (value.trim() === '') return 'ID를 입력해주세요.';
-      if (!value.includes('@') || !value.includes('.'))
-        return 'ID는 이메일 형식으로 입력해주세요.';
-      return null;
-    },
-    password: (value: string) => {
-      if (value.trim() === '') return 'PW를 입력해주세요.';
-      if (value.length < 8) return 'PW는 최소 8글자 이상이어야 합니다.';
-      return null;
-    },
-  };
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -40,6 +36,10 @@ const LoginForm = () => {
 
   const isFormValid = (): boolean => {
     return !validators.id(form.id) && !validators.password(form.password);
+  };
+
+  const loginRedirect = () => {
+    navigate('/');
   };
 
   return (
