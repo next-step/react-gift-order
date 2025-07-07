@@ -6,6 +6,8 @@ import styled from "@emotion/styled";
 import { useNavigate } from "react-router-dom";
 import useInput from "@/hooks/useInput";
 import { emailValidator, passwordValidator } from "@/utils/validators";
+import { useAuth } from '@/contexts/AuthContext';
+
 
 const LoginWrapper = styled.div`
   display: flex;
@@ -62,14 +64,22 @@ const ValidationMsg = styled.p`
 
 const Login = () => {
   const navigate = useNavigate();
+  const {setUser} = useAuth();
   const email = useInput({ validator: emailValidator });
   const password = useInput({ validator: passwordValidator });
+  const username = email.value.split('@')[0]
   const isActivatedBtn = email.isValid && password.isValid;
   const handleLoginClick = () => {
     if (isActivatedBtn) {
-      password.reset()
+      password.reset();
+      const userData = {username:username, isLoggedIn:true}
+      setUser(userData);
+      localStorage.setItem(
+        "user",
+        JSON.stringify({ username: username, isLoggedIn: true })
+      );
       navigate("/");
-      
+
     }
   };
   return (

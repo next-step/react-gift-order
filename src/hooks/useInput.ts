@@ -3,11 +3,12 @@ import { useState } from "react";
 
 interface UseInputReturn {
   value: string;
-  onChange: (value:string) => void;
+  onChange: (value: string) => void;
   onBlur: () => void;
   isValid: boolean;
-  error:string|null
-  reset:()=>void;
+  error: string | null;
+  reset: () => void;
+
 }
 
 interface UseInputOptions {
@@ -15,23 +16,25 @@ interface UseInputOptions {
   validator?: Validator;
 }
 
-const useInput = (options:UseInputOptions={}) :UseInputReturn=> {
- const  { initialValue="",validator } = options
+const useInput = (options: UseInputOptions = {}): UseInputReturn => {
+  const { initialValue = "", validator } = options;
   const [value, setValue] = useState(initialValue);
   const [isTouched, setIsTouched] = useState(false);
-  const validationResult =  validator?validator(value):null;
-  const isValid =validationResult===null; 
-  const error = isTouched ? validationResult: null;
+  const validationResult = validator ? validator(value) : null;
+  const isValid = validationResult === null;
+  const error = isTouched ? validationResult : null;
+
   const handleChange = (input: string) => {
     setValue(input);
   };
   const handleBlur = () => {
     setIsTouched(true);
   };
-  const reset =()=>{
-    setValue("")
-    setIsTouched(false)
-  }
+  const reset = () => {
+    setValue("");
+    setIsTouched(false);
+  };
+
   return {
     value,
     onChange: handleChange,

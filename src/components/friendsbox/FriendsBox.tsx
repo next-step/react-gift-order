@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import plusIcon from "../../assets/icons/plus.svg";
+import { useAuth } from '@/contexts/AuthContext';
 const Wrapper = styled.section`
   width: 100%;
   border: none;
@@ -37,13 +38,14 @@ const ButtonText = styled.p`
 `;
 
 const FriendsBox = () => {
+  const {user} = useAuth()
   return (
     <Wrapper>
       <Button name="선물할 친구를 선택해 주세요.">
         <PlusBox>
          <img src={plusIcon} alt="" />
         </PlusBox>
-        <ButtonText>선물할 친구를 선택해 주세요.</ButtonText>
+        <ButtonText>{user.isLoggedIn? <span>{user.username}님, </span>:""}선물할 친구를 선택해 주세요.</ButtonText>
       </Button>
     </Wrapper>
   );

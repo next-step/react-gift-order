@@ -1,5 +1,8 @@
 import styled from '@emotion/styled';
 import { PaddingSm } from '../padding/Padding';
+const RankingItemWrap= styled.div`
+  cursor: pointer;
+`
 const Image = styled.img`
   width: 100%;
   object-fit: cover;
@@ -20,32 +23,39 @@ const Price = styled.p`
   color: ${({ theme }) => theme.colors.gray.gray900};
 `;
 interface RankingItemProps {
-  id: number;   
+  id: number;
+  name: string;
+  imageURL: string;
+  onClick:()=>void;
+
+  price: {
+    basicPrice: number;
+    discountRate: number;
+    sellingPrice: number;
+  };
+  brandInfo: {
+    id: number;
     name: string;
     imageURL: string;
-
-    price: {
-      basicPrice: number;
-      discountRate: number;
-      sellingPrice: number;
-    };
-    brandInfo: {
-      id: number;
-      name: string;
-      imageURL: string;
-    };
-
+  };
 }
-const RankingItem = ({ id, name, imageURL, price, brandInfo }: RankingItemProps) => {
+const RankingItem = ({
+  id,
+  name,
+  imageURL,
+  price,
+  brandInfo,
+  onClick,
+}: RankingItemProps) => {
   return (
-    <div key={id}>
+    <RankingItemWrap onClick={onClick} key={id}>
       <Image src={imageURL} alt={name} />
       <Brand>{brandInfo.name}</Brand>
       <Name>{name}</Name>
       <PaddingSm />
       <Price>{price.sellingPrice}원</Price>
-    </div>
+    </RankingItemWrap>
   );
-}
+};
 
 export default RankingItem
