@@ -12,7 +12,7 @@ const CardSelectorContainer = styled.section(({ theme }) => ({
   width: "100%",
   border: "none",
   backgroundColor: theme.color.gray[0],
-  zIndex: 100,
+  zIndex: theme.zIndex.cardSelector,
 }));
 
 const CardThumbnail = styled.img<{ isSelected: boolean }>(({ isSelected }) => ({
