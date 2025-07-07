@@ -142,12 +142,12 @@ const containerStyle = (theme: Theme) => css`
   flex-direction: row;
   gap: ${theme.spacing.spacing16};
   width: 100%;
-  min-height: ${theme.spacing.spacing10}; // 40px
-  border-radius: ${theme.spacing.spacing2}; // 8px
+  min-height: ${theme.spacing.spacing10};
+  border-radius: ${theme.spacing.spacing2};
 `;
 
 const iconStyle = (theme: Theme) => css`
-  width: ${theme.spacing.spacing10}; // 40px
+  width: ${theme.spacing.spacing10};
   height: ${theme.spacing.spacing10};
   display: flex;
   align-items: center;
