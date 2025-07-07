@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
-import { useMemo, useCallback } from "react";
+import { useMemo, useCallback, useState } from "react";
 import { messageCards } from "@/mock/messageCards";
 import type { MessageCard } from "@/mock/messageCards";
 
@@ -11,9 +11,9 @@ interface Props {
   error?: string;
 }
 
-const DEFAULT_MESSAGE = "와~ 축하해요";
-
 const MessageCardSection = ({ message, selectedCardId, onChange }: Props) => {
+  const [isMessageTouched, setIsMessageTouched] = useState(false);
+
   const selectedCard: MessageCard = useMemo(() => {
     return messageCards.find((card) => card.id === selectedCardId) || messageCards[0];
   }, [selectedCardId]);
@@ -22,12 +22,19 @@ const MessageCardSection = ({ message, selectedCardId, onChange }: Props) => {
     (card: MessageCard) => {
       onChange("selectedCardId", card.id);
 
-      if (message.trim() === "") {
-        onChange("message", DEFAULT_MESSAGE);
+      if (!isMessageTouched) {
+        onChange("message", card.defaultTextMessage);
       }
     },
-    [onChange, message]
+    [onChange, isMessageTouched]
   );
+
+  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    if (!isMessageTouched) {
+      setIsMessageTouched(true);
+    }
+    onChange("message", e.target.value);
+  };
 
   return (
     <Wrapper>
@@ -48,7 +55,7 @@ const MessageCardSection = ({ message, selectedCardId, onChange }: Props) => {
       <MessageInputWrapper>
         <MessageInput
           value={message}
-          onChange={(e) => onChange("message", e.target.value)}
+          onChange={handleMessageChange}
           placeholder="메시지를 입력해주세요."
         />
       </MessageInputWrapper>
@@ -119,6 +126,6 @@ const MessageInput = styled.textarea`
   border-radius: 10px;
   padding: 15px;
   background-color: #fff;
-  color: black; 
+  color: black;
   font-size: ${({ theme }) => theme.typography.subtitle1Regular.fontSize};
 `;

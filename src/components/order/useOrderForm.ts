@@ -20,7 +20,7 @@ type ResetAction = { type: "RESET" };
 type Action = SetFieldAction | ResetAction;
 
 const initialState: OrderFormState = {
-  message: "와~ 축하해요",
+  message: "",
   senderName: "",
   receiverName: "",
   receiverPhone: "",
@@ -44,9 +44,17 @@ const validate = (state: OrderFormState) => {
 
   return {
     message: undefined,
-    senderName: state.senderName.trim() === "" ? "보내는 사람 이름을 입력해주세요." : undefined,
-    receiverName: state.receiverName.trim() === "" ? "받는 사람 이름을 입력해주세요." : undefined,
-    receiverPhone: !isPhoneValid ? "전화번호는 01012345678 형식이어야 해요." : undefined,
+    senderName:
+      state.senderName.trim() === ""
+        ? "보내는 사람 이름을 입력해주세요."
+        : undefined,
+    receiverName:
+      state.receiverName.trim() === ""
+        ? "받는 사람 이름을 입력해주세요."
+        : undefined,
+    receiverPhone: !isPhoneValid
+      ? "전화번호는 01012345678 형식이어야 해요."
+      : undefined,
     quantity: state.quantity < 1 ? "수량은 1개 이상이어야 해요." : undefined,
   };
 };
@@ -54,7 +62,10 @@ const validate = (state: OrderFormState) => {
 export const useOrderForm = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const updateField = (field: keyof OrderFormState, value: string | number | null) => {
+  const updateField = (
+    field: keyof OrderFormState,
+    value: string | number | null
+  ) => {
     dispatch({ type: "SET_FIELD", field, value });
   };
 
