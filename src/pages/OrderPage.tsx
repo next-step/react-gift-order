@@ -5,7 +5,6 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import { PageLayout } from "@/components/layout/PageLayout";
 import { PageContainer } from "@/components/layout/PageContainer";
-
 import { Navigation } from "@/components/header/Navigation";
 import MessageCardSection from "@/components/order/MessageCardSection";
 import SenderInfoSection from "@/components/order/SenderInfoSection";
@@ -15,30 +14,6 @@ import OrderButton from "@/components/order/OrderButton";
 import { useOrderForm } from "@/components/order/useOrderForm";
 
 import { rankingList } from "@/mock/rankingList";
-
-const Form = styled.div`
-  display: flex;
-  flex-direction: column;
-  background-color: ${({ theme }) => theme.colors.gray100};
-  padding: 16px 0 120px;
-`;
-
-const Container = styled.div`
-  width: 100%;
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 0 16px;
-  box-sizing: border-box;
-`;
-
-const SectionCard = styled.section`
-  width: 100%;
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-`;
 
 const OrderPage = () => {
   const navigate = useNavigate();
@@ -116,14 +91,59 @@ const OrderPage = () => {
               <OrderSummary product={product} />
             </SectionCard>
           </Container>
-
-          {Number.isFinite(totalAmount) && (
-            <OrderButton amount={totalAmount} onClick={handleSubmit} />
-          )}
         </Form>
+
+        <StickyFooter>
+  <StickyInner>
+    {Number.isFinite(totalAmount) && (
+      <OrderButton amount={totalAmount} onClick={handleSubmit} />
+    )}
+  </StickyInner>
+</StickyFooter>
+
       </PageContainer>
     </PageLayout>
   );
 };
 
 export default OrderPage;
+
+
+const Form = styled.div`
+  display: flex;
+  flex-direction: column;
+  background-color: ${({ theme }) => theme.colors.gray100};
+  padding: 16px 0 120px; 
+`;
+
+const Container = styled.div`
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 16px;
+  box-sizing: border-box;
+`;
+
+const SectionCard = styled.section`
+  width: 100%;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+`;
+
+const StickyFooter = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: transparent;
+`;
+
+const StickyInner = styled.div`
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+`;
