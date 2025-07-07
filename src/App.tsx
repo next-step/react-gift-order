@@ -6,6 +6,8 @@ import Navbar from './component/Navbar';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Login from './page/Login';
 import Notfound from './page/Notfound';
+import My from './page/My';
+import Order from './page/Order';
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
           <Routes>               
             <Route path="/" element={<Main />} />
             <Route path="/Login" element={<Login />} />
+            <Route path="/My" element={<My/>} />
+            <Route path="/Order" element={<Order/>} />
             <Route path="*" element={<Notfound/>} />
           </Routes>
         </ThemeProvider>
