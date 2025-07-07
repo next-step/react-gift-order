@@ -11,8 +11,9 @@ interface Props {
   error?: string;
 }
 
-const MessageCardSection = ({ message, selectedCardId, onChange, error }: Props) => {
-  // 선택된 카드 객체를 계산 (불필요한 useState 제거)
+const DEFAULT_MESSAGE = "와~ 축하해요";
+
+const MessageCardSection = ({ message, selectedCardId, onChange }: Props) => {
   const selectedCard: MessageCard = useMemo(() => {
     return messageCards.find((card) => card.id === selectedCardId) || messageCards[0];
   }, [selectedCardId]);
@@ -21,9 +22,8 @@ const MessageCardSection = ({ message, selectedCardId, onChange, error }: Props)
     (card: MessageCard) => {
       onChange("selectedCardId", card.id);
 
-      // 메시지가 비어 있으면 해당 카드의 기본 메시지 적용
       if (message.trim() === "") {
-        onChange("message", card.defaultTextMessage);
+        onChange("message", DEFAULT_MESSAGE);
       }
     },
     [onChange, message]
@@ -51,7 +51,6 @@ const MessageCardSection = ({ message, selectedCardId, onChange, error }: Props)
           onChange={(e) => onChange("message", e.target.value)}
           placeholder="메시지를 입력해주세요."
         />
-        {error && <ErrorText>{error}</ErrorText>}
       </MessageInputWrapper>
     </Wrapper>
   );
@@ -120,12 +119,6 @@ const MessageInput = styled.textarea`
   border-radius: 10px;
   padding: 15px;
   background-color: #fff;
-  color: black;
+  color: black; 
   font-size: ${({ theme }) => theme.typography.subtitle1Regular.fontSize};
-`;
-
-const ErrorText = styled.p`
-  color: ${({ theme }) => theme.colors.red500};
-  margin: 0 0 0px 35px;
-  font-size: ${({ theme }) => theme.typography.body2Regular.fontSize};
 `;

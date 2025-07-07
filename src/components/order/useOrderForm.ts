@@ -20,7 +20,7 @@ type ResetAction = { type: "RESET" };
 type Action = SetFieldAction | ResetAction;
 
 const initialState: OrderFormState = {
-  message: "",
+  message: "와~ 축하해요",
   senderName: "",
   receiverName: "",
   receiverPhone: "",
@@ -43,7 +43,7 @@ const validate = (state: OrderFormState) => {
   const isPhoneValid = /^010\d{8}$/.test(state.receiverPhone);
 
   return {
-    message: state.message.trim() === "" ? "메시지를 입력해주세요." : undefined,
+    message: undefined,
     senderName: state.senderName.trim() === "" ? "보내는 사람 이름을 입력해주세요." : undefined,
     receiverName: state.receiverName.trim() === "" ? "받는 사람 이름을 입력해주세요." : undefined,
     receiverPhone: !isPhoneValid ? "전화번호는 01012345678 형식이어야 해요." : undefined,
