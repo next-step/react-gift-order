@@ -17,10 +17,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, []);
 
-  const login = (email: string) => {
+  const login = (email: string, password?: string, onSuccess?: () => void) => {
     const newuserInfo = { email };
     setUserInfo(newuserInfo);
     sessionStorage.setItem('kakaotech/userInfo', JSON.stringify(newuserInfo));
+
+    if (onSuccess) {
+      setTimeout(onSuccess, 0);
+    }
   };
 
   const logout = () => {

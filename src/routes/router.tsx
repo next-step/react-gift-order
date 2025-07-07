@@ -5,6 +5,7 @@ import Login from '@/pages/Login/Page';
 import My from '@/pages/My/Page';
 import Order from '@/pages/Order/page';
 import NotFound from '@/pages/NotFound/Page';
+import ProtectedRoute from '@/components/ProtectedRoute';
 
 const router = createBrowserRouter([
   {
@@ -21,11 +22,19 @@ const router = createBrowserRouter([
       },
       {
         path: 'my',
-        element: sessionStorage.getItem('kakaotech/userInfo') ? <My /> : <Navigate to="/login" replace />,
+        element: (
+          <ProtectedRoute>
+            <My />
+          </ProtectedRoute>
+        ),
       },
       {
         path: 'order',
-        element: sessionStorage.getItem('kakaotech/userInfo') ? <Order /> : <Navigate to="/login" replace />,
+        element: (
+          <ProtectedRoute>
+            <Order />
+          </ProtectedRoute>
+        ),
       },
       {
         path: '*',
