@@ -162,15 +162,15 @@ export const SubmitStyle = (theme: Theme) => css`
   text-align: center;
 `;
 
-export const InputWrapperStyle = css`
+export const InputWrapperStyle = (theme: Theme) => css`
   display: flex;
   flex-direction: column;
   flex: 1;
-  gap: 4px;
+  gap: ${theme.spacing.spacing1};
 `;
 
-export const ErrorMessageStyle = css`
+export const ErrorMessageStyle = (theme: Theme) => css`
   font-size: 12px;
   color: red;
-  margin: 4px 0 0 4px;
+  margin: ${theme.spacing.spacing1} 0 0 ${theme.spacing.spacing1};
 `;
