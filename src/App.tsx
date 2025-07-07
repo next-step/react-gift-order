@@ -8,7 +8,7 @@ import ResetStyles from '@/styles/ResetStyles';
 import MainLayout from '@/Layout/MainLayout';
 import Login from '@/pages/Login';
 import Mypage from '@/pages/Mypage';
-import Order from '@/pages/Order/Order';
+import Order from '@/pages/Order';
 import NotFound from '@/NotFound';
 
 function App() {
