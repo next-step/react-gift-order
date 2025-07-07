@@ -5,21 +5,10 @@ import KakaoLogo from "../components/common/KakaoLogo";
 import { useInput } from "../hooks/useInput";
 import { useAuth } from "../contexts/AuthContext";
 
-type LocationState = {
-  from?: {
-    pathname: string;
-  };
-};
-
 const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { login } = useAuth();
-
-  const from =
-    typeof location.state?.from?.pathname === "string"
-      ? location.state.from.pathname
-      : "/";
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -36,11 +25,13 @@ const LoginPage = () => {
 
     const state = location.state as {
       from?: string;
-      product?: unknown;
+      product?: { id: number };
     };
 
-    if (state?.from === "/order" && state?.product) {
-      navigate("/order", { state: { product: state.product } });
+    if (state?.from) {
+      navigate(state.from, {
+        state: state.product ? { product: state.product } : undefined,
+      });
     } else {
       navigate("/my");
     }

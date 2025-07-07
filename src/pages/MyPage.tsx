@@ -2,18 +2,18 @@
 import styled from "@emotion/styled";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import LogoutButton from "../components/common/BaseButton";
+import useAuthNavigation from "../hooks/useAuthNavigation";
+import { useEffect } from "react";
 
 const MyPage = () => {
-  const { isLoggedIn, userEmail, userName, logout } = useAuth();
+  const { userEmail, userName, logout } = useAuth();
   const navigate = useNavigate();
+  const { goToPathWithAuth } = useAuthNavigation();
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      navigate("/login");
-    }
-  }, [isLoggedIn, navigate]);
+    goToPathWithAuth("/my");
+  }, []);
 
   const handleLogout = () => {
     logout();

@@ -2,13 +2,10 @@
 import styled from "@emotion/styled";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import MyPageIcon from "../common/MyPageIcon";
-import { useAuth } from "../../contexts/AuthContext";
+import useAuthNavigation from "../../hooks/useAuthNavigation";
 
 export default function NavigationBar() {
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const { isLoggedIn } = useAuth();
 
   const handleBack = () => {
     const isInternalReferrer = document.referrer.includes(window.location.host);
@@ -18,19 +15,13 @@ export default function NavigationBar() {
       navigate(-1);
     }
   };
-  const handleLogin = () => {
-    if (isLoggedIn) {
-      navigate("/my");
-    } else {
-      navigate("/login", { state: { from: location } });
-    }
-  };
+  const { goToPathWithAuth } = useAuthNavigation();
 
   return (
     <NavBar>
       <BackButton onClick={handleBack}>←</BackButton>
       <NavTitle to="/">선물하기</NavTitle>
-      <LoginButton onClick={handleLogin}>
+      <LoginButton onClick={() => goToPathWithAuth("/my")}>
         <MyPageIcon />
       </LoginButton>
     </NavBar>

@@ -2,8 +2,7 @@ import type { Product } from "../../mocks/types";
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
 import { useState } from "react";
-import { useAuth } from "../../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import useAuthNavigation from "../../hooks/useAuthNavigation";
 import { MOCK_PRODUCTS } from "../../mocks/products_list_mock";
 import RisingItem from "./RisingItem";
 
@@ -11,15 +10,10 @@ const INITIAL_VISIBLE_COUNT = 6;
 
 export default function RisingList() {
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
-  const navigate = useNavigate();
-  const { isLoggedIn } = useAuth();
+  const { goToPathWithAuth } = useAuthNavigation();
 
   const handleItemClick = (item: Product & { id: number }) => {
-    if (!isLoggedIn) {
-      navigate(`/login`, { state: { from: `/order/${item.id}` } });
-    } else {
-      navigate(`/order/${item.id}`);
-    }
+    goToPathWithAuth(`/order/${item.id}`);
   };
 
   return (
