@@ -11,7 +11,6 @@ import ReceiverForm from '@/components/OrderSection/ReceiverForm';
 import ProductInfo from '@/components/OrderSection/ProductInfo';
 import OrderSubmitButton from '@/components/OrderSection/OrderSubmitButton';
 import { useOrderForm } from '@/hooks/useOrderForm';
-import { ERROR_MESSAGES } from '@/constants/validation';
 
 const OrderPage = () => {
   const { id } = useParams();
@@ -23,13 +22,8 @@ const OrderPage = () => {
   const [selectedCardId, setSelectedCardId] = useState(messageCards[0].id);
   const selectedCard = messageCards.find(card => card.id === selectedCardId)!;
 
-  const [textMessage, setTextMessage] = useState(
-    selectedCard.defaultTextMessage
-  );
-  const [textMessageError, setTextMessageError] = useState('');
-
   useEffect(() => {
-    setTextMessage(selectedCard.defaultTextMessage);
+    handleChange('textMessage', selectedCard.defaultTextMessage);
   }, [selectedCardId]);
 
   const {
@@ -44,17 +38,8 @@ const OrderPage = () => {
     totalPrice,
   } = useOrderForm(product.price.sellingPrice);
 
-  const validateTextMessage = () => {
-    if (!textMessage.trim()) {
-      setTextMessageError(ERROR_MESSAGES.EMPTY_MESSAGE);
-      return false;
-    }
-    setTextMessageError('');
-    return true;
-  };
-
   const handleSubmit = () => {
-    const isValid = validateForm() && validateTextMessage();
+    const isValid = validateForm();
     if (!isValid) return;
 
     alert(
@@ -62,7 +47,7 @@ const OrderPage = () => {
         `상품명: ${product.name}\n` +
         `구매 수량: ${formValues.quantity}\n` +
         `발신자 이름: ${formValues.senderName}\n` +
-        `메시지: ${textMessage}`
+        `메시지: ${formValues.textMessage}`
     );
 
     navigate('/');
@@ -78,12 +63,11 @@ const OrderPage = () => {
             onSelect={setSelectedCardId}
           />
           <MessageInput
-            value={textMessage}
+            value={formValues.textMessage}
             onChange={e => {
-              setTextMessage(e.target.value);
-              if (textMessageError) validateTextMessage();
+              handleChange('textMessage', e.target.value);
             }}
-            error={textMessageError}
+            error={formErrors.textMessage}
           />
           <SenderForm
             value={formValues.senderName}

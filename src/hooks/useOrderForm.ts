@@ -5,13 +5,19 @@ import {
   ERROR_MESSAGES,
 } from '@/constants/validation';
 
-type FormFields = 'senderName' | 'receiverName' | 'receiverPhone' | 'quantity';
+type FormFields =
+  | 'senderName'
+  | 'receiverName'
+  | 'receiverPhone'
+  | 'quantity'
+  | 'textMessage';
 
 interface FormValues {
   senderName: string;
   receiverName: string;
   receiverPhone: string;
   quantity: number;
+  textMessage: string;
 }
 
 interface FormErrors {
@@ -19,6 +25,7 @@ interface FormErrors {
   receiverName: string;
   receiverPhone: string;
   quantity: string;
+  textMessage: string;
 }
 
 export const useOrderForm = (unitPrice: number) => {
@@ -27,6 +34,7 @@ export const useOrderForm = (unitPrice: number) => {
     receiverName: '',
     receiverPhone: '',
     quantity: 1,
+    textMessage: '',
   });
 
   const [formErrors, setFormErrors] = useState<FormErrors>({
@@ -34,10 +42,23 @@ export const useOrderForm = (unitPrice: number) => {
     receiverName: '',
     receiverPhone: '',
     quantity: '',
+    textMessage: '',
   });
 
   const handleChange = (field: FormFields, value: string | number) => {
     setFormValues(prev => ({ ...prev, [field]: value }));
+  };
+
+  const validateTextMessage = () => {
+    if (!formValues.textMessage.trim()) {
+      setFormErrors(prev => ({
+        ...prev,
+        textMessage: ERROR_MESSAGES.EMPTY_MESSAGE,
+      }));
+      return false;
+    }
+    setFormErrors(prev => ({ ...prev, textMessage: '' }));
+    return true;
   };
 
   const validateSender = () => {
@@ -100,7 +121,8 @@ export const useOrderForm = (unitPrice: number) => {
     const n = validateReceiverName();
     const p = validateReceiverPhone();
     const q = validateQuantity();
-    return s && n && p && q;
+    const m = validateTextMessage();
+    return s && n && p && q && m;
   };
 
   const totalPrice = unitPrice * formValues.quantity;
@@ -114,6 +136,7 @@ export const useOrderForm = (unitPrice: number) => {
     validateReceiverName,
     validateReceiverPhone,
     validateQuantity,
+    validateTextMessage,
     validateForm,
 
     totalPrice,
