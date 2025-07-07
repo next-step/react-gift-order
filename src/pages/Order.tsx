@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { OrderContainer } from '@/styles/Order/Order.styles';
+import OrderBtn from '@/components/OrderBtn';
 import {
   CardContainer,
   ThumbContainer,
@@ -41,16 +42,21 @@ function Order() {
   const item: mockItemType = location.state?.item;
   const [currentId, setCurrentId] = useState(orders[0].id);
   const [text, setText] = useState<string>(orders[0].defaultTextMessage);
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setText(e.target.value);
-  };
+  const [count, setCount] = useState<number>(1);
+  const [cost, setCost] = useState<number>(count * item.price.basicPrice);
 
+  function handleTextChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    setText(e.target.value);
+  }
+  function handleCountChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setCount(Number(e.target.value));
+    setCost(count * item.price.basicPrice);
+  }
   function handleThumbClick(id: number) {
     setCurrentId(id);
   }
 
   const currentOrder = orders.find((order) => order.id === currentId);
-  console.log(item);
   return (
     <OrderContainer>
       <CardContainer>
@@ -67,7 +73,7 @@ function Order() {
           ))}
         </ThumbContainer>
         {currentOrder && <Image src={currentOrder.imageUrl} alt="image" />}
-        <InputTextArea value={text} onChange={handleChange} />
+        <InputTextArea value={text} onChange={handleTextChange} />
       </CardContainer>
       <SenderContainer>
         <SenderTitle>보내는 사람</SenderTitle>
@@ -86,7 +92,7 @@ function Order() {
         </InputContainer>
         <InputContainer>
           <RecieverInputLabel>수량</RecieverInputLabel>
-          <RecieverInput type="number" />
+          <RecieverInput type="number" value={count} onChange={handleCountChange} />
         </InputContainer>
       </RecieverContainer>
       <ItemInfoContainer>
@@ -103,7 +109,7 @@ function Order() {
           </DetailContainer>
         </ItemContainer>
       </ItemInfoContainer>
-      <button></button>
+      <OrderBtn cost={cost} />
     </OrderContainer>
   );
 }

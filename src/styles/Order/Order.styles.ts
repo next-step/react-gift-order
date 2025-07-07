@@ -9,4 +9,5 @@ export const OrderContainer = styled.div`
   justify-content: left;
   background-color: ${({ theme }) => `${theme.colors.gray300}`};
   padding-top: 45px;
+  padding-bottom: 50px;
 `;
