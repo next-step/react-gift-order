@@ -1,8 +1,16 @@
 import TheHeader from "@/components/layout/TheHeader";
 import { useParams, useLocation, useNavigate } from "react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ROUTE_PATH } from "@/routes/paths";
 import { gifts } from "@/data/gift";
+import { cards } from "@/data/card";
+import type { Card } from "@/types/card";
+import useFormInput from "@/hooks/useFormInput";
+import {
+  checkNameError,
+  checkCountError,
+  checkPhoneError,
+} from "@/utils/validation";
 import styled from "@emotion/styled";
 import CardSection from "@/components/order/CardSection";
 import SendSection from "@/components/order/SendSection";
@@ -13,6 +21,18 @@ import type { Gift } from "@/types/gift";
 const OrderPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [selectedCard, setSelectedCard] = useState<Card>(cards[0]);
+  const [cardMessage, setCardMessage] = useState<string>(
+    selectedCard.defaultTextMessage,
+  );
+  const senderInput = useFormInput(checkNameError);
+  const receiverInput = useFormInput(checkNameError);
+  const phoneInput = useFormInput(checkPhoneError);
+  const countInput = useFormInput(checkCountError, "1");
+
+  useEffect(() => {
+    setCardMessage(selectedCard.defaultTextMessage);
+  }, [selectedCard]);
 
   useEffect(() => {
     const sessionUserInfo = sessionStorage.getItem("kakaotech/userInfo");
@@ -28,15 +48,24 @@ const OrderPage = () => {
 
   const handleOrder = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const senderError = senderInput.validate();
+    const receiverError = receiverInput.validate();
+    const phoneError = phoneInput.validate();
+    const countError = countInput.validate();
+    if (senderError || receiverError || phoneError || countError) {
+      return;
+    }
+
     alert(
       [
         "주문이 완료되었습니다.",
         `상품명: ${gift.name}`,
-        "구매 수량: aaa",
-        "보낸 사람: aaa",
-        "메시지: aaa.",
+        `구매 수량: ${countInput.value}`,
+        `보낸 사람: ${senderInput.value}`,
+        `메시지: ${cardMessage}`,
       ].join("\n"),
     );
+    navigate(ROUTE_PATH.HOME, { replace: true });
   };
 
   return (
@@ -44,11 +73,22 @@ const OrderPage = () => {
       <TheHeader />
       <Main>
         <form onSubmit={handleOrder}>
-          <CardSection />
-          <SendSection />
-          <ReceiverSection />
+          <CardSection
+            selectedCard={selectedCard}
+            setSelectedCard={setSelectedCard}
+            cardMessage={cardMessage}
+            setCardMessage={setCardMessage}
+          />
+          <SendSection senderInput={senderInput} />
+          <ReceiverSection
+            receiverInput={receiverInput}
+            phoneInput={phoneInput}
+            countInput={countInput}
+          />
           <GiftInformationSection selectedGift={gift} />
-          <Button>{gift.price.sellingPrice}원 주문하기</Button>
+          <Button>
+            {gift.price.sellingPrice * Number(countInput.value)}원 주문하기
+          </Button>
         </form>
       </Main>
     </>

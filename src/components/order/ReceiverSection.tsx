@@ -1,17 +1,23 @@
-import useFormInput from "@/hooks/useFormInput";
 import ErrorMessage from "../common/ErrorMessage";
-import {
-  checkNameError,
-  checkCountError,
-  checkPhoneError,
-} from "@/utils/validation";
 import styled from "@emotion/styled";
 
-const ReceiverSection = () => {
-  const receiverInput = useFormInput(checkNameError);
-  const phoneInput = useFormInput(checkPhoneError);
-  const countInput = useFormInput(checkCountError, "1");
+type InputType = {
+  value: string;
+  error: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+};
 
+type ReceiverSectionProps = {
+  countInput: InputType;
+  receiverInput: InputType;
+  phoneInput: InputType;
+};
+
+const ReceiverSection = ({
+  countInput,
+  receiverInput,
+  phoneInput,
+}: ReceiverSectionProps) => {
   return (
     <Section>
       <SectionTitle>받는 사람</SectionTitle>

@@ -18,11 +18,18 @@ const useFormInput = (validator: ValidatorFunction, initialValue = "") => {
     setError(validator(value));
   };
 
+  const validate = () => {
+    const validationResult = validator(value);
+    setError(validationResult);
+    return validationResult;
+  };
+
   return {
     value,
     error,
     onChange: handleChange,
     onBlur: handleBlur,
+    validate,
   };
 };
 

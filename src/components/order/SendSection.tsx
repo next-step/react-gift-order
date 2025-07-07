@@ -1,12 +1,16 @@
-import useFormInput from "@/hooks/useFormInput";
 import ErrorMessage from "../common/ErrorMessage";
-import { checkNameError } from "@/utils/validation";
 import styled from "@emotion/styled";
 import DescriptionMessage from "../common/DescriptionMessage";
 
-const SendSection = () => {
-  const senderInput = useFormInput(checkNameError);
+type SendSectionProps = {
+  senderInput: {
+    value: string;
+    error: string;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  };
+};
 
+const SendSection = ({ senderInput }: SendSectionProps) => {
   return (
     <Section>
       <Title>보내는 사람</Title>

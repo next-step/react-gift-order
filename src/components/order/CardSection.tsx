@@ -2,20 +2,22 @@ import styled from "@emotion/styled";
 import { cards } from "@/data/card";
 import CardItem from "@/components/order/CardItem";
 import CardGif from "@/components/order/CardGif";
-import { useEffect, useState } from "react";
 import type { Card } from "@/types/card";
 import CardTextarea from "./CardTextarea";
 
-const CardSection = () => {
-  const [selectedCard, setSelectedCard] = useState<Card>(cards[0]);
-  const [cardMessage, setCardMessage] = useState<string>(
-    selectedCard.defaultTextMessage,
-  );
+type CardSectionProps = {
+  selectedCard: Card;
+  setSelectedCard: (card: Card) => void;
+  cardMessage: string;
+  setCardMessage: (msg: string) => void;
+};
 
-  useEffect(() => {
-    setCardMessage(selectedCard.defaultTextMessage);
-  }, [selectedCard]);
-
+const CardSection = ({
+  selectedCard,
+  setSelectedCard,
+  cardMessage,
+  setCardMessage,
+}: CardSectionProps) => {
   return (
     <Section>
       <CardList>
