@@ -90,6 +90,7 @@ export const RankingSection = () => {
           <RankingCard
             key={item.id}
             rank={idx + 1}
+            id={item.id}
             imageURL={item.imageURL}
             brandName={item.brandInfo.name}
             productName={item.name}
