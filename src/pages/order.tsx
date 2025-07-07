@@ -3,6 +3,7 @@ import { Header } from '../components/common/Header';
 import MessageCard from '../components/MessageCard';
 import styled from '@emotion/styled';
 import { orderCardTemplates } from '../data/orderCardTemplateMock';
+import { giftItem } from '../components/RankingGrid';
 
 const MessaageWrapper = styled.div`
   padding: 8px 20px;
@@ -53,7 +54,7 @@ const BottomOrderButton = styled.div`
   color: black;
 `;
 
-const Wrapper = styled.div`
+const OrderInfoWrapper = styled.div`
   max-width: 720px;
   margin: 0 auto;
 `;
@@ -100,43 +101,13 @@ const Input = styled.input`
   }
 `;
 
-const OrderCustomerInfo = () => {
-  return (
-    <Wrapper>
-      <Section>
-        <Label>보내는 사람</Label>
-        <Input type="text" placeholder="이름을 입력하세요." />
-        <Description>
-          * 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.
-        </Description>
-      </Section>
-
-      <Section>
-        <Label>받는 사람</Label>
-
-        <Row>
-          <FieldLabel>이름</FieldLabel>
-          <Input type="text" placeholder="이름을 입력하세요." />
-        </Row>
-
-        <Row>
-          <FieldLabel>전화번호</FieldLabel>
-          <Input type="tel" placeholder="전화번호를 입력하세요." />
-        </Row>
-
-        <Row>
-          <FieldLabel>수량</FieldLabel>
-          <Input type="number" defaultValue={1} />
-        </Row>
-      </Section>
-    </Wrapper>
-  );
-};
-
 const Order = () => {
   const [selected, setSelected] = useState(
     orderCardTemplates[0].imageUrl
   );
+  const [quantity, setQuantity] = useState(1);
+  const product = giftItem;
+  const priceSum = product.price.sellingPrice * quantity;
 
   return (
     <>
@@ -159,8 +130,53 @@ const Order = () => {
         </SectionBox>
       </MessaageWrapper>
 
-      <OrderCustomerInfo></OrderCustomerInfo>
-      <BottomOrderButton>29000원 주문하기</BottomOrderButton>
+      <OrderInfoWrapper>
+        <Section>
+          <Label>보내는 사람</Label>
+          <Input type="text" placeholder="이름을 입력하세요." />
+          <Description>
+            * 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.
+          </Description>
+        </Section>
+
+        <Section>
+          <Label>받는 사람</Label>
+
+          <Row>
+            <FieldLabel>이름</FieldLabel>
+            <Input type="text" placeholder="이름을 입력하세요." />
+          </Row>
+
+          <Row>
+            <FieldLabel>전화번호</FieldLabel>
+            <Input type="tel" placeholder="전화번호를 입력하세요." />
+          </Row>
+
+          <Row>
+            <FieldLabel>수량</FieldLabel>
+            <Input
+              type="number"
+              value={quantity}
+              onChange={e => setQuantity(Number(e.target.value))}
+            />
+          </Row>
+          <Label>상품 정보</Label>
+          <img src={product.imageURL} alt={product.name} width={80} />
+          <div>
+            <div style={{ fontWeight: 'bold' }}>{product.name}</div>
+            <div style={{ color: '#888' }}>
+              {product.brandInfo.name}
+            </div>
+            <div>
+              상품가{' '}
+              <strong>
+                {product.price.sellingPrice.toLocaleString()}원
+              </strong>
+            </div>
+          </div>
+        </Section>
+      </OrderInfoWrapper>
+      <BottomOrderButton>{priceSum}원 주문하기</BottomOrderButton>
     </>
   );
 };

@@ -74,7 +74,7 @@ interface GiftItem {
   };
 }
 
-const giftItem: GiftItem = {
+export const giftItem: GiftItem = {
   id: 123,
   name: 'BBQ 양념치킨+크림치즈볼+콜라1.25L',
   imageURL:
@@ -100,7 +100,7 @@ export const RankingGrid = () => {
 
   const handleClick = (id: number) => {
     if (isAuthenticated) {
-      navigate(`/order`);
+      navigate(`/order/${id}`);
     } else {
       navigate('/login', { state: { redirectTo: `/order/${id}` } });
     }

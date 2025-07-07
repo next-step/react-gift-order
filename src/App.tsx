@@ -31,7 +31,7 @@ const App = () => {
               <Route path="/login" element={<Login />} />
               <Route path="*" element={<NotFoundPage />} />
               <Route path="/my" element={<MyPage />} />
-              <Route path="/order" element={<Order />} />
+              <Route path="/order/:id" element={<Order />} />
             </Routes>
           </BrowserRouter>
         </AuthProvider>
