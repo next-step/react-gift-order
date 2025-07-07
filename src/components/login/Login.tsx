@@ -1,7 +1,7 @@
 import type { Theme } from "@emotion/react";
 import { useTheme } from "@emotion/react";
 import { css } from "@emotion/react";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import Input from "@/components/login/Input";
 import { useUserInfo } from "@/context/UserInfoProvider";
@@ -10,7 +10,6 @@ const Login = () => {
   const { setUser } = useUserInfo();
   const theme = useTheme();
   const navigate = useNavigate();
-  const ref = useRef(null);
 
   const validateEmail = (email: string) => {
     const EMAIL_REGEXP = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -85,7 +84,6 @@ const Login = () => {
             navigate("/my");
           }
         }}
-        ref={ref}
         css={buttonStyle(theme, isFormValid)}
         disabled={!isFormValid}
       >
