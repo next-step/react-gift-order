@@ -34,11 +34,17 @@ const Button = styled.button`
     background-color: ${colors.brand.kakaoYellowHover};
   }
 `
+const Text = styled.p`
+  font-size: ${typography.body1Regular.fontSize};
+  font-weight: ${typography.body1Regular.fontWeight};
+  margin-bottom: ${spacing.spacing4};
+`
 
 export default function MyPage() {
-  const { logout } = useAuth()
+  const { logout, userEmail } = useAuth()
   const navigate = useNavigate()
 
+  const nickname = userEmail ? userEmail.split('@')[0] : ''
   const handleLogout = () => {
     logout()
     navigate('/login')
@@ -47,8 +53,10 @@ export default function MyPage() {
   return (
     <Layout>
       <Container>
-        <Title>마이페이지</Title>
-        <Button onClick={handleLogout}>로그아웃</Button>
+        <Title>{nickname}님 안녕하세요!</Title>
+        {userEmail && (
+          <Text>이메일 주소는 {userEmail} 입니다.</Text>
+        )}        <Button onClick={handleLogout}>로그아웃</Button>
       </Container>
     </Layout>
   )

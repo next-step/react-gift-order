@@ -38,8 +38,8 @@ export default function LoginPage() {
   const from = (location.state as { from?: string })?.from ?? '/'
 
 
-  const handleSuccess = () => {
-    login()
+  const handleSuccess = (userEmail: string) => {
+    login(userEmail)
     navigate(from, { replace: true })
   }
 
