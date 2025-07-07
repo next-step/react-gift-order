@@ -1,5 +1,6 @@
-import useNavigateBackOrHome from '@/hooks/useNavigateBackOrHome';
 import { BackButton, Container, LogoImage, LogoLink, Nav, UserIconLink } from './styles';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/routes/routes';
 
 const BackIcon = () => (
   <svg
@@ -37,12 +38,12 @@ const UserIcon = () => (
 );
 
 const Navigation = () => {
-  const navigateBackOrHome = useNavigateBackOrHome();
+  const navigate = useNavigate();
 
   return (
     <Container>
       <Nav>
-        <BackButton onClick={navigateBackOrHome}>
+        <BackButton onClick={() => navigate(-1)}>
           <BackIcon />
         </BackButton>
 
@@ -50,7 +51,7 @@ const Navigation = () => {
           <LogoImage src="/선물하기.webp" alt="카카오 선물하기 로고" />
         </LogoLink>
 
-        <UserIconLink href="/login">
+        <UserIconLink onClick={() => navigate(ROUTES.MY)}>
           <UserIcon />
         </UserIconLink>
       </Nav>
