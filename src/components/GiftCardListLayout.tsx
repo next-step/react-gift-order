@@ -10,6 +10,8 @@ const GiftCardListLayout = styled.div`
 
   &::-webkit-scrollbar {
     height: 6px;
+    margin: 1px;
+    padding: 1px;
   }
 
   &::-webkit-scrollbar-track {
@@ -20,6 +22,21 @@ const GiftCardListLayout = styled.div`
   &::-webkit-scrollbar-thumb {
     background: ${theme.colors.gray600};
     border-radius: 3px;
+  }
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 48px;
+    height: 100%;
+    pointer-events: none;
+
+    background: linear-gradient(
+      to left,
+      #ffffff 0%,
+      rgba(255, 255, 255, 0) 100%
+    );
   }
 `
 
