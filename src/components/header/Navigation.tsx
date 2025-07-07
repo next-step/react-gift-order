@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
-import styled from '@emotion/styled';
-import { useAuth } from '@/contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import styled from "@emotion/styled";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const HeaderContainer = styled.nav`
   display: flex;
@@ -19,6 +19,7 @@ const Left = styled.div`
 `;
 
 const Center = styled.div`
+  cursor: pointer;
   flex: 1;
   text-align: center;
   ${({ theme }) => theme.typography.title1Bold};
@@ -36,17 +37,20 @@ const Right = styled.div`
 export const Navigation = () => {
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
+  const handleGiftMainClick = () => {
+    navigate("/");
+  };
 
   const handleProfileClick = () => {
     if (isLoggedIn) {
-      navigate('/my');
+      navigate("/my");
     } else {
-      navigate('/login?redirect=/');
+      navigate("/login?redirect=/");
     }
   };
 
   const handleBackClick = () => {
-    navigate('/');
+    navigate("/");
   };
 
   return (
@@ -67,7 +71,7 @@ export const Navigation = () => {
         </svg>
       </Left>
 
-      <Center>선물하기</Center>
+      <Center onClick={handleGiftMainClick}>선물하기</Center>
 
       <Right onClick={handleProfileClick} aria-label="프로필">
         <svg
