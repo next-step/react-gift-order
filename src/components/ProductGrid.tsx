@@ -1,10 +1,12 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { colors } from '../styles/colors'
 import { spacing } from '../styles/spacing'
 import { typography } from '../styles/typography'
 import product from '@/data/product'
+import { useAuth } from '@/contexts/AuthContext'
 
 const sectionStyle = css({ margin: `${spacing.spacing8} 0` })
 const gridStyle = css({
@@ -19,6 +21,12 @@ const cardStyle = css({
   boxShadow: '0 2px 8px #0001',
   textAlign: 'center',
   position: 'relative',
+  cursor: 'pointer',
+  transition: 'transform 0.2s, box-shadow 0.2s',
+  '&:hover': {
+    transform: 'translateY(-4px)',
+    boxShadow: '0 4px 12px #0002',
+  }
 })
 const rankStyle = (rank: number) => css({
   position: 'absolute',
@@ -50,12 +58,31 @@ const moreBtnStyle = css({
 
 const ProductGrid = () => {
   const [showAll, setShowAll] = useState(false)
+  const navigate = useNavigate()
+  const { isAuthenticated } = useAuth()
+  
   const ranks = showAll ? [...Array(21).keys()].map(i => i + 1) : [...Array(6).keys()].map(i => i + 1)
+  
+  // 상품 클릭 핸들러
+  const handleProductClick = (productId: number) => {
+    if (isAuthenticated) {
+      // 로그인한 경우 바로 주문 페이지로 이동
+      navigate(`/order/${productId}`);
+    } else {
+      // 비로그인 시 로그인 페이지로 이동하고 from 상태로 주문 페이지 경로 전달
+      navigate('/login', { state: { from: `/order/${productId}` } });
+    }
+  };
+  
   return (
     <section css={sectionStyle}>
       <div css={gridStyle}>
         {ranks.map(rank => (
-          <div key={rank} css={cardStyle}>
+          <div 
+            key={rank} 
+            css={cardStyle}
+            onClick={() => handleProductClick(rank)}
+          >
             <span css={rankStyle(rank)}>{rank}</span>
             <img
               src={product.imageURL}
