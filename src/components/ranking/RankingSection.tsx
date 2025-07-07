@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Section } from '@/components/layout';
 import FilterButtonGroup from './FilterButtonGroup';
 import ProductGrid from './ProductGrid';
@@ -60,6 +60,7 @@ const generateRankingProducts = (): Product[] => {
 const RankingSection = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [showMore, setShowMore] = useState(false); // 더보기는 URL에 저장하지 않음 (UX 고려)
+  const navigate = useNavigate();
 
   // URL 쿼리 파라미터에서 필터 상태 읽기 및 유효성 검증
   const targetValidValues = getValidValues(targetOptions);
@@ -114,6 +115,11 @@ const RankingSection = () => {
     });
   };
 
+  // 상품 클릭 시 주문 페이지로 이동
+  const handleProductClick = (product: Product) => {
+    navigate(`/order/${product.productId}`);
+  };
+
   return (
     <Section title="실시간 급상승 선물랭킹" spacing="md">
       <FilterButtonGroup
@@ -130,7 +136,11 @@ const RankingSection = () => {
         onChange={(value) => handleParamChange('rank', value)}
       />
 
-      <ProductGrid products={rankingProducts} showMore={showMore} />
+      <ProductGrid
+        products={rankingProducts}
+        showMore={showMore}
+        onProductClick={handleProductClick}
+      />
 
       <MoreButton onClick={() => setShowMore(!showMore)}>
         {showMore ? '접기' : '더보기'}

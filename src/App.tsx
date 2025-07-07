@@ -2,13 +2,14 @@ import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { MobileLayout } from '@/components/layout';
 import { NavigationBar } from '@/components/navigation';
 import { PrivateRoute } from '@/components/common';
-import { HomePage, LoginPage, MyPage, NotFoundPage } from '@/pages';
+import { HomePage, LoginPage, MyPage, OrderPage, NotFoundPage } from '@/pages';
 import { useAuth } from '@/hooks';
 
 // 라우트 경로 상수 선언
 const ROUTE_HOME = '/';
 const ROUTE_LOGIN = '/login';
 const ROUTE_MY = '/my';
+const ROUTE_ORDER = '/order/:productId';
 const ROUTE_NOT_FOUND = '*';
 
 function App() {
@@ -37,6 +38,14 @@ function App() {
           showProfileButton: false,
         };
       default:
+        // /order/123 등 동적 라우트는 startsWith로 체크
+        if (location.pathname.startsWith('/order/')) {
+          return {
+            title: '선물하기',
+            showBackButton: true,
+            showProfileButton: false,
+          };
+        }
         return {
           title: 'Page Not Found',
           showBackButton: true,
@@ -84,6 +93,7 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route path={ROUTE_ORDER} element={<OrderPage />} />
         <Route path={ROUTE_NOT_FOUND} element={<NotFoundPage />} />
       </Routes>
     </MobileLayout>
