@@ -7,7 +7,6 @@ type CardTextareaProps = {
     setValue: (value: string) => void;
     error: string;
     onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-    onBlur: () => void;
   };
 };
 

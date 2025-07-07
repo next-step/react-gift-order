@@ -5,7 +5,6 @@ import { ROUTE_PATH } from "@/routes/paths";
 import { gifts } from "@/data/gift";
 import { cards } from "@/data/card";
 import type { Card } from "@/types/card";
-import useFormInput from "@/hooks/useFormInput";
 import {
   checkNameError,
   checkCountError,
@@ -18,16 +17,17 @@ import SendSection from "@/components/order/SendSection";
 import ReceiverSection from "@/components/order/ReceiverSection";
 import GiftInformationSection from "@/components/order/GiftInformationSection";
 import type { Gift } from "@/types/gift";
+import useOrderInput from "@/hooks/useOrderInput";
 
 const OrderPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [selectedCard, setSelectedCard] = useState<Card>(cards[0]);
-  const messageInput = useFormInput(checkMessageError);
-  const senderInput = useFormInput(checkNameError);
-  const receiverInput = useFormInput(checkNameError);
-  const phoneInput = useFormInput(checkPhoneError);
-  const countInput = useFormInput(checkCountError, "1");
+  const messageInput = useOrderInput(checkMessageError);
+  const senderInput = useOrderInput(checkNameError);
+  const receiverInput = useOrderInput(checkNameError);
+  const phoneInput = useOrderInput(checkPhoneError);
+  const countInput = useOrderInput(checkCountError, "1");
 
   useEffect(() => {
     messageInput.setValue(selectedCard.defaultTextMessage);
