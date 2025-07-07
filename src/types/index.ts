@@ -30,3 +30,10 @@ export type TabId = (typeof tabs)[number]['id'];
 
 export type Filter = (typeof filters)[number];
 export type FilterId = (typeof filters)[number]['id'];
+
+export type CardItem = {
+  id: number;
+  thumbUrl: string;
+  imageUrl: string;
+  defaultTextMessage: string;
+};
