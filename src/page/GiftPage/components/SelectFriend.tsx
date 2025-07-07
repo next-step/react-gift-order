@@ -1,3 +1,4 @@
+import { useUserInfo } from '@/contexts/UserInfoContext';
 import styled from '@emotion/styled';
 
 const Icon = () => (
@@ -58,13 +59,15 @@ const Text = styled.span`
 `;
 
 const SelectFriend = () => {
+  const { userInfo, isLoggedIn } = useUserInfo();
+  const nickname = isLoggedIn ? userInfo.email.split('@')[0] + '님!' : '';
   return (
     <Container>
       <Button>
         <IconContainer>
           <Icon />
         </IconContainer>
-        <Text>선물할 친구를 선택해 주세요.</Text>
+        <Text>{nickname} 선물할 친구를 선택해 주세요.</Text>
       </Button>
     </Container>
   );
