@@ -10,23 +10,32 @@ interface RecipientsItemProps {
   errors: FieldErrors<RecipientsModalFormData>; // 모달 내부 폼의 errors 타입
 }
 
+const StyledRecipientsItemContainerHeader = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
 const StyledRecipientsItem = styled.div`
-  h3 {
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 1.1em;
-    color: #333;
-  }
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0px 10px 0px;
+
   label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #555;
+    width: 20%;
   }
+`;
+
+const StyledInputErrorMsgContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+
   input {
-    width: calc(100% - 20px);
     padding: 10px;
-    margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 5px;
     &:focus {
@@ -39,51 +48,73 @@ const StyledRecipientsItem = styled.div`
       box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.25);
     }
   }
-  .error-message {
-    color: red;
-    font-size: 0.85em;
-    margin-top: -10px;
-    margin-bottom: 10px;
-  }
 `;
-
 const RecipientsItem: React.FC<RecipientsItemProps> = ({ index, register, errors }) => {
   return (
-    <StyledRecipientsItem>
-      <h3>받는 사람 {index + 1}</h3>
-      <div>
-        <label htmlFor={`newRecipients[${index}].name`}>이름</label>
-        <input
-          id={`newRecipients[${index}].name`}
-          type='text'
-          {...register(`newRecipients.${index}.receiveName`, {
-            required: `받는 사람 ${index + 1}의 이름은 필수입니다.`,
-          })}
-          className={errors.newRecipients?.[index]?.receiveName ? 'input-error' : ''}
-        />
-        {errors.newRecipients?.[index]?.receiveName && (
-          <p className='error-message'>
-            {(errors.newRecipients[index].receiveName as any)?.message}
-          </p>
-        )}
-      </div>
-      <div>
-        <label htmlFor={`newRecipients[${index}].receiveTel`}>연락처</label>
-        <input
-          id={`newRecipients[${index}].receiveTel`}
-          type='text'
-          {...register(`newRecipients.${index}.receiveTel`, {
-            required: `받는 사람 ${index + 1}의 연락처는 필수입니다.`,
-          })}
-          className={errors.newRecipients?.[index]?.receiveTel ? 'input-error' : ''}
-        />
-        {errors.newRecipients?.[index]?.receiveTel && (
-          <p className='error-message'>
-            {(errors.newRecipients[index].receiveTel as any)?.message}
-          </p>
-        )}
-      </div>
-    </StyledRecipientsItem>
+    <div>
+      <StyledRecipientsItemContainerHeader>
+        <p className='body1Bold'>받는 사람 {index + 1}</p>
+        <button>삭제</button>
+      </StyledRecipientsItemContainerHeader>
+      <StyledRecipientsItem>
+        <label className='body2Regular' htmlFor={`newRecipients[${index}].name`}>
+          이름
+        </label>
+        <StyledInputErrorMsgContainer>
+          <input
+            id={`newRecipients[${index}].name`}
+            type='text'
+            {...register(`newRecipients.${index}.receiveName`, {
+              required: `받는 사람 ${index + 1}의 이름은 필수입니다.`,
+            })}
+            className={errors.newRecipients?.[index]?.receiveName ? 'input-error' : ''}
+          />
+          {errors.newRecipients?.[index]?.receiveName && (
+            <p className='error-message'>
+              {(errors.newRecipients[index].receiveName as any)?.message}
+            </p>
+          )}
+        </StyledInputErrorMsgContainer>
+      </StyledRecipientsItem>
+      <StyledRecipientsItem>
+        <label className='body2Regular' htmlFor={`newRecipients[${index}].receiveTel`}>
+          연락처
+        </label>
+        <StyledInputErrorMsgContainer>
+          <input
+            id={`newRecipients[${index}].receiveTel`}
+            type='text'
+            {...register(`newRecipients.${index}.receiveTel`, {
+              required: `받는 사람 ${index + 1}의 연락처는 필수입니다.`,
+            })}
+            className={errors.newRecipients?.[index]?.receiveTel ? 'input-error' : ''}
+          />
+          {errors.newRecipients?.[index]?.receiveTel && (
+            <p className='error-message'>
+              {(errors.newRecipients[index].receiveTel as any)?.message}
+            </p>
+          )}
+        </StyledInputErrorMsgContainer>
+      </StyledRecipientsItem>
+      <StyledRecipientsItem>
+        <label className='body2Regular' htmlFor={`newRecipients[${index}].count`}>
+          수량
+        </label>
+        <StyledInputErrorMsgContainer>
+          <input
+            id={`newRecipients[${index}].count`}
+            type='number'
+            {...register(`newRecipients.${index}.count`, {
+              required: `받는 사람 ${index + 1}의 수량은 필수입니다.`,
+            })}
+            className={errors.newRecipients?.[index]?.count ? 'input-error' : ''}
+          />
+          {errors.newRecipients?.[index]?.count && (
+            <p className='error-message'>{(errors.newRecipients[index].count as any)?.message}</p>
+          )}
+        </StyledInputErrorMsgContainer>
+      </StyledRecipientsItem>
+    </div>
   );
 };
 

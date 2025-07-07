@@ -41,22 +41,17 @@ const ModalContent = styled.div`
 
 const ModalHeader = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+
   margin-bottom: 20px;
-  h2 {
-    margin: 0;
-    font-size: 1.5em;
-  }
+
   button {
-    background: none;
-    border: none;
-    font-size: 1.5em;
-    cursor: pointer;
-    color: #666;
-    &:hover {
-      color: #333;
-    }
+    border: 1px transparent;
+    width: 80px;
+    height: 30px;
+    border-radius: 5px;
+    background-color: gray;
+    margin: 5px 0px 5px 0px;
   }
 `;
 
@@ -145,32 +140,31 @@ const RecipientsModal: React.FC<RecipientsModalProps> = ({ onClose, onAdd }) => 
     <ModalOverlay onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <ModalHeader>
-          <h2>받는 사람 추가</h2>
-          <button onClick={onClose}>&times;</button>
+          <h2 className='title1Bold'>받는 사람</h2>
+          <p className='body2Regular'>* 최대 10명까지 추가할 수 있어요</p>
+          <p className='body2Regular'>* 받는 사람의 전화번호를 중복으로 입력할 수 없어요</p>
+          <button type='button' onClick={handleAddPersonField} className='add-person-field'>
+            추가하기
+          </button>
         </ModalHeader>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <ModalBody>
-            {fieldSets.map((fieldSet, index) => (
-              <RecipientsItem
-                key={fieldSet.id} // 고유 ID를 key로 사용
-                index={index}
-                register={register}
-                errors={errors}
-              />
-            ))}
-            <button type='button' onClick={handleAddPersonField} className='add-person-field'>
-              다른 사람 추가
-            </button>
-          </ModalBody>
-          <ModalFooter>
-            <button type='button' className='cancel' onClick={onClose}>
-              취소
-            </button>
-            <button type='submit' className='add'>
-              추가하기
-            </button>
-          </ModalFooter>
-        </form>
+        <ModalBody>
+          {fieldSets.map((fieldSet, index) => (
+            <RecipientsItem
+              key={fieldSet.id} // 고유 ID를 key로 사용
+              index={index}
+              register={register}
+              errors={errors}
+            />
+          ))}
+        </ModalBody>
+        <ModalFooter>
+          <button type='button' className='cancel' onClick={onClose}>
+            취소
+          </button>
+          <button type='button' className='add' onClick={handleSubmit(onSubmit)}>
+            추가하기
+          </button>
+        </ModalFooter>
       </ModalContent>
     </ModalOverlay>
   );

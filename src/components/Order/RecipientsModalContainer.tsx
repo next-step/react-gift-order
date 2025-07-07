@@ -56,11 +56,7 @@ interface RecipientsModalContainerProps {
   currentRecipients: Recipient[];
 }
 
-const RecipientsModalContainer: FC<RecipientsModalContainerProps> = ({
-  control,
-  errors,
-  currentRecipients,
-}) => {
+const RecipientsModalContainer: FC<RecipientsModalContainerProps> = ({ control }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { fields, append, remove } = useFieldArray({
     control,
@@ -71,7 +67,9 @@ const RecipientsModalContainer: FC<RecipientsModalContainerProps> = ({
 
   // AddRecipientsModal에서 새로운 Recipient[]를 받아와서 append
   const handleAddRecipients = (newRecipients: Recipient[]) => {
+    console.log('추가할 recipients', newRecipients);
     newRecipients.forEach((rec) => append(rec));
+    console.log('추가 후 recipients', newRecipients);
   };
 
   return (

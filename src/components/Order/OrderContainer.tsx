@@ -59,13 +59,22 @@ const OrderContainer: FC = () => {
           register={register} // senderName, senderContact 필드 등록을 위해 register 전달
           errors={errors} // 해당 필드들의 오류 정보 전달
         />
-        <RecipientsModalContainer control={control} errors={errors} currentRecipients={currentRecipients} />
+        <RecipientsModalContainer
+          control={control}
+          errors={errors}
+          currentRecipients={currentRecipients}
+        />
 
         <StyledItemInfoContainer className='item-info background-default'>
           <p className='title2Bold basic-label'>상품 정보</p>
           {selectedProduct ? (
             <div className='item-info-text'>
-              <img src={selectedProduct.imageURL} alt={selectedProduct.name} className='item-info-img' loading='lazy' />
+              <img
+                src={selectedProduct.imageURL}
+                alt={selectedProduct.name}
+                className='item-info-img'
+                loading='lazy'
+              />
               <div>
                 <p className='body1Regular'>{selectedProduct.name}</p>
                 <p className='label2Regular'>{selectedProduct.brandInfo.name}</p>
