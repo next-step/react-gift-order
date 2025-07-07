@@ -1,4 +1,4 @@
-import { useState} from 'react';
+import { useState } from 'react';
 import styled from '@emotion/styled';
 import { CardData } from '@/components/order/CardData';
 
@@ -26,8 +26,7 @@ const ThumbNail = styled.img<ThumbNailProps>`
   border-radius: 0.5rem;
   overflow: hidden;
   border: 3px solid
-    ${({ isSelected, theme }) =>
-      isSelected ? theme.color.semantic.border.default : 'transparent'};
+    ${({ isSelected, theme }) => (isSelected ? theme.color.semantic.border.default : 'transparent')};
   cursor: pointer;
 `;
 
@@ -42,19 +41,17 @@ const ImageUrl = styled.div`
 `;
 
 const MessageArea = styled.textarea`
-    width: 100%;
-    min-height: 20px !important;
-    font-size: 1rem;
-    font-weight: 400;
-    color: ${({ theme }) => theme.color.semantic.text.default};
-    line-height: 1.375rem;
+  width: 100%;
+  min-height: 20px !important;
+  font-size: 1rem;
+  font-weight: 400;
+  color: ${({ theme }) => theme.color.semantic.text.default};
+  line-height: 1.375rem;
 
-    padding: 8px 12px;
-    border-radius: 8px;
-    border: 1px solid ${({ theme }) => theme.color.semantic.border.default};
-
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid ${({ theme }) => theme.color.semantic.border.default};
 `;
-
 
 const CardSelect = () => {
   const [selectedId, setSelectedId] = useState<number>(CardData[0].id);
