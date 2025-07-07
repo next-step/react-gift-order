@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { validateEmail, validatePassword } from '../utils/validate';
-import { validateText } from '@/page/OrderPage/utils/validateForm';
+import { validateEmail, validatePassword } from '../page/LoginPage/utils/validate';
+import { validateNumber, validateText } from '@/page/OrderPage/utils/validateForm';
 
-type FieldType = 'email' | 'password' | 'text';
+type FieldType = 'email' | 'password' | 'text' | 'number';
 
 const useInput = (type: FieldType) => {
   let validator: (value: string) => string;
@@ -13,6 +13,8 @@ const useInput = (type: FieldType) => {
     validator = validatePassword;
   } else if (type === 'text') {
     validator = validateText;
+  } else if (type === 'number') {
+    validator = validateNumber;
   }
 
   const [value, setValue] = useState<string>('');
