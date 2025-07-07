@@ -17,7 +17,7 @@ import {
 
 import TabButton from '../Shared/TabButton';
 import RankingCard from '../Shared/RankingCard';
-import { useUserManagement } from '../../pages/Login/PascalCase';
+import { PascalCase } from '../../pages/Login/PascalCase';
 
 const genderTabs = [
   { label: '전체', icon: <FaUser /> },
@@ -31,7 +31,7 @@ const giftTabs = ['받고 싶어한', '많이 선물한', '위시로 받은'];
 const RankingSection = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const { user } = useUserManagement();
+  const { user } = PascalCase();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const initialGender = searchParams.get('gender') || '전체';

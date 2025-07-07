@@ -9,7 +9,7 @@ import RankingSection from './components/RankingSection/RankingSection';
 import LoginPage from './pages/Login/LoginPage';
 import NotFoundPage from './pages/NotFoundPage';
 import MyPage from './pages/MyPage';
-import { UserManagementProvider, useUserManagement } from './pages/Login/PascalCase';
+import { PascalCaseProvider, PascalCase } from './pages/Login/PascalCase';
 import React from 'react';
 import OrderPage from './pages/Order/OrderPage';
 import ScrollToTop from './components/ScrollToTop';
@@ -24,7 +24,7 @@ const Home = () => (
 );
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user } = useUserManagement();
+  const { user } = PascalCase();
 
   if (!user) {
     return <Navigate to="/login" replace />;
@@ -35,7 +35,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 function App() {
   return (
     <BrowserRouter>
-      <UserManagementProvider>
+      <PascalCaseProvider>
         <ScrollToTop />
         <NavBar />
         <Routes>
@@ -52,7 +52,7 @@ function App() {
           />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
-      </UserManagementProvider>
+      </PascalCaseProvider>
     </BrowserRouter>
   );
 }

@@ -16,7 +16,6 @@ const PascalCaseContext = createContext<PascalCaseType | undefined>(undefined);
 
 const LOCAL_STORAGE_KEY = 'kakao-login-user';
 
-// ✅ useStorageState 훅 정의
 function useStorageState<T>(key: string, initialValue: T) {
   const [state, setState] = useState<T>(() => {
     const stored = localStorage.getItem(key);
@@ -31,7 +30,6 @@ function useStorageState<T>(key: string, initialValue: T) {
 }
 
 export const PascalCaseProvider = ({ children }: { children: ReactNode }) => {
-  // ✅ 기존 useState + useEffect → useStorageState로 대체
   const [user, setUser] = useStorageState<User | null>(LOCAL_STORAGE_KEY, null);
 
   const login = (email: string) => {
