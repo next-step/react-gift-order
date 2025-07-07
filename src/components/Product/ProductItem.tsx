@@ -1,5 +1,7 @@
 import styled from '@emotion/styled'
 import { memo } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '@/contexts/AuthContext'
 
 interface Product {
   id: number
@@ -19,14 +21,26 @@ interface Product {
 }
 
 export const ProductItem = memo(function ProductItem({
+  id,
   imageURL,
   name,
   price,
   brandInfo,
   rank,
 }: Product) {
+  const navigate = useNavigate()
+  const { user } = useAuth()
+
+  const goOrderPage = () => {
+    if (user) {
+      navigate(`/order/${id}`)
+    } else {
+      navigate('/login', { state: { from: `/order/${id}` } })
+    }
+  }
+
   return (
-    <Wrapper>
+    <Wrapper onClick={goOrderPage}>
       <ImageWrapper>
         <RankBadge rank={rank}>{rank}</RankBadge>
         <Image src={imageURL} alt={name} />
