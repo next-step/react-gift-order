@@ -63,44 +63,73 @@ export const useForm = <T extends object>({
   const handleBlur = useCallback(
     <K extends keyof T>(field: K) => {
       setTouched(prev => ({ ...prev, [field]: true }));
-      const error = validateField(field, values[field]);
-      setErrors(prev => ({ ...prev, [field]: error }));
+      setValues(prev => {
+        const error = validateField(field, prev[field]);
+        setErrors(errors => ({ ...errors, [field]: error }));
+        return prev;
+      });
     },
-    [values, validateField],
+    [validateField],
   );
 
   const validateAllFields = useCallback(() => {
-    const newTouched = Object.keys(validationRules).reduce(
-      (acc, key) => {
-        acc[key as keyof T] = true;
+    let isValid = true;
+
+    setValues(currentValues => {
+      const newErrors = Object.keys(validationRules).reduce((acc, key) => {
+        const field = key as keyof T;
+        const error = validateField(field, currentValues[field]);
+        if (error) {
+          acc[field] = error;
+          isValid = false;
+        }
         return acc;
-      },
-      {} as Record<keyof T, boolean>,
-    );
-    setTouched(prev => ({ ...prev, ...newTouched }));
+      }, {} as ValidationErrors<T>);
 
-    const newErrors = Object.keys(validationRules).reduce((acc, key) => {
-      const field = key as keyof T;
-      const error = validateField(field, values[field]);
-      if (error) {
-        acc[field] = error;
-      }
-      return acc;
-    }, {} as ValidationErrors<T>);
+      setErrors(newErrors);
+      setTouched(prev => ({
+        ...prev,
+        ...Object.keys(validationRules).reduce(
+          (acc, key) => {
+            acc[key as keyof T] = true;
+            return acc;
+          },
+          {} as Record<keyof T, boolean>,
+        ),
+      }));
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  }, [values, validateField, validationRules]);
+      return currentValues;
+    });
+
+    return isValid;
+  }, [validationRules, validateField]);
 
   const handleSubmit = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      const isFormValid = validateAllFields();
-      if (isFormValid) {
-        onSubmit(values);
-      }
+
+      setValues(currentValues => {
+        const newErrors = Object.keys(validationRules).reduce((acc, key) => {
+          const field = key as keyof T;
+          const error = validateField(field, currentValues[field]);
+          if (error) {
+            acc[field] = error;
+          }
+          return acc;
+        }, {} as ValidationErrors<T>);
+
+        const isValid = Object.keys(newErrors).length === 0;
+
+        if (isValid) {
+          onSubmit(currentValues);
+        } else {
+          setErrors(newErrors);
+        }
+
+        return currentValues;
+      });
     },
-    [validateAllFields, onSubmit, values],
+    [validationRules, validateField, onSubmit],
   );
 
   const register = useCallback(
