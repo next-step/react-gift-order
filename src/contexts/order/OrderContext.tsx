@@ -1,13 +1,4 @@
-import type { ValidationErrors } from "@/utils/type";
-import {
-  createContext,
-  useContext,
-  useCallback,
-  type ReactNode,
-  useMemo,
-  type FormEvent,
-  type ChangeEvent,
-} from "react";
+import { createContext, useCallback, type ReactNode, useMemo } from "react";
 import type { Order } from "@/types";
 import { useForm } from "@/hooks/common/useForm";
 import {
@@ -15,34 +6,8 @@ import {
   orderValidationRules,
   isOrderComplete,
   getValidationErrors,
+  type OrderContextType,
 } from "@/contexts/order";
-
-interface OrderContextType {
-  order: Order;
-  errors: ValidationErrors<Order>;
-  touched: Record<keyof Order, boolean>;
-  register: <K extends keyof Order>(
-    field: K,
-  ) => {
-    name: K;
-    value: Order[K];
-    onChange: (
-      e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | Order[K],
-    ) => void;
-    onBlur: () => void;
-    error: string | undefined;
-    hasError: boolean;
-  };
-  handleSubmit: (e: FormEvent<HTMLFormElement>) => void;
-  resetOrder: () => void;
-  setOrder: (
-    newValues: Partial<Order> | ((prev: Order) => Partial<Order>),
-  ) => void;
-  isOrderComplete: () => boolean;
-  getValidationErrors: () => string[];
-  calculateTotalPrice: () => number;
-  validateAllFields: () => boolean;
-}
 
 export const OrderContext = createContext<OrderContextType | undefined>(
   undefined,
@@ -112,12 +77,4 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
   return (
     <OrderContext.Provider value={orderLogic}>{children}</OrderContext.Provider>
   );
-};
-
-export const useOrder = () => {
-  const context = useContext(OrderContext);
-  if (!context) {
-    throw new Error("useOrder가 OrderProvider 안에서 사용되고 있지 않습니다.");
-  }
-  return context as OrderContextType;
 };

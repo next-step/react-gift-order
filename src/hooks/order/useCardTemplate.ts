@@ -1,5 +1,5 @@
 import { cardTemplate } from "@/__mock__";
-import { useOrder } from "@/contexts/order/OrderContext";
+import { useOrder } from "@/hooks/order/useOrder";
 import type { CardTemplateType } from "@/types";
 import { useEffect } from "react";
 
