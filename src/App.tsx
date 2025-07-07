@@ -20,7 +20,7 @@ function App() {
   useEffect(() => {
     const id = localStorage.getItem('id') || '';
     if (loginInfo !== id) setLoginInfo(id);
-  }, []);
+  });
 
   function handleBackClick() {
     if (location.pathname !== '/') navigate(-1);
