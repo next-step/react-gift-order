@@ -1,4 +1,4 @@
-export const GiftList = Array.from({ length: 6 }).map((_, i) => ({
+export const GiftList = Array.from({ length: 21 }).map((_, i) => ({
   rank: i + 1,
   name: 'BBQ 양념치킨+크림치즈볼+콜라1.25L',
   imageURL:

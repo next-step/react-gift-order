@@ -6,6 +6,7 @@ interface GiftItemProps {
   imageURL: string;
   price: number;
   brand: string;
+  onClick: () => void | Promise<void>;
 }
 
 const Card = styled.div`
@@ -56,17 +57,19 @@ const Price = styled.div`
   color: ${({ theme }) => theme.color.semantic.text.default};
 `;
 
-const GiftItem = ({ rank, name, imageURL, price, brand }: GiftItemProps) => {
+const GiftItem = ({ rank, name, imageURL, price, brand, onClick }: GiftItemProps) => {
   return (
-    <Card>
-      <ImageWrapper>
-        <ProductImage src={imageURL} alt={name} />
-        <RankBadge>{rank}</RankBadge>
-      </ImageWrapper>
-      <Brand>{brand}</Brand>
-      <ProductName>{name}</ProductName>
-      <Price>{price.toLocaleString()} 원</Price>
-    </Card>
+    <div onClick={onClick} style={{ cursor: 'pointer' }}>
+      <Card>
+        <ImageWrapper>
+          <ProductImage src={imageURL} alt={name} />
+          <RankBadge>{rank}</RankBadge>
+        </ImageWrapper>
+        <Brand>{brand}</Brand>
+        <ProductName>{name}</ProductName>
+        <Price>{price.toLocaleString()} 원</Price>
+      </Card>
+    </div>
   );
 };
 
