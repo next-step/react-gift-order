@@ -10,25 +10,41 @@ import SenderForm from '@/components/OrderSection/SenderForm';
 import ReceiverForm from '@/components/OrderSection/ReceiverForm';
 import ProductInfo from '@/components/OrderSection/ProductInfo';
 import OrderSubmitButton from '@/components/OrderSection/OrderSubmitButton';
+import { useNavigate } from 'react-router-dom';
 
 const OrderPage = () => {
+  const navigate = useNavigate();
+
   const { id } = useParams();
   const product = mockProducts[Number(id) - 1];
 
   const [selectedCardId, setSelectedCardId] = useState(messageCards[0].id);
   const selectedCard = messageCards.find(card => card.id === selectedCardId)!;
 
+  const [textMessage, setTextMessage] = useState(
+    selectedCard.defaultTextMessage
+  );
   const [senderName, setSenderName] = useState('');
   const [receiverName, setReceiverName] = useState('');
   const [receiverPhone, setReceiverPhone] = useState('');
   const [quantity, setQuantity] = useState(1);
 
+  const [textMessageError, setTextMessageError] = useState('');
   const [senderError, setSenderError] = useState('');
   const [receiverNameError, setReceiverNameError] = useState('');
   const [receiverPhoneError, setReceiverPhoneError] = useState('');
   const [quantityError, setQuantityError] = useState('');
 
   const totalPrice = product.price.sellingPrice * quantity;
+
+  const validateTextMessage = () => {
+    if (!textMessage.trim()) {
+      setTextMessageError('메시지를 입력해주세요.');
+      return false;
+    }
+    setTextMessageError('');
+    return true;
+  };
 
   const validateSender = () => {
     if (!senderName.trim()) {
@@ -75,10 +91,22 @@ const OrderPage = () => {
     const nameValid = validateReceiverName();
     const phoneValid = validateReceiverPhone();
     const quantityValid = validateQuantity();
+    const messageValid = validateTextMessage();
 
-    const isValid = senderValid && nameValid && phoneValid && quantityValid;
+    const isValid =
+      senderValid && nameValid && phoneValid && quantityValid && messageValid;
 
     if (!isValid) return;
+
+    alert(
+      `주문이 완료되었습니다.\n` +
+        `상품명: ${product.name}\n` +
+        `구매 수량: ${quantity}\n` +
+        `발신자 이름: ${senderName}\n` +
+        `메시지: ${textMessage}`
+    );
+
+    navigate('/');
   };
 
   return (
@@ -91,7 +119,14 @@ const OrderPage = () => {
             onSelect={setSelectedCardId}
           />
 
-          <MessageInput value={selectedCard.defaultTextMessage} />
+          <MessageInput
+            value={textMessage}
+            onChange={e => {
+              setTextMessage(e.target.value);
+              if (textMessageError) validateTextMessage();
+            }}
+            error={textMessageError}
+          />
 
           <SenderForm
             value={senderName}

@@ -2,12 +2,19 @@ import styled from '@emotion/styled';
 
 interface MessageInputProps {
   value: string;
+  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  error?: string;
 }
 
-const MessageInput = ({ value }: MessageInputProps) => {
+const MessageInput = ({ value, onChange, error }: MessageInputProps) => {
   return (
     <Wrapper>
-      <InputArea value={value} placeholder="메시지를 입력해주세요." />
+      <InputArea
+        value={value}
+        onChange={onChange}
+        placeholder="메시지를 입력해주세요."
+      />
+      {error && <ErrorText>{error}</ErrorText>}
     </Wrapper>
   );
 };
@@ -29,4 +36,10 @@ const InputArea = styled.textarea`
   ${({ theme }) => theme.typography.body.body2Regular};
   color: ${({ theme }) => theme.color.semantic.text.default};
   resize: both;
+`;
+
+const ErrorText = styled.p`
+  color: ${({ theme }) => theme.color.red[500]};
+  ${({ theme }) => theme.typography.body.body2Regular};
+  margin: 0;
 `;
