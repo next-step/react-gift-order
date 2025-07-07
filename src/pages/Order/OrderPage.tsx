@@ -27,18 +27,44 @@ import {
 
 const AddReceiverModal = ({ onClose }: { onClose: () => void }) => {
   const theme = useTheme();
-  const [isFormVisible, setIsFormVisible] = useState(false);
+  const [receivers, setReceivers] = useState([
+    { name: '', phone: '', quantity: 1 },
+  ]);
 
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [quantity, setQuantity] = useState(1);
-
-  const [nameError, setNameError] = useState('');
-  const [phoneError, setPhoneError] = useState('');
-  const [quantityError, setQuantityError] = useState('');
+  const [errors, setErrors] = useState<
+    { name: string; phone: string; quantity: string }[]
+  >([{ name: '', phone: '', quantity: '' }]);
 
   const isValidPhoneNumber = (phone: string) =>
     /^010-\d{4}-\d{4}$/.test(phone);
+
+  const addReceiver = () => {
+    if (receivers.length >= 10) return;
+    setReceivers((prev) => [...prev, { name: '', phone: '', quantity: 1 }]);
+    setErrors((prev) => [...prev, { name: '', phone: '', quantity: '' }]);
+  };
+
+  const updateReceiver = (
+    index: number,
+    field: 'name' | 'phone' | 'quantity',
+    value: string
+  ) => {
+    const updatedReceivers = [...receivers];
+    if (field === 'quantity') {
+      updatedReceivers[index][field] = Number(value);
+    } else {
+      updatedReceivers[index][field] = value;
+    }
+    setReceivers(updatedReceivers);
+
+    const updatedErrors = [...errors];
+    if (field === 'name' && value.trim()) updatedErrors[index].name = '';
+    if (field === 'phone' && isValidPhoneNumber(value))
+      updatedErrors[index].phone = '';
+    if (field === 'quantity' && Number(value) >= 1)
+      updatedErrors[index].quantity = '';
+    setErrors(updatedErrors);
+  };
 
   return (
     <div
@@ -62,48 +88,59 @@ const AddReceiverModal = ({ onClose }: { onClose: () => void }) => {
           padding: '24px',
           borderRadius: '8px',
           width: '680px',
+          maxHeight: '80vh',
+          overflowY: 'auto',
           boxShadow: '0 0 10px rgba(0,0,0,0.3)',
         }}
         onClick={(e) => e.stopPropagation()}
       >
         <h3 css={{ marginTop: 0 }}>받는 사람 추가</h3>
-        <p css={receiverAddGuideStyle(theme)}>* 최대 10명까지 추가 할 수 있어요.</p>
-        <p css={receiverAddGuideStyle(theme)}>* 받는 사람의 전화번호를 중복으로 입력할 수 없어요.</p>
+        <p css={receiverAddGuideStyle(theme)}>
+          * 최대 10명까지 추가 할 수 있어요.
+        </p>
+        <p css={receiverAddGuideStyle(theme)}>
+          * 받는 사람의 전화번호를 중복으로 입력할 수 없어요.
+        </p>
 
-        {!isFormVisible && (
-          <button
-            type="button"
-            onClick={() => setIsFormVisible(true)}
-            css={{
-              backgroundColor: theme.color.gray.gray200,
-              color: 'white',
-              padding: '8px 16px',
-              border: 'none',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              marginTop: '12px',
-            }}
-          >
-            추가하기
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={addReceiver}
+          disabled={receivers.length >= 10}
+          css={{
+            backgroundColor:
+              receivers.length >= 10
+                ? theme.color.gray.gray100
+                : theme.color.gray.gray300,
+            color: theme.color.gray.gray1000,
+            padding: '8px 16px',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: receivers.length >= 10 ? 'not-allowed' : 'pointer',
+            marginTop: '12px',
+          }}
+        >
+          추가하기
+        </button>
 
-        {isFormVisible && (
-          <div>
+        {receivers.map((receiver, index) => (
+          <div key={index}>
+            <h4 style={{ marginTop: '16px' }}>받는 사람 {index + 1}</h4>
+
             <div css={horizontalFormStyle(theme)}>
               <label css={receiverLabelStyle(theme)}>이름</label>
               <div style={{ flex: 1 }}>
                 <input
                   type="text"
                   placeholder="이름을 입력하세요."
-                  value={name}
-                  onChange={(e) => {
-                    setName(e.target.value);
-                    if (e.target.value.trim()) setNameError('');
-                  }}
-                  css={nameError ? errorInputStyle : undefined}
+                  value={receiver.name}
+                  onChange={(e) =>
+                    updateReceiver(index, 'name', e.target.value)
+                  }
+                  css={errors[index].name ? errorInputStyle : undefined}
                 />
-                {nameError && <p css={errorMessageStyle}>{nameError}</p>}
+                {errors[index].name && (
+                  <p css={errorMessageStyle}>{errors[index].name}</p>
+                )}
               </div>
             </div>
 
@@ -113,16 +150,15 @@ const AddReceiverModal = ({ onClose }: { onClose: () => void }) => {
                 <input
                   type="text"
                   placeholder="전화번호를 입력하세요."
-                  value={phone}
-                  onChange={(e) => {
-                    setPhone(e.target.value);
-                    if (isValidPhoneNumber(e.target.value)) {
-                      setPhoneError('');
-                    }
-                  }}
-                  css={phoneError ? errorInputStyle : undefined}
+                  value={receiver.phone}
+                  onChange={(e) =>
+                    updateReceiver(index, 'phone', e.target.value)
+                  }
+                  css={errors[index].phone ? errorInputStyle : undefined}
                 />
-                {phoneError && <p css={errorMessageStyle}>{phoneError}</p>}
+                {errors[index].phone && (
+                  <p css={errorMessageStyle}>{errors[index].phone}</p>
+                )}
               </div>
             </div>
 
@@ -132,19 +168,19 @@ const AddReceiverModal = ({ onClose }: { onClose: () => void }) => {
                 <input
                   type="number"
                   min={1}
-                  value={quantity}
-                  onChange={(e) => {
-                    const val = Number(e.target.value);
-                    setQuantity(val);
-                    if (val >= 1) setQuantityError('');
-                  }}
-                  css={quantityError ? errorInputStyle : undefined}
+                  value={receiver.quantity}
+                  onChange={(e) =>
+                    updateReceiver(index, 'quantity', e.target.value)
+                  }
+                  css={errors[index].quantity ? errorInputStyle : undefined}
                 />
-                {quantityError && <p css={errorMessageStyle}>{quantityError}</p>}
+                {errors[index].quantity && (
+                  <p css={errorMessageStyle}>{errors[index].quantity}</p>
+                )}
               </div>
             </div>
           </div>
-        )}
+        ))}
 
         <button
           type="button"
