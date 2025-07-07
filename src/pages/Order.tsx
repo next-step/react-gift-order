@@ -262,7 +262,7 @@ function OrderButton({receiverName, receiverPhoneNum, itemCount}:ButtonProps) {
     }
 
     return (
-        <OrderButtonStyle onClick={onClickHandler}>29000원 주문하기</OrderButtonStyle>
+        <OrderButtonStyle onClick={onClickHandler}>{29000*itemCount}원 주문하기</OrderButtonStyle>
     );
 }
 
