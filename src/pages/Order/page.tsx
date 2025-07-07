@@ -1,8 +1,13 @@
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { orders } from '@/data/orders';
+import { type RankingItem } from '@/data/ranking';
 import OrderTemplate from './template';
 
 const Order = () => {
+  const location = useLocation();
+  const product = location.state?.product as RankingItem | undefined;
+  
   const [selectedCardId, setSelectedCardId] = useState<number>(orders[0]?.id || 904);
   const [message, setMessage] = useState<string>(orders[0]?.defaultTextMessage || '축하해요.');
   const [senderName, setSenderName] = useState<string>('');
@@ -51,6 +56,7 @@ const Order = () => {
       receiverName={receiverName}
       receiverPhone={receiverPhone}
       quantity={quantity}
+      product={product}
       onCardClick={handleCardClick}
       onMessageChange={handleMessageChange}
       onSenderNameChange={handleSenderNameChange}

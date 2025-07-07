@@ -4,6 +4,8 @@ import MessageInput from '@/components/molcules/MesageInput';
 import CardCarousel from '@/components/organisms/CardCarousel';
 import SenderSection from '@/components/organisms/SenderSection';
 import ReceiverSection from '@/components/organisms/ReceiverSection';
+import ProductInfo from '@/components/organisms/ProductInfo';
+import { type RankingItem } from '@/data/ranking';
 import * as S from './styles';
 
 interface Order {
@@ -22,6 +24,7 @@ interface OrderTemplateProps {
   receiverName: string;
   receiverPhone: string;
   quantity: string;
+  product?: RankingItem;
   onCardClick: (id: number) => void;
   onMessageChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onSenderNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -39,6 +42,7 @@ const OrderTemplate: React.FC<OrderTemplateProps> = ({
   receiverName,
   receiverPhone,
   quantity,
+  product,
   onCardClick,
   onMessageChange,
   onSenderNameChange,
@@ -89,6 +93,13 @@ const OrderTemplate: React.FC<OrderTemplateProps> = ({
         onReceiverPhoneChange={onReceiverPhoneChange}
         onQuantityChange={onQuantityChange}
       />
+      
+      {product && (
+        <>
+          <S.Spacer />
+          <ProductInfo product={product} />
+        </>
+      )}
     </S.Container>
   );
 };

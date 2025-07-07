@@ -31,9 +31,9 @@ const RankingSection = () => {
     });
   };
 
-  const handleItemCardClick = () => {
+  const handleItemCardClick = (item: typeof rankingItems[0]) => {
     if (isLoggedIn) {
-      navigate('/order');
+      navigate('/order', { state: { product: item } });
     } else {
       navigate('/login');
     }
@@ -80,7 +80,7 @@ const RankingSection = () => {
             price={item.price.sellingPrice}
             rank={index + 1}
             variant="product"
-            onClick={handleItemCardClick}
+            onClick={() => handleItemCardClick(item)}
           />
         ))}
       </S.Grid>
