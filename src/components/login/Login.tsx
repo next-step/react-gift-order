@@ -1,10 +1,10 @@
 import type { Theme } from "@emotion/react";
 import { useTheme } from "@emotion/react";
 import { css } from "@emotion/react";
-import { useState } from "react";
 import { useNavigate } from "react-router";
 import Input from "@/components/login/Input";
 import { useUserInfo } from "@/context/UserInfoProvider";
+import { useValidate } from "@/components/login/useValidate";
 
 const Login = () => {
   const { setUser } = useUserInfo();
@@ -19,34 +19,6 @@ const Login = () => {
   const validatePassword = (password: string) => {
     return password.length >= 8;
   };
-
-  function useValidate(
-    validator: (value: string) => boolean,
-    errorMessage: string
-  ) {
-    const [string, setString] = useState("");
-    const [isValid, setIsValid] = useState(false);
-    const [message, setMessage] = useState("");
-
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const nextValue = e.target.value;
-      setString(nextValue);
-      setIsValid(validator(nextValue));
-    };
-
-    const onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-      if (e.target.value === "") {
-        setMessage("값을 입력해주세요");
-      } else if (!isValid) {
-        setMessage(errorMessage);
-      } else if (isValid) {
-        setIsValid(true);
-        setMessage("");
-      }
-    };
-
-    return { string, isValid, message, onChange, onBlur };
-  }
 
   const email = useValidate(validateEmail, "이메일 형식을 지켜주세요.");
   const password = useValidate(validatePassword, "비밀번호는 8자 이상입니다.");
