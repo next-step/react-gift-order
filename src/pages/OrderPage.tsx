@@ -6,17 +6,7 @@ import Container from '@/components/layout/Container';
 import { products } from '@/data/products';
 import { cardTemplates } from '@/data/cardTemplates';
 
-function formatPhoneNumber(input: string) {
-  // 숫자만 남기고, 010-xxxx-xxxx 형태로 포맷팅
-  const onlyNums = input.replace(/[^0-9]/g, '');
-  if (onlyNums.length <= 3) return onlyNums;
-  if (onlyNums.length <= 7)
-    return onlyNums.replace(/(\d{3})(\d{1,4})/, '$1-$2');
-  return onlyNums.replace(/(\d{3})(\d{4})(\d{1,4})/, '$1-$2-$3');
-}
-
 function isValidPhoneNumber(phone: string) {
-  // 010-xxxx-xxxx
   return /^010-\d{4}-\d{4}$/.test(phone);
 }
 
@@ -57,14 +47,16 @@ const CardLargeImg = styled.img`
   border-radius: 16px;
   box-shadow: 0 2px 8px #0001;
 `;
-const MessageTextarea = styled.textarea`
+const MessageTextarea = styled.textarea<{ error?: boolean }>`
   width: 100%;
   min-height: 48px;
   font-size: 16px;
-  border: 1px solid #eee;
+  border: 1px solid
+    ${(props) =>
+      props.error ? props.theme.semanticColors.state.critical : '#eee'};
   border-radius: 8px;
   padding: 12px;
-  margin-bottom: 24px;
+  margin-bottom: 4px;
   resize: vertical;
 `;
 const FormSection = styled.div`
@@ -147,43 +139,69 @@ const OrderButton = styled.div`
 const OrderPage = () => {
   const { productId } = useParams<{ productId: string }>();
   const navigate = useNavigate();
-
-  // 상품 정보 찾기
   const product = products.find((p) => String(p.id) === String(productId));
-
-  // 카드 템플릿 선택 상태
   const [selectedCardIdx, setSelectedCardIdx] = useState(0);
   const selectedCard = cardTemplates[selectedCardIdx];
-
-  // 메시지, 폼 상태
   const [message, setMessage] = useState(selectedCard.defaultTextMessage || '');
   const [sender, setSender] = useState('');
   const [receiver, setReceiver] = useState('');
   const [receiverPhone, setReceiverPhone] = useState('');
   const [quantity, setQuantity] = useState(1);
+  // 에러 상태
+  const [messageError, setMessageError] = useState('');
+  const [senderError, setSenderError] = useState('');
+  const [receiverError, setReceiverError] = useState('');
   const [phoneError, setPhoneError] = useState('');
+  const [quantityError, setQuantityError] = useState('');
 
-  // 카드 선택 시 메시지도 default로 변경
   const handleSelectCard = (idx: number) => {
     setSelectedCardIdx(idx);
     setMessage(cardTemplates[idx].defaultTextMessage || '');
   };
 
-  // 휴대폰 번호 입력 핸들러 (자동 포맷팅)
+  // 전화번호 입력: 자동 포맷팅 없이, 사용자가 직접 입력
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatPhoneNumber(e.target.value);
-    setReceiverPhone(formatted);
+    setReceiverPhone(e.target.value);
     if (phoneError) setPhoneError('');
   };
 
-  // 주문하기 버튼 클릭 시 유효성 검사
   const handleOrder = () => {
+    let valid = true;
+    if (!message.trim()) {
+      setMessageError('메시지를 입력해주세요.');
+      valid = false;
+    } else {
+      setMessageError('');
+    }
+    if (!sender.trim()) {
+      setSenderError('이름을 입력해주세요.');
+      valid = false;
+    } else {
+      setSenderError('');
+    }
+    if (!receiver.trim()) {
+      setReceiverError('이름을 입력해주세요.');
+      valid = false;
+    } else {
+      setReceiverError('');
+    }
     if (!isValidPhoneNumber(receiverPhone)) {
       setPhoneError('올바른 전화번호 형식이 아닙니다.');
-      return;
+      valid = false;
+    } else {
+      setPhoneError('');
     }
-    // TODO: 실제 주문 처리 로직
-    alert('주문이 완료되었습니다!');
+    if (quantity < 1) {
+      setQuantityError('구매 수량은 1개 이상이어야 합니다.');
+      valid = false;
+    } else {
+      setQuantityError('');
+    }
+    if (!valid) return;
+    // 안내 메시지 구성
+    const msg = `주문이 완료되었습니다.\n상품명: ${product.name}\n구매 수량: ${quantity}\n발신자 이름: ${sender}\n메시지: ${message}`;
+    alert(msg);
+    navigate('/');
   };
 
   if (!product) {
@@ -200,7 +218,6 @@ const OrderPage = () => {
   return (
     <Section>
       <Container>
-        {/* 카드 템플릿 슬라이더 */}
         <CardSlider>
           {cardTemplates.map((card, idx) => (
             <CardThumbButton
@@ -215,20 +232,16 @@ const OrderPage = () => {
             </CardThumbButton>
           ))}
         </CardSlider>
-
-        {/* 선택된 카드 큰 이미지 */}
         <CardImagePreview>
           <CardLargeImg src={selectedCard.imageUrl} alt="선택된 카드" />
         </CardImagePreview>
-
-        {/* 메시지 입력 */}
         <MessageTextarea
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="메시지를 입력하세요."
+          error={!!messageError}
         />
-
-        {/* 보내는 사람 */}
+        {messageError && <ErrorText>{messageError}</ErrorText>}
         <FormSection>
           <FormLabel>보내는 사람</FormLabel>
           <Input
@@ -236,14 +249,14 @@ const OrderPage = () => {
             value={sender}
             onChange={(e) => setSender(e.target.value)}
             placeholder="이름을 입력하세요."
+            error={!!senderError}
           />
+          {senderError && <ErrorText>{senderError}</ErrorText>}
           <InputHelper>
             * 실제 선물 발송 시 발신자(보내는 사람) 이름으로 반영되는
             정보입니다.
           </InputHelper>
         </FormSection>
-
-        {/* 받는 사람 */}
         <FormSection>
           <FormLabel>받는 사람</FormLabel>
           <Input
@@ -251,7 +264,9 @@ const OrderPage = () => {
             value={receiver}
             onChange={(e) => setReceiver(e.target.value)}
             placeholder="이름을 입력하세요."
+            error={!!receiverError}
           />
+          {receiverError && <ErrorText>{receiverError}</ErrorText>}
           <Input
             type="tel"
             value={receiverPhone}
@@ -267,10 +282,10 @@ const OrderPage = () => {
             value={quantity}
             onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))}
             placeholder="수량"
+            error={!!quantityError}
           />
+          {quantityError && <ErrorText>{quantityError}</ErrorText>}
         </FormSection>
-
-        {/* 상품 정보 */}
         <ProductInfo>
           <ProductImg src={product.imageURL} alt={product.name} />
           <ProductInfoText>
@@ -282,8 +297,6 @@ const OrderPage = () => {
           </ProductInfoText>
         </ProductInfo>
       </Container>
-
-      {/* 하단 주문 버튼 (고정) */}
       <OrderButtonBar>
         <Container>
           <OrderButton onClick={handleOrder}>
