@@ -4,6 +4,7 @@ import styled from '@emotion/styled'
 import Layout from '@/Layout'
 import { cardTemplates, type CardTemplate } from '@/data/cardTemplates'
 import type { Product } from '@/type'
+import useOrderForm from '@/hooks/useOrderForm'
 import { colors } from '@/theme/color'
 import { typography } from '@/theme/typography'
 import { spacing } from '@/theme/spacing'
@@ -55,6 +56,12 @@ const Preview = styled.section`
     width: 100%;
     border-radius: 4px;
   }
+`
+const ErrorMessage = styled.p`
+  margin: 0 0 ${spacing.spacing2};
+  color: ${colors.status.critical};
+  font-size: ${typography.body2Regular.fontSize};
+  line-height: ${typography.body2Regular.lineHeight};
 `
 
 const MessageInput = styled.textarea`
@@ -133,6 +140,10 @@ const OrderButton = styled.button`
   &:hover {
     background-color: ${colors.brand.kakaoYellowHover};
   }
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
 `
 
 export default function OrderPage() {
@@ -140,9 +151,25 @@ export default function OrderPage() {
   const product = (location.state as { product?: Product })?.product
 
   const [selected, setSelected] = useState<CardTemplate>(cardTemplates[0])
-  const [message, setMessage] = useState(cardTemplates[0].defaultTextMessage)
-  const [sender, setSender] = useState('')
-  const [receiver, setReceiver] = useState({ name: '', phone: '', qty: 1 })
+  const {
+    message,
+    setMessage,
+    sender,
+    setSender,
+    receiver,
+    setReceiver,
+    messageError,
+    senderError,
+    receiverNameError,
+    receiverPhoneError,
+    qtyError,
+    handleMessageBlur,
+    handleSenderBlur,
+    handleReceiverNameBlur,
+    handleReceiverPhoneBlur,
+    handleQtyBlur,
+    isValid,
+  } = useOrderForm(cardTemplates[0].defaultTextMessage)
 
   const handleCardSelect = (card: CardTemplate) => {
     setSelected(card)
@@ -176,9 +203,11 @@ export default function OrderPage() {
         <MessageInput
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          onBlur={handleMessageBlur}
           placeholder="메시지를 입력해주세요."
           maxLength={200}
         />
+        {messageError && <ErrorMessage>{messageError}</ErrorMessage>}
 
         <InfoSection>
           <Label>보내는 사람</Label>
@@ -186,8 +215,10 @@ export default function OrderPage() {
             type="text"
             value={sender}
             onChange={(e) => setSender(e.target.value)}
+            onBlur={handleSenderBlur}
             placeholder="이름을 입력하세요."
           />
+          {senderError && <ErrorMessage>{senderError}</ErrorMessage>}
           *실제 선물 발송 시 발신자 이름으로 반영되는 정보입니다.
         </InfoSection>
 
@@ -199,16 +230,24 @@ export default function OrderPage() {
             onChange={(e) =>
               setReceiver((prev) => ({ ...prev, name: e.target.value }))
             }
+            onBlur={handleReceiverNameBlur}
             placeholder="이름을 입력하세요."
           />
+          {receiverNameError && (
+            <ErrorMessage>{receiverNameError}</ErrorMessage>
+          )}
           <Input
             type="tel"
             value={receiver.phone}
             onChange={(e) =>
               setReceiver((prev) => ({ ...prev, phone: e.target.value }))
             }
+            onBlur={handleReceiverPhoneBlur}
             placeholder="전화번호를 입력하세요."
           />
+          {receiverPhoneError && (
+            <ErrorMessage>{receiverPhoneError}</ErrorMessage>
+          )}
           <Input
             type="number"
             min="1"
@@ -216,8 +255,10 @@ export default function OrderPage() {
             onChange={(e) =>
               setReceiver((prev) => ({ ...prev, qty: Number(e.target.value) }))
             }
+            onBlur={handleQtyBlur}
             placeholder="수량"
           />
+           {qtyError && <ErrorMessage>{qtyError}</ErrorMessage>}
         </InfoSection>
 
         {product && (
@@ -234,7 +275,7 @@ export default function OrderPage() {
           </ProductInfo>
         )}
 
-        <OrderButton onClick={handleOrder}>
+        <OrderButton onClick={handleOrder} disabled={!isValid}>
           {product
             ? `${product.price.sellingPrice.toLocaleString()}원 주문하기`
             : '주문하기'}
