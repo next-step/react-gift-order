@@ -7,18 +7,15 @@ import ProductInfoSection from "@/sections/OrderSection/ProductInfoSection";
 import BottomOrderBar from "@/sections/OrderSection/BottomOrderBar";
 import { useParams, useNavigate } from "react-router";
 import { giftRankingData } from "@/mocks/giftRankingData";
-import { useState, useEffect } from "react";
-import { useAuth } from "@/hooks/useAuth";
+import { useState } from "react";
 import { messageCardData } from "@/mocks/messageCardData";
 import { validateMessage, validateName, validatePhone, validateQuantity, } from "@/utils/validate";
 import { useValidate } from "@/hooks/useValidate";
+import { withAuth } from "@/hoc/withAuth";
 
-export default function OrderPage() {
+function OrderPage() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { isLoggedIn } = useAuth();
-
-  const [isAuthChecked, setIsAuthChecked] = useState(false);
 
   const rank = Number(id);
   const repeatedData = Array(12).fill(null).flatMap(() => giftRankingData);
@@ -40,17 +37,6 @@ export default function OrderPage() {
   const quantityValidation = useValidate(String(quantity), (val) =>
     validateQuantity(Number(val))
   );
-
-  useEffect(() => {
-    const userInStorage = localStorage.getItem("user");
-    if (!userInStorage && !isLoggedIn) {
-      navigate("/login");
-    } else {
-      setIsAuthChecked(true);
-    }
-  }, [isLoggedIn, navigate]);
-
-  if (!isAuthChecked) return <PageContainer>로딩 중...</PageContainer>;
 
   if (!product || isNaN(rank) || rank < 1 || rank > repeatedData.length) {
     return <PageContainer>존재하지 않는 상품입니다.</PageContainer>;
@@ -128,4 +114,4 @@ export default function OrderPage() {
       <BottomOrderBar totalPrice={totalPrice} isValid onOrder={handleOrder} />
     </PageContainer>
   );
-}
+} export default withAuth(OrderPage);

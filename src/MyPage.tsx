@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
 import PageContainer from "@/components/PageContainer";
 import { useAuth } from "@/hooks/useAuth";
-import { useEffect } from "react";
 import { useNavigate } from "react-router";
+import { withAuth } from "@/hoc/withAuth";
 
 const UserInfo = styled.p`
   ${({ theme }) => theme.typography.body.body1Regular};
@@ -28,15 +28,9 @@ const Button = styled.button`
   }
 `;
 
-export default function MyPage() {
+function MyPage() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!user) {
-      navigate("/login");
-    }
-  }, [user, navigate]);
 
   const handleLogout = () => {
     logout();
@@ -53,4 +47,4 @@ export default function MyPage() {
       )}
     </PageContainer>
   );
-}
+} export default withAuth(MyPage);
