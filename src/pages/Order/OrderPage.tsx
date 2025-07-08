@@ -13,12 +13,10 @@ import {
   messageInputStyle,
   titleStyle,
   formGroupStyle,
-  horizontalFormStyle,
   productInfoStyle,
   productImageStyle,
   orderButtonStyle,
   sectionStyle,
-  receiverLabelStyle,
   helperTextStyle,
   errorInputStyle,
   errorMessageStyle,
@@ -31,22 +29,23 @@ const OrderPage = () => {
   const [selectedCard, setSelectedCard] = useState(cardTemplates[0]);
   const [message, setMessage] = useState(cardTemplates[0].defaultTextMessage);
   const [senderName, setSenderName] = useState('');
-  const [receiverName, setReceiverName] = useState('');
-  const [receiverPhone, setReceiverPhone] = useState('');
-  const [quantity, setQuantity] = useState(1);
 
+  // 받는 사람 목록 상태 (초기값 빈 배열)
+  const [receivers, setReceivers] = useState<
+    { name: string; phone: string; quantity: number }[]
+  >([]);
+
+  // 에러 상태
   const [senderError, setSenderError] = useState('');
-  const [receiverNameError, setReceiverNameError] = useState('');
-  const [receiverPhoneError, setReceiverPhoneError] = useState('');
   const [messageError, setMessageError] = useState('');
-  const [quantityError, setQuantityError] = useState('');
 
+  // 모달 오픈 상태
   const [isAddReceiverModalOpen, setIsAddReceiverModalOpen] = useState(false);
 
   const product = mockItems[0];
 
-  const isValidPhoneNumber = (phone: string) =>
-    /^010-\d{4}-\d{4}$/.test(phone);
+  // 총 수량 계산 함수 (받는 사람 각각의 수량 합산)
+  const totalQuantity = receivers.reduce((sum, r) => sum + r.quantity, 0);
 
   const submitOrder = () => {
     let hasError = false;
@@ -54,35 +53,31 @@ const OrderPage = () => {
     if (!senderName.trim()) {
       setSenderError('이름을 입력해주세요.');
       hasError = true;
-    }
-
-    if (!receiverName.trim()) {
-      setReceiverNameError('이름을 입력해주세요.');
-      hasError = true;
-    }
-
-    if (!receiverPhone.trim()) {
-      setReceiverPhoneError('전화번호를 입력해주세요.');
-      hasError = true;
-    } else if (!isValidPhoneNumber(receiverPhone)) {
-      setReceiverPhoneError('올바른 전화번호 형식이 아닙니다.');
-      hasError = true;
+    } else {
+      setSenderError('');
     }
 
     if (!message.trim()) {
       setMessageError('메시지를 입력해주세요.');
       hasError = true;
+    } else {
+      setMessageError('');
     }
 
-    if (quantity < 1) {
-      setQuantityError('구매 수량은 1개 이상이어야 합니다.');
+    if (receivers.length === 0) {
+      alert('받는 사람을 최소 1명 이상 추가해주세요.');
+      hasError = true;
+    }
+
+    if (totalQuantity < 1) {
+      alert('수량 합계가 1개 이상이어야 합니다.');
       hasError = true;
     }
 
     if (hasError) return;
 
     alert(
-      `주문이 완료되었습니다.\n상품명: ${product.name}\n구매 수량: ${quantity}\n발신자 이름: ${senderName}\n메시지: ${message}`
+      `주문이 완료되었습니다.\n상품명: ${product.name}\n총 구매 수량: ${totalQuantity}\n발신자 이름: ${senderName}\n메시지: ${message}\n받는 사람 수: ${receivers.length}`
     );
   };
 
@@ -94,6 +89,7 @@ const OrderPage = () => {
 
   return (
     <div css={containerStyle(theme)}>
+      {/* 카드 선택 */}
       <div css={cardSelectorStyle(theme)}>
         <div css={thumbListStyle(theme)}>
           {cardTemplates.map((card) => (
@@ -116,6 +112,7 @@ const OrderPage = () => {
         />
       </div>
 
+      {/* 메시지 입력 */}
       <textarea
         value={message}
         onChange={(e) => {
@@ -127,6 +124,7 @@ const OrderPage = () => {
       />
       {messageError && <p css={errorMessageStyle}>{messageError}</p>}
 
+      {/* 보내는 사람 */}
       <div css={sectionStyle(theme)}>
         <div css={formGroupStyle(theme)}>
           <label>보내는 사람</label>
@@ -149,101 +147,53 @@ const OrderPage = () => {
         </div>
       </div>
 
+      {/* 받는 사람 */}
       <div css={sectionStyle(theme)}>
-        <div css={formGroupStyle(theme)}>
-          <div
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: 8,
+          }}
+        >
+          <label>받는 사람</label>
+          <button
+            type="button"
+            onClick={() => setIsAddReceiverModalOpen(true)}
             style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
+              background: theme.color.gray.gray300,
+              color: theme.color.gray.gray1000,
+              padding: '6px 12px',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontSize: '14px',
             }}
           >
-            <label>받는 사람</label>
-            <button
-              type="button"
-              onClick={() => setIsAddReceiverModalOpen(true)}
-              style={{
-                background: theme.color.gray.gray300,
-                color: theme.color.gray.gray1000,
-                padding: '6px 12px',
-                border: 'none',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                fontSize: '14px',
-              }}
-            >
-              + 추가
-            </button>
-          </div>
-
-          <div css={horizontalFormStyle(theme)}>
-            <label css={receiverLabelStyle(theme)}>이름</label>
-            <div style={{ flex: 1 }}>
-              <input
-                type="text"
-                placeholder="이름을 입력하세요."
-                value={receiverName}
-                onChange={(e) => {
-                  setReceiverName(e.target.value);
-                  if (e.target.value.trim()) setReceiverNameError('');
-                }}
-                css={receiverNameError ? errorInputStyle : undefined}
-              />
-              {receiverNameError && (
-                <p css={errorMessageStyle}>{receiverNameError}</p>
-              )}
-            </div>
-          </div>
-
-          <div css={horizontalFormStyle(theme)}>
-            <label css={receiverLabelStyle(theme)}>전화번호</label>
-            <div style={{ flex: 1 }}>
-              <input
-                type="text"
-                placeholder="전화번호를 입력하세요."
-                value={receiverPhone}
-                onChange={(e) => {
-                  setReceiverPhone(e.target.value);
-                  if (isValidPhoneNumber(e.target.value)) {
-                    setReceiverPhoneError('');
-                  }
-                }}
-                css={receiverPhoneError ? errorInputStyle : undefined}
-              />
-              {receiverPhoneError && (
-                <p css={errorMessageStyle}>{receiverPhoneError}</p>
-              )}
-            </div>
-          </div>
-
-          <div css={horizontalFormStyle(theme)}>
-            <label css={receiverLabelStyle(theme)}>수량</label>
-            <div style={{ flex: 1 }}>
-              <input
-                type="number"
-                min={1}
-                value={quantity}
-                onChange={(e) => {
-                  const val = Number(e.target.value);
-                  setQuantity(val);
-                  if (val >= 1) setQuantityError('');
-                }}
-                css={quantityError ? errorInputStyle : undefined}
-              />
-              {quantityError && <p css={errorMessageStyle}>{quantityError}</p>}
-            </div>
-          </div>
+            + 추가
+          </button>
         </div>
+
+        {/* 받는 사람 리스트 표시 */}
+        {receivers.length === 0 ? (
+          <p css={helperTextStyle(theme)}>받는 사람이 없습니다. 받는 사람을 추가해주세요.</p>
+        ) : (
+          <ul>
+            {receivers.map((r, i) => (
+              <li key={i} style={{ marginBottom: 6 }}>
+                {r.name} / {r.phone} / {r.quantity}개
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
+      {/* 상품 정보 */}
       <div css={sectionStyle(theme)}>
         <h2 css={titleStyle(theme)}>상품 정보</h2>
         <div css={productInfoStyle(theme)}>
-          <img
-            src={product.imageURL}
-            alt="상품"
-            css={productImageStyle(theme)}
-          />
+          <img src={product.imageURL} alt="상품" css={productImageStyle(theme)} />
           <div>
             <p>
               {product.name} / {product.brand}
@@ -254,11 +204,19 @@ const OrderPage = () => {
       </div>
 
       <button css={orderButtonStyle(theme)} onClick={submitOrder}>
-        {(product.price * quantity).toLocaleString()}원 주문하기
+        {(product.price * totalQuantity).toLocaleString()}원 주문하기
       </button>
 
+      {/* 모달 */}
       {isAddReceiverModalOpen && (
-        <AddReceiverModal onClose={() => setIsAddReceiverModalOpen(false)} />
+        <AddReceiverModal
+          onClose={() => setIsAddReceiverModalOpen(false)}
+          onComplete={(newReceivers) => {
+            setReceivers(newReceivers); // 모달에서 받은 목록을 상태로 저장
+            setIsAddReceiverModalOpen(false);
+          }}
+          initialReceivers={receivers}
+        />
       )}
     </div>
   );

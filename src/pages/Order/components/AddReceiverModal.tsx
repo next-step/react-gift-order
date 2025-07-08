@@ -7,24 +7,38 @@ import {
   receiverAddGuideStyle,
   errorInputStyle,
   errorMessageStyle,
-} from '../OrderPage.style'; 
+} from '../OrderPage.style';
 
-const AddReceiverModal = ({ onClose }: { onClose: () => void }) => {
+type Receiver = {
+  name: string;
+  phone: string;
+  quantity: number;
+};
+
+type Props = {
+  onClose: () => void;
+  onComplete: (receivers: Receiver[]) => void;
+  initialReceivers: Receiver[];
+};
+
+const AddReceiverModal = ({ onClose, onComplete, initialReceivers }: Props) => {
   const theme = useTheme();
-  const [receivers, setReceivers] = useState([
-    { name: '', phone: '', quantity: 1 },
-  ]);
+  const [receivers, setReceivers] = useState<Receiver[]>(
+    initialReceivers.length > 0 ? initialReceivers : [{ name: '', phone: '', quantity: 1 }]
+  );
 
   const [errors, setErrors] = useState<
     { name: string; phone: string; quantity: string }[]
-  >([{ name: '', phone: '', quantity: '' }]);
+  >(
+    initialReceivers.length > 0
+      ? initialReceivers.map(() => ({ name: '', phone: '', quantity: '' }))
+      : [{ name: '', phone: '', quantity: '' }]
+  );
 
   const isValidPhoneNumber = (phone: string) => /^010\d{8}$/.test(phone);
 
   const isDuplicatePhone = (phone: string, index: number) => {
-    return receivers.some(
-      (receiver, i) => i !== index && receiver.phone === phone
-    );
+    return receivers.some((receiver, i) => i !== index && receiver.phone === phone);
   };
 
   const addReceiver = () => {
@@ -40,7 +54,7 @@ const AddReceiverModal = ({ onClose }: { onClose: () => void }) => {
 
   const updateReceiver = (
     index: number,
-    field: 'name' | 'phone' | 'quantity',
+    field: keyof Receiver,
     value: string
   ) => {
     const updatedReceivers = [...receivers];
@@ -49,7 +63,6 @@ const AddReceiverModal = ({ onClose }: { onClose: () => void }) => {
     } else {
       updatedReceivers[index][field] = value;
     }
-
     setReceivers(updatedReceivers);
 
     const updatedErrors = [...errors];
@@ -57,7 +70,6 @@ const AddReceiverModal = ({ onClose }: { onClose: () => void }) => {
     if (field === 'name') {
       updatedErrors[index].name = value.trim() ? '' : '이름을 입력해주세요.';
     }
-
     if (field === 'phone') {
       if (!value.trim()) {
         updatedErrors[index].phone = '전화번호를 입력해주세요.';
@@ -69,16 +81,43 @@ const AddReceiverModal = ({ onClose }: { onClose: () => void }) => {
         updatedErrors[index].phone = '';
       }
     }
-
     if (field === 'quantity') {
-      if (Number(value) < 1) {
-        updatedErrors[index].quantity = '수량은 1개 이상이어야 합니다.';
-      } else {
-        updatedErrors[index].quantity = '';
-      }
+      updatedErrors[index].quantity = Number(value) < 1 ? '수량은 1개 이상이어야 합니다.' : '';
     }
 
     setErrors(updatedErrors);
+  };
+
+  // 완료 버튼 클릭 시 전체 검증 후 완료
+  const handleComplete = () => {
+    let hasError = false;
+    const newErrors = receivers.map((r, i) => {
+      const err = { name: '', phone: '', quantity: '' };
+      if (!r.name.trim()) {
+        err.name = '이름을 입력해주세요.';
+        hasError = true;
+      }
+      if (!r.phone.trim()) {
+        err.phone = '전화번호를 입력해주세요.';
+        hasError = true;
+      } else if (!isValidPhoneNumber(r.phone)) {
+        err.phone = '올바른 전화번호 형식이 아닙니다.';
+        hasError = true;
+      } else if (isDuplicatePhone(r.phone, i)) {
+        err.phone = '중복된 전화번호입니다.';
+        hasError = true;
+      }
+      if (r.quantity < 1) {
+        err.quantity = '수량은 1개 이상이어야 합니다.';
+        hasError = true;
+      }
+      return err;
+    });
+    setErrors(newErrors);
+
+    if (hasError) return;
+
+    onComplete(receivers);
   };
 
   return (
@@ -110,12 +149,8 @@ const AddReceiverModal = ({ onClose }: { onClose: () => void }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <h3 css={{ marginTop: 0 }}>받는 사람 추가</h3>
-        <p css={receiverAddGuideStyle(theme)}>
-          * 최대 10명까지 추가 할 수 있어요.
-        </p>
-        <p css={receiverAddGuideStyle(theme)}>
-          * 받는 사람의 전화번호를 중복으로 입력할 수 없어요.
-        </p>
+        <p css={receiverAddGuideStyle(theme)}>* 최대 10명까지 추가 할 수 있어요.</p>
+        <p css={receiverAddGuideStyle(theme)}>* 받는 사람의 전화번호를 중복으로 입력할 수 없어요.</p>
 
         <button
           type="button"
@@ -123,9 +158,7 @@ const AddReceiverModal = ({ onClose }: { onClose: () => void }) => {
           disabled={receivers.length >= 10}
           css={{
             backgroundColor:
-              receivers.length >= 10
-                ? theme.color.gray.gray100
-                : theme.color.gray.gray300,
+              receivers.length >= 10 ? theme.color.gray.gray100 : theme.color.gray.gray300,
             color: theme.color.gray.gray1000,
             padding: '8px 16px',
             border: 'none',
@@ -172,14 +205,10 @@ const AddReceiverModal = ({ onClose }: { onClose: () => void }) => {
                   type="text"
                   placeholder="이름을 입력하세요."
                   value={receiver.name}
-                  onChange={(e) =>
-                    updateReceiver(index, 'name', e.target.value)
-                  }
+                  onChange={(e) => updateReceiver(index, 'name', e.target.value)}
                   css={errors[index].name ? errorInputStyle : undefined}
                 />
-                {errors[index].name && (
-                  <p css={errorMessageStyle}>{errors[index].name}</p>
-                )}
+                {errors[index].name && <p css={errorMessageStyle}>{errors[index].name}</p>}
               </div>
             </div>
 
@@ -190,14 +219,10 @@ const AddReceiverModal = ({ onClose }: { onClose: () => void }) => {
                   type="text"
                   placeholder="전화번호를 입력하세요"
                   value={receiver.phone}
-                  onChange={(e) =>
-                    updateReceiver(index, 'phone', e.target.value)
-                  }
+                  onChange={(e) => updateReceiver(index, 'phone', e.target.value)}
                   css={errors[index].phone ? errorInputStyle : undefined}
                 />
-                {errors[index].phone && (
-                  <p css={errorMessageStyle}>{errors[index].phone}</p>
-                )}
+                {errors[index].phone && <p css={errorMessageStyle}>{errors[index].phone}</p>}
               </div>
             </div>
 
@@ -208,9 +233,7 @@ const AddReceiverModal = ({ onClose }: { onClose: () => void }) => {
                   type="number"
                   min={1}
                   value={receiver.quantity}
-                  onChange={(e) =>
-                    updateReceiver(index, 'quantity', e.target.value)
-                  }
+                  onChange={(e) => updateReceiver(index, 'quantity', e.target.value)}
                   css={errors[index].quantity ? errorInputStyle : undefined}
                 />
                 {errors[index].quantity && (
@@ -223,9 +246,24 @@ const AddReceiverModal = ({ onClose }: { onClose: () => void }) => {
 
         <button
           type="button"
-          onClick={onClose}
+          onClick={handleComplete}
           css={{
             marginTop: '16px',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            border: '1px solid #ccc',
+            cursor: 'pointer',
+            backgroundColor: 'white',
+          }}
+        >
+          완료
+        </button>
+
+        <button
+          type="button"
+          onClick={onClose}
+          css={{
+            marginTop: '8px',
             padding: '8px 16px',
             borderRadius: '6px',
             border: '1px solid #ccc',
