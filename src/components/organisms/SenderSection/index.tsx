@@ -1,10 +1,9 @@
-import React from 'react';
-import { Label, InputField } from '@/components';
+import { Label, InputField, type InputChangeHandler } from '@/components';
 import * as S from './styles';
 
 interface SenderSectionProps {
   senderName: string;
-  onSenderNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSenderNameChange: InputChangeHandler;
   error?: string;
 }
 

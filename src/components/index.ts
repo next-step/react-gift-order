@@ -6,7 +6,7 @@ export { default as Text } from './atoms/Text';
 export { default as TextArea } from './atoms/TextArea';
 
 // Molecules
-export { default as InputField } from './molcules/InputField';
+export { default as InputField, type InputChangeHandler } from './molcules/InputField';
 export { default as MessageInput } from './molcules/MesageInput';
 export { default as OrderCard } from './molcules/OrderCard';
 

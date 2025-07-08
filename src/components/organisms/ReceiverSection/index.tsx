@@ -1,14 +1,14 @@
 import React from 'react';
-import { Label, InputField } from '@/components';
+import { Label, InputField, type InputChangeHandler } from '@/components';
 import * as S from './styles';
 
 interface ReceiverSectionProps {
   receiverName: string;
   receiverPhone: string;
   quantity: number;
-  onReceiverNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onReceiverPhoneChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onQuantityChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onReceiverNameChange: InputChangeHandler;
+  onReceiverPhoneChange: InputChangeHandler;
+  onQuantityChange: InputChangeHandler;
   receiverNameError?: string;
   receiverPhoneError?: string;
   quantityError?: string;

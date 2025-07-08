@@ -2,11 +2,13 @@ import React from 'react';
 import { Input, Label, Text } from '@/components';
 import * as S from './styles';
 
+export type InputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => void;
+
 interface InputFieldProps {
   label?: string;
   placeholder?: string;
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: InputChangeHandler;
   type?: 'text' | 'number' | 'tel';
   description?: string;
   labelMinWidth?: string;

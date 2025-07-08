@@ -1,11 +1,12 @@
 import React from 'react';
+import { type InputChangeHandler } from '@/components';
 import * as S from './styles';
 
 interface InputProps {
   type?: 'text' | 'number' | 'tel';
   placeholder?: string;
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: InputChangeHandler;
   style?: React.CSSProperties;
   hasError?: boolean;
 }

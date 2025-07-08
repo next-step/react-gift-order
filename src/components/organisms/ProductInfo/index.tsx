@@ -18,7 +18,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
           <S.BrandName>{product.brandInfo.name}</S.BrandName>
           <S.PriceDivider />
           <S.PriceContainer>
-            <S.PriceLabel>상품가 </S.PriceLabel>
+            <S.PriceLabel>상품가</S.PriceLabel>
             <S.Price>{product.price.sellingPrice.toLocaleString()}원</S.Price>
           </S.PriceContainer>
         </S.ProductDetails>

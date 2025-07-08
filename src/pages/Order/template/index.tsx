@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, CardCarousel, ProductInfo, MessageInput, SenderSection, ReceiverSection } from '@/components';
+import { Image, CardCarousel, ProductInfo, MessageInput, SenderSection, ReceiverSection, type InputChangeHandler } from '@/components';
 import { type RankingItem } from '@/data/ranking';
 import { type Order } from '@/data/orders';
 import { 
@@ -10,10 +10,10 @@ import {
 import * as S from './styles';
 
 interface FormHandlers {
-  onSenderNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onReceiverNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onReceiverPhoneChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onQuantityChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSenderNameChange: InputChangeHandler;
+  onReceiverNameChange: InputChangeHandler;
+  onReceiverPhoneChange: InputChangeHandler;
+  onQuantityChange: InputChangeHandler;
 }
 
 interface OrderTemplateProps {
