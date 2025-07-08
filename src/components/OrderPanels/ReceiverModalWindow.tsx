@@ -2,24 +2,23 @@ import styled from "@emotion/styled";
 import theme from "@src/styles/kakaoTheme";
 import type { StateHook } from "@src/hooks/stateHookType";
 import ReceiverInputBox from "./ReceiverInputBox";
-import { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import type { Receiver } from "./BatchReceiverInput";
 
 type ReceiverModalWindowProps = {
-  open: StateHook<boolean>;
+  openHooks: StateHook<boolean>;
+  listHooks: StateHook<Receiver[]>;
 };
 
-type Receiver = {
-  id: string;
-  receiver: string;
-  phoneNumber: string;
-  quantity: string;
-  duplicate: boolean;
-};
-
-function ReceiverModalWindow({ open }: ReceiverModalWindowProps) {
-  const [list, setList] = useState<Receiver[]>([]);
-
+function ReceiverModalWindow({
+  openHooks: open,
+  listHooks
+}: ReceiverModalWindowProps) {
   const closeModal = () => open.setValue(false);
+
+  const list: Receiver[] = listHooks.value;
+  const setList: React.Dispatch<React.SetStateAction<Receiver[]>> =
+    listHooks.setValue;
 
   const commit = () => {
     //commit logic

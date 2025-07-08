@@ -4,15 +4,19 @@ import { useState } from "react";
 import Modal from "@src/components/shared/Modal";
 import ReceiverModalWindow from "./ReceiverModalWindow";
 
+export type Receiver = {
+  id: string;
+  receiver: string;
+  phoneNumber: string;
+  quantity: string;
+  duplicate: boolean;
+};
+
 function BatchReceiverInput() {
   const [open, setOpen] = useState(false);
+  const [list, setList] = useState<Receiver[]>([]);
 
   const openModal = () => setOpen(true);
-  const closeModal = () => setOpen(false);
-  const commit = () => {
-    //commit logic
-    closeModal();
-  };
 
   return (
     <BatchReceiverInputWrapper>
@@ -26,7 +30,10 @@ function BatchReceiverInput() {
         받는 사람을 추가해주세요.
       </ReceiverPlaceholder>
       <Modal open={{ value: open, setValue: setOpen }}>
-        <ReceiverModalWindow open={{ value: open, setValue: setOpen }} />
+        <ReceiverModalWindow
+          openHooks={{ value: open, setValue: setOpen }}
+          listHooks={{ value: list, setValue: setList }}
+        />
       </Modal>
     </BatchReceiverInputWrapper>
   );
