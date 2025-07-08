@@ -1,1 +1,9 @@
 # react-gift-order
+
+## 2. 주문 폼 - 폼 처리
+
+### 0단계 미션 :
+
+- [x] 주문하기 저장소 포크, 클론
+- [x] step0를 위한 브랜치 생성 → 앞으론 이와 같이 step별 브랜치를 만들어서 각 단계 수행
+- [x] 요구사항 기록을 위한 requirements.txt 파일 준비, gitignore로 등록
