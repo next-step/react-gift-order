@@ -74,9 +74,15 @@ const Login = () => {
     setIsError((prev) => ({ ...prev, [field]: validateField(field, value) }));
   };
 
-  const handleBlur = (field: 'email' | 'password') => {
-    const value = formValue[field];
-    setIsError((prev) => ({ ...prev, [field]: validateField(field, value) }));
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    if (name === 'email' || name === 'password') {
+      setIsError((prev) => ({
+        ...prev,
+        [name]: validateField(name, value),
+      }));
+    }
   };
 
   const formSubmitted = () => {
@@ -97,7 +103,7 @@ const Login = () => {
             placeholder="이메일"
             value={formValue.email}
             onChange={handleChange}
-            onBlur={() => handleBlur('email')}
+            onBlur={handleBlur}
             error={isError.email}
           />
 
@@ -109,7 +115,7 @@ const Login = () => {
             placeholder="비밀번호"
             value={formValue.password}
             onChange={handleChange}
-            onBlur={() => handleBlur('password')}
+            onBlur={handleBlur}
             error={isError.password}
           />
 
