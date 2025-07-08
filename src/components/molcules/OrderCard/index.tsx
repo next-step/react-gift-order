@@ -1,4 +1,4 @@
-import Image from '@/components/atoms/Image';
+import { Image } from '@/components';
 import { type Order } from '@/data/orders';
 import * as S from './styles';
 

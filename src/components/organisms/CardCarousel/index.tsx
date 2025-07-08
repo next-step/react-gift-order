@@ -1,4 +1,4 @@
-import OrderCard from '@/components/molcules/OrderCard';
+import { OrderCard } from '@/components';
 import { type Order } from '@/data/orders';
 import * as S from './styles';
 

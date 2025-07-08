@@ -1,5 +1,5 @@
 import React from 'react';
-import TextArea from '@/components/atoms/TextArea';
+import { TextArea } from '@/components';
 import * as S from './styles';
 
 interface MessageInputProps {

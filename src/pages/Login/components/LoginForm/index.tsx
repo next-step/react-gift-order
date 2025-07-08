@@ -1,6 +1,5 @@
 import { useLoginForm } from '@/hooks/useLoginForm';
-import LoginInputField from '@/components/Form/LoginInputField';
-import Button from '@/components/common/Button';
+import { LoginInputField, Button } from '@/components';
 import * as S from './styles';
 
 const LoginForm = () => {

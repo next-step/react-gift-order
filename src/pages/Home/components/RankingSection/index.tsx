@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { rankingItems, genderItems, actionItems } from '@/data/ranking';
-import ItemCard from '@/components/common/ItemCard';
+import { ItemCard } from '@/components';
 import { useAuth } from '@/contexts/AuthContext';
 import * as S from './styles';
 

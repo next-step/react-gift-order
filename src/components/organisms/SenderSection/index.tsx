@@ -1,6 +1,5 @@
 import React from 'react';
-import Label from '@/components/atoms/Label';
-import InputField from '@/components/molcules/InputField';
+import { Label, InputField } from '@/components';
 import * as S from './styles';
 
 interface SenderSectionProps {

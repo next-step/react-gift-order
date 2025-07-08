@@ -1,6 +1,6 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import * as S from './styles';
-import IconButton from '@/components/common/IconButton';
+import { IconButton } from '@/components';
 import { useAuth } from '@/contexts/AuthContext';
 
 const Navigation = () => {

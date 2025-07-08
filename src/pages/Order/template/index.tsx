@@ -1,10 +1,5 @@
 import React from 'react';
-import Image from '@/components/atoms/Image';
-import MessageInput from '@/components/molcules/MesageInput';
-import CardCarousel from '@/components/organisms/CardCarousel';
-import SenderSection from '@/components/organisms/SenderSection';
-import ReceiverSection from '@/components/organisms/ReceiverSection';
-import ProductInfo from '@/components/organisms/ProductInfo';
+import { Image, CardCarousel, ProductInfo, MessageInput, SenderSection, ReceiverSection } from '@/components';
 import { type RankingItem } from '@/data/ranking';
 import { type Order } from '@/data/orders';
 import * as S from './styles';
