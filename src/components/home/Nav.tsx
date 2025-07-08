@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { theme } from '@/styles/theme'
 import { Link, useNavigate } from 'react-router-dom'
 import { ChevronLeft, UserRound } from 'lucide-react'
-import { ROUTH_PATH } from '@/Router'
+import { ROUTE_PATH } from '@/Router'
 import { useAuth } from '@/contexts/AuthContext'
 
 // * 네비게이션 컴포넌트
@@ -16,15 +16,15 @@ export const Nav = () => {
         {/* 뒤로가기 아이콘 */}
         <ChevronLeft size={28} color={theme.colors.gray.gray900} />
       </NavButton>
-      <Link to={ROUTH_PATH.HOME} css={theme.typography.title.title1Bold}>
+      <Link to={ROUTE_PATH.HOME} css={theme.typography.title.title1Bold}>
         선물하기
       </Link>
       {/* 로그인 페이지 이동 시 직전 위치 정보를 state로 넘겨줌 (로그인 시 이전 페이지로 Redirect되도록 하기 위해) */}
       <NavButton
         onClick={() =>
           isLogin
-            ? navigate(ROUTH_PATH.MY)
-            : navigate(ROUTH_PATH.LOGIN, { state: { from: location.pathname } })
+            ? navigate(ROUTE_PATH.MY)
+            : navigate(ROUTE_PATH.LOGIN, { state: { from: location.pathname } })
         }
       >
         {/* 프로필 아이콘 */}

@@ -1,7 +1,7 @@
 import { Button, PageContainer, Typography } from '@/components/common'
 import { useAuth } from '@/contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
-import { ROUTH_PATH } from '@/Router'
+import { ROUTE_PATH } from '@/Router'
 import styled from '@emotion/styled'
 import { theme } from '@/styles/theme'
 import { useEffect } from 'react'
@@ -15,13 +15,13 @@ export const MyPage = () => {
   // ! 로그아웃 시에 로그인 페이지로 리다이렉트
   const handleLogout = () => {
     logout()
-    navigate(ROUTH_PATH.LOGIN, { replace: true })
+    navigate(ROUTE_PATH.LOGIN, { replace: true })
   }
 
   // ! 로그인하지 않은 사용자는 로그인 페이지로 리다이렉트
   useEffect(() => {
     if (!isLogin) {
-      navigate(ROUTH_PATH.LOGIN, { replace: true })
+      navigate(ROUTE_PATH.LOGIN, { replace: true })
     }
   }, [isLogin, navigate])
 

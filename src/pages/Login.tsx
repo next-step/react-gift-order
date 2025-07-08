@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { PageContainer } from '@/components/common/PageContainer'
 import { Button } from '@/components/common/Button'
 import { useInput } from '@/hooks/useInput'
-import { ROUTH_PATH } from '@/Router'
+import { ROUTE_PATH } from '@/Router'
 import { VALIDATE_RULES } from '@/data/validateRules'
 import { useAuth } from '@/contexts/AuthContext'
 
@@ -23,7 +23,7 @@ export const Login = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const from = (location.state as { from?: string })?.from || ROUTH_PATH.HOME
+  const from = (location.state as { from?: string })?.from || ROUTE_PATH.HOME
 
   // * 로그인 핸들러
   const handleLogin = (e: React.FormEvent) => {

@@ -13,7 +13,7 @@ import { SenderSection } from '@/components/order/SenderSection'
 import { ReceiverSection } from '@/components/order/ReceiverSection'
 import { validateValue } from '@/utils/validateValue'
 import { VALIDATE_RULES } from '@/data/validateRules'
-import { ROUTH_PATH } from '@/Router'
+import { ROUTE_PATH } from '@/Router'
 
 // * 주문하기 페이지
 export const Order = () => {
@@ -127,7 +127,7 @@ export const Order = () => {
       alert(
         `주문이 완료되었습니다!\n상품명: ${productInfo?.name}\n구매 수량: ${receiver.count}\n상품가: ${totalPrice.toLocaleString()}원\n보낸 사람 명: ${sender}\n받는 사람 명: ${receiver.name}\n메시지: ${cardMessage}`,
       )
-      navigate(ROUTH_PATH.HOME)
+      navigate(ROUTE_PATH.HOME)
     }
   }
 

@@ -4,7 +4,7 @@ import styled from '@emotion/styled'
 import type { Product } from './types'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
-import { ROUTH_PATH } from '@/Router'
+import { ROUTE_PATH } from '@/Router'
 
 // * 실시간 급상승 상품 아이템 컴포넌트
 export const ProductItem = ({ product, index }: { product: Product; index: number }) => {
@@ -17,10 +17,10 @@ export const ProductItem = ({ product, index }: { product: Product; index: numbe
     // * 로그인 유무에 따른 페이지 이동
     if (isLogin) {
       // * 로그인 (유) -> 주문하기 페이지
-      navigate(`${ROUTH_PATH.ORDER}/${product.id}`)
+      navigate(`${ROUTE_PATH.ORDER}/${product.id}`)
     } else {
       // * 로그인 (무) -> 로그인 페이지 (로그인 이후 from을 남겨 )
-      navigate(ROUTH_PATH.LOGIN, { state: { from: `${ROUTH_PATH.ORDER}/${product.id}` } })
+      navigate(ROUTE_PATH.LOGIN, { state: { from: `${ROUTE_PATH.ORDER}/${product.id}` } })
     }
   }
 
