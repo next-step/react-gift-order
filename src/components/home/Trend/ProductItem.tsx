@@ -42,8 +42,8 @@ export const ProductItem = ({ product, index }: { product: Product; index: numbe
   )
 }
 
-// * 실시간 급상승 상품 아이템 컨테이너
-const ProductItemContainer = styled.div`
+// * 실시간 급상승 상품 아이템 컨테이너 (article 시맨틱 태그 사용)
+const ProductItemContainer = styled.article`
   position: relative;
 
   width: 100%;

@@ -25,8 +25,8 @@ export const Friends = () => {
   )
 }
 
-// * 선물할 친구 컨테이너
-const Container = styled.div`
+// * 선물할 친구 컨테이너 (section 시맨틱 태그 사용)
+const Container = styled.section`
   width: 100%;
   height: fit-content;
 

@@ -14,8 +14,8 @@ interface PageContainerProps {
   className?: string
 }
 
-// * 공통 페이지 컨테이너
-const Container = styled.div`
+// * 공통 페이지 컨테이너 (main 시맨틱 태그 사용)
+const Container = styled.main`
   width: 100%;
   max-width: 720px;
   height: fit-content;
