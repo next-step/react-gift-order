@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import theme from '@src/styles/tokens/index';
 import product from '@src/assets/mock/itemList_mock';
-import { useAuthNavigation } from '@/utills/authNavigation';
+import { useAuthNavigation } from '@/hooks/useAuthNavigation';
 
 const targets = [
   { key: 'ALL', label: '전체', icon: 'ALL' },

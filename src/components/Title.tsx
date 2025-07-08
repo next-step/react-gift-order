@@ -4,7 +4,7 @@ import arrowBackIcon from '@src/assets/icons/arrow_back.svg';
 import personIcon from '@src/assets/icons/person.svg';
 import logoIcon from '@src/assets/icons/logo.webp';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuthNavigation } from '@/utills/authNavigation';
+import { useAuthNavigation } from '@/hooks/useAuthNavigation';
 
 const divStyle = css`
   width: 100%;
