@@ -1,20 +1,17 @@
 import { useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { rankingItems, genderItems, actionItems } from '@/data/ranking';
+import { rankingItems, genderItems, actionItems, type RankingItem } from '@/data/ranking';
 import { ItemCard } from '@/components';
-import { useAuth } from '@/contexts/AuthContext';
 import * as S from './styles';
 
 const RankingSection = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isExpanded, setIsExpanded] = useState(false);
   const navigate = useNavigate();
-  const { isLoggedIn } = useAuth();
-  
-  // URL에서 필터 값 읽기 (기본값 설정)
+
   const selectedGender = searchParams.get('gender') || 'ALL';
   const selectedAction = searchParams.get('action') || '받고 싶어한';
-  // 필터 변경 핸들러
+
   const handleGenderChange = (gender: string) => {
     setSearchParams(prev => {
       const newParams = new URLSearchParams(prev);
@@ -22,7 +19,7 @@ const RankingSection = () => {
       return newParams;
     });
   };
-  // 필터 변경 핸들러
+
   const handleActionChange = (action: string) => {
     setSearchParams(prev => {
       const newParams = new URLSearchParams(prev);
@@ -31,12 +28,8 @@ const RankingSection = () => {
     });
   };
 
-  const handleItemCardClick = (item: typeof rankingItems[0]) => {
-    if (isLoggedIn) {
-      navigate('/order', { state: { product: item } });
-    } else {
-      navigate('/login');
-    }
+  const handleItemCardClick = (item: RankingItem) => {
+    navigate(`/order/${item.id}`);
   };
 
   return (

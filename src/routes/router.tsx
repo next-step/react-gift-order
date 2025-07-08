@@ -24,7 +24,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: 'order',
+        path: 'order/:productId?',
         element: (
           <ProtectedRoute>
             <Order />

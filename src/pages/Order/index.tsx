@@ -1,12 +1,14 @@
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { orders } from '@/data/orders';
-import { type RankingItem } from '@/data/ranking';
+import { rankingItems} from '@/data/ranking';
 import { useOrderForm } from '@/hooks/useOrderForm';
 import OrderTemplate from './template';
 
 const Order = () => {
-  const location = useLocation();
-  const product = location.state?.product as RankingItem | undefined;
+  const { productId } = useParams<{ productId: string }>();
+  const product = productId 
+    ? rankingItems.find(item => item.id === parseInt(productId)) 
+    : undefined;
 
   const {
     cardState,
