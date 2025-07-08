@@ -73,27 +73,6 @@ const Order = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const validateField = (name: string, value: string) => {
-    let error = '';
-
-    if (name === 'message') {
-      if (!value.trim()) error = '메시지를 입력해주세요.';
-    } else if (name === 'senderName') {
-      if (!value.trim()) error = '이름을 입력해주세요.';
-    } else if (name === 'recipientName') {
-      if (!value.trim()) error = '이름을 입력해주세요';
-    } else if (name === 'recipientPhone') {
-      if (!value.trim()) error = '전화번호를 입력해주세요.';
-      else if (!/^010\d{7,8}$/.test(value))
-        error = '올바른 전화번호 형식이 아닙니다.';
-    } else if (name === 'quantity') {
-      if (!value || Number(value) < 1)
-        error = '구매수량은 1개 이상이어야 합니다.';
-    }
-
-    setErrors((prev) => ({ ...prev, [name]: error }));
-  };
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
