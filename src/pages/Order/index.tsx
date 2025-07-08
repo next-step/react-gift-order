@@ -16,7 +16,7 @@ const Order = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const product = location.state?.product as RankingItem | undefined;
-  
+
   const [selectedCardId, setSelectedCardId] = useState<number>(orders[0]?.id || 904);
   const [message, setMessage] = useState<string>(orders[0]?.defaultTextMessage || '축하해요.');
   const [senderName, setSenderName] = useState<string>('');
@@ -36,28 +36,45 @@ const Order = () => {
     const card = orders.find(order => order.id === id);
     if (card) {
       setMessage(card.defaultTextMessage);
+      if (errors.message) {
+        setErrors(prev => ({ ...prev, message: '' }));
+      }
     }
-    console.log('카드 클릭:', id);
   };
 
   const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
+    if (errors.message) {
+      setErrors(prev => ({ ...prev, message: '' }));
+    }
   };
 
   const handleSenderNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSenderName(e.target.value);
+    if (errors.senderName) {
+      setErrors(prev => ({ ...prev, senderName: '' }));
+    }
   };
 
   const handleReceiverNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setReceiverName(e.target.value);
+    if (errors.receiverName) {
+      setErrors(prev => ({ ...prev, receiverName: '' }));
+    }
   };
 
   const handleReceiverPhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setReceiverPhone(e.target.value);
+    if (errors.receiverPhone) {
+      setErrors(prev => ({ ...prev, receiverPhone: '' }));
+    }
   };
 
   const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuantity(e.target.value);
+    if (errors.quantity) {
+      setErrors(prev => ({ ...prev, quantity: '' }));
+    }
   };
 
   const validateForm = (): boolean => {
@@ -69,40 +86,33 @@ const Order = () => {
       quantity: '',
     };
 
-    // 메시지 검사
     if (!message.trim()) {
       newErrors.message = '메시지를 입력해주세요.';
     }
 
-    // 보내는 사람 이름 검사
     if (!senderName.trim()) {
       newErrors.senderName = '이름을 입력해주세요.';
     }
 
-    // 받는 사람 이름 검사
     if (!receiverName.trim()) {
       newErrors.receiverName = '이름을 입력해주세요.';
     }
 
-    // 전화번호 검사
     if (!receiverPhone.trim()) {
       newErrors.receiverPhone = '전화번호를 입력해주세요.';
     } else {
       const phoneRegex = /^010\d{8}$/;
       if (!phoneRegex.test(receiverPhone)) {
-        newErrors.receiverPhone = '올바른 전화번호 형식을 입력해주세요. (01012341234)';
+        newErrors.receiverPhone = '올바른 전화번호 형식이 아닙니다.';
       }
     }
 
-    // 수량 검사
     const quantityNum = parseInt(quantity, 10);
     if (isNaN(quantityNum) || quantityNum < 1) {
       newErrors.quantity = '수량은 1개 이상이어야 합니다.';
     }
-
     setErrors(newErrors);
 
-    // 모든 에러가 없으면 true 반환
     return !Object.values(newErrors).some(error => error !== '');
   };
 

@@ -5,14 +5,16 @@ interface TextAreaProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   placeholder?: string;
+  hasError?: boolean;
 }
 
-const TextArea = ({ value, onChange, placeholder }: TextAreaProps) => {
+const TextArea = ({ value, onChange, placeholder, hasError = false }: TextAreaProps) => {
   return (
     <S.TextArea
       value={value}
       onChange={onChange}
       placeholder={placeholder}
+      hasError={hasError}
     />
   );
 };

@@ -1,9 +1,15 @@
 import styled from '@emotion/styled';
 
-export const Input = styled.input`
+interface InputStyledProps {
+  hasError?: boolean;
+}
+
+export const Input = styled.input<InputStyledProps>`
   width: 100%;
   padding: ${({ theme }) => theme.spacing.spacing2} ${({ theme }) => theme.spacing.spacing3};
-  border: 1px solid ${({ theme }) => theme.semantic.border.default};
+  border: 1px solid ${({ theme, hasError }) => 
+    hasError ? theme.colors.red[700] : theme.semantic.border.default
+  };
   border-radius: ${({ theme }) => theme.spacing.spacing2};
   ${({ theme }) => theme.typography.body1Regular};
   color: ${({ theme }) => theme.semantic.text.default};

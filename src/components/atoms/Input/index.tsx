@@ -7,6 +7,7 @@ interface InputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   style?: React.CSSProperties;
+  hasError?: boolean;
 }
 
 const Input = ({
@@ -15,6 +16,7 @@ const Input = ({
   value,
   onChange,
   style,
+  hasError = false,
 }: InputProps) => {
   return (
     <S.Input
@@ -23,6 +25,7 @@ const Input = ({
       value={value}
       onChange={onChange}
       style={style}
+      hasError={hasError}
     />
   );
 };

@@ -17,6 +17,7 @@ const MessageInput = ({ value, onChange, placeholder, error }: MessageInputProps
           value={value}
           onChange={onChange}
           placeholder={placeholder}
+          hasError={!!error}
         />
         {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
       </S.Wrapper>

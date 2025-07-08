@@ -39,6 +39,7 @@ const InputField = ({
           value={value}
           onChange={onChange}
           style={{ width: '100%' }}
+          hasError={!!error}
         />
       </S.InputWrapper>
       {description && (
