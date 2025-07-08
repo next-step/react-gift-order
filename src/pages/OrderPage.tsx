@@ -15,16 +15,7 @@ import { useOrderForm } from '@/hooks/useOrderForm';
 const OrderPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-
   const product = mockProducts[Number(id) - 1];
-  if (!product) return <div>잘못된 접근입니다.</div>;
-
-  const [selectedCardId, setSelectedCardId] = useState(messageCards[0].id);
-  const selectedCard = messageCards.find(card => card.id === selectedCardId)!;
-
-  useEffect(() => {
-    handleChange('textMessage', selectedCard.defaultTextMessage);
-  }, [selectedCardId]);
 
   const {
     formValues,
@@ -37,6 +28,13 @@ const OrderPage = () => {
     validateForm,
     totalPrice,
   } = useOrderForm(product.price.sellingPrice);
+
+  const [selectedCardId, setSelectedCardId] = useState(messageCards[0].id);
+  const selectedCard = messageCards.find(card => card.id === selectedCardId)!;
+
+  useEffect(() => {
+    handleChange('textMessage', selectedCard.defaultTextMessage);
+  }, [selectedCardId]);
 
   const handleSubmit = () => {
     const isValid = validateForm();
@@ -52,6 +50,8 @@ const OrderPage = () => {
 
     navigate('/');
   };
+
+  if (!product) return <div>잘못된 접근입니다.</div>;
 
   return (
     <>
