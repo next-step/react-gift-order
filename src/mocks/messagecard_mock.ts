@@ -1,5 +1,3 @@
-import type { MessageCard } from "./types";
-
 export const MESSAGE_CARD_LIST = [
   {
     id: 904,

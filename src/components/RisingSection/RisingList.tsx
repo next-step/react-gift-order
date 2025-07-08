@@ -1,10 +1,10 @@
-import type { Product } from "../../mocks/types";
+import type { Product } from "@/mocks/types";
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
 import { useState } from "react";
-import useAuthNavigation from "../../hooks/useAuthNavigation";
-import { MOCK_PRODUCTS } from "../../mocks/products_list_mock";
-import RisingItem from "./RisingItem";
+import useAuthNavigation from "@/hooks/useAuthNavigation";
+import { MOCK_PRODUCTS } from "@/mocks/products_list_mock";
+import RisingItem from "@/components/RisingSection/RisingItem";
 
 const INITIAL_VISIBLE_COUNT = 6;
 

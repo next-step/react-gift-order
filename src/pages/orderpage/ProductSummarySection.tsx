@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import type { Product } from "../../mocks/types";
+import type { Product } from "@/mocks/types";
 
 interface ProductSummarySectionProps {
   product: Product;

@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import styled from '@emotion/styled';
+import styled from "@emotion/styled";
 
 interface CategoryItemProps {
   name: string;

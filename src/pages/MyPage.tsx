@@ -1,9 +1,9 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import LogoutButton from "../components/common/BaseButton";
-import useAuthNavigation from "../hooks/useAuthNavigation";
+import LogoutButton from "@/components/common/BaseButton";
+import useAuthNavigation from "@/hooks/useAuthNavigation";
 import { useEffect } from "react";
 
 const MyPage = () => {

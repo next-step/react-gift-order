@@ -1,8 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
-import { useNavigate, useLocation, Link } from "react-router-dom";
-import MyPageIcon from "../common/MyPageIcon";
-import useAuthNavigation from "../../hooks/useAuthNavigation";
+import { useNavigate, Link } from "react-router-dom";
+import MyPageIcon from "@/components/common/MyPageIcon";
+import useAuthNavigation from "@/hooks/useAuthNavigation";
 
 export default function NavigationBar() {
   const navigate = useNavigate();

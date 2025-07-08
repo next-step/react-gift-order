@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
-import CategoryItem from "./CategoryItem";
-import { CATEGORIES } from "../../mocks/categories_mock";
+import CategoryItem from "@/components/CategorySection/CategoryItem";
+import { CATEGORIES } from "@/mocks/categories_mock";
 
 export default function CategorySection() {
   return (

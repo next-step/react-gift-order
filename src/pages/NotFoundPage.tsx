@@ -1,7 +1,7 @@
-import styled from '@emotion/styled';
-import { useNavigate } from 'react-router-dom';
-import HomeButton from '../components/common/BaseButton';
-import NotFoundImage from '../components/common/NotFoundImage';
+import styled from "@emotion/styled";
+import { useNavigate } from "react-router-dom";
+import HomeButton from "@/components/common/BaseButton";
+import NotFoundImage from "@/components/common/NotFoundImage";
 
 const NotFoundPage = () => {
   const navigate = useNavigate();
@@ -15,7 +15,7 @@ const NotFoundPage = () => {
       <HomeButton
         color="yellow"
         size="large"
-        onClick={() => navigate('/')}
+        onClick={() => navigate("/")}
         label="홈으로 이동"
       ></HomeButton>
     </Wrapper>

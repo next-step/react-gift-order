@@ -1,5 +1,5 @@
-import { MOCK_PRICE_INFO } from "./product_mock";
-import type { Product } from "./types";
+import { MOCK_PRICE_INFO } from "@/mocks/product_mock";
+import type { Product } from "@/mocks/types";
 
 export const MOCK_PRODUCTS: (Product & { id: number })[] = Array.from(
   { length: 21 },

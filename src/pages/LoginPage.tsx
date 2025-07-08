@@ -1,11 +1,11 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import styled from "@emotion/styled";
-import LoginButton from "../components/common/BaseButton";
-import KakaoLogo from "../components/common/KakaoLogo";
-import { useForm } from "../hooks/useForm";
-import { useAuth } from "../contexts/AuthContext";
+import LoginButton from "@/components/common/BaseButton";
+import KakaoLogo from "@/components/common/KakaoLogo";
+import { useForm } from "@/hooks/useForm";
+import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
-import { validateEmail, validatePassword } from "../utils/validator";
+import { validateEmail, validatePassword } from "@/utils/validator";
 
 const LoginPage = () => {
   const navigate = useNavigate();

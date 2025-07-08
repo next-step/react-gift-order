@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import styled from '@emotion/styled';
+import styled from "@emotion/styled";
 
 export default function Fighting() {
   return (
@@ -19,7 +19,7 @@ const Wrapper = styled.section`
 
 const Card = styled.div`
   background-color: ${({ theme }) => theme.colors.kakaoYellow};
-  border-radius: 20px;
+  border-radius: 14px;
   padding: 0 16px;
   display: flex;
   flex-direction: column;
@@ -30,7 +30,7 @@ const AudienceText = styled.p`
   font-weight: ${({ theme }) => theme.typography.subtitle1Regular.fontWeight};
   color: ${({ theme }) => theme.colors.gray600};
   line-height: 1.3;
-  margin: 10px;
+  margin: 10px 0 0 10px;
 `;
 
 const MotivationText = styled.p`
@@ -38,5 +38,5 @@ const MotivationText = styled.p`
   font-weight: ${({ theme }) => theme.typography.subtitle1Regular.fontWeight};
   color: ${({ theme }) => theme.colors.textDefault};
   line-height: 1.3;
-  margin: 10px;
+  margin: 0 0 10px 10px;
 `;
