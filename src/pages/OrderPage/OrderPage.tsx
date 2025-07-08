@@ -22,45 +22,18 @@ const OrderPageContainer = styled.div`
 function OrderPage() {
   const navigate = useNavigate();
 
-  const {
-    selectedCard,
-    message,
-    handleCardSelect,
-    handleMessageChange,
-    validateMessage,
-    cardSelectionErrorMessage,
-  } = useCardSelection(orderCardMockData);
-
-  const {
-    senderName,
-    handleSenderNameChange,
-    validateSenderName,
-    senderNameErrorMessage,
-  } = useSenderInput();
-
-  const {
-    receiverName,
-    receiverPhone,
-    quantity,
-    handleReceiverNameChange,
-    handleReceiverPhoneChange,
-    handleQuantityChange,
-    validateReceiverName,
-    validateReceiverPhone,
-    validateQuantity,
-    receiverNameErrorMessage,
-    receiverPhoneErrorMessage,
-    quantityErrorMessage,
-  } = useReceiverInput();
+  const cardSelection = useCardSelection(orderCardMockData);
+  const senderInput = useSenderInput();
+  const receiverInput = useReceiverInput();
 
   const validateForms = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    validateMessage(message);
-    validateSenderName(senderName);
-    validateReceiverName(receiverName);
-    validateReceiverPhone(receiverPhone);
-    validateQuantity(quantity);
+    cardSelection.validateMessage(cardSelection.message);
+    senderInput.onValidateSenderName(senderInput.senderName);
+    receiverInput.onValidateReceiverName(receiverInput.receiverName);
+    receiverInput.onValidateReceiverPhone(receiverInput.receiverPhone);
+    receiverInput.onValidateQuantity(receiverInput.quantity);
   };
 
   const product = useProductInfo();
@@ -74,35 +47,10 @@ function OrderPage() {
     <Layout>
       <OrderPageContainer>
         <form onSubmit={validateForms}>
-          <CardSelection
-            cards={orderCardMockData}
-            selectedCard={selectedCard}
-            message={message}
-            onSelect={handleCardSelect}
-            onMessageChange={handleMessageChange}
-            cardSelectionErrorMessage={cardSelectionErrorMessage}
-          />
-          <SenderSectionComponent
-            senderName={senderName}
-            handleSenderNameChange={handleSenderNameChange}
-            validateSenderName={validateSenderName}
-            senderNameErrorMessage={senderNameErrorMessage}
-          />
-          <ReceiverSectionComponent
-            receiverName={receiverName}
-            receiverPhone={receiverPhone}
-            quantity={quantity}
-            handleReceiverNameChange={handleReceiverNameChange}
-            handleReceiverPhoneChange={handleReceiverPhoneChange}
-            handleQuantityChange={handleQuantityChange}
-            validateReceiverName={validateReceiverName}
-            validateReceiverPhone={validateReceiverPhone}
-            validateQuantity={validateQuantity}
-            receiverNameErrorMessage={receiverNameErrorMessage}
-            receiverPhoneErrorMessage={receiverPhoneErrorMessage}
-            quantityErrorMessage={quantityErrorMessage}
-          />
-          <ProductInfo product={product} quantity={quantity} />
+          <CardSelection cards={orderCardMockData} {...cardSelection} />
+          <SenderSectionComponent {...senderInput} />
+          <ReceiverSectionComponent {...receiverInput} />
+          <ProductInfo product={product} quantity={receiverInput.quantity} />
         </form>
       </OrderPageContainer>
     </Layout>

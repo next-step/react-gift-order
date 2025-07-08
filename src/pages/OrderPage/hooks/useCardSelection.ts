@@ -28,8 +28,8 @@ export function useCardSelection(initialCards: OrderCardType[]) {
   return {
     selectedCard,
     message: messageInput.value,
-    handleCardSelect,
-    handleMessageChange: messageInput.handleValueChange,
+    onSelect: handleCardSelect,
+    onMessageChange: messageInput.handleValueChange,
     validateMessage: messageInput.validate,
     cardSelectionErrorMessage: messageInput.errorMessage,
   };

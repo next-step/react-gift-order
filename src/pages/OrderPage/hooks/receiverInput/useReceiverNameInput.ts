@@ -16,8 +16,8 @@ export function useReceiverNameInput() {
 
   return {
     receiverName: receiverNameInput.value,
-    handleReceiverNameChange: receiverNameInput.handleValueChange,
-    validateReceiverName: receiverNameInput.validate,
+    onReceiverNameChange: receiverNameInput.handleValueChange,
+    onValidateReceiverName: receiverNameInput.validate,
     receiverNameErrorMessage: receiverNameInput.errorMessage,
   };
 }

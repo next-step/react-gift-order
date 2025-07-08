@@ -16,8 +16,8 @@ export function useSenderInput(initialValue = "") {
 
   return {
     senderName: senderInput.value,
-    handleSenderNameChange: senderInput.handleValueChange,
-    validateSenderName: senderInput.validate,
+    onSenderNameChange: senderInput.handleValueChange,
+    onValidateSenderName: senderInput.validate,
     senderNameErrorMessage: senderInput.errorMessage,
   };
 }

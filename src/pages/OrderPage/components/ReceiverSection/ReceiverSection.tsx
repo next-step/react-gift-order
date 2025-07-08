@@ -12,12 +12,12 @@ interface ReceiverSectionProps {
   receiverName: string;
   receiverPhone: string;
   quantity: string;
-  handleReceiverNameChange: (value: string) => void;
-  handleReceiverPhoneChange: (value: string) => void;
-  handleQuantityChange: (value: string) => void;
-  validateReceiverName: (value: string) => void;
-  validateReceiverPhone: (value: string) => void;
-  validateQuantity: (value: string) => void;
+  onReceiverNameChange: (value: string) => void;
+  onReceiverPhoneChange: (value: string) => void;
+  onQuantityChange: (value: string) => void;
+  onValidateReceiverName: (value: string) => void;
+  onValidateReceiverPhone: (value: string) => void;
+  onValidateQuantity: (value: string) => void;
   receiverNameErrorMessage: string;
   receiverPhoneErrorMessage: string;
   quantityErrorMessage: string;
@@ -27,12 +27,12 @@ function ReceiverSectionComponent({
   receiverName,
   receiverPhone,
   quantity,
-  handleReceiverNameChange,
-  handleReceiverPhoneChange,
-  handleQuantityChange,
-  validateReceiverName,
-  validateReceiverPhone,
-  validateQuantity,
+  onReceiverNameChange,
+  onReceiverPhoneChange,
+  onQuantityChange,
+  onValidateReceiverName,
+  onValidateReceiverPhone,
+  onValidateQuantity,
   receiverNameErrorMessage,
   receiverPhoneErrorMessage,
   quantityErrorMessage,
@@ -48,8 +48,8 @@ function ReceiverSectionComponent({
             placeholder={RECEIVER_SECTION_CONSTANTS.NAME_PLACEHOLDER}
             value={receiverName}
             onChange={(e) => {
-              handleReceiverNameChange(e.target.value);
-              validateReceiverName(e.target.value);
+              onReceiverNameChange(e.target.value);
+              onValidateReceiverName(e.target.value);
             }}
             errorMessage={receiverNameErrorMessage}
           />
@@ -61,8 +61,8 @@ function ReceiverSectionComponent({
             placeholder={RECEIVER_SECTION_CONSTANTS.PHONE_PLACEHOLDER}
             value={receiverPhone}
             onChange={(e) => {
-              handleReceiverPhoneChange(e.target.value);
-              validateReceiverPhone(e.target.value);
+              onReceiverPhoneChange(e.target.value);
+              onValidateReceiverPhone(e.target.value);
             }}
             errorMessage={receiverPhoneErrorMessage}
           />
@@ -75,8 +75,8 @@ function ReceiverSectionComponent({
             placeholder={RECEIVER_SECTION_CONSTANTS.QUANTITY_PLACEHOLDER}
             value={quantity}
             onChange={(e) => {
-              handleQuantityChange(e.target.value);
-              validateQuantity(e.target.value);
+              onQuantityChange(e.target.value);
+              onValidateQuantity(e.target.value);
             }}
             errorMessage={quantityErrorMessage}
           />

@@ -16,8 +16,8 @@ export function useReceiverQuantityInput() {
 
   return {
     quantity: quantityInput.value,
-    handleQuantityChange: quantityInput.handleValueChange,
-    validateQuantity: quantityInput.validate,
+    onQuantityChange: quantityInput.handleValueChange,
+    onValidateQuantity: quantityInput.validate,
     quantityErrorMessage: quantityInput.errorMessage,
   };
 }

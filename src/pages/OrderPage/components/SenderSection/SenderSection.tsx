@@ -4,8 +4,8 @@ import SENDER_SECTION_CONSTANTS from "@/pages/OrderPage/constants/senderSection"
 
 interface SenderSectionProps {
   senderName: string;
-  handleSenderNameChange: (value: string) => void;
-  validateSenderName: (value: string) => void;
+  onSenderNameChange: (value: string) => void;
+  onValidateSenderName: (value: string) => void;
   senderNameErrorMessage: string;
 }
 
@@ -39,8 +39,8 @@ const InputLabel = styled.label`
 
 function SenderSectionComponent({
   senderName,
-  handleSenderNameChange,
-  validateSenderName,
+  onSenderNameChange,
+  onValidateSenderName,
   senderNameErrorMessage,
 }: SenderSectionProps) {
   return (
@@ -53,8 +53,8 @@ function SenderSectionComponent({
           placeholder={SENDER_SECTION_CONSTANTS.NAME_PLACEHOLDER}
           value={senderName}
           onChange={(e) => {
-            handleSenderNameChange(e.target.value);
-            validateSenderName(e.target.value);
+            onSenderNameChange(e.target.value);
+            onValidateSenderName(e.target.value);
           }}
         />
         {!senderNameErrorMessage && (

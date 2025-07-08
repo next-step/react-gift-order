@@ -20,8 +20,8 @@ export function useReceiverPhoneInput() {
 
   return {
     receiverPhone: receiverPhoneInput.value,
-    handleReceiverPhoneChange: receiverPhoneInput.handleValueChange,
-    validateReceiverPhone: receiverPhoneInput.validate,
+    onReceiverPhoneChange: receiverPhoneInput.handleValueChange,
+    onValidateReceiverPhone: receiverPhoneInput.validate,
     receiverPhoneErrorMessage: receiverPhoneInput.errorMessage,
   };
 }

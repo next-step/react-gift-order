@@ -5,39 +5,39 @@ import { useReceiverQuantityInput } from "./receiverInput/useReceiverQuantityInp
 export function useReceiverInput() {
   const {
     receiverName,
-    handleReceiverNameChange,
-    validateReceiverName,
+    onReceiverNameChange,
+    onValidateReceiverName,
     receiverNameErrorMessage,
   } = useReceiverNameInput();
 
   const {
     receiverPhone,
-    handleReceiverPhoneChange,
-    validateReceiverPhone,
+    onReceiverPhoneChange,
+    onValidateReceiverPhone,
     receiverPhoneErrorMessage,
   } = useReceiverPhoneInput();
 
   const {
     quantity,
-    handleQuantityChange,
-    validateQuantity,
+    onQuantityChange,
+    onValidateQuantity,
     quantityErrorMessage,
   } = useReceiverQuantityInput();
 
   return {
     receiverName,
-    handleReceiverNameChange,
-    validateReceiverName,
+    onReceiverNameChange,
+    onValidateReceiverName,
     receiverNameErrorMessage,
 
     receiverPhone,
-    handleReceiverPhoneChange,
-    validateReceiverPhone,
+    onReceiverPhoneChange,
+    onValidateReceiverPhone,
     receiverPhoneErrorMessage,
 
     quantity,
-    handleQuantityChange,
-    validateQuantity,
+    onQuantityChange,
+    onValidateQuantity,
     quantityErrorMessage,
   };
 }
