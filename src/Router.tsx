@@ -5,6 +5,7 @@ import { NotFound } from '@/pages/NotFound'
 import { Routes, Route } from 'react-router-dom'
 import { MyPage } from './pages/MyPage'
 import { Order } from './pages/Order'
+import { withAuth } from './hoc/withAuth'
 
 // * 라우터 컴포넌트
 const Router = () => {
@@ -17,9 +18,9 @@ const Router = () => {
         {/* 로그인 페이지 */}
         <Route path={ROUTE_PATH.LOGIN} element={<Login />} />
         {/* 마이 페이지 */}
-        <Route path={ROUTE_PATH.MY} element={<MyPage />} />
+        <Route path={ROUTE_PATH.MY} element={<AuthPages.MyPage />} />
         {/* 주문하기 페이지 */}
-        <Route path={`${ROUTE_PATH.ORDER}/:id`} element={<Order />} />
+        <Route path={`${ROUTE_PATH.ORDER}/:id`} element={<AuthPages.Order />} />
 
         {/* 404 NotFound 페이지 - 기타 구현되지 않은 경로 페이지 */}
         <Route path={ROUTE_PATH.NOT_FOUND} element={<NotFound />} />
@@ -42,4 +43,10 @@ export const ROUTE_PATH = {
   ORDER: '/order',
   // * 404 페이지
   NOT_FOUND: '*',
+}
+
+// * 인증 페이지들을 별도 객체로 관리
+const AuthPages = {
+  MyPage: withAuth(MyPage),
+  Order: withAuth(Order),
 }

@@ -4,12 +4,11 @@ import { useNavigate } from 'react-router-dom'
 import { ROUTE_PATH } from '@/Router'
 import styled from '@emotion/styled'
 import { theme } from '@/styles/theme'
-import { useEffect } from 'react'
 
 // * 마이 페이지
 export const MyPage = () => {
   const navigate = useNavigate()
-  const { isLogin, logout, user } = useAuth()
+  const { logout, user } = useAuth()
 
   // * 로그아웃 핸들러
   // ! 로그아웃 시에 로그인 페이지로 리다이렉트
@@ -17,13 +16,6 @@ export const MyPage = () => {
     logout()
     navigate(ROUTE_PATH.LOGIN, { replace: true })
   }
-
-  // ! 로그인하지 않은 사용자는 로그인 페이지로 리다이렉트
-  useEffect(() => {
-    if (!isLogin) {
-      navigate(ROUTE_PATH.LOGIN, { replace: true })
-    }
-  }, [isLogin, navigate])
 
   return (
     <MyPageContainer>
