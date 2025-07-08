@@ -39,7 +39,7 @@ const FriendSectionDescription = styled.p(({ theme }) => ({
 
 export const SelectFriendSection = () => {
   const userInfo = getUserInfo();
-  const userName = userInfo ? userInfo.email.split("@")[0] : "";
+  const userName = userInfo ? userInfo.userName : "";
 
   return (
     <FriendSectionWrapper>

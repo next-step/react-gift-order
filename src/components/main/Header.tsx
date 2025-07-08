@@ -1,8 +1,7 @@
-import { ROUTE_PATH } from "@/constants";
+import { useRouter } from "@/hooks/common/useRouter";
 import { getUserInfo } from "@/utils";
 import styled from "@emotion/styled";
 import { ChevronLeft, UserRound } from "lucide-react";
-import { useLocation, useNavigate } from "react-router-dom";
 
 const Navbar = styled.nav(({ theme }) => ({
   display: "flex",
@@ -35,33 +34,23 @@ const NavbarTitle = styled.h1(({ theme }) => ({
 }));
 
 export const Header = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const { goMyPage, goLoginPage, goHomePage, goBack } = useRouter();
 
   const handleLoginClick = () => {
-    const userEmail = getUserInfo();
-    if (userEmail) {
-      navigate(ROUTE_PATH.MY);
+    const userInfo = getUserInfo();
+    if (userInfo) {
+      goMyPage();
     } else {
-      navigate(
-        `${ROUTE_PATH.LOGIN}?redirect=${encodeURIComponent(location.pathname)}`,
-      );
+      goLoginPage({ redirect: true });
     }
   };
 
-  const handleTitleClick = () => {
-    navigate(ROUTE_PATH.HOME);
-  };
-
-  const handleBackClick = () => {
-    navigate(ROUTE_PATH.GO_BACK);
-  };
   return (
     <Navbar>
-      <NavbarIcon onClick={handleBackClick}>
+      <NavbarIcon onClick={goBack}>
         <ChevronLeft />
       </NavbarIcon>
-      <NavbarTitle onClick={handleTitleClick}>선물하기</NavbarTitle>
+      <NavbarTitle onClick={goHomePage}>선물하기</NavbarTitle>
       <NavbarIcon onClick={handleLoginClick}>
         <UserRound />
       </NavbarIcon>

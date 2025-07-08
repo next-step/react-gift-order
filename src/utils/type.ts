@@ -3,11 +3,15 @@ export interface FormData {
   password: string;
 }
 
-export type ValidationErrors = {
-  [K in keyof FormData]?: string;
+export type ValidationErrors<T> = {
+  [K in keyof T]?: string;
 };
 
-export interface ValidationRule {
-  condition: (value: string) => boolean;
+export interface ValidationRule<T = string> {
+  condition: (value: T) => boolean;
   message: string;
 }
+
+export type ValidationRulesMap<T> = {
+  [K in keyof T]: ValidationRule<T[K]>[];
+};
