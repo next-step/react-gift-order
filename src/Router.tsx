@@ -1,6 +1,6 @@
 import { createBrowserRouter, createRoutesFromElements, Route } from "react-router-dom";
 
-import { AuthGuard } from "@/features/auth/guards/AuthGuard";
+import { withAuth } from "@/features/auth/guards/withAuth";
 
 import HomePage from "@/pages/HomePage";
 import MyPage from "@/pages/MyPage";
@@ -17,15 +17,8 @@ const router = createRoutesFromElements(
         <Route path="/auth" element={<AuthLayout />}>
             <Route path="signin" element={<SignInPage />} />
         </Route>
-        <Route
-            path="my"
-            element={
-                <AuthGuard>
-                    <MyPage />
-                </AuthGuard>
-            }
-        />
-        <Route path="order/:id" element={<OrderPage />} />
+        <Route path="my" element={withAuth(MyPage)} />
+        <Route path="order/:id" element={withAuth(OrderPage)} />
         <Route path="*" element={<NotFoundPage />} />
     </Route>,
 );
