@@ -35,7 +35,10 @@ export const useRedirect = () => {
     }, [location.search]);
 
     const navigateWithRedirect = (to: string, payload?: Record<string, Primitive>) => {
-        const params = new URLSearchParams({ redirect: currentPath });
+        const params = new URLSearchParams();
+
+        if (!redirectPath) params.append(REDIRECT_QUERY_KEY, currentPath);
+        else params.append(REDIRECT_QUERY_KEY, redirectPath);
 
         if (payload) {
             for (const [key, value] of Object.entries(payload)) {
