@@ -55,7 +55,7 @@ const OrderTemplate = ({
               <S.PreviewImageContainer>
                 <Image
                   src={selectedCard?.imageUrl || ''}
-                  alt={`${selectedCard?.id}번 메시지 카드`}
+                  alt={selectedCard ? `${selectedCard.id}번 메시지 카드` : '메시지 카드'}
                   variant="preview"
                 />
               </S.PreviewImageContainer>
