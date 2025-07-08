@@ -1,5 +1,8 @@
 import React from 'react';
-import { Image, CardCarousel, ProductInfo, MessageInput, SenderSection, ReceiverSection, type InputChangeHandler } from '@/components';
+import { 
+  Image, CardCarousel, ProductInfo, MessageTextArea, 
+  SenderSection, ReceiverSection, type InputChangeHandler 
+} from '@/components';
 import { type RankingItem } from '@/data/ranking';
 import { type Order } from '@/data/orders';
 import { 
@@ -60,7 +63,7 @@ const OrderTemplate = ({
                 />
               </S.PreviewImageContainer>
             </S.PreviewContainer>           
-            <MessageInput
+            <MessageTextArea
               value={cardState.message}
               onChange={onMessageChange}
               placeholder="메시지를 입력하세요"

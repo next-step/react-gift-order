@@ -6,9 +6,9 @@ export { default as Text } from './atoms/Text';
 export { default as TextArea } from './atoms/TextArea';
 
 // Molecules
-export { default as InputField, type InputChangeHandler } from './molcules/InputField';
-export { default as MessageInput } from './molcules/MesageInput';
-export { default as OrderCard } from './molcules/OrderCard';
+export { default as InputField, type InputChangeHandler } from './molecules/InputField';
+export { default as MessageTextArea } from './molecules/MessageTextArea';
+export { default as OrderCard } from './molecules/OrderCard';
 
 // Organisms
 export { default as CardCarousel } from './organisms/CardCarousel';
