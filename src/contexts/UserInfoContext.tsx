@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useContext } from "react";
+import { createContext, useState, useContext } from "react";
 
 type UserInfo = {
   email: string | null;
@@ -16,16 +16,14 @@ export const UserInfoProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
-
-  useEffect(() => {
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(() => {
     const sessionUserInfo = sessionStorage.getItem("kakaotech/userInfo");
-    if (sessionUserInfo) {
-      const email = JSON.parse(sessionUserInfo).email;
-      const name = email.split("@")[0];
-      setUserInfo({ email, name });
-    }
-  }, []);
+    if (!sessionUserInfo) return null;
+
+    const { email } = JSON.parse(sessionUserInfo);
+    const name = email.split("@")[0];
+    return { email, name };
+  });
 
   return (
     <UserInfoContext.Provider
