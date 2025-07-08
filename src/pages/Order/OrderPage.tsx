@@ -22,9 +22,11 @@ import {
   errorMessageStyle,
 } from './OrderPage.style';
 import AddReceiverModal from './components/AddReceiverModal';
+import { useNavigate } from 'react-router-dom';
 
 const OrderPage = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
 
   const [selectedCard, setSelectedCard] = useState(cardTemplates[0]);
   const [message, setMessage] = useState(cardTemplates[0].defaultTextMessage);
@@ -75,6 +77,7 @@ const OrderPage = () => {
     alert(
       `주문이 완료되었습니다.\n상품명: ${product.name}\n총 구매 수량: ${totalQuantity}\n발신자 이름: ${senderName}\n메시지: ${message}\n받는 사람 수: ${receivers.length}`
     );
+    navigate('/');
   };
 
   const handleCardSelect = (card: (typeof cardTemplates)[0]) => {
