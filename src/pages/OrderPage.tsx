@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useLocation, useNavigate } from 'react-router';
 import { cardData, products } from '@/mock/mockData';
 import { Header } from '@/components/Header/Header';
 import { useOrderForm } from '@/hooks/useOrderForm';
 import { SuccessModal } from '@/components/SuccessModal/SuccessModal';
+import { useModal } from '@/hooks/useModal';
 
 const Container = styled.div`
   max-width: 720px;
@@ -225,26 +224,15 @@ const OrderButton = styled.button`
 `;
 
 export const OrderPage: React.FC = () => {
-  const { user } = useAuth();
-  const location = useLocation();
-  const navigate = useNavigate();
-
   // 쿼리스트링에서 productId 추출
   const searchParams = new URLSearchParams(location.search);
   const productIdParam = searchParams.get('productId');
   const productId = productIdParam ? parseInt(productIdParam, 10) : null;
 
-  // 상품 정보 찾기 (없으면 첫 번째 상품)
   const selectedProduct = products.find((p) => p.id === productId) || products[0];
 
-  useEffect(() => {
-    if (!user) {
-      navigate('/login');
-    }
-  }, [user, navigate]);
-
   const [selectedCard, setSelectedCard] = useState<number>(cardData[0].id); // 첫 번째 카드 기본 선택
-  const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
+  const successModal = useModal();
 
   // 선택된 카드의 기본 메시지로 초기화
   const selectedCardData = cardData.find((card) => card.id === selectedCard);
@@ -265,7 +253,7 @@ export const OrderPage: React.FC = () => {
 
   const handleOrder = () => {
     if (validateForm()) {
-      setShowSuccessModal(true);
+      successModal.openModal();
     }
   };
 
@@ -388,7 +376,7 @@ export const OrderPage: React.FC = () => {
         </OrderButton>
       </FormSection>
 
-      <SuccessModal showSuccessModal={showSuccessModal} setShowSuccessModal={setShowSuccessModal} />
+      <SuccessModal showSuccessModal={successModal.isOpen} onClose={successModal.closeModal} />
     </Container>
   );
 };
