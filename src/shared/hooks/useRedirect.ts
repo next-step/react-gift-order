@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const REDIRECT_QUERY_KEY = "redirect";
@@ -28,6 +29,11 @@ export const useRedirect = () => {
 
     const currentPath = location.pathname + location.search;
 
+    const redirectPath = useMemo(() => {
+        const params = new URLSearchParams(location.search);
+        return params.get(REDIRECT_QUERY_KEY);
+    }, [location.search]);
+
     const navigateWithRedirect = (to: string, payload?: Record<string, Primitive>) => {
         const params = new URLSearchParams({ redirect: currentPath });
 
@@ -46,5 +52,5 @@ export const useRedirect = () => {
         navigate(redirectPath || fallbackPath, { replace: true });
     };
 
-    return { navigateWithRedirect, returnToRedirect };
+    return { redirectPath, navigateWithRedirect, returnToRedirect };
 };
