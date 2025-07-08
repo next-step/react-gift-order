@@ -3,13 +3,13 @@ import Container from "@/components/common/Container";
 import Divider from "@/components/common/Divider";
 import styled from "@emotion/styled";
 import type React from "react";
-import useStringInput from "@/hooks/useStringInput";
+import useInput from "@/hooks/useInput";
 import { getIdError, getPasswordError } from "@/utils/errorMessage";
 import { useAuth } from "@/contexts/authContext";
 
 const Login = () => {
-  const id = useStringInput("", getIdError);
-  const password = useStringInput("", getPasswordError);
+  const id = useInput("", getIdError);
+  const password = useInput("", getPasswordError);
   const { login } = useAuth();
 
   const handleLoginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
