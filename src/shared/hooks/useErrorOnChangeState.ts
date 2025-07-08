@@ -10,7 +10,7 @@ export const useErrorOnChangeReset = <T>({ error, onChange }: UseErrorOnChangeRe
 
     const handleChange = useCallback(
         (e: React.ChangeEvent<T>) => {
-            if (err != null) setErr(undefined);
+            if (err !== undefined) setErr(undefined);
             onChange?.(e);
         },
         [err, onChange],
