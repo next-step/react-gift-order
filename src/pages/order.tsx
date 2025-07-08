@@ -46,7 +46,7 @@ const BottomOrderButton = styled.div`
   position: fixed;
   bottom: 0;
   width: 100%;
-  max-width: 700px;
+  max-width: 720px;
   background-color: ${({ theme }) => theme.colors.kakaoYellow};
   text-align: center;
   padding-top: 16px;
@@ -95,7 +95,7 @@ const FieldLabel = styled.div`
 const Input = styled.input`
   width: 100%;
   flex: 1;
-  padding: 12px 16px;
+  padding: 12px 0px 12px 10px;
   border: 1px solid #dcdee3;
   border-radius: 8px;
   font-size: 14px;
@@ -118,7 +118,7 @@ const ErrorText = styled.div`
 
 const ProductInfo = styled.div`
   width: 100%;
-  padding: 12px 16px;
+  padding: 12px 0px 12px 10px;
   border-radius: 0.5rem;
   background-color: rgb(255, 255, 255);
   border: 1px solid rgb(238, 239, 241);
