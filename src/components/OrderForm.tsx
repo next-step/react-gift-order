@@ -109,21 +109,17 @@ const colorspace8 = css`
   background-color: ${theme.colors.backgroundDisabled};
 `;
 
+interface FormValues {
+  message: string;
+  senderName: string;
+  recipientName: string;
+  recipientPhone: string;
+  quantity: string;
+}
+
 interface Props {
-  values: {
-    message: string;
-    senderName: string;
-    recipientName: string;
-    recipientPhone: string;
-    quantity: string;
-  };
-  errors: {
-    message?: string;
-    senderName?: string;
-    recipientName?: string;
-    recipientPhone?: string;
-    quantity?: string;
-  };
+  values: FormValues;
+  errors: Partial<FormValues>;
   onChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
