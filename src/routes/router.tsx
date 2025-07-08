@@ -1,10 +1,6 @@
 import { createBrowserRouter} from 'react-router-dom';
 import Layout from '@/components/Layout/Layout';
-import Home from '@/pages/Home/Page';
-import Login from '@/pages/Login/Page';
-import My from '@/pages/My/Page';
-import Order from '@/pages/Order/page';
-import NotFound from '@/pages/NotFound/Page';
+import { Home, Login, My, Order, NotFound } from '@/pages';
 import ProtectedRoute from '@/components/ProtectedRoute';
 
 const router = createBrowserRouter([
