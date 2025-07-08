@@ -5,140 +5,127 @@ import {
   ERROR_MESSAGES,
 } from '@/constants/validation';
 
-type FormFields =
+export type FormField =
   | 'senderName'
   | 'receiverName'
   | 'receiverPhone'
   | 'quantity'
   | 'textMessage';
 
-interface FormValues {
-  senderName: string;
-  receiverName: string;
-  receiverPhone: string;
-  quantity: number;
-  textMessage: string;
-}
+type FormValues = Record<FormField, string | number>;
+type FormErrors = Record<FormField, string>;
 
-interface FormErrors {
-  senderName: string;
-  receiverName: string;
-  receiverPhone: string;
-  quantity: string;
-  textMessage: string;
-}
+const DEFAULT_FORM_VALUES: FormValues = {
+  senderName: '',
+  receiverName: '',
+  receiverPhone: '',
+  quantity: 1,
+  textMessage: '',
+};
+
+const DEFAULT_FORM_ERRORS: FormErrors = {
+  senderName: '',
+  receiverName: '',
+  receiverPhone: '',
+  quantity: '',
+  textMessage: '',
+};
 
 export const useOrderForm = (unitPrice: number) => {
-  const [formValues, setFormValues] = useState<FormValues>({
-    senderName: '',
-    receiverName: '',
-    receiverPhone: '',
-    quantity: 1,
-    textMessage: '',
-  });
+  const [formValues, setFormValues] = useState<FormValues>(DEFAULT_FORM_VALUES);
+  const [formErrors, setFormErrors] = useState<FormErrors>(DEFAULT_FORM_ERRORS);
 
-  const [formErrors, setFormErrors] = useState<FormErrors>({
-    senderName: '',
-    receiverName: '',
-    receiverPhone: '',
-    quantity: '',
-    textMessage: '',
-  });
-
-  const handleChange = (field: FormFields, value: string | number) => {
+  const handleChange = (field: FormField, value: string | number) => {
     setFormValues(prev => ({ ...prev, [field]: value }));
   };
 
-  const validateTextMessage = () => {
-    if (!formValues.textMessage.trim()) {
-      setFormErrors(prev => ({
-        ...prev,
-        textMessage: ERROR_MESSAGES.EMPTY_MESSAGE,
-      }));
-      return false;
+  const validateField = (field: FormField): boolean => {
+    const value = formValues[field];
+
+    switch (field) {
+      case 'senderName':
+        if (!String(value).trim()) {
+          setFormErrors(prev => ({
+            ...prev,
+            senderName: ERROR_MESSAGES.EMPTY_SENDER,
+          }));
+          return false;
+        }
+        break;
+
+      case 'receiverName':
+        if (!String(value).trim()) {
+          setFormErrors(prev => ({
+            ...prev,
+            receiverName: ERROR_MESSAGES.EMPTY_RECEIVER_NAME,
+          }));
+          return false;
+        }
+        break;
+
+      case 'receiverPhone': {
+        const phone = String(value).trim();
+        if (!phone) {
+          setFormErrors(prev => ({
+            ...prev,
+            receiverPhone: ERROR_MESSAGES.EMPTY_RECEIVER_PHONE,
+          }));
+          return false;
+        } else if (!PHONE_REGEX.test(phone)) {
+          setFormErrors(prev => ({
+            ...prev,
+            receiverPhone: ERROR_MESSAGES.INVALID_PHONE,
+          }));
+          return false;
+        }
+        break;
+      }
+
+      case 'quantity':
+        if (Number(value) < MIN_QUANTITY) {
+          setFormErrors(prev => ({
+            ...prev,
+            quantity: ERROR_MESSAGES.INVALID_QUANTITY,
+          }));
+          return false;
+        }
+        break;
+
+      case 'textMessage':
+        if (!String(value).trim()) {
+          setFormErrors(prev => ({
+            ...prev,
+            textMessage: ERROR_MESSAGES.EMPTY_MESSAGE,
+          }));
+          return false;
+        }
+        break;
     }
-    setFormErrors(prev => ({ ...prev, textMessage: '' }));
+
+    setFormErrors(prev => ({ ...prev, [field]: '' }));
     return true;
   };
 
-  const validateSender = () => {
-    if (!formValues.senderName.trim()) {
-      setFormErrors(prev => ({
-        ...prev,
-        senderName: ERROR_MESSAGES.EMPTY_SENDER,
-      }));
-      return false;
-    }
-    setFormErrors(prev => ({ ...prev, senderName: '' }));
-    return true;
+  const validateForm = (): boolean => {
+    const fields: FormField[] = [
+      'senderName',
+      'receiverName',
+      'receiverPhone',
+      'quantity',
+      'textMessage',
+    ];
+    const results = fields.map(validateField);
+    return results.every(Boolean);
   };
 
-  const validateReceiverName = () => {
-    if (!formValues.receiverName.trim()) {
-      setFormErrors(prev => ({
-        ...prev,
-        receiverName: ERROR_MESSAGES.EMPTY_RECEIVER_NAME,
-      }));
-      return false;
-    }
-    setFormErrors(prev => ({ ...prev, receiverName: '' }));
-    return true;
-  };
-
-  const validateReceiverPhone = () => {
-    const phone = formValues.receiverPhone.trim();
-    if (!phone) {
-      setFormErrors(prev => ({
-        ...prev,
-        receiverPhone: ERROR_MESSAGES.EMPTY_RECEIVER_PHONE,
-      }));
-      return false;
-    } else if (!PHONE_REGEX.test(phone)) {
-      setFormErrors(prev => ({
-        ...prev,
-        receiverPhone: ERROR_MESSAGES.INVALID_PHONE,
-      }));
-      return false;
-    }
-    setFormErrors(prev => ({ ...prev, receiverPhone: '' }));
-    return true;
-  };
-
-  const validateQuantity = () => {
-    if (formValues.quantity < MIN_QUANTITY) {
-      setFormErrors(prev => ({
-        ...prev,
-        quantity: ERROR_MESSAGES.INVALID_QUANTITY,
-      }));
-      return false;
-    }
-    setFormErrors(prev => ({ ...prev, quantity: '' }));
-    return true;
-  };
-
-  const validateForm = () => {
-    const s = validateSender();
-    const n = validateReceiverName();
-    const p = validateReceiverPhone();
-    const q = validateQuantity();
-    const m = validateTextMessage();
-    return s && n && p && q && m;
-  };
-
-  const totalPrice = unitPrice * formValues.quantity;
+  const totalPrice = unitPrice * Number(formValues.quantity);
 
   return {
     formValues,
     formErrors,
     handleChange,
-
-    validateSender,
-    validateReceiverName,
-    validateReceiverPhone,
-    validateQuantity,
-    validateTextMessage,
+    validateField,
     validateForm,
-
     totalPrice,
   };
 };

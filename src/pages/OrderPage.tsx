@@ -16,15 +16,13 @@ const OrderPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const product = mockProducts[Number(id) - 1];
+  if (!product) return <div>잘못된 접근입니다.</div>;
 
   const {
     formValues,
     formErrors,
     handleChange,
-    validateSender,
-    validateReceiverName,
-    validateReceiverPhone,
-    validateQuantity,
+    validateField,
     validateForm,
     totalPrice,
   } = useOrderForm(product.price.sellingPrice);
@@ -51,8 +49,6 @@ const OrderPage = () => {
     navigate('/');
   };
 
-  if (!product) return <div>잘못된 접근입니다.</div>;
-
   return (
     <>
       <Navigation />
@@ -63,36 +59,37 @@ const OrderPage = () => {
             onSelect={setSelectedCardId}
           />
           <MessageInput
-            value={formValues.textMessage}
+            value={String(formValues.textMessage)}
             onChange={e => {
               handleChange('textMessage', e.target.value);
+              if (formErrors.textMessage) validateField('textMessage');
             }}
             error={formErrors.textMessage}
           />
           <SenderForm
-            value={formValues.senderName}
+            value={String(formValues.senderName)}
             onChange={e => {
               handleChange('senderName', e.target.value);
-              if (formErrors.senderName) validateSender();
+              if (formErrors.senderName) validateField('senderName');
             }}
             error={formErrors.senderName}
           />
           <ReceiverForm
-            name={formValues.receiverName}
-            phone={formValues.receiverPhone}
-            quantity={formValues.quantity}
+            name={String(formValues.receiverName)}
+            phone={String(formValues.receiverPhone)}
+            quantity={Number(formValues.quantity)}
             onNameChange={e => {
               handleChange('receiverName', e.target.value);
-              if (formErrors.receiverName) validateReceiverName();
+              if (formErrors.receiverName) validateField('receiverName');
             }}
             onPhoneChange={e => {
               handleChange('receiverPhone', e.target.value);
-              if (formErrors.receiverPhone) validateReceiverPhone();
+              if (formErrors.receiverPhone) validateField('receiverPhone');
             }}
             onQuantityChange={e => {
               const value = Number(e.target.value);
               handleChange('quantity', value);
-              if (formErrors.quantity) validateQuantity();
+              if (formErrors.quantity) validateField('quantity');
             }}
             nameError={formErrors.receiverName}
             phoneError={formErrors.receiverPhone}
