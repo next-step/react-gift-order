@@ -38,7 +38,7 @@ const Grid = styled.div<{
   marginBottom: keyof Theme['spacing'];
 }>`
   display: grid;
-  grid-template-columns: repeat(${({ columns }) => columns}, 1fr);
+  grid-template-columns: repeat(${({ columns }) => columns}, minmax(0, 1fr));
   column-gap: ${({ theme, columnGap }) => theme.spacing[columnGap]};
   row-gap: ${({ theme, rowGap }) => theme.spacing[rowGap]};
   margin-bottom: ${({ theme, marginBottom }) => theme.spacing[marginBottom]};
