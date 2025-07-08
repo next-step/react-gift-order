@@ -1,8 +1,7 @@
-import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { matchPath, Navigate, Outlet, useLocation } from "react-router-dom";
 import { getCookieValue } from "@/utils/cookie";
 import { ROUTE_PATH } from "@/components/routes/Routes";
 import { AUTH_COOKIE_KEY, useAuth } from "@/contexts/authContext";
-import { checkValidPath } from "@/utils/checkValidPath";
 
 type AuthRouteProps = {
   required?: boolean;
@@ -30,3 +29,10 @@ const AuthRoute = ({ required = false }: AuthRouteProps) => {
 };
 
 export default AuthRoute;
+
+const checkValidPath = (path: string): boolean => {
+  return Object.values(ROUTE_PATH).some((pattern) => {
+    const match = matchPath({ path: pattern, end: true }, path);
+    return match !== null;
+  });
+};
