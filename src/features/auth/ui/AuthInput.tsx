@@ -7,8 +7,8 @@ export interface AuthInputProps extends React.ComponentProps<"input"> {
 export const AuthInput = ({ error, ...props }: AuthInputProps) => {
     return (
         <>
-            <Styles.InputElement type="text" error={error} {...props} />
-            <Styles.InputErrorMessage>{error}</Styles.InputErrorMessage>
+            <Styles.AuthInputElement type="text" error={error} {...props} />
+            <Styles.AuthInputErrorMessage>{error}</Styles.AuthInputErrorMessage>
         </>
     );
 };
