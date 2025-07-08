@@ -15,8 +15,8 @@ export const Banner = () => {
   )
 }
 
-// * 기타 배너 컨테이너
-const Container = styled.div`
+// * 기타 배너 컨테이너 (section 시맨틱 태그 사용)
+const Container = styled.section`
   width: 100%;
   height: fit-content;
 

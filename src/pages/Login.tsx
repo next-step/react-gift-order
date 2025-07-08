@@ -6,24 +6,40 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { PageContainer } from '@/components/common/PageContainer'
 import { Button } from '@/components/common/Button'
 import { useInput } from '@/hooks/useInput'
-import { ROUTH_PATH } from '@/Router'
+import { ROUTE_PATH } from '@/Router'
+import { VALIDATE_RULES } from '@/data/validateRules'
+import { useAuth } from '@/contexts/AuthContext'
 
 // * 로그인 화면
 export const Login = () => {
-  // * 이메일, 비밀번호 입력 상태 관리 (useInput 커스텀 훅 사용)
-  const email = useInput('', validateEmail)
-  const password = useInput('', validatePassword)
+  // * 이메일, 비밀번호 입력 상태 관리 (useInput 커스텀 훅 & VALIDATE_RULES 사용)
+  // ? VALIDATE_RULES : 유효성 검증을 위해 별도로 관리되는 규칙 상수 데이터
+  const email = useInput('', VALIDATE_RULES.email)
+  const password = useInput('', VALIDATE_RULES.password)
+
+  // * 인증 컨텍스트 사용
+  const { login } = useAuth()
 
   const navigate = useNavigate()
   const location = useLocation()
 
-  const from = (location.state as { from?: string })?.from || ROUTH_PATH.HOME
+  const from = (location.state as { from?: string })?.from || ROUTE_PATH.HOME
 
+  // * 로그인 핸들러
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
 
-    // ! 로그인 정보 저장 로직 없이 바로 리디렉션
-    // TODO: 이후 로그인 정보 저장 로직 추가 필요
+    // ! 이메일에서 이름을 추출해서 사용
+    // ? 실제로는 서버에서 받은 사용자 정보를 사용
+    const name = email.value.split('@')[0]
+
+    // * 로그인 정보 저장 (쿠키에 암호화되어 저장)
+    login({
+      name,
+      email: email.value,
+    })
+
+    // * 로그인 시 이전 페이지로 리다이렉트
     navigate(from, { replace: true }) // * replace로 히스토리 정리
   }
 
@@ -37,7 +53,7 @@ export const Login = () => {
           placeholder="이메일"
           value={email.value}
           onChange={email.handleChange}
-          hasError={!email.isValid}
+          hasError={!!email.error}
           onBlur={email.handleBlur}
         />
         {email.error && <ErrorText>{email.error}</ErrorText>}
@@ -46,7 +62,7 @@ export const Login = () => {
           placeholder="비밀번호"
           value={password.value}
           onChange={password.handleChange}
-          hasError={!password.isValid}
+          hasError={!!password.error}
           onBlur={password.handleBlur}
         />
         {password.error && <ErrorText>{password.error}</ErrorText>}
@@ -55,45 +71,13 @@ export const Login = () => {
           type="submit"
           variant="kakao"
           size="medium"
-          disabled={
-            email.value.length === 0 ||
-            password.value.length === 0 ||
-            !email.isValid ||
-            !password.isValid
-          }
+          disabled={!email.isValid || !password.isValid}
         >
           로그인
         </Button>
       </LoginForm>
     </PageContainer>
   )
-}
-
-// ! 이메일 형식 검사를 위한 정규식
-const EMAIL_REGEX = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
-
-// * 이메일 유효성 검사 함수
-const validateEmail = (email: string): string | null => {
-  if (!email.trim()) {
-    return 'ID를 입력해주세요.'
-  }
-  if (!EMAIL_REGEX.test(email)) {
-    return 'ID는 이메일 형식으로 입력해주세요.'
-  }
-
-  return null
-}
-
-// * 비밀번호 유효성 검사 함수
-const validatePassword = (password: string): string | null => {
-  if (!password.trim()) {
-    return 'PW를 입력해주세요.'
-  }
-  if (password.length < 8) {
-    return 'PW는 최소 8글자 이상이어야 합니다.'
-  }
-
-  return null
 }
 
 // * 로고 이미지

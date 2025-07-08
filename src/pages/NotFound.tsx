@@ -4,7 +4,7 @@ import styled from '@emotion/styled'
 import { useNavigate } from 'react-router-dom'
 import { PageContainer } from '@/components/common/PageContainer'
 import { Button } from '@/components/common/Button'
-import { ROUTH_PATH } from '@/Router'
+import { ROUTE_PATH } from '@/Router'
 
 // * 404 NotFound 페이지
 export const NotFound = () => {
@@ -18,7 +18,7 @@ export const NotFound = () => {
       />
       <Title>잘못된 접근입니다.</Title>
       <Subtitle>찾으시는 페이지가 존재하지 않습니다.</Subtitle>
-      <Button variant="kakao" size="small" onClick={() => navigate(ROUTH_PATH.HOME)}>
+      <Button variant="kakao" size="small" onClick={() => navigate(ROUTE_PATH.HOME)}>
         홈으로
       </Button>
     </PageContainer>

@@ -15,7 +15,7 @@ export const Button = ({ children, variant = 'kakao', size = 'medium', ...props 
 }
 
 // * 버튼 변형 타입
-type ButtonVariant = 'kakao' | 'outline' | 'ghost'
+type ButtonVariant = 'kakao' | 'default' | 'outline' | 'ghost'
 
 // * 버튼 크기 타입
 type ButtonSize = 'small' | 'medium' | 'large'
@@ -81,6 +81,24 @@ const StyledButton = styled.button<{
 
           &:active {
             background-color: ${theme.semanticColors.brand.kakaoYellowActive};
+          }
+
+          &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+          }
+        `
+      case 'default': // * 기본 버튼
+        return `
+          background-color: ${theme.colors.gray.gray300};
+          color: ${theme.semanticColors.text.default};
+
+          &:hover {
+            background-color: ${theme.colors.gray.gray400};
+          }
+
+          &:active {
+            background-color: ${theme.colors.gray.gray500};
           }
 
           &:disabled {

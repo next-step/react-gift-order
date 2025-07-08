@@ -2,12 +2,23 @@ import { theme } from '@/styles/theme'
 import { typographyMixin } from '@/components/common'
 import styled from '@emotion/styled'
 import type { Product } from './types'
+import { useNavigate } from 'react-router-dom'
+import { ROUTE_PATH } from '@/Router'
 
 // * 실시간 급상승 상품 아이템 컴포넌트
 export const ProductItem = ({ product, index }: { product: Product; index: number }) => {
+  const navigate = useNavigate()
+  const productRank = index + 1
+
+  // * 상품 클릭시 핸들러
+  // ! withAuth HOC가 인증 처리를 담당
+  const handleProductClick = () => {
+    navigate(`${ROUTE_PATH.ORDER}/${product.id}`)
+  }
+
   return (
-    <ProductItemContainer>
-      <ProductRank rank={index + 1}>{index + 1}</ProductRank>
+    <ProductItemContainer onClick={handleProductClick}>
+      <ProductRank rank={productRank}>{productRank}</ProductRank>
       <ProductImage src={product.imageURL} alt={product.name} />
       <ProductTitleContainer>
         <ProductBrand>{product.brandInfo.name}</ProductBrand>
@@ -31,8 +42,8 @@ export const ProductItem = ({ product, index }: { product: Product; index: numbe
   )
 }
 
-// * 실시간 급상승 상품 아이템 컨테이너
-const ProductItemContainer = styled.div`
+// * 실시간 급상승 상품 아이템 컨테이너 (article 시맨틱 태그 사용)
+const ProductItemContainer = styled.article`
   position: relative;
 
   width: 100%;
@@ -43,6 +54,8 @@ const ProductItemContainer = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   gap: ${theme.spacing.spacing2};
+
+  cursor: pointer;
 `
 
 // * 실시간 급상승 상품 랭크
