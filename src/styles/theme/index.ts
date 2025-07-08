@@ -23,6 +23,9 @@ export const theme = {
     form: {
       focusBorderColor: "rgb(78, 78, 78)",
     },
+    modal: {
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+    },
   },
 } as const;
 

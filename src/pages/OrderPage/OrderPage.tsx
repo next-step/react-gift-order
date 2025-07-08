@@ -49,7 +49,7 @@ function OrderPage() {
         <OrderPageContainer>
           <CardSelection cards={orderCardMockData} {...cardSelection} />
           <SenderSectionComponent {...senderInput} />
-          <ReceiverSectionComponent {...receiverInput} />
+          <ReceiverSectionComponent />
           <ProductInfo product={product} quantity={receiverInput.quantity} />
         </OrderPageContainer>
       </form>

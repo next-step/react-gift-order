@@ -29,7 +29,7 @@ export const FieldLabel = styled.label`
   min-width: 4rem;
 `;
 
-export const FormContainer = styled.form`
+export const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing[2]};
