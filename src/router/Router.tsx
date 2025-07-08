@@ -6,14 +6,22 @@ import MyPage from '@/pages/MyPage';
 import Order from '@/pages/Order';
 import PrivateRoute from '@/router/PrivateRoute';
 
+const ROUTES = {
+  HOME: '/',
+  LOGIN: '/login',
+  MY_PAGE: '/my',
+  ORDER_DETAIL_BASE: '/order/:id',
+  NOT_FOUND: '*',
+} as const;
+
 const Router = () => {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<LoginPage />} />
+      <Route path={ROUTES.HOME} element={<Home />} />
+      <Route path={ROUTES.LOGIN} element={<LoginPage />} />
 
       <Route
-        path="/my"
+        path={ROUTES.MY_PAGE}
         element={
           <PrivateRoute>
             <MyPage />
@@ -21,7 +29,7 @@ const Router = () => {
         }
       />
       <Route
-        path="/order/:id"
+        path={ROUTES.ORDER_DETAIL_BASE}
         element={
           <PrivateRoute>
             <Order />
@@ -29,7 +37,7 @@ const Router = () => {
         }
       />
 
-      <Route path="*" element={<NotFound />} />
+      <Route path={ROUTES.NOT_FOUND} element={<NotFound />} />
     </Routes>
   );
 };
