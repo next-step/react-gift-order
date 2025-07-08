@@ -55,14 +55,8 @@ const spacer48 = css`
 
 const Login = () => {
   const { setUser } = useUserInfo();
-  const {
-    formValue,
-    setFormValue,
-    isError,
-    setIsError,
-    validateField,
-    loginActivated,
-  } = useLoginForm();
+  const { formValue, setFormValue, isError, setError, loginActivated } =
+    useLoginForm();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -71,21 +65,19 @@ const Login = () => {
     const field = name as 'email' | 'password';
 
     setFormValue((prev) => ({ ...prev, [field]: value }));
-    setIsError((prev) => ({ ...prev, [field]: validateField(field, value) }));
+    setError(field, value);
   };
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
     if (name === 'email' || name === 'password') {
-      setIsError((prev) => ({
-        ...prev,
-        [name]: validateField(name, value),
-      }));
+      setError(name, value);
     }
   };
 
-  const formSubmitted = () => {
+  const formSubmitted = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     const name = formValue.email.split('@')[0];
     setUser({ name: name, email: formValue.email });
     const from = location.state?.from?.pathname || '/';

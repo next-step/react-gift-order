@@ -36,14 +36,20 @@ const useLoginForm = () => {
     password: '',
   });
 
-  const loginActivated = isError.email === '' && isError.password === '';
+  const setError = (field: 'email' | 'password', value: string) => {
+    setIsError((prev) => ({ ...prev, [field]: validateField(field, value) }));
+  };
 
+  const loginActivated =
+    formValue.email !== '' &&
+    formValue.password !== '' &&
+    isError.email === '' &&
+    isError.password === '';
   return {
     formValue,
     setFormValue,
     isError,
-    setIsError,
-    validateField,
+    setError,
     loginActivated,
   };
 };
