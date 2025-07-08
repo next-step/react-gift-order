@@ -4,10 +4,10 @@ import { ROUTE_PATH } from "@/components/routes/Routes";
 import { AUTH_COOKIE_KEY, useAuth } from "@/contexts/authContext";
 
 type AuthRouteProps = {
-  authRequired: boolean;
+  required?: boolean;
 };
 
-const AuthRoute = ({ authRequired }: AuthRouteProps) => {
+const AuthRoute = ({ required = false }: AuthRouteProps) => {
   const location = useLocation();
   const { auth, setAuth } = useAuth();
 
@@ -15,7 +15,7 @@ const AuthRoute = ({ authRequired }: AuthRouteProps) => {
     setAuth({ isLoggedIn: false });
   }
 
-  if (authRequired) {
+  if (required) {
     if (!auth.isLoggedIn) {
       return <Navigate to={`${ROUTE_PATH.LOGIN}?redirect=${location.pathname}`} replace />;
     }

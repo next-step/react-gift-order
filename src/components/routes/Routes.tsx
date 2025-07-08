@@ -10,10 +10,10 @@ const Routes = () => {
   return (
     <RouterRoutes>
       <Route path={ROUTE_PATH.HOME} element={<Gift />} />
-      <Route element={<AuthRoute authRequired={false} />}>
+      <Route element={<AuthRoute />}>
         <Route path={ROUTE_PATH.LOGIN} element={<Login />} />
       </Route>
-      <Route element={<AuthRoute authRequired={true} />}>
+      <Route element={<AuthRoute required />}>
         <Route path={ROUTE_PATH.PROFILE} element={<Profile />} />
         <Route path={ROUTE_PATH.ORDER_ID} element={<Order />} />
       </Route>
