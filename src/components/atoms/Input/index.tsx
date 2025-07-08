@@ -9,13 +9,13 @@ interface InputProps {
   style?: React.CSSProperties;
 }
 
-const Input: React.FC<InputProps> = ({
+const Input = ({
   type = 'text',
   placeholder,
   value,
   onChange,
   style,
-}) => {
+}: InputProps) => {
   return (
     <S.Input
       type={type}

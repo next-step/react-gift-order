@@ -37,7 +37,7 @@ interface OrderTemplateProps {
   onOrder: () => void;
 }
 
-const OrderTemplate: React.FC<OrderTemplateProps> = ({
+const OrderTemplate = ({
   orders,
   selectedCardId,
   selectedCard,
@@ -55,7 +55,7 @@ const OrderTemplate: React.FC<OrderTemplateProps> = ({
   onReceiverPhoneChange,
   onQuantityChange,
   onOrder,
-}) => {
+}: OrderTemplateProps) => {
   return (
     <>
       <S.ContentWrapper>

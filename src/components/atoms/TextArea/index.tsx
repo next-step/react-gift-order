@@ -7,7 +7,7 @@ interface TextAreaProps {
   placeholder?: string;
 }
 
-const TextArea: React.FC<TextAreaProps> = ({ value, onChange, placeholder }) => {
+const TextArea = ({ value, onChange, placeholder }: TextAreaProps) => {
   return (
     <S.TextArea
       value={value}

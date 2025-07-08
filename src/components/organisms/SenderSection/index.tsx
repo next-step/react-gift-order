@@ -9,11 +9,11 @@ interface SenderSectionProps {
   error?: string;
 }
 
-const SenderSection: React.FC<SenderSectionProps> = ({
+const SenderSection = ({
   senderName,
   onSenderNameChange,
   error,
-}) => {
+}: SenderSectionProps) => {
   return (
     <S.Container>
       <S.SectionTitle>

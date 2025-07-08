@@ -9,7 +9,7 @@ interface MessageInputProps {
   error?: string;
 }
 
-const MessageInput: React.FC<MessageInputProps> = ({ value, onChange, placeholder, error }) => {
+const MessageInput = ({ value, onChange, placeholder, error }: MessageInputProps) => {
   return (
     <S.Container>
       <S.Wrapper>

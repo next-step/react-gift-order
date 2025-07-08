@@ -1,4 +1,3 @@
-import React from 'react';
 import OrderCard from '@/components/molcules/OrderCard';
 import { type Order } from '@/data/orders';
 import * as S from './styles';
@@ -9,7 +8,7 @@ interface CardCarouselProps {
   onCardClick: (id: number) => void;
 }
 
-const CardCarousel: React.FC<CardCarouselProps> = ({ orders, selectedCardId, onCardClick }) => {
+const CardCarousel = ({ orders, selectedCardId, onCardClick }: CardCarouselProps) => {
   return (
     <S.ScrollContainer>
       {orders.map((order) => (

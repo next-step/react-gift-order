@@ -16,7 +16,7 @@ interface InputFieldProps {
   error?: string;
 }
 
-const InputField: React.FC<InputFieldProps> = ({
+const InputField = ({
   label,
   placeholder,
   value,
@@ -26,7 +26,7 @@ const InputField: React.FC<InputFieldProps> = ({
   labelMinWidth,
   layout = 'vertical',
   error,
-}) => {
+}: InputFieldProps) => {
   return (
     <S.Container layout={layout}>
       {label && (

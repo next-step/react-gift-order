@@ -7,7 +7,7 @@ interface LabelProps {
   variant?: 'regular' | 'bold';
 }
 
-const Label: React.FC<LabelProps> = ({ children, minWidth, variant = 'regular' }) => {
+const Label = ({ children, minWidth, variant = 'regular' }: LabelProps) => {
   return (
     <S.Label minWidth={minWidth} variant={variant}>
       {children}

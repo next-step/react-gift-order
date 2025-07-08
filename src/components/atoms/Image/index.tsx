@@ -1,4 +1,3 @@
-import React from 'react';
 import * as S from './styles';
 
 interface ImageProps {
@@ -7,7 +6,7 @@ interface ImageProps {
   variant?: 'card' | 'preview';
 }
 
-const Image: React.FC<ImageProps> = ({ src, alt, variant = 'card' }) => {
+const Image = ({ src, alt, variant = 'card' }: ImageProps) => {
   return (
     <S.Image variant={variant} src={src} alt={alt} />
   );

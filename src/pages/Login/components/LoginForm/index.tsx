@@ -1,10 +1,9 @@
-import React from 'react';
 import { useLoginForm } from '@/hooks/useLoginForm';
 import LoginInputField from '@/components/Form/LoginInputField';
 import Button from '@/components/common/Button';
 import * as S from './styles';
 
-const LoginForm: React.FC = () => {
+const LoginForm = () => {
   const { email, password, isFormValid, handleSubmit } = useLoginForm();
 
   return (

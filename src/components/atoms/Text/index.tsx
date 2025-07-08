@@ -7,7 +7,7 @@ interface TextProps {
   style?: React.CSSProperties;
 }
 
-const Text: React.FC<TextProps> = ({ children, variant = 'body', style }) => {
+const Text = ({ children, variant = 'body', style }: TextProps) => {
   return (
     <S.Text variant={variant} style={style}>
       {children}

@@ -1,4 +1,3 @@
-import React from 'react';
 import Image from '@/components/atoms/Image';
 import { type Order } from '@/data/orders';
 import * as S from './styles';
@@ -9,7 +8,7 @@ interface OrderCardProps extends Pick<Order, 'id' | 'thumbUrl'> {
   onClick: () => void;
 }
 
-const OrderCard: React.FC<OrderCardProps> = ({ id, thumbUrl, isSelected, onClick }) => {
+const OrderCard = ({ id, thumbUrl, isSelected, onClick }: OrderCardProps) => {
   return (
     <S.Container isSelected={isSelected} onClick={onClick}>
       <Image

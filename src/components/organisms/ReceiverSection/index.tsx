@@ -15,7 +15,7 @@ interface ReceiverSectionProps {
   quantityError?: string;
 }
 
-const ReceiverSection: React.FC<ReceiverSectionProps> = ({
+const ReceiverSection = ({
   receiverName,
   receiverPhone,
   quantity,
@@ -25,7 +25,7 @@ const ReceiverSection: React.FC<ReceiverSectionProps> = ({
   receiverNameError,
   receiverPhoneError,
   quantityError,
-}) => {
+}: ReceiverSectionProps) => {
   return (
     <S.Container>
       <S.SectionTitle>

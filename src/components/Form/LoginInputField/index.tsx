@@ -10,14 +10,14 @@ interface LoginInputFieldProps {
   error?: string; //hasError삭제 
 }
 
-const LoginInputField: React.FC<LoginInputFieldProps> = ({
+const LoginInputField = ({
   type,
   placeholder,
   value,
   onChange,
   onBlur,
   error
-}) => {
+}: LoginInputFieldProps) => {
   return (
     <S.InputContainer>
       <S.Input
