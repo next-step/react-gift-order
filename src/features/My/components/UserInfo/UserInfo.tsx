@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useUserContext } from '@/contexts/UserContext'
-import { Container, Title, InfoText } from './UserInfo.styles'
+import * as S from './UserInfo.styles'
+import { ROUTE_PATH } from '@/routes/Router'
 
 import MyButton from '@/component/Button/Button'
 const UserInfo = () => {
@@ -9,20 +10,20 @@ const UserInfo = () => {
 
   const handleLogout = () => {
     logout()
-    navigate('/login')
+    navigate(ROUTE_PATH.LOGIN)
   }
 
   return (
-    <Container>
-      <Title>마이페이지</Title>
-      <InfoText>
+    <S.Container>
+      <S.Title>마이페이지</S.Title>
+      <S.InfoText>
         {user?.nickname} 님 안녕하세요! <br /> 이메일 주소는 {user?.email}
         입니다.
-      </InfoText>
+      </S.InfoText>
       <MyButton variant="secondory" size="verySmall" onClick={handleLogout}>
         로그아웃
       </MyButton>
-    </Container>
+    </S.Container>
   )
 }
 
