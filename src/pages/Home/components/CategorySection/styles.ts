@@ -13,7 +13,9 @@ export const Title = styled.h1`
 
 export const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(3, 1fr);
-  row-gap: ${({ theme }) => theme.spacing.spacing5};
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: ${({ theme }) => theme.spacing.spacing4};
+  justify-items: center;
+  align-items: center;
+  margin: 0 auto;
 `; 
