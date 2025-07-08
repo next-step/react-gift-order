@@ -1,5 +1,5 @@
 import MyButton from '@/component/Button/Button'
-import { Footer, PriceText } from './BottomPurchaseBar.styles.ts'
+import * as S from './BottomPurchaseBar.styles.ts'
 
 interface BottomPurchaseBarProps {
   handlePurchase: () => void
@@ -11,11 +11,11 @@ const BottomPurchaseBar = ({
   totalPrice,
 }: BottomPurchaseBarProps) => {
   return (
-    <Footer>
+    <S.Footer>
       <MyButton onClick={handlePurchase} variant="primary" fullWidth={true}>
-        <PriceText>{totalPrice.toLocaleString()}원 결제하기</PriceText>
+        <S.PriceText>{totalPrice.toLocaleString()}원 결제하기</S.PriceText>
       </MyButton>
-    </Footer>
+    </S.Footer>
   )
 }
 

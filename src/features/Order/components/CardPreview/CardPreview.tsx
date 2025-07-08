@@ -1,5 +1,5 @@
 import { cards } from '@/data/cards'
-import { PreviewContainer, CardImage } from './CardPreview.styles'
+import * as S from './CardPreview.styles'
 
 interface CardPreviewProps {
   selectedCardId: number
@@ -10,9 +10,9 @@ const CardPreview = ({ selectedCardId }: CardPreviewProps) => {
   if (!card) return null
 
   return (
-    <PreviewContainer>
-      <CardImage src={card.imageUrl} alt="card-preview" />
-    </PreviewContainer>
+    <S.PreviewContainer>
+      <S.CardImage src={card.imageUrl} alt="card-preview" />
+    </S.PreviewContainer>
   )
 }
 

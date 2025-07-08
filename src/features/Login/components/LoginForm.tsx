@@ -1,10 +1,4 @@
-import {
-  Container,
-  FormContainer,
-  KakaoTitle,
-  InputForm,
-  ErrorMessage,
-} from './LoginForm.styles'
+import * as S from './LoginForm.styles'
 import { useNavigate } from 'react-router-dom'
 import KaKaoTitleIcon from '@/assets/icons/kakao-title.svg?react'
 import MyButton from '@/component/Button/Button'
@@ -45,13 +39,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectPath }) => {
   }
 
   return (
-    <Container>
-      <FormContainer>
-        <KakaoTitle>
+    <S.Container>
+      <S.FormContainer>
+        <S.KakaoTitle>
           <KaKaoTitleIcon />
-        </KakaoTitle>
+        </S.KakaoTitle>
 
-        <InputForm
+        <S.InputForm
           placeholder="이메일"
           type="email"
           value={email}
@@ -59,9 +53,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectPath }) => {
           onBlur={() => setEmailTouched(true)}
           isError={!!emailError}
         />
-        <ErrorMessage isActive={!!emailError}>{emailError}</ErrorMessage>
+        <S.ErrorMessage isActive={!!emailError}>{emailError}</S.ErrorMessage>
 
-        <InputForm
+        <S.InputForm
           placeholder="비밀번호"
           type="password"
           value={password}
@@ -72,7 +66,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectPath }) => {
           onBlur={() => setPasswordTouched(true)}
           isError={!!passwordError}
         />
-        <ErrorMessage isActive={!!passwordError}>{passwordError}</ErrorMessage>
+        <S.ErrorMessage isActive={!!passwordError}>
+          {passwordError}
+        </S.ErrorMessage>
 
         <MyButton
           onClick={handleLoginClick}
@@ -84,8 +80,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectPath }) => {
         >
           로그인
         </MyButton>
-      </FormContainer>
-    </Container>
+      </S.FormContainer>
+    </S.Container>
   )
 }
 

@@ -1,28 +1,27 @@
-import {
-  Container,
-  Title,
-  SubTitle,
-  NotFoundImg,
-  ErrorContainer,
-} from './NotFound.styles'
+import * as S from './NotFound.styles'
 import { useNavigate } from 'react-router-dom'
 import notFoundImg from '@/assets/images/img_not_found.png'
 import MyButton from '@/component/Button/Button'
+import { ROUTE_PATH } from '@/routes/Router'
 
 const NotFound: React.FC = () => {
   const navigate = useNavigate()
 
   return (
-    <Container>
-      <ErrorContainer>
-        <NotFoundImg src={notFoundImg}></NotFoundImg>
-        <Title>잘못된 접근입니다.</Title>
-        <SubTitle>찾으시는 페이지가 존재하지 않습니다.</SubTitle>
-        <MyButton variant="primary" size="small" onClick={() => navigate('/')}>
+    <S.Container>
+      <S.ErrorContainer>
+        <S.NotFoundImg src={notFoundImg}></S.NotFoundImg>
+        <S.Title>잘못된 접근입니다.</S.Title>
+        <S.SubTitle>찾으시는 페이지가 존재하지 않습니다.</S.SubTitle>
+        <MyButton
+          variant="primary"
+          size="small"
+          onClick={() => navigate(ROUTE_PATH.GIFT)}
+        >
           홈으로
         </MyButton>
-      </ErrorContainer>
-    </Container>
+      </S.ErrorContainer>
+    </S.Container>
   )
 }
 

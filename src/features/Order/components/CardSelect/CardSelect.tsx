@@ -1,6 +1,6 @@
 import { cards } from '@/data/cards'
 import type { Dispatch, SetStateAction } from 'react'
-import { Container, Thumbnail } from './CardSelect.styles'
+import * as S from './CardSelect.styles'
 
 interface Props {
   selectedCardId: number
@@ -9,9 +9,9 @@ interface Props {
 
 const CardSelect: React.FC<Props> = ({ selectedCardId, setSelectedCardId }) => {
   return (
-    <Container>
+    <S.Container>
       {cards.map((card) => (
-        <Thumbnail
+        <S.Thumbnail
           key={card.id}
           src={card.thumbUrl}
           alt="card"
@@ -19,7 +19,7 @@ const CardSelect: React.FC<Props> = ({ selectedCardId, setSelectedCardId }) => {
           onClick={() => setSelectedCardId(card.id)}
         />
       ))}
-    </Container>
+    </S.Container>
   )
 }
 
