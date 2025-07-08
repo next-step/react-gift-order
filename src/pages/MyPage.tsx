@@ -1,15 +1,17 @@
+import { useTransition } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "@/features/auth/hooks/useAuth";
 
 export default function MyPage() {
+    const [, startTransition] = useTransition();
+
     const navigate = useNavigate();
     const { nickname, email, signOut } = useAuth();
 
     const onSignOut = () => {
-        // TODO: 로그아웃 처리 후 forbidden 잠깐 보이고 홈으로 리다이렉트 되는데 왜이러지..
-        signOut();
         navigate("/");
+        startTransition(() => signOut());
     };
 
     return (
