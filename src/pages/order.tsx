@@ -92,10 +92,11 @@ const FieldLabel = styled.div`
 `;
 
 const Input = styled.input`
+  width: 100%;
   flex: 1;
   padding: 12px 16px;
-  border: 1px solid '#dcdcdc';
-  border-radius: 6px;
+  border: 1px solid '#dcdee3';
+  border-radius: 8px;
   font-size: 14px;
   flex-direction: column;
 
@@ -110,7 +111,8 @@ const Input = styled.input`
 const ErrorText = styled.div`
   color: red;
   font-size: 12px;
-  margin-top: 4px;
+  margin-left: 1px;
+  margin-top: 5px;
 `;
 
 const validateName = (value: string) => {
@@ -210,37 +212,49 @@ const Order = () => {
 
           <Row>
             <FieldLabel>이름</FieldLabel>
-            <Input
-              type="text"
-              placeholder="이름을 입력하세요."
-              onChange={e =>
-                receiverNameInput.setValue(e.target.value)
-              }
-              onBlur={receiverNameInput.handleBlur}
-            />
-            <ErrorText>{receiverNameInput.error}</ErrorText>
+            <div style={{ flex: 1 }}>
+              <Input
+                type="text"
+                placeholder="이름을 입력하세요."
+                onChange={e =>
+                  receiverNameInput.setValue(e.target.value)
+                }
+                onBlur={receiverNameInput.handleBlur}
+              />
+              {!receiverNameInput.isValid && (
+                <ErrorText>{receiverNameInput.error}</ErrorText>
+              )}
+            </div>
           </Row>
 
           <Row>
             <FieldLabel>전화번호</FieldLabel>
-            <Input
-              type="tel"
-              placeholder="전화번호를 입력하세요."
-              onChange={e =>
-                receiverPhoneInput.setValue(e.target.value)
-              }
-              onBlur={receiverPhoneInput.handleBlur}
-            />
-            <ErrorText>{receiverPhoneInput.error}</ErrorText>
+            <div style={{ flex: 1 }}>
+              <Input
+                type="tel"
+                placeholder="전화번호를 입력하세요."
+                onChange={e =>
+                  receiverPhoneInput.setValue(e.target.value)
+                }
+                onBlur={receiverPhoneInput.handleBlur}
+              />
+              {!receiverPhoneInput.isValid && (
+                <ErrorText>{receiverPhoneInput.error}</ErrorText>
+              )}
+            </div>
           </Row>
 
           <Row>
             <FieldLabel>수량</FieldLabel>
-            <Input
-              type="number"
-              onChange={e => quantityInput.setValue(e.target.value)}
-            />
-            <ErrorText>{quantityInput.error}</ErrorText>
+            <div style={{ flex: 1 }}>
+              <Input
+                type="number"
+                onChange={e => quantityInput.setValue(e.target.value)}
+              />
+              {!quantityInput.isValid && (
+                <ErrorText>{quantityInput.error}</ErrorText>
+              )}{' '}
+            </div>
           </Row>
           <Label>상품 정보</Label>
           <img src={product.imageURL} alt={product.name} width={80} />
