@@ -3,7 +3,7 @@ import Container from "@/components/common/Container";
 import Divider from "@/components/common/Divider";
 import Button from "@/components/common/Button";
 import { useNavigate } from "react-router-dom";
-import { ROUTE_PATH } from "@/components/routes/Routes";
+import { ROUTE_PATH } from "@/components/routes/routePath";
 import { useAuth } from "@/contexts/authContext";
 
 const Profile = () => {

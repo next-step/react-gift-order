@@ -4,7 +4,7 @@ import Divider from "@/components/common/Divider";
 import { useState } from "react";
 import Button from "@/components/common/Button";
 import { useNavigate } from "react-router-dom";
-import { ROUTE_PATH } from "@/components/routes/Routes";
+import { ROUTE_PATH } from "@/components/routes/routePath";
 
 const RANKING_LIST_ITEM_VIEW_COUNT = 6;
 

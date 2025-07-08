@@ -5,7 +5,7 @@ import { orderCardMock } from "@/assets/orderCardMock";
 import { useEffect, useState } from "react";
 import { rankingItemMock } from "@/assets/rankingItemMock";
 import { useNavigate, useParams } from "react-router-dom";
-import { ROUTE_PATH } from "@/components/routes/Routes";
+import { ROUTE_PATH } from "@/components/routes/routePath";
 import Card from "./components/Card";
 import Sender from "./components/Sender";
 import Recipient from "./components/Recipient";

@@ -3,8 +3,8 @@ import LeftArrow from "@/components/icons/LeftArrow";
 import Profile from "@/components/icons/Profile";
 import { useLocation, useNavigate } from "react-router-dom";
 import Button from "@/components/common/Button";
-import { ROUTE_PATH } from "@/components/routes/Routes";
 import { useAuth } from "@/contexts/authContext";
+import { ROUTE_PATH } from "../routes/routePath";
 
 const Navigation = () => {
   const location = useLocation();

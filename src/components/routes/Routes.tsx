@@ -5,6 +5,7 @@ import NotFound from "@/pages/NotFound/Page";
 import Profile from "@/pages/Profile/Page";
 import AuthRoute from "@/components/routes/AuthRoute";
 import Order from "@/pages/Order/Page";
+import { ROUTE_PATH } from "./routePath";
 
 const Routes = () => {
   return (
@@ -21,14 +22,5 @@ const Routes = () => {
     </RouterRoutes>
   );
 };
-
-export const ROUTE_PATH = {
-  HOME: "/",
-  LOGIN: "/login",
-  PROFILE: "/my",
-  ORDER: "/order",
-  ORDER_ID: "/order/:productId",
-  NOT_FOUND: "*",
-} as const;
 
 export default Routes;
