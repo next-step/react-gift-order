@@ -2,16 +2,18 @@ import styled from '@emotion/styled';
 import InputField from '@/components/common/InputField';
 
 interface SenderFormProps {
+  name: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   error?: string;
 }
 
-const SenderForm = ({ value, onChange, error }: SenderFormProps) => {
+const SenderForm = ({ name, value, onChange, error }: SenderFormProps) => {
   return (
     <Wrapper>
       <Label>보내는 사람</Label>
       <InputField
+        name={name}
         type="text"
         value={value}
         onChange={onChange}

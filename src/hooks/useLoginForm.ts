@@ -14,6 +14,11 @@ const useLoginForm = () => {
 
   const handleChange = (field: 'email' | 'password', value: string) => {
     setUserInfo(prev => ({ ...prev, [field]: value }));
+    if (field == 'email') {
+      validateEmail();
+    } else {
+      validatePassword();
+    }
   };
 
   const validateEmail = () => {

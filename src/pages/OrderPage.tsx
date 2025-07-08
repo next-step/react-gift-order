@@ -51,6 +51,18 @@ const OrderPage = () => {
     navigate('/');
   };
 
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    const parsedValue = name === 'quantity' ? Number(value) : value;
+    handleChange(name as any, parsedValue);
+
+    if (formErrors[name as keyof typeof formErrors]) {
+      validateField(name as any);
+    }
+  };
+
   return (
     <>
       <Navigation />
@@ -61,41 +73,29 @@ const OrderPage = () => {
             onSelect={setSelectedCardId}
           />
           <MessageInput
+            name="textMessage"
             value={String(formValues.textMessage)}
-            onChange={e => {
-              handleChange('textMessage', e.target.value);
-              if (formErrors.textMessage) validateField('textMessage');
-            }}
+            onChange={handleInputChange}
             error={formErrors.textMessage}
           />
           <SenderForm
+            name="senderName"
             value={String(formValues.senderName)}
-            onChange={e => {
-              handleChange('senderName', e.target.value);
-              if (formErrors.senderName) validateField('senderName');
-            }}
+            onChange={handleInputChange}
             error={formErrors.senderName}
           />
           <ReceiverForm
-            name={String(formValues.receiverName)}
-            phone={String(formValues.receiverPhone)}
-            quantity={Number(formValues.quantity)}
-            onNameChange={e => {
-              handleChange('receiverName', e.target.value);
-              if (formErrors.receiverName) validateField('receiverName');
+            values={{
+              receiverName: String(formValues.receiverName),
+              receiverPhone: String(formValues.receiverPhone),
+              quantity: Number(formValues.quantity),
             }}
-            onPhoneChange={e => {
-              handleChange('receiverPhone', e.target.value);
-              if (formErrors.receiverPhone) validateField('receiverPhone');
+            errors={{
+              receiverName: formErrors.receiverName,
+              receiverPhone: formErrors.receiverPhone,
+              quantity: formErrors.quantity,
             }}
-            onQuantityChange={e => {
-              const value = Number(e.target.value);
-              handleChange('quantity', value);
-              if (formErrors.quantity) validateField('quantity');
-            }}
-            nameError={formErrors.receiverName}
-            phoneError={formErrors.receiverPhone}
-            quantityError={formErrors.quantity}
+            onChange={handleInputChange}
           />
           <ProductInfo product={product} />
           <OrderSubmitButton amount={totalPrice} />

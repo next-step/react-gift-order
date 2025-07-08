@@ -1,15 +1,17 @@
 import styled from '@emotion/styled';
 
 interface MessageInputProps {
+  name: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   error?: string;
 }
 
-const MessageInput = ({ value, onChange, error }: MessageInputProps) => {
+const MessageInput = ({ name, value, onChange, error }: MessageInputProps) => {
   return (
     <Wrapper>
       <InputArea
+        name={name}
         value={value}
         onChange={onChange}
         placeholder="메시지를 입력해주세요."

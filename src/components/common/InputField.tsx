@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 
 interface InputFieldProps {
+  name: string;
   type: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -10,6 +11,7 @@ interface InputFieldProps {
 }
 
 const InputField = ({
+  name,
   type,
   value,
   onChange,
@@ -20,6 +22,7 @@ const InputField = ({
   return (
     <Wrapper>
       <StyledInput
+        name={name}
         type={type}
         value={value}
         onChange={onChange}

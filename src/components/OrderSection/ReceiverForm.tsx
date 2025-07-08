@@ -2,50 +2,45 @@ import styled from '@emotion/styled';
 import InputField from '@/components/common/InputField';
 
 interface ReceiverFormProps {
-  name: string;
-  phone: string;
-  quantity: number;
-  onNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onPhoneChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onQuantityChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  nameError?: string;
-  phoneError?: string;
-  quantityError?: string;
+  values: {
+    receiverName: string;
+    receiverPhone: string;
+    quantity: number;
+  };
+  errors: {
+    receiverName?: string;
+    receiverPhone?: string;
+    quantity?: string;
+  };
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const ReceiverForm = ({
-  name,
-  phone,
-  quantity,
-  onNameChange,
-  onPhoneChange,
-  onQuantityChange,
-  nameError,
-  phoneError,
-  quantityError,
-}: ReceiverFormProps) => {
+const ReceiverForm = ({ values, errors, onChange }: ReceiverFormProps) => {
   return (
     <Wrapper>
       <Label>받는 사람</Label>
       <InputField
+        name="receiverName"
         type="text"
-        value={name}
-        onChange={onNameChange}
-        error={nameError}
+        value={values.receiverName}
+        onChange={onChange}
+        error={errors.receiverName}
         placeholder="이름을 입력하세요."
       />
       <InputField
+        name="receiverPhone"
         type="tel"
-        value={phone}
-        onChange={onPhoneChange}
-        error={phoneError}
+        value={values.receiverPhone}
+        onChange={onChange}
+        error={errors.receiverPhone}
         placeholder="전화번호를 입력하세요."
       />
       <InputField
+        name="quantity"
         type="number"
-        value={quantity.toString()}
-        onChange={onQuantityChange}
-        error={quantityError}
+        value={String(values.quantity)}
+        onChange={onChange}
+        error={errors.quantity}
         placeholder="수량"
       />
     </Wrapper>

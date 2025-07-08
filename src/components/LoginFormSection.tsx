@@ -33,6 +33,11 @@ const LoginFormSection = () => {
     isValidForm,
   } = useLoginForm();
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    handleChange(name as 'email' | 'password', value);
+  };
+
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -50,17 +55,19 @@ const LoginFormSection = () => {
       <FormWrapper onSubmit={handleLogin}>
         <InputWrapper>
           <InputField
+            name="email"
             type="email"
             value={userInfo.email}
-            onChange={e => handleChange('email', e.target.value)}
+            onChange={handleInputChange}
             onBlur={validateEmail}
             error={errors.email}
             placeholder="이메일"
           />
           <InputField
+            name="password"
             type="password"
             value={userInfo.password}
-            onChange={e => handleChange('password', e.target.value)}
+            onChange={handleInputChange}
             onBlur={validatePassword}
             error={errors.password}
             placeholder="비밀번호"
