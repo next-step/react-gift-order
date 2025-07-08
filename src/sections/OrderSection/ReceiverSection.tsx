@@ -1,6 +1,4 @@
 import styled from "@emotion/styled";
-import { useValidate } from "@/hooks/useValidate";
-import { validateName, validatePhone, validateQuantity } from "@/utils/validate";
 
 const Section = styled.section`
   width: 100%;
@@ -53,11 +51,7 @@ interface Props {
 }
 
 
-export default function ReceiverSection({ receiverName, receiverPhone, quantity, setReceiverName, setReceiverPhone, setQuantity, touched, }: Props) {
-    const nameValidation = useValidate(receiverName, validateName);
-    const phoneValidation = useValidate(receiverPhone, validatePhone);
-    const quantityValidation = useValidate(String(quantity), (val) => validateQuantity(Number(val)));
-
+export default function ReceiverSection({ receiverName, receiverPhone, quantity, setReceiverName, setReceiverPhone, setQuantity, touched, errors, onBlurs, }: Props) {
     return (
         <Section>
             <FieldWrapper>
@@ -68,9 +62,9 @@ export default function ReceiverSection({ receiverName, receiverPhone, quantity,
                     placeholder="이름을 입력하세요."
                     value={receiverName}
                     onChange={(e) => setReceiverName(e.target.value)}
-                    onBlur={nameValidation.onBlur}
+                    onBlur={onBlurs.receiverName}
                 />
-                {touched && nameValidation.error && <ErrorText>{nameValidation.error}</ErrorText>}
+                {touched && errors.receiverName && <ErrorText>{errors.receiverName}</ErrorText>}
             </FieldWrapper>
 
             <FieldWrapper>
@@ -81,9 +75,9 @@ export default function ReceiverSection({ receiverName, receiverPhone, quantity,
                     placeholder="전화번호를 입력하세요 (01012345678)"
                     value={receiverPhone}
                     onChange={(e) => setReceiverPhone(e.target.value)}
-                    onBlur={phoneValidation.onBlur}
+                    onBlur={onBlurs.receiverPhone}
                 />
-                {touched && phoneValidation.error && <ErrorText>{phoneValidation.error}</ErrorText>}
+                {touched && errors.receiverPhone && <ErrorText>{errors.receiverPhone}</ErrorText>}
 
             </FieldWrapper>
 
@@ -94,9 +88,9 @@ export default function ReceiverSection({ receiverName, receiverPhone, quantity,
                     type="number"
                     value={quantity}
                     onChange={(e) => setQuantity(Number(e.target.value))}
-                    onBlur={quantityValidation.onBlur}
+                    onBlur={onBlurs.quantity}
                 />
-                {touched && quantityValidation.error && <ErrorText>{quantityValidation.error}</ErrorText>}
+                {touched && errors.quantity && <ErrorText>{errors.quantity}</ErrorText>}
             </FieldWrapper>
         </Section>
     );

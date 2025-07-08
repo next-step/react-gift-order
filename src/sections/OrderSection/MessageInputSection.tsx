@@ -1,6 +1,4 @@
 import styled from "@emotion/styled";
-import { useValidate } from "@/hooks/useValidate";
-import { validateMessage } from "@/utils/validate";
 
 const Section = styled.section`
   width: 100%;
@@ -26,26 +24,24 @@ const ErrorText = styled.p`
 `;
 
 interface Props {
-    message: string;
-    setMessage: (value: string) => void;
-    touched: boolean;
-    error: string;
-    onBlur: () => void;
+  message: string;
+  setMessage: (value: string) => void;
+  touched: boolean;
+  error: string;
+  onBlur: () => void;
 }
 
 
-export default function MessageInputSection({ message, setMessage, touched }: Props) {
-    const { error, onBlur } = useValidate(message, validateMessage);
-
-    return (
-        <Section>
-            <TextArea
-                placeholder="메시지를 입력하세요"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                onBlur={onBlur}
-            />
-            {touched && error && <ErrorText>{error}</ErrorText>}
-        </Section>
-    );
+export default function MessageInputSection({ message, setMessage, touched, error, onBlur, }: Props) {
+  return (
+    <Section>
+      <TextArea
+        placeholder="메시지를 입력하세요"
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        onBlur={onBlur}
+      />
+      {touched && error && <ErrorText>{error}</ErrorText>}
+    </Section>
+  );
 }

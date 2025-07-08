@@ -1,6 +1,4 @@
 import styled from "@emotion/styled";
-import { useValidate } from "@/hooks/useValidate";
-import { validateName } from "@/utils/validate";
 
 const Section = styled.section`
   width: 100%;
@@ -29,28 +27,26 @@ const ErrorText = styled.p`
 `;
 
 interface Props {
-    sender: string;
-    setSender: (name: string) => void;
-    touched: boolean;
-    error: string;
-    onBlur: () => void;
+  sender: string;
+  setSender: (name: string) => void;
+  touched: boolean;
+  error: string;
+  onBlur: () => void;
 }
 
-export default function SenderSection({ sender, setSender, touched }: Props) {
-    const { error, onBlur } = useValidate(sender, validateName);
-
-    return (
-        <Section>
-            <Label htmlFor="sender">보내는 사람</Label>
-            <Input
-                id="sender"
-                type="text"
-                placeholder="이름을 입력하세요."
-                value={sender}
-                onChange={(e) => setSender(e.target.value)}
-                onBlur={onBlur}
-            />
-            {touched && error && <ErrorText>{error}</ErrorText>}
-        </Section>
-    );
+export default function SenderSection({ sender, setSender, touched, error, onBlur }: Props) {
+  return (
+    <Section>
+      <Label htmlFor="sender">보내는 사람</Label>
+      <Input
+        id="sender"
+        type="text"
+        placeholder="이름을 입력하세요."
+        value={sender}
+        onChange={(e) => setSender(e.target.value)}
+        onBlur={onBlur}
+      />
+      {touched && error && <ErrorText>{error}</ErrorText>}
+    </Section>
+  );
 }
