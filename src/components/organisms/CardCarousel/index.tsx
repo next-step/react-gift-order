@@ -1,13 +1,7 @@
 import React from 'react';
 import OrderCard from '@/components/molcules/OrderCard';
+import { type Order } from '@/data/orders';
 import * as S from './styles';
-
-interface Order {
-  id: number;
-  thumbUrl: string;
-  imageUrl: string;
-  defaultTextMessage: string;
-}
 
 interface CardCarouselProps {
   orders: Order[];

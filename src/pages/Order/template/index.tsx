@@ -6,14 +6,8 @@ import SenderSection from '@/components/organisms/SenderSection';
 import ReceiverSection from '@/components/organisms/ReceiverSection';
 import ProductInfo from '@/components/organisms/ProductInfo';
 import { type RankingItem } from '@/data/ranking';
+import { type Order } from '@/data/orders';
 import * as S from './styles';
-
-interface Order {
-  id: number;
-  thumbUrl: string;
-  imageUrl: string;
-  defaultTextMessage: string;
-}
 
 interface ValidationErrors {
   message: string;
