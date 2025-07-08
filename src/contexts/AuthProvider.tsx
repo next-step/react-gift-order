@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { AuthContext } from './AuthContext';
 import type { UserInfo } from './AuthContext';
 
@@ -7,15 +7,18 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
-
-  useEffect(() => {
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(() => {
     const savedUserInfo = sessionStorage.getItem('kakaotech/userInfo');
     if (savedUserInfo) {
-      const userInfoData = JSON.parse(savedUserInfo);
-      setUserInfo(userInfoData);
+      try {
+        return JSON.parse(savedUserInfo);
+      } catch {
+        sessionStorage.removeItem('kakaotech/userInfo');
+        return null;
+      }
     }
-  }, []);
+    return null;
+  });
 
   const login = useCallback((email: string, onSuccess?: () => void) => {
     const newuserInfo = { email };
