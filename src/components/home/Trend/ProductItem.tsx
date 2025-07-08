@@ -7,9 +7,10 @@ import { useAuth } from '@/contexts/AuthContext'
 import { ROUTH_PATH } from '@/Router'
 
 // * 실시간 급상승 상품 아이템 컴포넌트
-export const ProductItem = ({ product }: { product: Product }) => {
+export const ProductItem = ({ product, index }: { product: Product; index: number }) => {
   const navigate = useNavigate()
   const { isLogin } = useAuth()
+  const productRank = index + 1
 
   // * 상품 클릭시 핸들러
   const handleProductClick = () => {
@@ -25,7 +26,7 @@ export const ProductItem = ({ product }: { product: Product }) => {
 
   return (
     <ProductItemContainer onClick={handleProductClick}>
-      <ProductRank rank={product.id}>{product.id}</ProductRank>
+      <ProductRank rank={productRank}>{productRank}</ProductRank>
       <ProductImage src={product.imageURL} alt={product.name} />
       <ProductTitleContainer>
         <ProductBrand>{product.brandInfo.name}</ProductBrand>
