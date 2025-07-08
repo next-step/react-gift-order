@@ -34,7 +34,9 @@ const OrderPage = () => {
     handleChange('textMessage', selectedCard.defaultTextMessage);
   }, [selectedCardId]);
 
-  const handleSubmit = () => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     const isValid = validateForm();
     if (!isValid) return;
 
@@ -53,7 +55,7 @@ const OrderPage = () => {
     <>
       <Navigation />
       <Main>
-        <Section>
+        <Form onSubmit={handleSubmit}>
           <CardSelector
             selectedCardId={selectedCardId}
             onSelect={setSelectedCardId}
@@ -96,8 +98,8 @@ const OrderPage = () => {
             quantityError={formErrors.quantity}
           />
           <ProductInfo product={product} />
-          <OrderSubmitButton amount={totalPrice} onClick={handleSubmit} />
-        </Section>
+          <OrderSubmitButton amount={totalPrice} />
+        </Form>
       </Main>
     </>
   );
@@ -110,7 +112,7 @@ const Main = styled.main`
   background-color: ${({ theme }) => theme.color.semantic.background.default};
 `;
 
-const Section = styled.section`
+const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing[6]};
