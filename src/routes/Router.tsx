@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { createBrowserRouter } from 'react-router-dom'
 
 import GiftPage from '@/features/Gift/pages/GiftPage'
 import LoginPage from '@/features/Login/pages/LoginPage'
@@ -8,34 +8,6 @@ import MyPage from '@/features/My/pages/MyPage'
 import OrderPage from '@/features/Order/pages/OrderPage'
 import PrivateRoute from '@/routes/PrivateRoute'
 
-const AppRouter = () => {
-  return (
-    <Routes>
-      <Route element={<NavLayout />}>
-        <Route path={ROUTE_PATH.GIFT} element={<GiftPage />} />
-        <Route path={ROUTE_PATH.LOGIN} element={<LoginPage />} />
-        <Route path={ROUTE_PATH.NOT_FOUND} element={<NotFoundPage />} />
-        <Route
-          path={ROUTE_PATH.MY}
-          element={
-            <PrivateRoute>
-              <MyPage />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path={ROUTE_PATH.ORDER}
-          element={
-            <PrivateRoute>
-              <OrderPage />
-            </PrivateRoute>
-          }
-        />
-      </Route>
-    </Routes>
-  )
-}
-
 export const ROUTE_PATH = {
   GIFT: '/',
   LOGIN: '/login',
@@ -44,4 +16,38 @@ export const ROUTE_PATH = {
   NOT_FOUND: '*',
 }
 
-export default AppRouter
+const Router = createBrowserRouter([
+  {
+    path: ROUTE_PATH.GIFT,
+    element: <NavLayout />,
+    errorElement: <NotFoundPage />,
+    children: [
+      {
+        index: true,
+        element: <GiftPage />,
+      },
+      {
+        path: ROUTE_PATH.LOGIN.slice(1),
+        element: <LoginPage />,
+      },
+      {
+        path: ROUTE_PATH.MY.slice(1),
+        element: (
+          <PrivateRoute>
+            <MyPage />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: ROUTE_PATH.ORDER.slice(1),
+        element: (
+          <PrivateRoute>
+            <OrderPage />
+          </PrivateRoute>
+        ),
+      },
+    ],
+  },
+])
+
+export default Router
