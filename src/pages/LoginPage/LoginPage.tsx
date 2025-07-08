@@ -9,8 +9,8 @@ import { LOGIN_LABELS } from "./constants/labels";
 import Layout from "@/layout";
 import IDField from "./components/IDField";
 import PasswordField from "./components/PasswordField";
-import usePasswordValidation from "./hooks/usePasswordValidation";
 import { useEmailValidation } from "./hooks/useEmailValidation";
+import usePasswordValidation from "./hooks/usePasswordValidation";
 import useLoginSubmit from "./hooks/useLoginSubmit";
 
 export interface LoginFormProps {
@@ -49,7 +49,7 @@ function LoginPage() {
     <Layout>
       <LoginContainer>
         <KakaoLogo>kakao</KakaoLogo>
-        <LoginForm onSubmit={handleSubmit}>
+        <LoginForm onSubmit={(e) => handleSubmit(e, email)}>
           <InputFieldGroup>
             <IDField
               value={email}

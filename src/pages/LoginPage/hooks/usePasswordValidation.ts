@@ -1,50 +1,34 @@
-import { useState, useMemo } from "react";
-import { isNotEmpty, validatePasswordFormat } from "../utils/validation";
+import { useMemo } from "react";
+import { useInput } from "@/hooks/useInput";
+import { isNotEmpty } from "@/utils/validation";
+import { validatePasswordFormat } from "../utils/validation";
 import { LOGIN_ERROR_MESSAGES } from "../constants/labels";
 
 function usePasswordValidation() {
-  const [password, setPassword] = useState("");
-  const [passwordErrors, setPasswordErrors] = useState({
-    isEmpty: false,
-    invalidFormat: false,
+  const passwordInput = useInput({
+    initialValue: "",
+    validators: {
+      isEmpty: (value: string) => isNotEmpty(value),
+      invalidFormat: (value: string) => validatePasswordFormat(value),
+    },
   });
 
-  const handlePasswordValueChange = (value: string) => {
-    setPassword(value);
-  };
-
-  const validatePassword = (value: string) => {
-    const trimmedValue = value.trim();
-    const hasValue = isNotEmpty(trimmedValue);
-    const isFormatValid = validatePasswordFormat(trimmedValue);
-
-    const errors = {
-      isEmpty: !hasValue,
-      invalidFormat: hasValue && !isFormatValid,
-    };
-
-    setPasswordErrors(errors);
-  };
-
   const passwordErrorMessage = useMemo(() => {
-    if (passwordErrors.isEmpty) {
+    if (passwordInput.errors.isEmpty) {
       return LOGIN_ERROR_MESSAGES.PASSWORD_EMPTY;
     }
-    if (passwordErrors.invalidFormat) {
+    if (passwordInput.errors.invalidFormat) {
       return LOGIN_ERROR_MESSAGES.PASSWORD_FORMAT_INVALID;
     }
     return null;
-  }, [passwordErrors.isEmpty, passwordErrors.invalidFormat]);
-
-  const hasPasswordError =
-    passwordErrors.isEmpty || passwordErrors.invalidFormat;
+  }, [passwordInput.errors.isEmpty, passwordInput.errors.invalidFormat]);
 
   return {
-    password,
-    handlePasswordValueChange,
-    validatePassword,
+    password: passwordInput.value,
+    handlePasswordValueChange: passwordInput.handleValueChange,
+    validatePassword: passwordInput.validate,
     passwordErrorMessage,
-    hasPasswordError,
+    hasPasswordError: passwordInput.hasError,
   };
 }
 

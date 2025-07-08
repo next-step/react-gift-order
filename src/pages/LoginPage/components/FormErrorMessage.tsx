@@ -1,4 +1,4 @@
-import { ErrorMessage } from "../LoginPage.styles";
+import { ErrorMessage } from "@/components/common/Input/FormErrorMessage";
 
 function FormErrorMessage({ errorMessage }: { errorMessage: string }) {
   return <ErrorMessage>{errorMessage}</ErrorMessage>;

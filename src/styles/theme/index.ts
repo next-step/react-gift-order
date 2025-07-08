@@ -3,7 +3,7 @@ import { typography } from "@/styles/theme/typography";
 import { spacing } from "@/styles/theme/spacing";
 import { layout } from "./layout";
 import { borderRadius } from "./borderRadius";
-import { zIndex } from "./zindex";
+import { zIndex } from "./zIndex";
 
 export const theme = {
   colors: {
@@ -19,6 +19,9 @@ export const theme = {
   components: {
     navigationBar: {
       height: "3rem",
+    },
+    form: {
+      focusBorderColor: "rgb(78, 78, 78)",
     },
   },
 } as const;
