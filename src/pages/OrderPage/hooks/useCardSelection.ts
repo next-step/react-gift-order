@@ -3,6 +3,7 @@ import type { OrderCardType } from "@/types/OrderCardType";
 import { isNotEmpty } from "@/utils/validation";
 import { useInput } from "@/hooks/useInput";
 import { VALIDATE_LABELS } from "../constants/validateLabels";
+import { VALIDATION_CONSTANTS } from "@/constants/validation";
 
 export function useCardSelection(initialCards: OrderCardType[]) {
   const [selectedCard, setSelectedCard] = useState<OrderCardType>(
@@ -15,6 +16,7 @@ export function useCardSelection(initialCards: OrderCardType[]) {
       if (!isNotEmpty(value)) {
         return VALIDATE_LABELS.MESSAGE_EMPTY;
       }
+      return VALIDATION_CONSTANTS.NO_ERROR;
     },
   });
 
@@ -30,6 +32,5 @@ export function useCardSelection(initialCards: OrderCardType[]) {
     handleMessageChange: messageInput.handleValueChange,
     validateMessage: messageInput.validate,
     cardSelectionErrorMessage: messageInput.errorMessage,
-    hasCardSelectionError: messageInput.hasError,
   };
 }

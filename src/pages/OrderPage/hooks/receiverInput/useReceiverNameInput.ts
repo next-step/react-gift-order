@@ -1,6 +1,7 @@
 import { useInput } from "@/hooks/useInput";
 import { isNotEmpty } from "@/utils/validation";
 import { VALIDATE_LABELS } from "../../constants/validateLabels";
+import { VALIDATION_CONSTANTS } from "@/constants/validation";
 
 export function useReceiverNameInput() {
   const receiverNameInput = useInput({
@@ -9,6 +10,7 @@ export function useReceiverNameInput() {
       if (!isNotEmpty(value)) {
         return VALIDATE_LABELS.NAME_EMPTY;
       }
+      return VALIDATION_CONSTANTS.NO_ERROR;
     },
   });
 
@@ -17,6 +19,5 @@ export function useReceiverNameInput() {
     handleReceiverNameChange: receiverNameInput.handleValueChange,
     validateReceiverName: receiverNameInput.validate,
     receiverNameErrorMessage: receiverNameInput.errorMessage,
-    hasReceiverNameError: receiverNameInput.hasError,
   };
 }

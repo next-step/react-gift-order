@@ -21,9 +21,6 @@ interface ReceiverSectionProps {
   receiverNameErrorMessage: string;
   receiverPhoneErrorMessage: string;
   quantityErrorMessage: string;
-  hasReceiverNameError: boolean;
-  hasReceiverPhoneError: boolean;
-  hasQuantityError: boolean;
 }
 
 function ReceiverSectionComponent({
@@ -39,9 +36,6 @@ function ReceiverSectionComponent({
   receiverNameErrorMessage,
   receiverPhoneErrorMessage,
   quantityErrorMessage,
-  hasReceiverNameError,
-  hasReceiverPhoneError,
-  hasQuantityError,
 }: ReceiverSectionProps) {
   return (
     <ReceiverSection>
@@ -57,10 +51,7 @@ function ReceiverSectionComponent({
               handleReceiverNameChange(e.target.value);
               validateReceiverName(e.target.value);
             }}
-            hasError={hasReceiverNameError}
-            errorMessage={
-              receiverNameErrorMessage || RECEIVER_SECTION_CONSTANTS.NAME_ERROR
-            }
+            errorMessage={receiverNameErrorMessage}
           />
         </FormField>
         <FormField>
@@ -73,7 +64,6 @@ function ReceiverSectionComponent({
               handleReceiverPhoneChange(e.target.value);
               validateReceiverPhone(e.target.value);
             }}
-            hasError={hasReceiverPhoneError}
             errorMessage={receiverPhoneErrorMessage}
           />
         </FormField>
@@ -88,10 +78,7 @@ function ReceiverSectionComponent({
               handleQuantityChange(e.target.value);
               validateQuantity(e.target.value);
             }}
-            hasError={hasQuantityError}
-            errorMessage={
-              quantityErrorMessage || RECEIVER_SECTION_CONSTANTS.QUANTITY_ERROR
-            }
+            errorMessage={quantityErrorMessage}
           />
         </FormField>
       </FormContainer>

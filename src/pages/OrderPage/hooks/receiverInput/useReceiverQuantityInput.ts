@@ -1,6 +1,7 @@
 import { useInput } from "@/hooks/useInput";
 import { validateQuantity } from "../../utils/validation";
 import { VALIDATE_LABELS } from "../../constants/validateLabels";
+import { VALIDATION_CONSTANTS } from "@/constants/validation";
 
 export function useReceiverQuantityInput() {
   const quantityInput = useInput({
@@ -9,6 +10,7 @@ export function useReceiverQuantityInput() {
       if (!validateQuantity(value)) {
         return VALIDATE_LABELS.QUANTITY_INVALID;
       }
+      return VALIDATION_CONSTANTS.NO_ERROR;
     },
   });
 
@@ -17,6 +19,5 @@ export function useReceiverQuantityInput() {
     handleQuantityChange: quantityInput.handleValueChange,
     validateQuantity: quantityInput.validate,
     quantityErrorMessage: quantityInput.errorMessage,
-    hasQuantityError: quantityInput.hasError,
   };
 }

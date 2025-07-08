@@ -9,10 +9,9 @@ function IDField({
   handleChange,
   validator: validateEmail,
   errorMessage,
-  hasError,
 }: LoginFormProps) {
   const isEmailBlurredRef = useRef(false);
-  const shouldShowErrorStyle = hasError && isEmailBlurredRef.current;
+  const shouldShowErrorStyle = !!errorMessage && isEmailBlurredRef.current;
   const shouldShowErrorMessage = errorMessage && isEmailBlurredRef.current;
 
   const handleEmailChange = (value: string) => {

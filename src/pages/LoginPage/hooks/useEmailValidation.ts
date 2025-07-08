@@ -2,6 +2,7 @@ import { useInput } from "@/hooks/useInput";
 import { isNotEmpty } from "@/utils/validation";
 import { validateEmailFormat } from "../utils/validation";
 import { LOGIN_ERROR_MESSAGES } from "../constants/labels";
+import { VALIDATION_CONSTANTS } from "@/constants/validation";
 
 export function useEmailValidation(initialValue = "") {
   const emailInput = useInput({
@@ -13,6 +14,7 @@ export function useEmailValidation(initialValue = "") {
       if (!validateEmailFormat(value)) {
         return LOGIN_ERROR_MESSAGES.EMAIL_FORMAT_INVALID;
       }
+      return VALIDATION_CONSTANTS.NO_ERROR;
     },
   });
 
@@ -21,6 +23,5 @@ export function useEmailValidation(initialValue = "") {
     handleEmailValueChange: emailInput.handleValueChange,
     validateEmail: emailInput.validate,
     emailErrorMessage: emailInput.errorMessage,
-    hasEmailError: emailInput.hasError,
   };
 }

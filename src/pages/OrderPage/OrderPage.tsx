@@ -29,7 +29,6 @@ function OrderPage() {
     handleMessageChange,
     validateMessage,
     cardSelectionErrorMessage,
-    hasCardSelectionError,
   } = useCardSelection(orderCardMockData);
 
   const {
@@ -37,7 +36,6 @@ function OrderPage() {
     handleSenderNameChange,
     validateSenderName,
     senderNameErrorMessage,
-    hasSenderNameError,
   } = useSenderInput();
 
   const {
@@ -53,9 +51,6 @@ function OrderPage() {
     receiverNameErrorMessage,
     receiverPhoneErrorMessage,
     quantityErrorMessage,
-    hasReceiverNameError,
-    hasReceiverPhoneError,
-    hasQuantityError,
   } = useReceiverInput();
 
   const validateForms = (e: React.FormEvent<HTMLFormElement>) => {
@@ -85,7 +80,6 @@ function OrderPage() {
             message={message}
             onSelect={handleCardSelect}
             onMessageChange={handleMessageChange}
-            hasCardSelectionError={hasCardSelectionError}
             cardSelectionErrorMessage={cardSelectionErrorMessage}
           />
           <SenderSectionComponent
@@ -93,7 +87,6 @@ function OrderPage() {
             handleSenderNameChange={handleSenderNameChange}
             validateSenderName={validateSenderName}
             senderNameErrorMessage={senderNameErrorMessage}
-            hasSenderNameError={hasSenderNameError}
           />
           <ReceiverSectionComponent
             receiverName={receiverName}
@@ -108,9 +101,6 @@ function OrderPage() {
             receiverNameErrorMessage={receiverNameErrorMessage}
             receiverPhoneErrorMessage={receiverPhoneErrorMessage}
             quantityErrorMessage={quantityErrorMessage}
-            hasReceiverNameError={hasReceiverNameError}
-            hasReceiverPhoneError={hasReceiverPhoneError}
-            hasQuantityError={hasQuantityError}
           />
           <ProductInfo product={product} quantity={quantity} />
         </form>

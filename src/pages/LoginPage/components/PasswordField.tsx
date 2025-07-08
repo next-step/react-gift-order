@@ -9,10 +9,10 @@ function PasswordField({
   handleChange,
   validator: validatePassword,
   errorMessage,
-  hasError,
 }: LoginFormProps) {
   const isPasswordBlurredRef = useRef(false);
-  const shouldShowErrorStyle = hasError && isPasswordBlurredRef.current;
+  const shouldShowErrorStyle =
+    Boolean(errorMessage) && isPasswordBlurredRef.current;
   const shouldShowErrorMessage = errorMessage && isPasswordBlurredRef.current;
 
   const handlePasswordChange = (value: string) => {

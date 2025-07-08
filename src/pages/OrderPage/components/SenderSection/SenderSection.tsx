@@ -7,7 +7,6 @@ interface SenderSectionProps {
   handleSenderNameChange: (value: string) => void;
   validateSenderName: (value: string) => void;
   senderNameErrorMessage: string;
-  hasSenderNameError: boolean;
 }
 
 const SendSection = styled.section`
@@ -43,14 +42,12 @@ function SenderSectionComponent({
   handleSenderNameChange,
   validateSenderName,
   senderNameErrorMessage,
-  hasSenderNameError,
 }: SenderSectionProps) {
   return (
     <SendSection>
       <SectionTitle>{SENDER_SECTION_CONSTANTS.TITLE}</SectionTitle>
       <SendForm>
         <Input
-          hasError={hasSenderNameError}
           errorMessage={senderNameErrorMessage}
           type="text"
           placeholder={SENDER_SECTION_CONSTANTS.NAME_PLACEHOLDER}
@@ -60,7 +57,7 @@ function SenderSectionComponent({
             validateSenderName(e.target.value);
           }}
         />
-        {!hasSenderNameError && (
+        {!senderNameErrorMessage && (
           <InputLabel>{SENDER_SECTION_CONSTANTS.INFO_LABEL}</InputLabel>
         )}
       </SendForm>

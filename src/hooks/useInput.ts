@@ -2,7 +2,7 @@ import { useState } from "react";
 
 interface UseInputParams {
   initialValue?: string;
-  validator: (value: string) => string | undefined;
+  validator: (value: string) => string;
 }
 
 /**
@@ -11,19 +11,16 @@ interface UseInputParams {
  * 입력 필드의 상태와 검증 로직을 담당하며, validator 함수에서 직접 에러 메시지를 반환함
  *
  * @param initialValue - 입력 필드의 초기값
- * @param validator - 검증 함수 (에러 메시지 또는 undefined 반환)
+ * @param validator - 검증 함수 (에러 메시지 또는 빈 문자열 반환)
  * @returns
  *   - value: 현재 입력값
- *   - errorMessage: 현재 에러 메시지 (없으면 undefined)
+ *   - errorMessage: 현재 에러 메시지 (없으면 빈 문자열)
  *   - handleValueChange: 입력값 변경 함수
  *   - validate: 검증 실행 함수
- *   - hasError: 에러가 있는지 여부
  */
 export function useInput({ initialValue = "", validator }: UseInputParams) {
   const [value, setValue] = useState(initialValue);
-  const [errorMessage, setErrorMessage] = useState<string | undefined>(
-    undefined
-  );
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const handleValueChange = (newValue: string) => {
     setValue(newValue);
@@ -35,13 +32,10 @@ export function useInput({ initialValue = "", validator }: UseInputParams) {
     setErrorMessage(error);
   };
 
-  const hasError = errorMessage !== undefined;
-
   return {
     value,
     errorMessage,
     handleValueChange,
     validate,
-    hasError,
   };
 }

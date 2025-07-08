@@ -18,8 +18,7 @@ interface CardSelectionProps {
   message: string;
   onSelect: (card: OrderCardType) => void;
   onMessageChange: (value: string) => void;
-  hasCardSelectionError: boolean;
-  cardSelectionErrorMessage: string | null;
+  cardSelectionErrorMessage: string;
 }
 
 function CardSelection({
@@ -28,7 +27,6 @@ function CardSelection({
   message,
   onSelect,
   onMessageChange,
-  hasCardSelectionError,
   cardSelectionErrorMessage,
 }: CardSelectionProps) {
   return (
@@ -53,9 +51,9 @@ function CardSelection({
             value={message}
             onChange={(e) => onMessageChange(e.target.value)}
             placeholder={CARD_SELECTION_CONSTANTS.MESSAGE_PLACEHOLDER}
-            hasError={hasCardSelectionError}
+            hasError={!!cardSelectionErrorMessage}
           />
-          {hasCardSelectionError && cardSelectionErrorMessage && (
+          {!!cardSelectionErrorMessage && (
             <FormErrorMessage
               errorMessage={CARD_SELECTION_CONSTANTS.MESSAGE_ERROR}
             />

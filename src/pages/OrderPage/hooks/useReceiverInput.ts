@@ -8,7 +8,6 @@ export function useReceiverInput() {
     handleReceiverNameChange,
     validateReceiverName,
     receiverNameErrorMessage,
-    hasReceiverNameError,
   } = useReceiverNameInput();
 
   const {
@@ -16,7 +15,6 @@ export function useReceiverInput() {
     handleReceiverPhoneChange,
     validateReceiverPhone,
     receiverPhoneErrorMessage,
-    hasReceiverPhoneError,
   } = useReceiverPhoneInput();
 
   const {
@@ -24,7 +22,6 @@ export function useReceiverInput() {
     handleQuantityChange,
     validateQuantity,
     quantityErrorMessage,
-    hasQuantityError,
   } = useReceiverQuantityInput();
 
   return {
@@ -32,18 +29,15 @@ export function useReceiverInput() {
     handleReceiverNameChange,
     validateReceiverName,
     receiverNameErrorMessage,
-    hasReceiverNameError,
 
     receiverPhone,
     handleReceiverPhoneChange,
     validateReceiverPhone,
     receiverPhoneErrorMessage,
-    hasReceiverPhoneError,
 
     quantity,
     handleQuantityChange,
     validateQuantity,
     quantityErrorMessage,
-    hasQuantityError,
   };
 }

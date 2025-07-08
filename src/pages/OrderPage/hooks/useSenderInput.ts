@@ -1,6 +1,7 @@
 import { useInput } from "@/hooks/useInput";
 import { isNotEmpty } from "@/utils/validation";
 import { VALIDATE_LABELS } from "../constants/validateLabels";
+import { VALIDATION_CONSTANTS } from "@/constants/validation";
 
 export function useSenderInput(initialValue = "") {
   const senderInput = useInput({
@@ -9,6 +10,7 @@ export function useSenderInput(initialValue = "") {
       if (!isNotEmpty(value)) {
         return VALIDATE_LABELS.NAME_EMPTY;
       }
+      return VALIDATION_CONSTANTS.NO_ERROR;
     },
   });
 
@@ -17,6 +19,5 @@ export function useSenderInput(initialValue = "") {
     handleSenderNameChange: senderInput.handleValueChange,
     validateSenderName: senderInput.validate,
     senderNameErrorMessage: senderInput.errorMessage,
-    hasSenderNameError: senderInput.hasError,
   };
 }
