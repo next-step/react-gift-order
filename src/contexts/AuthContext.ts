@@ -7,7 +7,7 @@ export interface UserInfo {
 interface AuthContextType {
   isLoggedIn: boolean;
   userInfo: UserInfo | null;
-  login: (email: string, password?: string, onSuccess?: () => void) => void;
+  login: (email: string, onSuccess?: () => void) => void;
   logout: () => void;
 }
 

@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, []);
 
-  const login = (email: string, password?: string, onSuccess?: () => void) => {
+  const login = (email: string, onSuccess?: () => void) => {
     const newuserInfo = { email };
     setUserInfo(newuserInfo);
     sessionStorage.setItem('kakaotech/userInfo', JSON.stringify(newuserInfo));

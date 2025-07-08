@@ -48,7 +48,7 @@ export const useLoginForm = () => {
     }
 
     //전역상태 먼저 설정
-    login(email.value, password.value, () => {
+    login(email.value, () => {
       const from = location.state?.from || '/my';
       navigate(from, { replace: true });
     });
