@@ -91,6 +91,7 @@ export default function OrderPage() {
                     height="65px"
                     placeholder="메시지를 입력해주세요."
                     defaultValue={letterCard?.defaultTextMessage}
+                    error={validationErrors.message}
                 />
             </Styles.FieldSet>
 
