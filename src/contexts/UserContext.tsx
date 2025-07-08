@@ -14,11 +14,17 @@ interface UserContextType {
   logout: () => void
 }
 
+const STORAGE_KEY = {
+  IS_LOGGED_IN: 'isLoggedIn',
+  USER: 'user',
+}
+
 const UserContext = createContext<UserContextType | null>(null)
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const storedLogin = sessionStorage.getItem('isLoggedIn') === 'true'
-  const storedUser = sessionStorage.getItem('user')
+  const storedLogin =
+    sessionStorage.getItem(STORAGE_KEY.IS_LOGGED_IN) === 'true'
+  const storedUser = sessionStorage.getItem(STORAGE_KEY.USER)
 
   const [isLoggedIn, setIsLoggedIn] = useState(storedLogin)
   const [user, setUser] = useState<User | null>(
@@ -26,8 +32,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   )
 
   const login = (userInfo: User) => {
-    sessionStorage.setItem('isLoggedIn', 'true')
-    sessionStorage.setItem('user', JSON.stringify(userInfo))
+    sessionStorage.setItem(STORAGE_KEY.IS_LOGGED_IN, 'true')
+    sessionStorage.setItem(STORAGE_KEY.USER, JSON.stringify(userInfo))
     setIsLoggedIn(true)
     setUser(userInfo)
   }
