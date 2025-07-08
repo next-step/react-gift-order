@@ -1,7 +1,7 @@
 import React from 'react';
 import * as S from './styles';
 
-interface InputFieldProps {
+interface LoginInputFieldProps {
   type: string;
   placeholder: string;
   value: string;
@@ -10,7 +10,7 @@ interface InputFieldProps {
   error?: string; //hasError삭제 
 }
 
-const InputField: React.FC<InputFieldProps> = ({
+const LoginInputField: React.FC<LoginInputFieldProps> = ({
   type,
   placeholder,
   value,
@@ -33,4 +33,4 @@ const InputField: React.FC<InputFieldProps> = ({
   );
 };
 
-export default InputField;
+export default LoginInputField;

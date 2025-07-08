@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLoginForm } from '@/hooks/useLoginForm';
-import InputField from '@/components/Form/InputField';
+import LoginInputField from '@/components/Form/LoginInputField';
 import Button from '@/components/common/Button';
 import * as S from './styles';
 
@@ -10,7 +10,7 @@ const LoginForm: React.FC = () => {
   return (
     <S.LoginSection>
       <form onSubmit={handleSubmit}>
-        <InputField
+        <LoginInputField
           type="email"
           placeholder="이메일"
           value={email.value}
@@ -19,7 +19,7 @@ const LoginForm: React.FC = () => {
           error={email.error}
         />        
         <S.Spacer />       
-        <InputField
+        <LoginInputField
           type="password"
           placeholder="비밀번호"
           value={password.value}
