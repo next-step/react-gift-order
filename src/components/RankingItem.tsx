@@ -1,4 +1,5 @@
 ﻿import styled from '@emotion/styled'
+import { useNavigate } from 'react-router-dom'
 import { colors } from '@/theme/color'
 import { typography } from '@/theme/typography'
 import { spacing } from '@/theme/spacing'
@@ -9,17 +10,24 @@ interface RankingItemProps {
   product: Product
 }
 
-const RankingItem = ({ rank, product }: RankingItemProps) => (
-  <Card>
-    <Badge rank={rank}>{rank}</Badge>
-    <Image src={product.imageURL} alt={product.name} />
-    <Brand>{product.brandInfo.name}</Brand>
-    <Title>{product.name}</Title>
-    <Price>
-      {product.price.sellingPrice.toLocaleString()} <span>원</span>
-    </Price>
-  </Card>
-)
+export default function RankingItem({ rank, product }: RankingItemProps) {
+  const navigate = useNavigate()
+  const handleClick = () => {
+    navigate(`/order/${product.id}`, { state: { product } })
+  }
+
+  return (
+    <Card onClick={handleClick}>
+      <Badge rank={rank}>{rank}</Badge>
+      <Image src={product.imageURL} alt={product.name} />
+      <Brand>{product.brandInfo.name}</Brand>
+      <Title>{product.name}</Title>
+      <Price>
+        {product.price.sellingPrice.toLocaleString()} <span>원</span>
+      </Price>
+    </Card>
+  )
+}
 
 const Card = styled.div`
   position: relative;
@@ -27,6 +35,7 @@ const Card = styled.div`
   border-radius: 8px;
   overflow: hidden;
   text-align: left;
+  cursor: pointer;
 `
 
 const Badge = styled.div<{ rank: number }>`
@@ -78,5 +87,3 @@ const Price = styled.p`
   line-height: ${typography.body1Bold.lineHeight};
   color: ${colors.text.default};
 `
-
-export default RankingItem

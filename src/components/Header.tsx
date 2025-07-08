@@ -3,19 +3,23 @@ import { useNavigate } from 'react-router-dom'
 import backIcon from '@/assets/back.png'
 import loginIcon from '@/assets/user.png'
 import { spacing } from '@/theme/spacing'
+import { typography } from '@/theme/typography'
+import { colors } from '@/theme/color'
 import { useAuth } from '@/contexts/AuthContext'
 
-interface NavBarProps {
+interface HeaderProps {
   onBack?: () => void
-  logoSrc: string
+  title?: string
   onLoginClick?: () => void
 }
 
-const Nav = styled.nav`
+const Nav = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: ${spacing.spacing12};
+  padding: 0 ${spacing.spacing4};
+  border-bottom: 1px solid ${colors.border.default};
 `
 
 const IconButton = styled.button`
@@ -26,20 +30,24 @@ const IconButton = styled.button`
   align-items: center;
 `
 
-const LogoLink = styled.a`
+const TitleLink = styled.a`
   flex: 1;
   text-align: center;
+  font-size: ${typography.title2Bold.fontSize};
+  font-weight: ${typography.title2Bold.fontWeight};
+  line-height: ${typography.title2Bold.lineHeight};
+  color: ${colors.text.default};
+  text-decoration: none;
 `
 
-const NavBar = ({ onBack, logoSrc, onLoginClick }: NavBarProps) => {
+const Header = ({ onBack, onLoginClick, title = '선물하기' }: HeaderProps) => {
   const navigate = useNavigate()
+  const { isLoggedIn } = useAuth()
 
   const handleBack = () => {
     if (onBack) return onBack()
     navigate(-1)
   }
-
-  const { isLoggedIn } = useAuth()
 
   const handleLoginClick = onLoginClick ?? (() => {
     navigate(isLoggedIn ? '/profile' : '/login')
@@ -51,9 +59,7 @@ const NavBar = ({ onBack, logoSrc, onLoginClick }: NavBarProps) => {
       <IconButton onClick={handleBack} aria-label="back">
         <img src={backIcon} alt="back" height="28" />
       </IconButton>
-      <LogoLink href="/">
-        <img src={logoSrc} alt="logo" height="28" />
-      </LogoLink>
+      <TitleLink href="/">{title}</TitleLink>
       <IconButton
         onClick={handleLoginClick}
         aria-label={isLoggedIn ? 'profile' : 'login'}
@@ -68,4 +74,4 @@ const NavBar = ({ onBack, logoSrc, onLoginClick }: NavBarProps) => {
   )
 }
 
-export default NavBar
+export default Header

@@ -6,7 +6,7 @@ import { typography } from '@/theme/typography'
 import { spacing } from '@/theme/spacing'
 
 interface LoginFormSectionProps {
-    onSuccess: () => void
+    onSuccess: (email: string) => void
 }
 
 const Form = styled.form`
@@ -74,7 +74,7 @@ export default function LoginFormSection({ onSuccess }: LoginFormSectionProps) {
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault()
         if (!emailError && !passwordError && email && password) {
-            onSuccess()
+            onSuccess(email)
         }
     }
 

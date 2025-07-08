@@ -2,17 +2,42 @@
 
 interface AuthContextValue {
   isLoggedIn: boolean
-  login: () => void
+  userEmail: string | null
+  login: (email: string) => void
+  logout: () => void
+
 }
+const STORAGE_KEY = 'isLoggedIn'
+const EMAIL_KEY = 'userEmail'
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const login = () => setIsLoggedIn(true)
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    const stored = sessionStorage.getItem(STORAGE_KEY)
+    return stored === 'true'
+  })
+    const [userEmail, setUserEmail] = useState<string | null>(() => {
+    return sessionStorage.getItem(EMAIL_KEY)
+  })
+
+  const login = (email: string) => {
+    setIsLoggedIn(true)
+    setUserEmail(email)
+    sessionStorage.setItem(STORAGE_KEY, 'true')
+    sessionStorage.setItem(EMAIL_KEY, email)
+
+  }
+
+  const logout = () => {
+    setIsLoggedIn(false)
+    setUserEmail(null)
+    sessionStorage.removeItem(STORAGE_KEY)
+    sessionStorage.removeItem(EMAIL_KEY)
+  }
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login }}>
+    <AuthContext.Provider value={{ isLoggedIn, userEmail, login, logout }}>
       {children}
     </AuthContext.Provider>
   )
