@@ -78,7 +78,6 @@ const Order = () => {
   ) => {
     const { name, value } = e.target;
     setValues((prev) => ({ ...prev, [name]: value }));
-    1;
   };
 
   const handleOrderClick = () => {
