@@ -4,6 +4,7 @@ import { Sender } from './Sender';
 import { Recipinet } from './Recipinet';
 import { ProductInfo } from './ProductInfo';
 import { useLocation } from 'react-router-dom';
+import { OrderButton } from './OrderButton';
 
 const Wrapper = styled.section(({ theme }) => ({
   width: '100%',
@@ -29,7 +30,7 @@ const OrderForm = () => {
       <Recipinet />
       <Margin1 />
       <ProductInfo product={selectedProduct} />
-      버튼
+      <OrderButton />
     </Wrapper>
   );
 };
