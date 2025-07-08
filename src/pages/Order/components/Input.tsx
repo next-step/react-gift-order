@@ -6,17 +6,10 @@ interface InputProps extends ComponentPropsWithoutRef<"input"> {
   errorMsg: string | null;
 }
 
-const Input = ({ name, type, placeholder, value, onChange, errorMsg }: InputProps) => {
+const Input = ({ errorMsg, ...props }: InputProps) => {
   return (
     <Wrapper>
-      <Content
-        name={name}
-        type={type}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        errorMsg={errorMsg}
-      />
+      <Content errorMsg={errorMsg} {...props} />
       {errorMsg && <ErrorMsg>{errorMsg}</ErrorMsg>}
     </Wrapper>
   );
