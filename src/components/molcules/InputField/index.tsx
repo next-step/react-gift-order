@@ -29,28 +29,30 @@ const InputField = ({
 }: InputFieldProps) => {
   return (
     <S.Container layout={layout}>
-      {label && (
-        <Label minWidth={labelMinWidth}>
-          {label}
-        </Label>
-      )}
-      <S.InputWrapper>
-        <Input
-          type={type}
-          placeholder={placeholder}
-          value={value}
-          onChange={onChange}
-          style={{ width: '100%' }}
-          hasError={!!error}
-        />
-      </S.InputWrapper>
+      <S.InputRow layout={layout}>
+        {label && (
+          <Label minWidth={labelMinWidth}>
+            {label}
+          </Label>
+        )}
+        <S.InputWrapper>
+          <Input
+            type={type}
+            placeholder={placeholder}
+            value={value}
+            onChange={onChange}
+            style={{ width: '100%' }}
+            hasError={!!error}
+          />
+        </S.InputWrapper>
+      </S.InputRow>
       {description && (
         <Text variant="description" style={{ marginLeft: '0.5rem' }}>
           {description}
         </Text>
       )}
       {error && showError && (
-        <S.ErrorMessage>
+        <S.ErrorMessage layout={layout} labelMinWidth={labelMinWidth}>
           {error}
         </S.ErrorMessage>
       )}

@@ -19,9 +19,9 @@ interface FormHandlers {
 interface OrderTemplateProps {
   orders: Order[];
   cardState: CardState;
+  selectedCard: Order | undefined;
   onCardClick: (id: number) => void;
   onMessageChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-
   formData: FormData;
   formHandlers: FormHandlers;
   errors: ValidationErrors;
@@ -32,6 +32,7 @@ interface OrderTemplateProps {
 const OrderTemplate = ({
   orders,
   cardState,
+  selectedCard,
   onCardClick,
   onMessageChange,
   formData,
@@ -40,8 +41,6 @@ const OrderTemplate = ({
   product,
   onSubmit,
 }: OrderTemplateProps) => {
-  const selectedCard = orders.find(order => order.id === cardState.selectedCardId);
-
   return (
     <>
       <S.ContentWrapper>
@@ -95,7 +94,7 @@ const OrderTemplate = ({
         </S.Container>
       </S.ContentWrapper> 
       <S.FixedBottomButton onClick={onSubmit}>
-        {product ? `${(product.price.sellingPrice * Number(formData.quantity)).toLocaleString()}원 결제하기` : '선물하기'}
+        {product ? `${(product.price.sellingPrice * formData.quantity).toLocaleString()}원 결제하기` : '선물하기'}
       </S.FixedBottomButton>
     </>
   );

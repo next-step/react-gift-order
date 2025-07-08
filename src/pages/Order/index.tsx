@@ -12,6 +12,7 @@ const Order = () => {
     cardState,
     formData,
     errors,
+    selectedCard,
     handleCardClick,
     handleMessageChange,
     handleSenderNameChange,
@@ -32,6 +33,7 @@ const Order = () => {
     <OrderTemplate
       orders={orders}
       cardState={cardState}
+      selectedCard={selectedCard}
       onCardClick={handleCardClick}
       onMessageChange={handleMessageChange}
       formData={formData}

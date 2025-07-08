@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { orders } from '@/data/orders';
 import { type RankingItem } from '@/data/ranking';
@@ -25,7 +25,7 @@ export const useOrderForm = ({ product }: UseOrderFormProps = {}) => {
     senderName: '',
     receiverName: '',
     receiverPhone: '',
-    quantity: '1',
+    quantity: 1,
   });
 
   const [errors, setErrors] = useState<ValidationErrors>({
@@ -36,7 +36,9 @@ export const useOrderForm = ({ product }: UseOrderFormProps = {}) => {
     quantity: '',
   });
 
-  const selectedCard = orders.find(order => order.id === cardState.selectedCardId);
+  const selectedCard = useMemo(() => {
+    return orders.find(order => order.id === cardState.selectedCardId);
+  }, [cardState.selectedCardId]);
 
   const clearError = (field: keyof ValidationErrors) => {
     if (errors[field]) {
@@ -57,7 +59,7 @@ export const useOrderForm = ({ product }: UseOrderFormProps = {}) => {
   const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCardState(prev => ({
       ...prev,
-      message: e.target.value,
+      message: e.target.value.trim(),
     }));
     clearError('message');
   };
@@ -65,7 +67,7 @@ export const useOrderForm = ({ product }: UseOrderFormProps = {}) => {
   const handleSenderNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({
       ...prev,
-      senderName: e.target.value,
+      senderName: e.target.value.trim(),
     }));
     clearError('senderName');
   };
@@ -73,7 +75,7 @@ export const useOrderForm = ({ product }: UseOrderFormProps = {}) => {
   const handleReceiverNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({
       ...prev,
-      receiverName: e.target.value,
+      receiverName: e.target.value.trim(),
     }));
     clearError('receiverName');
   };
@@ -81,15 +83,16 @@ export const useOrderForm = ({ product }: UseOrderFormProps = {}) => {
   const handleReceiverPhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({
       ...prev,
-      receiverPhone: e.target.value,
+      receiverPhone: e.target.value.trim(),
     }));
     clearError('receiverPhone');
   };
 
   const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const quantity = parseInt(e.target.value, 10) || 0;
     setFormData(prev => ({
       ...prev,
-      quantity: e.target.value,
+      quantity,
     }));
     clearError('quantity');
   };

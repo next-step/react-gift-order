@@ -7,7 +7,7 @@ export interface FormData {
   senderName: string;
   receiverName: string;
   receiverPhone: string;
-  quantity: string;
+  quantity: number;
 }
 
 export interface ValidationErrors {
@@ -19,28 +19,28 @@ export interface ValidationErrors {
 }
 
 export const validateMessage = (message: string): string => {
-  if (!message.trim()) {
+  if (!message) {
     return '메시지를 입력해주세요.';
   }
   return '';
 };
 
 export const validateSenderName = (senderName: string): string => {
-  if (!senderName.trim()) {
+  if (!senderName) {
     return '이름을 입력해주세요.';
   }
   return '';
 };
 
 export const validateReceiverName = (receiverName: string): string => {
-  if (!receiverName.trim()) {
+  if (!receiverName) {
     return '이름을 입력해주세요.';
   }
   return '';
 };
 
 export const validateReceiverPhone = (receiverPhone: string): string => {
-  if (!receiverPhone.trim()) {
+  if (!receiverPhone) {
     return '전화번호를 입력해주세요.';
   }
   const phoneRegex = /^010\d{8}$/;
@@ -50,9 +50,8 @@ export const validateReceiverPhone = (receiverPhone: string): string => {
   return '';
 };
 
-export const validateQuantity = (quantity: string): string => {
-  const quantityNum = parseInt(quantity, 10);
-  if (isNaN(quantityNum) || quantityNum < 1) {
+export const validateQuantity = (quantity: number): string => {
+  if (isNaN(quantity) || quantity < 1) {
     return '수량은 1개 이상이어야 합니다.';
   }
   return '';
@@ -63,7 +62,7 @@ export const validateOrderForm = (
   senderName: string,
   receiverName: string,
   receiverPhone: string,
-  quantity: string
+  quantity: number
 ): { isValid: boolean; errors: ValidationErrors } => {
   const errors: ValidationErrors = {
     message: validateMessage(message),
