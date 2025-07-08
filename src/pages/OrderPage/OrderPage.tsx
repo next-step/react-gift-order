@@ -45,14 +45,14 @@ function OrderPage() {
 
   return (
     <Layout>
-      <OrderPageContainer>
-        <form onSubmit={validateForms}>
+      <form onSubmit={validateForms}>
+        <OrderPageContainer>
           <CardSelection cards={orderCardMockData} {...cardSelection} />
           <SenderSectionComponent {...senderInput} />
           <ReceiverSectionComponent {...receiverInput} />
           <ProductInfo product={product} quantity={receiverInput.quantity} />
-        </form>
-      </OrderPageContainer>
+        </OrderPageContainer>
+      </form>
     </Layout>
   );
 }

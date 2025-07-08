@@ -53,8 +53,6 @@ export const CardPreviewContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.background.default};
 
   padding-top: ${({ theme }) => theme.spacing[4]};
-  padding-left: ${({ theme }) => theme.spacing[7]};
-  padding-right: ${({ theme }) => theme.spacing[7]};
 
   padding-bottom: 2.5rem;
 `;
@@ -68,7 +66,7 @@ export const MainCardImage = styled.img`
 `;
 
 export const MessageTextArea = styled.textarea<{ hasError: boolean }>`
-  width: 100%;
+  width: 92%;
   height: 40px;
   padding: ${({ theme }) => theme.spacing[3]};
 
@@ -94,4 +92,6 @@ export const MessageTextAreaContainer = styled.div`
   flex-direction: column;
   width: 100%;
   gap: ${({ theme }) => theme.spacing[1]};
+  justify-content: center;
+  align-items: center;
 `;
