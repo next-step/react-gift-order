@@ -1,4 +1,4 @@
-import { Container, TextArea, ErrorText } from './MessageInput.styles'
+import * as S from './MessageInput.styles'
 
 interface Props {
   message: string
@@ -8,14 +8,15 @@ interface Props {
 
 const MessageInput: React.FC<Props> = ({ message, setMessage, error }) => {
   return (
-    <Container>
-      <TextArea
+    <S.Container>
+      <S.TextArea
         placeholder="메시지를 입력해주세요."
         value={message}
         onChange={(e) => setMessage(e.target.value)}
+        isError={!!error}
       />
-      {error && <ErrorText>{error}</ErrorText>}
-    </Container>
+      {error && <S.ErrorText>{error}</S.ErrorText>}
+    </S.Container>
   )
 }
 

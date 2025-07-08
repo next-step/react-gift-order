@@ -25,11 +25,15 @@ export const InputLabel = styled.p`
   ${theme.typography.label1Regular};
 `
 
-export const InputText = styled.input`
+export const InputText = styled.input<{ isError: boolean }>`
   width: 100%;
   height: ${theme.spacing[10]};
   padding: ${theme.spacing[2]};
-  border: 1px solid ${theme.colors.colorScale.gray[500]};
+  border: 1px solid
+    ${({ isError }) =>
+      isError
+        ? theme.colors.semanticColor.stateColor.critical
+        : theme.colors.colorScale.gray[500]};
   border-radius: ${theme.spacing[1]};
 `
 
