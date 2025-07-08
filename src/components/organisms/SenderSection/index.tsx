@@ -23,7 +23,7 @@ const SenderSection = ({
           placeholder="이름을 입력하세요."
           value={senderName}
           onChange={onSenderNameChange}
-          description="* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다."
+          description={error ? undefined : "* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다."}
           layout="vertical"
           error={error}
         />

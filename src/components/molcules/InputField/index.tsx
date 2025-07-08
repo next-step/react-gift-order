@@ -12,6 +12,7 @@ interface InputFieldProps {
   labelMinWidth?: string;
   layout?: 'vertical' | 'horizontal';
   error?: string;
+  showError?: boolean;
 }
 
 const InputField = ({
@@ -24,6 +25,7 @@ const InputField = ({
   labelMinWidth,
   layout = 'vertical',
   error,
+  showError = true,
 }: InputFieldProps) => {
   return (
     <S.Container layout={layout}>
@@ -47,7 +49,7 @@ const InputField = ({
           {description}
         </Text>
       )}
-      {error && (
+      {error && showError && (
         <S.ErrorMessage>
           {error}
         </S.ErrorMessage>

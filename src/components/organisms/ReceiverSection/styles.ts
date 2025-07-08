@@ -22,8 +22,22 @@ export const FormContent = styled.div`
 
 export const FormRow = styled.div`
   display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
+
+export const InputRow = styled.div`
+  display: flex;
   align-items: center;
   width: 100%;
+`;
+
+export const ErrorMessage = styled.span`
+  color: ${({ theme }) => theme.colors.red[700]};
+  ${({ theme }) => theme.typography.label2Regular};
+  margin-top: ${({ theme }) => theme.spacing.spacing1};
+  margin-left: calc(3.75rem + ${({ theme }) => theme.spacing.spacing3});
+  display: block;
 `;
 
 export const FormSpacer = styled.div`

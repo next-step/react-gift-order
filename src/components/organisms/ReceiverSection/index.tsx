@@ -32,41 +32,59 @@ const ReceiverSection = ({
       </S.SectionTitle>
       <S.FormContent>
         <S.FormRow>
-          <InputField
-            label="이름"
-            placeholder="이름을 입력하세요."
-            value={receiverName}
-            onChange={onReceiverNameChange}
-            labelMinWidth="3.75rem"
-            layout="horizontal"
-            error={receiverNameError}
-          />
+          <S.InputRow>
+            <InputField
+              label="이름"
+              placeholder="이름을 입력하세요."
+              value={receiverName}
+              onChange={onReceiverNameChange}
+              labelMinWidth="3.75rem"
+              layout="horizontal"
+              error={receiverNameError}
+              showError={false}
+            />
+          </S.InputRow>
+          {receiverNameError && (
+            <S.ErrorMessage>{receiverNameError}</S.ErrorMessage>
+          )}
         </S.FormRow>
         <S.FormSpacer />
         <S.FormRow>
-          <InputField
-            label="전화번호"
-            placeholder="전화번호를 입력하세요."
-            value={receiverPhone}
-            onChange={onReceiverPhoneChange}
-            type="tel"
-            labelMinWidth="3.75rem"
-            layout="horizontal"
-            error={receiverPhoneError}
-          />
+          <S.InputRow>
+            <InputField
+              label="전화번호"
+              placeholder="전화번호를 입력하세요."
+              value={receiverPhone}
+              onChange={onReceiverPhoneChange}
+              type="tel"
+              labelMinWidth="3.75rem"
+              layout="horizontal"
+              error={receiverPhoneError}
+              showError={false}
+            />
+          </S.InputRow>
+          {receiverPhoneError && (
+            <S.ErrorMessage>{receiverPhoneError}</S.ErrorMessage>
+          )}
         </S.FormRow>
         <S.FormSpacer />
         <S.FormRow>
-          <InputField
-            label="수량"
-            placeholder="수량을 입력하세요."
-            value={quantity}
-            onChange={onQuantityChange}
-            type="number"
-            labelMinWidth="3.75rem"
-            layout="horizontal"
-            error={quantityError}
-          />
+          <S.InputRow>
+            <InputField
+              label="수량"
+              placeholder="수량을 입력하세요."
+              value={quantity}
+              onChange={onQuantityChange}
+              type="number"
+              labelMinWidth="3.75rem"
+              layout="horizontal"
+              error={quantityError}
+              showError={false}
+            />
+          </S.InputRow>
+          {quantityError && (
+            <S.ErrorMessage>{quantityError}</S.ErrorMessage>
+          )}
         </S.FormRow>
       </S.FormContent>
     </S.Container>
