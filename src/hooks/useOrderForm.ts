@@ -5,15 +5,16 @@ import {
   ERROR_MESSAGES,
 } from '@/constants/validation';
 
-export type FormField =
-  | 'senderName'
-  | 'receiverName'
-  | 'receiverPhone'
-  | 'quantity'
-  | 'textMessage';
+type FormValues = {
+  senderName: string;
+  receiverName: string;
+  receiverPhone: string;
+  quantity: number;
+  textMessage: string;
+};
 
-type FormValues = Record<FormField, string | number>;
-type FormErrors = Record<FormField, string>;
+type FormErrors = Record<keyof FormValues, string>;
+type FormField = keyof FormValues;
 
 const DEFAULT_FORM_VALUES: FormValues = {
   senderName: '',
