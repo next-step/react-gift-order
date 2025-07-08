@@ -1,6 +1,6 @@
-import type { orderCardType } from "@/types/orderCardType";
+import type { OrderCardType } from "@/types/OrderCardType";
 
-export const orderCardMock: orderCardType[] = [
+export const orderCardMock: OrderCardType[] = [
   {
     id: 904,
     thumbUrl: "https://t1.daumcdn.net/gift/message-card/template/image/20240124_VGPJE.png",

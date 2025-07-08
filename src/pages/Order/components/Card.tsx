@@ -1,13 +1,13 @@
 import { orderCardMock } from "@/assets/orderCardMock";
 import Divider from "@/components/common/Divider";
-import type { orderCardType } from "@/types/orderCardType";
+import type { OrderCardType } from "@/types/OrderCardType";
 import styled from "@emotion/styled";
 import type { ChangeEvent } from "react";
 import ErrorMsg from "./ErrorMsg";
 
 interface CardProps {
-  selectedCard: orderCardType;
-  setSelectedCard: (card: orderCardType) => void;
+  selectedCard: OrderCardType;
+  setSelectedCard: (card: OrderCardType) => void;
   message: string;
   onChangeMessage: (event: ChangeEvent<HTMLTextAreaElement>) => void;
   errorMsg: string | null;
@@ -32,7 +32,7 @@ const Card = ({ selectedCard, setSelectedCard, message, onChangeMessage, errorMs
       </SelectedCardWrapper>
       <Divider spacing="2.5rem" />
       <CardMsgInputWrapper>
-        <CardMsgInput value={message} onChange={onChangeMessage} />
+        <CardMsgInput name="message" value={message} onChange={onChangeMessage} />
         {errorMsg && <ErrorMsg>{errorMsg}</ErrorMsg>}
       </CardMsgInputWrapper>
       <Divider spacing="2rem" />

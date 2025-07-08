@@ -3,7 +3,6 @@ import Container from "@/components/common/Container";
 import Divider from "@/components/common/Divider";
 import { orderCardMock } from "@/assets/orderCardMock";
 import { useEffect, useState } from "react";
-import useStringInput from "@/hooks/useStringInput";
 import { rankingItemMock } from "@/assets/rankingItemMock";
 import { useNavigate, useParams } from "react-router-dom";
 import { ROUTE_PATH } from "@/components/routes/Routes";
@@ -11,8 +10,7 @@ import Card from "./components/Card";
 import Sender from "./components/Sender";
 import Recipient from "./components/Recipient";
 import Product from "./components/Product";
-import useNumberInput from "@/hooks/useNumberInput";
-import { getMessageError, getNameError, getPhoneError, getQuantityError } from "@/utils/errorMessage";
+import useOrder from "@/hooks/useOrder";
 
 const Order = () => {
   const navigate = useNavigate();
@@ -26,34 +24,23 @@ const Order = () => {
 
   const [selectedCard, setSelectedCard] = useState(orderCardMock[0]);
 
-  const messageInput = useStringInput("", getMessageError);
-  const senderInput = useStringInput("", getNameError);
-  const recipientNameInput = useStringInput("", getNameError);
-  const recipientPhoneInput = useStringInput("", getPhoneError);
-  const recipientQuantityInput = useNumberInput(1, getQuantityError);
+  const { formData, onChangeOrder, setOrderMessage, errorMsg, checkValidOrder } = useOrder();
 
-  const totalPrice = product ? product.price.sellingPrice * recipientQuantityInput.value : 0;
+  const totalPrice = product ? product.price.sellingPrice * formData.recipients.quantity : 0;
 
   const handleOrderSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const isValidMessage = messageInput.validate();
-    const isValidSender = senderInput.validate();
-    const isValidRecipientName = recipientNameInput.validate();
-    const isValidRecipientPhone = recipientPhoneInput.validate();
-    const isValidRecipientCount = recipientQuantityInput.validate();
 
-    const isValidOrder =
-      isValidMessage && isValidSender && isValidRecipientName && isValidRecipientPhone && isValidRecipientCount;
+    const isValidOrder = checkValidOrder();
 
     if (isValidOrder) {
-      alertOrderInfo(messageInput.value, product?.name as string, recipientQuantityInput.value, senderInput.value);
+      alertOrderInfo(formData.message, product?.name as string, formData.recipients.quantity, formData.sender);
       navigate(ROUTE_PATH.HOME);
     }
-    console.log(recipientQuantityInput.value, recipientQuantityInput.errorMsg, recipientQuantityInput.validate());
   };
 
   useEffect(() => {
-    messageInput.setValue(selectedCard.defaultTextMessage);
+    setOrderMessage(selectedCard.defaultTextMessage);
   }, [selectedCard]);
   return (
     <Container>
@@ -61,27 +48,23 @@ const Order = () => {
         <Card
           selectedCard={selectedCard}
           setSelectedCard={setSelectedCard}
-          message={messageInput.value}
-          onChangeMessage={messageInput.onChange}
-          errorMsg={messageInput.errorMsg}
+          message={formData.message}
+          onChangeMessage={onChangeOrder}
+          errorMsg={errorMsg.message}
         />
         <Divider spacing="0.5rem" fill={false} />
-        <Sender
-          senderInput={senderInput.value}
-          onChangeSenderInput={senderInput.onChange}
-          errorMsg={senderInput.errorMsg}
-        />
+        <Sender senderInput={formData.sender} onChangeSenderInput={onChangeOrder} errorMsg={errorMsg.sender} />
         <Divider spacing="0.5rem" fill={false} />
         <Recipient
-          name={recipientNameInput.value}
-          onChangeName={recipientNameInput.onChange}
-          errorMsgName={recipientNameInput.errorMsg}
-          phone={recipientPhoneInput.value}
-          onChangePhone={recipientPhoneInput.onChange}
-          errorMsgPhone={recipientPhoneInput.errorMsg}
-          quantity={recipientQuantityInput.value}
-          onChangeQuantity={recipientQuantityInput.onChange}
-          errorMsgQuantity={recipientQuantityInput.errorMsg}
+          name={formData.recipients.name}
+          onChangeName={onChangeOrder}
+          errorMsgName={errorMsg.recipients.name}
+          phone={formData.recipients.phone}
+          onChangePhone={onChangeOrder}
+          errorMsgPhone={errorMsg.recipients.phone}
+          quantity={formData.recipients.quantity}
+          onChangeQuantity={onChangeOrder}
+          errorMsgQuantity={errorMsg.recipients.quantity}
         />
         <Divider spacing="0.5rem" fill={false} />
         {product && <Product product={product} />}

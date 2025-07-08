@@ -15,7 +15,13 @@ const Sender = ({ senderInput, onChangeSenderInput, errorMsg }: SenderProps) => 
       <Divider spacing="1rem" />
       <Title>보내는 사람</Title>
       <Divider spacing="1rem" />
-      <Input placeholder="이름을 입력하세요." onChange={onChangeSenderInput} value={senderInput} errorMsg={errorMsg} />
+      <Input
+        name="sender"
+        placeholder="이름을 입력하세요."
+        onChange={onChangeSenderInput}
+        value={senderInput}
+        errorMsg={errorMsg}
+      />
       {!errorMsg && <Msg>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</Msg>}
       <Divider spacing="1.5rem" />
     </Content>

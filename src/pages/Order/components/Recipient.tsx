@@ -23,8 +23,8 @@ const Recipient = ({
   onChangePhone,
   errorMsgPhone,
   quantity: count,
-  onChangeQuantity: onChangeCount,
-  errorMsgQuantity: errorMsgCount,
+  onChangeQuantity,
+  errorMsgQuantity,
 }: RecipientProps) => {
   return (
     <Content>
@@ -34,18 +34,30 @@ const Recipient = ({
       <InputWrapper>
         <InputTitle>이름</InputTitle>
         <InputWrapper>
-          <Input placeholder="이름을 입력하세요." value={name} onChange={onChangeName} errorMsg={errorMsgName} />
+          <Input
+            name="name"
+            placeholder="이름을 입력하세요."
+            value={name}
+            onChange={onChangeName}
+            errorMsg={errorMsgName}
+          />
         </InputWrapper>
       </InputWrapper>
       <Divider spacing="0.5rem" />
       <InputWrapper>
         <InputTitle>전화번호</InputTitle>
-        <Input placeholder="전화번호를 입력하세요." value={phone} onChange={onChangePhone} errorMsg={errorMsgPhone} />
+        <Input
+          name="phone"
+          placeholder="전화번호를 입력하세요."
+          value={phone}
+          onChange={onChangePhone}
+          errorMsg={errorMsgPhone}
+        />
       </InputWrapper>
       <Divider spacing="0.5rem" />
       <InputWrapper>
         <InputTitle>수량</InputTitle>
-        <Input type="number" value={count} onChange={onChangeCount} errorMsg={errorMsgCount} />
+        <Input name="quantity" type="number" value={count} onChange={onChangeQuantity} errorMsg={errorMsgQuantity} />
       </InputWrapper>
       <Divider spacing="1.5rem" />
     </Content>

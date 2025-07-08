@@ -44,7 +44,7 @@ const Login = () => {
   };
 
   const isValidIdAndPassword =
-    id.value.length !== 0 && password.value.length !== 0 && !id.errorMsg && !password.errorMsg;
+    id.value.length !== 0 && password.value.length >= 8 && !id.errorMsg && !password.errorMsg;
   return (
     <Container>
       <Content>
