@@ -1,24 +1,41 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
+import { clearCookieValue, setCookieValue } from "@/utils/cookie";
+import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 
 export const AUTH_COOKIE_KEY = "userId";
 
 type Auth = {
-  isLoggedIn: boolean;
-  userName?: string;
   userEmail?: string;
 };
 
 type AuthContextType = {
   auth: Auth;
-  setAuth: (auth: Auth) => void;
+  login: (userEmail: string) => void;
+  logout: () => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [auth, setAuth] = useState<Auth>({ isLoggedIn: false });
+  const [auth, setAuth] = useState<Auth>({});
 
-  return <AuthContext.Provider value={{ auth, setAuth }}>{children}</AuthContext.Provider>;
+  const login = useCallback((userEmail: string) => {
+    setAuth((prev) => ({ ...prev, userEmail }));
+    setCookieValue(AUTH_COOKIE_KEY, userEmail);
+  }, []);
+  const logout = useCallback(() => {
+    setAuth({});
+    clearCookieValue(AUTH_COOKIE_KEY);
+  }, []);
+  const value = useMemo(
+    () => ({
+      auth,
+      login,
+      logout,
+    }),
+    [auth, login, logout],
+  );
+
+  return <AuthContext value={value}>{children}</AuthContext>;
 };
 
 export const useAuth = () => {

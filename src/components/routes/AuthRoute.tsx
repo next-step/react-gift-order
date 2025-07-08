@@ -2,6 +2,7 @@ import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { getCookieValue } from "@/utils/cookie";
 import { ROUTE_PATH } from "@/components/routes/Routes";
 import { AUTH_COOKIE_KEY, useAuth } from "@/contexts/authContext";
+import { checkValidPath } from "@/utils/checkValidPath";
 
 type AuthRouteProps = {
   required?: boolean;
@@ -9,20 +10,21 @@ type AuthRouteProps = {
 
 const AuthRoute = ({ required = false }: AuthRouteProps) => {
   const location = useLocation();
-  const { auth, setAuth } = useAuth();
+  const { auth } = useAuth();
 
-  if (auth.isLoggedIn && auth.userEmail !== getCookieValue(AUTH_COOKIE_KEY)) {
-    setAuth({ isLoggedIn: false });
+  const isLoggedIn = !!auth.userEmail && auth.userEmail === getCookieValue(AUTH_COOKIE_KEY);
+
+  if (required && !isLoggedIn) {
+    return <Navigate to={`${ROUTE_PATH.LOGIN}?redirect=${location.pathname}`} replace />;
   }
 
-  if (required) {
-    if (!auth.isLoggedIn) {
-      return <Navigate to={`${ROUTE_PATH.LOGIN}?redirect=${location.pathname}`} replace />;
+  if (!required && isLoggedIn) {
+    const searchParams = new URLSearchParams(location.search);
+    let redirectUrl = searchParams.get("redirect");
+    if (!redirectUrl || !checkValidPath(redirectUrl)) {
+      redirectUrl = ROUTE_PATH.HOME;
     }
-  } else {
-    if (auth.isLoggedIn) {
-      return <Navigate to={ROUTE_PATH.PROFILE} replace />;
-    }
+    return <Navigate to={redirectUrl} replace />;
   }
   return <Outlet />;
 };
