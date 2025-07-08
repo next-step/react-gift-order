@@ -112,7 +112,7 @@ const OrderTemplate = ({
       </S.ContentWrapper>
       
       <S.FixedBottomButton onClick={onOrder}>
-        {product ? `${product.price.sellingPrice.toLocaleString()}원 결제하기` : '선물하기'}
+        {product ? `${(product.price.sellingPrice * Number(quantity)).toLocaleString()}원 결제하기` : '선물하기'}
       </S.FixedBottomButton>
     </>
   );
