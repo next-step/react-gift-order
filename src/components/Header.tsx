@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router';
 import styled from '@emotion/styled';
+import { useAuth } from '@/hooks/useAuth';
 
 const HeaderContainer = styled.header`
   display: flex;
@@ -65,6 +66,15 @@ const UserIcon = () => (
 
 export default function Header() {
     const navigate = useNavigate();
+    const { isLoggedIn } = useAuth();
+    
+    const handleUserClick = () => {
+        if (isLoggedIn) {
+            navigate('/my');
+        } else {
+            navigate('/login');
+        }
+    }
 
     return (
         <HeaderContainer>
@@ -76,7 +86,7 @@ export default function Header() {
                 선물하기
             </TitleLink>
 
-            <IconButton aria-label="로그인" onClick={() => navigate("/login")}>
+            <IconButton aria-label="로그인" onClick={handleUserClick}>
                 <UserIcon />
             </IconButton>
         </HeaderContainer>

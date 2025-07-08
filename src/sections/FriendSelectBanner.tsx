@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { useAuth } from "@/hooks/useAuth";
 
 const Wrapper = styled.section`
   padding: ${({ theme }) => theme.spacing.spacing5};
@@ -36,11 +37,12 @@ const Text = styled.p`
 `;
 
 export default function FriendSelectBanner() {
+  const { user } = useAuth();
     return (
         <Wrapper>
             <FriendButton>
                 <Icon>+</Icon>
-                <Text>선물할 친구를 선택해 주세요.</Text>
+                <Text>{user ? `${user.name}님! 선물할 친구를 선택해 주세요.` : "선물할 친구를 선택해 주세요."}</Text>
             </FriendButton>
         </Wrapper>
     );

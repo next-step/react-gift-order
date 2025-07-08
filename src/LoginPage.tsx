@@ -6,6 +6,7 @@ import Input from "@/components/Input";
 import { useInput } from "@/hooks/useInput";
 import { useValidate } from "@/hooks/useValidate";
 import { validateEmail, validatePassword } from "@/utils/validate";
+import { useAuth } from "@/hooks/useAuth";
 
 const LogoImage = styled.img`
   width: 88px;
@@ -39,6 +40,7 @@ const Button = styled.button<{ disabled?: boolean }>`
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const { setUser } = useAuth();
 
   const emailInput = useInput("");
   const emailValidation = useValidate(emailInput.value, validateEmail);
@@ -47,6 +49,11 @@ export default function LoginPage() {
   const passwordValidation = useValidate(passwordInput.value, validatePassword);
 
   const handleLogin = () => {
+    const email = emailInput.value;
+    setUser({
+      email,
+      name: email.split("@")[0],
+    });
     if (window.history.length > 2) {
       navigate(-1);
     } else {

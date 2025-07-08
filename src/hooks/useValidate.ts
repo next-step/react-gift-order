@@ -5,12 +5,13 @@ type Validator = (value: string) => string;
 export function useValidate(value: string, validate:Validator) {
     const [error, setError] = useState("");
 
-    const onBlur = () => {
+    const validateNow = () => {
         const message = validate(value);
         setError(message);
     };
 
+    const onBlur = validateNow;
     const isValid = !validate(value);
 
-    return {error, onBlur, isValid};
+    return {error, onBlur, isValid, validateNow};
 }
