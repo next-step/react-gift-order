@@ -1,22 +1,32 @@
-import styled from "@emotion/styled";
+import type { CSSProperties } from "react";
+
+import { useErrorOnChangeReset } from "@/shared/hooks/useErrorOnChangeState";
+
+import * as Styles from "./TextArea.styled";
 
 export interface TextAreaProps extends React.ComponentProps<"textarea"> {
-    width?: SizeProp;
-    height?: SizeProp;
+    width?: CSSProperties["width"];
+    height?: CSSProperties["height"];
+
+    error?: string;
 }
 
-export const TextArea = styled.textarea<TextAreaProps>`
-    width: ${({ width }) => width || "100%"};
-    height: ${({ height }) => height || "100%"};
+export const TextArea = ({ width, height, error, ...props }: TextAreaProps) => {
+    const { error: err, onChange } = useErrorOnChangeReset<HTMLTextAreaElement>({
+        error,
+        onChange: props.onChange,
+    });
 
-    border: 1px solid ${({ theme }) => theme.colors.gray.gray300};
-    border-radius: 8px;
-
-    padding: ${({ theme }) => theme.spacing.spacing3};
-
-    outline: none;
-
-    &:focus {
-        outline: 1px solid ${({ theme }) => theme.colors.gray.gray900};
-    }
-`;
+    return (
+        <>
+            <Styles.TextAreaElement
+                width={width}
+                height={height}
+                error={err}
+                onChange={onChange}
+                {...props}
+            />
+            {err && <Styles.Error>{err}</Styles.Error>}
+        </>
+    );
+};
