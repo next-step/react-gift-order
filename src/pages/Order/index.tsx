@@ -2,15 +2,8 @@ import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { orders } from '@/data/orders';
 import { type RankingItem } from '@/data/ranking';
+import { type ValidationErrors, validateOrderForm } from '@/utils/validation/orderForm';
 import OrderTemplate from './template';
-
-interface ValidationErrors {
-  message: string;
-  senderName: string;
-  receiverName: string;
-  receiverPhone: string;
-  quantity: string;
-}
 
 const Order = () => {
   const location = useLocation();
@@ -78,42 +71,16 @@ const Order = () => {
   };
 
   const validateForm = (): boolean => {
-    const newErrors: ValidationErrors = {
-      message: '',
-      senderName: '',
-      receiverName: '',
-      receiverPhone: '',
-      quantity: '',
-    };
-
-    if (!message.trim()) {
-      newErrors.message = '메시지를 입력해주세요.';
-    }
-
-    if (!senderName.trim()) {
-      newErrors.senderName = '이름을 입력해주세요.';
-    }
-
-    if (!receiverName.trim()) {
-      newErrors.receiverName = '이름을 입력해주세요.';
-    }
-
-    if (!receiverPhone.trim()) {
-      newErrors.receiverPhone = '전화번호를 입력해주세요.';
-    } else {
-      const phoneRegex = /^010\d{8}$/;
-      if (!phoneRegex.test(receiverPhone)) {
-        newErrors.receiverPhone = '올바른 전화번호 형식이 아닙니다.';
-      }
-    }
-
-    const quantityNum = parseInt(quantity, 10);
-    if (isNaN(quantityNum) || quantityNum < 1) {
-      newErrors.quantity = '수량은 1개 이상이어야 합니다.';
-    }
-    setErrors(newErrors);
-
-    return !Object.values(newErrors).some(error => error !== '');
+    const { isValid, errors: validationErrors } = validateOrderForm(
+      message,
+      senderName,
+      receiverName,
+      receiverPhone,
+      quantity
+    );
+    
+    setErrors(validationErrors);
+    return isValid;
   };
 
   const handleOrder = () => {
