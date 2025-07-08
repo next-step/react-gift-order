@@ -3,6 +3,7 @@ import CardSelector from './CardSelector';
 import { useState } from 'react';
 import { MOCK_CARDFORM_LIST } from './mock';
 import { CardImg } from './CardImg';
+import { Message } from './Message';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -25,33 +26,29 @@ const Margin3 = styled.div`
   background-color: transparent;
 `;
 
-const CardImgWrapper = styled.div`
-  width: 100%;
-  padding: 0px 1rem;
-  display: flex;
-  -webkit-box-pack: center;
-  justify-content: center;
-`;
-
-const CardMent = styled.div`
-  width: 100%;
-  padding: 0px 1rem;
-`;
-
 const Card = () => {
-  const [selectedCardId, setSelectedCardId] = useState<number | null>(904);
+  const defaultCard = MOCK_CARDFORM_LIST[0];
+  const [selectedCardId, setSelectedCardId] = useState<number>(defaultCard.id);
+  const [message, setMessage] = useState(defaultCard.defaultTextMessage || '');
+
+  const handleCardSelect = (id: number) => {
+    setSelectedCardId(id);
+    const selected = MOCK_CARDFORM_LIST.find((card) => card.id === id);
+    if (selected) {
+      setMessage(selected.defaultTextMessage || '');
+    }
+  };
+
   const selectedCard = MOCK_CARDFORM_LIST.find((card) => card.id === selectedCardId);
 
   return (
     <Wrapper>
       <Margin1 />
-      <CardSelector selectedCardId={selectedCardId} onChange={setSelectedCardId} />
+      <CardSelector selectedCardId={selectedCardId} onChange={handleCardSelect} />
       <Margin1 />
-      <CardImgWrapper>
-        {selectedCard && <CardImg selectedImgUrl={selectedCard.imageUrl} />}
-      </CardImgWrapper>
+      {selectedCard && <CardImg selectedImgUrl={selectedCard.imageUrl} />}
       <Margin2 />
-      <CardMent />
+      <Message value={message} onChange={(e) => setMessage(e.target.vaule)} />
       <Margin3 />
     </Wrapper>
   );

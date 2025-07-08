@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import { MOCK_CARDFORM_LIST } from './mock';
-import { useState } from 'react';
 
 const Wrapper = styled.div`
   width: 100%;

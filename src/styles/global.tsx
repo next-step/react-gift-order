@@ -157,12 +157,15 @@ const GlobalStyle = () => (
         cursor: pointer;
       }
 
-      input {
+      input,
+      textarea {
+        font: inherit;
         background: none;
         border: none;
         outline: none;
         appearance: none;
       }
+
       * {
         box-sizing: border-box;
       }
