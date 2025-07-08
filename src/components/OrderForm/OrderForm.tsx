@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import Card from './Card';
 import { Sender } from './Sender';
+import { Recipinet } from './Recipinet';
 
 const Wrapper = styled.section(({ theme }) => ({
   width: '100%',
@@ -21,7 +22,7 @@ const OrderForm = () => {
       <Margin1 />
       <Sender />
       <Margin1 />
-      받는사람
+      <Recipinet />
       <Margin1 />
       버튼
     </Wrapper>
