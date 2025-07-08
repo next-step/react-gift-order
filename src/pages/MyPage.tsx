@@ -35,7 +35,6 @@ export const MyPage = () => {
     logout();
     navigate(ROUTE_PATH.LOGIN);
   };
-  console.log(user);
   return (
     <AppContainer>
       <Header title="선물하기" />

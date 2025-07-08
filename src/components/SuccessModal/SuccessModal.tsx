@@ -56,17 +56,17 @@ const SuccessMessage = styled.div`
 
 export const SuccessModal = ({
   showSuccessModal,
-  setShowSuccessModal,
+  onClose,
 }: {
   showSuccessModal: boolean;
-  setShowSuccessModal: (show: boolean) => void;
+  onClose: () => void;
 }) => {
   return (
     <Modal show={showSuccessModal}>
       <ModalContent>
         <SuccessModalTitle>주문이 완료되었습니다! 🎉</SuccessModalTitle>
         <SuccessMessage>선물이 성공적으로 주문되었습니다.</SuccessMessage>
-        <ModalButton onClick={() => setShowSuccessModal(false)}>확인</ModalButton>
+        <ModalButton onClick={onClose}>확인</ModalButton>
       </ModalContent>
     </Modal>
   );
