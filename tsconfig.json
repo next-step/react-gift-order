@@ -1,7 +1,30 @@
+// {
+//   "files": [],
+//   "references": [
+//     { "path": "./tsconfig.app.json" },
+//     { "path": "./tsconfig.node.json" }
+//   ]
+// }
+// tsconfig.json
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": ["DOM", "ESNext"],
+    "jsx": "react-jsx",
+    "strict": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+
+    // --- 여기부터 별칭(alias) 설정 ---
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+    // ------------------------------
+  },
+  "include": ["src"],       // src 폴더 전체를 컴파일 대상에 포함
+  "exclude": ["node_modules", "dist"]
 }

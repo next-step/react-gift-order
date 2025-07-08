@@ -1,7 +1,7 @@
 import { Route, Routes as RouterRoutes } from 'react-router';
 import HomePage from './Home/Page';
 import NotFoundPage from './NotFound/Page';
-import LoginPage from './Login/Page';
+import LoginPage from './Login/LoginPage';
 
 export const Routes = () => {
   return (
