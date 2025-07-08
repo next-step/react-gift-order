@@ -23,6 +23,12 @@ export default function LoginPage() {
 
   const goToLogin = () => {
     if (!isFormValid) return;
+    const userInfo = {
+      email,
+    };
+    
+    sessionStorage.setItem("userInfo", JSON.stringify(userInfo));
+
     navigate(from, { replace: true });
   };
 
