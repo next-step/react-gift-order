@@ -1,13 +1,4 @@
-import {
-  Container,
-  Title,
-  ProductCard,
-  ProductImage,
-  ProductDetails,
-  ProductName,
-  BrandName,
-  ProductPrice,
-} from './ProductInfo.styles'
+import * as S from './ProductInfo.styles'
 import type { Product } from '@/data/products'
 
 interface ProductInfoProps {
@@ -16,19 +7,19 @@ interface ProductInfoProps {
 
 const ProductInfo = ({ product }: ProductInfoProps) => {
   return (
-    <Container>
-      <Title>상품 정보</Title>
-      <ProductCard>
-        <ProductImage src={product.imageURL} alt={product.name} />
-        <ProductDetails>
-          <ProductName>{product.name}</ProductName>
-          <BrandName>{product.brandInfo.name}</BrandName>
-          <ProductPrice>
+    <S.Container>
+      <S.Title>상품 정보</S.Title>
+      <S.ProductCard>
+        <S.ProductImage src={product.imageURL} alt={product.name} />
+        <S.ProductDetails>
+          <S.ProductName>{product.name}</S.ProductName>
+          <S.BrandName>{product.brandInfo.name}</S.BrandName>
+          <S.ProductPrice>
             상품가 {product.price.sellingPrice.toLocaleString()}원
-          </ProductPrice>
-        </ProductDetails>
-      </ProductCard>
-    </Container>
+          </S.ProductPrice>
+        </S.ProductDetails>
+      </S.ProductCard>
+    </S.Container>
   )
 }
 
