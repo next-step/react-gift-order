@@ -39,7 +39,7 @@ const Home = () => {
             <ButtonWithImg
               src={TitleIcon}
               onClick={() => navigate(`/`)}
-              width="100%"
+              width="auto"
               height="40px"
             />
           </Box>

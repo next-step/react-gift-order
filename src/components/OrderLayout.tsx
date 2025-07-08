@@ -5,16 +5,16 @@ interface LayoutStyle {
   paddingUp?: keyof typeof theme.space
   paddingLeft?: keyof typeof theme.space
   paddingRight?: keyof typeof theme.space
-  height?: string
+  minHeight?: string
   color?: keyof typeof theme.colors
 }
-const Layout = styled.div<LayoutStyle>`
+const OrderLayout = styled.div<LayoutStyle>`
   ${({
     marginTop,
     paddingUp,
     paddingLeft,
     paddingRight,
-    height,
+    minHeight,
     color,
     theme,
   }) => {
@@ -29,9 +29,9 @@ const Layout = styled.div<LayoutStyle>`
   ${paddingLeft ? `padding-left:  ${theme.space[paddingLeft]};` : ""}
   ${paddingRight ? `padding-right:  ${theme.space[paddingRight]};` : ""}
   ${color ? `background-color:  ${theme.colors[color]};` : ""}
-  ${height ? `height:  ${height};` : `height:100vh;`}
+  ${minHeight ? `min-height: ${minHeight};` : `min-height: 100vh;`}
   `
   }}
 `
 
-export default Layout
+export default OrderLayout

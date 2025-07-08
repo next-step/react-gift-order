@@ -50,7 +50,12 @@ const ProductGrid = () => {
             <IndexBadge backGroundColor={idx < 3 ? "critical" : "gray400"}>
               {idx + 1}
             </IndexBadge>
-            <ProductImage src={item.imageURL} alt={item.name} />
+            <ProductImage
+              src={item.imageURL}
+              alt={item.name}
+              borderTopLeftRadius="spacing3"
+              borderTopRightRadius="spacing3"
+            />
             <div style={{ padding: `${theme.space.spacing3}` }}>
               <Text
                 variant="subtitle2Regular"
@@ -75,6 +80,7 @@ const ProductGrid = () => {
         ))}
       </Grid>
       <MoreButton
+        borderRadius="spacing2"
         background="gray00"
         onClick={() => setShowAll((prev) => !prev)}
       >

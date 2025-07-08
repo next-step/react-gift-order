@@ -4,6 +4,9 @@ import Layout from "@/components/Layout"
 import type { CardTheme } from "@/context/CardContext"
 import { CardContext } from "@/context/CardContext"
 import GiftCardStyle from "@/components/GiftCardStyle"
+import PreviewCard from "./PreviewCard"
+import Blank from "@/components/Blank"
+import { OrderMessage } from "@/components/OrderMessage"
 interface CardProps {
   card: CardTheme
   selected: boolean
@@ -17,10 +20,12 @@ const GiftCard = ({ card, selected, onSelect }: CardProps) => {
     </GiftCardStyle>
   )
 }
-
-const GiftCardList = () => {
-  const cards = useContext(CardContext)
-  const [selectedId, setSelectedId] = useState<number>(cards[0]?.id ?? 0)
+interface ListProps {
+  cards: CardTheme[]
+  selectedId: number
+  onSelect: (id: number) => void
+}
+const GiftCardList = ({ cards, selectedId, onSelect }: ListProps) => {
   return (
     <GiftCardListLayout>
       {cards.map(function (card) {
@@ -29,7 +34,7 @@ const GiftCardList = () => {
             key={card.id}
             card={card}
             selected={card.id === selectedId}
-            onSelect={() => setSelectedId(card.id)}
+            onSelect={() => onSelect(card.id)}
           />
         )
       })}
@@ -37,10 +42,30 @@ const GiftCardList = () => {
   )
 }
 
-const CardThumbnail = () => {
+interface CardThumbnailProps {
+  message: string;
+  setMessage: (msg: string) => void;
+}
+
+const CardThumbnail = ({ message, setMessage }: CardThumbnailProps) => {
+  const cards = useContext(CardContext)
+  const [selectedId, setSelectedId] = useState<number>(cards[0]?.id ?? 0)
+  const selectedCard = cards.find((c) => c.id === selectedId)!
   return (
-    <Layout>
-      <GiftCardList />
+    <Layout height="472.5px">
+      <GiftCardList
+        cards={cards}
+        selectedId={selectedId}
+        onSelect={setSelectedId}
+      />
+      <PreviewCard card={selectedCard} />
+      <Blank height="40px" />
+      <OrderMessage
+        placeholder={selectedCard.defaultTextMessage}
+        value={message}
+        onChange={setMessage}
+        key="ordermessage"
+      />
     </Layout>
   )
 }
