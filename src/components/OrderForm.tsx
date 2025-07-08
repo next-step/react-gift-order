@@ -1,30 +1,11 @@
 import { css } from '@emotion/react';
 import theme from '@src/styles/tokens/index';
+import OrderFormInput from '@src/components/OrderFormInput';
 
 const coverStyle = css`
   width: 100%;
   padding: 0px 1rem;
   box-sizing: border-box;
-`;
-
-const inputStyle = css`
-  width: 100%;
-  box-sizing: border-box;
-  color: ${theme.colors.textDefault};
-  transition: border-color 200ms;
-  border-style: solid;
-  min-height: 2.75rem;
-  font-size: ${theme.typography.body1Regular.fontSize};
-  font-weight: ${theme.typography.body1Regular.fontWeight};
-  line-height: ${theme.typography.body1Regular.lineHeight};
-  padding: 8px 12px;
-  border-width: 1px;
-  border-radius: 8px;
-  border-color: ${theme.colors.borderDefault};
-`;
-
-const inputErrorStyle = css`
-  border-color: red;
 `;
 
 const noticeP = css`
@@ -33,15 +14,6 @@ const noticeP = css`
   line-height: ${theme.typography.label2Regular.lineHeight};
   color: ${theme.colors.textSub};
   margin: 0px;
-  text-align: left;
-`;
-
-const errorText = css`
-  font-weight: ${theme.typography.label2Regular.fontWeight};
-  font-size: ${theme.typography.label2Regular.fontSize};
-  color: red;
-  margin-top: 4px;
-  margin-bottom: 0;
   text-align: left;
 `;
 
@@ -68,21 +40,6 @@ const recipientRightInputDiv = css`
   box-sizing: border-box;
 `;
 
-const recipientRightInput = css`
-  width: 100%;
-  box-sizing: border-box;
-  color: ${theme.colors.textDefault};
-  transition: border-color 200ms;
-  border-style: solid;
-  min-height: 2.75rem;
-  font-size: ${theme.typography.body1Regular.fontSize};
-  font-weight: ${theme.typography.body1Regular.fontWeight};
-  line-height: ${theme.typography.body1Regular.lineHeight};
-  padding: 8px 12px;
-  border-width: 1px;
-  border-radius: 8px;
-  border-color: ${theme.colors.borderDefault};
-`;
 const pTitle = css`
   font-size: ${theme.typography.title2Bold.fontSize};
   font-weight: ${theme.typography.title2Bold.fontWeight};
@@ -132,23 +89,18 @@ const OrderForm = ({ values, errors, onChange }: Props) => {
         <div css={space12} />
         <p css={pTitle}>보내는 사람</p>
         <div css={space12} />
-        <div>
-          <input
-            css={[inputStyle, errors.senderName && inputErrorStyle]}
-            type="text"
-            placeholder="이름을 입력하세요."
-            name="senderName"
-            value={values.senderName}
-            onChange={onChange}
-          />
-          {errors.senderName ? (
-            <p css={errorText}>{errors.senderName}</p>
-          ) : (
-            <p css={noticeP}>
-              * 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.
-            </p>
-          )}
-        </div>
+        <OrderFormInput
+          name="senderName"
+          value={values.senderName}
+          placeholder="이름을 입력하세요."
+          error={errors.senderName}
+          onChange={onChange}
+        />
+        {!errors.senderName && (
+          <p css={noticeP}>
+            * 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.
+          </p>
+        )}
         <div css={space24} />
       </div>
 
@@ -162,20 +114,13 @@ const OrderForm = ({ values, errors, onChange }: Props) => {
         <div css={recipientFormDiv}>
           <p css={recipientSideP}>이름</p>
           <div css={recipientRightInputDiv}>
-            <input
-              css={[
-                recipientRightInput,
-                errors.recipientName && inputErrorStyle,
-              ]}
-              type="text"
-              placeholder="이름을 입력하세요."
+            <OrderFormInput
               name="recipientName"
               value={values.recipientName}
+              placeholder="이름을 입력하세요."
+              error={errors.recipientName}
               onChange={onChange}
             />
-            {errors.recipientName && (
-              <p css={errorText}>{errors.recipientName}</p>
-            )}
           </div>
         </div>
 
@@ -184,20 +129,13 @@ const OrderForm = ({ values, errors, onChange }: Props) => {
         <div css={recipientFormDiv}>
           <p css={recipientSideP}>전화번호</p>
           <div css={recipientRightInputDiv}>
-            <input
-              css={[
-                recipientRightInput,
-                errors.recipientPhone && inputErrorStyle,
-              ]}
-              type="text"
-              placeholder="전화번호를 입력하세요."
+            <OrderFormInput
               name="recipientPhone"
               value={values.recipientPhone}
+              placeholder="전화번호를 입력하세요."
+              error={errors.recipientPhone}
               onChange={onChange}
             />
-            {errors.recipientPhone && (
-              <p css={errorText}>{errors.recipientPhone}</p>
-            )}
           </div>
         </div>
 
@@ -206,16 +144,15 @@ const OrderForm = ({ values, errors, onChange }: Props) => {
         <div css={recipientFormDiv}>
           <p css={recipientSideP}>수량</p>
           <div css={recipientRightInputDiv}>
-            <input
-              css={[recipientRightInput, errors.quantity && inputErrorStyle]}
+            <OrderFormInput
+              name="quantity"
               type="number"
               min={1}
-              placeholder="수량을 입력하세요."
-              name="quantity"
               value={values.quantity}
+              placeholder="수량을 입력하세요."
+              error={errors.quantity}
               onChange={onChange}
             />
-            {errors.quantity && <p css={errorText}>{errors.quantity}</p>}
           </div>
         </div>
 
