@@ -4,6 +4,18 @@
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
   ],
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "lib": ["DOM", "ESNext"],
+    "jsx": "react-jsx",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true, // 느릴 경우 false
+    "noFallthroughCasesInSwitch": true
+  },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]
 }
