@@ -1,4 +1,3 @@
-// src/pages/MyPage.tsx
 import { Layout } from '@/components/Layout';
 import { NavBar } from '@/components/NavBar';
 import { useAuth } from '@/contexts/AuthContext';
@@ -14,7 +13,6 @@ const wrapper = css`
 
 const logoutButton = css`
   padding: 12px 20px;
-  //color: rgb(22, 15, 15);
   border-radius: 8px;
   font-weight: bold;
 `;
