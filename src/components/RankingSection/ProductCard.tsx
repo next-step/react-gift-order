@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import type { Product } from '@/types/product';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { ROUTES } from '@/constants/routes';
 
 interface ProductCardProps {
   item: Product;
@@ -12,14 +13,16 @@ const ProductCard = ({ item, rank }: ProductCardProps) => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
+  const targetPath = ROUTES.ORDER(rank);
+
   const handleClick = () => {
     if (user) {
-      navigate(`/order/${rank}`);
+      navigate(targetPath);
     } else {
-      navigate('/login', {
+      navigate(ROUTES.LOGIN, {
         state: {
           from: {
-            pathname: `/order/${rank}`,
+            pathname: targetPath,
             search: '',
           },
         },

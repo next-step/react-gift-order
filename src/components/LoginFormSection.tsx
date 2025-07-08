@@ -7,15 +7,15 @@ import useLoginForm from '@/hooks/useLoginForm';
 import InputField from '@/components/common/InputField';
 import { useAuth } from '@/contexts/AuthContext';
 
+type FromState = {
+  pathname: string;
+  search?: string;
+};
+
 const LoginFormSection = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-
-  type FromState = {
-    pathname: string;
-    search?: string;
-  };
 
   const fromState = location.state?.[LOCATION_STATE_KEYS.FROM] as
     | FromState

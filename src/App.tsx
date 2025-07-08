@@ -16,7 +16,7 @@ function App() {
           <Route path={ROUTES.HOME} element={<HomePage />} />
           <Route path={ROUTES.LOGIN} element={<LoginPage />} />
           <Route path={ROUTES.MY} element={<MyPage />} />
-          <Route path={ROUTES.ORDER} element={<OrderPage />} />
+          <Route path={ROUTES.ORDER_PATH} element={<OrderPage />} />
           <Route path={ROUTES.NOT_FOUND} element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
