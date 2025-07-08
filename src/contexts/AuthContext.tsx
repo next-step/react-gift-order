@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 
+const SESSION_STORAGE_KEY = 'user';
+
 interface User {
   name: string;
   email: string;
@@ -21,7 +23,7 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const savedUser = sessionStorage.getItem('user');
+    const savedUser = sessionStorage.getItem(SESSION_STORAGE_KEY);
     if (savedUser) {
       setUser(JSON.parse(savedUser));
     }
@@ -30,9 +32,9 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (user) {
-      sessionStorage.setItem('user', JSON.stringify(user));
+      sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(user));
     } else {
-      sessionStorage.removeItem('user');
+      sessionStorage.removeItem(SESSION_STORAGE_KEY);
     }
   }, [user]);
 
