@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { AuthContext } from './AuthContext';
 import type { UserInfo } from './AuthContext';
 
@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, []);
 
-  const login = (email: string, onSuccess?: () => void) => {
+  const login = useCallback((email: string, onSuccess?: () => void) => {
     const newuserInfo = { email };
     setUserInfo(newuserInfo);
     sessionStorage.setItem('kakaotech/userInfo', JSON.stringify(newuserInfo));
@@ -25,18 +25,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     if (onSuccess) {
       setTimeout(onSuccess, 0);
     }
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     setUserInfo(null);
     sessionStorage.removeItem('kakaotech/userInfo');
-  };
+  }, []);
 
-  //React 최소상태: isLoggedIn은 useInfo에 종속적이므로 별도 상태없이 변수로 분리했습니다.
   const isLoggedIn = !!userInfo;
 
-  //프로젝트가 어떻게 커질지 몰라 useMemo처리했는데, 멘토님이라면 객체 vs useMemo로 하실지 궁급합니다.
-  const value = useMemo(() => ({isLoggedIn, userInfo, login, logout}), [userInfo]);
+  //리뷰 반영 : 의존성배열에 모두 추가
+  const value = useMemo(() => ({ isLoggedIn, userInfo, login, logout }), [userInfo, isLoggedIn, login, logout]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
