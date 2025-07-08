@@ -88,7 +88,6 @@ const AddReceiverModal = ({ onClose, onComplete, initialReceivers }: Props) => {
     setErrors(updatedErrors);
   };
 
-  // 완료 버튼 클릭 시 전체 검증 후 완료
   const handleComplete = () => {
     let hasError = false;
     const newErrors = receivers.map((r, i) => {
@@ -144,6 +143,8 @@ const AddReceiverModal = ({ onClose, onComplete, initialReceivers }: Props) => {
           width: '550px',
           maxHeight: '80vh',
           overflowY: 'auto',
+          height: '700px',
+          overflow: 'auto',
           boxShadow: '0 0 10px rgba(0,0,0,0.3)',
         }}
         onClick={(e) => e.stopPropagation()}
@@ -244,35 +245,43 @@ const AddReceiverModal = ({ onClose, onComplete, initialReceivers }: Props) => {
           </div>
         ))}
 
-        <button
-          type="button"
-          onClick={handleComplete}
+         <div
           css={{
-            marginTop: '16px',
-            padding: '8px 16px',
-            borderRadius: '6px',
-            border: '1px solid #ccc',
-            cursor: 'pointer',
-            backgroundColor: 'white',
+            display: 'flex',
+            justifyContent: 'flex-end',
+            gap: '8px',
+            padding: '16px 24px',
+            borderTop: '1px solid #eee',
+            backgroundColor: '#fff',
           }}
         >
-          완료
-        </button>
-
-        <button
-          type="button"
-          onClick={onClose}
-          css={{
-            marginTop: '8px',
-            padding: '8px 16px',
-            borderRadius: '6px',
-            border: '1px solid #ccc',
-            cursor: 'pointer',
-            backgroundColor: 'white',
-          }}
-        >
-          닫기
-        </button>
+          <button
+            type="button"
+            onClick={handleComplete}
+            css={{
+              padding: '8px 16px',
+              borderRadius: '6px',
+              border: '1px solid #ccc',
+              cursor: 'pointer',
+              backgroundColor: 'white',
+            }}
+          >
+            완료
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            css={{
+              padding: '8px 16px',
+              borderRadius: '6px',
+              border: '1px solid #ccc',
+              cursor: 'pointer',
+              backgroundColor: 'white',
+            }}
+          >
+            닫기
+          </button>
+        </div>
       </div>
     </div>
   );

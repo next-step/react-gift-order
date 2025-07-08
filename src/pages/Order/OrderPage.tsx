@@ -30,21 +30,17 @@ const OrderPage = () => {
   const [message, setMessage] = useState(cardTemplates[0].defaultTextMessage);
   const [senderName, setSenderName] = useState('');
 
-  // 받는 사람 목록 상태 (초기값 빈 배열)
   const [receivers, setReceivers] = useState<
     { name: string; phone: string; quantity: number }[]
   >([]);
 
-  // 에러 상태
   const [senderError, setSenderError] = useState('');
   const [messageError, setMessageError] = useState('');
 
-  // 모달 오픈 상태
   const [isAddReceiverModalOpen, setIsAddReceiverModalOpen] = useState(false);
 
   const product = mockItems[0];
 
-  // 총 수량 계산 함수 (받는 사람 각각의 수량 합산)
   const totalQuantity = receivers.reduce((sum, r) => sum + r.quantity, 0);
 
   const submitOrder = () => {
@@ -89,7 +85,6 @@ const OrderPage = () => {
 
   return (
     <div css={containerStyle(theme)}>
-      {/* 카드 선택 */}
       <div css={cardSelectorStyle(theme)}>
         <div css={thumbListStyle(theme)}>
           {cardTemplates.map((card) => (
@@ -112,7 +107,6 @@ const OrderPage = () => {
         />
       </div>
 
-      {/* 메시지 입력 */}
       <textarea
         value={message}
         onChange={(e) => {
@@ -124,7 +118,6 @@ const OrderPage = () => {
       />
       {messageError && <p css={errorMessageStyle}>{messageError}</p>}
 
-      {/* 보내는 사람 */}
       <div css={sectionStyle(theme)}>
         <div css={formGroupStyle(theme)}>
           <label>보내는 사람</label>
@@ -147,7 +140,6 @@ const OrderPage = () => {
         </div>
       </div>
 
-      {/* 받는 사람 */}
       <div css={sectionStyle(theme)}>
         <div
           style={{
@@ -171,25 +163,54 @@ const OrderPage = () => {
               fontSize: '14px',
             }}
           >
-            + 추가
+            {receivers.length === 0 ? '+ 추가' : '수정'}
           </button>
         </div>
 
-        {/* 받는 사람 리스트 표시 */}
         {receivers.length === 0 ? (
-          <p css={helperTextStyle(theme)}>받는 사람이 없습니다. 받는 사람을 추가해주세요.</p>
+          <p css={helperTextStyle(theme)}>
+            받는 사람이 없습니다. 받는 사람을 추가해주세요.
+          </p>
         ) : (
-          <ul>
-            {receivers.map((r, i) => (
-              <li key={i} style={{ marginBottom: 6 }}>
-                {r.name} / {r.phone} / {r.quantity}개
-              </li>
-            ))}
-          </ul>
+          <table
+            style={{
+              width: '100%',
+              borderCollapse: 'collapse',
+              backgroundColor: theme.color.gray.gray100,
+              borderRadius: '8px',
+              overflow: 'hidden',
+            }}
+          >
+            <thead>
+              <tr
+                style={{
+                  backgroundColor: theme.color.gray.gray300,
+                  textAlign: 'left',
+                }}
+              >
+                <th style={{ padding: '8px 12px' }}>이름</th>
+                <th style={{ padding: '8px 12px' }}>전화번호</th>
+                <th style={{ padding: '8px 12px' }}>수량</th>
+              </tr>
+            </thead>
+            <tbody>
+              {receivers.map((r, i) => (
+                <tr
+                  key={i}
+                  style={{
+                    borderTop: `1px solid ${theme.color.gray.gray100}`,
+                  }}
+                >
+                  <td style={{ padding: '8px 12px' }}>{r.name}</td>
+                  <td style={{ padding: '8px 12px' }}>{r.phone}</td>
+                  <td style={{ padding: '8px 12px' }}>{r.quantity}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         )}
       </div>
 
-      {/* 상품 정보 */}
       <div css={sectionStyle(theme)}>
         <h2 css={titleStyle(theme)}>상품 정보</h2>
         <div css={productInfoStyle(theme)}>
@@ -207,12 +228,11 @@ const OrderPage = () => {
         {(product.price * totalQuantity).toLocaleString()}원 주문하기
       </button>
 
-      {/* 모달 */}
       {isAddReceiverModalOpen && (
         <AddReceiverModal
           onClose={() => setIsAddReceiverModalOpen(false)}
           onComplete={(newReceivers) => {
-            setReceivers(newReceivers); // 모달에서 받은 목록을 상태로 저장
+            setReceivers(newReceivers);
             setIsAddReceiverModalOpen(false);
           }}
           initialReceivers={receivers}
