@@ -1,4 +1,8 @@
 import styled from '@emotion/styled';
+import CardSelector from './CardSelector';
+import { useState } from 'react';
+import { MOCK_CARDFORM_LIST } from './mock';
+import { CardImg } from './CardImg';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -21,12 +25,7 @@ const Margin3 = styled.div`
   background-color: transparent;
 `;
 
-const CardSelector = styled.div`
-  width: 100%;
-  position: relative;
-`;
-
-const CardImg = styled.div`
+const CardImgWrapper = styled.div`
   width: 100%;
   padding: 0px 1rem;
   display: flex;
@@ -40,12 +39,17 @@ const CardMent = styled.div`
 `;
 
 const Card = () => {
+  const [selectedCardId, setSelectedCardId] = useState<number | null>(904);
+  const selectedCard = MOCK_CARDFORM_LIST.find((card) => card.id === selectedCardId);
+
   return (
     <Wrapper>
       <Margin1 />
-      <CardSelector></CardSelector>
+      <CardSelector selectedCardId={selectedCardId} onChange={setSelectedCardId} />
       <Margin1 />
-      <CardImg></CardImg>
+      <CardImgWrapper>
+        {selectedCard && <CardImg selectedImgUrl={selectedCard.imageUrl} />}
+      </CardImgWrapper>
       <Margin2 />
       <CardMent />
       <Margin3 />

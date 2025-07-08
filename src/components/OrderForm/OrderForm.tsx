@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import CardSelector from './CardSelector';
+import Card from './Card';
 
 const Wrapper = styled.section(({ theme }) => ({
   width: '100%',
@@ -10,7 +10,7 @@ const Wrapper = styled.section(({ theme }) => ({
 const OrderForm = () => {
   return (
     <Wrapper>
-      <CardSelector />
+      <Card />
     </Wrapper>
   );
 };

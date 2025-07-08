@@ -31,19 +31,19 @@ const CardImg = styled.img`
   height: 100%;
 `;
 
-const CardSelector = () => {
-  const [selectedCardId, setSelectedCardId] = useState<number | null>(904);
-  const handleSelectedCard = (id: number) => {
-    setSelectedCardId(id);
-  };
+type CardSelectorProps = {
+  selectedCardId: number | null;
+  onChange: (id: number) => void;
+};
 
+const CardSelector = ({ selectedCardId, onChange }: CardSelectorProps) => {
   return (
     <Wrapper>
       <Container>
         {MOCK_CARDFORM_LIST.map((card) => (
           <Card
             key={card.id}
-            onClick={() => handleSelectedCard(card.id)}
+            onClick={() => onChange(card.id)}
             selected={selectedCardId === card.id}
           >
             <CardImg src={card.thumbUrl} alt={card.defaultTextMessage} />
