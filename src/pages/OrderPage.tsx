@@ -1,5 +1,3 @@
-// src/pages/OrderPage.tsx
-/** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -10,7 +8,6 @@ import { rankingAll } from '@/data/rankings';
 import { messageCardTemplates } from '@/data/messageCards';
 import { palette, spacing, typography } from '@/styles/theme';
 
-// --- Styles ---
 const pageWrapper = css`
   padding: ${spacing.spacing4} 0 100px 0;
 `;
@@ -22,31 +19,30 @@ const cardSelector = css`
     overflow-x: auto;
     -ms-overflow-style: none;
     scrollbar-width: none;
-    &::-webkit-scrollbar {
-      display: none;
-    }
   }
   .thumb-btn {
     border: 2px solid transparent;
-    border-radius: 8px;
+    border-radius: 12px;
     padding: 0;
     cursor: pointer;
     transition: border-color 0.2s;
     flex-shrink: 0;
     &.active { border-color: ${palette.primary}; }
-    img { width: 80px; height: 80px; display: block; }
+    img { width: 80px; height: 50px; display: block; }
   }
 `;
 const cardPreview = css`
   width: 100%;
+  max-width: 720px;
   padding: 0 ${spacing.spacing4};
   margin-top: ${spacing.spacing4};
   aspect-ratio: 1.5 / 1;
-  img { width: 100%; height: 100%; object-fit: contain; border-radius: 8px; }
+  display: flex;
+  justify-content: center;
+  img { width: 50%; height: 50%; object-fit: contain; border-radius: 30px; }
 `;
 const messageGroup = css`
   padding: 0 ${spacing.spacing4};
-  margin-top: ${spacing.spacing4};
   textarea {
     width: 100%;
     padding: 12px;
@@ -60,26 +56,31 @@ const messageGroup = css`
 const divider = css`
   height: 8px;
   background-color: ${palette.gray100};
-  margin: ${spacing.spacing6} 0;
+  margin: ${spacing.spacing2} 0;
   border: none;
 `;
 const formSection = css`
-  padding: 0 ${spacing.spacing4};
+  padding: 0 ${spacing.spacing7};
   h3 {
     font-size: 18px;
     font-weight: bold;
-    margin-bottom: ${spacing.spacing4};
+    margin-bottom: ${spacing.spacing1};
   }
 `;
 const formGroup = css`
-  margin-bottom: ${spacing.spacing5};
+  display: flex;
+  align-items: center;
+  margin-bottom: ${spacing.spacing3};
   label {
+    flex-basis: 80px;
+    flex-shrink: 0;
     font-weight: bold;
     font-size: 14px;
     display: block;
     margin-bottom: ${spacing.spacing2};
   }
   input {
+    flex: 1;
     width: 100%;
     padding: 12px;
     border: 1px solid ${palette.gray300};
@@ -92,7 +93,7 @@ const formGroup = css`
     margin-top: ${spacing.spacing2};
   }
 `;
-const errorCss = css`
+const error = css`
   font-size: 12px;
   color: ${palette.red600};
   margin-top: 4px;
@@ -108,6 +109,40 @@ const footer = css`
   background: ${palette.gray00};
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
 `;
+
+const productInfo = css`
+  display: flex;
+  gap: ${spacing.spacing3};
+  padding: ${spacing.spacing3};
+  border: 1px solid ${palette.gray200};
+  border-radius: 8px;
+
+  img {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+  .details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: ${spacing.spacing1};
+    .brand {
+      font-size: 12px;
+      color: ${palette.gray700};
+    }
+    .name {
+      font-weight: bold;
+      color: ${palette.gray800};
+    }
+    .price {
+      font-weight: bold;
+      font-size: 16px;
+    }
+  }
+`;
+
 const submitButton = css`
   width: 100%;
   padding: 14px 0;
@@ -148,17 +183,17 @@ const OrderPage = () => {
       [name]: name === 'quantity' ? Number(value) : value,
     }));
   };
-  
+
   const validate = () => {
     const newErrors: Record<string, string> = {};
-    if (!formValues.senderName.trim()) newErrors.senderName = '보내는 사람 이름은 필수예요.';
-    if (!formValues.recipientName.trim()) newErrors.recipientName = '받는 사람 이름은 필수예요.';
+    if (!formValues.senderName.trim()) newErrors.senderName = '이름을 입력해주세요.';
+    if (!formValues.recipientName.trim()) newErrors.recipientName = '이름을 입력해주세요.';
     if (!formValues.recipientPhone.trim()) {
-      newErrors.recipientPhone = '받는 사람 전화번호는 필수예요.';
+      newErrors.recipientPhone = '전화번호를 입력해주세요.';
     } else if (!phoneRegex.test(formValues.recipientPhone)) {
-      newErrors.recipientPhone = '전화번호 형식이 올바르지 않아요 (01012341234).';
+      newErrors.recipientPhone = '올바른 전화번호 형식이 아닙니다';
     }
-    if (formValues.quantity < 1) newErrors.quantity = '수량은 1개 이상이어야 해요.';
+    if (formValues.quantity < 1) newErrors.quantity = '구매 수량은 1개 이상이어야 합니다.';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -179,6 +214,8 @@ const OrderPage = () => {
       </Layout>
     );
   }
+
+  const totalPrice = item.price.sellingPrice * formValues.quantity;
 
   return (
     <Layout>
@@ -224,7 +261,7 @@ const OrderPage = () => {
               onChange={handleChange}
             />
             <p className="helper-text">* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</p>
-            {errors.senderName && <div css={errorCss}>{errors.senderName}</div>}
+            {errors.senderName && <div css={error}>{errors.senderName}</div>}
           </div>
         </div>
 
@@ -234,25 +271,40 @@ const OrderPage = () => {
           <h3>받는 사람</h3>
           <div css={formGroup}>
             <label>이름</label>
-            <input type="text" name="recipientName" placeholder="이름을 입력하세요." value={formValues.recipientName} onChange={handleChange} />
-            {errors.recipientName && <div css={errorCss}>{errors.recipientName}</div>}
+            <input type="text" name="recipientName" placeholder="이름을 입력해주세요." value={formValues.recipientName} onChange={handleChange} />
+            {errors.recipientName && <div css={error}>{errors.recipientName}</div>}
           </div>
           <div css={formGroup}>
             <label>전화번호</label>
-            <input type="tel" name="recipientPhone" placeholder="전화번호를 입력하세요." value={formValues.recipientPhone} onChange={handleChange} />
-            {errors.recipientPhone && <div css={errorCss}>{errors.recipientPhone}</div>}
+            <input type="tel" name="recipientPhone" placeholder="전화번호를 입력해주세요." value={formValues.recipientPhone} onChange={handleChange} />
+            {errors.recipientPhone && <div css={error}>{errors.recipientPhone}</div>}
           </div>
           <div css={formGroup}>
             <label>수량</label>
             <input type="number" name="quantity" value={formValues.quantity} onChange={handleChange} min="1" />
-            {errors.quantity && <div css={errorCss}>{errors.quantity}</div>}
+            {errors.quantity && <div css={error}>{errors.quantity}</div>}
           </div>
         </div>
       </div>
 
+      <hr css={divider} />
+
+      <div css={formSection}>
+        <h3>상품 정보</h3>
+        <div css={productInfo}>
+          <img src={item.imageURL} alt={item.name} />
+          <div className="details">
+            <span className="brand">{item.brandInfo.name}</span>
+            <span className="name">{item.name}</span>
+            <span className="price">{item.price.sellingPrice.toLocaleString()}원</span>
+          </div>
+        </div>
+      </div>
+
+
       <footer css={footer}>
         <button type="button" css={submitButton} onClick={handleSubmit}>
-          {item.price.sellingPrice.toLocaleString()}원 주문하기
+          {totalPrice.toLocaleString()}원 주문하기
         </button>
       </footer>
     </Layout>
