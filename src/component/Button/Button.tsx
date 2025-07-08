@@ -2,8 +2,8 @@ import type { ComponentPropsWithoutRef } from 'react'
 import styled from '@emotion/styled'
 import { theme } from '@/theme'
 
-type Variant = 'primary' | 'outlined'
-type Size = 'large' | 'medium' | 'small'
+type Variant = 'primary' | 'secondory' | 'outlined'
+type Size = 'large' | 'medium' | 'small' | 'verySmall'
 
 interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
   variant?: Variant
@@ -19,6 +19,14 @@ const variantStyles = {
     hoverBackground: theme.colors.semanticColor.brandColor.kakaoYellowHover,
     color: theme.colors.semanticColor.textColor.default,
     inactiveColor: theme.colors.colorScale.gray[700],
+    border: 'none',
+  },
+  secondory: {
+    background: theme.colors.colorScale.gray[300],
+    inactiveBackground: theme.colors.colorScale.gray[300],
+    hoverBackground: theme.colors.colorScale.gray[500],
+    color: theme.colors.semanticColor.textColor.default,
+    inactiveColor: theme.colors.semanticColor.textColor.default,
     border: 'none',
   },
   outlined: {
@@ -50,6 +58,12 @@ const sizeStyles = {
     padding: `0 ${theme.spacing[4]}`,
     typography: theme.typography.label2Regular,
   },
+  verySmall: {
+    width: '100px',
+    height: theme.spacing[9],
+    padding: `0 ${theme.spacing[3]}`,
+    typography: theme.typography.label2Regular,
+  },
 }
 
 const setButtonStyle = ({
@@ -79,7 +93,6 @@ const setButtonStyle = ({
 
 const StyledButton = styled.button<ButtonProps>`
   display: block;
-  margin: 0 auto;
   border-radius: ${theme.spacing[1]};
 
   ${({

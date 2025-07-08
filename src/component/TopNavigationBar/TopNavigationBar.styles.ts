@@ -6,6 +6,14 @@ export const Icon = styled.div`
   height: ${theme.spacing[7]};
   cursor: pointer;
 `
+
+export const MainTitle = styled.p`
+  ${theme.typography.title1Bold};
+  margin: ${theme.spacing[0]};
+  align-items: center;
+  cursor: pointer;
+`
+
 export const Nav = styled.nav`
   display: flex;
   top: ${theme.spacing[0]};
@@ -15,5 +23,4 @@ export const Nav = styled.nav`
   z-index: 100;
   padding: ${theme.spacing[3]} ${theme.spacing[4]};
   background-color: ${theme.colors.colorScale.gray[0]};
-  ${theme.typography.title1Bold};
 `

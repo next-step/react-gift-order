@@ -1,13 +1,8 @@
 import { useState, useEffect } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 import { products } from '@/data/products'
 import type { Product } from '@/data/products'
-import {
-  Container,
-  GenderTab,
-  TypeTab,
-  Title,
-} from './TrendingGiftRanking.styles'
+import * as S from './TrendingGiftRanking.styles'
 import { FilterGender, FilterType } from './TrendingGiftRankingFilter'
 import ProductCard from '@/component/ProductCard/ProductCard'
 
@@ -26,6 +21,8 @@ export type Gender = (typeof genderList)[number]['label']
 export type Type = (typeof typeList)[number]
 
 const TrendingGiftRanking = () => {
+  const navigate = useNavigate()
+
   const [searchParams, setSearchParams] = useSearchParams()
 
   const selectedGender = searchParams.get('gender') ?? genderList[0].label
@@ -51,6 +48,7 @@ const TrendingGiftRanking = () => {
 
   const handleProductSelect = (product: Product) => {
     setSelectedProduct(product)
+    navigate(`/order?productId=${product.id}`)
   }
 
   const handleToggleView = () => {
@@ -63,40 +61,29 @@ const TrendingGiftRanking = () => {
     }
   }
 
-  // 피드백 : 유효하지 않은 쿼리 스트링의 경우 처리
   useEffect(() => {
     const params = new URLSearchParams(searchParams)
-    let isValid = true
+    const prevGender = params.get('gender')
+    const prevType = params.get('type')
 
-    if (!genderList.map((g) => g.label).includes(selectedGender as Gender)) {
-      params.set('gender', genderList[0].label)
-      isValid = false
-    }
+    const isGenderValid = genderList.some((g) => g.label === selectedGender)
+    const isTypeValid = typeList.includes(selectedType as Type)
 
-    if (!typeList.includes(selectedType as Type)) {
-      params.set('type', typeList[0])
-      isValid = false
-    }
+    if (!isGenderValid) params.set('gender', genderList[0].label)
+    if (!isTypeValid) params.set('type', typeList[0])
 
-    if (!isValid) setSearchParams(params, { replace: true })
+    const nextGender = params.get('gender')
+    const nextType = params.get('type')
+
+    const isChanged = prevGender !== nextGender || prevType !== nextType
+
+    if (isChanged) setSearchParams(params, { replace: true })
   }, [searchParams, selectedGender, selectedType, setSearchParams])
 
-  useEffect(() => {
-    console.log('선택된 Gender:', selectedGender)
-  }, [selectedGender])
-
-  useEffect(() => {
-    console.log('선택된 Type:', selectedType)
-  }, [selectedType])
-
-  useEffect(() => {
-    console.log('선택된 Product:', selectedProduct)
-  }, [selectedProduct])
-
   return (
-    <Container>
-      <Title>실시간 급상승 선물랭킹</Title>
-      <GenderTab>
+    <S.Container>
+      <S.Title>실시간 급상승 선물랭킹</S.Title>
+      <S.GenderTab>
         {genderList.map(({ icon, label }) => (
           <FilterGender
             key={label}
@@ -106,9 +93,9 @@ const TrendingGiftRanking = () => {
             onClick={handleGenderClick}
           />
         ))}
-      </GenderTab>
+      </S.GenderTab>
 
-      <TypeTab>
+      <S.TypeTab>
         {typeList.map((label) => (
           <FilterType
             key={label}
@@ -117,7 +104,7 @@ const TrendingGiftRanking = () => {
             onClick={handleTypeSelect}
           />
         ))}
-      </TypeTab>
+      </S.TypeTab>
 
       <ProductCard
         products={products}
@@ -126,7 +113,7 @@ const TrendingGiftRanking = () => {
         onProductSelect={handleProductSelect}
         onToggleView={handleToggleView}
       />
-    </Container>
+    </S.Container>
   )
 }
 

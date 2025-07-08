@@ -1,15 +1,16 @@
-import { BrowserRouter } from 'react-router-dom'
 import { Global } from '@emotion/react'
 import { globalStyle } from '@/styles/GlobalStyle'
-import AppRouter from '@/routes/Router'
+import { RouterProvider } from 'react-router-dom'
+import { UserProvider } from '@/contexts/UserContext'
+import Router from '@/routes/Router'
 
 const App = () => {
   return (
     <>
       <Global styles={globalStyle} />
-      <BrowserRouter>
-        <AppRouter />
-      </BrowserRouter>
+      <UserProvider>
+        <RouterProvider router={Router} />
+      </UserProvider>
     </>
   )
 }

@@ -1,13 +1,6 @@
 import { categories } from '@/data/categories'
-import { useState, useEffect } from 'react'
-import {
-  Container,
-  Title,
-  Grid,
-  Item,
-  ItemImage,
-  ItemName,
-} from './GiftCategory.styles'
+import { useState } from 'react'
+import * as S from './GiftCategory.styles'
 
 const GiftCategory = () => {
   const [selectedId, setSelectedId] = useState<number | null>(null)
@@ -16,22 +9,18 @@ const GiftCategory = () => {
     setSelectedId(id)
   }
 
-  useEffect(() => {
-    console.log('선택된 Category ID:', selectedId)
-  }, [selectedId])
-
   return (
-    <Container>
-      <Title>선물 테마</Title>
-      <Grid>
+    <S.Container>
+      <S.Title>선물 테마</S.Title>
+      <S.Grid>
         {categories.map((item) => (
-          <Item key={item.themeId} onClick={() => handleSelect(item.themeId)}>
-            <ItemImage src={item.image} alt={item.name} />
-            <ItemName>{item.name}</ItemName>
-          </Item>
+          <S.Item key={item.themeId} onClick={() => handleSelect(item.themeId)}>
+            <S.ItemImage src={item.image} alt={item.name} />
+            <S.ItemName>{item.name}</S.ItemName>
+          </S.Item>
         ))}
-      </Grid>
-    </Container>
+      </S.Grid>
+    </S.Container>
   )
 }
 
