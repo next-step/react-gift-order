@@ -1,6 +1,6 @@
-import styled from '@emotion/styled';
-import type { TrendingGiftsType } from '@/types/TrendingGiftsType';
-import ProductCard from '../ProductCard/ProductCard';
+import styled from "@emotion/styled";
+import type { TrendingGiftsType } from "@/types/TrendingGiftsType";
+import ProductCard from "../ProductCard/ProductCard";
 
 const ProductGridContainer = styled.div`
   width: 95%;
@@ -19,7 +19,8 @@ function ProductGrid({ products }: ProductGridPropsType) {
     <ProductGridContainer>
       {products.map((product, idx) => (
         <ProductCard
-          key={idx}
+          key={product.id}
+          id={product.id}
           imageURL={product.imageURL}
           name={product.name}
           brandName={product.brandInfo.name}

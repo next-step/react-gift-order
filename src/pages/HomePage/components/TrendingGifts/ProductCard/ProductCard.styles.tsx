@@ -1,4 +1,4 @@
-import styled from '@emotion/styled';
+import styled from "@emotion/styled";
 
 export const ProductCardContainer = styled.div`
   position: relative;
@@ -6,6 +6,7 @@ export const ProductCardContainer = styled.div`
   flex-direction: column;
   gap: ${({ theme }) => theme.layout.grid.gaps.sm};
   margin-bottom: ${({ theme }) => theme.spacing[5]};
+  cursor: pointer;
 `;
 
 export const RankBadge = styled.div<{ isTopThree: boolean }>`
@@ -56,5 +57,6 @@ export const ProductPrice = styled.p`
 `;
 
 export const PriceAmount = styled.span`
-  font-weight: ${({ theme }) => theme.typography.subtitle.subtitle1Bold.fontWeight};
+  font-weight: ${({ theme }) =>
+    theme.typography.subtitle.subtitle1Bold.fontWeight};
 `;

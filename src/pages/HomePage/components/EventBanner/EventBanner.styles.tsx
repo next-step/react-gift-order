@@ -1,4 +1,4 @@
-import styled from '@emotion/styled';
+import styled from "@emotion/styled";
 
 export const EventBannerSection = styled.section`
   display: flex;
@@ -30,6 +30,7 @@ export const SectionTitle = styled.p`
 
 export const SectionSubTitle = styled.p`
   font-size: ${({ theme }) => theme.typography.label.label2Regular.fontSize};
-  font-weight: ${({ theme }) => theme.typography.label.label2Regular.fontWeight};
+  font-weight: ${({ theme }) =>
+    theme.typography.label.label2Regular.fontWeight};
   color: ${({ theme }) => theme.colors.gray[700]};
 `;

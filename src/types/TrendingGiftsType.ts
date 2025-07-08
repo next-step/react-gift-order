@@ -1,19 +1,19 @@
-export type TrendingGiftsType = {
+export interface TrendingGiftsType {
   id: number;
   name: string;
   imageURL: string;
   price: PriceInfoType;
   brandInfo: BrandInfoType;
-};
+}
 
-type PriceInfoType = {
+interface PriceInfoType {
   basicPrice: number;
   discountRate: number;
   sellingPrice: number;
-};
+}
 
-type BrandInfoType = {
+interface BrandInfoType {
   id: number;
   name: string;
   imageURL: string;
-};
+}

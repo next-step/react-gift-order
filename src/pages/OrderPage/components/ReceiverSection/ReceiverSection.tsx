@@ -1,0 +1,102 @@
+import Input from "@/components/common/Input/Input";
+import RECEIVER_SECTION_CONSTANTS from "@/pages/OrderPage/constants/receiverSection";
+import {
+  FieldLabel,
+  FormContainer,
+  FormField,
+  ReceiverSection,
+  SectionTitle,
+} from "./ReceiverSection.styles";
+
+interface ReceiverSectionProps {
+  receiverName: string;
+  receiverPhone: string;
+  quantity: string;
+  handleReceiverNameChange: (value: string) => void;
+  handleReceiverPhoneChange: (value: string) => void;
+  handleQuantityChange: (value: string) => void;
+  validateReceiverName: (value: string) => void;
+  validateReceiverPhone: (value: string) => void;
+  validateQuantity: (value: string) => void;
+  receiverNameErrorMessage: string;
+  receiverPhoneErrorMessage: string;
+  quantityErrorMessage: string;
+  hasReceiverNameError: boolean;
+  hasReceiverPhoneError: boolean;
+  hasQuantityError: boolean;
+}
+
+function ReceiverSectionComponent({
+  receiverName,
+  receiverPhone,
+  quantity,
+  handleReceiverNameChange,
+  handleReceiverPhoneChange,
+  handleQuantityChange,
+  validateReceiverName,
+  validateReceiverPhone,
+  validateQuantity,
+  receiverNameErrorMessage,
+  receiverPhoneErrorMessage,
+  quantityErrorMessage,
+  hasReceiverNameError,
+  hasReceiverPhoneError,
+  hasQuantityError,
+}: ReceiverSectionProps) {
+  return (
+    <ReceiverSection>
+      <SectionTitle>{RECEIVER_SECTION_CONSTANTS.TITLE}</SectionTitle>
+      <FormContainer>
+        <FormField>
+          <FieldLabel>{RECEIVER_SECTION_CONSTANTS.NAME_LABEL}</FieldLabel>
+          <Input
+            type="text"
+            placeholder={RECEIVER_SECTION_CONSTANTS.NAME_PLACEHOLDER}
+            value={receiverName}
+            onChange={(e) => {
+              handleReceiverNameChange(e.target.value);
+              validateReceiverName(e.target.value);
+            }}
+            hasError={hasReceiverNameError}
+            errorMessage={
+              receiverNameErrorMessage || RECEIVER_SECTION_CONSTANTS.NAME_ERROR
+            }
+          />
+        </FormField>
+        <FormField>
+          <FieldLabel>{RECEIVER_SECTION_CONSTANTS.PHONE_LABEL}</FieldLabel>
+          <Input
+            type="tel"
+            placeholder={RECEIVER_SECTION_CONSTANTS.PHONE_PLACEHOLDER}
+            value={receiverPhone}
+            onChange={(e) => {
+              handleReceiverPhoneChange(e.target.value);
+              validateReceiverPhone(e.target.value);
+            }}
+            hasError={hasReceiverPhoneError}
+            errorMessage={receiverPhoneErrorMessage}
+          />
+        </FormField>
+        <FormField>
+          <FieldLabel>{RECEIVER_SECTION_CONSTANTS.QUANTITY_LABEL}</FieldLabel>
+          <Input
+            type="number"
+            min="1"
+            placeholder={RECEIVER_SECTION_CONSTANTS.QUANTITY_PLACEHOLDER}
+            value={quantity}
+            onChange={(e) => {
+              handleQuantityChange(e.target.value);
+              validateQuantity(e.target.value);
+            }}
+            hasError={hasQuantityError}
+            errorMessage={
+              quantityErrorMessage || RECEIVER_SECTION_CONSTANTS.QUANTITY_ERROR
+            }
+          />
+        </FormField>
+      </FormContainer>
+    </ReceiverSection>
+  );
+}
+
+export default ReceiverSectionComponent;
