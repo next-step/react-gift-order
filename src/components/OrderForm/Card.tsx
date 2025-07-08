@@ -48,7 +48,7 @@ const Card = () => {
       <Margin1 />
       {selectedCard && <CardImg selectedImgUrl={selectedCard.imageUrl} />}
       <Margin2 />
-      <Message value={message} onChange={(e) => setMessage(e.target.vaule)} />
+      <Message value={message} onChange={(e) => setMessage(e.target.value)} />
       <Margin3 />
     </Wrapper>
   );
