@@ -1,28 +1,22 @@
 import { useInput } from "@/hooks/useInput";
 import { validateQuantity } from "../../utils/validation";
-import { useMemo } from "react";
 import { VALIDATE_LABELS } from "../../constants/validateLabels";
 
 export function useReceiverQuantityInput() {
   const quantityInput = useInput({
     initialValue: "1",
-    validators: {
-      invalidFormat: (value: string) => validateQuantity(value),
+    validator: (value: string) => {
+      if (!validateQuantity(value)) {
+        return VALIDATE_LABELS.QUANTITY_INVALID;
+      }
     },
   });
-
-  const quantityErrorMessage = useMemo(() => {
-    if (quantityInput.errors.invalidFormat) {
-      return VALIDATE_LABELS.QUANTITY_INVALID;
-    }
-    return null;
-  }, [quantityInput.errors.invalidFormat]);
 
   return {
     quantity: quantityInput.value,
     handleQuantityChange: quantityInput.handleValueChange,
     validateQuantity: quantityInput.validate,
-    quantityErrorMessage,
+    quantityErrorMessage: quantityInput.errorMessage,
     hasQuantityError: quantityInput.hasError,
   };
 }

@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { useInput } from "@/hooks/useInput";
 import { isNotEmpty } from "@/utils/validation";
 import { validateEmailFormat } from "../utils/validation";
@@ -7,27 +6,21 @@ import { LOGIN_ERROR_MESSAGES } from "../constants/labels";
 export function useEmailValidation(initialValue = "") {
   const emailInput = useInput({
     initialValue,
-    validators: {
-      isEmpty: (value: string) => isNotEmpty(value),
-      invalidFormat: (value: string) => validateEmailFormat(value),
+    validator: (value: string) => {
+      if (!isNotEmpty(value)) {
+        return LOGIN_ERROR_MESSAGES.EMAIL_EMPTY;
+      }
+      if (!validateEmailFormat(value)) {
+        return LOGIN_ERROR_MESSAGES.EMAIL_FORMAT_INVALID;
+      }
     },
   });
-
-  const emailErrorMessage = useMemo(() => {
-    if (emailInput.errors.isEmpty) {
-      return LOGIN_ERROR_MESSAGES.EMAIL_EMPTY;
-    }
-    if (emailInput.errors.invalidFormat) {
-      return LOGIN_ERROR_MESSAGES.EMAIL_FORMAT_INVALID;
-    }
-    return null;
-  }, [emailInput.errors.isEmpty, emailInput.errors.invalidFormat]);
 
   return {
     email: emailInput.value,
     handleEmailValueChange: emailInput.handleValueChange,
     validateEmail: emailInput.validate,
-    emailErrorMessage,
+    emailErrorMessage: emailInput.errorMessage,
     hasEmailError: emailInput.hasError,
   };
 }

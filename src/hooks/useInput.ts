@@ -1,39 +1,29 @@
 import { useState } from "react";
 
-type ValidatorMap = Record<string, (value: string) => boolean>;
-
-interface UseInputParams<T extends ValidatorMap> {
+interface UseInputParams {
   initialValue?: string;
-  validators: T;
+  validator: (value: string) => string | undefined;
 }
 
 /**
  * 범용 입력 필드 상태 관리 및 검증 훅
  *
- * 입력 필드의 상태와 검증 로직만을 담당하며, 결합도를 줄이기 위해 에러 메시지 로직은 처리하지 않음
- * 에러 메시지는 사용처에서 errors 객체를 기반으로 처리해야 함
+ * 입력 필드의 상태와 검증 로직을 담당하며, validator 함수에서 직접 에러 메시지를 반환함
  *
  * @param initialValue - 입력 필드의 초기값
- * @param validators - 검증 함수들의 객체
+ * @param validator - 검증 함수 (에러 메시지 또는 undefined 반환)
  * @returns
  *   - value: 현재 입력값
- *   - errors: validators와 동일한 구조의 에러 객체 (각 키별로 boolean 값)
+ *   - errorMessage: 현재 에러 메시지 (없으면 undefined)
  *   - handleValueChange: 입력값 변경 함수
  *   - validate: 검증 실행 함수
- *   - hasError: 하나라도 에러가 있는지 여부
+ *   - hasError: 에러가 있는지 여부
  */
-export function useInput<T extends ValidatorMap>({
-  initialValue = "",
-  validators,
-}: UseInputParams<T>) {
+export function useInput({ initialValue = "", validator }: UseInputParams) {
   const [value, setValue] = useState(initialValue);
-  const [errors, setErrors] = useState<{ [K in keyof T]: boolean }>(() => {
-    const initialErrors = {} as { [K in keyof T]: boolean };
-    Object.keys(validators).forEach((key) => {
-      initialErrors[key as keyof T] = false;
-    });
-    return initialErrors;
-  });
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(
+    undefined
+  );
 
   const handleValueChange = (newValue: string) => {
     setValue(newValue);
@@ -41,20 +31,15 @@ export function useInput<T extends ValidatorMap>({
 
   const validate = (valueToValidate: string) => {
     const trimmedValue = valueToValidate.trim();
-    const newErrors = {} as { [K in keyof T]: boolean };
-
-    Object.entries(validators).forEach(([key, validatorFn]) => {
-      newErrors[key as keyof T] = !validatorFn(trimmedValue);
-    });
-
-    setErrors(newErrors);
+    const error = validator(trimmedValue);
+    setErrorMessage(error);
   };
 
-  const hasError = Object.values(errors).some((error) => error);
+  const hasError = errorMessage !== undefined;
 
   return {
     value,
-    errors,
+    errorMessage,
     handleValueChange,
     validate,
     hasError,

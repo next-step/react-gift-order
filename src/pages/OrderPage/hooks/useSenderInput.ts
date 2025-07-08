@@ -1,28 +1,22 @@
 import { useInput } from "@/hooks/useInput";
 import { isNotEmpty } from "@/utils/validation";
-import { useMemo } from "react";
 import { VALIDATE_LABELS } from "../constants/validateLabels";
 
 export function useSenderInput(initialValue = "") {
   const senderInput = useInput({
     initialValue,
-    validators: {
-      isEmpty: (value: string) => isNotEmpty(value),
+    validator: (value: string) => {
+      if (!isNotEmpty(value)) {
+        return VALIDATE_LABELS.NAME_EMPTY;
+      }
     },
   });
-
-  const senderNameErrorMessage = useMemo(() => {
-    if (senderInput.errors.isEmpty) {
-      return VALIDATE_LABELS.NAME_EMPTY;
-    }
-    return null;
-  }, [senderInput.errors.isEmpty]);
 
   return {
     senderName: senderInput.value,
     handleSenderNameChange: senderInput.handleValueChange,
     validateSenderName: senderInput.validate,
-    senderNameErrorMessage,
+    senderNameErrorMessage: senderInput.errorMessage,
     hasSenderNameError: senderInput.hasError,
   };
 }

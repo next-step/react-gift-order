@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import type { OrderCardType } from "@/types/OrderCardType";
 import { isNotEmpty } from "@/utils/validation";
 import { useInput } from "@/hooks/useInput";
@@ -11,8 +11,10 @@ export function useCardSelection(initialCards: OrderCardType[]) {
 
   const messageInput = useInput({
     initialValue: initialCards[0].defaultTextMessage,
-    validators: {
-      isEmpty: (value: string) => isNotEmpty(value),
+    validator: (value: string) => {
+      if (!isNotEmpty(value)) {
+        return VALIDATE_LABELS.MESSAGE_EMPTY;
+      }
     },
   });
 
@@ -21,20 +23,13 @@ export function useCardSelection(initialCards: OrderCardType[]) {
     messageInput.handleValueChange(card.defaultTextMessage);
   };
 
-  const messageErrorMessage = useMemo(() => {
-    if (messageInput.errors.isEmpty) {
-      return VALIDATE_LABELS.MESSAGE_EMPTY;
-    }
-    return null;
-  }, [messageInput.errors.isEmpty]);
-
   return {
     selectedCard,
     message: messageInput.value,
     handleCardSelect,
     handleMessageChange: messageInput.handleValueChange,
     validateMessage: messageInput.validate,
-    cardSelectionErrorMessage: messageErrorMessage,
+    cardSelectionErrorMessage: messageInput.errorMessage,
     hasCardSelectionError: messageInput.hasError,
   };
 }
