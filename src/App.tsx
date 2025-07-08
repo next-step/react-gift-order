@@ -11,22 +11,10 @@ function App() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route
-        path="/my"
-        element={
-          <PrivateRoute>
-            <MyPage />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/order/:id"
-        element={
-          <PrivateRoute>
-            <OrderPage />
-          </PrivateRoute>
-        }
-      />
+      <Route element={<PrivateRoute />}>
+        <Route path="/my" element={<MyPage />} />
+        <Route path="/order/:id" element={<OrderPage />} />
+      </Route>
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   )
