@@ -50,6 +50,7 @@ const ReceiverForm = ({ values, errors, onChange }: ReceiverFormProps) => {
 export default ReceiverForm;
 
 const Wrapper = styled.section`
+  margin: ${({ theme }) => theme.spacing[2]} ${({ theme }) => theme.spacing[0]};
   padding: ${({ theme }) => theme.spacing[5]};
   background-color: ${({ theme }) => theme.color.gray[100]};
   border-radius: 8px;

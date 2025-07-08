@@ -34,6 +34,8 @@ export default CardSelector;
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
+  margin: ${({ theme }) => theme.spacing[2]} ${({ theme }) => theme.spacing[0]};
+  padding: ${({ theme }) => theme.spacing[4]};
   gap: ${({ theme }) => theme.spacing[5]};
 `;
 

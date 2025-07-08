@@ -28,6 +28,7 @@ const SenderForm = ({ name, value, onChange, error }: SenderFormProps) => {
 export default SenderForm;
 
 const Wrapper = styled.section`
+  margin: ${({ theme }) => theme.spacing[2]} ${({ theme }) => theme.spacing[0]};
   padding: ${({ theme }) => theme.spacing[5]};
   background-color: ${({ theme }) => theme.color.gray[100]};
   border-radius: 8px;

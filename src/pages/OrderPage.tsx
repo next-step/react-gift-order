@@ -108,7 +108,6 @@ const OrderPage = () => {
 export default OrderPage;
 
 const Main = styled.main`
-  padding: ${({ theme }) => theme.spacing[5]};
   background-color: ${({ theme }) => theme.color.semantic.background.default};
 `;
 

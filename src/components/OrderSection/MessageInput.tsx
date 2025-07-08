@@ -24,6 +24,7 @@ const MessageInput = ({ name, value, onChange, error }: MessageInputProps) => {
 export default MessageInput;
 
 const Wrapper = styled.div`
+  margin: ${({ theme }) => theme.spacing[2]} ${({ theme }) => theme.spacing[0]};
   padding: ${({ theme }) => theme.spacing[5]};
   background-color: ${({ theme }) => theme.color.gray[100]};
   border-radius: 8px;

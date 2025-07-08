@@ -7,7 +7,7 @@ interface ProductInfoProps {
 
 const ProductInfo = ({ product }: ProductInfoProps) => {
   return (
-    <>
+    <Wrapper>
       <Label>상품 정보</Label>
       <ProductWrapper>
         <ProductImage src={product.imageURL} alt={product.name} />
@@ -20,12 +20,16 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
           </ProductPrice>
         </ProductDetails>
       </ProductWrapper>
-    </>
+    </Wrapper>
   );
 };
 
 export default ProductInfo;
 
+const Wrapper = styled.div`
+  margin: ${({ theme }) => theme.spacing[2]} ${({ theme }) => theme.spacing[0]};
+  padding: ${({ theme }) => theme.spacing[4]};
+`;
 const Label = styled.p`
   ${({ theme }) => theme.typography.title.title2Bold};
   color: ${({ theme }) => theme.color.semantic.text.default};
