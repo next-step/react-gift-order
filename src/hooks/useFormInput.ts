@@ -1,6 +1,8 @@
 import { useState } from "react";
 
-const useFormInput = (validator: (value: string) => string) => {
+type ValidatorFunction = (value: string) => string;
+
+const useFormInput = (validator: ValidatorFunction) => {
   const [value, setValue] = useState("");
   const [error, setError] = useState("");
 

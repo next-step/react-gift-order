@@ -3,17 +3,33 @@ import styled from "@emotion/styled";
 import { useLocation, useNavigate } from "react-router";
 import useFormInput from "@/hooks/useFormInput";
 import { checkEmailError, checkPasswordError } from "@/utils/validation";
-import ErrorMessage from "./ErrorMessage";
+import ErrorMessage from "../common/ErrorMessage";
+import { useUserInfo } from "@/contexts/UserInfoContext";
 
 const LoginForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const emailInput = useFormInput(checkEmailError);
   const passwordInput = useFormInput(checkPasswordError);
+  const user = useUserInfo();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    navigate(location.state?.from || ROUTE_PATH.HOME);
+
+    sessionStorage.setItem(
+      "kakaotech/userInfo",
+      JSON.stringify({
+        email: emailInput.value,
+      }),
+    );
+    user?.setUserInfo({
+      email: emailInput.value,
+      name: emailInput.value.split("@")[0],
+    });
+
+    const redirectPath = new URLSearchParams(location.search).get("redirect");
+
+    navigate(redirectPath || ROUTE_PATH.HOME);
   };
 
   return (

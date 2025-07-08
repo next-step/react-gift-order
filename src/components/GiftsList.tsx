@@ -1,6 +1,8 @@
 import styled from "@emotion/styled";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import GiftItem from "./GiftItem";
+import { ROUTE_PATH } from "@/routes/paths";
 import type { Gift } from "@/types/gift";
 
 type GiftsListProps = {
@@ -8,7 +10,12 @@ type GiftsListProps = {
 };
 
 const GiftsList = ({ gifts }: GiftsListProps) => {
+  const navigate = useNavigate();
   const [showMore, setShowMore] = useState(false);
+
+  const handleGiftClick = (giftId: number) => {
+    navigate(`${ROUTE_PATH.ORDER.replace(":id", giftId.toString())}`);
+  };
 
   const visibleGifts = showMore ? gifts : gifts.slice(0, 6);
 
@@ -22,6 +29,7 @@ const GiftsList = ({ gifts }: GiftsListProps) => {
             rank={index + 1}
             as="button"
             type="button"
+            onClick={() => handleGiftClick(gift.id)}
           />
         ))}
       </GiftsGrid>

@@ -21,15 +21,6 @@ const GiftsRanking = () => {
     setSearchParams(searchParams, { replace: true });
   };
 
-  const duplicatedMockGifts = Array(21)
-    .fill(null)
-    .flatMap((_, i) =>
-      gifts.map(gift => ({
-        ...gift,
-        id: gift.id + i,
-      })),
-    );
-
   return (
     <Background>
       <RankingTitle>실시간 급상승 선물랭킹</RankingTitle>
@@ -55,7 +46,7 @@ const GiftsRanking = () => {
           </PresentType>
         ))}
       </PresentTypeFlex>
-      <GiftsList gifts={duplicatedMockGifts} />
+      <GiftsList gifts={gifts} />
     </Background>
   );
 };

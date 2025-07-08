@@ -1,13 +1,19 @@
 import styled from "@emotion/styled";
 import Plus from "@/components/UI/Plus";
+import { useUserInfo } from "@/contexts/UserInfoContext";
 
 const SelectFriendBox = () => {
+  const user = useUserInfo();
+  const name = user?.name;
+
   return (
     <Box>
       <PlusDiv>
         <Plus size="24px" />
       </PlusDiv>
-      <SelectText>선물할 친구를 선택해 주세요.</SelectText>
+      <SelectText>
+        {name && `${name}님! `}선물할 친구를 선택해 주세요.
+      </SelectText>
     </Box>
   );
 };
