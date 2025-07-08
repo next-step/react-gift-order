@@ -26,7 +26,7 @@ export const useLoginForm = () => {
     }
 
     login(email.value, () => {
-      const from = location.state?.from || '/my';
+      const from = location.state?.from || '/mypage';
       navigate(from, { replace: true });
     });
   };

@@ -2,7 +2,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import * as S from './styles';
 
-const My = () => {
+const MyPage = () => {
   const { userInfo, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -24,4 +24,4 @@ const My = () => {
   );
 };
 
-export default My; 
+export default MyPage; 

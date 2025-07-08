@@ -16,7 +16,7 @@ const Navigation = () => {
   };
 
   const handleLoginClick = () => {
-    navigate(isLoggedIn ? '/my' : '/login');
+    navigate(isLoggedIn ? '/mypage' : '/login');
   };
 
   return (
