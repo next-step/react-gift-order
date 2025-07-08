@@ -15,25 +15,13 @@ export function OrderPage() {
   )
 
   const {
-    selectedCard,
-    setSelectedCard,
-    message,
-    setMessage,
     sender,
-    setSender,
     receiver,
-    setReceiver,
     receiverPhone,
-    setReceiverPhone,
     quantity,
-    setQuantity,
+    card,
     isSubmitted,
     setIsSubmitted,
-    senderError,
-    receiverError,
-    receiverPhoneError,
-    messageError,
-    quantityError,
     isFormValid,
     resetForm,
   } = useOrderForm()
@@ -51,9 +39,9 @@ export function OrderPage() {
     if (isFormValid) {
       alert(`주문이 완료되었습니다.
         상품명: ${productName}
-        구매 수량: ${quantity}
-        발신자 이름: ${sender}
-        메시지: ${message}`)
+        구매 수량: ${quantity.value}
+        발신자 이름: ${sender.value}
+        메시지: ${card.message}`)
       resetForm()
     }
   }
@@ -65,38 +53,38 @@ export function OrderPage() {
         <Container>
           <form onSubmit={submitOrderForm}>
             <CardList>
-              {cardMock.map((card) => (
+              {cardMock.map((cardItem) => (
                 <CardThumbnail
-                  key={card.id}
-                  src={card.thumbUrl}
+                  key={cardItem.id}
+                  src={cardItem.thumbUrl}
                   alt="card"
                   onClick={() => {
-                    setSelectedCard(card)
-                    setMessage(card.defaultTextMessage)
+                    card.setSelectedCard(cardItem)
+                    card.setMessage(cardItem.defaultTextMessage)
                   }}
-                  isSelected={selectedCard.id === card.id}
+                  isSelected={card.selectedCard.id === cardItem.id}
                 />
               ))}
             </CardList>
 
             <SelectedCard>
-              <img src={selectedCard.imageUrl} alt="selected" />
+              <img src={card.selectedCard.imageUrl} alt="selected" />
               <textarea
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
+                value={card.message}
+                onChange={(e) => card.setMessage(e.target.value)}
                 placeholder="메시지를 입력해주세요."
               />
-              {isSubmitted && messageError && <Error>{messageError}</Error>}
+              {isSubmitted && card.error && <Error>{card.error}</Error>}
             </SelectedCard>
 
             <PersonSection>
               <PersonLabel>보내는 사람</PersonLabel>
               <input
-                value={sender}
-                onChange={(e) => setSender(e.target.value)}
+                value={sender.value}
+                onChange={(e) => sender.set(e.target.value)}
                 placeholder="이름을 입력하세요."
               />
-              {isSubmitted && senderError && <Error>{senderError}</Error>}
+              {isSubmitted && sender.error && <Error>{sender.error}</Error>}
             </PersonSection>
 
             <PersonSection>
@@ -104,23 +92,23 @@ export function OrderPage() {
               <ReceiverSection>
                 <FieldLabel>이름</FieldLabel>
                 <input
-                  value={receiver}
-                  onChange={(e) => setReceiver(e.target.value)}
+                  value={receiver.value}
+                  onChange={(e) => receiver.set(e.target.value)}
                   placeholder="이름을 입력하세요."
                 />
               </ReceiverSection>
-              {isSubmitted && receiverError && <Error>{receiverError}</Error>}
+              {isSubmitted && receiver.error && <Error>{receiver.error}</Error>}
 
               <ReceiverSection>
                 <FieldLabel>전화번호</FieldLabel>
                 <input
-                  value={receiverPhone}
-                  onChange={(e) => setReceiverPhone(e.target.value)}
+                  value={receiverPhone.value}
+                  onChange={(e) => receiverPhone.set(e.target.value)}
                   placeholder="전화번호를 입력하세요."
                 />
               </ReceiverSection>
-              {isSubmitted && receiverPhoneError && (
-                <Error>{receiverPhoneError}</Error>
+              {isSubmitted && receiverPhone.error && (
+                <Error>{receiverPhone.error}</Error>
               )}
 
               <ReceiverSection>
@@ -128,11 +116,11 @@ export function OrderPage() {
                 <input
                   type="number"
                   min="1"
-                  value={quantity}
-                  onChange={(e) => setQuantity(Number(e.target.value))}
+                  value={quantity.value}
+                  onChange={(e) => quantity.set(Number(e.target.value))}
                 />
               </ReceiverSection>
-              {isSubmitted && quantityError && <Error>{quantityError}</Error>}
+              {isSubmitted && quantity.error && <Error>{quantity.error}</Error>}
             </PersonSection>
 
             <ProductInfo>
