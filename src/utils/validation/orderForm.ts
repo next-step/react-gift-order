@@ -1,3 +1,15 @@
+export interface CardState {
+  selectedCardId: number;
+  message: string;
+}
+
+export interface FormData {
+  senderName: string;
+  receiverName: string;
+  receiverPhone: string;
+  quantity: string;
+}
+
 export interface ValidationErrors {
   message: string;
   senderName: string;

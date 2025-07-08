@@ -2,55 +2,46 @@ import React from 'react';
 import { Image, CardCarousel, ProductInfo, MessageInput, SenderSection, ReceiverSection } from '@/components';
 import { type RankingItem } from '@/data/ranking';
 import { type Order } from '@/data/orders';
+import { 
+  type CardState,
+  type FormData,
+  type ValidationErrors 
+} from '@/utils/validation/orderForm';
 import * as S from './styles';
 
-interface ValidationErrors {
-  message: string;
-  senderName: string;
-  receiverName: string;
-  receiverPhone: string;
-  quantity: string;
-}
-
-interface OrderTemplateProps {
-  orders: Order[];
-  selectedCardId: number;
-  selectedCard: Order | undefined;
-  message: string;
-  senderName: string;
-  receiverName: string;
-  receiverPhone: string;
-  quantity: string;
-  product?: RankingItem;
-  errors: ValidationErrors;
-  onCardClick: (id: number) => void;
-  onMessageChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+interface FormHandlers {
   onSenderNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onReceiverNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onReceiverPhoneChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onQuantityChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onOrder: () => void;
+}
+
+interface OrderTemplateProps {
+  orders: Order[];
+  cardState: CardState;
+  onCardClick: (id: number) => void;
+  onMessageChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+
+  formData: FormData;
+  formHandlers: FormHandlers;
+  errors: ValidationErrors;
+  product?: RankingItem;
+  onSubmit: () => void;
 }
 
 const OrderTemplate = ({
   orders,
-  selectedCardId,
-  selectedCard,
-  message,
-  senderName,
-  receiverName,
-  receiverPhone,
-  quantity,
-  product,
-  errors,
+  cardState,
   onCardClick,
   onMessageChange,
-  onSenderNameChange,
-  onReceiverNameChange,
-  onReceiverPhoneChange,
-  onQuantityChange,
-  onOrder,
+  formData,
+  formHandlers,
+  errors,
+  product,
+  onSubmit,
 }: OrderTemplateProps) => {
+  const selectedCard = orders.find(order => order.id === cardState.selectedCardId);
+
   return (
     <>
       <S.ContentWrapper>
@@ -58,10 +49,9 @@ const OrderTemplate = ({
           <S.FirstSection>
             <CardCarousel
               orders={orders}
-              selectedCardId={selectedCardId}
+              selectedCardId={cardState.selectedCardId}
               onCardClick={onCardClick}
-            />
-            
+            />         
             <S.PreviewContainer>
               <S.PreviewImageContainer>
                 <Image
@@ -70,38 +60,32 @@ const OrderTemplate = ({
                   variant="preview"
                 />
               </S.PreviewImageContainer>
-            </S.PreviewContainer>
-            
+            </S.PreviewContainer>           
             <MessageInput
-              value={message}
+              value={cardState.message}
               onChange={onMessageChange}
               placeholder="메시지를 입력하세요"
               error={errors.message}
             />
-          </S.FirstSection>
-          
-          <S.Spacer />
-          
+          </S.FirstSection>    
+          <S.Spacer />        
           <SenderSection
-            senderName={senderName}
-            onSenderNameChange={onSenderNameChange}
+            senderName={formData.senderName}
+            onSenderNameChange={formHandlers.onSenderNameChange}
             error={errors.senderName}
-          />
-          
-          <S.Spacer />
-          
+          />       
+          <S.Spacer /> 
           <ReceiverSection
-            receiverName={receiverName}
-            receiverPhone={receiverPhone}
-            quantity={quantity}
-            onReceiverNameChange={onReceiverNameChange}
-            onReceiverPhoneChange={onReceiverPhoneChange}
-            onQuantityChange={onQuantityChange}
+            receiverName={formData.receiverName}
+            receiverPhone={formData.receiverPhone}
+            quantity={formData.quantity}
+            onReceiverNameChange={formHandlers.onReceiverNameChange}
+            onReceiverPhoneChange={formHandlers.onReceiverPhoneChange}
+            onQuantityChange={formHandlers.onQuantityChange}
             receiverNameError={errors.receiverName}
             receiverPhoneError={errors.receiverPhone}
             quantityError={errors.quantity}
-          />
-          
+          />          
           {product && (
             <>
               <S.Spacer />
@@ -109,10 +93,9 @@ const OrderTemplate = ({
             </>
           )}
         </S.Container>
-      </S.ContentWrapper>
-      
-      <S.FixedBottomButton onClick={onOrder}>
-        {product ? `${(product.price.sellingPrice * Number(quantity)).toLocaleString()}원 결제하기` : '선물하기'}
+      </S.ContentWrapper> 
+      <S.FixedBottomButton onClick={onSubmit}>
+        {product ? `${(product.price.sellingPrice * Number(formData.quantity)).toLocaleString()}원 결제하기` : '선물하기'}
       </S.FixedBottomButton>
     </>
   );
