@@ -1,9 +1,11 @@
 import React from 'react';
 import * as S from './styles';
 
+export type TextAreaChangeHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+
 interface TextAreaProps {
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onChange: TextAreaChangeHandler;
   placeholder?: string;
   hasError?: boolean;
 }

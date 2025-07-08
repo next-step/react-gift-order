@@ -1,10 +1,9 @@
-import React from 'react';
-import { TextArea } from '@/components';
+import { TextArea, type TextAreaChangeHandler } from '@/components';
 import * as S from './styles';
 
 interface MessageTextAreaProps {
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onChange: TextAreaChangeHandler;
   placeholder?: string;
   error?: string;
 }

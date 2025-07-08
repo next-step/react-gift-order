@@ -3,7 +3,7 @@ export { default as Image } from './atoms/Image';
 export { default as Input } from './atoms/Input';
 export { default as Label } from './atoms/Label';
 export { default as Text } from './atoms/Text';
-export { default as TextArea } from './atoms/TextArea';
+export { default as TextArea, type TextAreaChangeHandler } from './atoms/TextArea';
 
 // Molecules
 export { default as InputField, type InputChangeHandler } from './molecules/InputField';

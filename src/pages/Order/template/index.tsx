@@ -1,7 +1,6 @@
-import React from 'react';
 import { 
   Image, CardCarousel, ProductInfo, MessageTextArea, 
-  SenderSection, ReceiverSection, type InputChangeHandler 
+  SenderSection, ReceiverSection, type InputChangeHandler, type TextAreaChangeHandler
 } from '@/components';
 import { type RankingItem } from '@/data/ranking';
 import { type Order } from '@/data/orders';
@@ -24,7 +23,7 @@ interface OrderTemplateProps {
   cardState: CardState;
   selectedCard: Order | undefined;
   onCardClick: (id: number) => void;
-  onMessageChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onMessageChange: TextAreaChangeHandler;
   formData: FormData;
   formHandlers: FormHandlers;
   errors: ValidationErrors;

@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { orders } from '@/data/orders';
 import { type RankingItem } from '@/data/ranking';
+import { type TextAreaChangeHandler, type InputChangeHandler } from '@/components';
 import { 
   type CardState,
   type FormData,
@@ -56,7 +57,7 @@ export const useOrderForm = ({ product }: UseOrderFormProps = {}) => {
     clearError('message');
   };
 
-  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleMessageChange: TextAreaChangeHandler = (e) => {
     setCardState(prev => ({
       ...prev,
       message: e.target.value.trim(),
@@ -64,7 +65,7 @@ export const useOrderForm = ({ product }: UseOrderFormProps = {}) => {
     clearError('message');
   };
 
-  const handleSenderNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSenderNameChange: InputChangeHandler = (e) => {
     setFormData(prev => ({
       ...prev,
       senderName: e.target.value.trim(),
@@ -72,7 +73,7 @@ export const useOrderForm = ({ product }: UseOrderFormProps = {}) => {
     clearError('senderName');
   };
 
-  const handleReceiverNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleReceiverNameChange: InputChangeHandler = (e) => {
     setFormData(prev => ({
       ...prev,
       receiverName: e.target.value.trim(),
@@ -80,7 +81,7 @@ export const useOrderForm = ({ product }: UseOrderFormProps = {}) => {
     clearError('receiverName');
   };
 
-  const handleReceiverPhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleReceiverPhoneChange: InputChangeHandler = (e) => {
     setFormData(prev => ({
       ...prev,
       receiverPhone: e.target.value.trim(),
@@ -88,7 +89,7 @@ export const useOrderForm = ({ product }: UseOrderFormProps = {}) => {
     clearError('receiverPhone');
   };
 
-  const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleQuantityChange: InputChangeHandler = (e) => {
     const quantity = parseInt(e.target.value, 10) || 0;
     setFormData(prev => ({
       ...prev,
