@@ -8,6 +8,7 @@ import Login from './page/Login';
 import Notfound from './page/Notfound';
 import My from './page/My';
 import Order from './page/Order';
+import ProtectedRoute from './component/ProtectedRoute';
 
 function App() {
   return (
@@ -18,7 +19,7 @@ function App() {
           <Routes>               
             <Route path="/" element={<Main />} />
             <Route path="/Login" element={<Login />} />
-            <Route path="/My" element={<My/>} />
+            <Route path="/My" element={<ProtectedRoute><My/></ProtectedRoute>} />
             <Route path="/Order" element={<Order/>} />
             <Route path="*" element={<Notfound/>} />
           </Routes>

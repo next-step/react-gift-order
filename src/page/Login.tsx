@@ -24,7 +24,7 @@ const Login = () => {
 
   useEffect(() => {
     if (auth.user) {
-      navigate('/My');
+      navigate('/My' , { replace: true });
     }
   }, [auth.user, navigate]);
 
