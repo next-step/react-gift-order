@@ -275,12 +275,19 @@ const PresentRanking: React.FC = () => {
 
   const goOrder = () => {
     if (user) {
-      navigate('/Order');
+      navigate('/Order', { state: { product: productData } });
     } else {
       navigate('/login', {
         state: { from: { pathname: '/Order' } },
       });
     }
+  };
+
+  const [selectedProduct, setSelectedProduct] = useState<typeof productData | null>(null);
+
+  const handleProductClick = () => {
+    setSelectedProduct(productData);
+    goOrder();
   };
 
   return (
@@ -314,7 +321,7 @@ const PresentRanking: React.FC = () => {
         <PresentDisplayContainer>
           <PresentDisplay>
             {Array.from({ length: productsToShow }, (_, index) => (
-              <ProductBox key={index} onClick={goOrder}>
+              <ProductBox key={index} onClick={handleProductClick}>
                 <NumberLogo
                   css={css`
                     background-color: ${index <= 2 ? 'rgb(252, 106, 102)' : 'rgb(176, 179, 186)'};
