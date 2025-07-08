@@ -66,11 +66,7 @@ export function ProductListSection() {
 
       <ProductListWrapper>
         {displayedProducts.map((product, index) => (
-          <ProductItem
-            key={product.id + '-' + index}
-            {...product}
-            rank={index + 1}
-          />
+          <ProductItem key={product.id} {...product} rank={index + 1} />
         ))}
       </ProductListWrapper>
 
