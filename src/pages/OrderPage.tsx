@@ -6,152 +6,12 @@ import { NavBar } from '@/components/NavBar';
 import type { GiftItem, MessageCard } from '@/types';
 import { rankingAll } from '@/data/rankings';
 import { messageCardTemplates } from '@/data/messageCards';
-import { palette, spacing, typography } from '@/styles/theme';
 
-const pageWrapper = css`
-  padding: ${spacing.spacing4} 0 100px 0;
-`;
-const cardSelector = css`
-  padding: 0 ${spacing.spacing4};
-  .scroll-container {
-    display: flex;
-    gap: ${spacing.spacing3};
-    overflow-x: auto;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  .thumb-btn {
-    border: 2px solid transparent;
-    border-radius: 12px;
-    padding: 0;
-    cursor: pointer;
-    transition: border-color 0.2s;
-    flex-shrink: 0;
-    &.active { border-color: ${palette.primary}; }
-    img { width: 80px; height: 50px; display: block; }
-  }
-`;
-const cardPreview = css`
-  width: 100%;
-  max-width: 720px;
-  padding: 0 ${spacing.spacing4};
-  margin-top: ${spacing.spacing4};
-  aspect-ratio: 1.5 / 1;
-  display: flex;
-  justify-content: center;
-  img { width: 50%; height: 50%; object-fit: contain; border-radius: 30px; }
-`;
-const messageGroup = css`
-  padding: 0 ${spacing.spacing4};
-  textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid ${palette.gray300};
-    border-radius: 8px;
-    font-size: 14px;
-    resize: vertical;
-    min-height: 80px;
-  }
-`;
-const divider = css`
-  height: 8px;
-  background-color: ${palette.gray100};
-  margin: ${spacing.spacing2} 0;
-  border: none;
-`;
-const formSection = css`
-  padding: 0 ${spacing.spacing7};
-  h3 {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: ${spacing.spacing1};
-  }
-`;
-const formGroup = css`
-  display: flex;
-  align-items: center;
-  margin-bottom: ${spacing.spacing3};
-  label {
-    flex-basis: 80px;
-    flex-shrink: 0;
-    font-weight: bold;
-    font-size: 14px;
-    display: block;
-    margin-bottom: ${spacing.spacing2};
-  }
-  input {
-    flex: 1;
-    width: 100%;
-    padding: 12px;
-    border: 1px solid ${palette.gray300};
-    border-radius: 8px;
-    font-size: 14px;
-  }
-  .helper-text {
-    font-size: 12px;
-    color: ${palette.gray600};
-    margin-top: ${spacing.spacing2};
-  }
-`;
-const error = css`
-  font-size: 12px;
-  color: ${palette.red600};
-  margin-top: 4px;
-`;
-const footer = css`
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  max-width: 720px;
-  margin: 0 auto;
-  padding: ${spacing.spacing3} ${spacing.spacing4} ${spacing.spacing5};
-  background: ${palette.gray00};
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
-`;
-
-const productInfo = css`
-  display: flex;
-  gap: ${spacing.spacing3};
-  padding: ${spacing.spacing3};
-  border: 1px solid ${palette.gray200};
-  border-radius: 8px;
-
-  img {
-    width: 80px;
-    height: 80px;
-    border-radius: 8px;
-    flex-shrink: 0;
-  }
-  .details {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: ${spacing.spacing1};
-    .brand {
-      font-size: 12px;
-      color: ${palette.gray700};
-    }
-    .name {
-      font-weight: bold;
-      color: ${palette.gray800};
-    }
-    .price {
-      font-weight: bold;
-      font-size: 16px;
-    }
-  }
-`;
-
-const submitButton = css`
-  width: 100%;
-  padding: 14px 0;
-  border-radius: 8px;
-  font-weight: 700;
-  font-size: 16px;
-  color: ${palette.black};
-  background: ${palette.primary};
-`;
+import * as S from '@/styles/OrderPage.styles';
+import { MessageCardSection } from '@/components/order/MessageCardSection';
+import { ProductInfoSection } from '@/components/order/ProductInfoSection';
+import { OrderPageFooter } from '@/components/order/OrderPageFooter';
+import { GiftingForm } from '@/components/order/GiftingFOrm';
 
 const phoneRegex = /^010\d{8}$/;
 
@@ -210,7 +70,7 @@ const OrderPage = () => {
     return (
       <Layout>
         <NavBar />
-        <div css={pageWrapper}>상품 정보를 찾을 수 없습니다.</div>
+        <div css={S.pageWrapper}>상품 정보를 찾을 수 없습니다.</div>
       </Layout>
     );
   }
@@ -220,93 +80,26 @@ const OrderPage = () => {
   return (
     <Layout>
       <NavBar />
-      <div css={pageWrapper}>
-        <div css={cardSelector}>
-          <div className="scroll-container">
-            {messageCardTemplates.map(card => (
-              <button
-                key={card.id}
-                className={`thumb-btn ${selectedCard.id === card.id ? 'active' : ''}`}
-                onClick={() => setSelectedCard(card)}
-              >
-                <img src={card.thumbUrl} alt={`card-${card.id}`} />
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div css={cardPreview}>
-          <img src={selectedCard.imageUrl} alt="Selected Card Preview" />
-        </div>
-
-        <div css={messageGroup}>
-          <textarea
-            name="message"
-            placeholder="축하 메시지를 입력해주세요"
-            value={formValues.message}
-            onChange={handleChange}
-          />
-        </div>
-
-        <hr css={divider} />
-
-        <div css={formSection}>
-          <h3>보내는 사람</h3>
-          <div css={formGroup}>
-            <input
-              type="text"
-              name="senderName"
-              placeholder="이름을 입력하세요."
-              value={formValues.senderName}
-              onChange={handleChange}
-            />
-            <p className="helper-text">* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</p>
-            {errors.senderName && <div css={error}>{errors.senderName}</div>}
-          </div>
-        </div>
-
-        <hr css={divider} />
-
-        <div css={formSection}>
-          <h3>받는 사람</h3>
-          <div css={formGroup}>
-            <label>이름</label>
-            <input type="text" name="recipientName" placeholder="이름을 입력해주세요." value={formValues.recipientName} onChange={handleChange} />
-            {errors.recipientName && <div css={error}>{errors.recipientName}</div>}
-          </div>
-          <div css={formGroup}>
-            <label>전화번호</label>
-            <input type="tel" name="recipientPhone" placeholder="전화번호를 입력해주세요." value={formValues.recipientPhone} onChange={handleChange} />
-            {errors.recipientPhone && <div css={error}>{errors.recipientPhone}</div>}
-          </div>
-          <div css={formGroup}>
-            <label>수량</label>
-            <input type="number" name="quantity" value={formValues.quantity} onChange={handleChange} min="1" />
-            {errors.quantity && <div css={error}>{errors.quantity}</div>}
-          </div>
-        </div>
+      <div css={S.pageWrapper}>
+        <MessageCardSection
+          selectedCard={selectedCard}
+          onCardSelect={setSelectedCard}
+          message={formValues.message}
+          onMessageChange={handleChange}
+        />
+        <hr css={S.divider} />
+        <GiftingForm
+          formValues={formValues}
+          errors={errors}
+          onFormChange={handleChange}
+        />
+        <hr css={S.divider} />
       </div>
-
-      <hr css={divider} />
-
-      <div css={formSection}>
-        <h3>상품 정보</h3>
-        <div css={productInfo}>
-          <img src={item.imageURL} alt={item.name} />
-          <div className="details">
-            <span className="brand">{item.brandInfo.name}</span>
-            <span className="name">{item.name}</span>
-            <span className="price">{item.price.sellingPrice.toLocaleString()}원</span>
-          </div>
-        </div>
+      <div css={S.pageWrapper}>
+        <ProductInfoSection item={item as GiftItem} />
       </div>
+      <OrderPageFooter totalPrice={totalPrice} onSubmit={handleSubmit} />
 
-
-      <footer css={footer}>
-        <button type="button" css={submitButton} onClick={handleSubmit}>
-          {totalPrice.toLocaleString()}원 주문하기
-        </button>
-      </footer>
     </Layout>
   );
 };
