@@ -7,11 +7,11 @@ interface ButtonProps {
   children: React.ReactNode;
 }
 
-const Button: React.FC<ButtonProps> = ({
-  type = 'submit',
+const Button = ({
+  children,
   disabled = false,
-  children
-}) => {
+  type = 'submit',
+}: ButtonProps) => {
   return (
     <S.Button type={type} disabled={disabled}>
       {children}

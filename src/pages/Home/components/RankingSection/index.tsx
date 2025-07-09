@@ -1,17 +1,17 @@
 import { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { rankingItems, genderItems, actionItems } from '@/data/ranking';
-import ItemCard from '@/components/common/ItemCard';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { rankingItems, genderItems, actionItems, type RankingItem } from '@/data/ranking';
+import { ItemCard } from '@/components';
 import * as S from './styles';
 
 const RankingSection = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isExpanded, setIsExpanded] = useState(false);
-  
-  // URL에서 필터 값 읽기 (기본값 설정)
+  const navigate = useNavigate();
+
   const selectedGender = searchParams.get('gender') || 'ALL';
   const selectedAction = searchParams.get('action') || '받고 싶어한';
-  // 필터 변경 핸들러
+
   const handleGenderChange = (gender: string) => {
     setSearchParams(prev => {
       const newParams = new URLSearchParams(prev);
@@ -19,13 +19,17 @@ const RankingSection = () => {
       return newParams;
     });
   };
-  // 필터 변경 핸들러
+
   const handleActionChange = (action: string) => {
     setSearchParams(prev => {
       const newParams = new URLSearchParams(prev);
       newParams.set('action', action);
       return newParams;
     });
+  };
+
+  const handleItemCardClick = (item: RankingItem) => {
+    navigate(`/order/${item.id}`);
   };
 
   return (
@@ -69,6 +73,7 @@ const RankingSection = () => {
             price={item.price.sellingPrice}
             rank={index + 1}
             variant="product"
+            onClick={() => handleItemCardClick(item)}
           />
         ))}
       </S.Grid>

@@ -1,8 +1,6 @@
-import { createBrowserRouter } from 'react-router-dom';
-import Layout from '@/components/Layout/Layout';
-import Home from '@/pages/Home/Page';
-import Login from '@/pages/Login/Page';
-import NotFound from '@/pages/NotFound/Page';
+import { createBrowserRouter} from 'react-router-dom';
+import { Layout, ProtectedRoute } from '@/components';
+import { Home, Login, MyPage, Order, NotFound } from '@/pages';
 
 const router = createBrowserRouter([
   {
@@ -16,6 +14,22 @@ const router = createBrowserRouter([
       {
         path: 'login',
         element: <Login />,
+      },
+      {
+        path: 'mypage',
+        element: (
+          <ProtectedRoute>
+            <MyPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'order/:productId?',
+        element: (
+          <ProtectedRoute>
+            <Order />
+          </ProtectedRoute>
+        ),
       },
       {
         path: '*',

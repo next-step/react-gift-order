@@ -1,9 +1,11 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import * as S from './styles';
-import IconButton from '@/components/common/IconButton';
+import { IconButton } from '@/components';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Navigation = () => {
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
 
   const handleBack = () => {
     navigate(-1); 
@@ -14,7 +16,7 @@ const Navigation = () => {
   };
 
   const handleLoginClick = () => {
-    navigate('/login');
+    navigate(isLoggedIn ? '/mypage' : '/login');
   };
 
   return (

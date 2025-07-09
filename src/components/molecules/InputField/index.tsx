@@ -1,0 +1,65 @@
+import React from 'react';
+import { Input, Label, Text } from '@/components';
+import * as S from './styles';
+
+export type InputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => void;
+
+interface InputFieldProps {
+  label?: string;
+  placeholder?: string;
+  value: string;
+  onChange: InputChangeHandler;
+  type?: 'text' | 'number' | 'tel';
+  description?: string;
+  labelMinWidth?: string;
+  layout?: 'vertical' | 'horizontal';
+  error?: string;
+  showError?: boolean;
+}
+
+const InputField = ({
+  label,
+  placeholder,
+  value,
+  onChange,
+  type = 'text',
+  description,
+  labelMinWidth,
+  layout = 'vertical',
+  error,
+  showError = true,
+}: InputFieldProps) => {
+  return (
+    <S.Container layout={layout}>
+      <S.InputRow layout={layout}>
+        {label && (
+          <Label minWidth={labelMinWidth}>
+            {label}
+          </Label>
+        )}
+        <S.InputWrapper>
+          <Input
+            type={type}
+            placeholder={placeholder}
+            value={value}
+            onChange={onChange}
+            style={{ width: '100%' }}
+            hasError={!!error}
+          />
+        </S.InputWrapper>
+      </S.InputRow>
+      {description && (
+        <Text variant="description" style={{ marginLeft: '0.5rem' }}>
+          {description}
+        </Text>
+      )}
+      {error && showError && (
+        <S.ErrorMessage layout={layout} labelMinWidth={labelMinWidth}>
+          {error}
+        </S.ErrorMessage>
+      )}
+    </S.Container>
+  );
+};
+
+export default InputField; 

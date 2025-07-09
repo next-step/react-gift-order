@@ -1,25 +1,24 @@
 import React from 'react';
+import { type InputChangeHandler } from '@/components';
 import * as S from './styles';
 
-interface InputFieldProps {
+interface LoginInputFieldProps {
   type: string;
   placeholder: string;
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: InputChangeHandler;
   onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
-  hasError?: boolean;
-  error?: string;
+  error?: string; //hasError삭제 
 }
 
-const InputField: React.FC<InputFieldProps> = ({
+const LoginInputField = ({
   type,
   placeholder,
   value,
   onChange,
   onBlur,
-  hasError,
   error
-}) => {
+}: LoginInputFieldProps) => {
   return (
     <S.InputContainer>
       <S.Input
@@ -28,11 +27,11 @@ const InputField: React.FC<InputFieldProps> = ({
         value={value}
         onChange={onChange}
         onBlur={onBlur}
-        hasError={hasError}
+        error={error}
       />
       {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
     </S.InputContainer>
   );
 };
 
-export default InputField;
+export default LoginInputField;
