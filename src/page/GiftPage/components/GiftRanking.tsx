@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { filters, generations } from '@/data/categoryDatas';
 import useSearchParamState from '../hooks/useSearchParamState';
 import useToggleCollapse from '../hooks/useToggleCollapse';
-import { rankingDatas } from '@/data/rankingDatas';
+import { rankingDatas } from '@/data/rankingDatas.ts';
 import { useUserInfo } from '@/contexts/UserInfoContext';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/routes/routes';
