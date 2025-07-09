@@ -1,5 +1,5 @@
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
+import { useNavigate, createSearchParams } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function useAuthNavigation() {
   const navigate = useNavigate();
@@ -9,7 +9,12 @@ export default function useAuthNavigation() {
     if (isLoggedIn) {
       navigate(targetPath);
     } else {
-      navigate(`/login?redirect=${encodeURIComponent(targetPath)}`);
+      navigate({
+        pathname: "/login",
+        search: createSearchParams({
+          redirect: targetPath,
+        }).toString(),
+      });
     }
   };
 
