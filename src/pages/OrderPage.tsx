@@ -7,7 +7,7 @@ import { products } from '@/data/products';
 import { cardTemplates } from '@/data/cardTemplates';
 
 function isValidPhoneNumber(phone: string) {
-  return /^010-\d{4}-\d{4}$/.test(phone);
+  return /^010-\d{4}-\d{4}$/.test(phone) || /^010\d{8}$/.test(phone);
 }
 
 const CardSlider = styled.div`
