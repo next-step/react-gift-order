@@ -51,8 +51,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       setUser(userData);
       saveAuthToStorage(userData); // localStorage에 저장
-    } catch (error) {
-      throw error;
     } finally {
       setLoading(false);
     }
