@@ -2,7 +2,6 @@
 export interface Template {
   id: number;
   thumbUrl: string;
-  name:string;
   imageUrl: string;
   defaultTextMessage: string;
 }
