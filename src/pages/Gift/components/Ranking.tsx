@@ -1,28 +1,10 @@
 import styled from "@emotion/styled";
 import RankingList from "@/pages/Gift/components/RankingList";
 import { rankingRankCategoryList, rankingTargetCategory } from "@/assets/rankingCategory";
-import { useSearchParams } from "react-router-dom";
+import useRankingFilter from "@/hooks/useRankingFilter";
 
 const Ranking = () => {
-  const [rankingCategoryParams, setRankCategoryParams] = useSearchParams();
-
-  const targetTypeParams = rankingCategoryParams.get("targetType")?.trim();
-  const rankTypeParams = rankingCategoryParams.get("rankType")?.trim();
-
-  const isValidTarget = targetTypeParams && rankingTargetCategory.some((item) => item.targetType === targetTypeParams);
-  const isValidRank = rankTypeParams && rankTypeParams in rankingRankCategoryList;
-
-  const selectedTarget = isValidTarget ? targetTypeParams : rankingTargetCategory[0].targetType;
-  const selectedRank = isValidRank ? rankTypeParams : Object.keys(rankingRankCategoryList)[0];
-
-  const changeTargetType = (targetType: string) => {
-    rankingCategoryParams.set("targetType", targetType);
-    setRankCategoryParams(rankingCategoryParams, { replace: true });
-  };
-  const changeRankType = (rankType: string) => {
-    rankingCategoryParams.set("rankType", rankType);
-    setRankCategoryParams(rankingCategoryParams, { replace: true });
-  };
+  const { selectedTarget, selectedRank, changeTargetType, changeRankType } = useRankingFilter();
   return (
     <Container>
       <Title>실시간 급상승 선물랭킹</Title>
