@@ -64,15 +64,26 @@ const Button = styled.button(({ theme }) => ({
 
 const Login = () => {
   const navigate = useNavigate();
-  const { email, setEmail, emailError, validateEmail, isValid } =
-    useLoginForm();
+  const {
+    email,
+    setEmail,
+    emailError,
+    validateEmail,
+    password,
+    setPassword,
+    passwordError,
+    validatePassword,
+    isValid,
+  } = useLoginForm();
 
   const [emailTouched, setEmailTouched] = useState(false);
+  const [passwordTouched, setPasswordTouched] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const isEmailOk = validateEmail();
-    if (isEmailOk) {
+    const isPWOk = validatePassword();
+    if (isEmailOk && isPWOk) {
       if (window.history.length > 2) {
         navigate(-1);
       } else {
@@ -95,7 +106,17 @@ const Login = () => {
         }}
       />
       {emailTouched && emailError && emailError}
-      <Input type="password" placeholder="비밀번호" />
+      <Input
+        type="password"
+        placeholder="비밀번호"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        onBlur={() => {
+          setPasswordTouched(true);
+          validatePassword();
+        }}
+      />
+      {passwordTouched && passwordError && passwordError}
       <Button type="submit" disabled={!isValid}>
         로그인
       </Button>
