@@ -4,7 +4,7 @@ import PresentWhoBackGround from "@/components/PresentWhoBackGround"
 import Text from "@/components/Text"
 import PresentWho from "@/components/PresentWho"
 import { useAuth } from "@/context/AuthContext"
-import { getUsernameFromCookie } from "./MyPage"
+import { Cookie } from "@/utils/cookie"
 
 const PlusNewPerson = () => {
   const { isLoggedIn } = useAuth()
@@ -56,7 +56,7 @@ const PlusNewPerson = () => {
           padding="spacing2"
           marginTop="spacing1"
         >
-          {getUsernameFromCookie()}님! 선물할 친구를 선택해 주세요.
+          {Cookie.getUsernameFromCookie()}님! 선물할 친구를 선택해 주세요.
         </Text>
       </PresentWho>
     </PresentWhoBackGround>

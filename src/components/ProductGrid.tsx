@@ -33,7 +33,7 @@ const ProductGrid = () => {
   const handleGoOrder = useCallback(
     (id: number) => {
       if (!isLoggedIn) {
-        navigate("/login")
+        navigate(ROUTES.LOGIN)
       } else {
         navigate(getRoute(ROUTES.ORDER, { id: id }))
       }
