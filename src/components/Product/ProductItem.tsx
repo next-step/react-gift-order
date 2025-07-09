@@ -2,23 +2,7 @@ import styled from '@emotion/styled'
 import { memo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
-
-interface Product {
-  id: number
-  name: string
-  imageURL: string
-  price: {
-    basicPrice: number
-    discountRate: number
-    sellingPrice: number
-  }
-  brandInfo: {
-    id: number
-    name: string
-    imageURL: string
-  }
-  rank: number
-}
+import type { Product } from '@/types/product'
 
 export const ProductItem = memo(function ProductItem({
   id,
