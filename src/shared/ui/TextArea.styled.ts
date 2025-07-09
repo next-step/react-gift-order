@@ -1,10 +1,10 @@
-import { type InputFieldGroupProps, type InputProps } from "@/shared/ui/Input";
+import type { TextAreaProps } from "@/shared/ui/TextArea";
 
 import styled from "@emotion/styled";
 
-export const Input = styled.input<InputProps>`
+export const TextAreaElement = styled.textarea<TextAreaProps>`
     width: ${({ width }) => width || "100%"};
-    height: ${({ height }) => height || "40px"};
+    height: ${({ height }) => height || "100%"};
 
     border: 1px solid;
     border-color: ${({ theme, error }) => {
@@ -21,23 +21,6 @@ export const Input = styled.input<InputProps>`
     &:focus {
         outline: 1px solid ${({ theme }) => theme.colors.gray.gray900};
     }
-`;
-
-export const InputLabel = styled.label`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    min-width: 70px;
-`;
-
-export const InputFieldGroupContainer = styled.div<Pick<InputFieldGroupProps, "align">>`
-    display: flex;
-    flex-direction: ${({ align }) => (align === "vertical" ? "column" : "row")};
-`;
-
-export const InputElementContainer = styled.div`
-    width: 100%;
 `;
 
 export const Error = styled.p`

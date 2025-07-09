@@ -13,6 +13,7 @@ export const GiftCardGrid = ({ children }: PropsWithChildren) => {
 export interface GiftCardProps extends GiftModel {
     index: number;
     isHighlighted?: boolean;
+    onClick?: () => void;
 }
 
 export const GiftCard = ({
@@ -23,9 +24,10 @@ export const GiftCard = ({
     price,
     brandInfo,
     isHighlighted,
+    onClick,
 }: GiftCardProps) => {
     return (
-        <Styles.Wrapper key={id}>
+        <Styles.Wrapper key={id} onClick={onClick}>
             <Styles.IndexLabel isHighlighted={isHighlighted}>{index}</Styles.IndexLabel>
             <Styles.Image src={imageURL}></Styles.Image>
             <VerticalSpacing size="12px" />

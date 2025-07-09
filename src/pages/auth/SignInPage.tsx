@@ -1,9 +1,11 @@
 import kakaoLogo from "@/app/assets/kakao-logo.svg";
 
+import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useSignIn } from "@/features/auth/hooks/useSignIn";
+import { AuthInput } from "@/features/auth/ui/AuthInput";
 
 import { useRedirect } from "@/shared/hooks/useRedirect";
-import { Button, Input } from "@/shared/ui";
+import { Button } from "@/shared/ui";
 
 import { VerticalSpacing } from "@/widgets/layouts/Spacing.styled";
 
@@ -11,20 +13,24 @@ import * as Styles from "./SignInPage.styled";
 
 export default function SignInPage() {
     const { returnToRedirect } = useRedirect();
+    const { signIn } = useAuth();
 
     const {
         isLoginButtonActive,
 
-        emailRef,
         email,
         emailError,
         emailInputProps,
 
-        passwordRef,
         password,
         passwordError,
         passwordInputProps,
     } = useSignIn();
+
+    const onSignIn = () => {
+        signIn(email.split("@")[0], email);
+        returnToRedirect();
+    };
 
     return (
         <Styles.Container>
@@ -32,8 +38,7 @@ export default function SignInPage() {
 
             <Styles.Form>
                 <Styles.FieldSet>
-                    <Input
-                        ref={emailRef}
+                    <AuthInput
                         type="email"
                         width="100%"
                         height="44px"
@@ -45,8 +50,7 @@ export default function SignInPage() {
                 </Styles.FieldSet>
                 <VerticalSpacing size="16px" />
                 <Styles.FieldSet>
-                    <Input
-                        ref={passwordRef}
+                    <AuthInput
                         type="password"
                         width="100%"
                         height="44px"
@@ -65,7 +69,7 @@ export default function SignInPage() {
                     rounded={true}
                     width="100%"
                     height="44px"
-                    onClick={() => returnToRedirect()}
+                    onClick={onSignIn}
                 >
                     로그인
                 </Button>

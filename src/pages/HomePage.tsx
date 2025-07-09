@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 import { FriendSelectButton } from "@/entities/friends/ui/FriendSelectButton";
 import { FriendSelection } from "@/entities/friends/ui/FriendSelection";
 import { giftCategory } from "@/entities/gift/constants/giftCategory";
@@ -11,6 +13,8 @@ import { VerticalSpacing } from "@/widgets/layouts/Spacing.styled";
 import { TitledSection } from "@/widgets/sections/TitledSection";
 
 export default function HomePage() {
+    const navigate = useNavigate();
+
     return (
         <div>
             <FriendSelection>
@@ -55,6 +59,7 @@ export default function HomePage() {
                         .map((_, index) => {
                             return (
                                 <GiftCard
+                                    onClick={() => navigate(`/order/${index + 1}`)}
                                     isHighlighted={index < 3}
                                     index={index + 1}
                                     id={123}
