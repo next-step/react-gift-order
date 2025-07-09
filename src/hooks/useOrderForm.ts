@@ -1,38 +1,26 @@
-import { useDeferredValidationInput } from './useDeferredValidation';
+import { useValidationInput } from './useValidationInput';
+import { validateMessage, validateName, validatePhone, validateCount } from '@/utils/validators';
 
-const validateMessage = (value: string) => {
-  if (!value.trim()) return '메시지를 입력해주세요.';
-  return '';
-};
-const validateName = (value: string) => {
-  if (!value.trim()) return '이름을 입력해주세요.';
-  if (!/^[가-힣a-zA-Z]{2,}$/.test(value)) return '2자 이상 한글 또는 영어만 입력해주세요.';
-  return '';
-};
+export function useOrderForm() {
+  const message = useValidationInput(validateMessage, '');
+  const senderName = useValidationInput(validateName, '');
+  const receiverName = useValidationInput(validateName, '');
+  const receiverPhoneNumber = useValidationInput(validatePhone, '');
+  const itemCount = useValidationInput(validateCount, 1);
 
-const validatePhone = (value: string) => {
-  if (!value.trim()) return '전화번호를 입력해주세요.';
-  if (!/^\d{10,11}$/.test(value)) return '올바른 전화번호 형식이 아닙니다.';
-  return '';
-};
-
-const validateCount = (value: number) => {
-  if (value <= 0) return '구매 수량은 1개 이상이어야 합니다.';
-  return '';
-};
-
-export const useOrderForm = () => {
-  const message = useDeferredValidationInput(validateMessage, '' as string);
-  const senderName = useDeferredValidationInput(validateName, '');
-  const receiverName = useDeferredValidationInput(validateName, '');
-  const receiverPhoneNumber = useDeferredValidationInput(validatePhone, '');
-  const itemCount = useDeferredValidationInput(validateCount, 1);
+  const validateAll = () =>
+    message.isValid &&
+    senderName.isValid &&
+    receiverName.isValid &&
+    receiverPhoneNumber.isValid &&
+    itemCount.isValid;
 
   return {
+    message,
     senderName,
     receiverName,
     receiverPhoneNumber,
     itemCount,
-    message,
+    validateAll,
   };
-};
+}

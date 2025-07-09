@@ -26,9 +26,6 @@ const Order = () => {
   };
 
   useEffect(() => {
-    // selectedCard.defaultTextMessage가 있고,
-    // 사용자가 아직 메시지를 편집하지 않았으며,
-    // 현재 메시지 값이 비어있을 때만 기본 메시지를 설정
     if (selectedCard?.defaultTextMessage && !hasUserEditedMessage.current && message.value === '') {
       message.onChange({
         target: { value: selectedCard.defaultTextMessage },
