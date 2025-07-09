@@ -2,8 +2,9 @@
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+
 import { orderFormSchema } from "@/validations/orderSchema";
 import type { OrderFormValues } from "@/validations/orderSchema";
 
@@ -13,6 +14,7 @@ import { Navigation } from "@/components/header/Navigation";
 import MessageCardSection from "@/components/order/MessageCardSection";
 import SenderInfoSection from "@/components/order/SenderInfoSection";
 import ReceiverModal from "@/components/order/ReceiverModal";
+import ReceiverList from "@/components/order/ReceiverList";
 import OrderSummary from "@/components/order/OrderSummary";
 import OrderButton from "@/components/order/OrderButton";
 
@@ -29,33 +31,37 @@ const OrderPage = () => {
       senderName: "",
       message: "",
       selectedCardId: null,
-      receivers: [], 
+      receivers: [],
     },
     mode: "onBlur",
   });
 
-  const { handleSubmit, watch, setValue } = methods;
+  const { control, handleSubmit, watch, setValue } = methods;
+
+  const { fields, remove } = useFieldArray({
+    control,
+    name: "receivers",
+  });
 
   const [isReceiverModalOpen, setReceiverModalOpen] = useState(false);
 
-  const onValid = (data: OrderFormValues) => {
-    const totalQuantity = data.receivers.reduce(
-      (sum, r) => sum + r.quantity,
-      0
-    );
-    alert(
-      `🎉 주문 완료!\n상품명: ${product?.name}\n수량: ${totalQuantity}개\n보낸 사람: ${data.senderName}\n메시지: ${data.message}`
-    );
-    navigate("/", { replace: true });
-  };
-  if (!product) return null;
-
   const totalQuantity =
     watch("receivers")?.reduce((sum, r) => sum + r.quantity, 0) || 0;
-  const totalAmount = product!.price.sellingPrice * totalQuantity;
+
+  const totalAmount = product?.price.sellingPrice
+    ? product.price.sellingPrice * totalQuantity
+    : 0;
 
   const onReceiverComplete = (data: OrderFormValues["receivers"]) => {
     setValue("receivers", data);
+  };
+
+  const onValid = (data: OrderFormValues) => {
+    const qty = data.receivers.reduce((sum, r) => sum + r.quantity, 0);
+    alert(
+      `주문 완료!\n상품명: ${product?.name}\n수량: ${qty}개\n보낸 사람: ${data.senderName}\n메시지: ${data.message}`
+    );
+    navigate("/", { replace: true });
   };
 
   useEffect(() => {
@@ -70,6 +76,7 @@ const OrderPage = () => {
     <PageLayout>
       <PageContainer>
         <Navigation />
+
         <FormProvider {...methods}>
           <Form onSubmit={handleSubmit(onValid)}>
             <Container>
@@ -82,18 +89,26 @@ const OrderPage = () => {
               </SectionCard>
 
               <SectionCard>
-                <AddReceiverButton
-                  type="button"
-                  onClick={() => setReceiverModalOpen(true)}
-                >
-                  + 받는 사람 추가
-                </AddReceiverButton>
+                <SectionHeader>
+                  <SectionTitle>받는 사람</SectionTitle>
+                  <AddReceiverButton
+                    type="button"
+                    onClick={() => setReceiverModalOpen(true)}
+                  >
+                    {watch("receivers").length > 0 ? "수정" : "추가"}
+                  </AddReceiverButton>
+                </SectionHeader>
 
-                {watch("receivers")?.length > 0 && (
-                  <ReceiverCount>
-                    총 {watch("receivers").length}명 등록됨 / 총 수량{" "}
-                    {totalQuantity}개
-                  </ReceiverCount>
+                {watch("receivers").length === 0 ? (
+                  <EmptyBox>
+                    <EmptyText>
+                      받는 사람이 없습니다.
+                      <br />
+                      받는 사람을 추가해주세요.
+                    </EmptyText>
+                  </EmptyBox>
+                ) : (
+                  <ReceiverList fields={fields} remove={remove} />
                 )}
               </SectionCard>
 
@@ -104,9 +119,7 @@ const OrderPage = () => {
 
             <StickyFooter>
               <StickyInner>
-                {Number.isFinite(totalAmount) && (
-                  <OrderButton amount={totalAmount} type="submit" />
-                )}
+                <OrderButton amount={totalAmount} type="submit" />
               </StickyInner>
             </StickyFooter>
           </Form>
@@ -123,6 +136,7 @@ const OrderPage = () => {
 };
 
 export default OrderPage;
+
 
 const Form = styled.form`
   display: flex;
@@ -141,7 +155,7 @@ const Container = styled.div`
 
 const SectionCard = styled.section`
   width: 100%;
-  background-color: #fff;
+  background-color: ${({ theme }) => theme.colors.gray00};
   padding: 20px;
   border-radius: 12px;
   margin-bottom: 12px;
@@ -163,20 +177,45 @@ const StickyInner = styled.div`
   justify-content: center;
 `;
 
+const SectionHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+`;
+
+const SectionTitle = styled.p`
+  font-size: 1rem;
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.gray900};
+  margin: 0;
+`;
+
 const AddReceiverButton = styled.button`
-  margin-top: 12px;
-  padding: 8px 12px;
-  background-color: ${({ theme }) => theme.colors.yellow500};
-  color: black;
-  border: none;
+  font-size: 0.875rem;
+  font-weight: 400;
+  padding: 8px 16px;
   border-radius: 8px;
-  font-size: 14px;
-  font-weight: bold;
+  background-color: ${({ theme }) => theme.colors.gray200};
+  color: ${({ theme }) => theme.colors.gray900};
+  border: none;
   cursor: pointer;
 `;
 
-const ReceiverCount = styled.p`
-  margin-top: 8px;
-  font-size: 14px;
-  color: ${({ theme }) => theme.colors.gray700};
+const EmptyBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  border: 1px solid ${({ theme }) => theme.colors.gray400};
+  border-radius: 8px;
+  margin-top: 12px;
+`;
+
+const EmptyText = styled.p`
+  font-size: 0.875rem;
+  color: ${({ theme }) => theme.colors.gray600};
+  text-align: center;
+  margin: 0;
 `;

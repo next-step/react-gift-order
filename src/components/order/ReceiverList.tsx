@@ -1,52 +1,36 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
-import { useFieldArray, useFormContext } from "react-hook-form";
-import ReceiverItem from "@/components/order/ReceiverItem";
+import ReceiverItem from "./ReceiverItem";
+import type {
+  UseFieldArrayRemove,
+  FieldArrayWithId,
+} from "react-hook-form";
+import type { OrderFormValues } from "@/validations/orderSchema";
 
-const ReceiverList = () => {
-  const { control } = useFormContext();
-  const { fields, append, remove } = useFieldArray({ control, name: "receivers" });
+type Props = {
+  fields: FieldArrayWithId<OrderFormValues, "receivers", "id">[];
+  remove: UseFieldArrayRemove;
+};
 
+const ReceiverList = ({ fields, remove }: Props) => {
   return (
-    <Wrapper>
+    <ListWrapper>
       {fields.map((field, index) => (
         <ReceiverItem
-          key={field.id}
+          key={field.id} // ✅ FieldArray의 각 항목에는 고유한 id가 있습니다
           index={index}
           onRemove={() => remove(index)}
-          canDelete={fields.length > 1}
         />
       ))}
-
-      {fields.length < 10 && (
-        <AddButton
-          type="button"
-          onClick={() => append({ name: "", phone: "", quantity: 1 })}
-        >
-          추가
-        </AddButton>
-      )}
-    </Wrapper>
+    </ListWrapper>
   );
 };
 
 export default ReceiverList;
 
-const Wrapper = styled.div`
-  margin-top: 16px;
+const ListWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 16px;
-`;
-
-const AddButton = styled.button`
-  width: 100%;
-  padding: 12px;
-  border: 1px dashed ${({ theme }) => theme.colors.gray400};
-  border-radius: 8px;
-  background: none;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 14px;
-  color: ${({ theme }) => theme.colors.gray800};
+  gap: 24px;
+  padding-bottom: 12px;
 `;

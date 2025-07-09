@@ -13,6 +13,9 @@ type Props = {
 const ReceiverModal = ({ isOpen, onClose, onComplete }: Props) => {
   const {
     methods,
+    fields,
+    append,
+    remove,
     handleSubmit,
     isValid,
     reset,
@@ -22,108 +25,155 @@ const ReceiverModal = ({ isOpen, onClose, onComplete }: Props) => {
 
   const handleComplete = handleSubmit((data) => {
     onComplete(data.receivers);
-    reset(); // 입력 초기화
+    reset();
     onClose();
   });
 
+  const handleAdd = () => {
+    if (fields.length < 10) {
+      append({ name: "", phone: "", quantity: 1 });
+    }
+  };
+
   return (
     <Backdrop>
-      <ModalContainer>
-        <Header>
-          <Title>받는 사람 입력</Title>
-          <CloseButton onClick={onClose}>✕</CloseButton>
-        </Header>
-
+      <Container>
         <FormProvider {...methods}>
           <Form onSubmit={handleComplete}>
-            <ReceiverList />
+            <Header>
+              <Title>받는 사람</Title>
+              <Guide>* 최대 10명까지 추가할 수 있어요.</Guide>
+              <Guide>* 받는 사람의 전화번호를 중복으로 입력할 수 없어요.</Guide>
+              <AddButton
+                type="button"
+                onClick={handleAdd}
+                disabled={fields.length >= 10}
+              >
+                추가하기
+              </AddButton>
+            </Header>
+
+            <ScrollableArea>
+              <ReceiverList fields={fields} remove={remove} />
+            </ScrollableArea>
 
             <Footer>
-              <CancelButton type="button" onClick={onClose}>
+              <Cancel type="button" onClick={onClose}>
                 취소
-              </CancelButton>
-              <SubmitButton type="submit" disabled={!isValid}>
-                완료
-              </SubmitButton>
+              </Cancel>
+              <Submit type="submit" disabled={fields.length < 1 || !isValid}>
+                {fields.length}명 완료
+              </Submit>
             </Footer>
           </Form>
         </FormProvider>
-      </ModalContainer>
+      </Container>
     </Backdrop>
   );
 };
 
 export default ReceiverModal;
+
 const Backdrop = styled.div`
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.4);
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999;
+  z-index: 99;
 `;
 
-const ModalContainer = styled.div`
+const Container = styled.div`
   width: 100%;
-  max-width: 480px;
-  background: white;
+  max-width: 640px;
+  height: 700px; /* ✅ 고정된 세로 높이 */
+  background: #fff;
   border-radius: 12px;
-  padding: 20px;
+  padding: 24px;
   box-sizing: border-box;
-  max-height: 90vh;
-  overflow-y: auto;
-`;
-
-const Header = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-`;
-
-const Title = styled.h3`
-  font-size: 18px;
-  font-weight: bold;
-`;
-
-const CloseButton = styled.button`
-  border: none;
-  background: none;
-  font-size: 20px;
-  cursor: pointer;
+  flex-direction: column;
 `;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
+  flex: 1;
+  overflow: hidden; /* 중요 */
+`;
+
+const Header = styled.div`
+  flex-shrink: 0;
+`;
+
+const Title = styled.h3`
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: #000;
+`;
+
+const Guide = styled.p`
+  font-size: 13px;
+  color: #000;
+  margin: 2px 0;
+`;
+
+const AddButton = styled.button`
+  margin-top: 12px;
+  padding: 8px 16px;
+  font-size: 14px;
+  background: ${({ theme }) => theme.colors.gray100};
+  border: 1px solid ${({ theme }) => theme.colors.gray400};
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  color: #000;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
+
+const ScrollableArea = styled.div`
+  flex: 1;
+  overflow-y: auto;
+  margin-top: 16px;
+  padding-right: 4px;
+  &::-webkit-scrollbar {
+    display: none; 
+  }
 `;
 
 const Footer = styled.div`
+  flex-shrink: 0;
   display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
+  gap: 12px;
+  margin-top: 24px;
 `;
 
-const CancelButton = styled.button`
-  padding: 10px 16px;
-  background-color: ${({ theme }) => theme.colors.gray300};
-  border: none;
-  border-radius: 6px;
+const Cancel = styled.button`
+  flex: 1;
+  padding: 12px 0;
+  font-size: 15px;
   font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  background-color: ${({ theme }) => theme.colors.gray200};
+  color: #000;
 `;
 
-const SubmitButton = styled.button<{ disabled: boolean }>`
-  padding: 10px 16px;
+const Submit = styled.button<{ disabled: boolean }>`
+  flex: 2;
+  padding: 12px 0;
+  font-size: 15px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
   background-color: ${({ theme, disabled }) =>
-    disabled ? theme.colors.gray400 : theme.colors.yellow500};
-  color: black;
-  border: none;
-  border-radius: 6px;
-  font-weight: bold;
+    disabled ? theme.colors.gray300 : theme.colors.yellow500};
+  color: #000;
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
 `;

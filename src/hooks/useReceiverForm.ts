@@ -17,28 +17,22 @@ export const useReceiverForm = () => {
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { isValid },
     reset,
     setError,
   } = methods;
 
-  const {
-    fields,
-    append,
-    remove,
-  } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "receivers",
   });
 
   return {
     methods,
-    control,
     fields,
     append,
     remove,
     handleSubmit,
-    errors,
     isValid,
     reset,
     setError,
