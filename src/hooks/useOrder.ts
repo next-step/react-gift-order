@@ -16,6 +16,10 @@ export type ErrorType = {
   count: string;
 };
 
+function requiredField(value: string, message: string) {
+  return value.length < 1 ? message : '';
+}
+
 function useOrder(item: mockItemType) {
   const [currentId, setCurrentId] = useState(orders[0].id);
   const currentOrder: ordersType | undefined = orders.find((order) => order.id === currentId);
@@ -64,9 +68,9 @@ function useOrder(item: mockItemType) {
   }
 
   const validators = {
-    text: (value: string) => (value.length < 1 ? '메시지를 입력하세요.' : ''),
-    sender: (value: string) => (value.length < 1 ? '이름을 입력해주세요.' : ''),
-    recieverName: (value: string) => (value.length < 1 ? '이름을 입력해주세요.' : ''),
+    text: (value: string) => requiredField(value, '메시지를 입력하세요.'),
+    sender: (value: string) => requiredField(value, '이름을 입력해주세요.'),
+    recieverName: (value: string) => requiredField(value, '이름을 입력해주세요.'),
     recieverPhone: (value: string) => {
       if (value.length < 1) return '전화번호를 입력해주세요.';
       if (!/^01[016789][0-9]{3,4}[0-9]{4}$/.test(value.replace(/-/g, ''))) {
@@ -74,7 +78,7 @@ function useOrder(item: mockItemType) {
       }
       return '';
     },
-    count: (value: number) => (value < 1 ? '구매 수량은 1개 이상이어야 합니다.' : ''),
+    count: (value: number) => value < 1 ? '구매 수량은 1개 이상이어야 합니다.' : '',
   };
 
   function validate() {
