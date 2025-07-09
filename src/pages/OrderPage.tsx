@@ -227,7 +227,7 @@ export default function OrderPage() {
           </Preview>
 
         <MessageInput
-          {...register('message', { required: '메시지를 입력해주세요.' })}
+          {...register('message')}
           placeholder="메시지를 입력해주세요."
           maxLength={200}
         />
@@ -238,7 +238,7 @@ export default function OrderPage() {
           <Label>보내는 사람</Label>
           <Input
             type="text"
-            {...register('sender', { required: '보내는 사람을 입력해주세요.' })}
+            {...register('sender')}
             placeholder="이름을 입력하세요."
           />
           {errors.sender && (

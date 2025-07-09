@@ -174,9 +174,7 @@ export default function RecipientModal({
               <Label>이름</Label>
               <Input
                 placeholder="이름을 입력하세요."
-                {...register(`recipients.${index}.name`, {
-                  required: '이름을 입력해주세요.',
-                })}
+                {...register(`recipients.${index}.name`)}
               />
               {errors.recipients?.[index]?.name && (
                 <ErrorText>
@@ -189,11 +187,6 @@ export default function RecipientModal({
               <Input
                 placeholder="전화번호를 입력하세요."
                 {...register(`recipients.${index}.phone`, {
-                  required: '전화번호를 입력해주세요.',
-                  pattern: {
-                    value: /^010\d{8}$/,
-                    message: '전화번호 형식이 올바르지 않습니다.',
-                  },
                   validate: (value) => {
                     if (phones.filter((p) => p === value).length > 1) {
                       return '전화번호가 중복되었습니다.'
@@ -215,7 +208,6 @@ export default function RecipientModal({
                 placeholder="수량을 입력하세요."
                 {...register(`recipients.${index}.qty`, {
                   valueAsNumber: true,
-                  min: { value: 1, message: '1개 이상 입력해주세요.' },
                 })}
               />
               {errors.recipients?.[index]?.qty && (
