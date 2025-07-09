@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import NavigationBar from '@/components/NavigationBar';
-import {Container, Image, Title, Description, Button} from "./styles"
+import { Container, Image, Title, Description, Button } from "./styles"
 import NotFoundImg from '@/assets/not-found.png';
 
 const NotFoundPage = () => {
@@ -8,7 +7,6 @@ const NotFoundPage = () => {
 
   return (
     <>
-      <NavigationBar />
       <Container>
         <Image src={NotFoundImg} alt="404 image" />
         <Title>잘못된 접근입니다.</Title>

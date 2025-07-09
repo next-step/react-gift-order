@@ -18,6 +18,7 @@ const GiftRankingGrid = () => {
         {visibleItems.map((item, index) => (
           <ProductCard
             key={item.id}
+            id={item.id}
             rank={index + 1}
             imageURL={item.imageURL}
             brand={item.brand}

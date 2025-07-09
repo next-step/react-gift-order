@@ -1,6 +1,8 @@
 import styled from '@emotion/styled';
 import { IoArrowBack, IoPersonOutline } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
+import { useLogin } from '@/contexts/LoginContext';
+import { PATH } from '@/constants/paths';
 
 const FixedHeader = styled.header`
   position: fixed;
@@ -35,6 +37,7 @@ const Title = styled.button`
 
 const NavigationBar = () => {
   const navigate = useNavigate();
+  const { isLoggedIn } = useLogin();
 
   return (
     <FixedHeader>
@@ -42,8 +45,8 @@ const NavigationBar = () => {
         <Icon onClick={() => navigate(-1)}>
           <IoArrowBack size={24} />
         </Icon>
-        <Title>선물하기</Title>
-        <Icon onClick={() => navigate('/login')}>
+        <Title onClick={() => navigate(PATH.HOME)}>선물하기</Title>
+        <Icon onClick={() => navigate(isLoggedIn ? PATH.MY_PAGE : PATH.LOGIN)}>
           <IoPersonOutline size={24} />
         </Icon>
       </Container>

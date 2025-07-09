@@ -5,7 +5,6 @@ const Frame = styled.div`
   align-items: center;
   background-color: ${({ theme }) => theme.colors.semantic.backgroundDisabled};
   padding: ${({ theme }) => theme.spacing.spacing4} ${({ theme }) => theme.spacing.spacing3};
-  margin-top: ${({ theme }) => theme.spacing.spacing11};
 `;
 
 const Box = styled.div`
@@ -15,7 +14,7 @@ const Box = styled.div`
   width: 100%;
   background-color: ${({ theme }) => theme.colors.semantic.backgroundDefault};
   padding: ${({ theme }) => theme.spacing.spacing4};
-  
+
   border-radius: ${({ theme }) => theme.spacing.spacing3};
 `;
 
