@@ -4,6 +4,8 @@ import kakao_logo from '@src/assets/icons/kakao_logo.svg';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useLoginForm from '@src/hooks/useLoginForm';
 import LoginInput from '@src/components/LoginInput';
+import { useUserInfo } from '@/contexts/AuthContext';
+import ROUTES from '@/constants/routes';
 
 const mainStyle = css`
   width: 100%;
@@ -53,13 +55,33 @@ const spacer48 = css`
 `;
 
 const Login = () => {
-  const { formValue, handleChange, handleBlur, isError, loginActivated } =
+  const { setUser } = useUserInfo();
+  const { formValue, setValue, isError, setError, loginActivated } =
     useLoginForm();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const loginClicked = () => {
-    const from = location.state?.from?.pathname || '/';
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    const field = name as 'email' | 'password';
+
+    setValue(field, value);
+    setError(field, value);
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    if (name === 'email' || name === 'password') {
+      setError(name, value);
+    }
+  };
+
+  const formSubmitted = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const name = formValue.email.split('@')[0];
+    setUser({ name: name, email: formValue.email });
+    const from = location.state?.from?.pathname || ROUTES.HOME;
     navigate(from, { replace: true });
   };
 
@@ -67,14 +89,14 @@ const Login = () => {
     <main css={mainStyle}>
       <img css={logoStyle} src={kakao_logo} alt="카카오 공식 로고" />
       <section css={sectionStyle}>
-        <form action="">
+        <form onSubmit={formSubmitted}>
           <LoginInput
             name="email"
             type="email"
             placeholder="이메일"
             value={formValue.email}
             onChange={handleChange}
-            onBlur={() => handleBlur('email')}
+            onBlur={handleBlur}
             error={isError.email}
           />
 
@@ -86,18 +108,13 @@ const Login = () => {
             placeholder="비밀번호"
             value={formValue.password}
             onChange={handleChange}
-            onBlur={() => handleBlur('password')}
+            onBlur={handleBlur}
             error={isError.password}
           />
 
           <div css={spacer48} />
 
-          <button
-            type="submit"
-            css={buttonStyle}
-            onClick={loginClicked}
-            disabled={!loginActivated}
-          >
+          <button css={buttonStyle} disabled={!loginActivated}>
             로그인
           </button>
         </form>

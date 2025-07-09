@@ -5,10 +5,14 @@ import { BrowserRouter } from 'react-router-dom';
 import App from '@src/App.tsx';
 import '@src/styles/reset.css';
 
+import { UserInfoProvider } from '@src/contexts/AuthContext';
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <UserInfoProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </UserInfoProvider>
   </StrictMode>
 );

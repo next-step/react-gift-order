@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import theme from '@src/styles/tokens/index';
 import plusIcon from '@src/assets/icons/plus.svg';
+import { useUserInfo } from '@/contexts/AuthContext';
 
 const bannerStyle = css`
   background-color: ${theme.colors.gray200};
@@ -48,13 +49,18 @@ const pTagStyle = css`
 `;
 
 const Banner = () => {
+  const { user } = useUserInfo();
+
   return (
     <section css={bannerStyle}>
       <button css={buttonStyle}>
         <div css={plusStyle}>
           <img src={plusIcon} alt="추가 버튼" />
         </div>
-        <p css={pTagStyle}>선물할 친구를 선택해 주세요.</p>
+        <p css={pTagStyle}>
+          {user ? `${user.name}님! ` : ''}
+          선물할 친구를 선택해 주세요.
+        </p>
       </button>
     </section>
   );

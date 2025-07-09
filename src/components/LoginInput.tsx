@@ -1,14 +1,9 @@
+import type { InputHTMLAttributes } from 'react';
 import { css } from '@emotion/react';
 import theme from '@src/styles/tokens/index';
 
-type LoginInputProps = {
-  name: 'email' | 'password';
-  type: 'email' | 'password';
-  placeholder: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onBlur: () => void;
-  error: string;
+type LoginInputProps = InputHTMLAttributes<HTMLInputElement> & {
+  error?: string;
 };
 
 const inputDiv = css`
@@ -51,26 +46,10 @@ const errorMessageStyle = css`
   margin-top: ${theme.spacing.spacing1};
 `;
 
-const LoginInput = ({
-  name,
-  type,
-  placeholder,
-  value,
-  onChange,
-  onBlur,
-  error,
-}: LoginInputProps) => {
+const LoginInput = ({ error, ...props }: LoginInputProps) => {
   return (
     <div css={inputDiv}>
-      <input
-        css={inputStyle(!!error)}
-        name={name}
-        type={type}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        onBlur={onBlur}
-      />
+      <input css={inputStyle(!!error)} {...props} />
       {error && <p css={errorMessageStyle}>{error}</p>}
     </div>
   );

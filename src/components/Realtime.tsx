@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import theme from '@src/styles/tokens/index';
 import product from '@src/assets/mock/itemList_mock';
+import { useAuthNavigation } from '@/hooks/useAuthNavigation';
 
 const targets = [
   { key: 'ALL', label: '전체', icon: 'ALL' },
@@ -144,6 +145,9 @@ const rankingGrid = css`
 const rankingItemBox = css`
   width: 100%;
   position: relative;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const rankingNumberWins = css`
@@ -287,6 +291,7 @@ const Realtime = () => {
   const [selectedSort, setSelectedSort] = useState(initialSort);
   const [userHasSelected, setUserHasSelected] = useState(false);
 
+  const { navigateIfLoggedIn } = useAuthNavigation();
   useEffect(() => {
     if (!userHasSelected && [...searchParams].length === 0) {
       if (selectedTarget === DEFAULT_TARGET && selectedSort === DEFAULT_SORT) {
@@ -333,6 +338,10 @@ const Realtime = () => {
     setUserHasSelected(true);
   };
 
+  const goOrder = (key: number) => {
+    navigateIfLoggedIn(`/order/${key}`);
+  };
+
   return (
     <>
       <div css={spacer40} />
@@ -373,7 +382,13 @@ const Realtime = () => {
             {[...Array(displayedCount)].map((_, i) => {
               const rank = i + 1;
               return (
-                <div css={rankingItemBox} key={rank}>
+                <div
+                  css={rankingItemBox}
+                  key={rank}
+                  onClick={() => {
+                    goOrder(rank);
+                  }}
+                >
                   <span css={rank <= 3 ? rankingNumberWins : rankingNumber}>
                     {rank}
                   </span>

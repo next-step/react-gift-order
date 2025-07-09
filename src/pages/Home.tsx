@@ -5,12 +5,12 @@ import Realtime from '@src/components/Realtime';
 
 const Home = () => {
   return (
-    <main>
+    <>
       <Banner />
       <Maintheme />
       <AdBoard />
       <Realtime />
-    </main>
+    </>
   );
 };
 
