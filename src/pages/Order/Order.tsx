@@ -1,16 +1,22 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { OrderContainer } from '@/styles/Order/Order.styles';
 import OrderBtn from '@/components/OrderBtn';
 import Cards from '@/pages/Order/Cards';
 import Sender from '@/pages/Order/Sender';
 import Reciever from '@/pages/Order/Reciever';
 import ItemInfo from '@/pages/Order/ItemInfo';
-import type { mockItemType } from '@/mocks/mockItem';
+import { mockItemList } from '@/mocks/mockItem';
 import useOrder from '@/hooks/useOrder';
 
 function Order() {
   const location = useLocation();
-  const item: mockItemType = location.state?.item;
+  const { orderId } = useParams();
+  const parsedItemId = Number(orderId);
+  const item = location.state?.item || mockItemList.find((i) => i.id === parsedItemId);
+  const order = useOrder(item);
+
+  if (!item) return <div>상품 정보를 찾을 수 없습니다.</div>;
+
   const {
     currentId,
     currentOrder,
@@ -26,7 +32,7 @@ function Order() {
     handleRecieverPhoneChange,
     validate,
     SubmitOrder,
-  } = useOrder(item);
+  } = order;
 
   return (
     <OrderContainer>
