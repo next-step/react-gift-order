@@ -35,11 +35,13 @@ export const useLoginForm = () => {
 
   const isValid = !!(id && !!pw && !idError && !pwError);
 
-
-  //로그인 버튼 눌렀을 때
   const onSubmit = () => {
     if (!isValid) return;
-    login('dummy-token');
+    const user = {
+      id: id.split('@')[0], //@앞을 기준으로 id 설정
+      email: id,
+    };
+    login(user);
     navigate(from, { replace: true });
   };
 

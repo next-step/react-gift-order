@@ -1,42 +1,54 @@
 import { createContext, useState, useEffect, useContext } from 'react';
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
+const AUTH_TOKEN_KEY = 'authToken';
+const USER_INFO_KEY = 'userInfo';
+interface User {
+  id: string;
+  email: string;
+}
 
 interface AuthContextType {
   isLoggedIn: boolean;
-  login: (token: string) => void;
+  user: User | null; 
+  login: (user: User) => void;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => !!sessionStorage.getItem('authToken'));
+  const [user, setUser] = useState<User | null>(() => {
+    const savedUser = sessionStorage.getItem(USER_INFO_KEY);
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
+
+  const isLoggedIn = !!user;
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isLoggedIn) {
-      sessionStorage.setItem('authToken', 'dummy-token');
+    if (user) {
+      sessionStorage.setItem(USER_INFO_KEY, 'dummy-token');
     } else {
-      sessionStorage.removeItem('authToken');
+      sessionStorage.removeItem(USER_INFO_KEY);
     }
-  }, [isLoggedIn]);
+  }, [user]);
 
-  const login = (token: string) => { setIsLoggedIn(true); };
+  const login = (userData: User) => { setUser(userData); };
 
   const logout = () => {
-    setIsLoggedIn(false);
+    setUser(null);
     navigate('/login');
   };
 
-  const value = { isLoggedIn, login, logout };
+  const value = { isLoggedIn, user, login, logout };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  
+
   if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
