@@ -58,7 +58,7 @@ function App() {
           showProfileButton: false,
         };
       default:
-        if (location.pathname.startsWith('/order/')) {
+        if (location.pathname.startsWith(ROUTE_ORDER)) {
           return {
             title: '선물하기',
             showBackButton: true,
@@ -85,7 +85,7 @@ function App() {
 
   return (
     <MobileLayout>
-      {!location.pathname.startsWith('/order') && (
+      {!location.pathname.startsWith(ROUTE_ORDER) && (
         <NavigationBar
           title={navConfig.title}
           showBackButton={navConfig.showBackButton}
