@@ -7,6 +7,8 @@ import {
   ErrorContainer,
   LoginForm,
 } from '@/styles/Login.styles';
+import { useContext } from 'react';
+import { LoginInfoContext } from '@/contexts/LoginInfoContext';
 
 type LoginProps = {
   onLogin: () => void;
@@ -26,9 +28,14 @@ function Login({ onLogin }: LoginProps) {
     isValidForm,
   } = useLoginForm();
 
+  const { setLoginInfo } = useContext(LoginInfoContext);
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!isValidForm()) return;
+    setLoginInfo(id);
+    localStorage.setItem('id', id);
+    localStorage.setItem('name', id.split('@')[0]);
     onLogin();
   }
 

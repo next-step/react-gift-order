@@ -8,6 +8,7 @@ import {
   ItemName,
   ItemPrice,
 } from '@/styles/Item/Item.styles';
+import { useNavigate } from 'react-router-dom';
 
 type ItemProps = {
   index: number;
@@ -15,8 +16,14 @@ type ItemProps = {
 };
 
 function Item({ index, itemData }: ItemProps) {
+  const navigate = useNavigate();
+
+  function handleItemClick(itemId: number) {
+    navigate(`/order/${itemId}`, { state: { item: itemData } });
+  }
+
   return (
-    <ItemContainerStyle>
+    <ItemContainerStyle onClick={() => handleItemClick(index)}>
       <ItemImageWrapper>
         <ItemIndex index={index}>{index + 1}</ItemIndex>
         <ItemImg src={itemData.imageURL} alt={itemData.name} />

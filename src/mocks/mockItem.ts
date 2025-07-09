@@ -16,6 +16,22 @@ export const mockItem = {
   },
 };
 
+export const mockItemList = Array.from({ length: 20 }, (_, index) => ({
+  id: index + 1,
+  name: mockItem.name,
+  imageURL: mockItem.imageURL,
+  price: {
+    basicPrice: mockItem.price.basicPrice,
+    discountRate: mockItem.price.discountRate,
+    sellingPrice: mockItem.price.sellingPrice,
+  },
+  brandInfo: {
+    id: mockItem.brandInfo.id,
+    name: mockItem.brandInfo.name,
+    imageURL: mockItem.brandInfo.imageURL,
+  },
+}));
+
 export type mockItemType = {
   id: number;
   name: string;
