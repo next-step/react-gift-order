@@ -26,7 +26,7 @@ export const OrderButton = () => {
   const navigate = useNavigate();
   const [isValid, setIsValid] = useState(false);
   const { isFirstTry, message, sender, recipient, product, error } = useOrderInfo();
-  const totalPrice = product.price * product.amount;
+  const totalPrice = product.price * parseInt(product.amount);
 
   useEffect(() => {
     if (!isFirstTry) {

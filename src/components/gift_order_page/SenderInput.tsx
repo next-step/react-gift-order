@@ -63,7 +63,7 @@ const ErrorText = styled.div`
 `;
 
 export const SenderInput = () => {
-  const { setIsFirstTry, sender, error } = useOrderInfo();
+  const { sender, error } = useOrderInfo();
   const [senderNameInputFieldStyle, setsenderNameInputFieldStyle] = useState<inputStyle>('idle');
   const [isClicked, setIsClicked] = useState(false);
 
@@ -97,7 +97,6 @@ export const SenderInput = () => {
         onChange={(e) => {
           sender.setName(e.target.value);
           error.setTargetSenderName('modifying..');
-          setIsFirstTry(false);
         }}
         onFocus={() => {
           setIsClicked(true);

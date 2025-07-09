@@ -159,7 +159,6 @@ export const RecipientInput = () => {
             onChange={(e) => {
               recipient.setName(e.target.value);
               error.setTargetRecipientName('modifying..');
-              setIsFirstTry(false);
             }}
             onFocus={() => {
               setSelectedInput('name');
@@ -202,6 +201,7 @@ export const RecipientInput = () => {
             onChange={(e) => {
               if (parseInt(e.target.value)) {
                 product.setAmount(e.target.value);
+                setIsFirstTry(false);
                 error.setTargetAmount('1');
               } else {
                 product.setAmount('0');

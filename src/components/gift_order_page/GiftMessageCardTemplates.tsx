@@ -92,7 +92,7 @@ export const GiftMessageCardTemplates = () => {
   const index = giftMessageCards.findIndex((item) => item.id === selectedCardId);
   const [messageInputFieldStyle, setMessageInputFieldStyle] = useState<inputStyle>('idle');
   const [isClicked, setIsClicked] = useState(false);
-  const { setIsFirstTry, message, setMessage, error } = useOrderInfo();
+  const { message, setMessage, error } = useOrderInfo();
 
   const handleInputFieldStyle = useCallback(() => {
     let inputStatus: inputStyle = 'idle';
@@ -141,7 +141,6 @@ export const GiftMessageCardTemplates = () => {
           onChange={(e) => {
             setMessage(e.target.value);
             error.setTargetMessage('modifying..');
-            setIsFirstTry(false);
           }}
           onFocus={() => setIsClicked(true)}
           onBlur={() => setIsClicked(false)}
