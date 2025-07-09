@@ -16,7 +16,7 @@ function AuthGuard({ children }: ProtectedRouteProps) {
   }
 
   // 인증된 사용자는 원래 컴포넌트를 렌더링
-  return <>{children}</>;
+  return children;
 }
 
 export default AuthGuard;
