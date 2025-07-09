@@ -1,4 +1,6 @@
 import styled from '@emotion/styled';
+import { useLoginForm } from '@hooks/useLoginForm';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div(({ theme }) => ({
@@ -62,21 +64,41 @@ const Button = styled.button(({ theme }) => ({
 
 const Login = () => {
   const navigate = useNavigate();
+  const { email, setEmail, emailError, validateEmail, isValid } =
+    useLoginForm();
 
-  const loginButtunHandler = () => {
-    if (window.history.length > 2) {
-      navigate(-1);
-    } else {
-      navigate('/');
+  const [emailTouched, setEmailTouched] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const isEmailOk = validateEmail();
+    if (isEmailOk) {
+      if (window.history.length > 2) {
+        navigate(-1);
+      } else {
+        navigate('/');
+      }
     }
   };
 
   return (
-    <Container>
+    <Container as="form" onSubmit={handleSubmit}>
       <Title>kakao</Title>
-      <Input type="email" placeholder="이메일" />
+      <Input
+        type="email"
+        placeholder="이메일"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        onBlur={() => {
+          setEmailTouched(true);
+          validateEmail();
+        }}
+      />
+      {emailTouched && emailError && emailError}
       <Input type="password" placeholder="비밀번호" />
-      <Button onClick={loginButtunHandler}>로그인</Button>
+      <Button type="submit" disabled={!isValid}>
+        로그인
+      </Button>
     </Container>
   );
 };
