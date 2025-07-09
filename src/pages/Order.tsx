@@ -4,6 +4,7 @@ import PresentCard from '@/components/PresentCard';
 import OrderForm from '@/components/OrderForm';
 import ItemInfo from '@/components/ItemInfo';
 import useOrderForm from '@/hooks/useOrderForm';
+import product from '@/assets/mock/itemList_mock';
 
 const sectionStyle = css`
   width: 100%;
@@ -46,7 +47,7 @@ const Order = () => {
     if (validate()) {
       alert(
         `주문이 완료되었습니다.\n` +
-          `상품명: BBQ 양념치킨+크림치즈볼+콜라1.25L\n` +
+          `상품명: ${product.name}\n` +
           `구매수량: ${values.quantity}\n` +
           `발신자이름: ${values.senderName}\n` +
           `메시지: ${values.message}`

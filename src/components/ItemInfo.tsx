@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import theme from '@src/styles/tokens/index';
+import product from '@src/assets/mock/itemList_mock';
 
 const space12 = css`
   height: ${theme.spacing.spacing3};
@@ -90,16 +91,16 @@ const ItemInfo = () => {
       <div css={itemBox}>
         <img
           css={imgStyle}
-          src="	https://st.kakaocdn.net/product/gift/product/20231030175450_53e90ee9708f45ffa45b3f7b4bc01c7c.jpg"
+          src={product.imageURL}
           alt=""
         />
         <div css={itemInfoDiv}>
-          <p css={itemTitleP}>BBQ 양념치킨+ 크림치즈볼+콜라1.25L</p>
-          <p css={itemBrandP}>BBQ</p>
+          <p css={itemTitleP}>{product.name}</p>
+          <p css={itemBrandP}>{product.brandInfo.name}</p>
           <div css={space4} />
           <p css={priceP}>
             <span css={spanStyle}>상품가 </span>
-            29000원
+            {product.price.sellingPrice}원
           </p>
         </div>
       </div>
