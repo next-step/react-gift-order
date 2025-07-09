@@ -3,14 +3,14 @@ import styled from "@emotion/styled";
 export const ReceiverSection = styled.section`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
   background-color: ${({ theme }) => theme.colors.background.default};
   padding: ${({ theme }) => theme.spacing[4]};
+  gap: 1rem;
 `;
 
 export const SectionTitle = styled.h2`
-  font-size: ${({ theme }) => theme.typography.title.title2Bold.fontSize};
-  font-weight: ${({ theme }) => theme.typography.title.title2Bold.fontWeight};
+  font-size: ${({ theme }) => theme.typography.label.label1Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label.label1Bold.fontWeight};
   color: ${({ theme }) => theme.colors.text.default};
   margin: 0;
 `;
@@ -23,8 +23,9 @@ export const FormField = styled.div`
 `;
 
 export const FieldLabel = styled.label`
-  font-size: ${({ theme }) => theme.typography.body.body1Regular.fontSize};
-  font-weight: ${({ theme }) => theme.typography.body.body1Regular.fontWeight};
+  font-size: ${({ theme }) => theme.typography.label.label1Regular.fontSize};
+  font-weight: ${({ theme }) =>
+    theme.typography.label.label1Regular.fontWeight};
   color: ${({ theme }) => theme.colors.text.default};
   min-width: 4rem;
 `;

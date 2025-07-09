@@ -85,6 +85,7 @@ export const InfoText = styled.p`
 
 export const AddSection = styled.div`
   margin-top: ${({ theme }) => theme.spacing[3]};
+  margin-bottom: ${({ theme }) => theme.spacing[5]};
 `;
 
 export const AddSectionButton = styled.button`
@@ -102,6 +103,7 @@ export const AddSectionButton = styled.button`
 export const ModalFooter = styled.div`
   display: flex;
   gap: ${({ theme }) => theme.spacing[3]};
+  margin-top: ${({ theme }) => theme.spacing[4]};
 `;
 
 export const CancelButton = styled.button`
