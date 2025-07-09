@@ -34,3 +34,16 @@ export const FormContainer = styled.div`
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing[2]};
 `;
+
+export const ShowModalButton = styled.button`
+  cursor: pointer;
+  border: 0;
+  background-color: transparent;
+  background-color: ${({ theme }) => theme.colors.gray[300]};
+  padding: ${({ theme }) => theme.spacing[2]} ${({ theme }) => theme.spacing[4]};
+  color: ${({ theme }) => theme.colors.text.default};
+  font-size: ${({ theme }) => theme.typography.label.label1Regular.fontSize};
+  font-weight: ${({ theme }) =>
+    theme.typography.label.label1Regular.fontWeight};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+`;
