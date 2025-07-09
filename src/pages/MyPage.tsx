@@ -1,15 +1,12 @@
 import { Section } from '@/components/layout';
 import { Button } from '@/components/common';
 import { useAuth } from '@/hooks';
-import { useNavigate } from 'react-router-dom';
 
 const MyPage = () => {
   const { user, logout } = useAuth();
-  const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
-    navigate('/login', { replace: true });
   };
 
   return (
