@@ -11,4 +11,6 @@ const RECEIVER_SECTION_CONSTANTS = {
   QUANTITY_ERROR: "수량을 입력해주세요.",
 } as const;
 
+export const MAX_RECEIVERS: number = 10;
+
 export default RECEIVER_SECTION_CONSTANTS;

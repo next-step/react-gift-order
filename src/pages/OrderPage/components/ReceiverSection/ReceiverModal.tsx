@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useForm, useFieldArray } from "react-hook-form";
 import {
   ModalHeader,
   ModalOverlay,
@@ -15,107 +15,55 @@ import {
   ReceiverList,
 } from "./ReceiverModal.styles";
 import ReceiverForm from "./ReceiverForm";
-import {
-  validateReceiverData,
-  validatePhoneNumber,
-  validateQuantity,
-} from "../../utils/validation";
+import { MAX_RECEIVERS } from "../../constants/receiverSection";
 
 interface ReceiverModalProps {
   handleCloseModal: () => void;
 }
 
-export interface Receiver {
-  id: string;
-  name: string;
-  phone: string;
-  quantity: string;
-  errors: {
-    name?: string;
-    phone?: string;
-    quantity?: string;
-  };
+interface FormData {
+  receivers: {
+    name: string;
+    phone: string;
+    quantity: string;
+  }[];
 }
 
-const MAX_RECEIVERS = 10;
-
 function ReceiverModal({ handleCloseModal }: ReceiverModalProps) {
-  const [receivers, setReceivers] = useState<Receiver[]>([]);
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    defaultValues: {
+      receivers: [],
+    },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "receivers",
+  });
 
   const handleAddReceiver = () => {
-    if (receivers.length < MAX_RECEIVERS) {
-      const newReceiver: Receiver = {
-        id: `receiver-${Date.now()}`,
-        name: "",
-        phone: "",
-        quantity: "",
-        errors: {},
-      };
-
-      setReceivers((prev) => [...prev, newReceiver]);
+    if (fields.length < MAX_RECEIVERS) {
+      append({ name: "", phone: "", quantity: "" });
     }
   };
 
-  const handleRemoveReceiver = (receiverId: string) => {
-    setReceivers((prev) => prev.filter((r) => r.id !== receiverId));
-  };
-
-  const updateReceiver = (
-    receiverId: string,
-    field: keyof Receiver,
-    value: string
-  ) => {
-    setReceivers((prev) =>
-      prev.map((r) => {
-        if (r.id !== receiverId) return r;
-
-        const updatedReceiver = { ...r, [field]: value };
-        const newErrors = { ...r.errors };
-
-        if (field === "name" && value.trim()) {
-          delete newErrors.name;
-        } else if (
-          field === "phone" &&
-          value.trim() &&
-          validatePhoneNumber(value)
-        ) {
-          delete newErrors.phone;
-        } else if (
-          field === "quantity" &&
-          value.trim() &&
-          validateQuantity(value)
-        ) {
-          delete newErrors.quantity;
-        }
-
-        return { ...updatedReceiver, errors: newErrors };
-      })
-    );
-  };
-
-  const validateAllReceivers = () => {
-    if (receivers.length === 0) {
+  const onSubmit = (data: FormData) => {
+    if (data.receivers.length === 0) {
       handleCloseModal();
       return;
     }
 
-    let allValid = true;
+    alert("주문 완료");
 
-    const updatedReceivers = receivers.map((receiver) => {
-      const errors = validateReceiverData(receiver);
+    handleCloseModal();
+  };
 
-      if (Object.keys(errors).length > 0) {
-        allValid = false;
-      }
-
-      return { ...receiver, errors };
-    });
-
-    setReceivers(updatedReceivers);
-
-    if (allValid) {
-      handleCloseModal();
-    }
+  const onInvalid = () => {
+    // 검증 실패 시
   };
 
   return (
@@ -133,28 +81,33 @@ function ReceiverModal({ handleCloseModal }: ReceiverModalProps) {
           </InfoTextContainer>
 
           <AddSection>
-            <AddSectionButton onClick={handleAddReceiver}>
+            <AddSectionButton type="button" onClick={handleAddReceiver}>
               추가하기
             </AddSectionButton>
           </AddSection>
 
           <ReceiverList>
-            {receivers.map((receiver, index) => (
+            {fields.map((field, index) => (
               <ReceiverForm
-                key={receiver.id}
-                receiver={receiver}
+                key={field.id}
                 index={index}
-                totalCount={receivers.length}
-                handleRemoveReceiver={handleRemoveReceiver}
-                updateReceiver={updateReceiver}
+                totalCount={fields.length}
+                control={control}
+                errors={errors}
+                onRemove={() => remove(index)}
               />
             ))}
           </ReceiverList>
         </ModalBody>
         <ModalFooter>
-          <CancelButton onClick={handleCloseModal}>취소</CancelButton>
-          <CompleteButton onClick={validateAllReceivers}>
-            {receivers.length}명 완료
+          <CancelButton type="button" onClick={handleCloseModal}>
+            취소
+          </CancelButton>
+          <CompleteButton
+            type="button"
+            onClick={handleSubmit(onSubmit, onInvalid)}
+          >
+            {fields.length}명 완료
           </CompleteButton>
         </ModalFooter>
       </ModalContent>
