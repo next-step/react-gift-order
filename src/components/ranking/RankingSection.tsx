@@ -5,45 +5,15 @@ import FilterButtonGroup from './FilterButtonGroup';
 import ProductGrid from './ProductGrid';
 import MoreButton from './MoreButton';
 import { type Product } from './ProductCard';
-import { products } from '@/data';
+import {
+  getValidValue,
+  getValidValues,
+  generateRankingProducts,
+} from '@/utils';
 import { targetOptions, rankOptions } from '@/constants';
 
 type TargetType = (typeof targetOptions)[number]['value'];
 type RankType = (typeof rankOptions)[number]['value'];
-
-// Generic validation 함수로 통합
-const getValidValue = <T extends string>(
-  param: string | null,
-  validValues: readonly string[],
-  defaultValue: T
-): T => {
-  return validValues.includes(param as T) ? (param as T) : defaultValue;
-};
-
-// Helper 함수로 valid values 생성
-const getValidValues = (options: readonly { value: string }[]) =>
-  options.map((option) => option.value);
-
-// TODO: 실제 랭킹 API에서 데이터 가져오도록 구현 (현재는 BBQ 데이터 21개 복제)
-const generateRankingProducts = (): Product[] => {
-  const baseProduct = products.find((p) => p.brandInfo.name === 'BBQ');
-  if (!baseProduct) {
-    console.warn('BBQ 상품을 찾을 수 없습니다.');
-    return [];
-  }
-
-  return Array.from({ length: 21 }, (_, index) => ({
-    // BBQ 데이터를 21개로 복제
-    id: `${baseProduct.id}-${index + 1}`,
-    productId: baseProduct.id,
-    productName: baseProduct.name,
-    price: baseProduct.price.sellingPrice,
-    brandName: baseProduct.brandInfo.name,
-    image: baseProduct.imageURL,
-    rank: index + 1,
-    isTopThree: index < 3,
-  }));
-};
 
 const RankingSection = () => {
   const [searchParams, setSearchParams] = useSearchParams();
