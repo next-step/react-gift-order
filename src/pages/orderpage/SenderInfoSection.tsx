@@ -20,13 +20,7 @@ const SenderInfoSection = ({ register, error }: Props) => {
     <>
       <Title>보내는 사람 이름</Title>
       <SenderNameInput
-        {...register("sender", {
-          required: "이름을 입력해주세요.",
-          maxLength: {
-            value: 20,
-            message: "이름은 20자 이내여야 합니다.",
-          },
-        })}
+        {...register("sender")}
         placeholder="이름을 입력하세요"
       />
       {error && <ErrorMessage>{error}</ErrorMessage>}

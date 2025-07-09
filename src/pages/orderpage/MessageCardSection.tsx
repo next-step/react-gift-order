@@ -53,9 +53,7 @@ const MessageCardSection = ({ register, setValue, error }: Props) => {
       <MessageInputWrapper>
         <MessageInput
           placeholder="메시지를 입력해주세요."
-          {...register("message", {
-            required: "메시지를 입력해주세요.",
-          })}
+          {...register("message")}
         />
         {error && <ErrorText>{error}</ErrorText>}
       </MessageInputWrapper>

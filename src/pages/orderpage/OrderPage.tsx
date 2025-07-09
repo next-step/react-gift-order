@@ -9,6 +9,9 @@ import ProductSummarySection from "@/pages/orderpage/ProductSummarySection";
 import { useForm } from "react-hook-form";
 import OrderButton from "@/components/common/BaseButton";
 import { MOCK_PRODUCTS } from "@/mocks/products_list_mock";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { orderSchema } from "@/utils/validator";
+import type { OrderFormValues } from "@/utils/validator";
 
 const OrderPage = () => {
   const navigate = useNavigate();
@@ -20,7 +23,8 @@ const OrderPage = () => {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm({
+  } = useForm<OrderFormValues>({
+    resolver: zodResolver(orderSchema),
     defaultValues: {
       message: "",
       sender: "",

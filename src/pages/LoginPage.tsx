@@ -4,11 +4,9 @@ import LoginButton from "@/components/common/BaseButton";
 import KakaoLogo from "@/components/common/KakaoLogo";
 import { useAuth } from "@/contexts/AuthContext";
 import { useForm } from "react-hook-form";
-
-type FormValues = {
-  email: string;
-  password: string;
-};
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema } from "@/utils/validator";
+import type { LoginFormValues } from "@/utils/validator";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -21,12 +19,13 @@ const LoginPage = () => {
     handleSubmit,
     formState: { errors },
     watch,
-  } = useForm<FormValues>({
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
     mode: "onTouched",
     reValidateMode: "onChange",
   });
 
-  const onSubmit = (data: FormValues) => {
+  const onSubmit = (data: LoginFormValues) => {
     login(data.email);
     navigate(redirectTo);
   };
@@ -40,29 +39,13 @@ const LoginPage = () => {
         <KakaoLogo />
       </Logo>
       <Form noValidate onSubmit={handleSubmit(onSubmit)}>
-        <Input
-          type="email"
-          placeholder="이메일"
-          {...register("email", {
-            required: "이메일을 입력해주세요.",
-            pattern: {
-              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-              message: "이메일은 이메일 형식으로 입력해주세요.",
-            },
-          })}
-        />
+        <Input type="email" placeholder="이메일" {...register("email")} />
         {errors.email?.message && <ErrorText>{errors.email.message}</ErrorText>}
 
         <Input
           type="password"
           placeholder="비밀번호"
-          {...register("password", {
-            required: "비밀번호를 입력해주세요.",
-            minLength: {
-              value: 8,
-              message: "비밀번호는 최소 8자 이상이어야 합니다.",
-            },
-          })}
+          {...register("password")}
         />
         {errors.password?.message && (
           <ErrorText>{errors.password.message}</ErrorText>

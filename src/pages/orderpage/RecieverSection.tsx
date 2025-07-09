@@ -21,46 +21,19 @@ const ReceiverInfoSection = ({ register, errors }: Props) => {
       <Title>받는 사람</Title>
       <FormRow>
         <Label>이름</Label>
-        <Input
-          {...register("receiver", {
-            required: "받는 사람 이름을 입력해주세요.",
-            maxLength: {
-              value: 20,
-              message: "이름은 20자 이내여야 합니다.",
-            },
-          })}
-          placeholder="이름을 입력하세요."
-        />
+        <Input {...register("receiver")} placeholder="이름을 입력하세요." />
       </FormRow>
       {errors.receiver && <ErrorText>{errors.receiver.message}</ErrorText>}
 
       <FormRow>
         <Label>전화번호</Label>
-        <Input
-          {...register("phone", {
-            required: "전화번호를 입력해주세요.",
-            pattern: {
-              value: /^010\d{8}$/,
-              message: "010으로 시작하는 11자리 숫자를 입력하세요.",
-            },
-          })}
-          placeholder="전화번호를 입력하세요."
-        />
+        <Input {...register("phone")} placeholder="전화번호를 입력하세요." />
       </FormRow>
       {errors.phone && <ErrorText>{errors.phone.message}</ErrorText>}
 
       <FormRow>
         <Label>수량</Label>
-        <Input
-          type="number"
-          {...register("quantity", {
-            required: "수량을 입력해주세요.",
-            min: {
-              value: 1,
-              message: "수량은 최소 1개 이상이어야 합니다.",
-            },
-          })}
-        />
+        <Input type="number" {...register("quantity")} />
       </FormRow>
       {errors.quantity && <ErrorText>{errors.quantity.message}</ErrorText>}
     </>
