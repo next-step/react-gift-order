@@ -11,7 +11,7 @@ const Section = styled.section`
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: ${({ theme }) => theme.spacing.spacing3};
 `;
 

@@ -38,8 +38,10 @@ const Title = styled.h2(({ theme }) => ({
 
 const FilterRow = styled.div(({ theme }) => ({
   display: 'flex',
+  justifyContent: 'space-between',
   gap: theme.spacing.spacing2,
   marginBottom: theme.spacing.spacing3,
+  padding: theme.spacing.spacing2,
 }));
 
 const FilterButton = styled.button<{ active: boolean }>(
