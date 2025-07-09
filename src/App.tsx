@@ -1,4 +1,10 @@
-import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import {
+  Routes,
+  Route,
+  useLocation,
+  useNavigate,
+  Outlet,
+} from 'react-router-dom';
 import { MobileLayout } from '@/components/layout';
 import { NavigationBar } from '@/components/navigation';
 import { PrivateRoute } from '@/components/common';
@@ -9,8 +15,24 @@ import { useAuth } from '@/hooks';
 const ROUTE_HOME = '/';
 const ROUTE_LOGIN = '/login';
 const ROUTE_MY = '/my';
-const ROUTE_ORDER = '/order/:productId';
+const ROUTE_ORDER = '/order';
 const ROUTE_NOT_FOUND = '*';
+
+// OrderLayout 컴포넌트 추가
+function OrderLayout() {
+  const navigate = useNavigate();
+  return (
+    <>
+      <NavigationBar
+        title="선물하기"
+        showBackButton={true}
+        showProfileButton={false}
+        onBackClick={() => navigate(ROUTE_HOME)}
+      />
+      <Outlet />
+    </>
+  );
+}
 
 function App() {
   const location = useLocation();
@@ -92,14 +114,16 @@ function App() {
             </PrivateRoute>
           }
         />
-        <Route
-          path={ROUTE_ORDER}
-          element={
-            <PrivateRoute>
-              <OrderPage />
-            </PrivateRoute>
-          }
-        />
+        <Route path={ROUTE_ORDER} element={<OrderLayout />}>
+          <Route
+            path=":productId"
+            element={
+              <PrivateRoute>
+                <OrderPage />
+              </PrivateRoute>
+            }
+          />
+        </Route>
         <Route path={ROUTE_NOT_FOUND} element={<NotFoundPage />} />
       </Routes>
     </MobileLayout>
