@@ -44,6 +44,7 @@ export const ProductRankingFilter = ({ option, onOptionChange }: Props) => {
       <HorizontalSpacing size='spacing4' />
       <RankTypeWrapper>
         <RankingFilterRankTypeButton
+        
           label='받고 싶어한'
           value='MANY_WISH'
           selected={option.rankType === 'MANY_WISH'}
@@ -67,6 +68,7 @@ export const ProductRankingFilter = ({ option, onOptionChange }: Props) => {
 };
 
 const Wrapper = styled.div(({ theme }) => ({
+  
   borderRadius: '1rem',
   backgroundColor: theme.colors.semantic.background.default,
   width: '100%',
