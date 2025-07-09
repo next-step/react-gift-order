@@ -9,7 +9,6 @@ import { MobileLayout } from '@/components/layout';
 import { NavigationBar } from '@/components/navigation';
 import { PrivateRoute } from '@/components/common';
 import { HomePage, LoginPage, MyPage, OrderPage, NotFoundPage } from '@/pages';
-import { useAuth } from '@/hooks';
 
 // 라우트 경로 상수 선언
 const ROUTE_HOME = '/';
@@ -37,7 +36,6 @@ function OrderLayout() {
 function App() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
 
   const getNavigationConfig = () => {
     switch (location.pathname) {
@@ -82,15 +80,7 @@ function App() {
   };
 
   const handleProfileClick = () => {
-    if (isAuthenticated) {
-      // 로그인 상태면 마이페이지로 이동
-      navigate(ROUTE_MY);
-    } else {
-      // 비로그인 상태면 로그인 페이지로 이동
-      navigate(ROUTE_LOGIN, {
-        state: { from: location.pathname },
-      });
-    }
+    navigate(ROUTE_MY);
   };
 
   return (
