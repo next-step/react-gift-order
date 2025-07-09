@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams, useNavigate, generatePath } from 'react-router-dom';
 import { Section } from '@/components/layout';
 import FilterButtonGroup from './FilterButtonGroup';
 import ProductGrid from './ProductGrid';
@@ -10,7 +10,7 @@ import {
   getValidValues,
   generateRankingProducts,
 } from '@/utils';
-import { targetOptions, rankOptions } from '@/constants';
+import { targetOptions, rankOptions, ROUTE_ORDER } from '@/constants';
 
 type TargetType = (typeof targetOptions)[number]['value'];
 type RankType = (typeof rankOptions)[number]['value'];
@@ -75,7 +75,11 @@ const RankingSection = () => {
 
   // 상품 클릭 시 주문 페이지로 이동
   const handleProductClick = (product: Product) => {
-    navigate(`/order/${product.productId}`);
+    navigate(
+      generatePath(`${ROUTE_ORDER}/:productId`, {
+        productId: String(product.productId),
+      })
+    );
   };
 
   return (
