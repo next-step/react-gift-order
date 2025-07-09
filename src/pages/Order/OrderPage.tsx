@@ -21,7 +21,7 @@ import {
   helperTextStyle,
   errorInputStyle,
   errorMessageStyle,
-} from './OrderPage.style';
+} from './styles/OrderPage.style';
 import AddReceiverModal from './components/AddReceiverModal';
 import { useNavigate } from 'react-router-dom';
 
