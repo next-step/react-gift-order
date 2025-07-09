@@ -1,6 +1,4 @@
-/** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
-import { spacing } from '../styles/spacing'
 import type { ReactNode } from 'react'
 
 // 헤더 높이와 일치하는 상단 여백 + 약간의 추가 여백
