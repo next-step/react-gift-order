@@ -1,5 +1,5 @@
+import { validateAmount } from '@/utils/validate';
 import { useState } from 'react';
-import { validateAmount } from '@/page/OrderPage/utils/validateForm';
 
 export type useCheckAmountReturn = {
   value: number;

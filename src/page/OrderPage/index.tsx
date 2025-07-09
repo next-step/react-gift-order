@@ -5,8 +5,9 @@ import SenderInfo from './components/SenderInfo';
 import ReceiverInfo from './components/ReceiverInfo';
 import ProductInfo from './components/ProductInfo';
 import OrderButton from './components/OrderButton';
-import useInput from './hooks/useInput';
 import useCheckAmount from './hooks/useCheckAmount';
+import useInput from './hooks/useInput';
+
 
 const Section = styled.section`
   width: 100%;
@@ -18,7 +19,7 @@ const Section = styled.section`
 const OrderPage = () => {
   const senderName = useInput('text');
   const receiverName = useInput('text');
-  const receiverPhoneNumber = useInput('number');
+  const receiverPhoneNumber = useInput('phoneNumber');
   const receiverAmount = useCheckAmount();
 
   const handleClick = () => {

@@ -1,7 +1,7 @@
+import { getValidator } from '@/utils/validate';
 import { useState } from 'react';
-import { validateNumber, validateText } from '@/page/OrderPage/utils/validateForm';
 
-type FieldType = 'text' | 'number';
+type FieldType = 'email' | 'password' | 'text' | 'phoneNumber';
 
 export type UseInputReturn = {
   value: string;
@@ -12,9 +12,9 @@ export type UseInputReturn = {
 
 const useInput = (type: FieldType, initialValue = ''): UseInputReturn => {
   const [value, setValue] = useState(initialValue);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(initialValue);
 
-  const validator = type === 'text' ? validateText : validateNumber;
+  const validator = getValidator(type);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
