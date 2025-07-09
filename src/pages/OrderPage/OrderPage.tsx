@@ -62,7 +62,7 @@ export function OrderPage() {
                     card.setSelectedCard(cardItem)
                     card.setMessage(cardItem.defaultTextMessage)
                   }}
-                  isSelected={card.selectedCard.id === cardItem.id}
+                  selected={card.selectedCard.id === cardItem.id}
                 />
               ))}
             </CardList>
@@ -159,11 +159,11 @@ const CardList = styled.div`
   margin-bottom: 20px;
 `
 
-const CardThumbnail = styled.img<{ isSelected: boolean }>`
+const CardThumbnail = styled.img<{ selected: boolean }>`
   width: 100px;
   border: 2px solid
-    ${({ isSelected, theme }) =>
-      isSelected ? theme.colors.blue500 : 'transparent'};
+    ${({ selected, theme }) =>
+      selected ? theme.colors.blue500 : 'transparent'};
   border-radius: 8px;
   cursor: pointer;
 `
