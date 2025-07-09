@@ -49,12 +49,12 @@ function Header() {
   const handleLoginClick = () => {
     if (user && user.name) {
       navigate('/my');
-    } else {
-      if (location.pathname !== ROUTE_PATH.LOGIN) {
-        navigate(
-          `${ROUTE_PATH.LOGIN}?from=${encodeURIComponent(location.pathname)}`,
-        );
-      }
+      return;
+    }
+    if (location.pathname !== ROUTE_PATH.LOGIN) {
+      navigate(
+        `${ROUTE_PATH.LOGIN}?from=${encodeURIComponent(location.pathname)}`,
+      );
     }
   };
 
