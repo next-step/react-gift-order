@@ -12,6 +12,7 @@ export const OrderInfoProvider = ({ children }: { children: ReactNode }) => {
   const [recipientName, setRecipientName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [id, setId] = useState(0);
+  const [productName, setProductName] = useState('');
   const [price, setPrice] = useState(0);
   const [amount, setAmount] = useState(0);
   const [setTargetMessage, messageError] = useValidateGiftMessage();
@@ -37,6 +38,8 @@ export const OrderInfoProvider = ({ children }: { children: ReactNode }) => {
         product: {
           id: id,
           setId: setId,
+          name: productName,
+          setName: setProductName,
           price: price,
           setPrice: setPrice,
           amount: amount,

@@ -52,7 +52,7 @@ export const OrderButton = () => {
         if (isValid) {
           alert(`
             주문이 완료되었습니다.
-            상품명: BBQ 양념치킨+크림치즈볼+콜라1.25L
+            상품명: ${product.name}
             구매 수량: ${product.amount}
             발신자 이름: ${sender.name}
             메시지: ${message}

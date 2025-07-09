@@ -81,25 +81,26 @@ const PriceValue = styled.div`
 export const ProductInfo = () => {
   const { product } = useOrderInfo();
   const { id } = useParams();
+  if (!id) throw new Error('id가 없습니다');
   const parsedId = parseInt(id!);
-  const giftItems = giftItemData;
 
   useEffect(() => {
     product.setId(parsedId);
-    product.setPrice(giftItems[parsedId].price.basicPrice);
-  }, [giftItems, product, parsedId]);
+    product.setName(giftItemData[parsedId].name);
+    product.setPrice(giftItemData[parsedId].price.basicPrice);
+  }, [product, parsedId]);
 
   return (
     <Container>
       <Label>상품 정보</Label>
       <Body>
-        <ProductImg src={giftItems[parsedId].imageURL} />
+        <ProductImg src={giftItemData[parsedId].imageURL} />
         <Info>
-          <Name>{giftItems[parsedId].name}</Name>
-          <Brand>{giftItems[parsedId].brandInfo.name}</Brand>
+          <Name>{giftItemData[parsedId].name}</Name>
+          <Brand>{giftItemData[parsedId].brandInfo.name}</Brand>
           <Price>
             <PriceLabel>상품가</PriceLabel>
-            <PriceValue>{giftItems[parsedId].price.basicPrice}원</PriceValue>
+            <PriceValue>{giftItemData[parsedId].price.basicPrice}원</PriceValue>
           </Price>
         </Info>
       </Body>
