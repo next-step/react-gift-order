@@ -2,10 +2,15 @@ import InputOrder from '@/common/InputOrder';
 import useOrderForm from '@/hooks/useOrderForm';
 import styled from '@emotion/styled';
 
+type OrderFormField = Pick<
+  ReturnType<typeof useOrderForm>,
+  'value' | 'onChange' | 'error'
+>;
+
 type ReceiverInfoSectionProps = {
-  receiverName: ReturnType<typeof useOrderForm>;
-  receiverPhone: ReturnType<typeof useOrderForm>;
-  quantity: ReturnType<typeof useOrderForm>;
+  receiverName: OrderFormField;
+  receiverPhone: OrderFormField;
+  quantity: OrderFormField;
 };
 
 const ReceiverInfoSection = ({
