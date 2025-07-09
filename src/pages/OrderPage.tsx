@@ -16,7 +16,6 @@ import CardSection from "@/components/order/CardSection";
 import SendSection from "@/components/order/SendSection";
 import ReceiverSection from "@/components/order/ReceiverSection";
 import GiftInformationSection from "@/components/order/GiftInformationSection";
-import type { Gift } from "@/types/gift";
 import useOrderInput from "@/hooks/useOrderInput";
 
 const OrderPage = () => {
@@ -31,7 +30,7 @@ const OrderPage = () => {
 
   useEffect(() => {
     messageInput.setValue(selectedCard.defaultTextMessage);
-  }, [selectedCard]);
+  }, [selectedCard, messageInput]);
 
   useEffect(() => {
     const sessionUserInfo = sessionStorage.getItem("kakaotech/userInfo");
@@ -43,7 +42,12 @@ const OrderPage = () => {
   }, [location.pathname, navigate]);
 
   const { id } = useParams<{ id: string }>();
-  const gift = gifts.find(gift => gift.id.toString() === id) as Gift;
+  const gift = gifts.find(gift => gift.id.toString() === id);
+
+  if (!gift) {
+    navigate(ROUTE_PATH.NOT_FOUND, { replace: true });
+    return null;
+  }
 
   const handleOrder = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router";
+import { Routes, Route, Navigate } from "react-router";
 import { ROUTE_PATH } from "./paths";
 import MainPage from "@/pages/MainPage";
 import LoginPage from "@/pages/LoginPage";
@@ -14,6 +14,10 @@ const Router = () => {
       <Route path={ROUTE_PATH.MY_PAGE} element={<MyPage />} />
       <Route path={ROUTE_PATH.ORDER} element={<OrderPage />} />
       <Route path={ROUTE_PATH.NOT_FOUND} element={<NotFoundPage />} />
+      <Route
+        path="*"
+        element={<Navigate to={ROUTE_PATH.NOT_FOUND} replace />}
+      />
     </Routes>
   );
 };
