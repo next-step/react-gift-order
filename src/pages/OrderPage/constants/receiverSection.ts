@@ -1,5 +1,8 @@
 const RECEIVER_SECTION_CONSTANTS = {
   TITLE: "받는 사람",
+  ADD_BUTTON: "추가",
+  NO_RECEIVERS_MESSAGE: "받는 사람이 없습니다.",
+  ADD_RECEIVER_GUIDE: "받는 사람을 추가해주세요.",
   NAME_LABEL: "이름",
   NAME_PLACEHOLDER: "이름을 입력하세요.",
   NAME_ERROR: "이름을 입력해주세요.",

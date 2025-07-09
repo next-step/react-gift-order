@@ -13,21 +13,6 @@ import {
 } from "./ReceiverModal.styles";
 import ReceiverModal from "./ReceiverModal";
 
-export interface ReceiverSectionProps {
-  receiverName: string;
-  receiverPhone: string;
-  quantity: string;
-  onReceiverNameChange: (value: string) => void;
-  onReceiverPhoneChange: (value: string) => void;
-  onQuantityChange: (value: string) => void;
-  onValidateReceiverName: (value: string) => void;
-  onValidateReceiverPhone: (value: string) => void;
-  onValidateQuantity: (value: string) => void;
-  receiverNameErrorMessage: string;
-  receiverPhoneErrorMessage: string;
-  quantityErrorMessage: string;
-}
-
 function ReceiverSectionComponent() {
   const [showModal, setShowModal] = useState(false);
 
@@ -43,12 +28,18 @@ function ReceiverSectionComponent() {
     <ReceiverSection>
       <ReceiverSectionHeader>
         <SectionTitle>{RECEIVER_SECTION_CONSTANTS.TITLE}</SectionTitle>
-        <ShowModalButton onClick={handleOpenModal}>추가</ShowModalButton>
+        <ShowModalButton onClick={handleOpenModal}>
+          {RECEIVER_SECTION_CONSTANTS.ADD_BUTTON}
+        </ShowModalButton>
       </ReceiverSectionHeader>
       <FormContainer>
         <NoReceiversContent>
-          <NoReceiversLabel>받는 사람이 없습니다.</NoReceiversLabel>
-          <NoReceiversLabel>받는 사람을 추가해주세요.</NoReceiversLabel>
+          <NoReceiversLabel>
+            {RECEIVER_SECTION_CONSTANTS.NO_RECEIVERS_MESSAGE}
+          </NoReceiversLabel>
+          <NoReceiversLabel>
+            {RECEIVER_SECTION_CONSTANTS.ADD_RECEIVER_GUIDE}
+          </NoReceiversLabel>
         </NoReceiversContent>
       </FormContainer>
       {showModal && <ReceiverModal handleCloseModal={handleCloseModal} />}
