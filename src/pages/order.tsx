@@ -5,6 +5,9 @@ import styled from '@emotion/styled';
 import { orderCardTemplates } from '../data/orderCardTemplateMock';
 import { giftItem } from '../components/RankingGrid';
 import { useInputWithValidation } from '../hooks/useInputValidation';
+import ReceiverModal, {
+  type Receiver,
+} from '../components/ReceiverModal';
 
 const MessaageWrapper = styled.div`
   padding: 8px 20px;
@@ -129,6 +132,19 @@ const ProductInfo = styled.div`
   gap: 12px;
 `;
 
+const ReceiverAddButton = styled.button`
+  font-size: ${({ theme }) =>
+    theme.typography.subtitle2Regular.fontSize};
+  font-weight: ${({ theme }) =>
+    theme.typography.subtitle2Regular.fontWeight};
+  line-height: ${({ theme }) =>
+    theme.typography.subtitle2Regular.lineHeight};
+  padding: 8px 16px;
+  border-radius: 8px;
+  background-color: ${({ theme }) => theme.colors.gray300};
+  border: none;
+`;
+
 const validateName = (value: string) => {
   if (!value.trim()) return '이름을 입력해주세요';
 
@@ -173,6 +189,9 @@ const Order = () => {
     receiverNameInput.isValid &&
     receiverPhoneInput.isValid &&
     quantityInput.isValid;
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [receiverList, setReceiverList] = useState<Receiver[]>([]);
 
   const handleOrder = () => {
     if (!isFormValid) return;
@@ -222,8 +241,40 @@ const Order = () => {
         </Section>
 
         <Section>
-          <Label>받는 사람</Label>
+          <Row>
+            <Label>받는 사람</Label>
+            <ReceiverAddButton onClick={() => setModalOpen(true)}>
+              추가
+            </ReceiverAddButton>
+          </Row>
+          {receiverList.length === 0 ? (
+            <div
+              style={{
+                border: '1px solid #eee',
+                padding: '24px',
+                marginTop: '12px',
+                color: '#aaa',
+                textAlign: 'center',
+              }}
+            >
+              받는 사람이 없습니다. <br />
+              받는 사람을 추가해주세요.
+            </div>
+          ) : (
+            <ul>
+              {receiverList.map((r, i) => (
+                <li key={r.id}>
+                  {i + 1}. {r.name} / {r.phone} / 수량: {r.quantity}
+                </li>
+              ))}
+            </ul>
+          )}
 
+          <ReceiverModal
+            isOpen={modalOpen}
+            onClose={() => setModalOpen(false)}
+            onComplete={data => setReceiverList(data)}
+          />
           <Row>
             <FieldLabel>이름</FieldLabel>
             <div style={{ flex: 1 }}>
