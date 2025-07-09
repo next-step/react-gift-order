@@ -12,6 +12,7 @@ import LoginPage from "@/pages/LoginPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import MyPage from "@/pages/MyPage";
 import OrderPage from "@/pages/orderpage/OrderPage";
+import PrivateRoute from "@/routes/PrivateRoutes";
 
 function App() {
   return (
@@ -32,8 +33,22 @@ function App() {
             }
           />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/my" element={<MyPage />} />
-          <Route path="/order/:id" element={<OrderPage />} />
+          <Route
+            path="/my"
+            element={
+              <PrivateRoute>
+                <MyPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/order/:id"
+            element={
+              <PrivateRoute>
+                <OrderPage />
+              </PrivateRoute>
+            }
+          />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Layout>

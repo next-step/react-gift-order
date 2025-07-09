@@ -3,17 +3,10 @@ import styled from "@emotion/styled";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import LogoutButton from "@/components/common/BaseButton";
-import useAuthNavigation from "@/hooks/useAuthNavigation";
-import { useEffect } from "react";
 
 const MyPage = () => {
   const { userEmail, userName, logout } = useAuth();
   const navigate = useNavigate();
-  const { goToPathWithAuth } = useAuthNavigation();
-
-  useEffect(() => {
-    goToPathWithAuth("/my");
-  }, []);
 
   const handleLogout = () => {
     logout();

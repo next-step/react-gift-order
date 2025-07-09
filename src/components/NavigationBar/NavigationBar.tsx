@@ -2,7 +2,6 @@
 import styled from "@emotion/styled";
 import { useNavigate, Link } from "react-router-dom";
 import MyPageIcon from "@/components/common/MyPageIcon";
-import useAuthNavigation from "@/hooks/useAuthNavigation";
 
 export default function NavigationBar() {
   const navigate = useNavigate();
@@ -15,13 +14,12 @@ export default function NavigationBar() {
       navigate(-1);
     }
   };
-  const { goToPathWithAuth } = useAuthNavigation();
 
   return (
     <NavBar>
       <BackButton onClick={handleBack}>←</BackButton>
       <NavTitle to="/">선물하기</NavTitle>
-      <LoginButton onClick={() => goToPathWithAuth("/my")}>
+      <LoginButton onClick={() => navigate("/my")}>
         <MyPageIcon />
       </LoginButton>
     </NavBar>
