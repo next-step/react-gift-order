@@ -4,7 +4,7 @@ import Divider from "@/components/common/Divider";
 import styled from "@emotion/styled";
 import type React from "react";
 import useInput from "@/hooks/useInput";
-import { getIdError, getPasswordError } from "@/utils/errorMessage";
+import { getIdError, getPasswordError } from "@/hooks/utils/errorMessage";
 import { useAuth } from "@/contexts/authContext";
 
 const Login = () => {

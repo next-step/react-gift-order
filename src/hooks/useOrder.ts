@@ -1,4 +1,4 @@
-import { getMessageError, getNameError, getPhoneError, getQuantityError } from "@/utils/errorMessage";
+import { getMessageError, getNameError, getPhoneError, getQuantityError } from "@/hooks/utils/errorMessage";
 import { useState, type ChangeEvent } from "react";
 
 type UseOrderType = {
