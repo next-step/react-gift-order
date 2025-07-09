@@ -20,9 +20,9 @@ const ProductInfo = ({
         <Image src={imageURL} alt={name} />
         <TextArea>
           <ProductName>{name}</ProductName>
-          <BrandName>{brandInfo?.name}</BrandName>
+          <BrandName>{brandInfo.name}</BrandName>
           <Price>
-            상품가 <strong>{price?.basicPrice.toLocaleString()}원</strong>
+            상품가 <strong>{price.basicPrice.toLocaleString()}원</strong>
           </Price>
         </TextArea>
       </InfoBox>
