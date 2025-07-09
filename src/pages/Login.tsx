@@ -102,6 +102,7 @@ const Login = () => {
   const isFirstTry = isFirstIdTry || isFirstPwdTry;
   const isAllValid = !idError && !passwordError;
   const { setUser } = useUserInfo();
+  const MIN_INPUT_LENGTH = 8;
 
   const handleInputFieldStyle = useCallback(
     (type: string, isFirstTry: boolean, isClicked: boolean, error: string) => {
@@ -177,7 +178,7 @@ const Login = () => {
             placeholder="비밀번호"
             value={password}
             onChange={(e) => {
-              if (isFirstPwdTry && e.target.value.length > 7) {
+              if (isFirstPwdTry && e.target.value.length >= MIN_INPUT_LENGTH) {
                 setIsFirstPwdTry(false);
               }
               setPassword(e.target.value);
