@@ -1,31 +1,10 @@
 import Divider from "@/components/common/Divider";
 import styled from "@emotion/styled";
-import type { ChangeEvent } from "react";
 import Input from "@/pages/Order/components/Input";
+import { useOrderContext } from "@/contexts/orderContext";
 
-interface RecipientProps {
-  name: string;
-  onChangeName: (event: ChangeEvent<HTMLInputElement>) => void;
-  errorMsgName: string | null;
-  phone: string;
-  onChangePhone: (event: ChangeEvent<HTMLInputElement>) => void;
-  errorMsgPhone: string | null;
-  quantity: number;
-  onChangeQuantity: (event: ChangeEvent<HTMLInputElement>) => void;
-  errorMsgQuantity: string | null;
-}
-
-const Recipient = ({
-  name,
-  onChangeName,
-  errorMsgName,
-  phone,
-  onChangePhone,
-  errorMsgPhone,
-  quantity: count,
-  onChangeQuantity,
-  errorMsgQuantity,
-}: RecipientProps) => {
+const Recipient = () => {
+  const { formData, onChangeOrder, errorMsg } = useOrderContext();
   return (
     <Content>
       <Divider spacing="1rem" />
@@ -37,9 +16,9 @@ const Recipient = ({
           <Input
             name="name"
             placeholder="이름을 입력하세요."
-            value={name}
-            onChange={onChangeName}
-            errorMsg={errorMsgName}
+            value={formData.recipients.name}
+            onChange={onChangeOrder}
+            errorMsg={errorMsg.recipients.name}
           />
         </InputWrapper>
       </InputWrapper>
@@ -49,15 +28,21 @@ const Recipient = ({
         <Input
           name="phone"
           placeholder="전화번호를 입력하세요."
-          value={phone}
-          onChange={onChangePhone}
-          errorMsg={errorMsgPhone}
+          value={formData.recipients.phone}
+          onChange={onChangeOrder}
+          errorMsg={errorMsg.recipients.name}
         />
       </InputWrapper>
       <Divider spacing="0.5rem" />
       <InputWrapper>
         <InputTitle>수량</InputTitle>
-        <Input name="quantity" type="number" value={count} onChange={onChangeQuantity} errorMsg={errorMsgQuantity} />
+        <Input
+          name="quantity"
+          type="number"
+          value={formData.recipients.quantity}
+          onChange={onChangeOrder}
+          errorMsg={errorMsg.recipients.quantity}
+        />
       </InputWrapper>
       <Divider spacing="1.5rem" />
     </Content>

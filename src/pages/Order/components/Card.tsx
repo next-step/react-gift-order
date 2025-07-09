@@ -1,18 +1,18 @@
 import { orderCardMock } from "@/assets/orderCardMock";
 import Divider from "@/components/common/Divider";
-import type { OrderCardType } from "@/types/OrderCardType";
 import styled from "@emotion/styled";
-import type { ChangeEvent } from "react";
 import ErrorMsg from "./ErrorMsg";
+import { useOrderContext } from "@/contexts/orderContext";
+import { useEffect } from "react";
 
-interface CardProps {
-  selectedCard: OrderCardType;
-  setSelectedCard: (card: OrderCardType) => void;
-  message: string;
-  onChangeMessage: (event: ChangeEvent<HTMLTextAreaElement>) => void;
-  errorMsg: string | null;
-}
-const Card = ({ selectedCard, setSelectedCard, message, onChangeMessage, errorMsg }: CardProps) => {
+const Card = () => {
+  const { formData, setOrderMessage, selectCard, onChangeOrder, errorMsg } = useOrderContext();
+  const selectedCard = orderCardMock.find((card) => card.id === formData.cardId);
+  useEffect(() => {
+    if (selectedCard) {
+      setOrderMessage(selectedCard.defaultTextMessage);
+    }
+  }, [selectedCard]);
   return (
     <Container>
       <Divider spacing="0.75rem" />
@@ -20,20 +20,20 @@ const Card = ({ selectedCard, setSelectedCard, message, onChangeMessage, errorMs
         {orderCardMock.map((card) => (
           <CardListItem
             key={card.id}
-            selected={card === selectedCard}
+            selected={card.id === formData.cardId}
             alt={`${card.id}번 메시지 카드`}
             src={card.thumbUrl}
-            onClick={() => setSelectedCard(card)}
+            onClick={() => selectCard(card.id)}
           ></CardListItem>
         ))}
       </CardList>
       <SelectedCardWrapper>
-        {<SelectedCard alt={`${selectedCard.id}번 메시지 카드`} src={selectedCard.imageUrl} />}
+        {selectedCard && <SelectedCard alt={`${formData.cardId}번 메시지 카드`} src={selectedCard.imageUrl} />}
       </SelectedCardWrapper>
       <Divider spacing="2.5rem" />
       <CardMsgInputWrapper>
-        <CardMsgInput name="message" value={message} onChange={onChangeMessage} />
-        {errorMsg && <ErrorMsg>{errorMsg}</ErrorMsg>}
+        <CardMsgInput name="message" value={formData.message} onChange={onChangeOrder} />
+        {errorMsg.message && <ErrorMsg>{errorMsg.message}</ErrorMsg>}
       </CardMsgInputWrapper>
       <Divider spacing="2rem" />
     </Container>

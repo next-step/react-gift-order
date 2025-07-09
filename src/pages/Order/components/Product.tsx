@@ -1,12 +1,23 @@
+import { rankingItemMock } from "@/assets/rankingItemMock";
 import Divider from "@/components/common/Divider";
-import type { RankingItemType } from "@/types/RankingItemType";
+import { ROUTE_PATH } from "@/components/routes/routePath";
+import { useOrderContext } from "@/contexts/orderContext";
 import styled from "@emotion/styled";
+import { useEffect } from "react";
+import { Navigate, useParams } from "react-router-dom";
 
-interface ProductProps {
-  product: RankingItemType;
-}
-
-const Product = ({ product }: ProductProps) => {
+const Product = () => {
+  const { setProduct } = useOrderContext();
+  const { productId } = useParams();
+  const product = rankingItemMock.find((item) => item.id === Number(productId));
+  useEffect(() => {
+    if (product) {
+      setProduct(Number(productId));
+    }
+  }, [productId]);
+  if (!product) {
+    return <Navigate to={ROUTE_PATH.HOME} />;
+  }
   return (
     <Content>
       <Divider spacing="1rem" />
