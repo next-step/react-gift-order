@@ -4,22 +4,37 @@ export function useInput(validate: (value: string) => string | null) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [error, setError] = useState<string | null>(null)
 
+  const [value, setValue] = useState<string>('') // 입력값 상태 추가
+
   const handleBlur = () => {
-    const value = inputRef.current?.value || ''
-    setError(validate(value))
+    const currentValue = inputRef.current?.value || ''
+    setError(validate(currentValue))
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value
+    setValue(newValue)
+    
+    // 실시간 검증 - 항상 수행
+    setError(validate(newValue))
   }
 
   const checkAndSetError = () => {
-    const value = inputRef.current?.value || ''
-    const err = validate(value)
+    const currentValue = inputRef.current?.value || ''
+    const err = validate(currentValue)
     setError(err)
-    return err
   }
 
-  return { inputRef, error, handleBlur, checkAndSetError }
+  return { 
+    inputRef, 
+    error, 
+    value, 
+    handleBlur, 
+    handleChange, 
+    checkAndSetError 
+  }
 }
 
-// 검증 함수도 함께 export
 export const validateEmail = (email: string) => {
   if (!email) return 'ID를 입력해 주세요.'
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
