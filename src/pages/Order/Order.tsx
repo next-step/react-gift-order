@@ -18,7 +18,7 @@ function Order() {
   if (!item) return <div>상품 정보를 찾을 수 없습니다.</div>;
 
   const {
-    currentId,
+    currentCardId,
     currentOrder,
     text,
     count,
@@ -37,7 +37,7 @@ function Order() {
   return (
     <OrderContainer>
       <Cards
-        currentId={currentId}
+        currentId={currentCardId}
         currentOrder={currentOrder}
         text={text}
         errors={errors}

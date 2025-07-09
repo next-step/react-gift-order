@@ -21,8 +21,8 @@ function requiredField(value: string, message: string) {
 }
 
 function useOrder(item: mockItemType) {
-  const [currentId, setCurrentId] = useState(cards[0].id);
-  const currentOrder: ordersType | undefined = cards.find((card) => card.id === currentId);
+  const [currentCardId, setCurrentCardId] = useState(cards[0].id);
+  const currentOrder: ordersType | undefined = cards.find((card) => card.id === currentCardId);
 
   const [text, setText] = useState<string>(cards[0].defaultTextMessage);
   const [sender, setSender] = useState<string>('');
@@ -45,7 +45,7 @@ function useOrder(item: mockItemType) {
     setText(e.target.value);
   }
   function handleThumbClick(id: number) {
-    setCurrentId(id);
+    setCurrentCardId(id);
   }
   function handleSenderChange(e: React.ChangeEvent<HTMLInputElement>) {
     setSender(e.target.value);
@@ -103,7 +103,7 @@ function useOrder(item: mockItemType) {
   }
 
   return {
-    currentId,
+    currentCardId,
     currentOrder,
     text,
     sender,
