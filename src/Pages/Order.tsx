@@ -165,6 +165,7 @@ const OrderContainer = styled.main`
   background-color: ${({ theme }) => theme.colors.backgroundDefault};
   overflow-y: auto;
   margin: 0 auto;
+  padding-bottom: 60px;
 `;
 
 const SelectedCardPreview = styled.div`
@@ -271,8 +272,11 @@ const ItemPrice = styled.p`
 `;
 
 const OrderButton = styled.button`
+  position: fixed;
+  bottom: 0;
   margin-top: ${({ theme }) => theme.spacing.spacing4};
   width: 100%;
+  max-width: 720px;
   ${({ theme }) => `
     font-size: ${theme.font.subtitle1Bold.size};
     font-weight: ${theme.font.subtitle1Bold.weight};
