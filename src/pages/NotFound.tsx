@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import theme from '@src/styles/tokens/index';
 import { useNavigate } from 'react-router-dom';
 import notfoundImg from '@src/assets/icons/img_not_found.png';
+import ROUTES from '@/constants/routes';
 
 const mainStyle = css`
   width: 100%;
@@ -72,7 +73,7 @@ const space48 = css`
 const NotFound = () => {
   const navigate = useNavigate();
   const goHome = () => {
-    navigate('/');
+    navigate(ROUTES.NOT_FOUND);
   };
 
   return (
