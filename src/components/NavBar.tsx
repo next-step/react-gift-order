@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 const NavBarWrapper = styled.div`
   width: auto;
   height: 40px;
-  background-color: ${({ theme }) => theme.colors.gray[0]};
+  background-color: ${({ theme }) => theme.colors.gray.gray00};
 
   display: flex;
   justify-content: center;
@@ -17,7 +17,7 @@ const NavBarWrapper = styled.div`
 const NavBarBackBtn = styled.button`
   width: 40px;
   height: 40px;
-  background-color: ${({ theme }) => theme.colors.gray[0]};
+  background-color: ${({ theme }) => theme.colors.gray.gray00};
   border: none;
   cursor: pointer;
 
@@ -29,21 +29,21 @@ const NavBarBackBtn = styled.button`
     content: '<';
     font-size: 34px;
     font-weight: 100;
-    color: ${({ theme }) => theme.colors.gray[1000]};
+    color: ${({ theme }) => theme.colors.gray.gray1000};
   }
 `;
 
 const NavBarTitle = styled.h1`
-  font-size: ${({ theme }) => theme.typography['title1Bold'].fontSize};
-  font-weight: ${({ theme }) => theme.typography['title1Bold'].fontWeight};
-  line-height: ${({ theme }) => theme.typography['title1Bold'].lineHeight};
+  font-size: ${({ theme }) => theme.typography.title.title1Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.title.title1Bold.fontWeight};
+  line-height: ${({ theme }) => theme.typography.title.title1Bold.lineHeight};
   cursor: pointer;
 `;
 
 const NavBarLoginBtn = styled.button`
   width: 40px;
   height: 40px;
-  background-color: ${({ theme }) => theme.colors.gray[0]};
+  background-color: ${({ theme }) => theme.colors.gray.gray00};
   border: none;
   cursor: pointer;
 
@@ -55,7 +55,7 @@ const NavBarLoginBtn = styled.button`
     content: '👤';
     font-size: 34px;
     font-weight: 100;
-    color: ${({ theme }) => theme.colors.gray[1000]};
+    color: ${({ theme }) => theme.colors.gray.gray1000};
   }
 `;
 

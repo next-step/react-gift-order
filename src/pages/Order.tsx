@@ -8,7 +8,7 @@ import styled from '@emotion/styled';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { PHONE_NUM_REGEX } from '@/\butils/regex';
+import { PHONE_NUM_REGEX } from '@/utils/regex';
 
 interface OrderCardProps {
   setSelectedCardImg: Function;
@@ -94,14 +94,14 @@ const CardViewTextArea = styled.textarea`
   width: 650px;
   height: 50px;
   border-radius: 5px;
-  border: 1px solid ${({ theme }) => theme.colors.gray[400]};
+  border: 1px solid ${({ theme }) => theme.colors.gray.gray400};
   padding: 10px;
 `;
 
 const SenderInputTitle = styled.h2`
-  font-size: ${({ theme }) => theme.typography.title2Bold.fontSize};
-  font-weight: ${({ theme }) => theme.typography.title2Bold.fontWeight};
-  line-height: ${({ theme }) => theme.typography.title2Bold.lineHeight};
+  font-size: ${({ theme }) => theme.typography.title.title2Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.title.title2Bold.fontWeight};
+  line-height: ${({ theme }) => theme.typography.title.title2Bold.lineHeight};
   margin-bottom: 10px;
 `;
 
@@ -109,7 +109,7 @@ const SenderInput = styled.input`
   width: 660px;
   height: 30px;
   border-radius: 7px;
-  border: 1px solid ${({ theme }) => theme.colors.gray[400]};
+  border: 1px solid ${({ theme }) => theme.colors.gray.gray400};
   padding: 10px;
 `;
 
@@ -136,9 +136,9 @@ function SenderInputWrapper({ setSenderName, senderName }: SenderInputProps) {
 }
 
 const ReceiverInput = styled.h2`
-  font-size: ${({ theme }) => theme.typography.title2Bold.fontSize};
-  font-weight: ${({ theme }) => theme.typography.title2Bold.fontWeight};
-  line-height: ${({ theme }) => theme.typography.title2Bold.lineHeight};
+  font-size: ${({ theme }) => theme.typography.title.title2Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.title.title2Bold.fontWeight};
+  line-height: ${({ theme }) => theme.typography.title.title2Bold.lineHeight};
   margin-bottom: 10px;
 `;
 
@@ -208,9 +208,9 @@ const ReceiverItemNumInputLabel = styled.label``;
 const ReceiverItemNumInput = styled.input``;
 
 const ItemInfoTitle = styled.h2`
-  font-size: ${({ theme }) => theme.typography.title2Bold.fontSize};
-  font-weight: ${({ theme }) => theme.typography.title2Bold.fontWeight};
-  line-height: ${({ theme }) => theme.typography.title2Bold.lineHeight};
+  font-size: ${({ theme }) => theme.typography.title.title2Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.title.title2Bold.fontWeight};
+  line-height: ${({ theme }) => theme.typography.title.title2Bold.lineHeight};
   margin-bottom: 10px;
 `;
 
@@ -235,7 +235,7 @@ function ItemInfoWrapper({ selectedItem }: { selectedItem: string | null }) {
 }
 
 const OrderButtonStyle = styled.button`
-  background-color: ${({ theme }) => theme.colors.semantic.kakaoYellow};
+  background-color: ${({ theme }) => theme.colors.brand.kakaoYellow};
   width: 100%;
   height: 50px;
   border: none;

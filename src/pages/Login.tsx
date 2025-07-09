@@ -9,7 +9,7 @@ import Layout from '../components/Layout';
 import NavBar from '../components/NavBar';
 
 import { useInput } from '@/hooks/useInput';
-import { EMAIL_REGEX } from '@/\butils/regex';
+import { EMAIL_REGEX } from '@/utils/regex';
 import {
   ID_REQUIRED,
   ID_INVALID,
@@ -20,7 +20,7 @@ import {
 const LoginFormWrapper = styled.div`
   height: 100vh;
   padding: 0 150px;
-  background-color: ${({ theme }) => theme.colors.gray[0]};
+  background-color: ${({ theme }) => theme.colors.gray.gray00};
 
   display: flex;
   flex-direction: column;
@@ -49,15 +49,15 @@ const LoginFormInput = styled.input<InputProps>`
   border-right: none;
   border-bottom: 1px solid
     ${({ theme, invalid }) =>
-      invalid ? theme.colors.red[400] : theme.colors.gray[400]};
+      invalid ? theme.colors.red.red400 : theme.colors.gray.gray400};
   height: 40px;
-  font-size: ${({ theme }) => theme.typography.title2Regular.fontSize};
-  font-weight: ${({ theme }) => theme.typography.title2Regular.fontWeight};
-  line-height: ${({ theme }) => theme.typography.title2Regular.lineHeight};
+  font-size: ${({ theme }) => theme.typography.title.title2Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.title.title2Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.title.title2Regular.lineHeight};
 
   &:focus {
     outline: none;
-    border-bottom: 1px solid ${({ theme }) => theme.colors.gray[700]};
+    border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray700};
   }
 `;
 
@@ -67,7 +67,7 @@ const LoginFormErrorText = styled.p`
 `;
 
 const LoginFormBtn = styled.button<InputProps>`
-  background-color: ${({ theme }) => theme.colors.semantic.kakaoYellow};
+  background-color: ${({ theme }) => theme.colors.brand.kakaoYellow};
   cursor: pointer;
   border: none;
   border-radius: 5px;

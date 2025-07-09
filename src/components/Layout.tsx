@@ -5,7 +5,7 @@ const Layout = styled.div`
   width: 100%;
   margin: 0 auto;
 
-  background-color: ${({ theme }) => theme.colors.gray[0]};
+  background-color: ${({ theme }) => theme.colors.gray.gray00};
 `;
 
 export default Layout;

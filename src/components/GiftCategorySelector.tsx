@@ -8,9 +8,9 @@ const GiftCategorySelectorWrapper = styled.div`
 `;
 
 const GiftCategorySelectorTitle = styled.h2`
-  font-size: ${({ theme }) => theme.typography['title1Bold'].fontSize};
-  font-weight: ${({ theme }) => theme.typography['title1Bold'].fontWeight};
-  line-height: ${({ theme }) => theme.typography['title1Bold'].lineHeight};
+  font-size: ${({ theme }) => theme.typography.title.title1Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.title.title1Bold.fontWeight};
+  line-height: ${({ theme }) => theme.typography.title.title1Bold.lineHeight};
 `;
 
 const GiftCategorySelectorItemBoxStyle = styled.div`

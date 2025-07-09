@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 const PromoBannerWrapper = styled.div`
   width: auto;
   height: 65px;
-  background-color: ${({ theme }) => theme.colors.semantic.kakaoYellow};
+  background-color: ${({ theme }) => theme.colors.brand.kakaoYellow};
   box-sizing: border-box;
   border-radius: 15px;
   margin: 0px 20px;
@@ -11,16 +11,16 @@ const PromoBannerWrapper = styled.div`
 `;
 
 const PromoBannerWrapperTitle = styled.p`
-  font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
-  font-weight: ${({ theme }) => theme.typography.label2Regular.fontWeight};
-  line-height: ${({ theme }) => theme.typography.label2Regular.lineHeight};
-  color: ${({ theme }) => theme.colors.gray[700]};
+  font-size: ${({ theme }) => theme.typography.label.label2Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label.label2Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label.label2Regular.lineHeight};
+  color: ${({ theme }) => theme.colors.gray.gray700};
 `;
 const PromoBannerWrapperSubTitle = styled.p`
-  font-size: ${({ theme }) => theme.typography.label1Bold.fontSize};
-  font-weight: ${({ theme }) => theme.typography.label1Bold.fontWeight};
-  line-height: ${({ theme }) => theme.typography.label1Bold.lineHeight};
-  color: ${({ theme }) => theme.colors.gray[1000]};
+  font-size: ${({ theme }) => theme.typography.label.label1Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label.label1Bold.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label.label1Bold.lineHeight};
+  color: ${({ theme }) => theme.colors.gray.gray1000};
 `;
 
 function PromoBanner() {

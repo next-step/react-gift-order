@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import itemList from '../mocks/iteml_list.mock';
+import itemList from '../mocks/item_list.mock';
 
 const RealtimeRankWrapper = styled.div`
   width: 95%;
@@ -12,9 +12,9 @@ const RealtimeRankWrapper = styled.div`
 `;
 
 const RealtimeRankTitle = styled.h2`
-  font-size: ${({ theme }) => theme.typography['title1Bold'].fontSize};
-  font-weight: ${({ theme }) => theme.typography['title1Bold'].fontWeight};
-  line-height: ${({ theme }) => theme.typography['title1Bold'].lineHeight};
+  font-size: ${({ theme }) => theme.typography.title.title1Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.title.title1Bold.fontWeight};
+  line-height: ${({ theme }) => theme.typography.title.title1Bold.lineHeight};
 `;
 
 const RealtimeRankNavWrapper = styled.div`
@@ -36,21 +36,21 @@ const RealtimeRankNavBtnTitleWrapper = styled.div`
 const RealtimeRankNavBtnStyle = styled.div<{ isSelected?: boolean }>`
   width: 50px;
   height: 50px;
-  background-color: ${({ theme }) => theme.colors.blue[100]};
+  background-color: ${({ theme }) => theme.colors.blue.blue100};
   border-radius: 15px;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: ${({ theme }) => theme.colors.blue[400]};
-  font-size: ${({ theme }) => theme.typography['label1Bold'].fontSize};
-  font-weight: ${({ theme }) => theme.typography['label1Bold'].fontWeight};
-  line-height: ${({ theme }) => theme.typography['label1Bold'].lineHeight};
+  color: ${({ theme }) => theme.colors.blue.blue400};
+  font-size: ${({ theme }) => theme.typography.label.label1Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label.label1Bold.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label.label1Bold.lineHeight};
   cursor: pointer;
 
   background-color: ${({ theme, isSelected }) =>
-    isSelected ? theme.colors.blue[700] : theme.colors.blue[100]};
+    isSelected ? theme.colors.blue.blue700 : theme.colors.blue.blue100};
   color: ${({ theme, isSelected }) =>
-    isSelected ? theme.colors.gray[0] : theme.colors.blue[400]};
+    isSelected ? theme.colors.gray.gray0 : theme.colors.blue.blue400};
 `;
 
 function RealtimeRankNavBtn({
@@ -74,14 +74,14 @@ function RealtimeRankNavBtn({
 const RealtimeRankNavTitle = styled.p`
   font-size: 12px;
   margin-top: 5px;
-  color: ${({ theme }) => theme.colors.gray[600]};
+  color: ${({ theme }) => theme.colors.gray.gray600};
 `;
 
 const RealtimeRankNav2Wrapper = styled.div`
   width: 100%;
   height: 50px;
-  border: 1px solid ${({ theme }) => theme.colors.blue[300]};
-  background-color: ${({ theme }) => theme.colors.blue[100]};
+  border: 1px solid ${({ theme }) => theme.colors.blue.blue300};
+  background-color: ${({ theme }) => theme.colors.blue.blue100};
   border-radius: 5px;
   display: flex;
   justify-content: center;
@@ -90,14 +90,14 @@ const RealtimeRankNav2Wrapper = styled.div`
 `;
 
 const RealtimeRankNav2BtnStyle = styled.div<{ isSelected?: boolean }>`
-  font-size: ${({ theme }) => theme.typography.label1Bold.fontSize};
-  font-weight: ${({ theme }) => theme.typography.label1Bold.fontWeight};
-  line-height: ${({ theme }) => theme.typography.label1Bold.lineHeight};
-  color: ${({ theme }) => theme.colors.blue[500]};
+  font-size: ${({ theme }) => theme.typography.label.label1Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label.label1Bold.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label.label1Bold.lineHeight};
+  color: ${({ theme }) => theme.colors.blue.blue500};
   cursor: pointer;
 
   color: ${({ theme, isSelected }) =>
-    isSelected ? theme.colors.blue[700] : theme.colors.blue[500]};
+    isSelected ? theme.colors.blue.blue700 : theme.colors.blue.blue500};
 `;
 
 function RealtimeRankNav2Btn({
@@ -145,19 +145,19 @@ const RealtimeItemImg = styled.img`
 `;
 
 const RealtimeItemGrayTitle = styled.p`
-  font-size: ${({ theme }) => theme.typography['label1Bold'].fontSize};
+  font-size: ${({ theme }) => theme.typography.label.label1Bold.fontSize};
 
   color: gray;
 `;
 
 const RealtimeItemTitle = styled.p`
-  font-size: ${({ theme }) => theme.typography['label1Bold'].fontSize};
+  font-size: ${({ theme }) => theme.typography.label.label1Bold.fontSize};
 `;
 
 const RealtimeItemPriceTitle = styled.p`
-  font-size: ${({ theme }) => theme.typography['label1Bold'].fontSize};
-  font-weight: ${({ theme }) => theme.typography['label1Bold'].fontWeight};
-  line-height: ${({ theme }) => theme.typography['label1Bold'].lineHeight};
+  font-size: ${({ theme }) => theme.typography.label.label1Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label.label1Bold.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label.label1Bold.lineHeight};
 `;
 
 function RealtimeRankItemList({
@@ -231,9 +231,9 @@ const ExtraBtn = styled.button`
   height: 40px;
   margin-top: 10px;
   background-color: ${({ theme }) => theme.colors.background.default};
-  border: 1px solid ${({ theme }) => theme.colors.gray[300]};
+  border: 1px solid ${({ theme }) => theme.colors.gray.gray300};
   border-radius: 5px;
-  font-size: ${({ theme }) => theme.typography['label1Bold'].fontSize};
+  font-size: ${({ theme }) => theme.typography.label.label1Bold.fontSize};
   cursor: pointer;
 `;
 
