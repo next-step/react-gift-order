@@ -70,6 +70,7 @@ const RankContainer = styled.div`
 const RankItem = styled.div`
   width: 100%;
   position: relative;
+  cursor: pointer;
 `;
 
 const RankNumber = styled.span`
@@ -159,9 +160,9 @@ const GiftRanking = () => {
   const { isLoggedIn } = useUserInfo();
 
   const navigate = useNavigate();
-  const handleItemClick = () => {
+  const handleItemClick = (id: number) => {
     if (isLoggedIn) {
-      navigate(ROUTES.ORDER);
+      navigate(`/order/${id}`);
     } else {
       navigate(ROUTES.LOGIN);
     }
@@ -200,10 +201,10 @@ const GiftRanking = () => {
 
       <RankContainer>
         {rankingDatas.slice(0, visibleItemsCount).map(rank => (
-          <RankItem key={rank.id}>
+          <RankItem key={rank.id} onClick={() => handleItemClick(rank.id)}>
             <RankNumber>{rank.id}</RankNumber>
 
-            <ItemContainer onClick={handleItemClick}>
+            <ItemContainer>
               <Image src={rank.image} alt={rank.name} />
               <ItemName>{rank.name}</ItemName>
               <ItemSubName>{rank.subName}</ItemSubName>

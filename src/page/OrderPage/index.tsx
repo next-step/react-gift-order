@@ -7,7 +7,7 @@ import ProductInfo from './components/ProductInfo';
 import OrderButton from './components/OrderButton';
 import useCheckAmount from './hooks/useCheckAmount';
 import useInput from './hooks/useInput';
-
+import { useParams } from 'react-router-dom';
 
 const Section = styled.section`
   width: 100%;
@@ -17,6 +17,10 @@ const Section = styled.section`
 `;
 
 const OrderPage = () => {
+  const { id } = useParams<{ id: string }>();
+  const index = Number(id);
+  console.log(id);
+
   const senderName = useInput('text');
   const receiverName = useInput('text');
   const receiverPhoneNumber = useInput('phoneNumber');
@@ -48,8 +52,8 @@ const OrderPage = () => {
         numberHook={receiverPhoneNumber}
         amountHook={receiverAmount}
       />
-      <ProductInfo />
-      <OrderButton onClick={handleClick} />
+      <ProductInfo index={index} />
+      <OrderButton onClick={handleClick} index={index} />
     </Section>
   );
 };

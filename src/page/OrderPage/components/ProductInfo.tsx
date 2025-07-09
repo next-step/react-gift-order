@@ -1,3 +1,4 @@
+import { rankingDatas } from '@/data/rankingDatas';
 import styled from '@emotion/styled';
 
 const ProductInfoContainer = styled.div`
@@ -64,21 +65,24 @@ const Title = styled.h3`
   margin-bottom: ${({ theme }) => theme.spacing.spacing3};
 `;
 
-const ProductInfo = () => {
+interface ProductInfoProps {
+  index: number;
+}
+
+const ProductInfo = ({ index }: ProductInfoProps) => {
+  const { name, subName, price, image } = rankingDatas[index - 1];
   return (
     <ProductInfoContainer>
       <Title>상품 정보</Title>
 
       <ItemContainer>
-        <img
-          alt="product"
-          src="https://st.kakaocdn.net/product/gift/product/20231030175450_53e90ee9708f45ffa45b3f7b4bc01c7c.jpg"
-        />
+        <img alt={name} src={image} />
         <div>
-          <p>BBQ 양념치킨+크림치즈볼+콜라1.25L</p>
-          <p>BBQ</p>
+          <p>{name}</p>
+          <p>{subName}</p>
           <p>
-            <span>상품가 </span>29000원
+            <span>상품가 </span>
+            {price}
           </p>
         </div>
       </ItemContainer>

@@ -1,3 +1,4 @@
+import { rankingDatas } from '@/data/rankingDatas';
 import styled from '@emotion/styled';
 
 const OrderButtonContainer = styled.button`
@@ -18,8 +19,15 @@ const OrderButtonContainer = styled.button`
   }
 `;
 
-const OrderButton = ({ onClick }: { onClick: () => void }) => {
-  return <OrderButtonContainer onClick={onClick}>29000원 주문하기</OrderButtonContainer>;
+interface OrderButtonProps {
+  onClick: () => void;
+  index: number;
+}
+
+const OrderButton = ({ onClick, index }: OrderButtonProps) => {
+  return (
+    <OrderButtonContainer onClick={onClick}>{rankingDatas[index - 1].price}</OrderButtonContainer>
+  );
 };
 
 export default OrderButton;
