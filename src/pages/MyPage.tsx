@@ -11,7 +11,7 @@ function MyPage() {
   const email = user?.email || ''
 
   return (
-    <div style={{ maxWidth: 720, margin: '0 auto' , alignItems: 'center'}}>
+    <div>
       <GlobalStyle />
       <Header />
       <div >
