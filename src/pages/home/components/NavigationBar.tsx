@@ -3,6 +3,7 @@ import { FiArrowLeft, FiUser } from "react-icons/fi";
 import { useLocation, useNavigate } from "react-router-dom";
 import { HIDE_BACK_BUTTON_PATHS } from "@/constants/navigation";
 import { useAuth } from "@/hooks/useAuth";
+import { ROUTES } from "@/constants/routes";
 
 export const NavigationBar = () => {
   const navigate = useNavigate();
@@ -15,9 +16,9 @@ export const NavigationBar = () => {
 
   const handleUserClick = () => {
     if (isLoggedIn) {
-      navigate("/my");
+      navigate(ROUTES.MY);
     } else {
-      navigate("/login", { state: { from: location.pathname } });
+      navigate(ROUTES.LOGIN, { state: { from: location.pathname } });
     }
   };
 

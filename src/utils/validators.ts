@@ -1,4 +1,4 @@
-import { MIN_PASSWORD_LENGTH } from "@/constants/validation";
+import { MIN_PASSWORD_LENGTH, MIN_PRODUCT_COUNT } from "@/constants/validation";
 import { ERROR_MESSAGES } from "@/constants/messages";
 
 export const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -49,7 +49,7 @@ export function validatePhone(phone: string): string {
 }
 
 export function validateQuantity(quantity: number): string {
-  if (quantity < 1) {
+  if (quantity < MIN_PRODUCT_COUNT) {
     return ERROR_MESSAGES.VALIDATE.QUANTITY;
   }
   return "";

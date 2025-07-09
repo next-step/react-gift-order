@@ -62,7 +62,10 @@ export default function OrderPage() {
 
   return (
     <>
-      <MessageCard ref={messageCardRef} onSelect={(msg) => setMessage(msg)} />
+      <MessageCard
+        ref={messageCardRef}
+        onMessageChange={(msg) => setMessage(msg)}
+      />
       <SectionDivider />
       <SenderInfo
         ref={senderInfoRef}

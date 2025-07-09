@@ -26,17 +26,22 @@ const ReceiverSection = forwardRef<ReceiverInfoHandle, Props>(
 
     const handleNameChange = (value: string) => {
       setName(value);
-      setNameError("");
+      const msg = validateName(value);
+      setNameError(msg);
+      onChange?.({ name: value, phone, quantity });
     };
 
     const handlePhoneChange = (value: string) => {
       setPhone(value);
-      setPhoneError("");
+      const msg = validatePhone(value);
+      setPhoneError(msg);
+      onChange?.({ name, phone: value, quantity });
     };
 
     const handleQuantityChange = (value: number) => {
       setQuantity(value);
-      setQuantityError("");
+      const msg = validateQuantity(value);
+      setQuantityError(msg);
       onChange?.({ name, phone, quantity: value });
     };
 

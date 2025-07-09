@@ -8,11 +8,11 @@ export type MessageCardHandle = {
 };
 
 type Props = {
-  onSelect?: (message: string) => void;
+  onMessageChange?: (message: string) => void;
 };
 
 const MessageCard = forwardRef<MessageCardHandle, Props>(
-  ({ onSelect }, ref) => {
+  ({ onMessageChange }, ref) => {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [message, setMessage] = useState(
       mockCardTemplateData[0].defaultTextMessage,
@@ -20,14 +20,14 @@ const MessageCard = forwardRef<MessageCardHandle, Props>(
     const [error, setError] = useState("");
 
     useEffect(() => {
-      onSelect?.(message);
-    }, [message, onSelect]);
+      onMessageChange?.(message);
+    }, [message, onMessageChange]);
 
     const handleSelect = (index: number) => {
       setSelectedIndex(index);
       const newMessage = mockCardTemplateData[index].defaultTextMessage;
       setMessage(newMessage);
-      onSelect?.(newMessage);
+      onMessageChange?.(newMessage);
       setError("");
     };
 
@@ -51,7 +51,7 @@ const MessageCard = forwardRef<MessageCardHandle, Props>(
             <Thumbnail
               key={card.id}
               src={card.thumbUrl}
-              alt={`card-${card.id}`}
+              alt={`${card.id}번 카드 Thumbnail`}
               onClick={() => handleSelect(index)}
               isSelected={selectedIndex === index}
             />

@@ -6,17 +6,18 @@ import { NavigationBar } from "@/pages/home/components/NavigationBar";
 import AuthGuard from "./guards/AuthGuard";
 import MyPage from "@/pages/my";
 import OrderPage from "@/pages/order";
+import { ROUTES } from "@/constants/routes";
 
 export default function Router() {
   return (
     <BrowserRouter>
       <NavigationBar />
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route path={ROUTES.HOME} element={<HomePage />} />
+        <Route path={ROUTES.LOGIN} element={<LoginPage />} />
         <Route path="*" element={<NotFoundPage />} />
         <Route
-          path="/my"
+          path={ROUTES.MY}
           element={
             <AuthGuard>
               <MyPage />
@@ -24,7 +25,7 @@ export default function Router() {
           }
         />
         <Route
-          path="/order/:productId"
+          path={ROUTES.ORDER_DETAIL_TEMPLATE}
           element={
             <AuthGuard>
               <OrderPage />

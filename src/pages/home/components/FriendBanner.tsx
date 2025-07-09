@@ -5,17 +5,16 @@ import { FiPlus } from "react-icons/fi";
 export const FriendBanner = () => {
   const { user, isLoggedIn } = useAuth();
 
-  const text = isLoggedIn
-    ? `${user?.name}님, 선물할 친구를 선택해 주세요.`
-    : "선물할 친구를 선택해 주세요.";
-
   return (
     <OuterWrapper>
       <InnerBox>
         <IconBox>
           <FiPlus size={20} />
         </IconBox>
-        <Text>{text}</Text>
+        <Text>
+          {isLoggedIn && user ? `${user.name}님,` : ""} 선물할 친구를 선택해
+          주세요.
+        </Text>
       </InnerBox>
     </OuterWrapper>
   );
