@@ -6,7 +6,7 @@ import MyPage from '@/pages/MyPage'
 import OrderPage from '@/pages/OrderPage'
 import { AuthProvider } from '@/contexts/AuthContext'
 import AuthGuard from '@/components/AuthGuard'
-import PageWrapper from './components/PageWrapper'
+import PageWrapper from '@/components/PageWrapper'
 
 function App() {
   return (
