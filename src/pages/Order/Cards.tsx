@@ -7,7 +7,7 @@ import {
   InputTextArea,
 } from '@/styles/Order/Thumbnail.styles';
 import { ErrorContainer } from '@/styles/ErrorContainer.styles';
-import { orders } from '@/mocks/mockorder';
+import { cards } from '@/mocks/mockorder';
 import type { ordersType } from '@/mocks/mockorder';
 import type { ErrorType } from '@/hooks/useOrder';
 
@@ -31,13 +31,13 @@ function Cards({
   return (
     <CardContainer>
       <ThumbContainer>
-        {orders.map((order) => (
-          <ThumbImgWrapper key={order.id} clicked={currentId == order.id}>
+        {cards.map((card) => (
+          <ThumbImgWrapper key={card.id} clicked={currentId == card.id}>
             <ThumbImg
-              key={order.id}
-              src={order.thumbUrl}
+              key={card.id}
+              src={card.thumbUrl}
               alt="thumbnail"
-              onClick={() => handleThumbClick(order.id)}
+              onClick={() => handleThumbClick(card.id)}
             />
           </ThumbImgWrapper>
         ))}
