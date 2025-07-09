@@ -6,9 +6,7 @@ interface SenderInfoSectionProps {
   senderName: ReturnType<typeof useOrderForm>;
 }
 
-const SenderInfoSection: React.FC<SenderInfoSectionProps> = ({
-  senderName,
-}) => {
+const SenderInfoSection = ({ senderName }: SenderInfoSectionProps) => {
   return (
     <Section>
       <Title>보내는 사람</Title>

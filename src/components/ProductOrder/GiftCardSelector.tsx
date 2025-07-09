@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { orderData } from '@/data/ORDER_DATA';
 
@@ -9,7 +9,7 @@ export interface OrderItem {
   defaultTextMessage: string;
 }
 
-const GiftCardSelector: React.FC = () => {
+const GiftCardSelector = () => {
   const [selectedCardIndex, setSelectedCardIndex] = useState(0);
   const selectedCard = orderData[selectedCardIndex];
   const [message, setMessage] = useState(selectedCard.defaultTextMessage);

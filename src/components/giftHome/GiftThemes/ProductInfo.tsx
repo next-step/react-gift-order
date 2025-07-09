@@ -1,19 +1,18 @@
-import React from 'react';
 import styled from '@emotion/styled';
 
-interface ProductInfoProps {
+type ProductInfoProps = {
   imageURL: string;
   name: string;
   price: { basicPrice: number };
   brandInfo: { name: string };
-}
+};
 
-const ProductInfo: React.FC<ProductInfoProps> = ({
+const ProductInfo = ({
   imageURL,
   name,
   price,
   brandInfo,
-}) => {
+}: ProductInfoProps) => {
   return (
     <Wrapper>
       <Title>상품 정보</Title>

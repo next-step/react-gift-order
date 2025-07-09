@@ -2,17 +2,17 @@ import InputOrder from '@/common/InputOrder';
 import useOrderForm from '@/hooks/useOrderForm';
 import styled from '@emotion/styled';
 
-interface ReceiverInfoSectionProps {
+type ReceiverInfoSectionProps = {
   receiverName: ReturnType<typeof useOrderForm>;
   receiverPhone: ReturnType<typeof useOrderForm>;
   quantity: ReturnType<typeof useOrderForm>;
-}
+};
 
-const ReceiverInfoSection: React.FC<ReceiverInfoSectionProps> = ({
+const ReceiverInfoSection = ({
   receiverName,
   receiverPhone,
   quantity,
-}) => {
+}: ReceiverInfoSectionProps) => {
   return (
     <Section>
       <Title>받는 사람</Title>

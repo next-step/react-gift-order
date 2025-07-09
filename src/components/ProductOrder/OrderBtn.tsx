@@ -1,12 +1,11 @@
-import React from 'react';
 import styled from '@emotion/styled';
 
-interface OrderBtnProps {
+type OrderBtnProps = {
   price: number;
   onClick: () => void;
-}
+};
 
-const OrderBtn: React.FC<OrderBtnProps> = ({ price, onClick }) => {
+const OrderBtn = ({ price, onClick }: OrderBtnProps) => {
   return (
     <StickyWrapper>
       <Button onClick={onClick}>{price.toLocaleString()}원 주문하기</Button>

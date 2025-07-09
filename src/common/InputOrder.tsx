@@ -1,23 +1,23 @@
 import React from 'react';
 import styled from '@emotion/styled';
 
-interface InputOrderProps {
+type InputOrderProps = {
   label: string;
   placeholder?: string;
   value: string | number;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   type?: string;
   error?: string;
-}
+};
 
-const InputOrder: React.FC<InputOrderProps> = ({
+const InputOrder = ({
   label,
   placeholder,
   value,
   onChange,
   type = 'text',
   error,
-}) => {
+}: InputOrderProps) => {
   return (
     <Container>
       <Label>{label}</Label>
