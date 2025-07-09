@@ -19,7 +19,13 @@
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    /* Alias */ 
+    "baseUrl": ".",            // 루트 기준
+    "paths": {
+      "@/*": ["src/*"]         // 절대 경로 매핑
+    }
   },
   "include": ["vite.config.ts"]
 }
