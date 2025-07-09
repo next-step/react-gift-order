@@ -13,10 +13,6 @@ type OrderErrors = Partial<Record<keyof OrderValues, string>>;
 
 const unitPrice = 29000;
 
-const isEmpty = (value: string) => !value.trim();
-const isValidPhoneNumber = (phone: string) => /^010\d{7,8}$/.test(phone);
-const isValidQuantity = (quantity: string) => Number(quantity) >= 1;
-
 const useOrderForm = () => {
   const [values, setValues] = useState<OrderValues>({
     message: templates[0].defaultTextMessage,
@@ -38,19 +34,18 @@ const useOrderForm = () => {
   const validate = () => {
     const newErrors: OrderErrors = {};
 
-    if (isEmpty(values.message)) newErrors.message = '메시지를 입력해주세요.';
-    if (isEmpty(values.senderName))
+    if (!values.message.trim()) newErrors.message = '메시지를 입력해주세요.';
+    if (!values.senderName.trim())
       newErrors.senderName = '이름을 입력해주세요.';
-    if (isEmpty(values.recipientName))
+    if (!values.recipientName.trim())
       newErrors.recipientName = '이름을 입력해주세요.';
-    if (isEmpty(values.recipientPhone)) {
+    if (!values.recipientPhone.trim()) {
       newErrors.recipientPhone = '전화번호를 입력해주세요.';
-    } else if (!isValidPhoneNumber(values.recipientPhone)) {
+    } else if (!/^010\d{7,8}$/.test(values.recipientPhone)) {
       newErrors.recipientPhone = '올바른 전화번호 형식이 아닙니다.';
     }
-    if (!isValidQuantity(values.quantity)) {
+    if (!values.quantity || Number(values.quantity) < 1)
       newErrors.quantity = '구매수량은 1개 이상이어야 합니다.';
-    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
