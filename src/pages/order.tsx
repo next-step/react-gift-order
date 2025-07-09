@@ -27,8 +27,11 @@ const MainImg = styled.img`
 
 const MessageInput = styled.textarea`
   width: 100%;
+  max-width: 720px;
   margin-top: 20px;
   padding: 12px;
+  display: flex;
+  flex: 1;
   font-size: 16px;
   box-sizing: border-box;
   border: 1px solid #ccc;
@@ -63,7 +66,7 @@ const OrderInfoWrapper = styled.div`
 `;
 
 const Section = styled.div`
-  background-color: #f8f9fa;
+  background-color: white;
   padding: 20px;
   border-bottom: 8px solid #f1f1f1;
 `;
