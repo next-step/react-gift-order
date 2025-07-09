@@ -4,6 +4,7 @@ import CategoryList from '@/components/CategoryList';
 import NoticeBanner from '@/components/NoticeBanner';
 import RankingFilter from '@/components/RankingFilter';
 import ProductList from '@/components/ProductList';
+import Header from '@/components/Header';
 
 const Container = styled.div`
   max-width: 720px;
@@ -15,21 +16,24 @@ const Container = styled.div`
 
 const PageBackground = styled.div`
   min-height: 11vh;
-  background: #f5f6fa; // 연한 회색
+  background: #f5f6fa;
   padding: 0;
 `;
 
 function MainPage() {
   return (
-    <Container>
-      <PageBackground>
-        <FriendSelectBox />
-      </PageBackground>
-      <CategoryList />
-      <NoticeBanner />
-      <RankingFilter />
-      <ProductList />
-    </Container>
+    <>
+      <Header />
+      <Container>
+        <PageBackground>
+          <FriendSelectBox />
+        </PageBackground>
+        <CategoryList />
+        <NoticeBanner />
+        <RankingFilter />
+        <ProductList />
+      </Container>
+    </>
   );
 }
 

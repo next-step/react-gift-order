@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { ROUTE_PATH } from '@/constants/routes';
 import useLoginForm from '../hooks/useLoginForm';
 import Input from '@/components/common/Input';
+import Header from '@/components/Header';
 
 const PageBackground = styled.div`
   height: 100vh;
@@ -81,46 +82,49 @@ function LoginPage() {
   } = useLoginForm({ onSuccess: () => navigate(from, { replace: true }) });
 
   return (
-    <PageBackground>
-      <Card>
-        <Title>kakao</Title>
-        <Form onSubmit={handleSubmit}>
-          <div>
-            <Input
-              type="email"
-              placeholder="이메일"
-              value={email}
-              onChange={handleEmailChange}
-              onBlur={handleEmailBlur}
-              error={!!emailError}
-            />
-            {emailError && <ErrorMsg>{emailError}</ErrorMsg>}
-          </div>
-          <div>
-            <Input
-              type="password"
-              placeholder="비밀번호"
-              value={password}
-              onChange={handlePasswordChange}
-              onBlur={handlePasswordBlur}
-              error={!!pwError}
-            />
-            {pwError && <ErrorMsg>{pwError}</ErrorMsg>}
-          </div>
-          <Button
-            type="submit"
-            disabled={!isButtonActive}
-            style={{
-              background: isButtonActive ? '#ffe812' : '#f5f6fa',
-              color: isButtonActive ? '#222' : '#bbb',
-              cursor: isButtonActive ? 'pointer' : 'not-allowed',
-            }}
-          >
-            로그인
-          </Button>
-        </Form>
-      </Card>
-    </PageBackground>
+    <>
+      <Header />
+      <PageBackground>
+        <Card>
+          <Title>kakao</Title>
+          <Form onSubmit={handleSubmit}>
+            <div>
+              <Input
+                type="email"
+                placeholder="이메일"
+                value={email}
+                onChange={handleEmailChange}
+                onBlur={handleEmailBlur}
+                error={!!emailError}
+              />
+              {emailError && <ErrorMsg>{emailError}</ErrorMsg>}
+            </div>
+            <div>
+              <Input
+                type="password"
+                placeholder="비밀번호"
+                value={password}
+                onChange={handlePasswordChange}
+                onBlur={handlePasswordBlur}
+                error={!!pwError}
+              />
+              {pwError && <ErrorMsg>{pwError}</ErrorMsg>}
+            </div>
+            <Button
+              type="submit"
+              disabled={!isButtonActive}
+              style={{
+                background: isButtonActive ? '#ffe812' : '#f5f6fa',
+                color: isButtonActive ? '#222' : '#bbb',
+                cursor: isButtonActive ? 'pointer' : 'not-allowed',
+              }}
+            >
+              로그인
+            </Button>
+          </Form>
+        </Card>
+      </PageBackground>
+    </>
   );
 }
 

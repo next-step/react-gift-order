@@ -1,5 +1,6 @@
 import { useAuth } from '@/contexts/AuthContext';
 import styled from '@emotion/styled';
+import Header from '@/components/Header';
 
 const Container = styled.div`
   max-width: 720px;
@@ -49,15 +50,18 @@ function MyPage() {
   }
 
   return (
-    <Container>
-      <Title>마이 페이지</Title>
-      <Info>
-        {user.name}님 안녕하세요!
-        <br />
-        이메일 주소는 {user.email}입니다.
-      </Info>
-      <Button onClick={logout}>로그아웃</Button>
-    </Container>
+    <>
+      <Header />
+      <Container>
+        <Title>마이 페이지</Title>
+        <Info>
+          {user.name}님 안녕하세요!
+          <br />
+          이메일 주소는 {user.email}입니다.
+        </Info>
+        <Button onClick={logout}>로그아웃</Button>
+      </Container>
+    </>
   );
 }
 

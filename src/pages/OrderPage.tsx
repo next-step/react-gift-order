@@ -4,6 +4,7 @@ import { orderCardTemplates } from '@/data/ordercardtemplates';
 import { useParams } from 'react-router-dom';
 import { products } from '@/data/products';
 import { useNavigate } from 'react-router-dom';
+import Header from '@/components/Header';
 
 const cards = orderCardTemplates;
 
@@ -105,7 +106,7 @@ const OrderButton = styled.button`
 
 const Row = styled.div`
   display: flex;
-  align-items: flex-start; // 왼쪽 정렬
+  align-items: flex-start;
   margin-bottom: 18px;
 `;
 
@@ -158,12 +159,12 @@ const Price = styled.div`
 const ErrorMsg = styled.div`
   color: #f44336;
   font-size: 13px;
-  margin: 0 0 5px 25px; // 인풋 시작점에 맞추기
+  margin: 0 0 5px 25px;
 `;
 
 const InputWrapper = styled.div`
   display: flex;
-  flex-direction: column; // 인풋과 에러메시지를 세로로 쌓기
+  flex-direction: column;
   flex: 1;
 `;
 
@@ -183,14 +184,12 @@ function OrderPage() {
   const [receiverPhoneError, setReceiverPhoneError] = useState('');
   const [quantityError, setQuantityError] = useState('');
 
-  // 상품 id로 해당 상품 찾기
   const product = products.find((p) => p.id === Number(productId));
   const price = product ? product.price.sellingPrice : 0;
 
   const validate = () => {
     let valid = true;
 
-    // 메시지
     if (!message.trim()) {
       setMessageError('메시지를 입력해주세요.');
       valid = false;
@@ -198,7 +197,6 @@ function OrderPage() {
       setMessageError('');
     }
 
-    // 보내는 사람 이름: 한 글자 이상이면 에러 사라짐
     if (!sender) {
       setSenderError('이름을 입력해주세요.');
       valid = false;
@@ -206,7 +204,6 @@ function OrderPage() {
       setSenderError('');
     }
 
-    // 받는 사람 이름: 한 글자 이상이면 에러 사라짐
     if (!receiverName) {
       setReceiverNameError('이름을 입력해주세요.');
       valid = false;
@@ -214,7 +211,6 @@ function OrderPage() {
       setReceiverNameError('');
     }
 
-    // 전화번호
     const phoneRegex = /^010\d{8}$/;
     if (!receiverPhone) {
       setReceiverPhoneError('전화번호를 입력해주세요.');
@@ -226,7 +222,6 @@ function OrderPage() {
       setReceiverPhoneError('');
     }
 
-    // 수량
     if (quantity < 1) {
       setQuantityError('수량은 1개 이상이어야 해요.');
       valid = false;
@@ -242,8 +237,7 @@ function OrderPage() {
   const handleOrder = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (validate()) {
-      // 상품 정보 가져오기
-      if (!product) return; // product가 undefined일 때 방지
+      if (!product) return;
 
       alert(
         `주문이 완료되었습니다.
@@ -252,12 +246,13 @@ function OrderPage() {
   받는 사람 이름: ${receiverName}
   메시지: ${message}`,
       );
-      navigate('/'); // MainPage로 이동
+      navigate('/');
     }
   };
 
   return (
     <>
+      <Header />
       <Container>
         <ImageSelector>
           {cards.map((img, idx) => (

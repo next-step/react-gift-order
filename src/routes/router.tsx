@@ -10,39 +10,19 @@ import { ROUTE_PATH } from '@/constants/routes';
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: (
-      <>
-        <Header />
-        <MainPage />
-      </>
-    ),
+    element: <MainPage />,
   },
   {
     path: ROUTE_PATH.LOGIN,
-    element: (
-      <>
-        <Header />
-        <LoginPage />
-      </>
-    ),
+    element: <LoginPage />,
   },
   {
     path: ROUTE_PATH.MY,
-    element: (
-      <>
-        <Header />
-        <MyPage />
-      </>
-    ),
+    element: <MyPage />,
   },
   {
     path: '/order/:productId',
-    element: (
-      <>
-        <Header />
-        <OrderPage />
-      </>
-    ),
+    element: <OrderPage />,
   },
   {
     path: '*',
