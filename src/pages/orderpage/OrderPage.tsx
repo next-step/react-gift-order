@@ -2,20 +2,20 @@
 import styled from "@emotion/styled";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import MessageCardSection from "./MessageCardSection";
-import SenderInfoSection from "./SenderInfoSection";
-import ReceiverInfoSection from "./RecieverSection";
-import ProductSummarySection from "./ProductSummarySection";
-import { useForm } from "../../hooks/useForm";
-import OrderButton from "../../components/common/BaseButton";
-import { MOCK_PRODUCTS } from "../../mocks/products_list_mock";
+import MessageCardSection from "@/pages/orderpage/MessageCardSection";
+import SenderInfoSection from "@/pages/orderpage/SenderInfoSection";
+import ReceiverInfoSection from "@/pages/orderpage/RecieverSection";
+import ProductSummarySection from "@/pages/orderpage/ProductSummarySection";
+import { useForm } from "@/hooks/useForm";
+import OrderButton from "@/components/common/BaseButton";
+import { MOCK_PRODUCTS } from "@/mocks/products_list_mock";
 import {
   validateMessage,
   validateSender,
   validateReceiver,
   validatePhone,
   validateQuantity,
-} from "../../utils/validator";
+} from "@/utils/validator";
 
 const OrderPage = () => {
   const navigate = useNavigate();
@@ -39,13 +39,13 @@ const OrderPage = () => {
     }
   );
 
-  if (!product) {
-    useEffect(() => {
+  useEffect(() => {
+    if (!product) {
       navigate("/notfound", { replace: true });
-    }, []);
+    }
+  }, [product]);
 
-    return null;
-  }
+  if (!product) return null;
 
   return (
     <Form
