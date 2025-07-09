@@ -40,6 +40,10 @@ const useLoginForm = () => {
     setIsError((prev) => ({ ...prev, [field]: validateField(field, value) }));
   };
 
+  const setValue = (field: 'email' | 'password', value: string) => {
+    setFormValue((prev) => ({ ...prev, [field]: value }));
+  };
+
   const loginActivated =
     formValue.email !== '' &&
     formValue.password !== '' &&
@@ -47,7 +51,7 @@ const useLoginForm = () => {
     isError.password === '';
   return {
     formValue,
-    setFormValue,
+    setValue,
     isError,
     setError,
     loginActivated,

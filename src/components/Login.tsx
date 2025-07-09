@@ -56,7 +56,7 @@ const spacer48 = css`
 
 const Login = () => {
   const { setUser } = useUserInfo();
-  const { formValue, setFormValue, isError, setError, loginActivated } =
+  const { formValue, setValue, isError, setError, loginActivated } =
     useLoginForm();
   const navigate = useNavigate();
   const location = useLocation();
@@ -65,7 +65,7 @@ const Login = () => {
     const { name, value } = e.target;
     const field = name as 'email' | 'password';
 
-    setFormValue((prev) => ({ ...prev, [field]: value }));
+    setValue(field, value);
     setError(field, value);
   };
 
