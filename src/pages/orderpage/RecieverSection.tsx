@@ -1,56 +1,68 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
-interface Props {
+import type { UseFormRegister, FieldErrors } from "react-hook-form";
+
+interface FormValues {
+  message: string;
+  sender: string;
   receiver: string;
-  onChangeReceiver: (e: React.ChangeEvent<HTMLInputElement>) => void;
   phone: string;
-  onChangePhone: (e: React.ChangeEvent<HTMLInputElement>) => void;
   quantity: number;
-  onChangeQuantity: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  errorReceiver?: string;
-  errorPhone?: string;
-  errorQuantity?: string;
 }
 
-const ReceiverInfoSection = ({
-  receiver,
-  onChangeReceiver,
-  phone,
-  onChangePhone,
-  quantity,
-  onChangeQuantity,
-  errorReceiver,
-  errorPhone,
-  errorQuantity,
-}: Props) => {
+interface Props {
+  register: UseFormRegister<FormValues>;
+  errors: FieldErrors<FormValues>;
+}
+
+const ReceiverInfoSection = ({ register, errors }: Props) => {
   return (
     <>
       <Title>받는 사람</Title>
       <FormRow>
         <Label>이름</Label>
         <Input
-          value={receiver}
-          onChange={onChangeReceiver}
+          {...register("receiver", {
+            required: "받는 사람 이름을 입력해주세요.",
+            maxLength: {
+              value: 20,
+              message: "이름은 20자 이내여야 합니다.",
+            },
+          })}
           placeholder="이름을 입력하세요."
         />
       </FormRow>
-      {errorReceiver && <ErrorText>{errorReceiver}</ErrorText>}
+      {errors.receiver && <ErrorText>{errors.receiver.message}</ErrorText>}
 
       <FormRow>
         <Label>전화번호</Label>
         <Input
-          value={phone}
-          onChange={onChangePhone}
+          {...register("phone", {
+            required: "전화번호를 입력해주세요.",
+            pattern: {
+              value: /^010\d{8}$/,
+              message: "010으로 시작하는 11자리 숫자를 입력하세요.",
+            },
+          })}
           placeholder="전화번호를 입력하세요."
         />
       </FormRow>
-      {errorPhone && <ErrorText>{errorPhone}</ErrorText>}
+      {errors.phone && <ErrorText>{errors.phone.message}</ErrorText>}
 
       <FormRow>
         <Label>수량</Label>
-        <Input type="number" value={quantity} onChange={onChangeQuantity} />
+        <Input
+          type="number"
+          {...register("quantity", {
+            required: "수량을 입력해주세요.",
+            min: {
+              value: 1,
+              message: "수량은 최소 1개 이상이어야 합니다.",
+            },
+          })}
+        />
       </FormRow>
-      {errorQuantity && <ErrorText>{errorQuantity}</ErrorText>}
+      {errors.quantity && <ErrorText>{errors.quantity.message}</ErrorText>}
     </>
   );
 };

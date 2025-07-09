@@ -1,33 +1,36 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
 import { useState, useEffect } from "react";
-import { MESSAGE_CARD_LIST } from "../../mocks/messagecard_mock";
-import type { MessageCard } from "../../mocks/types";
+import { MESSAGE_CARD_LIST } from "@/mocks/messagecard_mock";
+import type { MessageCard } from "@/mocks/types";
+import type { UseFormRegister, UseFormSetValue } from "react-hook-form";
+
+interface FormValues {
+  message: string;
+  sender: string;
+  receiver: string;
+  phone: string;
+  quantity: number;
+}
 
 interface Props {
-  value: string;
-  onSelect: (text: string) => void;
-  onChangeMessage: (text: string) => void;
+  register: UseFormRegister<FormValues>;
+  setValue: UseFormSetValue<FormValues>;
   error?: string;
 }
 
-const MessageCardSection = ({
-  value,
-  onSelect,
-  onChangeMessage,
-  error,
-}: Props) => {
+const MessageCardSection = ({ register, setValue, error }: Props) => {
   const [selectedCard, setSelectedCard] = useState<MessageCard>(
     MESSAGE_CARD_LIST[0]
   );
 
   useEffect(() => {
-    onSelect(MESSAGE_CARD_LIST[0].defaultTextMessage);
-  }, []);
+    setValue("message", MESSAGE_CARD_LIST[0].defaultTextMessage);
+  }, [setValue]);
 
   const handleSelect = (card: MessageCard) => {
     setSelectedCard(card);
-    onSelect(card.defaultTextMessage);
+    setValue("message", card.defaultTextMessage);
   };
 
   return (
@@ -50,8 +53,9 @@ const MessageCardSection = ({
       <MessageInputWrapper>
         <MessageInput
           placeholder="메시지를 입력해주세요."
-          value={value}
-          onChange={(e) => onChangeMessage(e.target.value)}
+          {...register("message", {
+            required: "메시지를 입력해주세요.",
+          })}
         />
         {error && <ErrorText>{error}</ErrorText>}
       </MessageInputWrapper>

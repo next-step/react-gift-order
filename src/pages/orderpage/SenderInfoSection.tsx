@@ -1,18 +1,32 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
+import type { UseFormRegister } from "react-hook-form";
+
+interface FormValues {
+  message: string;
+  sender: string;
+  receiver: string;
+  phone: string;
+  quantity: number;
+}
+
 interface Props {
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  register: UseFormRegister<FormValues>;
   error?: string;
 }
 
-const SenderInfoSection = ({ value, onChange, error }: Props) => {
+const SenderInfoSection = ({ register, error }: Props) => {
   return (
     <>
       <Title>보내는 사람 이름</Title>
       <SenderNameInput
-        value={value}
-        onChange={onChange}
+        {...register("sender", {
+          required: "이름을 입력해주세요.",
+          maxLength: {
+            value: 20,
+            message: "이름은 20자 이내여야 합니다.",
+          },
+        })}
         placeholder="이름을 입력하세요"
       />
       {error && <ErrorMessage>{error}</ErrorMessage>}

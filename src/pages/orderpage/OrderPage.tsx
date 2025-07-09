@@ -6,38 +6,29 @@ import MessageCardSection from "@/pages/orderpage/MessageCardSection";
 import SenderInfoSection from "@/pages/orderpage/SenderInfoSection";
 import ReceiverInfoSection from "@/pages/orderpage/RecieverSection";
 import ProductSummarySection from "@/pages/orderpage/ProductSummarySection";
-import { useForm } from "@/hooks/useForm";
+import { useForm } from "react-hook-form";
 import OrderButton from "@/components/common/BaseButton";
 import { MOCK_PRODUCTS } from "@/mocks/products_list_mock";
-import {
-  validateMessage,
-  validateSender,
-  validateReceiver,
-  validatePhone,
-  validateQuantity,
-} from "@/utils/validator";
 
 const OrderPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const product = MOCK_PRODUCTS.find((item) => item.id === Number(id));
 
-  const { values, setValues, errors, validateAll } = useForm(
-    {
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
       message: "",
       sender: "",
       receiver: "",
       phone: "",
       quantity: 1,
     },
-    {
-      message: validateMessage,
-      sender: validateSender,
-      receiver: validateReceiver,
-      phone: validatePhone,
-      quantity: validateQuantity,
-    }
-  );
+  });
 
   useEffect(() => {
     if (!product) {
@@ -47,46 +38,22 @@ const OrderPage = () => {
 
   if (!product) return null;
 
+  const onSubmit = (data: any) => {
+    alert(
+      `주문이 완료되었습니다.\n상품명: ${product.name}\n구매 수량: ${data.quantity}\n발신자 이름: ${data.sender}\n메시지: ${data.message}`
+    );
+    navigate("/", { replace: true });
+  };
+
   return (
-    <Form
-      onSubmit={(e) => {
-        e.preventDefault();
-        const isValid = validateAll();
-        if (!isValid) return;
-        alert(
-          `주문이 완료되었습니다.\n상품명: ${product.name}\n구매 수량: ${values.quantity}\n발신자 이름: ${values.sender}\n메시지: ${values.message}`
-        );
-        navigate("/", { replace: true });
-      }}
-    >
+    <Form onSubmit={handleSubmit(onSubmit)}>
       <MessageCardSection
-        value={values.message}
-        onSelect={(text) => {
-          setValues({ ...values, message: text });
-        }}
-        onChangeMessage={(text) => setValues({ ...values, message: text })}
-        error={errors.message}
+        register={register}
+        setValue={setValue}
+        error={errors.message?.message}
       />
-      <SenderInfoSection
-        value={values.sender}
-        onChange={(e) => setValues({ ...values, sender: e.target.value })}
-        error={errors.sender}
-      />
-      <ReceiverInfoSection
-        receiver={values.receiver}
-        onChangeReceiver={(e) =>
-          setValues({ ...values, receiver: e.target.value })
-        }
-        phone={values.phone}
-        onChangePhone={(e) => setValues({ ...values, phone: e.target.value })}
-        quantity={values.quantity}
-        onChangeQuantity={(e) =>
-          setValues({ ...values, quantity: Number(e.target.value) })
-        }
-        errorReceiver={errors.receiver}
-        errorPhone={errors.phone}
-        errorQuantity={errors.quantity}
-      />
+      <SenderInfoSection register={register} error={errors.sender?.message} />
+      <ReceiverInfoSection register={register} errors={errors} />
       <ProductSummarySection product={product} />
       <OrderButton color="yellow" label="주문하기" size="large" type="submit" />
     </Form>

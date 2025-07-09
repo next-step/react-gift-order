@@ -2,10 +2,13 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import styled from "@emotion/styled";
 import LoginButton from "@/components/common/BaseButton";
 import KakaoLogo from "@/components/common/KakaoLogo";
-import { useForm } from "@/hooks/useForm";
 import { useAuth } from "@/contexts/AuthContext";
-import { useState } from "react";
-import { validateEmail, validatePassword } from "@/utils/validator";
+import { useForm } from "react-hook-form";
+
+type FormValues = {
+  email: string;
+  password: string;
+};
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -13,80 +16,58 @@ const LoginPage = () => {
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirect") || "/my";
 
-  const { values, setValues, errors, setErrors, validateAll } = useForm(
-    {
-      email: "",
-      password: "",
-    },
-    {
-      email: (value) => {
-        if (!value.trim()) return "이메일을 입력해주세요.";
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(value))
-          return "이메일은 이메일 형식으로 입력해주세요.";
-        return null;
-      },
-      password: (value) => {
-        if (!value.trim()) return "비밀번호를 입력해주세요.";
-        if (value.length < 8) return "비밀번호는 최소 8자 이상이어야 합니다.";
-        return null;
-      },
-    }
-  );
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useForm<FormValues>({
+    mode: "onTouched",
+    reValidateMode: "onChange",
+  });
 
-  const [touched, setTouched] = useState({ email: false, password: false });
-
-  const handleBlur = (key: "email" | "password") => {
-    setTouched((prev) => ({ ...prev, [key]: true }));
-    const error =
-      key === "email"
-        ? validateEmail(values.email)
-        : validatePassword(values.password);
-    setErrors((prev) => ({ ...prev, [key]: error ?? undefined }));
+  const onSubmit = (data: FormValues) => {
+    login(data.email);
+    navigate(redirectTo);
   };
 
-  const handleChange = (key: "email" | "password", value: string) => {
-    setValues({ ...values, [key]: value });
-    if (touched[key]) {
-      const error =
-        key === "email" ? validateEmail(value) : validatePassword(value);
-      setErrors((prev) => ({ ...prev, [key]: error ?? undefined }));
-    }
-  };
+  const email = watch("email");
+  const password = watch("password");
 
   return (
     <Wrapper>
       <Logo>
         <KakaoLogo />
       </Logo>
-      <Form
-        onSubmit={(e) => {
-          e.preventDefault();
-          const isValid = validateAll();
-          if (isValid) {
-            login(values.email);
-            navigate(redirectTo);
-          }
-        }}
-      >
+      <Form noValidate onSubmit={handleSubmit(onSubmit)}>
         <Input
           type="email"
-          name="email"
           placeholder="이메일"
-          value={values.email}
-          onChange={(e) => handleChange("email", e.target.value)}
-          onBlur={() => handleBlur("email")}
+          {...register("email", {
+            required: "이메일을 입력해주세요.",
+            pattern: {
+              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              message: "이메일은 이메일 형식으로 입력해주세요.",
+            },
+          })}
         />
-        {errors.email && <ErrorText>{errors.email}</ErrorText>}
+        {errors.email?.message && <ErrorText>{errors.email.message}</ErrorText>}
+
         <Input
           type="password"
-          name="password"
           placeholder="비밀번호"
-          value={values.password}
-          onChange={(e) => handleChange("password", e.target.value)}
-          onBlur={() => handleBlur("password")}
+          {...register("password", {
+            required: "비밀번호를 입력해주세요.",
+            minLength: {
+              value: 8,
+              message: "비밀번호는 최소 8자 이상이어야 합니다.",
+            },
+          })}
         />
-        {errors.password && <ErrorText>{errors.password}</ErrorText>}
+        {errors.password?.message && (
+          <ErrorText>{errors.password.message}</ErrorText>
+        )}
+
         <LoginButton
           color="yellow"
           type="submit"
@@ -95,8 +76,8 @@ const LoginPage = () => {
           disabled={
             !!errors.email ||
             !!errors.password ||
-            values.email.trim() === "" ||
-            values.password.trim() === ""
+            email?.trim() === "" ||
+            password?.trim() === ""
           }
         />
       </Form>
