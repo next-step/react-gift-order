@@ -24,8 +24,9 @@ const recipientSchema = z.object({
 const orderSchema = z.object({
   message: z.string().min(1, '메시지를 입력해주세요.'),
   sender: z.string().min(1, '보내는 사람을 입력해주세요.'),
-  recipients: z.array(recipientSchema),
-})
+  recipients: z
+    .array(recipientSchema)
+    .nonempty('받는 사람을 한 명 이상 추가해주세요.'),})
 
 export default function useOrderForm(initialMessage: string) {
   const methods = useForm<OrderFormValues>({
