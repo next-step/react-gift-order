@@ -16,12 +16,6 @@ const LoginForm = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    sessionStorage.setItem(
-      "kakaotech/userInfo",
-      JSON.stringify({
-        email: emailInput.value,
-      }),
-    );
     user?.setUserInfo({
       email: emailInput.value,
       name: emailInput.value.split("@")[0],

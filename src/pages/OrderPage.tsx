@@ -17,6 +17,7 @@ import SendSection from "@/components/order/SendSection";
 import ReceiverSection from "@/components/order/ReceiverSection";
 import GiftInformationSection from "@/components/order/GiftInformationSection";
 import useOrderInput from "@/hooks/useOrderInput";
+import { useUserInfo } from "@/contexts/UserInfoContext";
 
 const OrderPage = () => {
   const location = useLocation();
@@ -27,19 +28,19 @@ const OrderPage = () => {
   const receiverInput = useOrderInput(checkNameError);
   const phoneInput = useOrderInput(checkPhoneError);
   const countInput = useOrderInput(checkCountError, "1");
+  const userInfo = useUserInfo();
 
   useEffect(() => {
     messageInput.setValue(selectedCard.defaultTextMessage);
   }, [selectedCard, messageInput]);
 
   useEffect(() => {
-    const sessionUserInfo = sessionStorage.getItem("kakaotech/userInfo");
-    if (!sessionUserInfo) {
+    if (!userInfo?.email) {
       navigate(`${ROUTE_PATH.LOGIN}?redirect=${location.pathname}`, {
         replace: true,
       });
     }
-  }, [location.pathname, navigate]);
+  }, [location.pathname, navigate, userInfo]);
 
   const { id } = useParams<{ id: string }>();
   const gift = gifts.find(gift => gift.id.toString() === id);
