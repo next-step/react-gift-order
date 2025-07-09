@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { css, useTheme } from '@emotion/react';
+import { useTheme } from '@emotion/react';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { mockItems } from '../../data/mockItems';
@@ -23,6 +23,8 @@ import {
   errorMessageStyle,
 } from './styles/OrderPage.style';
 import AddReceiverModal from './components/AddReceiverModal';
+import ReceiverTable from './components/ReceiverTable';
+import EmptyReceiverBox from './components/EmptyReceiverBox';
 import { useNavigate } from 'react-router-dom';
 
 const OrderPage = () => {
@@ -152,57 +154,9 @@ const OrderPage = () => {
           </div>
 
           {receivers.length === 0 ? (
-            <div
-              css={css`
-                border: 1px solid ${theme.color.gray.gray400};
-                border-radius: 8px;
-                padding: 40px 0;
-                text-align: center;
-                color: ${theme.color.gray.gray600};
-                font-size: 14px;
-              `}
-            >
-              받는 사람이 없습니다.  
-              <br />
-              받는 사람을 추가해주세요.
-            </div>
+            <EmptyReceiverBox />
           ) : (
-            <table
-              style={{
-                width: '100%',
-                borderCollapse: 'collapse',
-                backgroundColor: theme.color.gray.gray100,
-                borderRadius: '8px',
-                overflow: 'hidden',
-              }}
-            >
-              <thead>
-                <tr
-                  style={{
-                    backgroundColor: theme.color.gray.gray300,
-                    textAlign: 'left',
-                  }}
-                >
-                  <th style={{ padding: '8px 12px' }}>이름</th>
-                  <th style={{ padding: '8px 12px' }}>전화번호</th>
-                  <th style={{ padding: '8px 12px' }}>수량</th>
-                </tr>
-              </thead>
-              <tbody>
-                {receivers.map((r, i) => (
-                  <tr
-                    key={i}
-                    style={{
-                      borderTop: `1px solid ${theme.color.gray.gray100}`,
-                    }}
-                  >
-                    <td style={{ padding: '8px 12px' }}>{r.name}</td>
-                    <td style={{ padding: '8px 12px' }}>{r.phone}</td>
-                    <td style={{ padding: '8px 12px' }}>{r.quantity}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <ReceiverTable receivers={receivers} />
           )}
         </div>
 
