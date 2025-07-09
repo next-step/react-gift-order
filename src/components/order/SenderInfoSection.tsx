@@ -1,23 +1,28 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
+import { useFormContext } from "react-hook-form";
+import type { OrderFormValues } from "@/validations/orderSchema";
 
-type Props = {
-  senderName: string;
-  onChange: (value: string) => void;
-  error?: string;
-};
+const SenderInfoSection = () => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<OrderFormValues>();
 
-const SenderInfoSection = ({ senderName, onChange, error }: Props) => {
   return (
     <Container>
       <Title>보내는 사람</Title>
+
       <Input
         type="text"
-        value={senderName}
-        onChange={(e) => onChange(e.target.value)}
         placeholder="이름을 입력하세요"
+        {...register("senderName")}
       />
-      {error && <ErrorMessage>{error}</ErrorMessage>}
+
+      {errors.senderName && (
+        <ErrorMessage>{errors.senderName.message}</ErrorMessage>
+      )}
+
       <Notice>* 실제 선물 발송 시 발신자 이름으로 반영되는 정보입니다.</Notice>
     </Container>
   );
@@ -47,8 +52,9 @@ const Input = styled.input`
   padding: 10px;
   border: 1px solid ${({ theme }) => theme.colors.gray600};
   border-radius: 10px;
-  color:black;
+  color: black;
   font-size: ${({ theme }) => theme.typography.subtitle1Regular.fontSize};
+
   &:focus {
     outline: none;
     border-color: ${({ theme }) => theme.colors.gray800};
