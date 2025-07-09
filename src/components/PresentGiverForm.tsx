@@ -5,7 +5,7 @@ import type { FormData } from "@/pages/OrderPage"
 import type { FormField } from "@/pages/OrderPage"
 import InputForm from "@/components/InputForm"
 import Blank from "./Blank"
-
+import { getErrorMessage } from "@/functions/getErrorMessage"
 interface PresentGiverFormProps {
   formData: FormData
   handleInputChange: (field: FormField, value: string) => void
@@ -36,10 +36,8 @@ const PresentGiverForm: React.FC<PresentGiverFormProps> = ({
         name="senderName"
         placeholder="이름을 입력하세요."
         value={formData.senderName}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          handleInputChange("senderName", e.target.value)
-        }
-        message={hasError("senderName") ? "이름을 입력해주세요." : undefined}
+        onChange={(e) => handleInputChange("senderName", e.target.value)}
+        message={getErrorMessage(hasError, "senderName")}
         description="* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다."
       />
     </Layout>

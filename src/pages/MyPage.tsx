@@ -4,23 +4,7 @@ import Text from "@/components/Text"
 import { useNavigate } from "react-router-dom"
 import Blank from "@/components/Blank"
 import ButtonWithStyle from "@/components/ButtonWithStyle"
-
-export const getUserEmailFromCookie = () => {
-  const useremailCookie = document.cookie
-    .split(";")
-    .find((row) => row.trim().startsWith("username="))
-
-  return useremailCookie ? useremailCookie.split("=")[1] : "email"
-}
-
-export const getUsernameFromCookie = () => {
-  const getEmail = getUserEmailFromCookie()
-  if (getEmail === "email") {
-    return "사용자"
-  } else {
-    return getEmail?.split("@")[0]
-  }
-}
+import { Cookie } from "@/utils/cookie"
 
 const MyPage = () => {
   const { logout } = useAuth()
@@ -38,10 +22,10 @@ const MyPage = () => {
       </Text>
       <Blank height="8px" />
       <Text variant="body1Regular" margin="spacing0" padding="spacing0">
-        {getUsernameFromCookie()}님 안녕하세요!
+        {Cookie.getUsernameFromCookie()}님 안녕하세요!
       </Text>
       <Text variant="body1Regular" margin="spacing0" padding="spacing0">
-        이메일 주소는 {getUserEmailFromCookie()}입니다.
+        이메일 주소는 {Cookie.getUserEmailFromCookie()}입니다.
       </Text>
       <Blank height="24px" />
       <ButtonWithStyle

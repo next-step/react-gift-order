@@ -8,7 +8,11 @@ import { useInput } from "@/hooks/useInput"
 import { useState } from "react"
 import type { FormEvent, FocusEventHandler } from "react"
 import type { ValueType } from "@/interfaces/ValueType"
-import { CheckValid, validateEmail, validatePassword } from "@/hooks/CheckValid"
+import {
+  checkValid,
+  validateEmail,
+  validatePassword,
+} from "@/functions/checkValid"
 import { useAuth } from "@/context/AuthContext"
 
 const Login = () => {
@@ -18,7 +22,7 @@ const Login = () => {
   }
 
   const [data, onChange] = useInput(form)
-  const { isEmailValid, isPasswordValid } = CheckValid(data)
+  const { isEmailValid, isPasswordValid } = checkValid(data)
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {}
   )
@@ -90,6 +94,7 @@ const Login = () => {
         ></InputBlank>
         <MoreButton
           background="kakaoYellow"
+          borderRadius="spacing0"
           onClick={handleLogin}
           disabled={!isEmailValid || !isPasswordValid}
         >

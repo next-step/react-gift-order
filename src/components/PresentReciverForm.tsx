@@ -6,7 +6,8 @@ import type { FormField } from "@/pages/OrderPage"
 import InputForm from "@/components/InputForm"
 import Blank from "./Blank"
 import RowForm from "@/components/RowForm"
-interface PresentReciverFormProps {
+import { getErrorMessage } from "@/functions/getErrorMessage"
+export interface PresentReciverFormProps {
   formData: FormData
   handleInputChange: (field: FormField, value: string) => void
   hasError: (field: FormField) => boolean
@@ -51,9 +52,7 @@ const PresentReciverForm: React.FC<PresentReciverFormProps> = ({
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               handleInputChange("receiverName", e.target.value)
             }
-            message={
-              hasError("receiverName") ? "이름을 입력해주세요." : undefined
-            }
+            message={getErrorMessage(hasError, "receiverName")}
             description=""
           />
         </div>
@@ -69,15 +68,11 @@ const PresentReciverForm: React.FC<PresentReciverFormProps> = ({
             name="receiverPhone"
             placeholder="전화번호를 입력하세요."
             value={formData.receiverPhone}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              handleInputChange("receiverPhone", e.target.value)
-            }
+            onChange={(e) => handleInputChange("receiverPhone", e.target.value)}
             message={
               phoneErrorMessage
                 ? phoneErrorMessage
-                : hasError("receiverPhone")
-                  ? "전화번호를 입력해주세요."
-                  : undefined
+                : getErrorMessage(hasError, "receiverPhone")
             }
             description=""
           />
@@ -103,10 +98,8 @@ const PresentReciverForm: React.FC<PresentReciverFormProps> = ({
             min={1}
             max={99}
             step={1}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              handleInputChange("quantity", e.target.value)
-            }
-            message={hasError("quantity") ? "수량을 입력해주세요." : undefined}
+            onChange={(e) => handleInputChange("quantity", e.target.value)}
+            message={getErrorMessage(hasError, "quantity")}
             description=""
           />
         </div>

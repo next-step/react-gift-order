@@ -18,7 +18,7 @@ export function validatePassword(password: string): string {
   return ""
 }
 
-export function CheckValid(data: ValueType) {
+export function checkValid(data: ValueType) {
   const emailMessage = validateEmail(data.email)
   const passwordMessage = validatePassword(data.password)
   const isEmailValid = !emailMessage

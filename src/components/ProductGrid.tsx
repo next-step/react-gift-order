@@ -9,6 +9,8 @@ import MoreButton from "./MoreButton"
 import theme from "@/styles/theme"
 import { useAuth } from "@/context/AuthContext"
 import { useNavigate } from "react-router-dom"
+import { ROUTES } from "@/constants/routes"
+import getRoute from "@/functions/getRoute"
 
 const VISIBLE_COUNT = 6
 
@@ -33,7 +35,7 @@ const ProductGrid = () => {
       if (!isLoggedIn) {
         navigate("/login")
       } else {
-        navigate(`/order/${id}`)
+        navigate(getRoute(ROUTES.ORDER, { id: id }))
       }
     },
     [isLoggedIn, navigate]
