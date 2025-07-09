@@ -9,7 +9,7 @@ export const sectionWrapper = css`
 export const tabRow = css`
   display: flex;
   justify-content: space-between;
-  width: 700px;
+  width: 95%;
   margin: 0 auto ${theme.spacing[4]};
 `;
 
