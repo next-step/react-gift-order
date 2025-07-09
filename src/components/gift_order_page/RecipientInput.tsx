@@ -1,4 +1,5 @@
 import useOrderInfo from '@/hooks/useOrderInfo';
+import type { inputStyle } from '@/types/inputStyle';
 import styled from '@emotion/styled';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -105,12 +106,12 @@ export const RecipientInput = () => {
   const [nameIsClicked, setNameIsClicked] = useState(false);
   const [phoneNumberIsClicked, setPhoneNumberIsClicked] = useState(false);
   const [amountIsClicked, setAmountIsClicked] = useState(false);
-  const [nameInputFieldStyle, setNameInputFieldStyle] = useState('idle');
-  const [phoneNumberInputFieldStyle, setPhoneNumberInputFieldStyle] = useState('idle');
-  const [amountInputFieldStyle, setAmountInputFieldStyle] = useState('idle');
+  const [nameInputFieldStyle, setNameInputFieldStyle] = useState<inputStyle>('idle');
+  const [phoneNumberInputFieldStyle, setPhoneNumberInputFieldStyle] = useState<inputStyle>('idle');
+  const [amountInputFieldStyle, setAmountInputFieldStyle] = useState<inputStyle>('idle');
 
   const handleInputFieldStyle = useCallback((type: string, isClicked: boolean, error: string) => {
-    let inputStatus = '';
+    let inputStatus: inputStyle = 'idle';
 
     if (isClicked) {
       inputStatus = 'isClicked';

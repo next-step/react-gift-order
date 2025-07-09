@@ -3,8 +3,8 @@ import styled from '@emotion/styled';
 interface GiftMessageCardType {
   id: number;
   image: string;
-  selectedCard: number;
-  setSelectedCard: React.Dispatch<React.SetStateAction<number>>;
+  selectedCardId: number;
+  setSelectedCardId: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const Border = styled.div<{ isSelected: boolean }>`
@@ -36,23 +36,15 @@ const Card = styled.div<{ image: string }>`
 export const GiftMessageCard = ({
   id,
   image,
-  selectedCard,
-  setSelectedCard,
+  selectedCardId,
+  setSelectedCardId,
 }: GiftMessageCardType) => {
-  let isSelected = false;
-
-  if (id === selectedCard) {
-    isSelected = true;
-  } else {
-    isSelected = false;
-  }
-
   return (
-    <Border isSelected={isSelected}>
+    <Border isSelected={id === selectedCardId}>
       <Card
         image={image}
         onClick={() => {
-          setSelectedCard(id);
+          setSelectedCardId(id);
         }}
       />
     </Border>

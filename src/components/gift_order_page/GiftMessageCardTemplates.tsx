@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { GiftMessageCard } from './GiftMessageCard';
 import { useCallback, useEffect, useState } from 'react';
 import useOrderInfo from '@/hooks/useOrderInfo';
+import type { inputStyle } from '@/types/inputStyle';
 
 const Container = styled.div`
   display: flex;
@@ -87,13 +88,14 @@ const ErrorText = styled.div`
 
 export const GiftMessageCardTemplates = () => {
   const giftMessageCards = giftMessageCardTemplatesData;
-  const [selectedCard, setSelectedCard] = useState(0);
-  const [messageInputFieldStyle, setMessageInputFieldStyle] = useState('idle');
+  const [selectedCardId, setSelectedCardId] = useState(giftMessageCards[0].id);
+  const index = giftMessageCards.findIndex((item) => item.id === selectedCardId);
+  const [messageInputFieldStyle, setMessageInputFieldStyle] = useState<inputStyle>('idle');
   const [isClicked, setIsClicked] = useState(false);
   const { setIsFirstTry, message, setMessage, error } = useOrderInfo();
 
   const handleInputFieldStyle = useCallback(() => {
-    let inputStatus = '';
+    let inputStatus: inputStyle = 'idle';
 
     if (isClicked) {
       inputStatus = 'isClicked';
@@ -109,8 +111,8 @@ export const GiftMessageCardTemplates = () => {
   }, [isClicked, error]);
 
   useEffect(() => {
-    setMessage(giftMessageCards[selectedCard].defaultTextMessage);
-  }, [setMessage, giftMessageCards, selectedCard]);
+    setMessage(giftMessageCards[index].defaultTextMessage);
+  }, [setMessage, giftMessageCards, index]);
 
   useEffect(() => {
     handleInputFieldStyle();
@@ -119,19 +121,19 @@ export const GiftMessageCardTemplates = () => {
   return (
     <Container>
       <List>
-        {giftMessageCards.map((item, i) => {
+        {giftMessageCards.map((item) => {
           return (
             <GiftMessageCard
-              key={i}
-              id={i}
+              key={item.id}
+              id={item.id}
               image={item.thumbUrl}
-              selectedCard={selectedCard}
-              setSelectedCard={setSelectedCard}
+              selectedCardId={selectedCardId}
+              setSelectedCardId={setSelectedCardId}
             />
           );
         })}
       </List>
-      <Card image={giftMessageCards[selectedCard].imageUrl} />
+      <Card image={giftMessageCards[index].imageUrl} />
       <InputContainer>
         <MessageInputField
           messageInputFieldStyle={messageInputFieldStyle}

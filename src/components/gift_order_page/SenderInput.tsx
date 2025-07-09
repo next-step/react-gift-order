@@ -1,4 +1,5 @@
 import useOrderInfo from '@/hooks/useOrderInfo';
+import type { inputStyle } from '@/types/inputStyle';
 import styled from '@emotion/styled';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -63,11 +64,11 @@ const ErrorText = styled.div`
 
 export const SenderInput = () => {
   const { setIsFirstTry, sender, error } = useOrderInfo();
-  const [senderNameInputFieldStyle, setsenderNameInputFieldStyle] = useState('idle');
+  const [senderNameInputFieldStyle, setsenderNameInputFieldStyle] = useState<inputStyle>('idle');
   const [isClicked, setIsClicked] = useState(false);
 
   const handleInputFieldStyle = useCallback(() => {
-    let inputStatus = '';
+    let inputStatus: inputStyle = 'idle';
 
     if (isClicked) {
       inputStatus = 'isClicked';

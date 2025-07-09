@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import useValidateId from '@/hooks/useValidateId';
 import useValidatePassword from '@/hooks/useValidatePassword';
 import useUserInfo from '@/hooks/useUserInfo';
+import type { inputStyle } from '@/types/inputStyle';
 
 const Container = styled.div`
   display: flex;
@@ -45,9 +46,9 @@ const Input = styled.input<{ inputFieldStyle: string }>`
   border-bottom-width: 1px;
   border-bottom-style: solid;
   border-bottom-color: ${({ theme, inputFieldStyle }) => {
-    if (inputFieldStyle === 'idle' || inputFieldStyle === 'blurredValid') {
+    if (inputFieldStyle === 'idle') {
       return theme.colors.gray400;
-    } else if (inputFieldStyle === 'firstAttempt' || inputFieldStyle === 'focusedValid') {
+    } else if (inputFieldStyle === 'isClicked') {
       return theme.colors.gray700;
     } else {
       return theme.colors.red700;
@@ -96,32 +97,32 @@ const Login = () => {
   const [email, setEmail, isFirstIdTry, setIsFirstIdTry, idError] = useValidateId();
   const [password, setPassword, isFirstPwdTry, setIsFirstPwdTry, passwordError] =
     useValidatePassword();
-  const [idInputFieldStyle, setIdInputFieldStyle] = useState('idle');
-  const [pwdInputFieldStyle, setPwdInputFieldStyle] = useState('idle');
+  const [idInputFieldStyle, setIdInputFieldStyle] = useState<inputStyle>('idle');
+  const [pwdInputFieldStyle, setPwdInputFieldStyle] = useState<inputStyle>('idle');
   const isFirstTry = isFirstIdTry || isFirstPwdTry;
   const isAllValid = !idError && !passwordError;
   const { setUser } = useUserInfo();
 
   const handleInputFieldStyle = useCallback(
     (type: string, isFirstTry: boolean, isClicked: boolean, error: string) => {
-      let inputStatus = '';
+      let inputStatus: inputStyle = 'idle';
 
       if (isFirstTry) {
         if (isClicked) {
-          inputStatus = 'firstAttempt';
+          inputStatus = 'isClicked';
         } else {
           inputStatus = 'idle';
         }
       } else {
         if (isClicked) {
           if (!error) {
-            inputStatus = 'focusedValid';
+            inputStatus = 'isClicked';
           } else {
             inputStatus = 'error';
           }
         } else {
           if (!error) {
-            inputStatus = 'blurredValid';
+            inputStatus = 'isClicked';
           } else {
             inputStatus = 'error';
           }
