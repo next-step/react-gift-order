@@ -61,7 +61,7 @@ const RankingList: React.FC<RankingListProps> = ({
     <Wrapper>
       <GridContainer>
         {visibleItems.map((prod, idx) => (
-          <RankingItem key={prod.id} rank={idx + 1} product={prod} />
+          <RankingItem key={`${prod.id}-${idx}`} rank={idx + 1} product={prod} />
         ))}
       </GridContainer>
 
