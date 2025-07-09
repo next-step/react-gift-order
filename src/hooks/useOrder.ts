@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { orders } from '@/mocks/mockorder';
+import { cards } from '@/mocks/mockorder';
 import type { ordersType } from '@/mocks/mockorder';
 import type { mockItemType } from '@/mocks/mockItem';
 
@@ -21,10 +21,10 @@ function requiredField(value: string, message: string) {
 }
 
 function useOrder(item: mockItemType) {
-  const [currentId, setCurrentId] = useState(orders[0].id);
-  const currentOrder: ordersType | undefined = orders.find((order) => order.id === currentId);
+  const [currentId, setCurrentId] = useState(cards[0].id);
+  const currentOrder: ordersType | undefined = cards.find((card) => card.id === currentId);
 
-  const [text, setText] = useState<string>(orders[0].defaultTextMessage);
+  const [text, setText] = useState<string>(cards[0].defaultTextMessage);
   const [sender, setSender] = useState<string>('');
   const [reciever, setReciever] = useState<RecieverType>({
     name: '',
@@ -78,7 +78,7 @@ function useOrder(item: mockItemType) {
       }
       return '';
     },
-    count: (value: number) => value < 1 ? '구매 수량은 1개 이상이어야 합니다.' : '',
+    count: (value: number) => (value < 1 ? '구매 수량은 1개 이상이어야 합니다.' : ''),
   };
 
   function validate() {

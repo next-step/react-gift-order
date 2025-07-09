@@ -5,7 +5,7 @@ export type ordersType = {
   defaultTextMessage: string;
 };
 
-export const orders = [
+export const cards = [
   {
     id: 904,
     thumbUrl: 'https://t1.daumcdn.net/gift/message-card/template/image/20240124_VGPJE.png',
