@@ -29,6 +29,11 @@ interface ReceiverFormProps {
   totalCount: number;
   control: Control<FormData>;
   errors: FieldErrors<FormData>;
+  watchedReceivers: {
+    name: string;
+    phone: string;
+    quantity: string;
+  }[];
   onRemove: () => void;
 }
 
@@ -37,6 +42,7 @@ function ReceiverForm({
   totalCount,
   control,
   errors,
+  watchedReceivers,
   onRemove,
 }: ReceiverFormProps) {
   return (
@@ -74,8 +80,18 @@ function ReceiverForm({
             control={control}
             rules={{
               required: VALIDATE_LABELS.PHONE_EMPTY,
-              validate: (value) =>
-                validatePhoneNumber(value) || VALIDATE_LABELS.PHONE_INVALID,
+              validate: {
+                format: (value) =>
+                  validatePhoneNumber(value) || VALIDATE_LABELS.PHONE_INVALID,
+                unique: (value) => {
+                  if (!value) return true;
+                  const hasDuplicate = watchedReceivers.some(
+                    (receiver, receiverIndex) =>
+                      receiverIndex !== index && receiver.phone === value
+                  );
+                  return !hasDuplicate || VALIDATE_LABELS.PHONE_DUPLICATE;
+                },
+              },
             }}
             render={({ field }) => (
               <Input

@@ -34,6 +34,7 @@ function ReceiverModal({ handleCloseModal }: ReceiverModalProps) {
     control,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm<FormData>({
     defaultValues: {
       receivers: [],
@@ -44,6 +45,8 @@ function ReceiverModal({ handleCloseModal }: ReceiverModalProps) {
     control,
     name: "receivers",
   });
+
+  const watchedReceivers = watch("receivers");
 
   const handleAddReceiver = () => {
     if (fields.length < MAX_RECEIVERS) {
@@ -94,6 +97,7 @@ function ReceiverModal({ handleCloseModal }: ReceiverModalProps) {
                 totalCount={fields.length}
                 control={control}
                 errors={errors}
+                watchedReceivers={watchedReceivers}
                 onRemove={() => remove(index)}
               />
             ))}
