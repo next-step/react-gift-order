@@ -1,4 +1,5 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext } from 'react'
+import { useStorageState } from '@/hooks/useStorageState'
 
 interface AuthContextType {
   user: string | null
@@ -9,19 +10,9 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<string | null>(() => {
-    return localStorage.getItem('user')
-  })
-
-  const login = (email: string) => {
-    localStorage.setItem('user', email)
-    setUser(email)
-  }
-
-  const logout = () => {
-    localStorage.removeItem('user')
-    setUser(null)
-  }
+  const [user, setUser] = useStorageState<string | null>('user')
+  const login = (email: string) => setUser(email)
+  const logout = () => setUser(null)
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
