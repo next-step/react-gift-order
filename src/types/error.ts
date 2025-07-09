@@ -7,6 +7,6 @@ export interface Error {
   recipientNameError: string;
   setTargetPhoneNumber: React.Dispatch<React.SetStateAction<string>>;
   phoneNumberError: string;
-  setTargetAmount: React.Dispatch<React.SetStateAction<number>>;
+  setTargetAmount: React.Dispatch<React.SetStateAction<string>>;
   amountError: string;
 }

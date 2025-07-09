@@ -201,11 +201,11 @@ export const RecipientInput = () => {
             value={product.amount}
             onChange={(e) => {
               if (parseInt(e.target.value)) {
-                product.setAmount(parseInt(e.target.value));
-                error.setTargetAmount(1);
+                product.setAmount(e.target.value);
+                error.setTargetAmount('1');
               } else {
-                product.setAmount(0);
-                error.setTargetAmount(1);
+                product.setAmount('0');
+                error.setTargetAmount('1');
               }
             }}
             onFocus={() => {

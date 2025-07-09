@@ -1,9 +1,6 @@
 import { OrderInfoContext } from '@/contexts/OrderInfoContext';
-import useValidateAmount from '@/hooks/useValidateAmount';
-import useValidateGiftMessage from '@/hooks/useValidateGiftMessage';
-import useValidatePhoneNumber from '@/hooks/useValidatePhoneNumber';
-import useValidateSenderName from '@/hooks/useValidateSenderName';
 import { useState, type ReactNode } from 'react';
+import useValidateOrderForm from '@/hooks/useValidateOrderForm';
 
 export const OrderInfoProvider = ({ children }: { children: ReactNode }) => {
   const [isFirstTry, setIsFirstTry] = useState(true);
@@ -14,12 +11,12 @@ export const OrderInfoProvider = ({ children }: { children: ReactNode }) => {
   const [id, setId] = useState(0);
   const [productName, setProductName] = useState('');
   const [price, setPrice] = useState(0);
-  const [amount, setAmount] = useState(0);
-  const [setTargetMessage, messageError] = useValidateGiftMessage();
-  const [setTargetSenderName, senderNameError] = useValidateSenderName();
-  const [setTargetRecipientName, recipientNameError] = useValidateSenderName();
-  const [setTargetPhoneNumber, phoneNumberError] = useValidatePhoneNumber();
-  const [setTargetAmount, amountError] = useValidateAmount();
+  const [amount, setAmount] = useState('0');
+  const [setTargetMessage, messageError] = useValidateOrderForm('message');
+  const [setTargetSenderName, senderNameError] = useValidateOrderForm('name');
+  const [setTargetRecipientName, recipientNameError] = useValidateOrderForm('name');
+  const [setTargetPhoneNumber, phoneNumberError] = useValidateOrderForm('phoneNumber');
+  const [setTargetAmount, amountError] = useValidateOrderForm('amount');
 
   return (
     <OrderInfoContext.Provider

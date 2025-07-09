@@ -1,1 +1,1 @@
-export type inputType = '' | 'name' | 'phoneNumber' | 'amount';
+export type inputType = '' | 'message' | 'name' | 'phoneNumber' | 'amount';
