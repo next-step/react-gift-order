@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { useTheme } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { mockItems } from '../../data/mockItems';
@@ -152,9 +152,20 @@ const OrderPage = () => {
           </div>
 
           {receivers.length === 0 ? (
-            <p css={helperTextStyle(theme)}>
-              받는 사람이 없습니다. 받는 사람을 추가해주세요.
-            </p>
+            <div
+              css={css`
+                border: 1px solid ${theme.color.gray.gray400};
+                border-radius: 8px;
+                padding: 40px 0;
+                text-align: center;
+                color: ${theme.color.gray.gray600};
+                font-size: 14px;
+              `}
+            >
+              받는 사람이 없습니다.  
+              <br />
+              받는 사람을 추가해주세요.
+            </div>
           ) : (
             <table
               style={{
