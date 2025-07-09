@@ -18,3 +18,10 @@
 - 로그인폼 리디렉션 흐름을 redirect query 방식으로 리팩터링해 하드코딩을 피했습니다.
 - 로그인폼과 주문폼의 공통로직을 추출해 useForm 커스텀훅을 생성하고, 두 폼을 useForm을 이용해 상태관리 했습니다.
 - utils폴더를 만들어 validator.ts파일 안에 유효성 검사 로직을 정의해 코드 가독성을 높였습니다.
+
+# 2차 피드백 적용 내용
+
+- OrderPage.tsx useEffect Hook사용법에 맞게 수정했습니다.
+- useAuthNavigation.ts navigate부분 유지보수성과 확장성 고려해서 리팩터링했습니다.
+- AuthContext.tsx에서 UserName을 Email로부터 추출하는 로직을 유틸함수(getUserNameFromEmail.ts)로 분리했습니다.
+- 로그인 인증 기반 페이지 이동 로직을 버튼을 이용한 커스텀훅 사용-> 라우팅 기반 접근 제어 방식으로 리팩터링했습니다.
