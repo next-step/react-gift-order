@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { useAuth } from '@/contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import { Navbar } from '@/components/Navbar/Navbar'
+import { Layout } from '@/components/Layout/Layout'
 
 export function MyPage() {
   const { user, logout } = useAuth()
@@ -14,15 +15,17 @@ export function MyPage() {
 
   return (
     <>
-      <Navbar />
-      <Wrapper>
-        <Title>마이 페이지</Title>
-        <Message>
-          {user?.split('@')[0]}님 안녕하세요! <br />
-          이메일 주소는 {user}입니다.
-        </Message>
-        <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
-      </Wrapper>
+      <Layout>
+        <Navbar />
+        <Wrapper>
+          <Title>마이 페이지</Title>
+          <Message>
+            {user?.split('@')[0]}님 안녕하세요! <br />
+            이메일 주소는 {user}입니다.
+          </Message>
+          <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
+        </Wrapper>
+      </Layout>
     </>
   )
 }

@@ -17,8 +17,8 @@ export function OrderPage() {
 
   return (
     <>
-      <Navbar />
       <Layout>
+        <Navbar />
         <Container>
           <OrderForm product={product} />
         </Container>

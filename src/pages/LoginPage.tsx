@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { useLoginForm } from '@/hooks/useLoginForm'
 import { useAuth } from '@/contexts/AuthContext'
 import { useEffect } from 'react'
+import { Layout } from '@/components/Layout/Layout'
 
 export function LoginPage() {
   const navigate = useNavigate()
@@ -32,35 +33,37 @@ export function LoginPage() {
 
   return (
     <>
-      <Navbar />
-      <Container>
-        <Logo>kakao</Logo>
-        <Form onSubmit={submitLoginForm}>
-          <Input
-            type="email"
-            placeholder="이메일"
-            value={email.value}
-            onChange={(e) => email.change(e.target.value)}
-            onBlur={email.onBlur}
-          />
-          {email.touched && email.error && <Error>{email.error}</Error>}
+      <Layout>
+        <Navbar />
+        <Container>
+          <Logo>kakao</Logo>
+          <Form onSubmit={submitLoginForm}>
+            <Input
+              type="email"
+              placeholder="이메일"
+              value={email.value}
+              onChange={(e) => email.change(e.target.value)}
+              onBlur={email.onBlur}
+            />
+            {email.touched && email.error && <Error>{email.error}</Error>}
 
-          <Input
-            type="password"
-            placeholder="비밀번호"
-            value={password.value}
-            onChange={(e) => password.change(e.target.value)}
-            onBlur={password.onBlur}
-          />
-          {password.touched && password.error && (
-            <Error>{password.error}</Error>
-          )}
+            <Input
+              type="password"
+              placeholder="비밀번호"
+              value={password.value}
+              onChange={(e) => password.change(e.target.value)}
+              onBlur={password.onBlur}
+            />
+            {password.touched && password.error && (
+              <Error>{password.error}</Error>
+            )}
 
-          <LoginButton type="submit" disabled={!validForm}>
-            로그인
-          </LoginButton>
-        </Form>
-      </Container>
+            <LoginButton type="submit" disabled={!validForm}>
+              로그인
+            </LoginButton>
+          </Form>
+        </Container>
+      </Layout>
     </>
   )
 }
