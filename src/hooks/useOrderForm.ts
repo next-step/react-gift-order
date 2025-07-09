@@ -1,5 +1,9 @@
 import { useDeferredValidationInput } from './useDeferredValidation';
 
+const validateMessage = (value: string) => {
+  if (!value.trim()) return '메시지를 입력해주세요.';
+  return '';
+};
 const validateName = (value: string) => {
   if (!value.trim()) return '이름을 입력해주세요.';
   if (!/^[가-힣a-zA-Z]{2,}$/.test(value)) return '2자 이상 한글 또는 영어만 입력해주세요.';
@@ -18,6 +22,7 @@ const validateCount = (value: number) => {
 };
 
 export const useOrderForm = () => {
+  const message = useDeferredValidationInput(validateMessage, '' as string);
   const senderName = useDeferredValidationInput(validateName, '');
   const receiverName = useDeferredValidationInput(validateName, '');
   const receiverPhoneNumber = useDeferredValidationInput(validatePhone, '');
@@ -28,5 +33,6 @@ export const useOrderForm = () => {
     receiverName,
     receiverPhoneNumber,
     itemCount,
+    message,
   };
 };

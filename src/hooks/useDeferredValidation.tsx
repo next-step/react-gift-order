@@ -10,7 +10,7 @@ export const useDeferredValidationInput = <T extends string | number>(
   const [error, setError] = useState('');
 
   const onChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const newValue = e.target.value as string;
 
       // T가 number일 경우 숫자 변환

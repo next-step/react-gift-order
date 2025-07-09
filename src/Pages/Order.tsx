@@ -8,7 +8,7 @@ import { useOrderForm } from '@/hooks/useOrderForm';
 import BorderInputBox from '@/components/Common/BorderInputBox';
 import { useParams, useNavigate } from 'react-router-dom';
 import { mockGiftItems } from '@/mocks/itemListMock';
-import { useState, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 const Order = () => {
   const { itemId } = useParams<{ itemId: string }>();
@@ -16,27 +16,46 @@ const Order = () => {
   const item = mockGiftItems.find((item) => item.id === id);
 
   const { selectedCard, selectCard } = useCardSelection();
-  const { senderName, receiverName, receiverPhoneNumber, itemCount } = useOrderForm();
-  const [textMessage, setTextMessage] = useState('');
+  const { message, senderName, receiverName, receiverPhoneNumber, itemCount } = useOrderForm();
+
+  const hasUserEditedMessage = useRef(false);
+
+  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    hasUserEditedMessage.current = true;
+    message.onChange(e);
+  };
+
   useEffect(() => {
-    if (selectedCard?.defaultTextMessage) {
-      setTextMessage(selectedCard.defaultTextMessage);
+    // selectedCard.defaultTextMessage가 있고,
+    // 사용자가 아직 메시지를 편집하지 않았으며,
+    // 현재 메시지 값이 비어있을 때만 기본 메시지를 설정
+    if (selectedCard?.defaultTextMessage && !hasUserEditedMessage.current && message.value === '') {
+      message.onChange({
+        target: { value: selectedCard.defaultTextMessage },
+      } as React.ChangeEvent<HTMLTextAreaElement>);
     }
-  }, [selectedCard]);
+  }, [selectedCard, message]);
+
   const navigate = useNavigate();
 
   if (!item) return <p>상품 정보를 찾을 수 없습니다.</p>;
 
   const handleOrderSubmit = () => {
+    const isMessageVaild = message.validate();
     const isSenderNameValid = senderName.validate();
     const isReceiverNameValid = receiverName.validate();
     const isPhoneValid = receiverPhoneNumber.validate();
     const isItemCountValid = itemCount.validate();
 
-    const valid = isSenderNameValid && isReceiverNameValid && isPhoneValid && isItemCountValid;
+    const valid =
+      isMessageVaild &&
+      isSenderNameValid &&
+      isReceiverNameValid &&
+      isPhoneValid &&
+      isItemCountValid;
     if (valid) {
       alert(
-        `주문이 완료되었습니다.\n상품명: ${item?.name}\n구매 수량: ${itemCount.value}\n발신자 이름: ${senderName.value}\n메시지: ${textMessage}`
+        `주문이 완료되었습니다.\n상품명: ${item?.name}\n구매 수량: ${itemCount.value}\n발신자 이름: ${senderName.value}\n메시지: ${message.value}`
       );
       navigate('/');
     }
@@ -52,13 +71,18 @@ const Order = () => {
 
           {selectedCard && (
             <SelectedCardPreview>
-              <CardImage src={selectedCard.imageUrl} />
+              <CardImageWraaper>
+                <CardImage src={selectedCard.imageUrl} />
+              </CardImageWraaper>
               <CardMessageTextArea
-                onChange={(e) => setTextMessage(e.target.value)}
-                value={textMessage}
-              >
-                {textMessage}
-              </CardMessageTextArea>
+                value={message.value}
+                placeholder="메시지를 입력해주세요."
+                isError={Boolean(message.error)}
+                onChange={handleMessageChange}
+              />
+              <MessageTextAreaCaption isError={Boolean(message.error)}>
+                {message.error || ' '}{' '}
+              </MessageTextAreaCaption>
             </SelectedCardPreview>
           )}
         </SectionContainer>
@@ -143,9 +167,16 @@ const OrderContainer = styled.main`
 
 const SelectedCardPreview = styled.div`
   margin-top: ${({ theme }) => theme.spacing.spacing4};
-  text-align: center;
+  display: flex;
+  flex-direction: column;
 `;
 
+const CardImageWraaper = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 const CardImage = styled.img`
   width: 100%;
   max-width: 360px;
@@ -153,13 +184,20 @@ const CardImage = styled.img`
   margin-bottom: ${({ theme }) => theme.spacing.spacing4};
 `;
 
-const CardMessageTextArea = styled.textarea`
+const CardMessageTextArea = styled.textarea<{ isError: boolean }>`
   width: 100%;
   border-radius: 4px;
-  border: 1px solid ${({ theme }) => theme.colors.gray400};
+  border: 1px solid
+    ${({ isError, theme }) => (isError ? theme.colors.critical : theme.colors.gray400)};
   min-height: 100px;
   background-color: ${({ theme }) => theme.colors.backgroundDefault};
   padding: ${({ theme }) => theme.spacing.spacing4};
+`;
+
+const MessageTextAreaCaption = styled.span<{ isError: boolean }>`
+  color: ${({ isError, theme }) => (isError ? theme.colors.critical : theme.colors.gray600)};
+  font-size: ${({ theme }) => theme.font.label2Regular.size};
+  margin-top: 4px;
 `;
 
 const ReceiverInputWrapper = styled.div`
