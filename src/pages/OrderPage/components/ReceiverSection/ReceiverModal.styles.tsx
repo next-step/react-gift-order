@@ -131,3 +131,38 @@ export const CompleteButton = styled.button`
     theme.typography.label.label1Regular.fontWeight};
   cursor: pointer;
 `;
+
+export const ReceiverList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing[2]};
+  max-height: 520px;
+  overflow-y: auto;
+`;
+
+export const ReceiverInputContainer = styled.div`
+  margin-top: ${({ theme }) => theme.spacing[2]};
+`;
+
+export const RemoveButton = styled.button`
+  font-size: ${({ theme }) => theme.typography.label.label1Regular.fontSize};
+  font-weight: ${({ theme }) =>
+    theme.typography.label.label1Regular.fontWeight};
+  color: ${({ theme }) => theme.colors.gray[800]};
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+`;
+
+export const ReceiverInputHeader = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: ${({ theme }) => theme.spacing[2]};
+`;
+
+export const Divider = styled.div`
+  height: 1px;
+  background-color: ${({ theme }) => theme.colors.gray[300]};
+  margin-top: ${({ theme }) => theme.spacing[4]};
+`;
