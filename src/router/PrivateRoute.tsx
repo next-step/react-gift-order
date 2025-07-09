@@ -1,7 +1,6 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import { useUserInfo } from '@src/contexts/AuthContext';
-
-const NO_LOGIN_PATH = '/login';
+import ROUTES from '@/constants/routes';
 
 interface PrivateRouteProps {
   children: React.ReactNode;
@@ -12,11 +11,11 @@ const PrivateRoute = ({ children }: PrivateRouteProps) => {
   const location = useLocation();
 
   if (loading) {
-    return <></>;
+    return null;
   }
 
   if (!user) {
-    return <Navigate to={NO_LOGIN_PATH} state={{ from: location }} replace />;
+    return <Navigate to={ROUTES.LOGIN} state={{ from: location }} replace />;
   }
 
   return children;

@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useUserInfo } from '@/contexts/AuthContext';
+import ROUTES from '@/constants/routes';
 
 export const useAuthNavigation = () => {
   const { user } = useUserInfo();
@@ -9,7 +10,7 @@ export const useAuthNavigation = () => {
     if (user) {
       navigate(to);
     } else {
-      navigate('/login');
+      navigate(ROUTES.LOGIN);
     }
   };
 
