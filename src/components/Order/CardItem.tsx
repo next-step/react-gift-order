@@ -18,8 +18,6 @@ const CardItem = ({ card, onClick, selected }: Props) => {
 export default CardItem;
 
 const ItemWrapper = styled.div<{ isSelected: boolean }>`
-  border: ${({ isSelected, theme }) =>
-    isSelected ? `2px solid ${theme.colors.kakaoBrown}` : '1px solid #ccc'};
   border-radius: 8px;
   overflow: hidden;
   cursor: pointer;
