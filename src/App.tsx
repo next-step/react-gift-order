@@ -9,13 +9,13 @@ import { MobileLayout } from '@/components/layout';
 import { NavigationBar } from '@/components/navigation';
 import { PrivateRoute } from '@/components/common';
 import { HomePage, LoginPage, MyPage, OrderPage, NotFoundPage } from '@/pages';
-
-// 라우트 경로 상수 선언
-const ROUTE_HOME = '/';
-const ROUTE_LOGIN = '/login';
-const ROUTE_MY = '/my';
-const ROUTE_ORDER = '/order';
-const ROUTE_NOT_FOUND = '*';
+import {
+  ROUTE_HOME,
+  ROUTE_LOGIN,
+  ROUTE_MY,
+  ROUTE_ORDER,
+  ROUTE_NOT_FOUND,
+} from '@/constants';
 
 // OrderLayout 컴포넌트 추가
 function OrderLayout() {
