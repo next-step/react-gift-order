@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import theme from '@src/styles/tokens/index';
 import OrderFormInput from '@src/components/OrderFormInput';
+import type { OrderValues } from '@src/hooks/useOrderForm';
 
 const coverStyle = css`
   width: 100%;
@@ -66,17 +67,9 @@ const colorspace8 = css`
   background-color: ${theme.colors.backgroundDisabled};
 `;
 
-interface FormValues {
-  message: string;
-  senderName: string;
-  recipientName: string;
-  recipientPhone: string;
-  quantity: string;
-}
-
 interface Props {
-  values: FormValues;
-  errors: Partial<FormValues>;
+  values: OrderValues;
+  errors: Partial<OrderValues>;
   onChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
