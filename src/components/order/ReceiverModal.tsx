@@ -18,14 +18,12 @@ const ReceiverModal = ({ isOpen, onClose, onComplete }: Props) => {
     remove,
     handleSubmit,
     isValid,
-    reset,
   } = useReceiverForm();
 
   if (!isOpen) return null;
 
   const handleComplete = handleSubmit((data) => {
     onComplete(data.receivers);
-    reset();
     onClose();
   });
 
@@ -87,7 +85,7 @@ const Backdrop = styled.div`
 const Container = styled.div`
   width: 100%;
   max-width: 640px;
-  height: 700px; /* ✅ 고정된 세로 높이 */
+  height: 700px; 
   background: #fff;
   border-radius: 12px;
   padding: 24px;
@@ -100,7 +98,7 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   flex: 1;
-  overflow: hidden; /* 중요 */
+  overflow: hidden;
 `;
 
 const Header = styled.div`
