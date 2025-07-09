@@ -1,39 +1,27 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
-import { useMemo, useCallback, useState } from "react";
+import { useFormContext, useWatch } from "react-hook-form";
 import { messageCards } from "@/mock/messageCards";
 import type { MessageCard } from "@/mock/messageCards";
+import type { OrderFormValues } from "@/validations/orderSchema";
 
-interface Props {
-  message: string;
-  selectedCardId: number | null;
-  onChange: (field: "message" | "selectedCardId", value: string | number | null) => void;
-  error?: string;
-}
+const DEFAULT_MESSAGE = "와~ 축하해요";
 
-const MessageCardSection = ({ message, selectedCardId, onChange }: Props) => {
-  const [isMessageTouched, setIsMessageTouched] = useState(false);
+const MessageCardSection = () => {
+  const { register, setValue, control } = useFormContext<OrderFormValues>();
 
-  const selectedCard: MessageCard = useMemo(() => {
-    return messageCards.find((card) => card.id === selectedCardId) || messageCards[0];
-  }, [selectedCardId]);
+  const selectedCardId = useWatch({ control, name: "selectedCardId" });
+  const message = useWatch({ control, name: "message" });
 
-  const handleSelect = useCallback(
-    (card: MessageCard) => {
-      onChange("selectedCardId", card.id);
+  const selectedCard: MessageCard =
+    messageCards.find((card) => card.id === selectedCardId) || messageCards[0];
 
-      if (!isMessageTouched) {
-        onChange("message", card.defaultTextMessage);
-      }
-    },
-    [onChange, isMessageTouched]
-  );
+  const handleSelectCard = (card: MessageCard) => {
+    setValue("selectedCardId", card.id);
 
-  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    if (!isMessageTouched) {
-      setIsMessageTouched(true);
+    if (!message?.trim()) {
+      setValue("message", DEFAULT_MESSAGE);
     }
-    onChange("message", e.target.value);
   };
 
   return (
@@ -42,7 +30,7 @@ const MessageCardSection = ({ message, selectedCardId, onChange }: Props) => {
         {messageCards.map((card) => (
           <ThumbButton
             key={card.id}
-            onClick={() => handleSelect(card)}
+            onClick={() => handleSelectCard(card)}
             selected={selectedCard.id === card.id}
           >
             <ThumbImg src={card.thumbUrl} alt="thumb" height={50} />
@@ -54,8 +42,7 @@ const MessageCardSection = ({ message, selectedCardId, onChange }: Props) => {
 
       <MessageInputWrapper>
         <MessageInput
-          value={message}
-          onChange={handleMessageChange}
+          {...register("message")}
           placeholder="메시지를 입력해주세요."
         />
       </MessageInputWrapper>
