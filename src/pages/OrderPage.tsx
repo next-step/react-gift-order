@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import styled from '@emotion/styled'
 import Layout from '@/Layout'
 import { cardTemplates, type CardTemplate } from '@/data/cardTemplates'
@@ -182,6 +182,8 @@ const OrderButton = styled.button`
 export default function OrderPage() {
   const location = useLocation()
   const product = (location.state as { product?: Product })?.product
+  const navigate = useNavigate()
+
 
   const [selected, setSelected] = useState<CardTemplate>(cardTemplates[0])
   const [modalOpen, setModalOpen] = useState(false)
@@ -197,12 +199,23 @@ export default function OrderPage() {
     watch,
   } = useOrderForm(cardTemplates[0].defaultTextMessage)
 
+    const recipients = watch('recipients')
+  const totalQty = recipients.reduce(
+    (sum: number, r: { qty: number }) => sum + (r.qty ?? 0),
+    0,
+  )
+  const orderPrice = product ? product.price.sellingPrice * totalQty : 0
+
   const onSubmit = (data: any) => {
-    const first = data.recipients[0]
-    alert(
-      `주문 완료:\n카드: ${selected.id}\n메시지: ${data.message}\n보낸 사람: ${data.sender}\n받는 사람: ${first?.name ?? ''}, ${first?.phone ?? ''}, 수량: ${first?.qty ?? ''}`,
+        const totalQty = data.recipients.reduce(
+      (sum: number, r: { qty: number }) => sum + r.qty,
+      0,
     )
-  }
+    const totalPrice = product ? product.price.sellingPrice * totalQty : 0
+    alert(
+      `주문 완료:\n카드: ${selected.id}\n메시지: ${data.message}\n보낸 사람: ${data.sender}\n총 수량: ${totalQty}\n결제금액: ${totalPrice.toLocaleString()}원`,    )
+      navigate('/')
+    }
      const handleCardSelect = (card: CardTemplate) => {
     setSelected(card)
     setValue('message', card.defaultTextMessage)
@@ -297,9 +310,7 @@ export default function OrderPage() {
         )}
 
         <OrderButton type="submit" disabled={!isValid}>
-          {product
-            ? `${product.price.sellingPrice.toLocaleString()}원 주문하기`
-            : '주문하기'}
+          {product ? `${orderPrice.toLocaleString()}원 주문하기` : '주문하기'}
         </OrderButton>
       </Container>
       <RecipientModal
