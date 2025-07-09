@@ -22,8 +22,6 @@ function App() {
       <Container>
         <GlobalStyle />
 
-        <Header />
-
         <Routes>
           <Route
             path="/"
