@@ -1,5 +1,6 @@
 import useOrderInfo from '@/hooks/useOrderInfo';
 import type { inputStyle } from '@/types/inputStyle';
+import type { inputType } from '@/types/inputType';
 import styled from '@emotion/styled';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -103,46 +104,47 @@ const ErrorText = styled.div`
 
 export const RecipientInput = () => {
   const { setIsFirstTry, recipient, product, error } = useOrderInfo();
-  const [nameIsClicked, setNameIsClicked] = useState(false);
-  const [phoneNumberIsClicked, setPhoneNumberIsClicked] = useState(false);
-  const [amountIsClicked, setAmountIsClicked] = useState(false);
+  const [selectedInput, setSelectedInput] = useState<inputType>('');
   const [nameInputFieldStyle, setNameInputFieldStyle] = useState<inputStyle>('idle');
   const [phoneNumberInputFieldStyle, setPhoneNumberInputFieldStyle] = useState<inputStyle>('idle');
   const [amountInputFieldStyle, setAmountInputFieldStyle] = useState<inputStyle>('idle');
 
-  const handleInputFieldStyle = useCallback((type: string, isClicked: boolean, error: string) => {
-    let inputStatus: inputStyle = 'idle';
+  const handleInputFieldStyle = useCallback(
+    (type: inputType, selectedInput: inputType, error: string) => {
+      let inputStatus: inputStyle = 'idle';
 
-    if (isClicked) {
-      inputStatus = 'isClicked';
-    } else {
-      if (error) {
-        inputStatus = 'error';
+      if (selectedInput === type) {
+        inputStatus = 'isClicked';
       } else {
-        inputStatus = 'idle';
+        if (error) {
+          inputStatus = 'error';
+        } else {
+          inputStatus = 'idle';
+        }
       }
-    }
 
-    if (type === 'name') {
-      setNameInputFieldStyle(inputStatus);
-    } else if (type === 'phoneNumber') {
-      setPhoneNumberInputFieldStyle(inputStatus);
-    } else {
-      setAmountInputFieldStyle(inputStatus);
-    }
-  }, []);
-
-  useEffect(() => {
-    handleInputFieldStyle('name', nameIsClicked, error.recipientNameError);
-  }, [handleInputFieldStyle, nameIsClicked, error.recipientNameError]);
+      if (type === 'name') {
+        setNameInputFieldStyle(inputStatus);
+      } else if (type === 'phoneNumber') {
+        setPhoneNumberInputFieldStyle(inputStatus);
+      } else {
+        setAmountInputFieldStyle(inputStatus);
+      }
+    },
+    []
+  );
 
   useEffect(() => {
-    handleInputFieldStyle('phoneNumber', phoneNumberIsClicked, error.phoneNumberError);
-  }, [handleInputFieldStyle, phoneNumberIsClicked, error.phoneNumberError]);
+    handleInputFieldStyle('name', selectedInput, error.recipientNameError);
+  }, [handleInputFieldStyle, selectedInput, error.recipientNameError]);
 
   useEffect(() => {
-    handleInputFieldStyle('amount', amountIsClicked, error.amountError);
-  }, [handleInputFieldStyle, amountIsClicked, error.amountError]);
+    handleInputFieldStyle('phoneNumber', selectedInput, error.phoneNumberError);
+  }, [handleInputFieldStyle, selectedInput, error.phoneNumberError]);
+
+  useEffect(() => {
+    handleInputFieldStyle('amount', selectedInput, error.amountError);
+  }, [handleInputFieldStyle, selectedInput, error.amountError]);
 
   return (
     <Container>
@@ -160,10 +162,10 @@ export const RecipientInput = () => {
               setIsFirstTry(false);
             }}
             onFocus={() => {
-              setNameIsClicked(true);
+              setSelectedInput('name');
             }}
             onBlur={() => {
-              setNameIsClicked(false);
+              setSelectedInput('');
             }}
           />
           {error.recipientNameError && <ErrorText>{error.recipientNameError}</ErrorText>}
@@ -181,10 +183,10 @@ export const RecipientInput = () => {
               error.setTargetPhoneNumber('modifying..');
             }}
             onFocus={() => {
-              setPhoneNumberIsClicked(true);
+              setSelectedInput('phoneNumber');
             }}
             onBlur={() => {
-              setPhoneNumberIsClicked(false);
+              setSelectedInput('');
             }}
           />
           {error.phoneNumberError && <ErrorText>{error.phoneNumberError}</ErrorText>}
@@ -207,10 +209,10 @@ export const RecipientInput = () => {
               }
             }}
             onFocus={() => {
-              setAmountIsClicked(true);
+              setSelectedInput('amount');
             }}
             onBlur={() => {
-              setAmountIsClicked(false);
+              setSelectedInput('');
             }}
           />
           {error.amountError && <ErrorText>{error.amountError}</ErrorText>}
