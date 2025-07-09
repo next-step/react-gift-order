@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
 
+import { useUser } from '@/hooks/useUser';
+
 const FriendSelectorWrapper = styled.div`
   width: auto;
   height: 65px;
@@ -45,7 +47,7 @@ const FriendSelectorBoxText = styled.p`
 `;
 
 function FriendSelector() {
-  const userId = sessionStorage.getItem('userId')?.split('@')[0] ?? '';
+  const userId = useUser();
 
   return (
     <FriendSelectorWrapper>

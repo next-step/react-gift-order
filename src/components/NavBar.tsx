@@ -1,6 +1,8 @@
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 
+import { useUser } from '@/hooks/useUser';
+
 const NavBarWrapper = styled.div`
   width: auto;
   height: 40px;
@@ -61,7 +63,7 @@ const NavBarLoginBtn = styled.button`
 
 function NavBar() {
   const navigate = useNavigate();
-  const userId = sessionStorage.getItem('userId')?.split('@')[0] ?? '';
+  const userId = useUser();
 
   function loginRoute() {
     if (userId !== '') {
