@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, useEffect, type ReactNode } from 'react';
+import { createContext, useState, useContext, useEffect, useMemo, type ReactNode } from 'react';
 
 // 사용자 정보 타입 정의
 interface User {
@@ -71,12 +71,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   // 컨텍스트 값 정의
-  const value = {
+  const value = useMemo(() => ({
     user,
     isAuthenticated,
     login,
     logout,
-  };
+  }), [user, isAuthenticated, login, logout]);
 
   // Provider로 자식 컴포넌트 감싸기
   return (
