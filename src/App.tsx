@@ -85,13 +85,15 @@ function App() {
 
   return (
     <MobileLayout>
-      <NavigationBar
-        title={navConfig.title}
-        showBackButton={navConfig.showBackButton}
-        showProfileButton={navConfig.showProfileButton}
-        onBackClick={handleBackClick}
-        onProfileClick={handleProfileClick}
-      />
+      {!location.pathname.startsWith('/order') && (
+        <NavigationBar
+          title={navConfig.title}
+          showBackButton={navConfig.showBackButton}
+          showProfileButton={navConfig.showProfileButton}
+          onBackClick={handleBackClick}
+          onProfileClick={handleProfileClick}
+        />
+      )}
 
       <Routes>
         <Route path={ROUTE_HOME} element={<HomePage />} />
