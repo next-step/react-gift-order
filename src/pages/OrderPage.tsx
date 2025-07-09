@@ -1,10 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { orderSchema } from "@/validations/orderSchema"; 
+import { orderFormSchema } from "@/validations/orderSchema";
 import type { OrderFormValues } from "@/validations/orderSchema";
 
 import { PageLayout } from "@/components/layout/PageLayout";
@@ -12,7 +12,7 @@ import { PageContainer } from "@/components/layout/PageContainer";
 import { Navigation } from "@/components/header/Navigation";
 import MessageCardSection from "@/components/order/MessageCardSection";
 import SenderInfoSection from "@/components/order/SenderInfoSection";
-import ReceiverSection from "@/components/order/ReceiverSection";
+import ReceiverModal from "@/components/order/ReceiverModal";
 import OrderSummary from "@/components/order/OrderSummary";
 import OrderButton from "@/components/order/OrderButton";
 
@@ -24,19 +24,39 @@ const OrderPage = () => {
   const product = rankingList.find((item) => item.id === Number(id));
 
   const methods = useForm<OrderFormValues>({
-    resolver: zodResolver(orderSchema),
+    resolver: zodResolver(orderFormSchema),
     defaultValues: {
       senderName: "",
-      receiverName: "",
-      receiverPhone: "",
-      quantity: 1,
       message: "",
       selectedCardId: null,
+      receivers: [], 
     },
     mode: "onBlur",
   });
 
-  const { handleSubmit, watch } = methods;
+  const { handleSubmit, watch, setValue } = methods;
+
+  const [isReceiverModalOpen, setReceiverModalOpen] = useState(false);
+
+  const onValid = (data: OrderFormValues) => {
+    const totalQuantity = data.receivers.reduce(
+      (sum, r) => sum + r.quantity,
+      0
+    );
+    alert(
+      `🎉 주문 완료!\n상품명: ${product?.name}\n수량: ${totalQuantity}개\n보낸 사람: ${data.senderName}\n메시지: ${data.message}`
+    );
+    navigate("/", { replace: true });
+  };
+  if (!product) return null;
+
+  const totalQuantity =
+    watch("receivers")?.reduce((sum, r) => sum + r.quantity, 0) || 0;
+  const totalAmount = product!.price.sellingPrice * totalQuantity;
+
+  const onReceiverComplete = (data: OrderFormValues["receivers"]) => {
+    setValue("receivers", data);
+  };
 
   useEffect(() => {
     if (!product) {
@@ -45,19 +65,6 @@ const OrderPage = () => {
   }, [product, navigate]);
 
   if (!product) return null;
-
-  const totalAmount = product.price.sellingPrice * (watch("quantity") || 1);
-
-  const onValid = (data: OrderFormValues) => {
-    alert(
-      `주문이 완료되었습니다!\n` +
-        `상품명: ${product.name}\n` +
-        `수량: ${data.quantity}\n` +
-        `보낸 사람: ${data.senderName}\n` +
-        `메시지: ${data.message}`
-    );
-    navigate("/", { replace: true });
-  };
 
   return (
     <PageLayout>
@@ -75,7 +82,19 @@ const OrderPage = () => {
               </SectionCard>
 
               <SectionCard>
-                <ReceiverSection />
+                <AddReceiverButton
+                  type="button"
+                  onClick={() => setReceiverModalOpen(true)}
+                >
+                  + 받는 사람 추가
+                </AddReceiverButton>
+
+                {watch("receivers")?.length > 0 && (
+                  <ReceiverCount>
+                    총 {watch("receivers").length}명 등록됨 / 총 수량{" "}
+                    {totalQuantity}개
+                  </ReceiverCount>
+                )}
               </SectionCard>
 
               <SectionCard>
@@ -92,13 +111,18 @@ const OrderPage = () => {
             </StickyFooter>
           </Form>
         </FormProvider>
+
+        <ReceiverModal
+          isOpen={isReceiverModalOpen}
+          onClose={() => setReceiverModalOpen(false)}
+          onComplete={onReceiverComplete}
+        />
       </PageContainer>
     </PageLayout>
   );
 };
 
 export default OrderPage;
-
 
 const Form = styled.form`
   display: flex;
@@ -137,4 +161,22 @@ const StickyInner = styled.div`
   margin: 0 auto;
   display: flex;
   justify-content: center;
+`;
+
+const AddReceiverButton = styled.button`
+  margin-top: 12px;
+  padding: 8px 12px;
+  background-color: ${({ theme }) => theme.colors.yellow500};
+  color: black;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+`;
+
+const ReceiverCount = styled.p`
+  margin-top: 8px;
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.gray700};
 `;

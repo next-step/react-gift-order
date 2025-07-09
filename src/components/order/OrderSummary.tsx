@@ -11,8 +11,11 @@ interface ProductSummarySectionProps {
 export default function OrderSummary({ product }: ProductSummarySectionProps) {
   const { watch } = useFormContext<OrderFormValues>();
 
-  const quantity = watch("quantity") ?? 0;
-  const totalPrice = product.price.sellingPrice * quantity;
+  const receivers = watch("receivers") ?? [];
+
+  const totalQuantity = receivers.reduce((sum, r) => sum + r.quantity, 0);
+
+  const totalPrice = product.price.sellingPrice * totalQuantity;
 
   return (
     <Container>
@@ -31,7 +34,7 @@ export default function OrderSummary({ product }: ProductSummarySectionProps) {
 
         <SummaryRow>
           <Label>총 수량</Label>
-          <Value>{quantity}개</Value>
+          <Value>{totalQuantity}개</Value>
         </SummaryRow>
         <SummaryRow>
           <Label>총 결제금액</Label>
