@@ -6,19 +6,16 @@ import theme from "@/styles/theme"
 const InputStyle = styled.input<ComponentStyle & { hasError?: boolean }>`
   width: ${({ width }) => width};
   height: ${({ height }) => height};
-  border: 1px solid ${theme.colors.gray300};
-  font-size: 16px;
+  border: 1px solid;
+  border-radius: ${theme.space.spacing2};
+  ${({ hasError }) => (hasError ? theme.colors.red700 : theme.colors.gray700)};
+  box-sizing: border-box;
 
-  &:focus {
-    outline: none;
-    border-color: ${theme.colors.gray900};
-  }
-  border: none;
-  border-bottom: 1px solid
-    ${({ hasError }) => (hasError ? theme.colors.red700 : theme.colors.gray700)};
+  width: 100%;
+  height: ${({ height }) => height ?? "42px"};
 `
 
-export type InputBlankProps<T> = Omit<
+export type InputFormProps<T> = Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
   "name"
 > &
@@ -29,7 +26,7 @@ export type InputBlankProps<T> = Omit<
     onBlur?: React.FocusEventHandler<HTMLInputElement>
   }
 
-function InputBlank<T>({
+function InputForm<T>({
   width,
   height,
   name,
@@ -37,7 +34,7 @@ function InputBlank<T>({
   description,
   onBlur,
   ...props
-}: InputBlankProps<T>) {
+}: InputFormProps<T>) {
   const hasError = Boolean(message)
 
   return (
@@ -76,4 +73,4 @@ function InputBlank<T>({
   )
 }
 
-export default InputBlank
+export default InputForm

@@ -1,5 +1,5 @@
 import { css } from "@emotion/react"
-
+import theme from "./theme"
 const reset = css`
   html,
   body,
@@ -129,6 +129,11 @@ const reset = css`
   table {
     border-collapse: collapse;
     border-spacing: 0;
+  }
+  html,
+  body {
+    background-color: ${theme.colors.gray100};
+    min-height: 100%;
   }
 `
 
