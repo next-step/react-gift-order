@@ -1,25 +1,14 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
+import { useFormContext } from "react-hook-form";
+import type { OrderFormValues } from "@/validations/orderSchema";
 
-type Props = {
-  receiverName: string;
-  phone: string;
-  quantity: number;
-  onChange: (field: "receiverName" | "receiverPhone" | "quantity", value: string | number) => void;
-  errors: {
-    receiverName?: string | null;
-    receiverPhone?: string | null;
-    quantity?: string | null;
-  };
-};
+const ReceiverSection = () => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<OrderFormValues>();
 
-const ReceiverSection = ({
-  receiverName,
-  phone,
-  quantity,
-  onChange,
-  errors,
-}: Props) => {
   return (
     <Container>
       <Title>받는 사람</Title>
@@ -29,11 +18,12 @@ const ReceiverSection = ({
         <InputWrapper>
           <Input
             type="text"
-            value={receiverName}
-            onChange={(e) => onChange("receiverName", e.target.value)}
             placeholder="이름을 입력하세요"
+            {...register("receiverName")}
           />
-          {errors.receiverName && <ErrorText>{errors.receiverName}</ErrorText>}
+          {errors.receiverName && (
+            <ErrorText>{errors.receiverName.message}</ErrorText>
+          )}
         </InputWrapper>
       </Field>
 
@@ -42,11 +32,12 @@ const ReceiverSection = ({
         <InputWrapper>
           <Input
             type="tel"
-            value={phone}
-            onChange={(e) => onChange("receiverPhone", e.target.value)}
             placeholder="전화번호를 입력하세요"
+            {...register("receiverPhone")}
           />
-          {errors.receiverPhone && <ErrorText>{errors.receiverPhone}</ErrorText>}
+          {errors.receiverPhone && (
+            <ErrorText>{errors.receiverPhone.message}</ErrorText>
+          )}
         </InputWrapper>
       </Field>
 
@@ -55,14 +46,13 @@ const ReceiverSection = ({
         <InputWrapper>
           <Input
             type="number"
-            min={1}
-            value={quantity}
-            onChange={(e) =>
-              onChange("quantity", e.target.value === "" ? 1 : Number(e.target.value))
-            }
             placeholder="수량을 입력하세요"
+            min={1}
+            {...register("quantity", { valueAsNumber: true })}
           />
-          {errors.quantity && <ErrorText>{errors.quantity}</ErrorText>}
+          {errors.quantity && (
+            <ErrorText>{errors.quantity.message}</ErrorText>
+          )}
         </InputWrapper>
       </Field>
     </Container>
@@ -111,6 +101,7 @@ const Input = styled.input`
   border-radius: 10px;
   color: black;
   font-size: ${({ theme }) => theme.typography.subtitle1Regular.fontSize};
+
   &:focus {
     outline: none;
     border-color: ${({ theme }) => theme.colors.gray800};
@@ -121,5 +112,5 @@ const ErrorText = styled.p`
   color: ${({ theme }) => theme.colors.red500};
   font-size: ${({ theme }) => theme.typography.body2Regular.fontSize};
   margin-top: 4px;
-  text-align: left;
+   text-align: left;
 `;
