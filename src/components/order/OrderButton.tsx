@@ -3,7 +3,8 @@ import styled from "@emotion/styled";
 
 type OrderButtonProps = {
   amount: number;
-  onClick: () => void;
+  onClick?: () => void; 
+  type?: "button" | "submit";
   size?: "large" | "small";
   color?: "yellow" | "gray";
 };
@@ -11,13 +12,19 @@ type OrderButtonProps = {
 const OrderButton = ({
   amount,
   onClick,
+  type = "button", 
   size = "large",
   color = "yellow",
 }: OrderButtonProps) => {
   const displayAmount = isNaN(amount) ? 0 : amount;
 
   return (
-    <StyledButton $size={size} $color={color} onClick={onClick}>
+    <StyledButton
+      type={type}
+      onClick={onClick}
+      $size={size}
+      $color={color}
+    >
       {`${displayAmount.toLocaleString()}원 주문하기`}
     </StyledButton>
   );
