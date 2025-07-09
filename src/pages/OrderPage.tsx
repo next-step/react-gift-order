@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
-import GiftCardSelector from "@/components/GiftCardSelector";
-import SenderForm from "@/components/SenderForm";
-import ReceiverForm from "@/components/ReceiverForm";
-import GiftInfo from "@/components/GiftInfo";
+import GiftCardSelector from "@/components/order/GiftCardSelector";
+import SenderForm from "@/components/order/SenderForm";
+import ReceiverForm from "@/components/order/ReceiverForm";
+import GiftInfo from "@/components/order/GiftInfo";
 import { useNavigate, useParams } from "react-router-dom";
 import { ranking } from "@/data/ranking";
 import useOrderForm from "./useOrderForm";
