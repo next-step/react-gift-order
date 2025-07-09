@@ -5,6 +5,7 @@ import personIcon from '@src/assets/icons/person.svg';
 import logoIcon from '@src/assets/icons/logo.webp';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthNavigation } from '@/hooks/useAuthNavigation';
+import ROUTES from '@/constants/routes';
 
 const divStyle = css`
   width: 100%;
@@ -64,7 +65,7 @@ const Title = () => {
   };
 
   const goLogin = () => {
-    navigateIfLoggedIn('/my');
+    navigateIfLoggedIn(ROUTES.MY_PAGE);
   };
 
   return (

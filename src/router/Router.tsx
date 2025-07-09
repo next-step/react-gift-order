@@ -5,14 +5,7 @@ import NotFound from '@/pages/NotFound';
 import MyPage from '@/pages/MyPage';
 import Order from '@/pages/Order';
 import PrivateRoute from '@/router/PrivateRoute';
-
-const ROUTES = {
-  HOME: '/',
-  LOGIN: '/login',
-  MY_PAGE: '/my',
-  ORDER_DETAIL_BASE: '/order/:id',
-  NOT_FOUND: '*',
-} as const;
+import ROUTES from '@/constants/routes';
 
 const Router = () => {
   return (

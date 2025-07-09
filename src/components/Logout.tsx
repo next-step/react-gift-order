@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import theme from '@src/styles/tokens/index';
 import { useUserInfo } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import ROUTES from '@/constants/routes';
 
 const buttonStyle = css`
   height: 2.75rem;
@@ -24,7 +25,7 @@ const Logout = () => {
   const navigate = useNavigate();
   const logoutClicked = () => {
     setUser(undefined);
-    navigate('/login');
+    navigate(ROUTES.LOGIN);
   };
   return (
     <button css={buttonStyle} onClick={logoutClicked}>

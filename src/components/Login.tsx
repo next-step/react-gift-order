@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import useLoginForm from '@src/hooks/useLoginForm';
 import LoginInput from '@src/components/LoginInput';
 import { useUserInfo } from '@/contexts/AuthContext';
+import ROUTES from '@/constants/routes';
 
 const mainStyle = css`
   width: 100%;
@@ -80,7 +81,7 @@ const Login = () => {
     e.preventDefault();
     const name = formValue.email.split('@')[0];
     setUser({ name: name, email: formValue.email });
-    const from = location.state?.from?.pathname || '/';
+    const from = location.state?.from?.pathname || ROUTES.HOME;
     navigate(from, { replace: true });
   };
 
