@@ -1,11 +1,7 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { User, AuthContextType } from '@/types/auth';
-import {
-  saveAuthToStorage,
-  loadAuthFromStorage,
-  removeAuthFromStorage,
-} from '@/utils/storage';
+import { useLocalStorageState } from '@/hooks';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -14,28 +10,13 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true); // 초기 로딩은 true로 시작
+  const [user, setUser] = useLocalStorageState<User | null>(
+    'kakao-gift-auth',
+    null
+  );
+  const [loading, setLoading] = useState(false); // useLocalStorageState는 동기 초기화되므로 loading 불필요
 
   const isAuthenticated = !!user;
-
-  // 컴포넌트 마운트 시 localStorage에서 사용자 정보 복원
-  useEffect(() => {
-    const initializeAuth = async () => {
-      try {
-        const savedUser = loadAuthFromStorage();
-        if (savedUser) {
-          setUser(savedUser);
-        }
-      } catch (error) {
-        console.error('인증 정보 초기화 실패:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    initializeAuth();
-  }, []);
 
   const login = async (email: string, _password: string): Promise<void> => {
     setLoading(true);
@@ -49,16 +30,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         email,
       };
 
-      setUser(userData);
-      saveAuthToStorage(userData); // localStorage에 저장
+      setUser(userData); // useLocalStorageState가 자동으로 localStorage에 저장
     } finally {
       setLoading(false);
     }
   };
 
   const logout = () => {
-    setUser(null);
-    removeAuthFromStorage(); // localStorage에서 삭제
+    setUser(null); // useLocalStorageState가 자동으로 localStorage에서 삭제
   };
 
   const value: AuthContextType = {
