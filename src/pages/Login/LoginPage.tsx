@@ -3,21 +3,18 @@ import Container from "@/components/common/Container";
 import Divider from "@/components/common/Divider";
 import styled from "@emotion/styled";
 import type React from "react";
-import useInput from "@/hooks/useInput";
-import { getIdError, getPasswordError } from "@/hooks/utils/errorMessage";
+import useLoginInput from "@/hooks/useLoginInput";
 import { useAuth } from "@/contexts/authContext";
 
 const Login = () => {
-  const id = useInput("", getIdError);
-  const password = useInput("", getPasswordError);
+  const { user, onChange, onBlur, errorMsg } = useLoginInput();
   const { login } = useAuth();
 
   const handleLoginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    login(id.value);
+    login(user.id);
   };
-  const isValidIdAndPassword =
-    id.value.length !== 0 && password.value.length >= 8 && !id.errorMsg && !password.errorMsg;
+  const isValidIdAndPassword = user.id.length !== 0 && user.password.length >= 8 && !errorMsg.id && !errorMsg.password;
   return (
     <Container>
       <Content>
@@ -25,25 +22,27 @@ const Login = () => {
         <Form onSubmit={handleLoginSubmit}>
           <InputWrapper>
             <Input
+              name="id"
               type="email"
               placeholder="이메일"
-              onChange={id.onChange}
-              onBlur={id.onBlur}
-              errorMsg={id.errorMsg}
-              value={id.value}
+              onChange={onChange}
+              onBlur={onBlur}
+              errorMsg={errorMsg.id}
+              value={user.id}
             />
-            <ErrorMsg>{id.errorMsg}</ErrorMsg>
+            {errorMsg.id && <ErrorMsg>{errorMsg.id}</ErrorMsg>}
           </InputWrapper>
           <InputWrapper>
             <Input
+              name="password"
               type="password"
               placeholder="비밀번호"
-              onChange={password.onChange}
-              onBlur={password.onBlur}
-              errorMsg={password.errorMsg}
-              value={password.value}
+              onChange={onChange}
+              onBlur={onBlur}
+              errorMsg={errorMsg.password}
+              value={user.password}
             />
-            {password.errorMsg && <ErrorMsg>{password.errorMsg}</ErrorMsg>}
+            {errorMsg.password && <ErrorMsg>{errorMsg.password}</ErrorMsg>}
           </InputWrapper>
           <Divider />
           <Button fullWidth={true} type="submit" disabled={!isValidIdAndPassword}>
