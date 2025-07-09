@@ -10,8 +10,10 @@ export const useOrderForm = () => {
   const navigate = useNavigate();
 
   // 폼 상태
-  const [selectedCardIdx, setSelectedCardIdx] = useState(0);
-  const selectedCard = cardTemplates[selectedCardIdx];
+  const [selectedCardId, setSelectedCardId] = useState(cardTemplates[0].id);
+  const selectedCard =
+    cardTemplates.find((card) => card.id === selectedCardId) ||
+    cardTemplates[0];
   const [message, setMessage] = useState(selectedCard.defaultTextMessage || '');
   const [sender, setSender] = useState('');
   const [receiver, setReceiver] = useState('');
@@ -26,9 +28,10 @@ export const useOrderForm = () => {
   const [quantityError, setQuantityError] = useState('');
 
   // 카드 선택 핸들러
-  const handleSelectCard = (idx: number) => {
-    setSelectedCardIdx(idx);
-    setMessage(cardTemplates[idx].defaultTextMessage || '');
+  const handleSelectCard = (cardId: number) => {
+    setSelectedCardId(cardId);
+    const card = cardTemplates.find((c) => c.id === cardId);
+    setMessage(card?.defaultTextMessage || '');
   };
 
   // 전화번호 입력 핸들러
@@ -94,7 +97,7 @@ export const useOrderForm = () => {
   return {
     // 폼 데이터
     formData: {
-      selectedCardIdx,
+      selectedCardId,
       selectedCard,
       message,
       sender,

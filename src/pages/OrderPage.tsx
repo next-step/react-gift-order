@@ -139,7 +139,7 @@ const OrderPage = () => {
 
   const { formData, errors, handlers } = useOrderForm();
   const {
-    selectedCardIdx,
+    selectedCardId,
     selectedCard,
     message,
     sender,
@@ -182,8 +182,8 @@ const OrderPage = () => {
           {cardTemplates.map((card, idx) => (
             <CardThumbButton
               key={card.id}
-              selected={idx === selectedCardIdx}
-              onClick={() => handleSelectCard(idx)}
+              selected={card.id === selectedCardId}
+              onClick={() => handleSelectCard(card.id)}
             >
               <CardThumbImg
                 src={card.thumbUrl}
