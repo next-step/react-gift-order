@@ -15,7 +15,11 @@ import {
   ReceiverList,
 } from "./ReceiverModal.styles";
 import ReceiverForm from "./ReceiverForm";
-import { MAX_RECEIVERS } from "../../constants/receiverSection";
+import {
+  MAX_RECEIVERS,
+  RECEIVER_MODAL_CONSTANTS,
+  DEFAULT_RECEIVER,
+} from "../../constants/receiverSection";
 
 interface ReceiverModalProps {
   handleCloseModal: () => void;
@@ -50,7 +54,7 @@ function ReceiverModal({ handleCloseModal }: ReceiverModalProps) {
 
   const handleAddReceiver = () => {
     if (fields.length < MAX_RECEIVERS) {
-      append({ name: "", phone: "", quantity: "" });
+      append(DEFAULT_RECEIVER);
     }
   };
 
@@ -59,8 +63,6 @@ function ReceiverModal({ handleCloseModal }: ReceiverModalProps) {
       handleCloseModal();
       return;
     }
-
-    alert("주문 완료");
 
     handleCloseModal();
   };
@@ -73,19 +75,19 @@ function ReceiverModal({ handleCloseModal }: ReceiverModalProps) {
     <ModalOverlay>
       <ModalContent>
         <ModalHeader>
-          <ModalTitle>받는 사람</ModalTitle>
+          <ModalTitle>{RECEIVER_MODAL_CONSTANTS.MODAL_TITLE}</ModalTitle>
         </ModalHeader>
         <ModalBody>
           <InfoTextContainer>
-            <InfoText>* 최대 {MAX_RECEIVERS}명까지 추가할 수 있어요.</InfoText>
             <InfoText>
-              * 받는 사람의 전화번호를 중복으로 입력할 수 있어요.
+              {RECEIVER_MODAL_CONSTANTS.INFO_TEXT_MAX_COUNT(MAX_RECEIVERS)}
             </InfoText>
+            <InfoText>{RECEIVER_MODAL_CONSTANTS.INFO_TEXT_DUPLICATE}</InfoText>
           </InfoTextContainer>
 
           <AddSection>
             <AddSectionButton type="button" onClick={handleAddReceiver}>
-              추가하기
+              {RECEIVER_MODAL_CONSTANTS.ADD_BUTTON}
             </AddSectionButton>
           </AddSection>
 
@@ -105,13 +107,13 @@ function ReceiverModal({ handleCloseModal }: ReceiverModalProps) {
         </ModalBody>
         <ModalFooter>
           <CancelButton type="button" onClick={handleCloseModal}>
-            취소
+            {RECEIVER_MODAL_CONSTANTS.CANCEL_BUTTON}
           </CancelButton>
           <CompleteButton
             type="button"
             onClick={handleSubmit(onSubmit, onInvalid)}
           >
-            {fields.length}명 완료
+            {RECEIVER_MODAL_CONSTANTS.COMPLETE_BUTTON(fields.length)}
           </CompleteButton>
         </ModalFooter>
       </ModalContent>

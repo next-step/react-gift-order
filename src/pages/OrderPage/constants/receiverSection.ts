@@ -11,6 +11,24 @@ const RECEIVER_SECTION_CONSTANTS = {
   QUANTITY_ERROR: "수량을 입력해주세요.",
 } as const;
 
+const RECEIVER_MODAL_CONSTANTS = {
+  MODAL_TITLE: "받는 사람",
+  INFO_TEXT_MAX_COUNT: (count: number) =>
+    `* 최대 ${count}명까지 추가할 수 있어요.`,
+  INFO_TEXT_DUPLICATE: "* 전화번호는 중복으로 입력할 수 없어요.",
+  ADD_BUTTON: "추가하기",
+  CANCEL_BUTTON: "취소",
+  COMPLETE_BUTTON: (count: number) => `${count}명 완료`,
+  ORDER_SUCCESS_MESSAGE: "주문 완료",
+} as const;
+
 export const MAX_RECEIVERS: number = 10;
 
+export const DEFAULT_RECEIVER = {
+  name: "",
+  phone: "",
+  quantity: "",
+} as const;
+
 export default RECEIVER_SECTION_CONSTANTS;
+export { RECEIVER_MODAL_CONSTANTS };
