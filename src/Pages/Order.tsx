@@ -72,6 +72,7 @@ const Order = () => {
                 <CardImage src={selectedCard.imageUrl} />
               </CardImageWraaper>
               <CardMessageTextArea
+                id="order-message"
                 value={message.value}
                 placeholder="메시지를 입력해주세요."
                 isError={Boolean(message.error)}
