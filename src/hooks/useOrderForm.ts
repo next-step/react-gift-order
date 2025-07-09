@@ -26,6 +26,8 @@ export default function useOrderForm(initialMessage: string) {
     handleSubmit,
     formState: { errors, isValid },
     setValue,
+    watch,
+
   } = methods
 
   const { fields, append, remove } = useFieldArray({
@@ -41,5 +43,6 @@ export default function useOrderForm(initialMessage: string) {
     fields,
     append,
     remove,
+    watch,
   }
 }
