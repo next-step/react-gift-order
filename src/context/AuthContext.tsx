@@ -16,6 +16,17 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+function isValidUser(data: unknown): data is User {
+  return (
+    typeof data === 'object' &&
+    data !== null &&
+    'name' in data &&
+    'email' in data &&
+    typeof (data as any).name === 'string' &&
+    typeof (data as any).email === 'string'
+  );
+}
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -25,12 +36,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const storedUser = sessionStorage.getItem('user');
       if (storedUser) {
-        const userData: User = JSON.parse(storedUser);
-        setUser(userData);
-        setIsLoggedIn(true);
+        const parsed = JSON.parse(storedUser);
+        if (isValidUser(parsed)) {
+          setUser(parsed);
+          setIsLoggedIn(true);
+        } else {
+          throw new Error('Invalid user data structure');
+        }
       }
     } catch (error) {
-      console.error(error);
+      console.error('Failed to restore user session:', error);
       sessionStorage.removeItem('user');
     }
   }, []);
