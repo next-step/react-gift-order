@@ -2,92 +2,80 @@ import styled from "@emotion/styled";
 import theme from "@src/styles/kakaoTheme";
 import type { StateHook } from "@src/hooks/stateHookType";
 import ReceiverInputBox from "./ReceiverInputBox";
-import React, { useEffect } from "react";
-import type { Receiver } from "./BatchReceiverInput";
+import { useEffect, useRef } from "react";
+import type { FormType, Receiver } from "@src/pages/OrderPage";
+import { useFieldArray, useFormContext } from "react-hook-form";
 
 type ReceiverModalWindowProps = {
   openHooks: StateHook<boolean>;
-  listHooks: StateHook<Receiver[]>;
 };
 
-function ReceiverModalWindow({
-  openHooks: open,
-  listHooks
-}: ReceiverModalWindowProps) {
-  const closeModal = () => open.setValue(false);
+function ReceiverModalWindow({ openHooks: open }: ReceiverModalWindowProps) {
+  const { control, getValues, trigger } = useFormContext<FormType>();
+  const { fields, append, remove, replace } = useFieldArray({
+    control,
+    name: "receivers"
+  });
 
-  const list: Receiver[] = listHooks.value;
-  const setList: React.Dispatch<React.SetStateAction<Receiver[]>> =
-    listHooks.setValue;
+  const reset = () => {
+    replace(oldList.current);
+    setTimeout(() => open.setValue(false), 0);
+  };
 
-  const commit = () => {
-    //commit logic
-    closeModal();
+  const commit = async () => {
+    const isValid = await trigger("receivers");
+    if (!isValid) return;
+    const list = getValues("receivers");
+    replace(list);
+    open.setValue(false);
   };
 
   const ADD_LIMIT = 10;
   const add = () => {
-    if (list.length >= ADD_LIMIT) return;
-    const newReceiver: Receiver = {
+    if (fields.length >= ADD_LIMIT) return;
+    append({
       id: crypto.randomUUID(),
-      receiver: "",
+      name: "",
       phoneNumber: "",
-      quantity: "",
-      duplicate: false
-    };
-    setList((prev) => [...prev, newReceiver]);
+      quantity: "1"
+    });
   };
 
+  const oldList = useRef<Receiver[]>([]);
+
   useEffect(() => {
-    const phoneMap = new Map<string, number>();
-
-    list.forEach(({ phoneNumber }) => {
-      if (!phoneNumber) return;
-      phoneMap.set(phoneNumber, (phoneMap.get(phoneNumber) || 0) + 1);
-    });
-
-    setList((prev) =>
-      prev.map((receiver) => ({
-        ...receiver,
-        duplicate:
-          !!receiver.phoneNumber && phoneMap.get(receiver.phoneNumber)! > 1
-      }))
-    );
-  }, [list.map((r) => r.phoneNumber).join(",")]);
+    if (open.value) {
+      oldList.current = getValues("receivers").map((r) => ({ ...r }));
+    }
+  }, [open.value]);
 
   return (
     <ModalWindowWrapper>
       <h3>받는 사람</h3>
       <GraySub>* 최대 10명까지 추가 할 수 있어요.</GraySub>
       <GraySub>* 받는 사람의 전화번호를 중복으로 입력할 수 없어요.</GraySub>
-      <AddButton onClick={add}>추가하기</AddButton>
+      <AddButton type="button" onClick={add}>
+        추가하기
+      </AddButton>
       <ReceiverList>
-        {list?.map((receiver: Receiver, index: number) => {
+        {fields?.map((receiver: Receiver, index: number) => {
           return (
             <ReceiverInputBox
               key={receiver.id}
               id={receiver.id}
               no={index}
-              receiverData={receiver}
-              onChange={(id, field, value) => {
-                setList((prev) =>
-                  prev.map((receiver) =>
-                    receiver.id === id
-                      ? { ...receiver, [field]: value }
-                      : receiver
-                  )
-                );
-              }}
-              onRemove={(id) => {
-                setList((prev) => prev.filter((r) => id !== r.id));
-              }}
+              onRemove={() => remove(index)}
             />
           );
         })}
       </ReceiverList>
       <ButtonHorizontalLayout>
-        <CancelButton onClick={closeModal}>취소</CancelButton>
-        <CommitButton onClick={commit}>{list.length}명 완료</CommitButton>
+        <CancelButton type="reset" onClick={reset}>
+          취소
+        </CancelButton>
+        <CommitButton type="submit" onClick={commit}>
+          {fields.length}명 완료
+        </CommitButton>
       </ButtonHorizontalLayout>
     </ModalWindowWrapper>
   );

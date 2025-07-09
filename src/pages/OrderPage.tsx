@@ -10,7 +10,20 @@ import theme from "@src/styles/kakaoTheme";
 import { useContext, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import BatchReceiverInput from "@src/components/OrderPanels/BatchReceiverInput";
-import { useForm, Controller, FormProvider } from "react-hook-form";
+import { useForm, Controller, FormProvider, useWatch } from "react-hook-form";
+
+export type Receiver = {
+  id: string;
+  name: string;
+  phoneNumber: string;
+  quantity: string;
+};
+
+export type FormType = {
+  message: string;
+  sender: string;
+  receivers: Receiver[];
+};
 
 function OrderPage() {
   const navigate = useNavigate();
@@ -21,30 +34,30 @@ function OrderPage() {
     navigate(PATH.LOGIN + `?redirect=${encodeURIComponent(path)}/${id}`);
   };
 
-  const methods = useForm({
+  const formHooks = useForm({
     defaultValues: {
       message: "",
       sender: "",
-      receiver: "",
-      phoneNumber: "",
-      quantity: "1"
+      receivers: []
     }
   });
 
-  type dataType = {
-    message: string;
-    sender: string;
-    receiver: string;
-    phoneNumber: string;
-    quantity: string;
-  };
-
-  const orderHandler = (data: dataType) => {
+  const orderHandler = (data: FormType) => {
     alert(
-      `주문이 완료되었습니다.\n상품명: ${productMockData.name}\n수량: ${data.quantity}\n발신자 이름: ${data.sender}\n받는 사람 이름: ${data.receiver}\n메세지: ${data.message}`
+      `주문이 완료되었습니다.\n상품명: ${
+        productMockData.name
+      }\n구매 수량: ${receivers.reduce(
+        (sum: number, r: Receiver) => sum + parseInt(r.quantity),
+        0
+      )}\n발신자 이름: ${data.sender}\n메세지: ${data.message}`
     );
     navigate(PATH.MAIN);
   };
+
+  const receivers = useWatch({
+    control: formHooks.control,
+    name: "receivers"
+  });
 
   useEffect(() => {
     if (!userContext?.valid.value) {
@@ -53,14 +66,14 @@ function OrderPage() {
   }, [userContext?.valid.value]);
 
   return (
-    <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(orderHandler)}>
+    <FormProvider {...formHooks}>
+      <form onSubmit={formHooks.handleSubmit(orderHandler)}>
         <OrderPageWrapper>
           <CardSelector name="message" />
           <InputGroup title="보내는 사람">
             <Controller
               name="sender"
-              control={methods.control}
+              control={formHooks.control}
               rules={{ required: "이름을 입력해주세요." }}
               render={({ field, fieldState }) => (
                 <AdvancedInput
@@ -80,7 +93,10 @@ function OrderPage() {
           </InputGroup>
           <FooterButton type="submit">
             {productMockData.price.sellingPrice *
-              parseInt(methods.getValues("quantity") || "1")}
+              receivers.reduce(
+                (sum: number, r: Receiver) => sum + parseInt(r.quantity),
+                0
+              )}
             원 주문하기
           </FooterButton>
         </OrderPageWrapper>

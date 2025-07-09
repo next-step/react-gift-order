@@ -3,41 +3,89 @@ import theme from "@src/styles/kakaoTheme";
 import { useState } from "react";
 import Modal from "@src/components/shared/Modal";
 import ReceiverModalWindow from "./ReceiverModalWindow";
-
-export type Receiver = {
-  id: string;
-  receiver: string;
-  phoneNumber: string;
-  quantity: string;
-  duplicate: boolean;
-};
+import type { FormType, Receiver } from "@src/pages/OrderPage";
+import { useFormContext, useWatch } from "react-hook-form";
 
 function BatchReceiverInput() {
   const [open, setOpen] = useState(false);
-  const [list, setList] = useState<Receiver[]>([]);
+
+  const { control } = useFormContext<FormType>();
 
   const openModal = () => setOpen(true);
+
+  const receivers = useWatch({
+    control,
+    name: "receivers"
+  });
 
   return (
     <BatchReceiverInputWrapper>
       <TopBarWrapper>
         <TitleP>받는 사람</TitleP>
-        <AddButton onClick={openModal}>추가</AddButton>
+        <AddButton type="button" onClick={openModal}>
+          {receivers.length === 0 ? "추가" : "수정"}
+        </AddButton>
       </TopBarWrapper>
-      <ReceiverPlaceholder>
-        받는 사람이 없습니다.
-        <br />
-        받는 사람을 추가해주세요.
-      </ReceiverPlaceholder>
+      {receivers.length === 0 ? (
+        <ReceiverPlaceholder>
+          받는 사람이 없습니다.
+          <br />
+          받는 사람을 추가해주세요.
+        </ReceiverPlaceholder>
+      ) : (
+        <RTable fields={receivers} />
+      )}
       <Modal open={{ value: open, setValue: setOpen }}>
-        <ReceiverModalWindow
-          openHooks={{ value: open, setValue: setOpen }}
-          listHooks={{ value: list, setValue: setList }}
-        />
+        <ReceiverModalWindow openHooks={{ value: open, setValue: setOpen }} />
       </Modal>
     </BatchReceiverInputWrapper>
   );
 }
+
+function RTable({ fields }: { fields: Receiver[] }) {
+  return (
+    <ReceiverTable>
+      <thead>
+        <tr>
+          <th>이름</th>
+          <th>전화번호</th>
+          <th>수량</th>
+        </tr>
+      </thead>
+      <tbody>
+        {fields.map((field) => (
+          <tr key={field.id}>
+            <td>{field.name}</td>
+            <td>{field.phoneNumber}</td>
+            <td>{field.quantity}</td>
+          </tr>
+        ))}
+      </tbody>
+    </ReceiverTable>
+  );
+}
+
+const ReceiverTable = styled.table`
+  border: 1px solid ${theme.colors.gray.gray400};
+  border-radius: 10px;
+  border-collapse: separate;
+  border-spacing: 0;
+
+  thead {
+    font-size: 14px;
+    background-color: ${theme.colors.gray.gray300};
+    text-align: left;
+  }
+
+  tbody > tr > td,
+  thead > tr > th {
+    padding: 10px;
+  }
+
+  tbody tr td {
+    border-top: 1px solid ${theme.colors.gray.gray400};
+  }
+`;
 
 const AddButton = styled.button`
   margin: 10px;

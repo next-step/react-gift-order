@@ -1,61 +1,40 @@
 import styled from "@emotion/styled";
 import AdvancedInput from "@src/components/shared/AdvancedInput";
-import useReceiverErrorHandler from "@src/hooks/useReceiverErrorHandler";
-import useReceiverState from "@src/hooks/useReceiverState";
-import { createNewNameEvaluator } from "@src/utils/evaluator/implementation/nameEvaluator";
-import { createNewPNEvaluator } from "@src/utils/evaluator/implementation/phoneNumberEvaluator";
-import { createNewQuantityEvaluator } from "@src/utils/evaluator/implementation/quantityEvaluator";
+import type { FormType, Receiver } from "@src/pages/OrderPage";
 import { useEffect } from "react";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
 
 type ReceiverInputBoxProps = {
   id: string;
   no: number;
-  receiverData: {
-    receiver: string;
-    phoneNumber: string;
-    quantity: string;
-    duplicate: boolean;
-  };
-  onChange: (
-    id: string,
-    field: "name" | "phoneNumber" | "quantity",
-    value: string
-  ) => void;
   onRemove: (id: string) => void;
 };
 
-function ReceiverInputBox({
-  id,
-  no,
-  receiverData,
-  onChange,
-  onRemove
-}: ReceiverInputBoxProps) {
-  const nameEvaluator = createNewNameEvaluator();
-  const phoneNumberEvaluator = createNewPNEvaluator();
-  const quantityEvaluator = createNewQuantityEvaluator();
-
-  const receiverState = useReceiverState();
-  const receiverErrorHandler = useReceiverErrorHandler();
+function ReceiverInputBox({ id, no, onRemove }: ReceiverInputBoxProps) {
+  const { control, setError, clearErrors } = useFormContext<FormType>();
+  const receivers = useWatch({ name: "receivers", control });
 
   useEffect(() => {
-    onChange(id, "name", receiverState.receiver.value);
-  }, [receiverState.receiver.value]);
+    if (!receivers) return;
 
-  useEffect(() => {
-    onChange(id, "phoneNumber", receiverState.phoneNumber.value);
-  }, [receiverState.phoneNumber.value]);
+    const phoneCountMap = receivers.reduce<Record<string, number>>((acc, r) => {
+      if (!r.phoneNumber) return acc;
+      acc[r.phoneNumber] = (acc[r.phoneNumber] || 0) + 1;
+      return acc;
+    }, {});
 
-  useEffect(() => {
-    onChange(id, "quantity", receiverState.quantity.value);
-  }, [receiverState.quantity.value]);
-
-  useEffect(() => {
-    receiverErrorHandler.phoneNumberValid.setValue(!receiverData.duplicate);
-    receiverErrorHandler.phoneNumberReason.setValue(
-      receiverData.duplicate ? "중복된 전화번호가 있습니다." : null
-    );
-  }, [receiverData.duplicate]);
+    receivers.forEach((receiver, index) => {
+      const phone = receiver.phoneNumber;
+      if (phone && phoneCountMap[phone] > 1) {
+        setError(`receivers.${index}.phoneNumber`, {
+          type: "duplicate",
+          message: "중복된 전화번호가 있습니다."
+        });
+      } else {
+        clearErrors(`receivers.${index}.phoneNumber`);
+      }
+    });
+  }, [receivers]);
 
   return (
     <InputGroupWrapper>
@@ -65,35 +44,69 @@ function ReceiverInputBox({
       </TitleP>
       <InputCaptionPairWrapper>
         <Caption>이름</Caption>
-        <AdvancedInput
-          placeholder="이름을 입력하세요."
-          type="text"
-          evaluator={nameEvaluator}
-          validHookSet={receiverErrorHandler.receiverValid}
-          reasonHookSet={receiverErrorHandler.receiverReason}
-          valueHookSet={receiverState.receiver}
+        <Controller
+          name={`receivers.${no}.name`}
+          control={control}
+          rules={{ required: "이름을 입력해주세요." }}
+          render={({ field, fieldState }) => (
+            <AdvancedInput
+              placeholder="이름을 입력하세요."
+              type="text"
+              {...field}
+              error={!!fieldState.error}
+              helperText={fieldState.error?.message}
+            />
+          )}
         />
       </InputCaptionPairWrapper>
       <InputCaptionPairWrapper>
         <Caption>전화번호</Caption>
-        <AdvancedInput
-          placeholder="전화번호를 입력하세요."
-          type="text"
-          evaluator={phoneNumberEvaluator}
-          validHookSet={receiverErrorHandler.phoneNumberValid}
-          reasonHookSet={receiverErrorHandler.phoneNumberReason}
-          valueHookSet={receiverState.phoneNumber}
+        <Controller
+          name={`receivers.${no}.phoneNumber`}
+          control={control}
+          rules={{
+            required: "전화번호를 입력해주세요.",
+            pattern: {
+              value: /^010\d{8}$/,
+              message: "올바른 전화번호 형식이 아닙니다."
+            },
+            validate: (value) => {
+              if (!receivers) return true;
+              const count = receivers.filter(
+                (r: Receiver, i: number) => r.phoneNumber === value && i !== no
+              ).length;
+              return count === 0 || "중복된 전화번호가 있습니다.";
+            }
+          }}
+          render={({ field, fieldState }) => (
+            <AdvancedInput
+              placeholder="전화번호를 입력하세요."
+              type="text"
+              {...field}
+              error={!!fieldState.error}
+              helperText={fieldState.error?.message}
+            />
+          )}
         />
       </InputCaptionPairWrapper>
       <InputCaptionPairWrapper>
         <Caption>수량</Caption>
-        <AdvancedInput
-          placeholder=""
-          type="number"
-          evaluator={quantityEvaluator}
-          validHookSet={receiverErrorHandler.quantityValid}
-          reasonHookSet={receiverErrorHandler.quantityReason}
-          valueHookSet={receiverState.quantity}
+        <Controller
+          name={`receivers.${no}.quantity`}
+          control={control}
+          rules={{
+            required: "수량을 입력해주세요.",
+            min: { value: 1, message: "구매 수량은 1개 이상이어야 합니다." }
+          }}
+          render={({ field, fieldState }) => (
+            <AdvancedInput
+              placeholder=""
+              type="number"
+              {...field}
+              error={!!fieldState.error}
+              helperText={fieldState.error?.message}
+            />
+          )}
         />
       </InputCaptionPairWrapper>
     </InputGroupWrapper>
