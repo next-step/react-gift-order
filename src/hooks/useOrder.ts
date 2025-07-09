@@ -63,49 +63,31 @@ function useOrder(item: mockItemType) {
     }));
   }
 
-  const isValid =
-    text.length > 0 &&
-    sender.length > 0 &&
-    reciever.name.length > 0 &&
-    reciever.phone.length > 0 &&
-    /^01[016789][0-9]{3,4}[0-9]{4}$/.test(reciever.phone.replace(/-/g, '')) &&
-    count > 0;
+  const validators = {
+    text: (value: string) => (value.length < 1 ? '메시지를 입력하세요.' : ''),
+    sender: (value: string) => (value.length < 1 ? '이름을 입력해주세요.' : ''),
+    recieverName: (value: string) => (value.length < 1 ? '이름을 입력해주세요.' : ''),
+    recieverPhone: (value: string) => {
+      if (value.length < 1) return '전화번호를 입력해주세요.';
+      if (!/^01[016789][0-9]{3,4}[0-9]{4}$/.test(value.replace(/-/g, ''))) {
+        return '올바른 전화번호 형식이 아닙니다.';
+      }
+      return '';
+    },
+    count: (value: number) => (value < 1 ? '구매 수량은 1개 이상이어야 합니다.' : ''),
+  };
 
   function validate() {
     const newErrors: ErrorType = {
-      text: '',
-      sender: '',
-      recieverName: '',
-      recieverPhone: '',
-      count: '',
+      text: validators.text(text),
+      sender: validators.sender(sender),
+      recieverName: validators.recieverName(reciever.name),
+      recieverPhone: validators.recieverPhone(reciever.phone),
+      count: validators.count(count),
     };
-    let isValid = true;
 
-    if (text.length < 1) {
-      newErrors.text = '메시지를 입력하세요.';
-      isValid = false;
-    }
-    if (sender.length < 1) {
-      newErrors.sender = '이름을 입력해주세요.';
-      isValid = false;
-    }
-    if (reciever.name.length < 1) {
-      newErrors.recieverName = '이름을 입력해주세요.';
-      isValid = false;
-    }
-    if (reciever.phone.length < 1) {
-      newErrors.recieverPhone = '전화번호를 입력해주세요.';
-      isValid = false;
-    } else if (!/^01[016789][0-9]{3,4}[0-9]{4}$/.test(reciever.phone.replace(/-/g, ''))) {
-      newErrors.recieverPhone = '올바른 전화번호 형식이 아닙니다.';
-      isValid = false;
-    }
-    if (count < 1) {
-      newErrors.count = '구매 수량은 1개 이상이어야 합니다.';
-      isValid = false;
-    }
     setErrors(newErrors);
-    return isValid;
+    return Object.values(newErrors).every((msg) => !msg);
   }
 
   function SubmitOrder() {
@@ -125,7 +107,6 @@ function useOrder(item: mockItemType) {
     count,
     cost,
     errors,
-    isValid,
     handleTextChange,
     handleThumbClick,
     handleSenderChange,
