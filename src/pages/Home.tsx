@@ -7,13 +7,13 @@ import RealtimeGiftRank from '../components/RealtimeGiftRank';
 
 function Home() {
   return (
-      <Layout>
-        <NavBar />
-        <FriendSelector />
-        <GiftCategorySelector />
-        <PromoBanner />
-        <RealtimeGiftRank />
-      </Layout>
+    <Layout>
+      <NavBar />
+      <FriendSelector />
+      <GiftCategorySelector />
+      <PromoBanner />
+      <RealtimeGiftRank />
+    </Layout>
   );
 }
 

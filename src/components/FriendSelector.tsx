@@ -41,8 +41,10 @@ const FriendSelectorBoxBtn = styled.div`
 
 const FriendSelectorBoxText = styled.p`
   font-size: ${({ theme }) => theme.typography.subtitle.subtitle1Bold.fontSize};
-  font-weight: ${({ theme }) => theme.typography.subtitle.subtitle1Bold.fontWeight};
-  line-height: ${({ theme }) => theme.typography.subtitle.subtitle1Bold.lineHeight};
+  font-weight: ${({ theme }) =>
+    theme.typography.subtitle.subtitle1Bold.fontWeight};
+  line-height: ${({ theme }) =>
+    theme.typography.subtitle.subtitle1Bold.lineHeight};
   margin-left: 12px;
 `;
 

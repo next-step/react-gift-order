@@ -52,8 +52,10 @@ const LoginFormInput = styled.input<InputProps>`
       invalid ? theme.colors.red.red400 : theme.colors.gray.gray400};
   height: 40px;
   font-size: ${({ theme }) => theme.typography.title.title2Regular.fontSize};
-  font-weight: ${({ theme }) => theme.typography.title.title2Regular.fontWeight};
-  line-height: ${({ theme }) => theme.typography.title.title2Regular.lineHeight};
+  font-weight: ${({ theme }) =>
+    theme.typography.title.title2Regular.fontWeight};
+  line-height: ${({ theme }) =>
+    theme.typography.title.title2Regular.lineHeight};
 
   &:focus {
     outline: none;

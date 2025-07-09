@@ -99,7 +99,7 @@ const theme = {
 
     state: {
       critical: '#fa342c', // 경고 에러 색상
-      criticalBackground: '#fdf0f0', // 경고 에러 배경 색상 
+      criticalBackground: '#fdf0f0', // 경고 에러 배경 색상
       info: '#217cf9', // 정보 색상
       infoBackground: '#eff6ff', // 정보 배경 색상
     },
@@ -112,45 +112,45 @@ const theme = {
         fontWeight: 700,
         lineHeight: '1.6875rem',
       },
-  
+
       title1Regular: {
         fontSize: '1.25rem',
         fontWeight: 400,
         lineHeight: '1.6875rem',
       },
-  
+
       title2Bold: {
         fontSize: '1rem',
         fontWeight: 700,
         lineHeight: '1.5rem',
       },
-  
+
       title2Regular: {
         fontSize: '1rem',
         fontWeight: 400,
         lineHeight: '1.5rem',
       },
     },
-    
-    subtitle : {
+
+    subtitle: {
       subtitle1Bold: {
         fontSize: '1rem',
         fontWeight: 700,
         lineHeight: '1.375rem',
       },
-  
+
       subtitle1Regular: {
         fontSize: '1rem',
         fontWeight: 400,
         lineHeight: '1.5rem',
       },
-  
+
       subtitle2Bold: {
         fontSize: '0.875rem',
         fontWeight: 700,
         lineHeight: '1.1875rem',
       },
-  
+
       subtitle2Regular: {
         fontSize: '0.875rem',
         fontWeight: 400,
@@ -164,19 +164,19 @@ const theme = {
         fontWeight: 700,
         lineHeight: '1.375rem',
       },
-  
+
       body1Regular: {
         fontSize: '1rem',
         fontWeight: 400,
         lineHeight: '1.375rem',
       },
-  
+
       body2Bold: {
         fontSize: '0.875rem',
         fontWeight: 700,
         lineHeight: '1.1875rem',
       },
-  
+
       body2Regular: {
         fontSize: '0.875rem',
         fontWeight: 400,
@@ -184,25 +184,25 @@ const theme = {
       },
     },
 
-    label : {
+    label: {
       label1Bold: {
         fontSize: '0.875rem',
         fontWeight: 700,
         lineHeight: '1.1875rem',
       },
-  
+
       label1Regular: {
         fontSize: '0.875rem',
         fontWeight: 400,
         lineHeight: '1.1875rem',
       },
-  
+
       label2Bold: {
         fontSize: '0.75rem',
         fontWeight: 700,
         lineHeight: '1rem',
       },
-  
+
       label2Regular: {
         fontSize: '0.75rem',
         fontWeight: 400,
@@ -212,23 +212,23 @@ const theme = {
   },
 
   spacing: {
-    spacing0: '0px', 
-    spacing1: '4px', 
-    spacing2: '8px', 
-    spacing3: '12px', 
-    spacing4: '16px', 
-    spacing5: '20px', 
-    spacing6: '24px', 
-    spacing7: '28px', 
-    spacing8: '32px', 
-    spacing9: '36px', 
-    spacing10: '40px', 
-    spacing11: '44px', 
-    spacing12: '48px', 
-    spacing13: '52px', 
-    spacing14: '56px', 
-    spacing15: '60px', 
-    spacing16: '64px', 
+    spacing0: '0px', // 간격 없음
+    spacing1: '4px', // 최소 간격
+    spacing2: '8px', // 작은 간격
+    spacing3: '12px', // 작은-중간 간격
+    spacing4: '16px', // 기본 간격
+    spacing5: '20px', // 중간 간격
+    spacing6: '24px', // 중간-큰 간격
+    spacing7: '28px', // 큰 간격
+    spacing8: '32px', // 매우 큰 간격
+    spacing9: '36px', // 초대형 간격
+    spacing10: '40px', // 40px 간격
+    spacing11: '44px', // 44px 간격
+    spacing12: '48px', // 48px 간격
+    spacing13: '52px', // 52px 간격
+    spacing14: '56px', // 56px 간격
+    spacing15: '60px', // 60px 간격
+    spacing16: '64px', // 64px 간격
   },
 };
 

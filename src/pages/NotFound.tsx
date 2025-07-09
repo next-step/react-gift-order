@@ -30,9 +30,12 @@ const NotFoundTitle = styled.p`
 `;
 
 const NotFoundSubTitle = styled.p`
-  font-size: ${({ theme }) => theme.typography.subtitle.subtitle1Regular.fontSize};
-  font-weight: ${({ theme }) => theme.typography.subtitle.subtitle1Regular.fontWeight};
-  line-height: ${({ theme }) => theme.typography.subtitle.subtitle1Regular.lineHeight};
+  font-size: ${({ theme }) =>
+    theme.typography.subtitle.subtitle1Regular.fontSize};
+  font-weight: ${({ theme }) =>
+    theme.typography.subtitle.subtitle1Regular.fontWeight};
+  line-height: ${({ theme }) =>
+    theme.typography.subtitle.subtitle1Regular.lineHeight};
   margin-top: 10px;
   color: ${({ theme }) => theme.colors.gray.gray700};
 `;
@@ -44,8 +47,10 @@ const NotFoundBtn = styled.button`
   width: 170px;
   height: 40px;
   font-size: ${({ theme }) => theme.typography.label.label1Regular.fontSize};
-  font-weight: ${({ theme }) => theme.typography.label.label1Regular.fontWeight};
-  line-height: ${({ theme }) => theme.typography.label.label1Regular.lineHeight};
+  font-weight: ${({ theme }) =>
+    theme.typography.label.label1Regular.fontWeight};
+  line-height: ${({ theme }) =>
+    theme.typography.label.label1Regular.lineHeight};
 `;
 
 function NotFound() {

@@ -12,8 +12,10 @@ const PromoBannerWrapper = styled.div`
 
 const PromoBannerWrapperTitle = styled.p`
   font-size: ${({ theme }) => theme.typography.label.label2Regular.fontSize};
-  font-weight: ${({ theme }) => theme.typography.label.label2Regular.fontWeight};
-  line-height: ${({ theme }) => theme.typography.label.label2Regular.lineHeight};
+  font-weight: ${({ theme }) =>
+    theme.typography.label.label2Regular.fontWeight};
+  line-height: ${({ theme }) =>
+    theme.typography.label.label2Regular.lineHeight};
   color: ${({ theme }) => theme.colors.gray.gray700};
 `;
 const PromoBannerWrapperSubTitle = styled.p`
