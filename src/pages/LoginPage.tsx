@@ -67,7 +67,6 @@ function LoginPage() {
   const navigate = useNavigate();
   const from = searchParams.get('from') || ROUTE_PATH.HOME;
 
-  // 커스텀 훅에서 모든 상태와 핸들러를 받아옴
   const {
     email,
     password,
@@ -86,7 +85,6 @@ function LoginPage() {
       <Card>
         <Title>kakao</Title>
         <Form onSubmit={handleSubmit}>
-          {/* 이메일 입력 */}
           <div>
             <Input
               type="email"
@@ -94,11 +92,10 @@ function LoginPage() {
               value={email}
               onChange={handleEmailChange}
               onBlur={handleEmailBlur}
-              error={!!emailError} // error가 있으면 true, 없으면 false
+              error={!!emailError}
             />
             {emailError && <ErrorMsg>{emailError}</ErrorMsg>}
           </div>
-          {/* 비밀번호 입력 */}
           <div>
             <Input
               type="password"
@@ -110,7 +107,6 @@ function LoginPage() {
             />
             {pwError && <ErrorMsg>{pwError}</ErrorMsg>}
           </div>
-          {/* 로그인 버튼: 조건 충족 시에만 활성화 */}
           <Button
             type="submit"
             disabled={!isButtonActive}

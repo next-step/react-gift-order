@@ -38,7 +38,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-// Context를 쉽게 사용하기 위한 커스텀 훅
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context)
