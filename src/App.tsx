@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { Providers } from '@/Providers';
 import { AppWrapper } from '@/styles/App.styles';
 import { Routes, Route } from 'react-router-dom';
@@ -13,21 +13,16 @@ import NotFound from '@/NotFound';
 import { LoginInfoContext } from '@/contexts/LoginInfoContext';
 
 function App() {
-  const { loginInfo, setLoginInfo } = useContext(LoginInfoContext);
+  const { loginInfo } = useContext(LoginInfoContext);
   const navigate = useNavigate();
   const location = useLocation();
-
-  useEffect(() => {
-    const id = localStorage.getItem('id') || '';
-    if (loginInfo !== id) setLoginInfo(id);
-  });
 
   function handleBackClick() {
     if (location.pathname !== '/') navigate(-1);
   }
 
   function handleLoginClick() {
-    const id = localStorage.getItem('id') || '';
+    const id = loginInfo || '';
     if (!id) navigate('/login');
     else navigate('/my');
   }
