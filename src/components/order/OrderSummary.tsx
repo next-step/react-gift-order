@@ -1,13 +1,19 @@
+/** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
-import type { RankingList as Product } from "@/mock/rankingList"; // ✅ 타입 import
+import { useFormContext } from "react-hook-form";
+import type { OrderFormValues } from "@/validations/orderSchema";
+import type { RankingList as Product } from "@/mock/rankingList";
 
 interface ProductSummarySectionProps {
   product: Product;
 }
 
-export default function OrderSummary({
-  product,
-}: ProductSummarySectionProps) {
+export default function OrderSummary({ product }: ProductSummarySectionProps) {
+  const { watch } = useFormContext<OrderFormValues>();
+
+  const quantity = watch("quantity") ?? 0;
+  const totalPrice = product.price.sellingPrice * quantity;
+
   return (
     <Container>
       <Wrapper>
@@ -18,15 +24,25 @@ export default function OrderSummary({
             <ProductName>{product.name}</ProductName>
             <BrandName>{product.brandInfo.name}</BrandName>
             <PriceText>
-              상품가{" "}
-              <strong>{product.price.sellingPrice.toLocaleString()}원</strong>
+              상품가 <strong>{product.price.sellingPrice.toLocaleString()}원</strong>
             </PriceText>
           </Content>
         </Card>
+
+        <SummaryRow>
+          <Label>총 수량</Label>
+          <Value>{quantity}개</Value>
+        </SummaryRow>
+        <SummaryRow>
+          <Label>총 결제금액</Label>
+          <Value>{totalPrice.toLocaleString()}원</Value>
+        </SummaryRow>
       </Wrapper>
     </Container>
   );
 }
+
+
 
 const Container = styled.div`
   width: 100%;
@@ -88,4 +104,21 @@ const PriceText = styled.div`
     font-weight: bold;
     color: black;
   }
+`;
+
+const SummaryRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding-top: 4px;
+`;
+
+const Label = styled.div`
+  font-size: ${({ theme }) => theme.typography.body2Regular.fontSize};
+  color: ${({ theme }) => theme.colors.gray700};
+`;
+
+const Value = styled.div`
+  font-size: ${({ theme }) => theme.typography.subtitle1Regular.fontSize};
+  font-weight: bold;
+  color: ${({ theme }) => theme.colors.gray900};
 `;
