@@ -5,9 +5,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { colors } from '../styles/colors'
 import Header from '@/components/Header'
 import { typography } from '../styles/typography'
-
 import { useAuth } from '@/contexts/AuthContext'
-
 import GlobalStyle from '@/styles/GlobalStyle'
 import { useInput, validateEmail, validatePassword } from '@/hooks/useInput'
 
@@ -97,7 +95,7 @@ const LoginPage = () => {
     if (isAuthenticated) {
       navigate('/', { replace: true })
     }
-  }, [isAuthenticated, navigate])
+  }, [])
 
 
   // 뒤로가기 버튼 클릭
@@ -112,7 +110,7 @@ const LoginPage = () => {
     login(emailValue, passwordValue)
     
     // 원래 가려던 페이지 또는 홈으로 이동
-    const from = (location.state as any)?.from || '/'
+    const from = (location.state as any)?.from || '/';
     navigate(from, { replace: true })
   }
 

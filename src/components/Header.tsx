@@ -38,12 +38,7 @@ const Header = ({ onBack }: HeaderProps) => {
   const { isAuthenticated } = useAuth()
   
   const handleProfileClick = () => {
-    // 로그인 상태에 따라 마이페이지 또는 로그인 페이지로 이동
-    if (isAuthenticated) {
       navigate('/my')
-    } else {
-      navigate('/login')
-    }
   }
   
   // 뒤로가기 핸들러
