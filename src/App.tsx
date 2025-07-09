@@ -5,7 +5,7 @@ import NotFound from '@/pages/NotFound'
 import MyPage from '@/pages/MyPage'
 import OrderPage from '@/pages/OrderPage'
 import { AuthProvider } from '@/contexts/AuthContext'
-import ProtectedRoute from '@/components/ProtectedRoute'
+import AuthGuard from '@/components/AuthGuard'
 import PageWrapper from './components/PageWrapper'
 
 function App() {
@@ -17,14 +17,14 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/" element={<HomePage />} />
             <Route path="/my" element={
-              <ProtectedRoute>
+              <AuthGuard>
                 <MyPage />
-              </ProtectedRoute>
+              </AuthGuard>
             } />
             <Route path="/order/:productId" element={
-              <ProtectedRoute>
+              <AuthGuard>
                 <OrderPage />
-              </ProtectedRoute>
+              </AuthGuard>
             } />
             <Route path="*" element={<NotFound />} />
           </Routes>
