@@ -15,6 +15,11 @@ import {
   ReceiverList,
 } from "./ReceiverModal.styles";
 import ReceiverForm from "./ReceiverForm";
+import {
+  validateReceiverData,
+  validatePhoneNumber,
+  validateQuantity,
+} from "../../utils/validation";
 
 interface ReceiverModalProps {
   handleCloseModal: () => void;
@@ -25,6 +30,11 @@ export interface Receiver {
   name: string;
   phone: string;
   quantity: string;
+  errors: {
+    name?: string;
+    phone?: string;
+    quantity?: string;
+  };
 }
 
 const MAX_RECEIVERS = 10;
@@ -39,13 +49,73 @@ function ReceiverModal({ handleCloseModal }: ReceiverModalProps) {
         name: "",
         phone: "",
         quantity: "",
+        errors: {},
       };
-      setReceivers([...receivers, newReceiver]);
+
+      setReceivers((prev) => [...prev, newReceiver]);
     }
   };
 
   const handleRemoveReceiver = (receiverId: string) => {
-    setReceivers(receivers.filter((receiver) => receiver.id !== receiverId));
+    setReceivers((prev) => prev.filter((r) => r.id !== receiverId));
+  };
+
+  const updateReceiver = (
+    receiverId: string,
+    field: keyof Receiver,
+    value: string
+  ) => {
+    setReceivers((prev) =>
+      prev.map((r) => {
+        if (r.id !== receiverId) return r;
+
+        const updatedReceiver = { ...r, [field]: value };
+        const newErrors = { ...r.errors };
+
+        if (field === "name" && value.trim()) {
+          delete newErrors.name;
+        } else if (
+          field === "phone" &&
+          value.trim() &&
+          validatePhoneNumber(value)
+        ) {
+          delete newErrors.phone;
+        } else if (
+          field === "quantity" &&
+          value.trim() &&
+          validateQuantity(value)
+        ) {
+          delete newErrors.quantity;
+        }
+
+        return { ...updatedReceiver, errors: newErrors };
+      })
+    );
+  };
+
+  const validateAllReceivers = () => {
+    if (receivers.length === 0) {
+      handleCloseModal();
+      return;
+    }
+
+    let allValid = true;
+
+    const updatedReceivers = receivers.map((receiver) => {
+      const errors = validateReceiverData(receiver);
+
+      if (Object.keys(errors).length > 0) {
+        allValid = false;
+      }
+
+      return { ...receiver, errors };
+    });
+
+    setReceivers(updatedReceivers);
+
+    if (allValid) {
+      handleCloseModal();
+    }
   };
 
   return (
@@ -58,7 +128,7 @@ function ReceiverModal({ handleCloseModal }: ReceiverModalProps) {
           <InfoTextContainer>
             <InfoText>* 최대 {MAX_RECEIVERS}명까지 추가할 수 있어요.</InfoText>
             <InfoText>
-              * 받는 사람의 전화번호를 중복으로 입력할 수 없어요.
+              * 받는 사람의 전화번호를 중복으로 입력할 수 있어요.
             </InfoText>
           </InfoTextContainer>
 
@@ -73,17 +143,19 @@ function ReceiverModal({ handleCloseModal }: ReceiverModalProps) {
               <ReceiverForm
                 key={receiver.id}
                 receiver={receiver}
-                receivers={receivers}
                 index={index}
+                totalCount={receivers.length}
                 handleRemoveReceiver={handleRemoveReceiver}
+                updateReceiver={updateReceiver}
               />
             ))}
           </ReceiverList>
         </ModalBody>
-
         <ModalFooter>
           <CancelButton onClick={handleCloseModal}>취소</CancelButton>
-          <CompleteButton>{receivers.length}명 완료</CompleteButton>
+          <CompleteButton onClick={validateAllReceivers}>
+            {receivers.length}명 완료
+          </CompleteButton>
         </ModalFooter>
       </ModalContent>
     </ModalOverlay>

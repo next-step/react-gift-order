@@ -16,19 +16,37 @@ import type { Receiver } from "./ReceiverModal";
 
 interface ReceiverFormProps {
   receiver: Receiver;
-  receivers: Receiver[];
   index: number;
+  totalCount: number;
   handleRemoveReceiver: (receiverId: string) => void;
+  updateReceiver: (
+    receiverId: string,
+    field: keyof Receiver,
+    value: string
+  ) => void;
 }
 
 function ReceiverForm({
   receiver,
   index,
+  totalCount,
   handleRemoveReceiver,
-  receivers,
+  updateReceiver,
 }: ReceiverFormProps) {
+  const handleNameChange = (value: string) => {
+    updateReceiver(receiver.id, "name", value);
+  };
+
+  const handlePhoneChange = (value: string) => {
+    updateReceiver(receiver.id, "phone", value);
+  };
+
+  const handleQuantityChange = (value: string) => {
+    updateReceiver(receiver.id, "quantity", value);
+  };
+
   return (
-    <ReceiverInputContainer key={receiver.id}>
+    <ReceiverInputContainer>
       <ReceiverInputHeader>
         <SectionTitle>
           {RECEIVER_SECTION_CONSTANTS.TITLE} {index + 1}
@@ -44,8 +62,8 @@ function ReceiverForm({
             type="text"
             placeholder={RECEIVER_SECTION_CONSTANTS.NAME_PLACEHOLDER}
             value={receiver.name}
-            onChange={() => {}}
-            errorMessage=""
+            onChange={(e) => handleNameChange(e.target.value)}
+            errorMessage={receiver.errors.name}
           />
         </FormField>
         <FormField>
@@ -54,8 +72,8 @@ function ReceiverForm({
             type="tel"
             placeholder={RECEIVER_SECTION_CONSTANTS.PHONE_PLACEHOLDER}
             value={receiver.phone}
-            onChange={() => {}}
-            errorMessage=""
+            onChange={(e) => handlePhoneChange(e.target.value)}
+            errorMessage={receiver.errors.phone}
           />
         </FormField>
         <FormField>
@@ -65,12 +83,12 @@ function ReceiverForm({
             min="1"
             placeholder={RECEIVER_SECTION_CONSTANTS.QUANTITY_PLACEHOLDER}
             value={receiver.quantity}
-            onChange={() => {}}
-            errorMessage=""
+            onChange={(e) => handleQuantityChange(e.target.value)}
+            errorMessage={receiver.errors.quantity}
           />
         </FormField>
       </FormContainer>
-      {index !== receivers.length - 1 && <Divider />}
+      {index !== totalCount - 1 && <Divider />}
     </ReceiverInputContainer>
   );
 }
