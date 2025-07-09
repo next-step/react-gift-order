@@ -73,7 +73,7 @@ const space48 = css`
 const NotFound = () => {
   const navigate = useNavigate();
   const goHome = () => {
-    navigate(ROUTES.NOT_FOUND);
+    navigate(ROUTES.HOME);
   };
 
   return (
