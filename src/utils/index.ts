@@ -1,14 +1,8 @@
 export {
-  isValidEmail,
-  getEmailErrorMessage,
-  isValidPassword,
-  getPasswordErrorMessage,
-} from './validation';
-
-export {
   saveAuthToStorage,
   loadAuthFromStorage,
   removeAuthFromStorage,
 } from './storage';
 
 export * from './rankingUtils';
+export * from './validation';

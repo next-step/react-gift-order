@@ -1,10 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cardTemplates } from '@/data/cardTemplates';
-
-function isValidPhoneNumber(phone: string) {
-  return /^010-\d{4}-\d{4}$/.test(phone) || /^010\d{8}$/.test(phone);
-}
+import { isValidPhoneNumber } from '@/utils';
 
 export const useOrderForm = () => {
   const navigate = useNavigate();
