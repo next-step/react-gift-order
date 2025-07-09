@@ -1,6 +1,7 @@
 // validators.ts
 import type { Validator } from '@/hooks/useValidationInput';
 
+// 로그인 전용
 export const validateEmail = (email: string) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!email.trim()) return 'ID를 입력해주세요.';
