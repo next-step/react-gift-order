@@ -4,13 +4,16 @@ import styled from "@emotion/styled";
 import CardSelection from "./components/CardSelection/CardSelection";
 import { useCardSelection } from "./hooks/useCardSelection";
 import SenderSectionComponent from "./components/SenderSection/SenderSection";
-import { useSenderInput } from "./hooks/useSenderInput";
 import ReceiverSectionComponent from "./components/ReceiverSection/ReceiverSection";
-import { useReceiverInput } from "./hooks/useReceiverInput";
 import ProductInfo from "./components/ProductInfo/ProductInfo";
 import { useProductInfo } from "./hooks/useProductInfo";
 import { ROUTES } from "@/constants/routes";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+
+export interface SenderFormData {
+  senderName: string;
+}
 
 const OrderPageContainer = styled.div`
   display: flex;
@@ -23,17 +26,22 @@ function OrderPage() {
   const navigate = useNavigate();
 
   const cardSelection = useCardSelection(orderCardMockData);
-  const senderInput = useSenderInput();
-  const receiverInput = useReceiverInput();
 
-  const validateForms = (e: React.FormEvent<HTMLFormElement>) => {
+  const {
+    control: senderControl,
+    handleSubmit: senderHandleSubmit,
+    formState: { errors: senderErrors },
+  } = useForm<SenderFormData>({
+    defaultValues: {
+      senderName: "",
+    },
+  });
+
+  const onSubmit = () => {};
+  const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    cardSelection.validateMessage(cardSelection.message);
-    senderInput.onValidateSenderName(senderInput.senderName);
-    receiverInput.onValidateReceiverName(receiverInput.receiverName);
-    receiverInput.onValidateReceiverPhone(receiverInput.receiverPhone);
-    receiverInput.onValidateQuantity(receiverInput.quantity);
+    senderHandleSubmit(onSubmit)(e);
   };
 
   const product = useProductInfo();
@@ -45,12 +53,15 @@ function OrderPage() {
 
   return (
     <Layout>
-      <form onSubmit={validateForms}>
+      <form onSubmit={onSubmitHandler}>
         <OrderPageContainer>
           <CardSelection cards={orderCardMockData} {...cardSelection} />
-          <SenderSectionComponent {...senderInput} />
+          <SenderSectionComponent
+            control={senderControl}
+            errors={senderErrors}
+          />
           <ReceiverSectionComponent />
-          <ProductInfo product={product} quantity={receiverInput.quantity} />
+          <ProductInfo product={product} quantity="1" />
         </OrderPageContainer>
       </form>
     </Layout>
