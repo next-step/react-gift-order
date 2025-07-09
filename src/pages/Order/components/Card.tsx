@@ -1,7 +1,7 @@
 import { orderCardMock } from "@/assets/orderCardMock";
 import Divider from "@/components/common/Divider";
 import styled from "@emotion/styled";
-import ErrorMsg from "./ErrorMsg";
+import ErrorMsg from "@/pages/Order/components/ErrorMsg";
 import { useOrderContext } from "@/contexts/orderContext";
 import { useEffect } from "react";
 

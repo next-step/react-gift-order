@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import Container from "@/components/common/Container";
 import Divider from "@/components/common/Divider";
-import Order from "./components/Order";
+import Order from "@/pages/Order/components/Order";
 import { useOrderContext } from "@/contexts/orderContext";
 
 const OrderPage = () => {

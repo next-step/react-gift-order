@@ -1,10 +1,10 @@
 import { OrderProvider } from "@/contexts/orderContext";
 import type React from "react";
-import Card from "./Card";
-import Sender from "./Sender";
-import Recipient from "./Recipient";
-import Product from "./Product";
-import OrderBtn from "./OrderBtn";
+import Card from "@/pages/Order/components/Card";
+import Sender from "@/pages/Order/components/Sender";
+import Recipient from "@/pages/Order/components/Recipient";
+import Product from "@/pages/Order/components/Product";
+import OrderBtn from "@/pages/Order/components/OrderBtn";
 
 interface OrderProps {
   children: React.ReactNode;

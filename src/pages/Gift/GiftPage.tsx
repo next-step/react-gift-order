@@ -5,7 +5,7 @@ import Friend from "@/pages/Gift/components/Friend";
 import Divider from "@/components/common/Divider";
 import Banner from "@/pages/Gift/components/Banner";
 
-const Gift = () => {
+const GiftPage = () => {
   return (
     <Container>
       <Friend />
@@ -19,4 +19,4 @@ const Gift = () => {
   );
 };
 
-export default Gift;
+export default GiftPage;

@@ -6,7 +6,7 @@ import type React from "react";
 import useLoginInput from "@/hooks/useLoginInput";
 import { useAuth } from "@/contexts/authContext";
 
-const Login = () => {
+const LoginPage = () => {
   const { user, onChange, onBlur, errorMsg } = useLoginInput();
   const { login } = useAuth();
 
@@ -117,4 +117,4 @@ const ErrorMsg = styled.p`
   min-height: 1rem;
 `;
 
-export default Login;
+export default LoginPage;

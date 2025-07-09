@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { ROUTE_PATH } from "@/components/routes/routePath";
 import { useAuth } from "@/contexts/authContext";
 
-const Profile = () => {
+const ProfilePage = () => {
   const { auth, logout } = useAuth();
   const navigate = useNavigate();
   const onLogout = () => {
@@ -49,4 +49,4 @@ const UserInfo = styled(Title)`
   font: ${({ theme }) => theme.typography.body1Regular};
 `;
 
-export default Profile;
+export default ProfilePage;
