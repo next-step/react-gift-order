@@ -34,6 +34,7 @@ const Button = styled.button(({ theme }) => ({
   padding: theme.spacing.spacing4,
   borderRadius: '18px',
   cursor: 'pointer',
+  border: 'none',
 }));
 
 const IconWrapper = styled.div(({ theme }) => ({
