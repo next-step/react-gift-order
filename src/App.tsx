@@ -1,5 +1,4 @@
 import { useContext } from 'react';
-import { Providers } from '@/Providers';
 import { AppWrapper } from '@/styles/App.styles';
 import { Routes, Route } from 'react-router-dom';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -28,27 +27,25 @@ function App() {
   }
 
   return (
-    <Providers>
-      <AppWrapper>
-        <ResetStyles />
-        <Routes>
-          <Route
-            element={
-              <WithHeaderLayout
-                handleBackClick={handleBackClick}
-                handleLoginClick={handleLoginClick}
-              />
-            }
-          >
-            <Route path="/" element={<MainLayout />} />
-            <Route path="/login" element={<Login onLogin={handleBackClick} />} />
-            <Route path="/my" element={<Mypage onLogin={handleBackClick} />} />
-            <Route path="/order/:orderId" element={<Order />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </AppWrapper>
-    </Providers>
+    <AppWrapper>
+      <ResetStyles />
+      <Routes>
+        <Route
+          element={
+            <WithHeaderLayout
+              handleBackClick={handleBackClick}
+              handleLoginClick={handleLoginClick}
+            />
+          }
+        >
+          <Route path="/" element={<MainLayout />} />
+          <Route path="/login" element={<Login onLogin={handleBackClick} />} />
+          <Route path="/my" element={<Mypage onLogin={handleBackClick} />} />
+          <Route path="/order/:orderId" element={<Order />} />
+        </Route>
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </AppWrapper>
   );
 }
 
