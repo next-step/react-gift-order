@@ -1,10 +1,9 @@
 import styled from '@emotion/styled';
 import { FiPlus } from 'react-icons/fi';
-
-const STORAGE_KEY = "userInfo";
+import { STORAGE_KEY } from '@/constants/storage';
 
 export default function Friends() {
-  const userInfo = sessionStorage.getItem(STORAGE_KEY);
+  const userInfo = sessionStorage.getItem(STORAGE_KEY.USER_INFO);
   const userId = userInfo
     ? JSON.parse(userInfo).email.split("@")[0]
     : null;

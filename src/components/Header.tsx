@@ -2,6 +2,7 @@ import { FiChevronLeft, FiUser } from "react-icons/fi";
 import styled from "@emotion/styled";
 import { useNavigate } from "react-router-dom";
 import IconButton from "./IconButton";
+import { STORAGE_KEY } from "@/constants/storage";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ export default function Header() {
         <IconButton
           aria-label="마이페이지"
           onClick={() => {
-            const userInfo = sessionStorage.getItem("userInfo");
+            const userInfo = sessionStorage.getItem(STORAGE_KEY.USER_INFO);
             if (userInfo) navigate("/my");
             else navigate("/login");
           }}
