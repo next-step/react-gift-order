@@ -1,3 +1,4 @@
+import { getUserNameFromEmail } from "@/utils/getUserNameFromEmail";
 import React, { createContext, useContext, useState } from "react";
 
 type AuthContextType = {
@@ -42,6 +43,6 @@ export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) throw new Error("useAuth must be used within an AuthProvider");
   const { userEmail, ...rest } = context;
-  const userName = userEmail ? userEmail.split("@")[0] : null;
+  const userName = getUserNameFromEmail(userEmail);
   return { userEmail, userName, ...rest };
 };
