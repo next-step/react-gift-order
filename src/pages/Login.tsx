@@ -4,6 +4,7 @@ import { Header } from '@/components/Header/Header';
 import { useLocation, useNavigate } from 'react-router';
 import { ROUTE_PATH } from '@/shared/RoutePath';
 import { useLoginForm } from '@/hooks/useLoginForm';
+import { useAuth } from '@/contexts/AuthContext';
 
 const AppContainer = styled.div`
   width: 720px;
@@ -102,7 +103,7 @@ export const Login: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || ROUTE_PATH.HOME;
-
+  const { login } = useAuth();
   const {
     email,
     password,
@@ -119,6 +120,7 @@ export const Login: React.FC = () => {
     e.preventDefault();
     if (!isValid) return;
     alert(`이메일: ${email}\n비밀번호: ${password}`);
+    login(email);
     navigate(from, { replace: true });
   };
 
