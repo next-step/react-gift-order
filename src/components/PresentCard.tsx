@@ -117,7 +117,7 @@ const errorText = css`
 
 interface Props {
   message: string;
-  onMessageChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onMessageChange: (name: string, value: string) => void;
   errorMessage?: string;
 }
 
@@ -128,12 +128,7 @@ const PresentCard = ({ message, onMessageChange, errorMessage }: Props) => {
     setSelectedCard(card);
 
     if (!message.trim() || message === selectedCard.defaultTextMessage) {
-      onMessageChange({
-        target: {
-          name: 'message',
-          value: card.defaultTextMessage,
-        },
-      } as React.ChangeEvent<HTMLTextAreaElement>);
+      onMessageChange('message', card.defaultTextMessage);
     }
   };
 
@@ -173,7 +168,7 @@ const PresentCard = ({ message, onMessageChange, errorMessage }: Props) => {
           <textarea
             css={[textareaStyle, errorMessage && inputErrorStyle]}
             value={message}
-            onChange={onMessageChange}
+            onChange={(e) => onMessageChange('message', e.target.value)}
             placeholder="메시지를 입력해 주세요"
             name="message"
             rows={3}

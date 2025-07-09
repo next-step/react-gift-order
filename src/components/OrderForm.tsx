@@ -70,9 +70,7 @@ const colorspace8 = css`
 interface Props {
   values: OrderValues;
   errors: Partial<OrderValues>;
-  onChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => void;
+  onChange: (name: string, value: string) => void;
 }
 
 const OrderForm = ({ values, errors, onChange }: Props) => {
@@ -87,7 +85,7 @@ const OrderForm = ({ values, errors, onChange }: Props) => {
           value={values.senderName}
           placeholder="이름을 입력하세요."
           error={errors.senderName}
-          onChange={onChange}
+          onChange={(e) => onChange('senderName', e.target.value)}
         />
         {!errors.senderName && (
           <p css={noticeP}>
@@ -112,7 +110,7 @@ const OrderForm = ({ values, errors, onChange }: Props) => {
               value={values.recipientName}
               placeholder="이름을 입력하세요."
               error={errors.recipientName}
-              onChange={onChange}
+              onChange={(e) => onChange('recipientName', e.target.value)}
             />
           </div>
         </div>
@@ -127,7 +125,7 @@ const OrderForm = ({ values, errors, onChange }: Props) => {
               value={values.recipientPhone}
               placeholder="전화번호를 입력하세요."
               error={errors.recipientPhone}
-              onChange={onChange}
+              onChange={(e) => onChange('recipientPhone', e.target.value)}
             />
           </div>
         </div>
@@ -144,7 +142,7 @@ const OrderForm = ({ values, errors, onChange }: Props) => {
               value={values.quantity}
               placeholder="수량을 입력하세요."
               error={errors.quantity}
-              onChange={onChange}
+              onChange={(e) => onChange('quantity', e.target.value)}
             />
           </div>
         </div>

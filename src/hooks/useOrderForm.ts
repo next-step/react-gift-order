@@ -31,10 +31,7 @@ const useOrderForm = () => {
 
   const [errors, setErrors] = useState<OrderErrors>({});
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
+  const handleChange = (name: string, value: string) => {
     setValues((prev) => ({ ...prev, [name]: value }));
   };
 
