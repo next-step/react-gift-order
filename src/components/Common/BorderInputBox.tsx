@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 
 type InputBoxProps = {
   type?: string;
+  id: string;
   placeholder?: string;
   value: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -11,6 +12,7 @@ type InputBoxProps = {
 };
 
 const BorderInputBox = ({
+  id,
   type = 'text',
   placeholder,
   value,
@@ -21,6 +23,7 @@ const BorderInputBox = ({
   return (
     <Wrapper>
       <StyledInput
+        id={id}
         type={type}
         placeholder={placeholder}
         value={value}

@@ -88,6 +88,7 @@ const Order = () => {
         <SectionContainer>
           <SectionTitle>보내는 사람</SectionTitle>
           <BorderInputBox
+            id="sender-name"
             type="text"
             value={senderName.value}
             onChange={senderName.onChange}
@@ -102,6 +103,7 @@ const Order = () => {
           <ReceiverInputWrapper>
             <InfoTitle>이름</InfoTitle>
             <BorderInputBox
+              id="receiver-name"
               type="text"
               value={receiverName.value}
               onChange={receiverName.onChange}
@@ -113,6 +115,7 @@ const Order = () => {
           <ReceiverInputWrapper>
             <InfoTitle>전화번호</InfoTitle>
             <BorderInputBox
+              id="phonenumber"
               type="text"
               value={receiverPhoneNumber.value}
               onChange={receiverPhoneNumber.onChange}
@@ -124,6 +127,7 @@ const Order = () => {
           <ReceiverInputWrapper>
             <InfoTitle>수량</InfoTitle>
             <BorderInputBox
+              id="item-count"
               type="number"
               value={itemCount.value.toString()}
               onChange={itemCount.onChange}
