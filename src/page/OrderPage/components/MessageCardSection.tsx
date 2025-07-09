@@ -22,12 +22,6 @@ const MessageCardItem = styled.div`
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid ${({ theme }) => theme.colors.colorScale.gray[200]};
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
 `;
 
 const SelectedCardItem = styled.div`
@@ -37,17 +31,17 @@ const SelectedCardItem = styled.div`
   overflow: hidden;
   border-radius: 12px;
   box-shadow: rgba(0, 0, 0, 0.2) 0px 39px 20px -30px;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
 `;
 
 const SelectedCardContainer = styled.div`
   display: flex;
   justify-content: center;
+`;
+
+const Img = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 `;
 
 const MessageCardSection = () => {
@@ -58,13 +52,13 @@ const MessageCardSection = () => {
       <MessageCardList>
         {messageCardDatas[0].map(card => (
           <MessageCardItem key={card.id} onClick={() => setSelected(card)}>
-            <img src={card.thumbUrl} alt={card.defaultTextMessage} />
+            <Img src={card.thumbUrl} alt={card.defaultTextMessage} />
           </MessageCardItem>
         ))}
       </MessageCardList>
       <SelectedCardContainer>
         <SelectedCardItem>
-          <img src={selected.thumbUrl} alt={selected.defaultTextMessage} />
+          <Img src={selected.thumbUrl} alt={selected.defaultTextMessage} />
         </SelectedCardItem>
       </SelectedCardContainer>
     </MessageCardContainer>

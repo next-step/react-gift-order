@@ -18,12 +18,8 @@ const OrderButtonContainer = styled.button`
   }
 `;
 
-const OrderButton = () => {
-  return (
-    <OrderButtonContainer>
-      29000원 주문하기
-    </OrderButtonContainer>
-  );
+const OrderButton = ({ onClick }: { onClick: () => void }) => {
+  return <OrderButtonContainer onClick={onClick}>29000원 주문하기</OrderButtonContainer>;
 };
 
 export default OrderButton;

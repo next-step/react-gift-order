@@ -56,10 +56,18 @@ const ItemContainer = styled.div`
   gap: 12px;
 `;
 
+const Title = styled.h3`
+  font-size: ${({ theme }) => theme.typography.title2Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.title2Bold.fontWeight};
+  line-height: ${({ theme }) => theme.typography.title2Bold.lineHeight};
+  color: ${({ theme }) => theme.colors.semantic.text.default};
+  margin-bottom: ${({ theme }) => theme.spacing.spacing3};
+`;
+
 const ProductInfo = () => {
   return (
     <ProductInfoContainer>
-      <h3>상품 정보</h3>
+      <Title>상품 정보</Title>
 
       <ItemContainer>
         <img

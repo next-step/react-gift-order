@@ -5,6 +5,8 @@ import SenderInfo from './components/SenderInfo';
 import ReceiverInfo from './components/ReceiverInfo';
 import ProductInfo from './components/ProductInfo';
 import OrderButton from './components/OrderButton';
+import useInput from './hooks/useInput';
+import useCheckAmount from './hooks/useCheckAmount';
 
 const Section = styled.section`
   width: 100%;
@@ -14,17 +16,39 @@ const Section = styled.section`
 `;
 
 const OrderPage = () => {
-  const handleSubmit = () => {};
+  const senderName = useInput('text');
+  const receiverName = useInput('text');
+  const receiverPhoneNumber = useInput('number');
+  const receiverAmount = useCheckAmount();
+
+  const handleClick = () => {
+    const isSenderValid = senderName.validate();
+    const isReceiverNameValid = receiverName.validate();
+    const isReceiverPhoneNumberValid = receiverPhoneNumber.validate();
+    const isReceiverAmountValid = receiverAmount.validate();
+
+    if (
+      isSenderValid &&
+      isReceiverNameValid &&
+      isReceiverPhoneNumberValid &&
+      isReceiverAmountValid
+    ) {
+      alert('주문 성공!');
+    }
+  };
+
   return (
     <Section>
-      <form onSubmit={handleSubmit}>
-        <MessageCardSection />
-        <MessageInput />
-        <SenderInfo />
-        <ReceiverInfo />
-        <ProductInfo />
-        <OrderButton />
-      </form>
+      <MessageCardSection />
+      <MessageInput />
+      <SenderInfo hook={senderName} />
+      <ReceiverInfo
+        nameHook={receiverName}
+        numberHook={receiverPhoneNumber}
+        amountHook={receiverAmount}
+      />
+      <ProductInfo />
+      <OrderButton onClick={handleClick} />
     </Section>
   );
 };
