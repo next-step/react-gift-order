@@ -5,6 +5,7 @@ import { theme } from "@styles/theme";
 import AppLayout from "@/components/layout/AppLayout";
 import Router from "@/routes/router";
 import { UserInfoProvider } from "@/contexts/UserInfoContext";
+import { ModalProvider } from "./contexts/ModalContext";
 
 function App() {
   return (
@@ -12,9 +13,11 @@ function App() {
       <Global styles={GlobalResetStyle} />
       <Global styles={GlobalTypographyStyle} />
       <UserInfoProvider>
-        <AppLayout>
-          <Router />
-        </AppLayout>
+        <ModalProvider>
+          <AppLayout>
+            <Router />
+          </AppLayout>
+        </ModalProvider>
       </UserInfoProvider>
     </ThemeProvider>
   );

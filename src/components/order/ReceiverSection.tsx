@@ -3,6 +3,8 @@ import ErrorMessage from "../common/ErrorMessage";
 import styled from "@emotion/styled";
 import { useFormContext } from "react-hook-form";
 import { checkPhoneError, checkCountError } from "@/utils/validation";
+import { useModal } from "@/contexts/ModalContext";
+import ReceiverModal from "./ReceiverModal";
 
 const ReceiverSection = () => {
   const {
@@ -14,9 +16,19 @@ const ReceiverSection = () => {
     count: number;
   }>();
 
+  const { openModal } = useModal();
+
   return (
     <Section>
       <SectionTitle>받는 사람</SectionTitle>
+      <button
+        onClick={e => {
+          e.preventDefault();
+          openModal();
+        }}
+      >
+        추가
+      </button>
       <InputDiv>
         <InputTitle>이름</InputTitle>
         <InputErrorDiv>
@@ -62,6 +74,7 @@ const ReceiverSection = () => {
           )}
         </InputErrorDiv>
       </InputDiv>
+      <ReceiverModal />
     </Section>
   );
 };
