@@ -115,30 +115,24 @@ const ReceiverTitleBox = styled.div`
 `;
 
 const RecieverTitle = styled.p`
-  font-size: 1.25rem;
-  font-weight: 700;
-  line-height: 1.6875rem;
+  ${({ theme }) => theme.typography.title1Bold};
   color: ${({ theme }) => theme.colors.gray[900]};
   margin: 0px;
   text-align: left;
 `;
 
 const ReceiverText = styled.p`
-  font-size: 0.75rem;
-  font-weight: 400;
-  line-height: 1rem;
+  ${({ theme }) => theme.typography.label2Regular};
   color: rgb(85, 93, 109);
   margin: 0px;
   text-align: left;
 `;
 
 const AddButton = styled.button`
-  font-size: 0.75rem;
-  font-weight: 400;
-  line-height: 1rem;
+  ${({ theme }) => theme.typography.label2Regular};
   padding: 8px 16px;
   border-radius: 8px;
-  background-color: rgb(238, 239, 241);
+  background-color: ${({ theme }) => theme.colors.gray[300]};
   border: none;
   cursor: pointer;
   transition:
@@ -157,12 +151,10 @@ const ButtonWrapper = styled.div`
 `;
 
 const CancelButton = styled.button`
-  font-size: 0.875rem;
-  font-weight: 400;
-  line-height: 1.1875rem;
+  ${({ theme }) => theme.typography.label1Regular};
   padding: 12px 24px;
   border-radius: 8px;
-  background-color: rgb(238, 239, 241);
+  background-color:${({ theme }) => theme.colors.gray[300]};
   border: none;
   cursor: pointer;
   transition:
@@ -173,13 +165,11 @@ const CancelButton = styled.button`
 `;
 
 const SubmitButton = styled.button`
-  font-size: 0.875rem;
-  font-weight: 400;
-  line-height: 1.1875rem;
+  ${({ theme }) => theme.typography.label1Regular};
   width: 100%;
   padding: 12px 24px;
   border-radius: 8px;
-  background-color: rgb(254, 229, 0);
+  background-color: ${({ theme }) => theme.colors.kakao.yellow.default};
   border: none;
   cursor: pointer;
   transition:
