@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import MessageCardSection from "@/pages/orderpage/MessageCardSection";
 import SenderInfoSection from "@/pages/orderpage/SenderInfoSection";
-import ReceiverInfoSection from "@/pages/orderpage/RecieverSection";
+import ReceiverInfoSection from "@/pages/orderpage/ReceiverInfoSection";
 import ProductSummarySection from "@/pages/orderpage/ProductSummarySection";
 import { useForm } from "react-hook-form";
 import OrderButton from "@/components/common/BaseButton";
@@ -28,9 +28,6 @@ const OrderPage = () => {
     defaultValues: {
       message: "",
       sender: "",
-      receiver: "",
-      phone: "",
-      quantity: 1,
     },
   });
 
@@ -57,7 +54,7 @@ const OrderPage = () => {
         error={errors.message?.message}
       />
       <SenderInfoSection register={register} error={errors.sender?.message} />
-      <ReceiverInfoSection register={register} errors={errors} />
+      <ReceiverInfoSection />
       <ProductSummarySection product={product} />
       <OrderButton color="yellow" label="주문하기" size="large" type="submit" />
     </Form>

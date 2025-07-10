@@ -5,9 +5,6 @@ import type { UseFormRegister } from "react-hook-form";
 interface FormValues {
   message: string;
   sender: string;
-  receiver: string;
-  phone: string;
-  quantity: number;
 }
 
 interface Props {
