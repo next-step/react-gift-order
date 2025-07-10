@@ -1,17 +1,13 @@
 import styled from '@emotion/styled';
 import InputField from '@/components/common/InputField';
+import type { FormErrors, FormValues } from '@/hooks/useOrderForm';
 
 interface ReceiverFormProps {
-  values: {
-    receiverName: string;
-    receiverPhone: string;
-    quantity: number;
-  };
-  errors: {
-    receiverName?: string;
-    receiverPhone?: string;
-    quantity?: string;
-  };
+  values: Pick<FormValues, 'receiverName' | 'receiverPhone' | 'quantity'>;
+  errors: Partial<
+    Pick<FormErrors, 'receiverName' | 'receiverPhone' | 'quantity'>
+  >;
+
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 

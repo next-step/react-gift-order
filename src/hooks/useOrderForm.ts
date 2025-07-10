@@ -5,7 +5,7 @@ import {
   ERROR_MESSAGES,
 } from '@/constants/validation';
 
-type FormValues = {
+export type FormValues = {
   senderName: string;
   receiverName: string;
   receiverPhone: string;
@@ -13,7 +13,7 @@ type FormValues = {
   textMessage: string;
 };
 
-type FormErrors = Record<FormField, string>;
+export type FormErrors = Record<FormField, string>;
 export type FormField = keyof FormValues;
 
 const DEFAULT_FORM_VALUES: FormValues = {
