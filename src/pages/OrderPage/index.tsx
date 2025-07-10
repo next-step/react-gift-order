@@ -65,6 +65,7 @@ function OrderPage() {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <MessageCard register={register} setValue={setValue} />
+      <OrderForm register={register} errors={errors} productPrice={product.price} />
       <ReceiverSelectBox onAddClick={() => setIsReceiverModalOpen(true)} />
       <ReceiverModal
         isOpen={isReceiverModalOpen}
@@ -72,7 +73,6 @@ function OrderPage() {
         onComplete={handleReceiverModalComplete}
         initialReceivers={receivers}
       />
-      <OrderForm register={register} errors={errors} productPrice={product.price} />
       <Container>
         <Title>주문 정보</Title>
         <Box>

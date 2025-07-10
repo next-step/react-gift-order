@@ -15,7 +15,7 @@ interface OrderFormProps {
   productPrice: number;
 }
 
-function OrderForm({ register, errors, watch, productPrice }: OrderFormProps) {
+function OrderForm({ register, errors }: OrderFormProps) {
   return (
     <>
       <Container>

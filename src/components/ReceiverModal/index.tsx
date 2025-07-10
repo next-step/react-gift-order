@@ -2,7 +2,7 @@ import React from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import Modal from '@/components/common/Modal';
 import * as S from './styles';
-import { Input, InputRow, Label, ErrorMessage } from '@/components/OrderForm/styles'; 
+import { Input, InputRow, Label, ErrorMessage } from '@/components/OrderForm/styles';
 const RECEIVER_NAME_ERROR = '받는 사람 이름을 입력해주세요.';
 const RECEIVER_PHONE_ERROR = '받는 사람 연락처를 입력해주세요.';
 const PHONE_REGEX_ERROR = '01012341234 형식으로 입력해주세요.';
@@ -75,7 +75,7 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
     });
 
     if (hasDuplicatePhone) {
-      return; 
+      return;
     }
 
     onComplete(data.receivers);
@@ -84,23 +84,21 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
 
   const footerContent = (
     <>
-      <button onClick={onClose}>취소</button>
-      <button onClick={handleSubmit(onSubmit)}>
+      <S.CancelButton onClick={onClose}>취소</S.CancelButton>
+      <S.FinishButton onClick={handleSubmit(onSubmit)}>
         {fields.length}명 완료
-      </button>
+      </S.FinishButton>
     </>
   );
 
   const modalHeaderContent = (
     <>
-      <S.HeaderTitleRow>
-        <S.ModalTitle>받는사람</S.ModalTitle>
-        {fields.length < MAX_RECEIVERS && (
-          <S.AddButton onClick={handleAddReceiver}>추가하기</S.AddButton>
-        )}
-      </S.HeaderTitleRow>
+      <S.ModalTitle>받는사람</S.ModalTitle>
       <S.HintText>최대 {MAX_RECEIVERS}명까지 추가 할 수 있어요.</S.HintText>
       <S.HintText>받는사람의 전화번호를 중복으로 입력할 수 없어요.</S.HintText>
+      <S.AddButton onClick={handleAddReceiver} disabled={fields.length >= MAX_RECEIVERS}>
+        추가하기
+      </S.AddButton>
     </>
   );
 
@@ -109,6 +107,7 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
 
       {fields.map((field, index) => (
         <S.ReceiverFormWrapper key={field.id}>
+          <S.ReceiverTitle>받는사람 {index + 1}</S.ReceiverTitle>
           {fields.length > 1 && (
             <S.RemoveButton onClick={() => handleRemoveReceiver(index)}>
               &times;

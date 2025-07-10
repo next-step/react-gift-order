@@ -14,13 +14,13 @@ export const Overlay = styled.div`
 `;
 
 export const Container = styled.div`
-  background-color: white;
-  padding: 30px;
-  border-radius: 12px;
+  background-color: ${({ theme }) => theme.colors.semantic.backgroundDefault};
+  padding: ${({ theme }) => theme.spacing.spacing4};
+  border-radius: ${({ theme }) => theme.spacing.spacing3};
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   width: 100%;
   max-width: 600px;
-  max-height: 80vh;
+  height: 600px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -29,7 +29,6 @@ export const Container = styled.div`
 export const Header = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
   padding-bottom: 10px;
   border-bottom: 1px solid #eee;
 `;
