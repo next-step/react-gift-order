@@ -59,11 +59,11 @@ const Order = () => {
   const totalOrderPrice = unitPrice * totalRecipientQuantity;
 
   const handleOrderClick = () => {
-    if (totalRecipientQuantity === 0) {
-      alert('받는 사람을 추가해 주세요!');
-      return;
-    }
     if (validate()) {
+      if (totalRecipientQuantity === 0) {
+        alert('받는 사람을 추가해 주세요!');
+        return;
+      }
       alert(
         `주문이 완료되었습니다.\n` +
           `상품명: ${product.name}\n` +
