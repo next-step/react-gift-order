@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { TopNavBar } from '@/components/TopNavBar';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import useValidateId from '@/hooks/useValidateId';
 import useValidatePassword from '@/hooks/useValidatePassword';
+import useUserInfo from '@/hooks/useUserInfo';
+import type { inputStyle } from '@/types/inputStyle';
 
 const Container = styled.div`
   display: flex;
@@ -44,9 +46,9 @@ const Input = styled.input<{ inputFieldStyle: string }>`
   border-bottom-width: 1px;
   border-bottom-style: solid;
   border-bottom-color: ${({ theme, inputFieldStyle }) => {
-    if (inputFieldStyle === 'idle' || inputFieldStyle === 'blurredValid') {
+    if (inputFieldStyle === 'idle') {
       return theme.colors.gray400;
-    } else if (inputFieldStyle === 'firstAttempt' || inputFieldStyle === 'focusedValid') {
+    } else if (inputFieldStyle === 'isClicked') {
       return theme.colors.gray700;
     } else {
       return theme.colors.red700;
@@ -88,35 +90,40 @@ const Button = styled.button`
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const nextPath = location.state?.from || -1;
   const [emailIsClicked, setEmailIsClicked] = useState(false);
   const [passwordIsClicked, setPasswordIsClicked] = useState(false);
   const [email, setEmail, isFirstIdTry, setIsFirstIdTry, idError] = useValidateId();
   const [password, setPassword, isFirstPwdTry, setIsFirstPwdTry, passwordError] =
     useValidatePassword();
-  const [idInputFieldStyle, setIdInputFieldStyle] = useState('idle');
-  const [pwdInputFieldStyle, setPwdInputFieldStyle] = useState('idle');
+  const [idInputFieldStyle, setIdInputFieldStyle] = useState<inputStyle>('idle');
+  const [pwdInputFieldStyle, setPwdInputFieldStyle] = useState<inputStyle>('idle');
+  const isFirstTry = isFirstIdTry || isFirstPwdTry;
   const isAllValid = !idError && !passwordError;
+  const { setUser } = useUserInfo();
+  const MIN_INPUT_LENGTH = 8;
 
   const handleInputFieldStyle = useCallback(
     (type: string, isFirstTry: boolean, isClicked: boolean, error: string) => {
-      let inputStatus = '';
+      let inputStatus: inputStyle = 'idle';
 
       if (isFirstTry) {
         if (isClicked) {
-          inputStatus = 'firstAttempt';
+          inputStatus = 'isClicked';
         } else {
           inputStatus = 'idle';
         }
       } else {
         if (isClicked) {
           if (!error) {
-            inputStatus = 'focusedValid';
+            inputStatus = 'isClicked';
           } else {
             inputStatus = 'error';
           }
         } else {
           if (!error) {
-            inputStatus = 'blurredValid';
+            inputStatus = 'isClicked';
           } else {
             inputStatus = 'error';
           }
@@ -170,7 +177,12 @@ const Login = () => {
             type="password"
             placeholder="비밀번호"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              if (isFirstPwdTry && e.target.value.length >= MIN_INPUT_LENGTH) {
+                setIsFirstPwdTry(false);
+              }
+              setPassword(e.target.value);
+            }}
             onFocus={() => setPasswordIsClicked(true)}
             onBlur={() => {
               setIsFirstPwdTry(false);
@@ -181,9 +193,10 @@ const Login = () => {
         </div>
         <Button
           onClick={() => {
-            navigate('/');
+            setUser({ id: email, password: password });
+            navigate(nextPath, { replace: true });
           }}
-          disabled={!isAllValid}
+          disabled={isFirstTry ? true : !isAllValid}
         >
           로그인
         </Button>

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import categoryData from '@/mock_data/category';
 import type { CategoryDataType } from '@/types/category';
-import { CategoryCard } from '@/components/gift_page/Category/CategoryCard';
+import { CategoryCard } from '@/components/gift_list_page/Category/CategoryCard';
 
 const Container = styled.div`
   position: relative;

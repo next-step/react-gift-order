@@ -1,4 +1,4 @@
-import Router from '@/shared/Router';
+import Router from '@/routes/Router';
 
 function App() {
   return <Router />;

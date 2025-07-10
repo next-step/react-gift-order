@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
 import { TopNavBar } from '@/components/TopNavBar';
-import { Category } from '@/components/gift_page/Category';
-import { SelectFriend } from '@/components/gift_page/SelectFriend';
-import { Banner } from '@/components/gift_page/Banner';
-import { GiftList } from '@/components/gift_page/GiftList';
+import { Category } from '@/components/gift_list_page/Category';
+import { SelectFriend } from '@/components/gift_list_page/SelectFriend';
+import { Banner } from '@/components/gift_list_page/Banner';
+import { GiftList } from '@/components/gift_list_page/GiftList';
 
 const Container = styled.div`
   display: flex;
