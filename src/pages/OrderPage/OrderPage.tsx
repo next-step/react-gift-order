@@ -10,6 +10,7 @@ import { ROUTES } from "@/constants/routes";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useOrderForm } from "./hooks/useOrderForm";
+import { ORDER_MESSAGES } from "./constants/alert";
 
 const OrderPageContainer = styled.div`
   display: flex;
@@ -48,11 +49,12 @@ function OrderPage() {
       if (isValid) {
         const formValues = getFormValues();
         alert(
-          `주문이 완료되었습니다.
-          상품명: ${product?.name}
-          구매 수량: ${formValues.totalQuantity}
-          발신자 이름: ${formValues.senderName}
-          메시지: ${formValues.cardMessage}`
+          ORDER_MESSAGES.ORDER_COMPLETE_TEMPLATE({
+            productName: product?.name || "",
+            totalQuantity: formValues.totalQuantity,
+            senderName: formValues.senderName,
+            cardMessage: formValues.cardMessage,
+          })
         );
         navigate(ROUTES.HOME);
         return;
