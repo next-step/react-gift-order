@@ -2,12 +2,12 @@ import { createContext, useContext, useState, type PropsWithChildren } from 'rea
 
 interface UserInfo {
   email: string;
-  password: string;
+  token: string;
 }
 
 interface Ctx {
   userInfo: UserInfo;
-  login: (email: string, password: string) => void;
+  login: (email: string, token: string) => void;
   logout: () => void;
   isLoggedIn: boolean;
 }
@@ -25,19 +25,20 @@ export const useUserInfo = () => {
 export const UserInfoProvider = ({ children }: PropsWithChildren) => {
   const [userInfo, setUserInfo] = useState<UserInfo>(() => ({
     email: sessionStorage.getItem('email') ?? '',
-    password: sessionStorage.getItem('password') ?? '',
+    token: sessionStorage.getItem('token') ?? '',
   }));
 
   const isLoggedIn = Boolean(userInfo.email);
 
-  const login = (email: string, password: string) => {
-    setUserInfo({ email, password });
+  const login = (email: string, token: string) => {
+    setUserInfo({ email, token });
     sessionStorage.setItem('email', email);
-    sessionStorage.setItem('password', password);
+    sessionStorage.setItem('token', token);
+    console.log(sessionStorage.getItem('token')); // token 확인을 위함(추후에 지우겠습니다)
   };
 
   const logout = () => {
-    setUserInfo({ email: '', password: '' });
+    setUserInfo({ email: '', token: '' });
     sessionStorage.clear();
   };
 

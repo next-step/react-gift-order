@@ -4,6 +4,7 @@ import InputField from './components/InputField';
 import { useUserInfo } from '@/contexts/UserInfoContext';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/routes/routes';
+import { fakeAuthApi } from './utils/fakeAuthApi';
 
 const Container = styled.div`
   display: flex;
@@ -58,14 +59,16 @@ const LoginPage = () => {
 
   const isButtonActive = username.isValid && password.isValid;
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!username.isValid || !password.isValid) return;
-
-    login(username.value, password.value);
+    const token = await fakeAuthApi(username.value, password.value);
+    login(username.value, token);
     navigate(ROUTES.MY, { replace: true });
   };
+  // const token = await fakeAuthApi(username.value, password.value);
+  
 
   return (
     <Container>
