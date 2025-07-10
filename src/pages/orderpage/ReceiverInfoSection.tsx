@@ -7,13 +7,17 @@ import type { FullOrderFormValues } from "@/utils/validator";
 
 const ReceiverInfoSection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { control, watch } = useFormContext<FullOrderFormValues>();
+  const [initialReceivers, setInitialReceivers] = useState<
+    { name: string; phone: string; quantity: number }[]
+  >([]);
+  const { control } = useFormContext<FullOrderFormValues>();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "receivers",
   });
 
   const handleClickAdd = () => {
+    setInitialReceivers([...fields]);
     setIsModalOpen(true);
   };
 
@@ -24,6 +28,9 @@ const ReceiverInfoSection = () => {
   const handleSubmitReceiverData = (data: {
     receivers: { name: string; phone: string; quantity: number }[];
   }) => {
+    for (let i = fields.length - 1; i >= 0; i--) {
+      remove(i);
+    }
     data.receivers.forEach((receiver) => append(receiver));
     setIsModalOpen(false);
   };
@@ -69,6 +76,7 @@ const ReceiverInfoSection = () => {
           isOpen={isModalOpen}
           onClose={handleCloseModal}
           onSubmit={handleSubmitReceiverData}
+          initialReceivers={initialReceivers}
         />
       )}
     </SectionContainer>

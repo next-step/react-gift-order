@@ -4,20 +4,36 @@ import styled from "@emotion/styled";
 import { receiverArraySchema } from "@/utils/validator";
 import ReceiverFormItem from "./ReceiverFormItem";
 import type { ReceiverArrayFormValues } from "@/utils/validator";
+import { useEffect } from "react";
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: ReceiverArrayFormValues) => void;
+  initialReceivers: ReceiverArrayFormValues["receivers"];
 };
 
-const ReceiverModal = ({ isOpen, onClose, onSubmit }: Props) => {
+const ReceiverModal = ({
+  isOpen,
+  onClose,
+  onSubmit,
+  initialReceivers,
+}: Props) => {
   const methods = useForm<ReceiverArrayFormValues>({
     resolver: zodResolver(receiverArraySchema),
     defaultValues: {
-      receivers: [{ name: "", phone: "", quantity: 1 }],
+      receivers: [],
     },
   });
+
+  useEffect(() => {
+    methods.reset({
+      receivers:
+        initialReceivers.length > 0
+          ? initialReceivers
+          : [{ name: "", phone: "", quantity: 1 }],
+    });
+  }, [initialReceivers]);
 
   const { fields, append, remove } = useFieldArray({
     control: methods.control,
