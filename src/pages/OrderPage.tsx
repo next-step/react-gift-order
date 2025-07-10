@@ -5,34 +5,41 @@ import { ROUTE_PATH } from "@/routes/paths";
 import { gifts } from "@/data/gift";
 import { cards } from "@/data/card";
 import type { Card } from "@/types/card";
-import {
-  checkNameError,
-  checkCountError,
-  checkPhoneError,
-  checkMessageError,
-} from "@/utils/validation";
 import styled from "@emotion/styled";
 import CardSection from "@/components/order/CardSection";
 import SendSection from "@/components/order/SendSection";
 import ReceiverSection from "@/components/order/ReceiverSection";
 import GiftInformationSection from "@/components/order/GiftInformationSection";
-import useOrderInput from "@/hooks/useOrderInput";
 import { useUserInfo } from "@/contexts/UserInfoContext";
+import { FormProvider, useForm } from "react-hook-form";
+import type { SubmitHandler } from "react-hook-form";
+
+type OrderFormValue = {
+  message: string;
+  sender: string;
+  receiver: string;
+  phone: string;
+  count: number;
+};
 
 const OrderPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [selectedCard, setSelectedCard] = useState<Card>(cards[0]);
-  const messageInput = useOrderInput(checkMessageError);
-  const senderInput = useOrderInput(checkNameError);
-  const receiverInput = useOrderInput(checkNameError);
-  const phoneInput = useOrderInput(checkPhoneError);
-  const countInput = useOrderInput(checkCountError, "1");
+  const methods = useForm<OrderFormValue>({
+    defaultValues: {
+      message: selectedCard.defaultTextMessage,
+      sender: "",
+      receiver: "",
+      phone: "",
+      count: 1,
+    },
+  });
   const userInfo = useUserInfo();
 
   useEffect(() => {
-    messageInput.setValue(selectedCard.defaultTextMessage);
-  }, [selectedCard, messageInput]);
+    methods.setValue("message", selectedCard.defaultTextMessage);
+  }, [selectedCard, methods]);
 
   useEffect(() => {
     if (!userInfo?.email) {
@@ -50,30 +57,14 @@ const OrderPage = () => {
     return null;
   }
 
-  const handleOrder = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const messageError = messageInput.validate();
-    const senderError = senderInput.validate();
-    const receiverError = receiverInput.validate();
-    const phoneError = phoneInput.validate();
-    const countError = countInput.validate();
-    if (
-      messageError ||
-      senderError ||
-      receiverError ||
-      phoneError ||
-      countError
-    ) {
-      return;
-    }
-
+  const onValid: SubmitHandler<OrderFormValue> = data => {
     alert(
       [
         "주문이 완료되었습니다.",
         `상품명: ${gift.name}`,
-        `구매 수량: ${countInput.value}`,
-        `보낸 사람: ${senderInput.value}`,
-        `메시지: ${messageInput.value}`,
+        `구매 수량: ${data.count}`,
+        `보낸 사람: ${data.sender}`,
+        `메시지: ${data.message}`,
       ].join("\n"),
     );
     navigate(ROUTE_PATH.HOME, { replace: true });
@@ -83,23 +74,21 @@ const OrderPage = () => {
     <>
       <TheHeader />
       <Main>
-        <Form onSubmit={handleOrder}>
-          <CardSection
-            selectedCard={selectedCard}
-            setSelectedCard={setSelectedCard}
-            messageInput={messageInput}
-          />
-          <SendSection senderInput={senderInput} />
-          <ReceiverSection
-            receiverInput={receiverInput}
-            phoneInput={phoneInput}
-            countInput={countInput}
-          />
-          <GiftInformationSection selectedGift={gift} />
-          <Button>
-            {gift.price.sellingPrice * Number(countInput.value)}원 주문하기
-          </Button>
-        </Form>
+        <FormProvider {...methods}>
+          <Form onSubmit={methods.handleSubmit(onValid)}>
+            <CardSection
+              selectedCard={selectedCard}
+              setSelectedCard={setSelectedCard}
+            />
+            <SendSection />
+            <ReceiverSection />
+            <GiftInformationSection selectedGift={gift} />
+            <Button>
+              {gift.price.sellingPrice * Number(methods.getValues("count"))}원
+              주문하기
+            </Button>
+          </Form>
+        </FormProvider>
       </Main>
     </>
   );

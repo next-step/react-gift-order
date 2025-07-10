@@ -1,23 +1,19 @@
+import { checkNameError } from "@/utils/validation";
 import ErrorMessage from "../common/ErrorMessage";
 import styled from "@emotion/styled";
+import { useFormContext } from "react-hook-form";
+import { checkPhoneError, checkCountError } from "@/utils/validation";
 
-type InputType = {
-  value: string;
-  error: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-};
+const ReceiverSection = () => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<{
+    receiver: string;
+    phone: string;
+    count: number;
+  }>();
 
-type ReceiverSectionProps = {
-  countInput: InputType;
-  receiverInput: InputType;
-  phoneInput: InputType;
-};
-
-const ReceiverSection = ({
-  countInput,
-  receiverInput,
-  phoneInput,
-}: ReceiverSectionProps) => {
   return (
     <Section>
       <SectionTitle>받는 사람</SectionTitle>
@@ -25,14 +21,14 @@ const ReceiverSection = ({
         <InputTitle>이름</InputTitle>
         <InputErrorDiv>
           <Input
-            error={!!receiverInput.error}
+            error={!!errors.receiver}
             type="text"
-            value={receiverInput.value}
-            placeholder="이름을 입력해주세요."
-            onChange={receiverInput.onChange}
+            {...register("receiver", {
+              validate: value => checkNameError(value),
+            })}
           />
-          {receiverInput.error && (
-            <ErrorMessage message={receiverInput.error} />
+          {errors.receiver?.message && (
+            <ErrorMessage message={errors.receiver.message} />
           )}
         </InputErrorDiv>
       </InputDiv>
@@ -40,26 +36,30 @@ const ReceiverSection = ({
         <InputTitle>전화번호</InputTitle>
         <InputErrorDiv>
           <Input
-            error={!!phoneInput.error}
+            error={!!errors.phone}
             type="text"
-            value={phoneInput.value}
-            placeholder="전화번호를 입력해주세요."
-            onChange={phoneInput.onChange}
+            {...register("phone", {
+              validate: value => checkPhoneError(value),
+            })}
           />
-          {phoneInput.error && <ErrorMessage message={phoneInput.error} />}
+          {errors.phone?.message && (
+            <ErrorMessage message={errors.phone.message} />
+          )}
         </InputErrorDiv>
       </InputDiv>
       <InputDiv>
         <InputTitle>수량</InputTitle>
         <InputErrorDiv>
           <Input
-            error={!!countInput.error}
+            error={!!errors.count}
             type="number"
-            value={countInput.value}
-            placeholder="수량을 입력해주세요."
-            onChange={countInput.onChange}
+            {...register("count", {
+              validate: value => checkCountError(String(value)),
+            })}
           />
-          {countInput.error && <ErrorMessage message={countInput.error} />}
+          {errors.count?.message && (
+            <ErrorMessage message={errors.count.message} />
+          )}
         </InputErrorDiv>
       </InputDiv>
     </Section>

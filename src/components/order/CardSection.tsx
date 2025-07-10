@@ -4,23 +4,20 @@ import CardThumbnail from "@/components/order/CardThumbnail";
 import CardImage from "@/components/order/CardImage";
 import type { Card } from "@/types/card";
 import CardTextarea from "./CardTextarea";
+import { useFormContext } from "react-hook-form";
+import { checkMessageError } from "@/utils/validation";
 
 type CardSectionProps = {
   selectedCard: Card;
   setSelectedCard: (card: Card) => void;
-  messageInput: {
-    value: string;
-    setValue: (value: string) => void;
-    error: string;
-    onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  };
 };
 
-const CardSection = ({
-  selectedCard,
-  setSelectedCard,
-  messageInput,
-}: CardSectionProps) => {
+const CardSection = ({ selectedCard, setSelectedCard }: CardSectionProps) => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<{ message: string }>();
+
   return (
     <Section>
       <CardList>
@@ -34,7 +31,12 @@ const CardSection = ({
         ))}
       </CardList>
       <CardImage selectedCard={selectedCard} />
-      <CardTextarea messageInput={messageInput} />
+      <CardTextarea
+        {...register("message", {
+          validate: value => checkMessageError(value),
+        })}
+        error={errors.message?.message}
+      />
     </Section>
   );
 };
