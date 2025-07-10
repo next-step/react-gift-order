@@ -1,18 +1,19 @@
 import { rankingItemMock } from "@/assets/rankingItemMock";
 import Divider from "@/components/common/Divider";
 import { ROUTE_PATH } from "@/components/routes/routePath";
-import { useOrderContext } from "@/contexts/orderContext";
+import type { OrderFormType } from "@/types/OrderFormType";
 import styled from "@emotion/styled";
 import { useEffect } from "react";
+import { useFormContext } from "react-hook-form";
 import { Navigate, useParams } from "react-router-dom";
 
 const Product = () => {
-  const { setProduct } = useOrderContext();
+  const { setValue } = useFormContext<OrderFormType>();
   const { productId } = useParams();
   const product = rankingItemMock.find((item) => item.id === Number(productId));
   useEffect(() => {
     if (product) {
-      setProduct(Number(productId));
+      setValue("productId", product.id);
     }
   }, [productId]);
   if (!product) {

@@ -3,7 +3,7 @@ import type { ComponentPropsWithoutRef } from "react";
 import ErrorMsg from "@/pages/Order/components/ErrorMsg";
 
 interface InputProps extends ComponentPropsWithoutRef<"input"> {
-  errorMsg: string | null;
+  errorMsg: string | undefined;
 }
 
 const Input = ({ errorMsg, ...props }: InputProps) => {

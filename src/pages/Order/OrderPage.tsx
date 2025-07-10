@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import Container from "@/components/common/Container";
 import Divider from "@/components/common/Divider";
 import Order from "@/pages/Order/components/Order";
-import { useOrderContext } from "@/contexts/orderContext";
+import { useFormContext } from "react-hook-form";
 
 const OrderPage = () => {
   return (
@@ -13,10 +13,11 @@ const OrderPage = () => {
 };
 
 const OrderPageContent = () => {
-  const { submit } = useOrderContext();
+  const { handleSubmit } = useFormContext();
+  const onSubmit = () => console.log("data submit");
   return (
     <Container>
-      <Content onSubmit={submit}>
+      <Content onSubmit={handleSubmit(onSubmit)}>
         <Order.Card />
         <Divider spacing="0.5rem" fill={false} />
         <Order.Sender />
