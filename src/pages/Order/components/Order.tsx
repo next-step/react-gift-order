@@ -18,7 +18,7 @@ const defaultValues: OrderFormType = {
   cardId: orderCardMock[0].id,
   message: orderCardMock[0].defaultTextMessage,
   sender: "",
-  recipients: { name: "", phone: "", quantity: 1 },
+  recipients: [],
   productId: rankingItemMock[0].id,
 };
 

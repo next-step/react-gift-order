@@ -2,13 +2,19 @@ import Divider from "@/components/common/Divider";
 import styled from "@emotion/styled";
 import RecipientFieldArray from "./RecipientFieldArray";
 
-const Recipient = () => {
+interface RecipientProps {
+  onOpen: () => void;
+}
+
+const Recipient = ({ onOpen }: RecipientProps) => {
   return (
     <Content>
       <Divider spacing="1rem" />
       <Wrapper>
         <Title>받는 사람</Title>
-        <ModalBtn type="button">추가</ModalBtn>
+        <ModalBtn type="button" onClick={onOpen}>
+          추가
+        </ModalBtn>
       </Wrapper>
       <Divider spacing="1rem" />
       <RecipientFieldArray />

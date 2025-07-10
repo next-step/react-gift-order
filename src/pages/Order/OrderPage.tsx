@@ -3,6 +3,7 @@ import Container from "@/components/common/Container";
 import Divider from "@/components/common/Divider";
 import Order from "@/pages/Order/components/Order";
 import { useFormContext } from "react-hook-form";
+import { useState } from "react";
 
 const OrderPage = () => {
   return (
@@ -13,8 +14,11 @@ const OrderPage = () => {
 };
 
 const OrderPageContent = () => {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
   const { handleSubmit } = useFormContext();
-  const onSubmit = () => console.log("data submit");
+  const onSubmit = (data: any) => console.log(data);
   return (
     <Container>
       <Content onSubmit={handleSubmit(onSubmit)}>
@@ -22,13 +26,13 @@ const OrderPageContent = () => {
         <Divider spacing="0.5rem" fill={false} />
         <Order.Sender />
         <Divider spacing="0.5rem" fill={false} />
-        <Order.Recipient />
+        <Order.Recipient onOpen={openModal} />
         <Divider spacing="0.5rem" fill={false} />
         <Order.Product />
         <Divider spacing="3.125rem" />
         <Order.Btn />
       </Content>
-      <Order.Modal />
+      {isModalOpen && <Order.Modal onClose={closeModal} />}
     </Container>
   );
 };

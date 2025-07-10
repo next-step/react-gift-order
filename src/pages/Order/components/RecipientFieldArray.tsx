@@ -7,6 +7,7 @@ const RecipientFieldArray = () => {
     <Container>
       <Msg>{DEFAULT_MESSAGE}</Msg>
       {/* {여기에 recipient map 예정} */}
+      // 여기 구현하고 메시지 textarea 테두리 수정
     </Container>
   );
 };

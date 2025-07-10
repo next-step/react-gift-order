@@ -7,8 +7,11 @@ const OrderBtn = () => {
   const { watch } = useFormContext<OrderFormType>();
   const productId = watch("productId");
   const product = rankingItemMock.find((item) => item.id === productId);
-  const quantity = watch("recipients.quantity");
-  const totalPrice = product ? product.price.sellingPrice * quantity : 0;
+  const recipients = watch("recipients");
+  const totalQuantity = recipients.reduce((accumulator, currentValue) => {
+    return accumulator + currentValue.quantity;
+  }, 0);
+  const totalPrice = product ? product.price.sellingPrice * totalQuantity : 0;
   return <Button type="submit">{totalPrice}원 주문하기</Button>;
 };
 

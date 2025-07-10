@@ -1,6 +1,6 @@
 export type OrderFormType = {
   sender: string;
-  recipients: RecipientType;
+  recipients: RecipientType[];
   message: string;
   cardId: number;
   productId: number;
