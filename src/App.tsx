@@ -1,10 +1,10 @@
 import GlobalStyle from '@/styles/GlobalStyle';
 import GlobalFontStyle from '@/styles/GlobalFontStyle';
 import NavigationBar from '@/components/NavigationBar/NavigationBar';
-import CategorySection from '@/components/Category/CategorySection';
+import CategorySection from '@/pages/MainPage/Category/CategorySection';
 import SectionTitle from '@/components/SectionTitle';
-import GiftReceiverSelect from '@/components/GiftReceiverSelect/GiftReceiverSelect';
-import GiftRankingSection from '@/components/GiftRanking/GiftRankingSection';
+import GiftReceiverSelect from '@/pages/MainPage/GiftReceiverSelect/GiftReceiverSelect';
+import GiftRankingSection from '@/pages/MainPage/GiftRanking/GiftRankingSection';
 import Layout from '@/components/Layout';
 
 function App() {

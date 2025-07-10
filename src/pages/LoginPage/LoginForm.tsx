@@ -1,12 +1,20 @@
 import * as S from '@/pages/LoginPage/LoginForm.styles';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useLoginForm } from './useLoginForm';
+import { useAuth } from '@/contexts/AuthContext';
 
 const LoginForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { login } = useAuth();
 
   const handleLogin = () => {
+    // 로그인 정보 저장
+    login({
+      email,
+      pw: password,
+    });
+
     const redirectTo = location.state?.from?.pathname || '/';
     navigate(redirectTo, { replace: true });
   };
@@ -17,12 +25,14 @@ const LoginForm = () => {
     password,
     emailError,
     passwordError,
-    handleEmailChange,
-    handlePasswordChange,
+    changeEmail,
+    changePassword,
     validateEmail,
     validatePassword,
     isValid,
   } = useLoginForm();
+
+  //인풋관리
 
   return (
     <S.Form>
@@ -32,18 +42,18 @@ const LoginForm = () => {
       />
       <S.Input
         type="email"
-        value={email}
         placeholder="이메일"
-        onChange={(e) => handleEmailChange(e.target.value)}
+        value={email}
+        onChange={(e) => changeEmail(e.target.value)}
         onBlur={validateEmail}
         hasError={!!emailError}
       />
       {emailError && <S.ErrorMessage>{emailError}</S.ErrorMessage>}
       <S.Input
         type="password"
-        value={password}
         placeholder="비밀번호"
-        onChange={(e) => handlePasswordChange(e.target.value)}
+        value={password}
+        onChange={(e) => changePassword(e.target.value)}
         onBlur={validatePassword}
         hasError={!!passwordError}
       />
