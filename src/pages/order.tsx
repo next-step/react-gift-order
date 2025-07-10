@@ -53,7 +53,8 @@ const BottomOrderButton = styled.div<{ disabled: boolean }>`
   background-color: ${({ theme, disabled }) =>
     disabled ? theme.colors.yellow300 : theme.colors.kakaoYellow};
   text-align: center;
-  padding: 16px;
+  padding-top: 16px;
+  padding-bottom: 16px;
   font-size: 18px;
   font-weight: bold;
   color: black;
@@ -98,8 +99,8 @@ const FieldLabel = styled.div`
 const Input = styled.input`
   flex: 1;
   padding: 12px 0px 12px 10px;
-  border: 1px solid '#dcdcdc';
-  border-radius: 6px;
+  border: 1px solid #dcdee3;
+  border-radius: 8px;
   font-size: 14px;
   flex-direction: column;
 
@@ -114,7 +115,18 @@ const Input = styled.input`
 const ErrorText = styled.div`
   color: red;
   font-size: 12px;
-  margin-top: 4px;
+  margin-left: 1px;
+  margin-top: 5px;
+`;
+
+const ProductInfo = styled.div`
+  width: 100%;
+  padding: 12px 0px 12px 10px;
+  border-radius: 0.5rem;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgb(238, 239, 241);
+  display: flex;
+  gap: 12px;
 `;
 
 const validateName = (value: string) => {
@@ -215,53 +227,71 @@ const Order = () => {
 
           <Row>
             <FieldLabel>이름</FieldLabel>
-            <Input
-              type="text"
-              placeholder="이름을 입력하세요."
-              onChange={e =>
-                receiverNameInput.setValue(e.target.value)
-              }
-              onBlur={receiverNameInput.handleBlur}
-            />
-            <ErrorText>{receiverNameInput.error}</ErrorText>
+            <div style={{ flex: 1 }}>
+              <Input
+                type="text"
+                placeholder="이름을 입력하세요."
+                onChange={e =>
+                  receiverNameInput.setValue(e.target.value)
+                }
+                onBlur={receiverNameInput.handleBlur}
+              />
+              {!receiverNameInput.isValid && (
+                <ErrorText>{receiverNameInput.error}</ErrorText>
+              )}
+            </div>
           </Row>
 
           <Row>
             <FieldLabel>전화번호</FieldLabel>
-            <Input
-              type="tel"
-              placeholder="전화번호를 입력하세요."
-              onChange={e =>
-                receiverPhoneInput.setValue(e.target.value)
-              }
-              onBlur={receiverPhoneInput.handleBlur}
-            />
-            <ErrorText>{receiverPhoneInput.error}</ErrorText>
+            <div style={{ flex: 1 }}>
+              <Input
+                type="tel"
+                placeholder="전화번호를 입력하세요."
+                onChange={e =>
+                  receiverPhoneInput.setValue(e.target.value)
+                }
+                onBlur={receiverPhoneInput.handleBlur}
+              />
+              {!receiverPhoneInput.isValid && (
+                <ErrorText>{receiverPhoneInput.error}</ErrorText>
+              )}
+            </div>
           </Row>
 
           <Row>
             <FieldLabel>수량</FieldLabel>
-            <Input
-              type="number"
-              onChange={e => quantityInput.setValue(e.target.value)}
-              onBlur={quantityInput.handleBlur}
-            />
-            <ErrorText>{quantityInput.error}</ErrorText>
+            <div style={{ flex: 1 }}>
+              <Input
+                type="number"
+                onChange={e => quantityInput.setValue(e.target.value)}
+                onBlur={quantityInput.handleBlur}
+              />
+              {!quantityInput.isValid && (
+                <ErrorText>{quantityInput.error}</ErrorText>
+              )}{' '}
+            </div>
           </Row>
           <Label>상품 정보</Label>
-          <img src={product.imageURL} alt={product.name} width={80} />
-          <div>
-            <div style={{ fontWeight: 'bold' }}>{product.name}</div>
-            <div style={{ color: '#888' }}>
-              {product.brandInfo.name}
-            </div>
+          <ProductInfo>
+            <img
+              src={product.imageURL}
+              alt={product.name}
+              width={80}
+            />
             <div>
-              상품가{' '}
-              <strong>
-                {product.price.sellingPrice.toLocaleString()}원
-              </strong>
+              <div style={{ fontWeight: 'bold' }}>{product.name}</div>
+              <div style={{ color: '#888' }}>
+                {product.brandInfo.name}
+              </div>
+              <div>
+                상품가{' '}
+                <strong>
+                  {product.price.sellingPrice.toLocaleString()}원
+                </strong>
+              </div>
             </div>
-          </div>
+          </ProductInfo>
         </Section>
       </OrderInfoWrapper>
       <BottomOrderButton

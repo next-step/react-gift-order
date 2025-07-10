@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 const Banner = styled.div`
   width: 100%;
   border-radius: 1rem;
-  background-color: rgb(254, 229, 0);
+  background-color: ${({ theme }) => theme.colors.kakaoYellow};
   padding: 20px 0px;
   display: flex;
   flex-direction: column;
