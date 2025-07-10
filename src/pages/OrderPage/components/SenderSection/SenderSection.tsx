@@ -2,8 +2,8 @@ import Input from "@/components/common/Input/Input";
 import styled from "@emotion/styled";
 import SENDER_SECTION_CONSTANTS from "@/pages/OrderPage/constants/senderSection";
 import { Controller, type Control, type FieldErrors } from "react-hook-form";
-import type { SenderFormData } from "../../OrderPage";
 import { FORM_FIELD } from "../../constants/formField";
+import type { SenderFormData } from "../../schemas";
 
 interface SenderProps {
   control: Control<SenderFormData>;

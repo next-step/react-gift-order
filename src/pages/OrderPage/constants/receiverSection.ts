@@ -1,4 +1,4 @@
-const RECEIVER_SECTION_CONSTANTS = {
+export const RECEIVER_SECTION_CONSTANTS = {
   TITLE: "받는 사람",
   ADD_BUTTON: "추가",
   NO_RECEIVERS_MESSAGE: "받는 사람이 없습니다.",
@@ -14,7 +14,7 @@ const RECEIVER_SECTION_CONSTANTS = {
   QUANTITY_ERROR: "수량을 입력해주세요.",
 } as const;
 
-const RECEIVER_MODAL_CONSTANTS = {
+export const RECEIVER_MODAL_CONSTANTS = {
   MODAL_TITLE: "받는 사람",
   INFO_TEXT_MAX_COUNT: (count: number) =>
     `* 최대 ${count}명까지 추가할 수 있어요.`,
@@ -33,5 +33,4 @@ export const DEFAULT_RECEIVER = {
   quantity: "",
 } as const;
 
-export default RECEIVER_SECTION_CONSTANTS;
-export { RECEIVER_MODAL_CONSTANTS };
+export const RECEIVER_MODIFIY_BUTTON = "수정";

@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { VALIDATE_LABELS } from "./constants/validateLabels";
 import { validatePhoneNumber } from "./utils/validation";
-import RECEIVER_SECTION_CONSTANTS from "./constants/receiverSection";
+import { RECEIVER_SECTION_CONSTANTS } from "./constants/receiverSection";
 
 export interface MessageCardFormData {
   cardMessage: string;

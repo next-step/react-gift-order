@@ -1,4 +1,7 @@
-import RECEIVER_SECTION_CONSTANTS from "@/pages/OrderPage/constants/receiverSection";
+import {
+  RECEIVER_SECTION_CONSTANTS,
+  RECEIVER_MODIFIY_BUTTON,
+} from "@/pages/OrderPage/constants/receiverSection";
 import {
   FormContainer,
   ReceiverSection,
@@ -20,6 +23,7 @@ import {
   TableRow,
 } from "./ReceiverTable";
 import type { Receiver } from "../../hooks/useOrderForm";
+import { TABLE_CELL_CONSTANTS } from "../../constants/table";
 
 interface ReceiverSectionComponentProps {
   receivers: Receiver[];
@@ -44,7 +48,9 @@ function ReceiverSectionComponent({
     <ReceiverSection>
       <ReceiverSectionHeader>
         <SectionTitle>{RECEIVER_SECTION_CONSTANTS.TITLE}</SectionTitle>
-        <ShowModalButton onClick={handleOpenModal}>수정</ShowModalButton>
+        <ShowModalButton onClick={handleOpenModal}>
+          {RECEIVER_MODIFIY_BUTTON}
+        </ShowModalButton>
       </ReceiverSectionHeader>
       <FormContainer>
         {receivers.length === 0 ? (
@@ -59,9 +65,9 @@ function ReceiverSectionComponent({
         ) : (
           <ReceiverTable>
             <TableHeader>
-              <TableHeaderCell>이름</TableHeaderCell>
-              <TableHeaderCell>전화번호</TableHeaderCell>
-              <TableHeaderCell>수량</TableHeaderCell>
+              <TableHeaderCell>{TABLE_CELL_CONSTANTS.NAME}</TableHeaderCell>
+              <TableHeaderCell>{TABLE_CELL_CONSTANTS.PHONE}</TableHeaderCell>
+              <TableHeaderCell>{TABLE_CELL_CONSTANTS.QUANTITY}</TableHeaderCell>
             </TableHeader>
             {receivers.map((receiver) => (
               <TableRow key={receiver.phone}>
