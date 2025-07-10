@@ -93,7 +93,7 @@ const RealtimeRankItemWrapper = styled.div`
 
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  row-gap: ${({ theme }) => theme.spacing.spacing5}; // TODO: gap수치 조정하자
+  row-gap: ${({ theme }) => theme.spacing.spacing5};
   justify-items: center; 
 `;
 
@@ -113,7 +113,17 @@ const RealtimeItemImg = styled.img`
   width: 220px;
   height: auto;
   border-radius: 5px;
+  position: relative;
 `;
+
+const RealtimeItemImgLabel = styled.div`
+  width: 5px;
+  height: 5px;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+`
 
 const RealtimeItemTxt = styled.p`
   font-size: ${({ theme }) => theme.typography.label.label1Regular.fontSize};
@@ -142,25 +152,33 @@ const RealtimeItemPriceTxt = styled.p`
 
 // 더보기버튼 시작
 const ExtraBtnWrapper = styled.div`
+  width: auto;
+  height: auto;
+  padding-top: ${({ theme }) => theme.spacing.spacing8};
+
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 
 const ExtraBtn = styled.button`
-  width: 500px;
-  height: 40px;
-  margin-top: 10px;
+  width: 480px;
+  height: ${({ theme }) => theme.spacing.spacing11};
+  
   background-color: ${({ theme }) => theme.colors.background.default};
-  border: 1px solid ${({ theme }) => theme.colors.gray.gray300};
+  border: 1px solid ${({ theme }) => theme.colors.gray.gray400};
   border-radius: 5px;
+
   font-size: ${({ theme }) => theme.typography.label.label1Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label.label1Bold.fontSize};
+  line-height: ${({ theme }) => theme.typography.label.label1Bold.fontSize};
   cursor: pointer;
 `;
 
+// 메인 컴포넌트 시작
 function RealtimeGiftRank() {
   const [selectedGroup, setSelectedGroup] = useState('');
-  const [selectRankingType, setSelectRankingType] = useState('');
+  const [selectedType, setSelectedType] = useState('');
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const navigate = useNavigate();
@@ -180,14 +198,14 @@ function RealtimeGiftRank() {
 
   useEffect(() => {
     const savedGroup = sessionStorage.getItem('selectedGroup');
-    const savedType = sessionStorage.getItem('rankingType');
+    const savedType = sessionStorage.getItem('selectedType');
 
     if (savedGroup) {
       setSelectedGroup(savedGroup);
     }
 
     if (savedType) {
-      setSelectRankingType(savedType);
+      setSelectedType(savedType);
     }
   }, []);
 
@@ -198,8 +216,8 @@ function RealtimeGiftRank() {
   }
 
   function handleTypeClick(type : string) {
-    setSelectRankingType(type);
-    sessionStorage.setItem('rankingType', type);
+    setSelectedType(type);
+    sessionStorage.setItem('selectedType', type);
   }
 
   function handleCollapsedClick() {
@@ -221,7 +239,7 @@ function RealtimeGiftRank() {
         JSON.stringify({ brandInfo, id, imageURL, name, price }),
       );
 
-      navigate('/Order');
+      navigate('/order');
     } else {
       navigate('/login');
     }
@@ -250,7 +268,7 @@ function RealtimeGiftRank() {
           <RankingTypeSelectorBtn
             key={key}
             onClick={() => handleTypeClick(type)}
-            isSelected={selectRankingType === type}>
+            isSelected={selectedType === type}>
             {label}
           </RankingTypeSelectorBtn>
         ))}
@@ -274,7 +292,8 @@ function RealtimeGiftRank() {
           <RealtimeItemImg
             src={item.imageURL}
             alt={item.name}
-          ></RealtimeItemImg>
+          >
+          </RealtimeItemImg>
           <RealtimeItemTxt>{item.brandInfo.name}</RealtimeItemTxt>
           <RealtimeItemSubTxt>{item.brandInfo.name}</RealtimeItemSubTxt>
           <RealtimeItemPriceTxt>

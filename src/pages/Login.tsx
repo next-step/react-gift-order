@@ -1,8 +1,5 @@
 import { useState, createContext, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import GlobalStyle from '../styles/GlobalStyle';
-import { ThemeProvider } from '@emotion/react';
-import theme from '../styles/theme';
 import styled from '@emotion/styled';
 
 import Layout from '../components/Layout';
@@ -125,8 +122,6 @@ function Login() {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <GlobalStyle />
       <UserInfoContext.Provider value={userInfo}>
         <Layout>
           <NavBar></NavBar>
@@ -158,7 +153,7 @@ function Login() {
           </LoginFormWrapper>
         </Layout>
       </UserInfoContext.Provider>
-    </ThemeProvider>
   );
 }
+
 export default Login;

@@ -60,7 +60,6 @@ function NavBar() {
   const navigate = useNavigate();
   const userId = useUser(); // session storage에 있는 로그인 정보
 
-  // window history에 따라 뒤로가기 버튼 구현
   function handleBackNavigation() {
     if(window.history.length > 1) {
       navigate(-1);
@@ -69,7 +68,6 @@ function NavBar() {
     }
   }
 
-  // session storage에 있는 로그인 정보로 로그인이 되어있으면 my page로 아니면 login페이지로 유도
   function handleLoginClick() {
     if (userId !== '') {
       navigate('/my');
