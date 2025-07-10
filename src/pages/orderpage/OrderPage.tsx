@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
-import { useEffect } from "react";
+import { Navigate } from "react-router-dom";
 import { useNavigate, useParams } from "react-router-dom";
 import MessageCardSection from "@/pages/orderpage/MessageCardSection";
 import SenderInfoSection from "@/pages/orderpage/SenderInfoSection";
@@ -33,13 +33,9 @@ const OrderPage = () => {
     formState: { errors },
   } = methods;
 
-  useEffect(() => {
-    if (!product) {
-      navigate("/notfound", { replace: true });
-    }
-  }, [product]);
-
-  if (!product) return null;
+  if (!product) {
+    return <Navigate to="/notfound" replace />;
+  }
 
   const onSubmit = (data: FullOrderFormValues) => {
     console.log(data);
