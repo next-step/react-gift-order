@@ -115,7 +115,7 @@ interface ReceiverModalProps {
 function ReceiverModal({ receivers, setReceivers, onClose }: ReceiverModalProps) {
   const methods = useForm({
     defaultValues: {
-      receivers: receivers.length > 0 ? receivers : [{ receiverName: '', phoneNumber: '', quantity: 1 }],
+      receivers: receivers.length > 0 ? receivers : [], // 디폴트 0명
     },
     mode: 'onChange',
   });
