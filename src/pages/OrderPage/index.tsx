@@ -66,7 +66,7 @@ function OrderPage() {
     <form onSubmit={handleSubmit(onSubmit)}>
       <MessageCard register={register} setValue={setValue} />
       <OrderForm register={register} errors={errors} productPrice={product.price} />
-      <ReceiverSelectBox onAddClick={() => setIsReceiverModalOpen(true)} />
+      <ReceiverSelectBox onAddClick={() => setIsReceiverModalOpen(true)} recipients={receivers} />
       <ReceiverModal
         isOpen={isReceiverModalOpen}
         onClose={() => setIsReceiverModalOpen(false)}
