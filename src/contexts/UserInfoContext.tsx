@@ -34,7 +34,6 @@ export const UserInfoProvider = ({ children }: PropsWithChildren) => {
     setUserInfo({ email, token });
     sessionStorage.setItem('email', email);
     sessionStorage.setItem('token', token);
-    console.log(sessionStorage.getItem('token')); // token 확인을 위함(추후에 지우겠습니다)
   };
 
   const logout = () => {

@@ -41,7 +41,7 @@ const ErrorMessage = styled.p`
   margin-top: ${({ theme }) => theme.spacing.spacing1};
 `;
 
-const SenderInfo = ({ hook }: { hook: UseInputReturn }) => {
+const SenderInfo = ({ hook }: { hook: UseInputReturn<HTMLInputElement> }) => {
   const { value, onChange, error } = hook;
   return (
     <SenderInfoContainer>

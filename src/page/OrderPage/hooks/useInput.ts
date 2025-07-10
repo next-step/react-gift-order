@@ -1,22 +1,25 @@
 import { getValidator } from '@/utils/validate';
-import { useState } from 'react';
+import { useState, type ChangeEvent } from 'react';
 
-type FieldType = 'email' | 'password' | 'text' | 'phoneNumber';
+type FieldType = 'email' | 'password' | 'text' | 'phoneNumber' | 'textarea';
 
-export type UseInputReturn = {
+export type UseInputReturn<T> = {
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (e: ChangeEvent<T>) => void;
   error: string;
   validate: () => boolean;
 };
 
-const useInput = (type: FieldType, initialValue = ''): UseInputReturn => {
+const useInput = <T extends HTMLInputElement | HTMLTextAreaElement>(
+  type: FieldType,
+  initialValue = ''
+): UseInputReturn<T> => {
   const [value, setValue] = useState(initialValue);
   const [error, setError] = useState(initialValue);
 
   const validator = getValidator(type);
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = (e: ChangeEvent<T>) => {
     setValue(e.target.value);
   };
 

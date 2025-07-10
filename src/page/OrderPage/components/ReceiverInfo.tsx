@@ -57,8 +57,8 @@ const ReceiverInfo = ({
   numberHook,
   amountHook,
 }: {
-  nameHook: UseInputReturn;
-  numberHook: UseInputReturn;
+  nameHook: UseInputReturn<HTMLInputElement>;
+  numberHook: UseInputReturn<HTMLInputElement>;
   amountHook: useCheckAmountReturn;
 }) => {
   return (

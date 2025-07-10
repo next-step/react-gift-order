@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import type { UseInputReturn } from '../hooks/useInput';
 
 const MessageInputContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.semantic.background.default};
@@ -31,11 +32,20 @@ const Textarea = styled.textarea`
   }
 `;
 
-const MessageInput = () => {
+const ErrorMessage = styled.p`
+  font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label2Regular.fontWeight};
+  color: ${({ theme }) => theme.colors.colorScale.red[600]};
+  margin-top: ${({ theme }) => theme.spacing.spacing1};
+`;
+
+const MessageInput = ({ hook }: { hook: UseInputReturn<HTMLTextAreaElement> }) => {
+  const { onChange, value, error } = hook;
   return (
     <MessageInputContainer>
       <Title>메시지 입력</Title>
-      <Textarea placeholder="메시지를 입력해주세요." defaultValue="축하해요."></Textarea>
+      <Textarea placeholder="메시지를 입력해주세요." value={value} onChange={onChange}></Textarea>
+      {error && <ErrorMessage>메시지를 입력해주세요.</ErrorMessage>}
     </MessageInputContainer>
   );
 };

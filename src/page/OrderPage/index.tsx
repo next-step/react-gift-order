@@ -19,14 +19,15 @@ const Section = styled.section`
 const OrderPage = () => {
   const { id } = useParams<{ id: string }>();
   const index = Number(id);
-  console.log(id);
 
-  const senderName = useInput('text');
-  const receiverName = useInput('text');
-  const receiverPhoneNumber = useInput('phoneNumber');
+  const messageInputText = useInput<HTMLTextAreaElement>('textarea', '축하해요.');
+  const senderName = useInput<HTMLInputElement>('text');
+  const receiverName = useInput<HTMLInputElement>('text');
+  const receiverPhoneNumber = useInput<HTMLInputElement>('phoneNumber');
   const receiverAmount = useCheckAmount();
 
   const handleClick = () => {
+    const isTextAreaValid = messageInputText.validate();
     const isSenderValid = senderName.validate();
     const isReceiverNameValid = receiverName.validate();
     const isReceiverPhoneNumberValid = receiverPhoneNumber.validate();
@@ -36,7 +37,8 @@ const OrderPage = () => {
       isSenderValid &&
       isReceiverNameValid &&
       isReceiverPhoneNumberValid &&
-      isReceiverAmountValid
+      isReceiverAmountValid &&
+      isTextAreaValid
     ) {
       alert('주문 성공!');
     }
@@ -45,7 +47,7 @@ const OrderPage = () => {
   return (
     <Section>
       <MessageCardSection />
-      <MessageInput />
+      <MessageInput hook={messageInputText} />
       <SenderInfo hook={senderName} />
       <ReceiverInfo
         nameHook={receiverName}

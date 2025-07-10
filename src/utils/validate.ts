@@ -30,6 +30,14 @@ const validateText = (value: string): string => {
   }
 };
 
+const validateTextArea = (value: string): string => {
+  if (value.trim() === '') {
+    return '메시지를 입력해주세요.';
+  } else {
+    return '';
+  }
+};
+
 const validatePhoneNumber = (value: string): string => {
   if (value.trim() === '') {
     return '전화번호를 입력해주세요.';
@@ -47,8 +55,9 @@ export const validateAmount = (value: number): string => {
   return '';
 };
 
-type FieldType = 'email' | 'password' | 'text' | 'phoneNumber';
+type FieldType = 'email' | 'password' | 'text' | 'phoneNumber' | 'textarea';
 const validators = {
+  textarea: validateTextArea,
   email: validateEmail,
   password: validatePassword,
   text: validateText,
