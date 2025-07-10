@@ -5,6 +5,7 @@ import useToggleCollapse from '../hooks/useToggleCollapse';
 import { rankingDatas } from '@/data/rankingDatas.ts';
 import { useUserInfo } from '@/contexts/UserInfoContext';
 import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/routes/routes';
 
 interface ButtonProps {
   isActive: boolean;
@@ -162,6 +163,8 @@ const GiftRanking = () => {
   const handleItemClick = (id: number) => {
     if (isLoggedIn) {
       navigate(`/order/${id}`);
+    } else {
+      navigate(ROUTES.LOGIN);
     }
   };
 
