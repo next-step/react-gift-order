@@ -5,7 +5,7 @@ import { useUser } from '@/hooks/useUser';
 
 const NavBarWrapper = styled.div`
   width: auto;
-  height: 40px;
+  height: ${({ theme }) => theme.spacing.spacing11};
   background-color: ${({ theme }) => theme.colors.gray.gray00};
 
   display: flex;
@@ -17,8 +17,8 @@ const NavBarWrapper = styled.div`
 `;
 
 const NavBarBackBtn = styled.button`
-  width: 40px;
-  height: 40px;
+  width: ${({ theme }) => theme.spacing.spacing11};
+  height: ${({ theme }) => theme.spacing.spacing11};
   background-color: ${({ theme }) => theme.colors.gray.gray00};
   border: none;
   cursor: pointer;
@@ -27,12 +27,9 @@ const NavBarBackBtn = styled.button`
   top: 0px;
   left: 0px;
 
-  &::before {
-    content: '<';
-    font-size: 34px;
-    font-weight: 100;
-    color: ${({ theme }) => theme.colors.gray.gray1000};
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const NavBarTitle = styled.h1`
@@ -43,8 +40,8 @@ const NavBarTitle = styled.h1`
 `;
 
 const NavBarLoginBtn = styled.button`
-  width: 40px;
-  height: 40px;
+  width: ${({ theme }) => theme.spacing.spacing11};
+  height: ${({ theme }) => theme.spacing.spacing11};
   background-color: ${({ theme }) => theme.colors.gray.gray00};
   border: none;
   cursor: pointer;
@@ -53,30 +50,45 @@ const NavBarLoginBtn = styled.button`
   top: 0px;
   right: 0px;
 
-  &::before {
-    content: '👤';
-    font-size: 34px;
-    font-weight: 100;
-    color: ${({ theme }) => theme.colors.gray.gray1000};
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 function NavBar() {
   const navigate = useNavigate();
   const userId = useUser();
 
-  function loginRoute() {
+  function handleBackNavigation() {
+    if(window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate('/');
+    }
+  }
+
+  function handleLoginClick() {
     if (userId !== '') {
       navigate('/my');
     } else {
       navigate('/login');
     }
   }
+
   return (
     <NavBarWrapper>
-      <NavBarBackBtn onClick={() => navigate('/')}></NavBarBackBtn>
+      <NavBarBackBtn onClick={handleBackNavigation}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-chevron-left" aria-hidden="true">
+          <path d="m15 18-6-6 6-6"></path>
+        </svg>
+      </NavBarBackBtn>
       <NavBarTitle>선물하기</NavBarTitle>
-      <NavBarLoginBtn onClick={loginRoute}></NavBarLoginBtn>
+      <NavBarLoginBtn onClick={handleLoginClick}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-user-round" aria-hidden="true">
+          <circle cx="12" cy="8" r="5"></circle>
+          <path d="M20 21a8 8 0 0 0-16 0"></path>
+        </svg>
+      </NavBarLoginBtn>
     </NavBarWrapper>
   );
 }
