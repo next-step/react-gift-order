@@ -4,8 +4,12 @@ import { useState } from "react";
 import ReceiverModal from "./ReceiverModal";
 import type { Receiver } from "@/types/order";
 
-export default function ReceiverForm() {
-  const [receiverList, setReceiverList] = useState<Receiver[]>([]);
+type ReceiverFormProps = {
+  receiverList: Receiver[];
+  setReceiverList: React.Dispatch<React.SetStateAction<Receiver[]>>;
+};
+
+export default function ReceiverForm({ receiverList, setReceiverList }: ReceiverFormProps) {
   const [isModalOpen, setModalOpen] = useState(false);
 
   return (

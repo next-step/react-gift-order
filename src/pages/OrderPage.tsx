@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ranking } from "@/data/ranking";
 import useOrderForm from "../components/order/useOrderForm";
 import { useState } from "react";
+import type { Receiver } from "@/types/order";
 
 export default function OrderPage() {
   const navigate = useNavigate();
@@ -17,31 +18,28 @@ export default function OrderPage() {
 
   const message = useOrderForm();
   const sender = useOrderForm();
-  const receiver = useOrderForm();
-  const phone = useOrderForm();
 
-  const [quantity, setQuantity] = useState(1);
-  const [quantityError, setQuantityError] = useState(false);
+  const [receiverList, setReceiverList] = useState<Receiver[]>([]);
 
   const handleOrder = () => {
     const isMessageValid = message.validate();
     const isSenderValid = sender.validate();
-    const isReceiverValid = receiver.validate();
-    const isPhoneValid = phone.phonevalidate(); 
-    const isQuantityValid = quantity >= 1;
-    setQuantityError(!isQuantityValid);
+    const isQuantityValid = receiverList.length > 0;
 
-    if (!isMessageValid || !isSenderValid || !isReceiverValid || !isPhoneValid || !isQuantityValid) {
-    return;
+    if (!isMessageValid || !isSenderValid || !isQuantityValid) {
+      return;
     }
+
+    const totalQuantity = receiverList.reduce((sum, receiver) => sum + Number(receiver.quantity), 0);
 
     alert(`주문이 완료되었습니다.
 상품명: ${card.name}
-구매 수량: ${quantity}
-발신자 이름: ${receiver.value}
+총 구매 수량: ${totalQuantity}
+받는 사람 수: ${receiverList.length}명
+발신자 이름: ${sender.value}
 메시지: ${message.value}`
 );
-  navigate("/");
+    navigate("/");
   };
 
   return (
@@ -58,11 +56,14 @@ export default function OrderPage() {
         error={sender.error}
       />
       <Divider />
-      <ReceiverForm/>
+      <ReceiverForm
+        receiverList={receiverList}
+        setReceiverList={setReceiverList}
+      />
       <Divider />
       <GiftInfo />
       <OrderBtn onClick={handleOrder}>
-        {(card.price.basicPrice * quantity).toLocaleString()}원 주문하기
+        {(card.price.basicPrice * (receiverList.reduce((sum, receiver) => sum + Number(receiver.quantity), 0))).toLocaleString()}원 주문하기
       </OrderBtn>
     </Wrapper>
   );
