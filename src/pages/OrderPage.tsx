@@ -262,6 +262,10 @@ const OrderPage = () => {
     }
   }, [isAuthenticated, navigate, productId]);
   
+  // 받는 사람 전체 수량 합계 계산
+  const totalQuantity = receivers.reduce((sum, r) => sum + (Number(r.quantity) || 0), 0);
+  const totalPrice = product.price.sellingPrice * (totalQuantity || 1);
+  
   return (
     <>
       <GlobalStyle />
@@ -370,7 +374,7 @@ const OrderPage = () => {
           
           {/* 주문하기 버튼 */}
           <button css={orderButton} type="submit">
-            {product.price.sellingPrice.toLocaleString()}원 주문하기
+            {totalPrice.toLocaleString()}원 주문하기
           </button>
         </form>
 
