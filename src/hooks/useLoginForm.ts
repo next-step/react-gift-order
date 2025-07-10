@@ -7,7 +7,6 @@ export const useLoginForm = () => {
   const [emailError, setEmailError] = useState('');
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const [isValid, setIsvalid] = useState(false);
 
   const validateEmail = () => {
     if (!email) {
@@ -38,10 +37,18 @@ export const useLoginForm = () => {
   };
 
   useEffect(() => {
-    const isEmailValid = validateEmail();
-    const isPasswordValid = validatePassword();
-    setIsvalid(isEmailValid && isPasswordValid);
-  }, [email, password]);
+    if (emailError) {
+      validateEmail();
+    }
+  }, [email]);
+
+  useEffect(() => {
+    if (passwordError) {
+      validatePassword();
+    }
+  }, [password]);
+
+  const isValid = !emailError && !passwordError && email && password;
 
   return {
     email,
