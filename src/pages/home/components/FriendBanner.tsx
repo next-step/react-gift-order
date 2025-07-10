@@ -1,14 +1,20 @@
+import { useAuth } from "@/hooks/useAuth";
 import styled from "@emotion/styled";
 import { FiPlus } from "react-icons/fi";
 
 export const FriendBanner = () => {
+  const { user, isLoggedIn } = useAuth();
+
   return (
     <OuterWrapper>
       <InnerBox>
         <IconBox>
           <FiPlus size={20} />
         </IconBox>
-        <Text>선물할 친구를 선택해 주세요.</Text>
+        <Text>
+          {isLoggedIn && user ? `${user.name}님,` : ""} 선물할 친구를 선택해
+          주세요.
+        </Text>
       </InnerBox>
     </OuterWrapper>
   );

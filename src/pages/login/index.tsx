@@ -1,14 +1,18 @@
 import styled from "@emotion/styled";
 import { useLocation, useNavigate } from "react-router-dom";
 import LoginFormSection from "@/pages/login/components/LoginFormSection";
+import { useAuth } from "@/hooks/useAuth";
+import type { User } from "@/contexts/AuthContext";
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { login } = useAuth();
 
-  const from = location.state?.from?.pathname || "/";
+  const from = location.state?.from || "/";
 
-  const handleLogin = () => {
+  const handleLogin = (user: User) => {
+    login(user);
     navigate(from, { replace: true });
   };
 
