@@ -44,6 +44,7 @@ function OrderPage() {
     trigger: cardSelectionTrigger,
     formState: { errors: cardSelectionErrors },
     setValue,
+    getValues: cardSelectionGetValues,
   } = useForm<CardSelectionFormData>({
     mode: isSubmittedOnce ? "onChange" : "onSubmit",
     defaultValues: {
@@ -69,12 +70,17 @@ function OrderPage() {
     control: senderControl,
     trigger: senderTrigger,
     formState: { errors: senderErrors },
+    getValues: senderGetValues,
   } = useForm<SenderFormData>({
     mode: isSubmittedOnce ? "onChange" : "onSubmit",
     defaultValues: {
       senderName: "",
     },
   });
+
+  const [receivers, setReceivers] = useState<Receiver[]>([]);
+
+  const product = useProductInfo();
 
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -86,7 +92,13 @@ function OrderPage() {
       ]);
 
       if (cardValid && senderValid) {
-        alert("주문 완료");
+        alert(
+          `주문이 완료되었습니다.
+          상품명: ${product?.name}
+          구매 수량: ${receivers.reduce((acc, cur) => acc + Number(cur.quantity), 0)}
+          발신자 이름: ${senderGetValues("senderName")}
+          메시지: ${cardSelectionGetValues("cardMessage")}`
+        );
         navigate(ROUTES.HOME);
         return;
       }
@@ -96,16 +108,6 @@ function OrderPage() {
 
     setIsSubmittedOnce(true);
   };
-
-  const [receivers, setReceivers] = useState<Receiver[]>([
-    {
-      name: "홍길동",
-      phone: "01012345678",
-      quantity: "1",
-    },
-  ]);
-
-  const product = useProductInfo();
 
   if (!product) {
     navigate(ROUTES.NOT_FOUND);
