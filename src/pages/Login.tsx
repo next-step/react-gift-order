@@ -4,6 +4,10 @@ import { useLoginForm } from '@hooks/useLoginForm';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+interface LoginButtonProps {
+  disabled: boolean;
+}
+
 const Container = styled.div(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -44,26 +48,36 @@ const Input = styled.input<{ hasError?: boolean }>(({ theme, hasError }) => ({
   },
 }));
 
-const Button = styled.button(({ theme }) => ({
+const loginButtonYellowDisabled = '#fff584';
+
+const Button = styled.button<LoginButtonProps>(({ theme, disabled }) => ({
   width: '100%',
   maxWidth: '320px',
   padding: `${theme.spacing.spacing3} 0`,
   marginTop: theme.spacing.spacing3,
-  backgroundColor: theme.colors.semantic.kakaoYellow,
-  color: theme.colors.semantic.kakaoBrown,
+  backgroundColor: disabled
+    ? loginButtonYellowDisabled
+    : theme.colors.semantic.kakaoYellow,
+  color: disabled
+    ? theme.colors.gray.gray600
+    : theme.colors.semantic.textDefault,
   fontWeight: theme.typography.body1Bold.fontWeight,
   fontSize: theme.typography.body1Bold.fontSize,
   lineHeight: theme.typography.body1Bold.lineHeight,
   border: 'none',
   borderRadius: '6px',
-  cursor: 'pointer',
+  cursor: disabled ? 'not-allowed' : 'pointer',
 
   '&:hover': {
-    backgroundColor: theme.colors.semantic.kakaoYellowHover,
+    backgroundColor: disabled
+      ? loginButtonYellowDisabled
+      : theme.colors.semantic.kakaoYellowHover,
   },
 
   '&:active': {
-    backgroundColor: theme.colors.semantic.kakaoYellowActive,
+    backgroundColor: disabled
+      ? loginButtonYellowDisabled
+      : theme.colors.semantic.kakaoYellowActive,
   },
 }));
 
