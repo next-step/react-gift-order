@@ -64,11 +64,10 @@ const errorMessage = css({
   marginBottom: spacing.spacing4,
 });
 
-function ReceiverInput({ idx, remove, isPhoneDuplicate, isLast }: {
+function ReceiverInput({ idx, remove, isPhoneDuplicate }: {
   idx: number;
   remove: (index: number) => void;
   isPhoneDuplicate: (value: string, idx: number) => true | string;
-  isLast: boolean;
 }) {
   const { control, formState: { errors } } = useFormContext();
   const receiverErrors = errors.receivers as any;
@@ -80,7 +79,6 @@ function ReceiverInput({ idx, remove, isPhoneDuplicate, isLast }: {
           css={deleteButton}
           type="button"
           onClick={() => remove(idx)}
-          disabled={isLast}
         >
           &times;
         </button>

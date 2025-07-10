@@ -152,7 +152,6 @@ function ReceiverModal({ receivers, setReceivers, onClose }: ReceiverModalProps)
                     idx={idx}
                     remove={remove}
                     isPhoneDuplicate={isPhoneDuplicate}
-                    isLast={fields.length === 1}
                   />
                 ))}
               </div>
