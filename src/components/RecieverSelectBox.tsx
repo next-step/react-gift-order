@@ -34,14 +34,18 @@ const Text = styled.p`
     color: ${({ theme }) => theme.colors.semantic.textDeafult};
 `;
 
-const ReceiverSelectBox = () => {
+interface ReceiverSelectBoxProps {
+  onAddClick: () => void;
+}
+
+const ReceiverSelectBox: React.FC<ReceiverSelectBoxProps> = ({ onAddClick }) => {
   return (
     <Frame>
-      <Box>
+      <Box onClick={onAddClick} style={{ cursor: 'pointer' }}>
         <IconWrap>
           <IoAdd />
         </IconWrap>
-        <Text>선물할 친구를 선택해 주세요.</Text>
+        <Text>받는 사람 추가</Text>
       </Box>
     </Frame>
   );
