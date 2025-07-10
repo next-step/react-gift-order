@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { Navigate, useParams, useNavigate } from "react-router-dom";
 import { useForm, FormProvider} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -24,6 +24,9 @@ const OrderPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const product = rankingList.find((item) => item.id === Number(id));
+  
+  if (!product) 
+    return <Navigate to="/not-found" replace />;
 
   const methods = useForm<OrderFormValues>({
     resolver: zodResolver(orderFormSchema),
@@ -39,14 +42,13 @@ const OrderPage = () => {
   const { handleSubmit, watch, setValue } = methods;
 
 
+  const receivers = watch("receivers") ?? [];
+
   const [isReceiverModalOpen, setReceiverModalOpen] = useState(false);
 
-  const totalQuantity =
-    watch("receivers")?.reduce((sum, r) => sum + r.quantity, 0) || 0;
+  const totalQuantity = receivers.reduce((sum, r) => sum + r.quantity, 0);
 
-  const totalAmount = product?.price.sellingPrice
-    ? product.price.sellingPrice * totalQuantity
-    : 0;
+  const totalAmount = product.price.sellingPrice * totalQuantity;
 
   const onReceiverComplete = (data: OrderFormValues["receivers"]) => {
     setValue("receivers", data);
@@ -55,7 +57,7 @@ const OrderPage = () => {
   const onValid = (data: OrderFormValues) => {
     const qty = data.receivers.reduce((sum, r) => sum + r.quantity, 0);
     alert(
-      `🎉 주문 완료!\n상품명: ${product?.name}\n수량: ${qty}개\n보낸 사람: ${data.senderName}\n메시지: ${data.message}`
+      `주문 완료!\n상품명: ${product?.name}\n수량: ${qty}개\n보낸 사람: ${data.senderName}\n메시지: ${data.message}`
     );
     navigate("/", { replace: true });
   };
