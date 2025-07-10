@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { useOrderForm } from '@/hooks/useOrderForm';
-import { useNavigate } from 'react-router-dom';
+import { GiftList } from '@/components/gift-ranking/GiftList';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Wrapper = styled.div`
   display: flex;
@@ -100,6 +101,12 @@ const OrderButton = styled.button`
 `;
 
 const GiftForm = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const giftId = location.state?.id;
+
+  const selectedGift = GiftList.find((gift) => gift.id === giftId);
+
   const { values, errors, handleChange, validate } = useOrderForm({
     sender: '',
     receiver: '',
@@ -108,18 +115,17 @@ const GiftForm = () => {
     message: '',
   });
 
-  const navigate = useNavigate();
   const handleSubmit = () => {
-    if (validate()) {
-      alert(
-        `주문이 완료되었습니다.
-        상품명: BBQ 양념치킨+크림치즈볼+콜라1.25L
-        구매 수량: ${values.quantity}
-        발신자 이름: ${values.sender}
-        메시지: ${values.message}`
-      );
-      navigate('/');
-    }
+    if (!validate()) return;
+    
+    alert(
+      `주문이 완료되었습니다.
+      상품명: ${selectedGift.name}
+      구매 수량: ${values.quantity}
+      발신자 이름: ${values.sender}
+      메시지: ${values.message}`
+    );
+    navigate('/');
   };
 
   return (
@@ -189,13 +195,13 @@ const GiftForm = () => {
         <Label>상품 정보</Label>
         <ProductInfo>
           <ProductImage
-            src="https://st.kakaocdn.net/product/gift/product/20231030175450_53e90ee9708f45ffa45b3f7b4bc01c7c.jpg"
-            alt="상품 이미지"
+            src={selectedGift.imageURL}
+            alt={selectedGift.name}
           />
           <ProductDetails>
-            <strong>BBQ 양념치킨+크림치즈볼+콜라1.25L</strong>
-            <span>BBQ</span>
-            <b>상품가 29000원</b>
+            <strong>{selectedGift.name}</strong>
+            <span>{selectedGift.brandInfo.name}</span>
+            <b>상품가 {selectedGift.price.sellingPrice.toLocaleString()}원</b>
           </ProductDetails>
         </ProductInfo>
       </Section>
