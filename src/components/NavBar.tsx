@@ -1,8 +1,7 @@
 import styled from '@emotion/styled';
 import { IoIosArrowBack } from 'react-icons/io';
 import { GoPerson } from 'react-icons/go';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 const Nav = styled.header`
   position: sticky;
@@ -24,12 +23,9 @@ const Title = styled.header`
 
 export default function NavBar() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { user } = useAuth();
 
   const handleProfile = () => {
-    if (user) navigate('/my');
-    else navigate('/login', { state: { from: location.pathname } });
+    navigate('/my');
   };
 
   return (

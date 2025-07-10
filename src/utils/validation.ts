@@ -23,21 +23,16 @@ export function validateOrder({
   recvPhone: string;
   qty: number;
 }): OrderErrors {
-  const err: OrderErrors = {};
+  const fields = { message, sender, recvName, recvPhone, qty };
 
-  if (isBlank(message)) err.message = '메시지를 입력해주세요.';
-  if (isBlank(sender)) err.sender = '이름을 입력해주세요.';
-  if (isBlank(recvName)) err.recvName = '이름을 입력해주세요.';
+  const errors: OrderErrors = {};
 
-  if (isBlank(recvPhone)) {
-    err.recvPhone = '전화번호를 입력해주세요.';
-  } else if (!isPhone(recvPhone)) {
-    err.recvPhone = '올바른 전화번호 형식이 아닙니다.';
-  }
+  (Object.keys(fields) as (keyof OrderErrors)[]).forEach((key) => {
+    const error = validateField(key, fields[key]);
+    if (error) errors[key] = error;
+  });
 
-  if (qty < 1) err.qty = '구매 수량은 1개 이상이어야 합니다.';
-
-  return err;
+  return errors;
 }
 
 export function validateField(
