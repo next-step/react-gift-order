@@ -47,7 +47,8 @@ const Wrapper = styled.div`
 
 const StyledInput = styled.input<{ hasError: boolean }>`
   border: 1px solid
-    ${({ theme, hasError }) => (hasError ? theme.colors.critical : theme.colors.gray500)};
+    ${({ theme, hasError }) =>
+      hasError ? theme.colors.critical : theme.colors.borderDefault};
   padding: ${({ theme }) => theme.spacing.spacing3};
   font-size: ${({ theme }) => theme.font.body1Regular.size};
   background-color: ${({ theme }) => theme.colors.backgroundDefault};
@@ -64,7 +65,8 @@ const StyledInput = styled.input<{ hasError: boolean }>`
 `;
 
 const CaptionText = styled.span<{ isError: boolean }>`
-  color: ${({ isError, theme }) => (isError ? theme.colors.critical : theme.colors.gray600)};
+  color: ${({ isError, theme }) =>
+    isError ? theme.colors.critical : theme.colors.textSub};
   font-size: ${({ theme }) => theme.font.label2Regular.size};
   margin-top: 4px;
 `;
