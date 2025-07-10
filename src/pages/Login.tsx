@@ -120,18 +120,13 @@ const HoriziontalSpacing2 = styled.div(({ theme }) => ({
   backgroundColor: 'transparent',
 }));
 
-interface LocationState {
-  from?: { pathname: string };
-}
+type LocationState = { from?: string };
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  let redirectTo = '/';
-  if (location.state && 'from' in location.state) {
-    redirectTo = (location.state as LocationState).from?.pathname ?? '/';
-  }
+  const redirectTo = (location.state as LocationState | null)?.from || '/';
 
   const {
     id,

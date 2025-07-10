@@ -21,9 +21,9 @@ const Margin = styled.div<{ height: string }>`
 
 const OrderForm = () => {
   const [searchParams] = useSearchParams();
-  const productIdParam = searchParams.get('productId');
+  const productId = Number(searchParams.get('productId'));
 
-  const selectedProduct = productIdParam === String(productData.id) ? productData : null;
+  const selectedProduct = productId === productData.id ? productData : null;
 
   if (!selectedProduct) {
     return <div>존재하지 않는 상품입니다.</div>;
