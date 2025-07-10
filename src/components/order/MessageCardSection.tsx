@@ -1,7 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
 import { useFormContext, useWatch } from "react-hook-form";
-import { useMemo } from "react";
 import { messageCards } from "@/mock/messageCards";
 import type { MessageCard } from "@/mock/messageCards";
 import type { OrderFormValues } from "@/validations/orderSchema";
@@ -12,16 +11,17 @@ const MessageCardSection = () => {
   const selectedCardId = useWatch({ control, name: "selectedCardId" });
   const message = useWatch({ control, name: "message" });
 
-  const selectedCard = useMemo<MessageCard>(() => {
-    return (
-      messageCards.find((card) => card.id === selectedCardId) ?? messageCards[0]
-    );
-  }, [selectedCardId]);
+  const selectedCard =
+    messageCards.find((card) => card.id === selectedCardId) ?? messageCards[0];
+
+  const isDefaultMessage = messageCards.some(
+    (card) => card.defaultTextMessage === message
+  );
 
   const handleSelectCard = (card: MessageCard) => {
     setValue("selectedCardId", card.id);
 
-    if (!message?.trim()) {
+    if (isDefaultMessage || !message?.trim()) {
       setValue("message", card.defaultTextMessage);
     }
   };
@@ -55,7 +55,6 @@ const MessageCardSection = () => {
 
 export default MessageCardSection;
 
-// --- 스타일 ---
 const Wrapper = styled.section`
   display: flex;
   flex-direction: column;

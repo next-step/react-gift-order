@@ -10,19 +10,20 @@ export const receiverItemSchema = z.object({
     .min(1, "수량은 1개 이상이어야 합니다."),
 });
 
-//전체 받는 사람 리스트 검증
+export const receiverArraySchema = z
+  .array(receiverItemSchema)
+  .min(1, "최소 1명 이상 추가해야 합니다.")
+  .max(10, "최대 10명까지 추가할 수 있습니다.")
+  .refine((list) => {
+    const phones = list.map((r) => r.phone);
+    return new Set(phones).size === phones.length;
+  }, {
+    message: "전화번호가 중복되었습니다.",
+    path: ["receivers"],
+  });
+
 export const receiverFormSchema = z.object({
-  receivers: z
-    .array(receiverItemSchema)
-    .min(1, "최소 1명 이상 추가해야 합니다.")
-    .max(10, "최대 10명까지 추가할 수 있습니다.")
-    .refine((list) => {
-      const phones = list.map((r) => r.phone);
-      return new Set(phones).size === phones.length;
-    }, {
-      message: "전화번호가 중복되었습니다.",
-      path: ["receivers"],
-    }),
+  receivers: receiverArraySchema,
 });
 
 export type ReceiverFormValues = z.infer<typeof receiverFormSchema>;
