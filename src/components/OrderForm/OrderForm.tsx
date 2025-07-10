@@ -1,10 +1,10 @@
 import styled from '@emotion/styled';
-import Card from './Card';
-import { Sender } from './Sender';
-import { Recipinet } from './Recipinet';
-import { ProductInfo } from './ProductInfo';
+import Card from '@/components/OrderForm/Card';
+import { Sender } from '@/components/OrderForm/Sender';
+import { Recipinet } from '@/components/OrderForm/Recipinet';
+import { ProductInfo } from '@/components/OrderForm/ProductInfo';
 import { useLocation } from 'react-router-dom';
-import { OrderButton } from './OrderButton';
+import { OrderButton } from '@/components/OrderForm/OrderButton';
 
 const Wrapper = styled.section(({ theme }) => ({
   width: '100%',

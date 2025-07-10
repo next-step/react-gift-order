@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { MOCK_CARDFORM_LIST } from './mock';
+import { MOCK_CARDFORM_LIST } from '@/components/OrderForm/mock';
 
 const Wrapper = styled.div`
   width: 100%;

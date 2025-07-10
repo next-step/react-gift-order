@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
-import CardSelector from './CardSelector';
+import CardSelector from '@/components/OrderForm/CardSelector';
 import { useState } from 'react';
-import { MOCK_CARDFORM_LIST } from './mock';
-import { CardImg } from './CardImg';
-import { Message } from './Message';
+import { MOCK_CARDFORM_LIST } from '@/components/OrderForm/mock';
+import { CardImg } from '@/components/OrderForm/CardImg';
+import { Message } from '@/components/OrderForm/Message';
 
 const Wrapper = styled.div`
   width: 100%;
