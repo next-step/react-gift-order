@@ -52,7 +52,7 @@ const GiftRankingHeader = () => {
             onClick={() => handleTargetClick("ALL")}
             css={[
               iconStyle(theme),
-              target == "ALL" && selectedTargetStyle(theme),
+              target === "ALL" && selectedTargetStyle(theme),
             ]}
           >
             ALL
@@ -67,7 +67,7 @@ const GiftRankingHeader = () => {
             onClick={() => handleTargetClick("WOMAN")}
             css={[
               iconStyle(theme),
-              target == "WOMAN" && selectedTargetStyle(theme),
+              target === "WOMAN" && selectedTargetStyle(theme),
             ]}
           >
             👩🏻
@@ -82,12 +82,12 @@ const GiftRankingHeader = () => {
             onClick={() => handleTargetClick("MAN")}
             css={[
               iconStyle(theme),
-              target == "MAN" && selectedTargetStyle(theme),
+              target === "MAN" && selectedTargetStyle(theme),
             ]}
           >
             👨🏻
           </div>
-          <p css={target == "MAN" && selectedTargetStyle(theme)}>남성이</p>
+          <p css={target === "MAN" && selectedTargetStyle(theme)}>남성이</p>
         </div>
       </div>
       <div css={tabContainerStyle(theme)}>
@@ -95,7 +95,7 @@ const GiftRankingHeader = () => {
           onClick={() => handleRankClick("MANY_WANT")}
           css={[
             tabItemStyle(theme),
-            rankType == "MANY_WANT" && selectedRankStyle(theme),
+            rankType === "MANY_WANT" && selectedRankStyle(theme),
           ]}
         >
           받고 싶어한
@@ -104,7 +104,7 @@ const GiftRankingHeader = () => {
           onClick={() => handleRankClick("MANY_GIVE")}
           css={[
             tabItemStyle(theme),
-            rankType == "MANY_GIVE" && selectedRankStyle(theme),
+            rankType === "MANY_GIVE" && selectedRankStyle(theme),
           ]}
         >
           많이 선물한
@@ -113,7 +113,7 @@ const GiftRankingHeader = () => {
           onClick={() => handleRankClick("MANY_WISH")}
           css={[
             tabItemStyle(theme),
-            rankType == "MANY_WISH" && selectedRankStyle(theme),
+            rankType === "MANY_WISH" && selectedRankStyle(theme),
           ]}
         >
           위시로 받은
