@@ -13,7 +13,6 @@ import Order from './pages/Order';
 const containerStyle = css`
   max-width: 720px;
   margin: 0 auto;
-  padding: 16px;
   background-color: transparent;
   justify-content: center;
   align-items: center;

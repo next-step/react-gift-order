@@ -27,8 +27,11 @@ const MainImg = styled.img`
 
 const MessageInput = styled.textarea`
   width: 100%;
+  max-width: 720px;
   margin-top: 20px;
   padding: 12px;
+  display: flex;
+  flex: 1;
   font-size: 16px;
   box-sizing: border-box;
   border: 1px solid #ccc;
@@ -42,12 +45,13 @@ const SectionBox = styled.div`
   padding: 20px;
 `;
 
-const BottomOrderButton = styled.div`
+const BottomOrderButton = styled.div<{ disabled: boolean }>`
   position: fixed;
   bottom: 0;
   width: 100%;
   max-width: 720px;
-  background-color: #ffeb00;
+  background-color: ${({ theme, disabled }) =>
+    disabled ? theme.colors.yellow300 : theme.colors.kakaoYellow};
   text-align: center;
   padding: 16px;
   font-size: 18px;
@@ -62,7 +66,7 @@ const OrderInfoWrapper = styled.div`
 `;
 
 const Section = styled.div`
-  background-color: #f8f9fa;
+  background-color: white;
   padding: 20px;
   border-bottom: 8px solid #f1f1f1;
 `;
@@ -93,7 +97,7 @@ const FieldLabel = styled.div`
 
 const Input = styled.input`
   flex: 1;
-  padding: 12px 16px;
+  padding: 12px 0px 12px 10px;
   border: 1px solid '#dcdcdc';
   border-radius: 6px;
   font-size: 14px;
@@ -134,8 +138,9 @@ const validateQuantity = (value: string) => {
 };
 
 const Order = () => {
-  const [selected, setSelected] = useState(
-    orderCardTemplates[0].imageUrl
+  const [selected, setSelected] = useState(orderCardTemplates[0].id);
+  const selectedCard = orderCardTemplates.find(
+    card => card.id === selected
   );
   const product = giftItem;
 
@@ -174,10 +179,10 @@ const Order = () => {
           {' '}
           <MessageCard
             selected={selected}
-            onSelect={setSelected}
+            onCardSelect={setSelected}
           ></MessageCard>
           <MainWrapper>
-            <MainImg src={selected} />
+            <MainImg src={selectedCard?.imageUrl} />
 
             <MessageInput
               placeholder="메시지를 입력해주세요."
@@ -239,6 +244,7 @@ const Order = () => {
             <Input
               type="number"
               onChange={e => quantityInput.setValue(e.target.value)}
+              onBlur={quantityInput.handleBlur}
             />
             <ErrorText>{quantityInput.error}</ErrorText>
           </Row>
@@ -258,7 +264,10 @@ const Order = () => {
           </div>
         </Section>
       </OrderInfoWrapper>
-      <BottomOrderButton onClick={handleOrder}>
+      <BottomOrderButton
+        disabled={!isFormValid}
+        onClick={handleOrder}
+      >
         {priceSum}원 주문하기
       </BottomOrderButton>
     </>

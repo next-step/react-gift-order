@@ -1,4 +1,3 @@
-// src/contexts/AuthContext.tsx
 import { createContext, useContext, useState } from 'react';
 
 interface AuthContextType {
@@ -17,26 +16,19 @@ export const AuthProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
-    () => {
-      return localStorage.getItem('isAuthenticated') === 'true';
-    }
-  );
   const [userEmail, setUserEmail] = useState<string | null>(() => {
     return localStorage.getItem('userEmail');
   });
 
+  const isAuthenticated = userEmail !== null;
+
   const login = (email: string) => {
-    setIsAuthenticated(true);
     setUserEmail(email);
-    localStorage.setItem('isAuthenticated', 'true');
     localStorage.setItem('userEmail', email);
   };
 
   const logout = () => {
-    setIsAuthenticated(false);
     setUserEmail(null);
-    localStorage.removeItem('isAuthenticated');
     localStorage.removeItem('userEmail');
   };
 
