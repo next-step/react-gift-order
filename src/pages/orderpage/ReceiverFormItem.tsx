@@ -1,6 +1,6 @@
 import { useFormContext } from "react-hook-form";
 import type { FieldArrayWithId } from "react-hook-form";
-import type { ReceiverFormValues } from "../../utils/validator";
+import type { ReceiverFormValues } from "@/utils/validator";
 import styled from "@emotion/styled";
 
 interface Props {
@@ -108,6 +108,7 @@ const FormRow = styled.div`
   display: flex;
   align-items: center;
   width: 97%;
+  margin-bottom: 16px;
 `;
 
 const Label = styled.label`
