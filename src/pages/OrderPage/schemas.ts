@@ -3,9 +3,17 @@ import { VALIDATE_LABELS } from "./constants/validateLabels";
 import { validatePhoneNumber } from "./utils/validation";
 import RECEIVER_SECTION_CONSTANTS from "./constants/receiverSection";
 
+export interface MessageCardFormData {
+  cardMessage: string;
+}
+
 export const messageCardSchema = z.object({
   cardMessage: z.string().nonempty(VALIDATE_LABELS.MESSAGE_EMPTY),
 });
+
+export interface SenderFormData {
+  senderName: string;
+}
 
 export const senderSchema = z.object({
   senderName: z.string().nonempty(VALIDATE_LABELS.NAME_EMPTY),

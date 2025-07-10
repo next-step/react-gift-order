@@ -15,7 +15,7 @@ import CARD_SELECTION_CONSTANTS from "@/pages/OrderPage/constants/cardSelection"
 import { Controller } from "react-hook-form";
 import type { Control, FieldErrors } from "react-hook-form";
 import { FORM_FIELD } from "../../constants/formField";
-import type { MessageCardFormData } from "../../OrderPage";
+import type { MessageCardFormData } from "../../schemas";
 
 interface CardSelectionProps {
   cards: OrderCardType[];

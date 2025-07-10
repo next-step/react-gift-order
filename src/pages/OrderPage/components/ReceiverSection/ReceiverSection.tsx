@@ -12,7 +12,6 @@ import {
   NoReceiversLabel,
 } from "./ReceiverModal.styles";
 import ReceiverModal from "./ReceiverModal";
-import type { Receiver } from "../../OrderPage";
 import {
   ReceiverTable,
   TableCell,
@@ -20,6 +19,7 @@ import {
   TableHeaderCell,
   TableRow,
 } from "./ReceiverTable";
+import type { Receiver } from "../../hooks/useOrderForm";
 
 interface ReceiverSectionComponentProps {
   receivers: Receiver[];
