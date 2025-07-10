@@ -2,87 +2,68 @@ import styled from '@emotion/styled'
 import { Navbar } from '@/components/Navbar/Navbar'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useLoginForm } from '@/hooks/useLoginForm'
+import { useAuth } from '@/contexts/AuthContext'
+import { useEffect } from 'react'
+import { Layout } from '@/components/Layout/Layout'
 
 export function LoginPage() {
   const navigate = useNavigate()
   const location = useLocation()
-  const from = location.state?.from?.pathname || '/'
+  const from = location.state?.from?.pathname || '/my'
 
-  const {
-    email,
-    setEmail,
-    password,
-    setPassword,
-    emailError,
-    passwordError,
-    emailTouched,
-    passwordTouched,
-    validateEmail,
-    validatePassword,
-    isFormValid,
-    setEmailTouched,
-    setPasswordTouched,
-  } = useLoginForm()
+  const { login, user } = useAuth()
+  const { email, password, validForm } = useLoginForm()
+
+  useEffect(() => {
+    if (user) {
+      navigate('/my', { replace: true })
+    }
+  }, [user, navigate])
 
   const submitLoginForm = (e: React.FormEvent) => {
     e.preventDefault()
-    validateEmail(email)
-    validatePassword(password)
+    email.onBlur()
+    password.onBlur()
 
-    if (isFormValid) {
+    if (validForm) {
+      login(email.value)
       navigate(from, { replace: true })
     }
   }
 
   return (
     <>
-      <Navbar />
-      <Container>
-        <Logo>kakao</Logo>
-        <Form onSubmit={submitLoginForm}>
-          <Input
-            type="email"
-            placeholder="이메일"
-            value={email}
-            onChange={(e) => {
-              const newValue = e.target.value
-              setEmail(newValue)
+      <Layout>
+        <Navbar />
+        <Container>
+          <Logo>kakao</Logo>
+          <Form onSubmit={submitLoginForm}>
+            <Input
+              type="email"
+              placeholder="이메일"
+              value={email.value}
+              onChange={(e) => email.change(e.target.value)}
+              onBlur={email.onBlur}
+            />
+            {email.touched && email.error && <Error>{email.error}</Error>}
 
-              if (emailTouched) {
-                validateEmail(newValue)
-              }
-            }}
-            onBlur={() => {
-              setEmailTouched(true)
-              validateEmail(email)
-            }}
-          />
-          {emailTouched && emailError && <Error>{emailError}</Error>}
+            <Input
+              type="password"
+              placeholder="비밀번호"
+              value={password.value}
+              onChange={(e) => password.change(e.target.value)}
+              onBlur={password.onBlur}
+            />
+            {password.touched && password.error && (
+              <Error>{password.error}</Error>
+            )}
 
-          <Input
-            type="password"
-            placeholder="비밀번호"
-            value={password}
-            onChange={(e) => {
-              const newValue = e.target.value
-              setPassword(newValue)
-
-              if (passwordTouched) {
-                validatePassword(newValue)
-              }
-            }}
-            onBlur={() => {
-              setPasswordTouched(true)
-              validatePassword(password)
-            }}
-          />
-          {passwordTouched && passwordError && <Error>{passwordError}</Error>}
-
-          <LoginButton type="submit" disabled={!isFormValid}>
-            로그인
-          </LoginButton>
-        </Form>
-      </Container>
+            <LoginButton type="submit" disabled={!validForm}>
+              로그인
+            </LoginButton>
+          </Form>
+        </Container>
+      </Layout>
     </>
   )
 }

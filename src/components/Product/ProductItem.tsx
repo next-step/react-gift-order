@@ -1,37 +1,37 @@
 import styled from '@emotion/styled'
 import { memo } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '@/contexts/AuthContext'
+import type { Product } from '@/types/product'
 
-interface Product {
-  id: number
-  name: string
-  imageURL: string
-  price: {
-    basicPrice: number
-    discountRate: number
-    sellingPrice: number
+export const ProductItem = memo(function ProductItem({
+  id,
+  imageURL,
+  name,
+  price,
+  brandInfo,
+  rank,
+}: Product) {
+  const navigate = useNavigate()
+  const { user } = useAuth()
+
+  const goOrderPage = () => {
+    if (user) {
+      navigate(`/order/${id}`)
+    } else {
+      navigate('/login', { state: { from: `/order/${id}` } })
+    }
   }
-  brandInfo: {
-    id: number
-    name: string
-    imageURL: string
-  }
-}
 
-interface Props {
-  product: Product
-  rank: number
-}
-
-export const ProductItem = memo(function ProductItem({ product, rank }: Props) {
   return (
-    <Wrapper>
+    <Wrapper onClick={goOrderPage}>
       <ImageWrapper>
         <RankBadge rank={rank}>{rank}</RankBadge>
-        <Image src={product.imageURL} alt={product.name} />
+        <Image src={imageURL} alt={name} />
       </ImageWrapper>
-      <Brand>{product.brandInfo.name}</Brand>
-      <Name>{product.brandInfo.name}</Name>
-      <Price>{product.price.sellingPrice.toLocaleString()}원</Price>
+      <Brand>{brandInfo.name}</Brand>
+      <Name>{name}</Name>
+      <Price>{price.sellingPrice.toLocaleString()}원</Price>
     </Wrapper>
   )
 })
