@@ -20,20 +20,23 @@ import {
   RECEIVER_MODAL_CONSTANTS,
   DEFAULT_RECEIVER,
 } from "../../constants/receiverSection";
+import type { Receiver } from "./ReceiverSection";
 
 interface ReceiverModalProps {
   handleCloseModal: () => void;
+  receivers: Receiver[];
+  setReceivers: (receivers: Receiver[]) => void;
 }
 
 interface FormData {
-  receivers: {
-    name: string;
-    phone: string;
-    quantity: string;
-  }[];
+  receivers: Receiver[];
 }
 
-function ReceiverModal({ handleCloseModal }: ReceiverModalProps) {
+function ReceiverModal({
+  handleCloseModal,
+  receivers,
+  setReceivers,
+}: ReceiverModalProps) {
   const {
     control,
     handleSubmit,
@@ -41,7 +44,7 @@ function ReceiverModal({ handleCloseModal }: ReceiverModalProps) {
     watch,
   } = useForm<FormData>({
     defaultValues: {
-      receivers: [],
+      receivers: receivers,
     },
   });
 
@@ -65,6 +68,7 @@ function ReceiverModal({ handleCloseModal }: ReceiverModalProps) {
     }
 
     handleCloseModal();
+    setReceivers(data.receivers);
   };
 
   const onInvalid = () => {
