@@ -1,11 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
 import { useFormContext, useWatch } from "react-hook-form";
+import { useMemo } from "react";
 import { messageCards } from "@/mock/messageCards";
 import type { MessageCard } from "@/mock/messageCards";
 import type { OrderFormValues } from "@/validations/orderSchema";
-
-const DEFAULT_MESSAGE = "와~ 축하해요";
 
 const MessageCardSection = () => {
   const { register, setValue, control } = useFormContext<OrderFormValues>();
@@ -13,14 +12,17 @@ const MessageCardSection = () => {
   const selectedCardId = useWatch({ control, name: "selectedCardId" });
   const message = useWatch({ control, name: "message" });
 
-  const selectedCard: MessageCard =
-    messageCards.find((card) => card.id === selectedCardId) || messageCards[0];
+  const selectedCard = useMemo<MessageCard>(() => {
+    return (
+      messageCards.find((card) => card.id === selectedCardId) ?? messageCards[0]
+    );
+  }, [selectedCardId]);
 
   const handleSelectCard = (card: MessageCard) => {
     setValue("selectedCardId", card.id);
 
     if (!message?.trim()) {
-      setValue("message", DEFAULT_MESSAGE);
+      setValue("message", card.defaultTextMessage);
     }
   };
 
@@ -41,6 +43,7 @@ const MessageCardSection = () => {
       <PreviewImage src={selectedCard.imageUrl} alt="preview" />
 
       <MessageInputWrapper>
+        <Label>메시지 입력</Label>
         <MessageInput
           {...register("message")}
           placeholder="메시지를 입력해주세요."
@@ -52,11 +55,12 @@ const MessageCardSection = () => {
 
 export default MessageCardSection;
 
-const Wrapper = styled.div`
+// --- 스타일 ---
+const Wrapper = styled.section`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin-top: 10px;
+  margin-top: 20px;
 `;
 
 const ThumbList = styled.div`
@@ -67,17 +71,15 @@ const ThumbList = styled.div`
   &::-webkit-scrollbar {
     height: 7px;
   }
+
   &::-webkit-scrollbar-thumb {
     background-color: ${({ theme }) => theme.colors.gray600};
     border-radius: 10px;
   }
+
   &::-webkit-scrollbar-track {
     background: ${({ theme }) => theme.colors.gray100};
   }
-`;
-
-const ThumbImg = styled.img`
-  border-radius: 8px;
 `;
 
 const ThumbButton = styled.button<{ selected: boolean }>`
@@ -90,29 +92,44 @@ const ThumbButton = styled.button<{ selected: boolean }>`
   margin-bottom: 3px;
 `;
 
+const ThumbImg = styled.img`
+  border-radius: 8px;
+`;
+
 const PreviewImage = styled.img`
   width: 100%;
   max-width: 400px;
-  margin: 0 auto;
+  align-self: center;
   border-radius: 16px;
-  box-shadow: 0 6px 8px lightgray;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
 `;
 
 const MessageInputWrapper = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  width: 100%;
+`;
+
+const Label = styled.label`
+  font-size: ${({ theme }) => theme.typography.subtitle1Regular.fontSize};
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: ${({ theme }) => theme.colors.gray800};
 `;
 
 const MessageInput = styled.textarea`
-  width: 90%;
+  width: 100%;
   height: 100px;
-  margin: 0 auto 18px;
   border: 1px solid ${({ theme }) => theme.colors.gray600};
   border-radius: 10px;
   padding: 15px;
   background-color: #fff;
   color: black;
   font-size: ${({ theme }) => theme.typography.subtitle1Regular.fontSize};
+
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.colors.gray800};
+  }
 `;
