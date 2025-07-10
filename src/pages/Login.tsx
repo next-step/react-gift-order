@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useInputWithValidation } from '../hooks/useInputValidation';
 import { useAuth } from '../contexts/AuthContext';
 
+
 const PageWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -116,9 +117,13 @@ const Login = () => {
     return null;
   }
 
+  const emailInput = useInputWithValidation('', validateEmail);
+  const passwordInput = useInputWithValidation('', validatePassword);
+
+  const isFormValid = emailInput.isValid && passwordInput.isValid;
+
   const handleLogin = () => {
     if (!isFormValid) return;
-
     login(emailInput.value);
 
     const redirectPath = location.state?.from?.pathname;
