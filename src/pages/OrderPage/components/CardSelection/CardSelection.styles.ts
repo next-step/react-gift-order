@@ -66,7 +66,7 @@ export const MainCardImage = styled.img`
 `;
 
 export const MessageTextArea = styled.textarea<{ hasError: boolean }>`
-  width: 92%;
+  min-width: 92%;
   height: 40px;
   padding: ${({ theme }) => theme.spacing[3]};
 
@@ -94,4 +94,10 @@ export const MessageTextAreaContainer = styled.div`
   gap: ${({ theme }) => theme.spacing[1]};
   justify-content: center;
   align-items: center;
+`;
+
+export const ErrorMessageWrapper = styled.div`
+  width: 95%;
+  display: flex;
+  justify-content: flex-start;
 `;
