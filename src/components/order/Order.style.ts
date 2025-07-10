@@ -64,7 +64,7 @@ export const ReceiverFormStyle = (theme: Theme) => css`
 export const InputRowStyle = (theme: Theme) => css`
   display: flex;
   flex-direction: row;
-  align-items: flex-start; 
+  align-items: flex-start;
   gap: ${theme.spacing.spacing4};
 
   span {
@@ -171,7 +171,7 @@ export const InputWrapperStyle = (theme: Theme) => css`
 `;
 
 export const ErrorMessageStyle = (theme: Theme) => css`
-  font-size: 12px;
+  font-size: ${theme.typography.subtitle1Bold.size};
   color: red;
   margin: ${theme.spacing.spacing1} 0 0 ${theme.spacing.spacing1};
 `;
