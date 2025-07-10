@@ -66,7 +66,11 @@ function ReceiverModalWindow({ openHooks: open }: ReceiverModalWindowProps) {
         <h3>받는 사람</h3>
         <GraySub>* 최대 10명까지 추가 할 수 있어요.</GraySub>
         <GraySub>* 받는 사람의 전화번호를 중복으로 입력할 수 없어요.</GraySub>
-        <AddButton type="button" onClick={add}>
+        <AddButton
+          type="button"
+          onClick={add}
+          disabled={fields.length >= ADD_LIMIT}
+        >
           추가하기
         </AddButton>
         <ReceiverList>
@@ -135,12 +139,13 @@ const ModalWindowWrapper = styled.div`
   border-radius: 10px;
 `;
 
-const AddButton = styled.button`
+const AddButton = styled.button<{ props: { disabled: boolean } }>`
   margin: 10px;
   height: 35px;
   width: 70px;
   border: none;
   border-radius: 10px;
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
 `;
 
 export default ReceiverModalWindow;
