@@ -76,6 +76,7 @@ if (!/^01[016789]-?\d{3,4}-?\d{4}$/.test(phone)) {
   };
 
   return (
+    <div>
     <div style={{ padding: 20 }}>
 
       {/* ─── 1. TEMPLATE 썸네일 / 미리보기 / 메시지 편집 ─── */}
@@ -136,10 +137,10 @@ if (!/^01[016789]-?\d{3,4}-?\d{4}$/.test(phone)) {
       {/* ─── 2. 주문 폼 ─── */}
       <form onSubmit={onSubmit} className="space-y-4">
         <div>
+          보내는 사람<br /> 
           <input
             value={sender}
             onChange={(e) => setSender(e.target.value)}
-            placeholder="보내는 사람"
             className="w-full p-2 border rounded"
           />
           {errors.sender && (
@@ -147,10 +148,13 @@ if (!/^01[016789]-?\d{3,4}-?\d{4}$/.test(phone)) {
           )}
         </div>
         <div>
+          받는 사람<br />  
+          이름 
           <input
+          
             value={receiver}
             onChange={(e) => setReceiver(e.target.value)}
-            placeholder="받는 사람"
+           
             className="w-full p-2 border rounded"
           />
           {errors.receiver && (
@@ -159,14 +163,13 @@ if (!/^01[016789]-?\d{3,4}-?\d{4}$/.test(phone)) {
         </div>
      <div className="form-group">
        <label htmlFor="phone" className="block mb-1 text-sm font-medium">
-         전화번호
+         전화번호 
        </label>
        <input
          id="phone"
          type="tel"
          value={phone}
          onChange={e => setPhone(e.target.value)}
-         placeholder="010-1234-5678"
          className={`w-full p-2 border rounded ${
            errors.phone ? 'border-red-500' : 'border-gray-300'
          }`}
@@ -177,7 +180,9 @@ if (!/^01[016789]-?\d{3,4}-?\d{4}$/.test(phone)) {
          </p>
        )}
      </div>
+     
         <div>
+          수량
           <input
             type="number"
             value={qty}
@@ -210,6 +215,8 @@ if (!/^01[016789]-?\d{3,4}-?\d{4}$/.test(phone)) {
         />{product.name}
         <p>₩{product.price.sellingPrice.toLocaleString()}</p>
       </div>
+    </div>
+
     </div>
   );
 }
