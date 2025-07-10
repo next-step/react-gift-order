@@ -116,15 +116,6 @@ const RealtimeItemImg = styled.img`
   position: relative;
 `;
 
-const RealtimeItemImgLabel = styled.div`
-  width: 5px;
-  height: 5px;
-  position: absolute;
-  top: 0;
-  left: 0;
-
-`
-
 const RealtimeItemTxt = styled.p`
   font-size: ${({ theme }) => theme.typography.label.label1Regular.fontSize};
   font-weight: ${({ theme }) => theme.typography.label.label1Regular.fontWeight};
