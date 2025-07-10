@@ -64,7 +64,7 @@ const LoginPage = () => {
     if (!username.isValid || !password.isValid) return;
 
     login(username.value, password.value);
-    navigate(ROUTES.MY);
+    navigate(ROUTES.MY, { replace: true });
   };
 
   return (
