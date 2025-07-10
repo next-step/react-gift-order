@@ -29,6 +29,8 @@ const OrderButton = ({
     </StyledButton>
   );
 };
+export default OrderButton;
+
 
 const StyledButton = styled.button<{
   $size: "large" | "small";
@@ -47,4 +49,3 @@ const StyledButton = styled.button<{
   transition: background-color 0.2s ease;
 `;
 
-export default OrderButton;
