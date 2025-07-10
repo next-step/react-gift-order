@@ -35,8 +35,36 @@ const ReceiverSchema = z.object({
   message: z.string().nonempty('메시지를 입력해주세요.'),
 });
 
+const ReceiversNumberListSchema = z
+  .array(ReceiverSchema)
+  .superRefine((receivers, ctx) => {
+    const seenPhoneNumbers = new Map<string, number[]>();
+    receivers.forEach((receiver, index) => {
+      const phoneNumber = receiver.receiverPhoneNumber;
+      if (phoneNumber) {
+        if (seenPhoneNumbers.has(phoneNumber)) {
+          seenPhoneNumbers.get(phoneNumber)?.forEach((prevIndex) => {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: '중복된 전화번호입니다.',
+              path: [prevIndex, 'receiverPhoneNumber'],
+            });
+          });
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: '중복된 전화번호입니다.',
+            path: [index, 'receiverPhoneNumber'],
+          });
+          seenPhoneNumbers.get(phoneNumber)?.push(index);
+        } else {
+          seenPhoneNumbers.set(phoneNumber, [index]);
+        }
+      }
+    });
+  });
+
 const FormSchema = z.object({
-  receivers: z.array(ReceiverSchema),
+  receivers: ReceiversNumberListSchema,
 });
 
 type FormValues = z.infer<typeof FormSchema>;
@@ -46,12 +74,8 @@ const ReceiverListModal = ({
   onClose,
   onAdd,
 }: ReceiverListModalProps) => {
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>({
-    resolver: zodResolver(FormSchema), // 여전히 Resolver로 타입 + 유효성 동기화
+  const { control, handleSubmit } = useForm<FormValues>({
+    resolver: zodResolver(FormSchema),
     defaultValues: {
       receivers: [
         {
@@ -96,7 +120,7 @@ const ReceiverListModal = ({
           <ModalTitle>받는 사람</ModalTitle>
           <ModalCaption>
             * 최대 10명까지 추가 할 수 있어요.
-            <br />* 받는 사람의 전화번호를 중복으로 입력할 수 있어요.
+            <br />* 받는 사람의 전화번호를 중복으로 입력할 수 없어요.
           </ModalCaption>
 
           <AddReceiverButton
@@ -183,13 +207,6 @@ const ReceiverListModal = ({
                           type="number"
                           placeholder="수량을 입력하세요."
                           hasError={!!fieldState.error}
-                          onChange={(e) =>
-                            field.onChange(
-                              e.target.value === ''
-                                ? undefined
-                                : +e.target.value
-                            )
-                          }
                         />
                         {fieldState.error && (
                           <CaptionText isError>
