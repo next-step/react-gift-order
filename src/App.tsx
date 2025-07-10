@@ -12,7 +12,7 @@ import LoginPage from "@/pages/LoginPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import MyPage from "@/pages/MyPage";
 import OrderPage from "@/pages/orderpage/OrderPage";
-import PrivateRoute from "@/routes/PrivateRoutes";
+import PrivateRoute from "@/routes/PrivateRoute";
 
 function App() {
   return (
