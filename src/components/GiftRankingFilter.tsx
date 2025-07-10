@@ -21,12 +21,12 @@ const IconFilterContainer = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
-  padding: ${theme.typography.spacing.spacing4};
+  padding: ${theme.typography.spacing.spacing4} 0px;
 `;
 
 const Container = styled.div`
   width: 100%;
-  padding: 24px 16px;
+  padding: 24px 0px;
   background-color: ${theme.colors.backgroundDefault};
 `;
 

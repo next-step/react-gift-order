@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { FiArrowLeft, FiUser } from 'react-icons/fi';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useInputWithValidation } from '../hooks/useInputValidation';
+import { useAuth } from '../contexts/AuthContext';
 
 const PageWrapper = styled.div`
   display: flex;
@@ -103,15 +104,24 @@ const validatePassword = (value: string) => {
 const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { isAuthenticated, login } = useAuth();
 
   const emailInput = useInputWithValidation('', validateEmail);
   const passwordInput = useInputWithValidation('', validatePassword);
 
   const isFormValid = emailInput.isValid && passwordInput.isValid;
 
+  if (isAuthenticated) {
+    navigate('/my', { replace: true });
+    return null;
+  }
+
   const handleLogin = () => {
     if (!isFormValid) return;
+    login(emailInput.value);
+
     const redirectPath = location.state?.from?.pathname;
+    navigate(redirectPath || '/my', { replace: true });
 
     if (redirectPath) {
       navigate(redirectPath, { replace: true });

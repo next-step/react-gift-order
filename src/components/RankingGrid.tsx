@@ -1,5 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 const Container = styled.div`
   padding: 24px;
@@ -17,6 +19,7 @@ const GiftCard = styled.div`
   background-color: #fff;
   overflow: hidden;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
 `;
 
 const RankBadge = styled.div`
@@ -71,7 +74,7 @@ interface GiftItem {
   };
 }
 
-const giftItem: GiftItem = {
+export const giftItem: GiftItem = {
   id: 123,
   name: 'BBQ 양념치킨+크림치즈볼+콜라1.25L',
   imageURL:
@@ -92,11 +95,22 @@ const giftItem: GiftItem = {
 const mockData: GiftItem[] = Array(21).fill(giftItem);
 
 export const RankingGrid = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+
+  const handleClick = (id: number) => {
+    if (isAuthenticated) {
+      navigate(`/order/${id}`);
+    } else {
+      navigate('/login', { state: { redirectTo: `/order/${id}` } });
+    }
+  };
+
   return (
     <Container>
       <Grid>
         {mockData.map((item, index) => (
-          <GiftCard key={index}>
+          <GiftCard key={index} onClick={() => handleClick(item.id)}>
             <RankBadge>{index + 1}</RankBadge>
             <ProductImage src={item.imageURL} alt={item.name} />
             <ProductInfo>

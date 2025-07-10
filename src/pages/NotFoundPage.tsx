@@ -66,7 +66,7 @@ const HomeButton = styled.button`
 `;
 
 const NotFoundImg = styled.img`
-  weight: 150px;
+  width: 150px;
   height: 150px;
 `;
 
