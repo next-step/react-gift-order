@@ -1,4 +1,4 @@
-import { DefaultComponentDiv, EmptyDiv12h, EmptyDiv24h, EmptyDiv8h, ErrorText, LowField, MiniText, SideBlankDiv, SimpleInput, SubText, SubTitle } from '@/styles/Common.styled';
+import { DefaultComponentDiv, Div100p, EmptyDiv12h, EmptyDiv24h, EmptyDiv8h, ErrorText, LowField, MiniText, SideBlankDiv, SimpleInput, SubText, SubTitle } from '@/styles/Common.styled';
 
 interface ReceiverProps {
     nameInput: {
@@ -36,7 +36,7 @@ const Receiver: React.FC<ReceiverProps> = ({
                 {/* 이름 */}
                 <LowField>
                     <MiniText>이름</MiniText>
-                    <div>
+                    <Div100p>
                         <SimpleInput
                             type="text"
                             placeholder="이름을 입력하세요."
@@ -47,7 +47,7 @@ const Receiver: React.FC<ReceiverProps> = ({
                         {nameInput.error && (
                             <ErrorText>{nameInput.error}</ErrorText>
                         )}
-                    </div>
+                    </Div100p>
                 </LowField>
 
 
@@ -56,7 +56,7 @@ const Receiver: React.FC<ReceiverProps> = ({
                 {/* 전화번호 */}
                 <LowField>
                     <MiniText>전화번호</MiniText>
-                    <div>
+                    <Div100p>
                         <SimpleInput
                             type="text"
                             placeholder="전화번호를 입력하세요."
@@ -67,14 +67,14 @@ const Receiver: React.FC<ReceiverProps> = ({
                         {phoneInput.error && (
                             <ErrorText>{phoneInput.error}</ErrorText>
                         )}
-                    </div>
+                    </Div100p>
                 </LowField>
                 <EmptyDiv8h />
 
                 {/* 수량 */}
                 <LowField>
                     <MiniText>수량</MiniText>
-                    <div>
+                    <Div100p>
                         <SimpleInput
                             type="number"
                             min={1}
@@ -85,7 +85,7 @@ const Receiver: React.FC<ReceiverProps> = ({
                         {quantityInput.error && (
                             <ErrorText>{quantityInput.error}</ErrorText>
                         )}
-                    </div>
+                    </Div100p>
                 </LowField>
                 <EmptyDiv8h />
             </SideBlankDiv>

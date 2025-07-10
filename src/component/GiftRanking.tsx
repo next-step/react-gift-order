@@ -51,15 +51,32 @@ const GiftRanking = () => {
 
   const shownProducts = GiftList.slice(0, visibleCount);
 
-  const {user} = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
-  const handleClickProduct = (id: number) => {
-  if (!user) {
-    navigate(`/login?redirect=/order?id=${id}`);
-  } else {
-    navigate(`/order?id=${id}`);
+
+  interface ProductItem {
+    id: number;
+    name: string;
+    imageURL: string;
+    price: {
+      basicPrice: number;
+      discountRate: number;
+      sellingPrice: number;
+    };
+    brandInfo: {
+      id: number;
+      name: string;
+      imageURL: string;
+    };
   }
-};
+
+  const handleClickProduct = (item: ProductItem) => {
+    if (!user) {
+      navigate(`/login?redirect=/order?id=${item.id}`);
+    } else {
+      navigate(`/order?id=${item.id}`, { state: { item } });
+    }
+  };
 
   return (
     <GiftRanKingSection>
@@ -124,17 +141,16 @@ const GiftRanking = () => {
       <ProductDiv>
         <ProductGrid>
           {shownProducts.map((item) => (
-            <ProductCard key={item.id} onClick={() => handleClickProduct(item.id)}>
+            <ProductCard
+              key={item.id}
+              onClick={() => handleClickProduct(item)}
+            >
               <ProductImage src={item.imageURL} alt={item.name} />
               <BrandImage
                 src={item.brandInfo.imageURL}
                 alt={item.brandInfo.name}
               />
-              <ProductInfo
-                title={item.name}
-              >
-                {item.name}
-              </ProductInfo>
+              <ProductInfo title={item.name}>{item.name}</ProductInfo>
               <Price>{item.price.sellingPrice.toLocaleString()} 원</Price>
             </ProductCard>
           ))}

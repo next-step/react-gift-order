@@ -1,13 +1,17 @@
 import { CardTemplete } from '@/mock/CardTemplete';
 import { CentorAlignDiv, DefaultComponentDiv, EmptyDiv40h, EmptyDiv8h, LowSlideDiv, SideBlankDiv } from '@/styles/Common.styled';
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { CardBiGImg, CardBiGImgDiv, CardMessage, CardMiniImg } from './PresentCardSelector.styled';
 
 
+interface PresentCardSelectorProps {
+  cardMessage : string,
+  setCardMessage : ( newMessage :string) => void
+}
 
-const PresentCardSelector = () => {
+
+const PresentCardSelector : React.FC<PresentCardSelectorProps>= ({cardMessage, setCardMessage}) => {
   const [selectedCard, setSelectedCard] = useState(CardTemplete[0]);
-  const [message, setMessage] = useState('축하해요.');
 
   return (
     <DefaultComponentDiv>
@@ -19,7 +23,7 @@ const PresentCardSelector = () => {
             alt={card.defaultTextMessage}
             onClick={() => {
               setSelectedCard(card)
-              setMessage(card.defaultTextMessage)
+              setCardMessage(card.defaultTextMessage)
               }
             }
             selected={selectedCard === card}
@@ -42,8 +46,8 @@ const PresentCardSelector = () => {
 
       <SideBlankDiv style={{ marginTop: '16px' }}>
         <CardMessage
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          value={cardMessage}
+          onChange={(e) => setCardMessage(e.target.value)}
           placeholder="메시지를 입력해주세요."
         />
       </SideBlankDiv>

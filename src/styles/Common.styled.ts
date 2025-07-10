@@ -212,3 +212,7 @@ export const OrderButton = styled.button`
   border-radius: 6px;
   cursor: pointer;
 `;
+
+export const Div100p = styled.div`
+  width: 100%;
+`
