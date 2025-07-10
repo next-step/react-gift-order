@@ -1,7 +1,11 @@
 import Button from '@/components/common/Button';
 import styled from '@emotion/styled';
+import { useAuth } from '@/contexts/AuthContext';
 
 const FriendSelectSection = () => {
+  const { user } = useAuth();
+  const userId = user?.email.split('@')[0];
+
   return (
     <Section>
       <Button
@@ -23,7 +27,13 @@ const FriendSelectSection = () => {
           </svg>
         }
       >
-        선물할 친구를 선택해 주세요.
+        {userId ? (
+          <>
+            <strong>{userId}</strong>님! 선물할 친구를 선택해 주세요.
+          </>
+        ) : (
+          '선물할 친구를 선택해 주세요.'
+        )}
       </Button>
     </Section>
   );

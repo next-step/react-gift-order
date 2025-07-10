@@ -7,6 +7,7 @@ interface ButtonProps {
   onClick?: () => void;
   backgroundColor?: string;
   height?: string;
+  borderRadius?: string;
 }
 
 const Button = ({
@@ -15,6 +16,7 @@ const Button = ({
   onClick,
   backgroundColor,
   height = '74px',
+  borderRadius = '16px',
 }: ButtonProps) => {
   return (
     <Wrapper>
@@ -22,6 +24,7 @@ const Button = ({
         onClick={onClick}
         backgroundColor={backgroundColor}
         height={height}
+        borderRadius={borderRadius}
       >
         {icon && <IconWrapper>{icon}</IconWrapper>}
         <Text>{children}</Text>
@@ -39,6 +42,7 @@ const Wrapper = styled.div`
 const StyledButton = styled.button<{
   backgroundColor?: string;
   height: string;
+  borderRadius: string;
 }>`
   width: 100%;
   height: ${({ height }) => height};
@@ -49,7 +53,7 @@ const StyledButton = styled.button<{
   align-items: center;
   gap: ${({ theme }) => theme.spacing[4]};
   padding: ${({ theme }) => `${theme.spacing[2]} ${theme.spacing[3]}`};
-  border-radius: 16px;
+  border-radius: ${({ borderRadius }) => borderRadius};
   box-shadow: 0 0 0 1px ${({ theme }) => theme.color.gray[200]};
   cursor: pointer;
 `;

@@ -1,33 +1,44 @@
 import { useState } from 'react';
 import { getEmailError, getPasswordError } from '@/utils/validators';
 
+type Field = 'email' | 'password';
+
 const useLoginForm = () => {
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordError, setPasswordError] = useState('');
+  const [userInfo, setUserInfo] = useState<Record<Field, string>>({
+    email: '',
+    password: '',
+  });
 
-  const validateEmail = (value: string) => {
-    const error = getEmailError(value);
-    setEmailError(error);
+  const [errors, setErrors] = useState<Record<Field, string>>({
+    email: '',
+    password: '',
+  });
+
+  const validators: Record<Field, (value: string) => string> = {
+    email: getEmailError,
+    password: getPasswordError,
   };
 
-  const validatePassword = (value: string) => {
-    const error = getPasswordError(value);
-    setPasswordError(error);
+  const handleChange = (field: Field, value: string) => {
+    setUserInfo(prev => ({ ...prev, [field]: value }));
+    validateField(field);
   };
 
-  const isValidForm = !emailError && !passwordError;
+  const validateField = (field: Field): boolean => {
+    const validator = validators[field];
+    const error = validator(userInfo[field]);
+
+    setErrors(prev => ({ ...prev, [field]: error }));
+    return !error;
+  };
+
+  const isValidForm = !errors.email && !errors.password;
 
   return {
-    email,
-    setEmail,
-    emailError,
-    validateEmail,
-    password,
-    setPassword,
-    passwordError,
-    validatePassword,
+    userInfo,
+    handleChange,
+    errors,
+    validateField,
     isValidForm,
   };
 };
