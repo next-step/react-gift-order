@@ -1,45 +1,56 @@
+import { useForm } from 'react-hook-form'
 import styled from '@emotion/styled'
 import { cardMock } from '@/pages/OrderPage/cardMock'
-import { useOrderForm } from '@/hooks/useOrderForm'
 import type { Product } from '@/types/product'
+import { useState } from 'react'
 
 interface OrderFormProps {
   product: Product
 }
 
+interface FormValues {
+  sender: string
+  receiver: string
+  receiverPhone: string
+  quantity: number
+  message: string
+}
+
 export function OrderForm({ product }: OrderFormProps) {
   const {
-    sender,
-    receiver,
-    receiverPhone,
-    quantity,
-    card,
-    isSubmitted,
-    setIsSubmitted,
-    isFormValid,
-    resetForm,
-  } = useOrderForm()
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+    watch,
+    reset,
+  } = useForm<FormValues>({
+    defaultValues: {
+      sender: '',
+      receiver: '',
+      receiverPhone: '',
+      quantity: 1,
+      message: cardMock[0].defaultTextMessage,
+    },
+  })
 
-  const price = product.price.sellingPrice
-  const productName = product.name
-  const brandName = product.brandInfo.name
+  const [selectedCard, setSelectedCard] = useState(cardMock[0])
 
-  const submitOrderForm = (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitted(true)
-
-    if (isFormValid) {
-      alert(`주문이 완료되었습니다.
-        상품명: ${productName}
-        구매 수량: ${quantity.value}
-        발신자 이름: ${sender.value}
-        메시지: ${card.message}`)
-      resetForm()
-    }
+  const onSubmit = (data: FormValues) => {
+    alert(`주문이 완료되었습니다.
+      상품명: ${product.name}
+      구매 수량: ${data.quantity}
+      발신자 이름: ${data.sender}
+      메시지: ${data.message}`)
+    reset()
+    setSelectedCard(cardMock[0])
+    setValue('message', cardMock[0].defaultTextMessage)
   }
 
+  const message = watch('message')
+
   return (
-    <form onSubmit={submitOrderForm}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <CardList>
         {cardMock.map((cardItem) => (
           <CardThumbnail
@@ -47,32 +58,36 @@ export function OrderForm({ product }: OrderFormProps) {
             src={cardItem.thumbUrl}
             alt="card"
             onClick={() => {
-              card.setSelectedCard(cardItem)
-              card.setMessage(cardItem.defaultTextMessage)
+              setSelectedCard(cardItem)
+              setValue('message', cardItem.defaultTextMessage)
             }}
-            selected={card.selectedCard.id === cardItem.id}
+            selected={selectedCard.id === cardItem.id}
           />
         ))}
       </CardList>
 
       <SelectedCard>
-        <img src={card.selectedCard.imageUrl} alt="selected" />
+        <img src={selectedCard.imageUrl} alt="selected" />
         <textarea
-          value={card.message}
-          onChange={(e) => card.setMessage(e.target.value)}
+          {...register('message', {
+            required: '메시지를 입력해주세요.',
+          })}
+          value={message}
+          onChange={(e) => setValue('message', e.target.value)}
           placeholder="메시지를 입력해주세요."
         />
-        {isSubmitted && card.error && <Error>{card.error}</Error>}
+        {errors.message && <Error>{errors.message.message}</Error>}
       </SelectedCard>
 
       <PersonSection>
         <PersonLabel>보내는 사람</PersonLabel>
         <input
-          value={sender.value}
-          onChange={(e) => sender.set(e.target.value)}
+          {...register('sender', {
+            required: '보내는 사람 이름을 입력해주세요.',
+          })}
           placeholder="이름을 입력하세요."
         />
-        {isSubmitted && sender.error && <Error>{sender.error}</Error>}
+        {errors.sender && <Error>{errors.sender.message}</Error>}
       </PersonSection>
 
       <PersonSection>
@@ -80,54 +95,59 @@ export function OrderForm({ product }: OrderFormProps) {
         <ReceiverSection>
           <FieldLabel>이름</FieldLabel>
           <input
-            value={receiver.value}
-            onChange={(e) => receiver.set(e.target.value)}
+            {...register('receiver', {
+              required: '받는 사람 이름을 입력해주세요.',
+            })}
             placeholder="이름을 입력하세요."
           />
         </ReceiverSection>
-        {isSubmitted && receiver.error && <Error>{receiver.error}</Error>}
+        {errors.receiver && <Error>{errors.receiver.message}</Error>}
 
         <ReceiverSection>
           <FieldLabel>전화번호</FieldLabel>
           <input
-            value={receiverPhone.value}
-            onChange={(e) => receiverPhone.set(e.target.value)}
+            {...register('receiverPhone', {
+              required: '전화번호를 입력해주세요.',
+              pattern: {
+                value: /^010\d{8}$/,
+                message: '올바른 전화번호 형식이 아닙니다.',
+              },
+            })}
             placeholder="전화번호를 입력하세요."
           />
         </ReceiverSection>
-        {isSubmitted && receiverPhone.error && (
-          <Error>{receiverPhone.error}</Error>
-        )}
+        {errors.receiverPhone && <Error>{errors.receiverPhone.message}</Error>}
 
         <ReceiverSection>
           <FieldLabel>수량</FieldLabel>
           <input
             type="number"
-            min="1"
-            value={quantity.value}
-            onChange={(e) => quantity.set(Number(e.target.value))}
+            min="0"
+            {...register('quantity', {
+              required: '수량을 입력해주세요.',
+              min: { value: 1, message: '수량은 1개 이상이어야 합니다.' },
+            })}
           />
         </ReceiverSection>
-        {isSubmitted && quantity.error && <Error>{quantity.error}</Error>}
+        {errors.quantity && <Error>{errors.quantity.message}</Error>}
       </PersonSection>
 
       <ProductInfo>
         <label>상품 정보</label>
         <ProductBox>
-          <ProductImage
-            src="https://st.kakaocdn.net/product/gift/product/20231030175450_53e90ee9708f45ffa45b3f7b4bc01c7c.jpg"
-            alt="상품 이미지"
-          />
+          <ProductImage src={product.imageURL} alt={product.name} />
           <ProductDetails>
-            <ProductName>{productName}</ProductName>
-            <ProductBrand>{brandName}</ProductBrand>
-            <ProductPrice>{price.toLocaleString()}원</ProductPrice>
+            <ProductName>{product.name}</ProductName>
+            <ProductBrand>{product.brandInfo.name}</ProductBrand>
+            <ProductPrice>
+              {product.price.sellingPrice.toLocaleString()}원
+            </ProductPrice>
           </ProductDetails>
         </ProductBox>
       </ProductInfo>
 
       <OrderButton type="submit">
-        {price.toLocaleString()}원 주문하기
+        {product.price.sellingPrice.toLocaleString()}원 주문하기
       </OrderButton>
     </form>
   )
