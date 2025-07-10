@@ -24,7 +24,14 @@ const NavigationBar = () => {
         <IoArrowBackOutline />
       </button>
 
-      <h1 css={titleStyles(theme)}>선물하기</h1>
+      <h1
+        onClick={() => {
+          navigate("/");
+        }}
+        css={titleStyles(theme)}
+      >
+        선물하기
+      </h1>
 
       <button
         onClick={() => {
@@ -50,14 +57,15 @@ const navigationBarStyles = (theme: Theme) => css`
 
 const titleStyles = (theme: Theme) => css`
   margin: 0;
-  font-size: ${theme.typography.title2Bold.size};
+  cursor: pointer;
+  font-size: ${theme.typography.label1Bold.size};
   font-weight: ${theme.typography.title2Bold.weight};
   color: ${theme.colors.semantic.text.default};
 `;
 
 const iconButtonStyles = (theme: Theme) => css`
   all: unset;
-  font-size: 1.5rem;
+  font-size: ${theme.typography.label2Regular};
   display: flex;
   color: ${theme.colors.semantic.text.default};
   cursor: pointer;
