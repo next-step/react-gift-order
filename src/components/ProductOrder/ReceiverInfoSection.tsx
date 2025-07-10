@@ -20,28 +20,14 @@ const ReceiverInfoSection = ({
 }: ReceiverInfoSectionProps) => {
   return (
     <Section>
-      <Title>받는 사람</Title>
-      <InputOrder
-        label="이름"
-        placeholder="이름을 입력하세요."
-        value={receiverName.value}
-        onChange={receiverName.onChange}
-        error={receiverName.error}
-      />
-      <InputOrder
-        label="전화번호"
-        placeholder="전화번호를 입력하세요."
-        value={receiverPhone.value}
-        onChange={receiverPhone.onChange}
-        error={receiverPhone.error}
-      />
-      <InputOrder
-        label="수량"
-        type="number"
-        value={quantity.value}
-        onChange={quantity.onChange}
-        error={quantity.error}
-      />
+      <RecipientHeaderContainer>
+        <Title>받는 사람</Title>
+        <AddBtn>추가</AddBtn>
+      </RecipientHeaderContainer>
+      <RecipientListContainer>
+        받는 사람이 없습니다. <br />
+        받는 사람을 추가해주세요.
+      </RecipientListContainer>
     </Section>
   );
 };
@@ -53,8 +39,34 @@ const Section = styled.div`
   width: 100%;
 `;
 
+const RecipientHeaderContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+`;
+
 const Title = styled.h3`
   font-size: 16px;
   font-weight: bold;
-  margin-bottom: 12px;
+`;
+
+const AddBtn = styled.button`
+  background-color: ${({ theme }) => theme.colors.gray300};
+  padding: ${({ theme }) => theme.spacing.spacing2}
+    ${({ theme }) => theme.spacing.spacing4}
+    ${({ theme }) => theme.spacing.spacing2}
+    ${({ theme }) => theme.spacing.spacing4};
+  border-radius: ${({ theme }) => theme.spacing.spacing2};
+  border: 0px;
+`;
+
+const RecipientListContainer = styled.div`
+  border: 1px solid ${({ theme }) => theme.colors.gray300};
+  border-radius:  ${({ theme }) => theme.spacing.spacing3};
+  padding: ${({ theme }) => theme.spacing.spacing7}; 0;
+  text-align: center;
+  color:${({ theme }) => theme.colors.gray600};
+  font-size: 14px;
+  line-height: ${({ theme }) => theme.spacing.spacing6};
 `;
