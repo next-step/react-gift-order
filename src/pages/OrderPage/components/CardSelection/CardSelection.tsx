@@ -14,13 +14,13 @@ import type { OrderCardType } from "@/types/OrderCardType";
 import CARD_SELECTION_CONSTANTS from "@/pages/OrderPage/constants/cardSelection";
 import { Controller } from "react-hook-form";
 import type { Control, FieldErrors } from "react-hook-form";
-import type { CardSelectionFormData } from "../../OrderPage";
 import { FORM_FIELD } from "../../constants/formField";
+import type { MessageCardFormData } from "../../OrderPage";
 
 interface CardSelectionProps {
   cards: OrderCardType[];
-  control: Control<CardSelectionFormData>;
-  errors: FieldErrors<CardSelectionFormData>;
+  control: Control<MessageCardFormData>;
+  errors: FieldErrors<MessageCardFormData>;
   messageCard: OrderCardType;
   setMessageCard: (card: OrderCardType) => void;
 }

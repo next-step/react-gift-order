@@ -10,23 +10,22 @@ import { ROUTES } from "@/constants/routes";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { VALIDATE_LABELS } from "./constants/validateLabels";
 import { FORM_FIELD } from "./constants/formField";
-
-export interface SenderFormData {
-  senderName: string;
-}
-
-export interface CardSelectionFormData {
-  cardMessage: string;
-}
+import { messageCardSchema, senderSchema } from "./schemas";
 
 export interface Receiver {
   name: string;
   phone: string;
   quantity: string;
+}
+
+export interface MessageCardFormData {
+  cardMessage: string;
+}
+
+export interface SenderFormData {
+  senderName: string;
 }
 
 const OrderPageContainer = styled.div`
@@ -35,14 +34,6 @@ const OrderPageContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.background.disabled};
   gap: ${({ theme }) => theme.spacing[2]};
 `;
-
-const messageCardSchema = z.object({
-  cardMessage: z.string().nonempty(VALIDATE_LABELS.MESSAGE_EMPTY),
-});
-
-const senderSchema = z.object({
-  senderName: z.string().nonempty(VALIDATE_LABELS.NAME_EMPTY),
-});
 
 function OrderPage() {
   const navigate = useNavigate();
@@ -57,7 +48,7 @@ function OrderPage() {
     formState: { errors: cardSelectionErrors },
     setValue,
     getValues: cardSelectionGetValues,
-  } = useForm<CardSelectionFormData>({
+  } = useForm<MessageCardFormData>({
     mode: isSubmittedOnce ? "onChange" : "onSubmit",
     defaultValues: {
       cardMessage: messageCard.defaultTextMessage,
