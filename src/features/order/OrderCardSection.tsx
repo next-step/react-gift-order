@@ -5,7 +5,7 @@ import type { CardData } from './types'
 import { ORDER_FORM_PLACEHOLDER } from '@/entities/order/orderContent'
 import { Typography } from '@/shared/ui'
 import { Controller, type Control } from 'react-hook-form'
-import type { OrderFormData } from './schema'
+import type { OrderFormData } from '@/entities/order'
 
 type OrderCardSectionProps = {
   cardList: CardData[]

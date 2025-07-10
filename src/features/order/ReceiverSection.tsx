@@ -4,7 +4,7 @@ import { typographyInput, typographyLabel } from '@/shared/styles/typography'
 import { ORDER_FORM_PLACEHOLDER } from '@/entities/order/orderContent'
 import { Typography } from '@/shared/ui'
 import { Controller, type Control } from 'react-hook-form'
-import type { OrderFormData } from './schema'
+import type { OrderFormData } from '@/entities/order'
 
 type ReceiverSectionProps = {
   control: Control<OrderFormData>

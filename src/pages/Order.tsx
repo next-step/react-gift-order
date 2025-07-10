@@ -14,7 +14,7 @@ import { ReceiverSection } from '@/features/order/ReceiverSection'
 import { ROUTE_PATH } from '@/app/Router'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { orderFormSchema, type OrderFormData } from '@/features/order/schema'
+import { orderFormSchema, type OrderFormData } from '@/entities/order'
 
 // * 주문하기 페이지
 export const Order = () => {
