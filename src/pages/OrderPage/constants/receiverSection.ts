@@ -1,5 +1,7 @@
 export const RECEIVER_SECTION_CONSTANTS = {
   TITLE: "받는 사람",
+  INDEX_TITLE: (index: number) =>
+    `${RECEIVER_SECTION_CONSTANTS.TITLE} ${index}`,
   ADD_BUTTON: "추가",
   NO_RECEIVERS_MESSAGE: "받는 사람이 없습니다.",
   ADD_RECEIVER_GUIDE: "받는 사람을 추가해주세요.",

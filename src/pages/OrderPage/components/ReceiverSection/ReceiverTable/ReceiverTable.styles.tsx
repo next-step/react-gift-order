@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-export const ReceiverTable = styled.div`
+export const ReceiverTableContainer = styled.div`
   display: flex;
   flex-direction: column;
   border-radius: ${({ theme }) => theme.borderRadius.md};

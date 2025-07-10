@@ -9,8 +9,8 @@ export const ReceiverSection = styled.section`
 `;
 
 export const SectionTitle = styled.h2`
-  font-size: ${({ theme }) => theme.typography.label.label1Bold.fontSize};
-  font-weight: ${({ theme }) => theme.typography.label.label1Bold.fontWeight};
+  font-size: ${({ theme }) => theme.typography.title.title2Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.title.title2Bold.fontWeight};
   color: ${({ theme }) => theme.colors.text.default};
   margin: 0;
 `;
@@ -34,6 +34,12 @@ export const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing[2]};
+`;
+
+export const ReceiverSectionHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 export const ShowModalButton = styled.button`

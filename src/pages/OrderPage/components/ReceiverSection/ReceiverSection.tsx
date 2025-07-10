@@ -7,23 +7,13 @@ import {
   ReceiverSection,
   SectionTitle,
   ShowModalButton,
+  ReceiverSectionHeader,
 } from "./ReceiverSection.styles";
 import { useState } from "react";
-import {
-  ReceiverSectionHeader,
-  NoReceiversContent,
-  NoReceiversLabel,
-} from "./ReceiverModal.styles";
-import ReceiverModal from "./ReceiverModal";
-import {
-  ReceiverTable,
-  TableCell,
-  TableHeader,
-  TableHeaderCell,
-  TableRow,
-} from "./ReceiverTable";
+import ReceiverModal from "./ReceiverModal/ReceiverModal";
+import ReceiverTable from "./ReceiverTable/ReceiverTable";
+import NoReceiver from "./NoReceiver/NoReceiver";
 import type { Receiver } from "../../hooks/useOrderForm";
-import { TABLE_CELL_CONSTANTS } from "../../constants/table";
 
 interface ReceiverSectionComponentProps {
   receivers: Receiver[];
@@ -54,29 +44,9 @@ function ReceiverSectionComponent({
       </ReceiverSectionHeader>
       <FormContainer>
         {receivers.length === 0 ? (
-          <NoReceiversContent>
-            <NoReceiversLabel>
-              {RECEIVER_SECTION_CONSTANTS.NO_RECEIVERS_MESSAGE}
-            </NoReceiversLabel>
-            <NoReceiversLabel>
-              {RECEIVER_SECTION_CONSTANTS.ADD_RECEIVER_GUIDE}
-            </NoReceiversLabel>
-          </NoReceiversContent>
+          <NoReceiver />
         ) : (
-          <ReceiverTable>
-            <TableHeader>
-              <TableHeaderCell>{TABLE_CELL_CONSTANTS.NAME}</TableHeaderCell>
-              <TableHeaderCell>{TABLE_CELL_CONSTANTS.PHONE}</TableHeaderCell>
-              <TableHeaderCell>{TABLE_CELL_CONSTANTS.QUANTITY}</TableHeaderCell>
-            </TableHeader>
-            {receivers.map((receiver) => (
-              <TableRow key={receiver.phone}>
-                <TableCell>{receiver.name}</TableCell>
-                <TableCell>{receiver.phone}</TableCell>
-                <TableCell>{receiver.quantity}</TableCell>
-              </TableRow>
-            ))}
-          </ReceiverTable>
+          <ReceiverTable receivers={receivers} />
         )}
       </FormContainer>
       {showModal && (

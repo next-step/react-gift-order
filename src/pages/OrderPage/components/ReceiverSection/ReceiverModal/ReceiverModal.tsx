@@ -1,38 +1,38 @@
 import { useForm, useFieldArray } from "react-hook-form";
+import ReceiverForm from "./ReceiverForm";
 import {
-  ModalHeader,
-  ModalOverlay,
+  MAX_RECEIVERS,
+  RECEIVER_MODAL_CONSTANTS,
+  DEFAULT_RECEIVER,
+} from "../../../constants/receiverSection";
+import type { Receiver } from "../../../hooks/useOrderForm";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FORM_FIELD } from "../../../constants/formField";
+import { receiversSchema } from "../../../schemas";
+import {
   ModalContent,
+  ModalOverlay,
+  ModalHeader,
   ModalTitle,
   ModalBody,
+  InfoTextContainer,
   InfoText,
   AddSection,
   AddSectionButton,
   ModalFooter,
   CancelButton,
   CompleteButton,
-  InfoTextContainer,
   ReceiverList,
 } from "./ReceiverModal.styles";
-import ReceiverForm from "./ReceiverForm";
-import {
-  MAX_RECEIVERS,
-  RECEIVER_MODAL_CONSTANTS,
-  DEFAULT_RECEIVER,
-} from "../../constants/receiverSection";
-import type { Receiver } from "../../OrderPage";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FORM_FIELD } from "../../constants/formField";
-import { receiversSchema } from "../../schemas";
+
+interface FormData {
+  receivers: Receiver[];
+}
 
 interface ReceiverModalProps {
   handleCloseModal: () => void;
   receivers: Receiver[];
   setReceivers: (receivers: Receiver[]) => void;
-}
-
-interface FormData {
-  receivers: Receiver[];
 }
 
 function ReceiverModal({
@@ -113,7 +113,7 @@ function ReceiverModal({
           <CancelButton type="button" onClick={handleCloseModal}>
             {RECEIVER_MODAL_CONSTANTS.CANCEL_BUTTON}
           </CancelButton>
-          <CompleteButton type="button" onClick={handleSubmit(onSubmit)}>
+          <CompleteButton type="submit" onClick={handleSubmit(onSubmit)}>
             {RECEIVER_MODAL_CONSTANTS.COMPLETE_BUTTON(fields.length)}
           </CompleteButton>
         </ModalFooter>
