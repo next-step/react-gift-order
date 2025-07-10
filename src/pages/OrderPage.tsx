@@ -2,7 +2,7 @@
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useForm, FormProvider, useFieldArray } from "react-hook-form";
+import { useForm, FormProvider} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { orderFormSchema } from "@/validations/orderSchema";
@@ -14,7 +14,7 @@ import { Navigation } from "@/components/header/Navigation";
 import MessageCardSection from "@/components/order/MessageCardSection";
 import SenderInfoSection from "@/components/order/SenderInfoSection";
 import ReceiverModal from "@/components/order/ReceiverModal";
-import ReceiverList from "@/components/order/ReceiverList";
+import ReceiverTable from "@/components/order/ReceiverTable"; 
 import OrderSummary from "@/components/order/OrderSummary";
 import OrderButton from "@/components/order/OrderButton";
 
@@ -36,12 +36,8 @@ const OrderPage = () => {
     mode: "onBlur",
   });
 
-  const { control, handleSubmit, watch, setValue } = methods;
+  const { handleSubmit, watch, setValue } = methods;
 
-  const { fields, remove } = useFieldArray({
-    control,
-    name: "receivers",
-  });
 
   const [isReceiverModalOpen, setReceiverModalOpen] = useState(false);
 
@@ -59,7 +55,7 @@ const OrderPage = () => {
   const onValid = (data: OrderFormValues) => {
     const qty = data.receivers.reduce((sum, r) => sum + r.quantity, 0);
     alert(
-      `주문 완료!\n상품명: ${product?.name}\n수량: ${qty}개\n보낸 사람: ${data.senderName}\n메시지: ${data.message}`
+      `🎉 주문 완료!\n상품명: ${product?.name}\n수량: ${qty}개\n보낸 사람: ${data.senderName}\n메시지: ${data.message}`
     );
     navigate("/", { replace: true });
   };
@@ -108,7 +104,7 @@ const OrderPage = () => {
                     </EmptyText>
                   </EmptyBox>
                 ) : (
-                  <ReceiverList fields={fields} remove={remove} />
+                  <ReceiverTable />
                 )}
               </SectionCard>
 
