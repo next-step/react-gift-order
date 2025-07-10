@@ -1,10 +1,8 @@
 import { createContext, useContext} from "react";
+import { z } from 'zod';
+import { receiverSchema } from '@/utils/validation/orderFormSchema';
 
-export interface ReceiverInfo {
-    name: string;
-    phone: string;
-    address: string;
-}
+export type ReceiverInfo = z.infer<typeof receiverSchema>;
 
 interface ReceiverContextType {
     receiverList: ReceiverInfo[];
