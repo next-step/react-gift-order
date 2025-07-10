@@ -1,3 +1,4 @@
+import ErrorText from '@components/common/ErrorText';
 import styled from '@emotion/styled';
 import { useLoginForm } from '@hooks/useLoginForm';
 import { useState } from 'react';
@@ -21,13 +22,17 @@ const Title = styled.h1(({ theme }) => ({
   color: theme.colors.semantic.textDefault,
 }));
 
-const Input = styled.input(({ theme }) => ({
+const Input = styled.input<{ hasError?: boolean }>(({ theme, hasError }) => ({
   width: '100%',
   maxWidth: '320px',
   padding: `${theme.spacing.spacing3} 0`,
-  marginBottom: theme.spacing.spacing5,
+  marginBottom: theme.spacing.spacing2,
   border: 'none',
-  borderBottom: `1px solid ${theme.colors.semantic.borderDefault}`,
+  borderBottom: `1px solid ${
+    hasError
+      ? theme.colors.semantic.critical
+      : theme.colors.semantic.borderDefault
+  }`,
   fontSize: theme.typography.body1Regular.fontSize,
   fontWeight: theme.typography.body1Regular.fontWeight,
   color: theme.colors.semantic.textDefault,
@@ -104,8 +109,9 @@ const Login = () => {
           setEmailTouched(true);
           validateEmail();
         }}
+        hasError={emailTouched && !!emailError}
       />
-      {emailTouched && emailError && emailError}
+      {emailTouched && emailError && <ErrorText>{emailError}</ErrorText>}
       <Input
         type="password"
         placeholder="비밀번호"
@@ -115,8 +121,11 @@ const Login = () => {
           setPasswordTouched(true);
           validatePassword();
         }}
+        hasError={passwordTouched && !!passwordError}
       />
-      {passwordTouched && passwordError && passwordError}
+      {passwordTouched && passwordError && (
+        <ErrorText>{passwordError}</ErrorText>
+      )}
       <Button type="submit" disabled={!isValid}>
         로그인
       </Button>
