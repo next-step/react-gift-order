@@ -19,26 +19,26 @@ const GiftGrid = () => {
     }
   };
 
-const visibleGifts: Gift[] = GiftList.slice(0, visibleCount);
+  const visibleGifts: Gift[] = GiftList.slice(0, visibleCount);
 
   return (
     <>
       <GridWrapper>
-      {visibleGifts.map((gift, index) => (
-        <GiftItem
-          key={gift.id}
-          {...gift}
-          rank={index + 1}
-          onClick={() => {
-            if (!isLoggedIn) {
-              alert('로그인이 필요합니다.');
-              navigate('/login');
-              return;
-            }
-            navigate('/order', {state:{id:gift.id}});
-          }}
-        />
-      ))}
+        {visibleGifts.map((gift, index) => (
+          <GiftItem
+            key={gift.id}
+            {...gift}
+            rank={index + 1}
+            onClick={() => {
+              if (!isLoggedIn) {
+                alert('로그인이 필요합니다.');
+                navigate('/login');
+                return;
+              }
+              navigate('/order', { state: { id: gift.id } });
+            }}
+          />
+        ))}
       </GridWrapper>
       <ButtonWrapper>
         <MoreButton onClick={handleCount}>{visibleCount >= 21 ? '접기' : '더보기'}</MoreButton>

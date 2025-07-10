@@ -49,7 +49,6 @@ const Price = styled.div`
   color: ${({ theme }) => theme.color.semantic.text.default};
 `;
 
-
 interface GiftItemProps extends Gift {
   rank: number;
   onClick: () => void;

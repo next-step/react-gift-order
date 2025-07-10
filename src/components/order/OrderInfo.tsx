@@ -115,9 +115,13 @@ const GiftForm = () => {
     message: '',
   });
 
+  if (!selectedGift) {
+    return <div>선택한 상품이 없습니다.</div>;
+  }
+
   const handleSubmit = () => {
     if (!validate()) return;
-    
+
     alert(
       `주문이 완료되었습니다.
       상품명: ${selectedGift.name}
@@ -194,10 +198,7 @@ const GiftForm = () => {
       <Section>
         <Label>상품 정보</Label>
         <ProductInfo>
-          <ProductImage
-            src={selectedGift.imageURL}
-            alt={selectedGift.name}
-          />
+          <ProductImage src={selectedGift.imageURL} alt={selectedGift.name} />
           <ProductDetails>
             <strong>{selectedGift.name}</strong>
             <span>{selectedGift.brandInfo.name}</span>
