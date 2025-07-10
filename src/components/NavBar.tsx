@@ -24,8 +24,8 @@ const NavBarBackBtn = styled.button`
   cursor: pointer;
 
   position: absolute;
-  top: 0px;
-  left: 0px;
+  top: ${({ theme }) => theme.spacing.spacing0};
+  left: ${({ theme }) => theme.spacing.spacing0};
 
   display: flex;
   justify-content: center;
@@ -47,8 +47,8 @@ const NavBarLoginBtn = styled.button`
   cursor: pointer;
 
   position: absolute;
-  top: 0px;
-  right: 0px;
+  top: ${({ theme }) => theme.spacing.spacing0};
+  right: ${({ theme }) => theme.spacing.spacing0};
 
   display: flex;
   justify-content: center;
@@ -58,6 +58,7 @@ const NavBarLoginBtn = styled.button`
 function NavBar() {
   const navigate = useNavigate();
   const userId = useUser(); // session storage에 있는 로그인 정보
+  // state로 관리할 UI 요소없음
 
   function handleBackNavigation() {
     if(window.history.length > 1) {

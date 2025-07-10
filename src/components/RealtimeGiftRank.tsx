@@ -5,10 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import itemList from '../mocks/item_list.mock';
 
 const RealtimeRankWrapper = styled.div`
-  width: 95%;
+  width: auto;
   height: auto;
-  margin: 0 20px;
-  margin-top: 40px;
+  padding: ${({ theme }) => theme.spacing.spacing2} ${({ theme }) => theme.spacing.spacing4};
 `;
 
 const RealtimeRankTitle = styled.h2`

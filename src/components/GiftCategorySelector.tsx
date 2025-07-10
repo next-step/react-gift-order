@@ -1,10 +1,11 @@
 import styled from '@emotion/styled';
 import categories from '../mocks/category.mock';
+import PromoBanner from './PromoBanner';
 
 const GiftCategorySelectorWrapper = styled.div`
-  width: 100%;
-  height: 300px;
-  padding: 30px 20px;
+  width: auto;
+  height: auto;
+  padding: ${({ theme }) => theme.spacing.spacing8} ${({ theme }) => theme.spacing.spacing4};
 `;
 
 const GiftCategorySelectorTitle = styled.h2`
@@ -14,17 +15,42 @@ const GiftCategorySelectorTitle = styled.h2`
 `;
 
 const GiftCategorySelectorItemBoxStyle = styled.div`
-  width: 100%;
+  width: auto;
   height: auto;
-  padding-top: 16px;
-
+  margin-top: ${({ theme }) => theme.spacing.spacing5};
+  margin-bottom: ${({ theme }) => theme.spacing.spacing10};
+  
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  row-gap: 10px;
-  column-gap: 10px;
+  row-gap: ${({ theme }) => theme.spacing.spacing5};
+  column-gap: ${({ theme }) => theme.spacing.spacing7};
+`;
+
+const GiftCategorySelectorItemWrapper = styled.div`
+  width: auto;
+  height: auto;
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const GiftCategorySelectorItemImg = styled.img`
+  width: ${({ theme }) => theme.spacing.spacing13};
+  height: ${({ theme }) => theme.spacing.spacing13};
+`;
+
+const GiftCategorySelectorItemText = styled.p`
+  font-size: 12px;
+  font-weight: 300;
+  text-align: center;
+  margin-top: ${({ theme }) => theme.spacing.spacing1};
 `;
 
 function GiftCategorySelectorItemBox() {
+  
   return (
     <GiftCategorySelectorItemBoxStyle>
       {categories.map((item) => (
@@ -42,32 +68,14 @@ function GiftCategorySelectorItemBox() {
   );
 }
 
-const GiftCategorySelectorItemWrapper = styled.div`
-  width: 80px;
-  height: 80px;
-  cursor: pointer;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const GiftCategorySelectorItemImg = styled.img`
-  width: 50px;
-  height: 50px;
-`;
-
-const GiftCategorySelectorItemText = styled.p`
-  font-size: 11px;
-  text-align: center;
-`;
-
 function GiftCategorySelector() {
+  // 아직까진 state로 관리할 UI나 로그인 정보 필요없음
+
   return (
     <GiftCategorySelectorWrapper>
       <GiftCategorySelectorTitle>선물 테마</GiftCategorySelectorTitle>
       <GiftCategorySelectorItemBox></GiftCategorySelectorItemBox>
+      <PromoBanner></PromoBanner>
     </GiftCategorySelectorWrapper>
   );
 }
