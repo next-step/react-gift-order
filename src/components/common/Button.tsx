@@ -10,17 +10,10 @@ interface ButtonProps extends ComponentPropsWithoutRef<"button"> {
   fullWidth?: boolean;
 }
 
-const Button = (props: ButtonProps) => {
+const Button = ({ variant, size, fullWidth, children, ...props }: ButtonProps) => {
   return (
-    <Style
-      variant={props.variant}
-      size={props.size}
-      fullWidth={props.fullWidth}
-      onClick={props.onClick}
-      disabled={props.disabled}
-      type={props.type}
-    >
-      {props.children}
+    <Style variant={variant} size={size} fullWidth={fullWidth} {...props}>
+      {children}
     </Style>
   );
 };

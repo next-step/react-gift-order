@@ -91,4 +91,4 @@ export const categoryMock: CategoryType[] = [
     image:
       "https://img1.daumcdn.net/thumb/S104x104/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fgift%2Fhome%2Ftheme%2F370220241228_UPSAE.png",
   },
-];
+] as const;

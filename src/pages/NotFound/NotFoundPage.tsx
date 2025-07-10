@@ -1,12 +1,12 @@
-import Container from "@/components/Container";
+import Container from "@/components/common/Container";
 import styled from "@emotion/styled";
 import { useNavigate } from "react-router-dom";
-import { ROUTE_PATH } from "@/App";
+import { ROUTE_PATH } from "@/components/routes/routePath";
 import Button from "@/components/common/Button";
 
 const NOT_FOUND_IMG_URL = "https://gift-s.kakaocdn.net/dn/gift/webapp/images/m640/img_not_found.png";
 
-const NotFound = () => {
+const NotFoundPage = () => {
   const navigate = useNavigate();
   const goHome = () => {
     navigate(ROUTE_PATH.HOME);
@@ -55,4 +55,4 @@ const Msg = styled.p`
   color: ${({ theme }) => theme.color.gray700};
 `;
 
-export default NotFound;
+export default NotFoundPage;

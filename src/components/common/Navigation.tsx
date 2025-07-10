@@ -2,12 +2,15 @@ import styled from "@emotion/styled";
 import LeftArrow from "@/components/icons/LeftArrow";
 import Profile from "@/components/icons/Profile";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ROUTE_PATH } from "@/App";
 import Button from "@/components/common/Button";
+import { useAuth } from "@/contexts/authContext";
+import { ROUTE_PATH } from "../routes/routePath";
 
 const Navigation = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { auth } = useAuth();
+  const isLoggedIn = !!auth.userEmail;
   const goBack = () => {
     if (window.history.length > 1) {
       navigate(-1);
@@ -19,12 +22,13 @@ const Navigation = () => {
     navigate(ROUTE_PATH.HOME);
   };
   const goLogin = () => {
-    let path: string = `${ROUTE_PATH.LOGIN}`;
-    if ((Object.values(ROUTE_PATH) as string[]).includes(location.pathname)) {
-      path = path + `?redirect=${location.pathname}`;
+    if (isLoggedIn) navigate(ROUTE_PATH.PROFILE);
+    else {
+      const loginPath = ROUTE_PATH.LOGIN + `?redirect=${location.pathname}`;
+      navigate(loginPath);
     }
-    navigate(path);
   };
+  const isLoginPageOrProfilePage = location.pathname === ROUTE_PATH.LOGIN || location.pathname === ROUTE_PATH.PROFILE;
   return (
     <Container>
       <Nav>
@@ -39,7 +43,7 @@ const Navigation = () => {
           </Button>
         </NavCenter>
         <NavRight>
-          <Button variant="icon" onClick={goLogin} disabled={location.pathname === ROUTE_PATH.LOGIN}>
+          <Button variant="icon" onClick={goLogin} disabled={isLoginPageOrProfilePage}>
             <Profile />
           </Button>
         </NavRight>

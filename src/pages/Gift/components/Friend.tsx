@@ -1,14 +1,17 @@
 import styled from "@emotion/styled";
 import Plus from "@/components/icons/Plus";
+import { useAuth } from "@/contexts/authContext";
 
 const Friend = () => {
+  const { auth } = useAuth();
+  const userName = auth.userEmail?.split("@")[0];
   return (
     <Container>
       <Content>
         <PlusWrapper>
           <Plus />
         </PlusWrapper>
-        <Msg>선물할 친구를 선택해 주세요.</Msg>
+        <Msg>{userName && `${userName}님! `}선물할 친구를 선택해 주세요.</Msg>
       </Content>
     </Container>
   );

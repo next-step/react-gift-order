@@ -1,70 +1,48 @@
-import { ROUTE_PATH } from "@/App";
 import Button from "@/components/common/Button";
-import Container from "@/components/Container";
-import Divider from "@/components/Divider";
+import Container from "@/components/common/Container";
+import Divider from "@/components/common/Divider";
 import styled from "@emotion/styled";
 import type React from "react";
-import useInput from "@/hooks/useInput";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import type { ThemeType } from "@/types/ThemeType";
-import theme from "@/styles/theme/theme";
+import useLoginInput from "@/hooks/useLoginInput";
+import { useAuth } from "@/contexts/authContext";
 
-const ERROR_MSG_ID_EMPTY = "ID를 입력해주세요.";
-const ERROR_MSG_ID_FORM = "ID는 이메일 형식으로 입력해주세요.";
-const ERROR_MSG_PASSWORD_EMPTY = "PW를 입력해주세요.";
-const ERROR_MSG_PASSWORD_FORM = "PW는 최소 8글자 이상이어야 합니다.";
+const LoginPage = () => {
+  const { user, onChange, onBlur, errorMsg } = useLoginInput();
+  const { login } = useAuth();
 
-const Login = () => {
-  const id = useInput("", isValidId);
-  const password = useInput("", isValidPassword);
-  const navigate = useNavigate();
-  const [redirectUrl] = useSearchParams();
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleLoginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const redirect = () => {
-      const path = redirectUrl.get("redirect")?.trim();
-      if (path && (Object.values(ROUTE_PATH) as string[]).includes(path)) {
-        return path;
-      } else {
-        return ROUTE_PATH.HOME;
-      }
-    };
-    if (redirect() === ROUTE_PATH.LOGIN) {
-      navigate(ROUTE_PATH.HOME);
-    } else {
-      navigate(`${redirect()}`);
-    }
+    login(user.id);
   };
-
-  const isValidIdAndPassword =
-    id.value.length !== 0 && password.value.length !== 0 && !id.errorMsg && !password.errorMsg;
+  const isValidIdAndPassword = user.id.length !== 0 && user.password.length >= 8 && !errorMsg.id && !errorMsg.password;
   return (
     <Container>
       <Content>
         <Logo>kakao</Logo>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleLoginSubmit}>
           <InputWrapper>
             <Input
+              name="id"
               type="email"
               placeholder="이메일"
-              onChange={id.onChange}
-              onBlur={id.onBlur}
-              errorMsg={id.errorMsg}
-              theme={theme}
+              onChange={onChange}
+              onBlur={onBlur}
+              errorMsg={errorMsg.id}
+              value={user.id}
             />
-            <ErrorMsg>{id.errorMsg}</ErrorMsg>
+            {errorMsg.id && <ErrorMsg>{errorMsg.id}</ErrorMsg>}
           </InputWrapper>
           <InputWrapper>
             <Input
+              name="password"
               type="password"
               placeholder="비밀번호"
-              onChange={password.onChange}
-              onBlur={password.onBlur}
-              errorMsg={password.errorMsg}
-              theme={theme}
+              onChange={onChange}
+              onBlur={onBlur}
+              errorMsg={errorMsg.password}
+              value={user.password}
             />
-            <ErrorMsg>{password.errorMsg}</ErrorMsg>
+            {errorMsg.password && <ErrorMsg>{errorMsg.password}</ErrorMsg>}
           </InputWrapper>
           <Divider />
           <Button fullWidth={true} type="submit" disabled={!isValidIdAndPassword}>
@@ -74,20 +52,6 @@ const Login = () => {
       </Content>
     </Container>
   );
-};
-
-const isValidId = (id: string) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  let msg: string | null = null;
-  if (!id) msg = ERROR_MSG_ID_EMPTY;
-  else if (!emailRegex.test(id)) msg = ERROR_MSG_ID_FORM;
-  return msg;
-};
-const isValidPassword = (password: string) => {
-  let msg: string | null = null;
-  if (!password) msg = ERROR_MSG_PASSWORD_EMPTY;
-  else if (password.length < 8) msg = ERROR_MSG_PASSWORD_FORM;
-  return msg;
 };
 
 const Content = styled.div`
@@ -126,7 +90,6 @@ const InputWrapper = styled.div`
 
 type InputType = {
   errorMsg: string | null;
-  theme: ThemeType;
 };
 const Input = styled.input<InputType>`
   width: 100%;
@@ -154,4 +117,4 @@ const ErrorMsg = styled.p`
   min-height: 1rem;
 `;
 
-export default Login;
+export default LoginPage;
