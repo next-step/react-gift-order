@@ -20,13 +20,13 @@ interface OrderCard {
   defaultTextMessage: string;
 }
 
+
 // 받는 사람 타입 정의
 interface Receiver {
   receiverName: string;
   phoneNumber: string;
   quantity: number;
 }
-
 // 카드 컨테이너 스타일
 const cardScrollContainer = css({
   display: 'flex',
@@ -110,7 +110,6 @@ const inputContainer = css({
   alignItems: 'center',
   marginBottom: spacing.spacing3,
 });
-
 // 주문 정보 컨테이너 스타일
 const orderInfoContainer = css({
   padding: spacing.spacing4,
@@ -157,6 +156,7 @@ const errorMessage = css({
   marginBottom: spacing.spacing3,
   marginLeft: '70px',
 });
+
 
 // 받는 사람 영역 스타일
 const receiverSectionHeader = css({
@@ -221,10 +221,12 @@ const receiverTableTd = (isFirst: boolean) => css({
 });
 
 
+
 const OrderPage = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const { productId } = useParams();
+
 
   // react-hook-form 적용
   const { register, handleSubmit, formState: { errors } } = useForm({
@@ -234,10 +236,12 @@ const OrderPage = () => {
       senderName: '',
     },
   });
+
   
   // 가져온 orderCard.ts 데이터 사용
   const [selectedCard, setSelectedCard] = useState<OrderCard>(orderCardsData[0]);
   
+
   // 모달 열기/닫기 상태
   const [receiverModalOpen, setReceiverModalOpen] = useState(false);
 
@@ -255,6 +259,7 @@ const OrderPage = () => {
     navigate('/');
   };
   
+
   // 로그인 체크
   useEffect(() => {
     if (!isAuthenticated) {
@@ -262,6 +267,7 @@ const OrderPage = () => {
     }
   }, [isAuthenticated, navigate, productId]);
   
+
   // 받는 사람 전체 수량 합계 계산
   const totalQuantity = receivers.reduce((sum, r) => sum + (Number(r.quantity) || 0), 0);
   const totalPrice = product.price.sellingPrice * (totalQuantity || 1);
@@ -270,8 +276,8 @@ const OrderPage = () => {
     <>
       <GlobalStyle />
       <Header />
+
       <div>
-        
         {/* 카드 선택 영역 */}
         <div>
           <div css={cardScrollContainer}>
@@ -386,6 +392,7 @@ const OrderPage = () => {
             onClose={() => setReceiverModalOpen(false)}
           />
         )}
+
       </div>
     </>
   );
