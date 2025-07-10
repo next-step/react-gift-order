@@ -6,6 +6,7 @@ const RecipientFieldArray = () => {
   return (
     <Container>
       <Msg>{DEFAULT_MESSAGE}</Msg>
+      {/* {여기에 recipient map 예정} */}
     </Container>
   );
 };

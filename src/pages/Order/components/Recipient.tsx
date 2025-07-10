@@ -8,7 +8,7 @@ const Recipient = () => {
       <Divider spacing="1rem" />
       <Wrapper>
         <Title>받는 사람</Title>
-        <ModalBtn>추가</ModalBtn>
+        <ModalBtn type="button">추가</ModalBtn>
       </Wrapper>
       <Divider spacing="1rem" />
       <RecipientFieldArray />

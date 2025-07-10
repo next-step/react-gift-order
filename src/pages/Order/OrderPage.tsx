@@ -28,6 +28,7 @@ const OrderPageContent = () => {
         <Divider spacing="3.125rem" />
         <Order.Btn />
       </Content>
+      <Order.Modal />
     </Container>
   );
 };
