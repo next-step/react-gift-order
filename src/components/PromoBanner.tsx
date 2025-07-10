@@ -11,10 +11,8 @@ const PromoBannerWrapper = styled.div`
 
 const PromoBannerTitle = styled.p`
   font-size: ${({ theme }) => theme.typography.label.label2Regular.fontSize};
-  font-weight: ${({ theme }) =>
-    theme.typography.label.label2Regular.fontWeight};
-  line-height: ${({ theme }) =>
-    theme.typography.label.label2Regular.lineHeight};
+  font-weight: ${({ theme }) => theme.typography.label.label2Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label.label2Regular.lineHeight};
   color: ${({ theme }) => theme.colors.gray.gray700};
 `;
 
@@ -26,8 +24,6 @@ const PromoBannerSubTitle = styled.p`
 `;
 
 function PromoBanner() {
-  // 여기엔 로그인 정보 필요없음
-  // 그리고 state로 관리할것도 없음
 
   return (
     <PromoBannerWrapper>

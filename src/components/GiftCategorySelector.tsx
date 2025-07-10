@@ -69,7 +69,6 @@ function GiftCategorySelectorItemBox() {
 }
 
 function GiftCategorySelector() {
-  // 아직까진 state로 관리할 UI나 로그인 정보 필요없음
 
   return (
     <GiftCategorySelectorWrapper>
