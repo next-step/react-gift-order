@@ -1,11 +1,5 @@
 import { useState } from "react";
 
-type Receiver = {
-  name: string;
-  phone: string;
-  quantity: number;
-};
-
 export default function useOrderForm(initial = "") {
   const [value, setValue] = useState(initial);
   const [error, setError] = useState(false);

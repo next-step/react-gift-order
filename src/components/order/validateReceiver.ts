@@ -1,8 +1,4 @@
-export type Receiver = {
-  name: string;
-  phone: string;
-  quantity: number;
-};
+import type { Receiver } from "@/types/order";
 
 export function validateReceivers(receivers: Receiver[]) {
   return receivers.filter((r, idx, arr) => {
