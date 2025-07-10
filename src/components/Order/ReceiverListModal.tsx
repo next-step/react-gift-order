@@ -223,7 +223,9 @@ const ReceiverListModal = ({
         </ModalContent>
         <ModalButtonWrapper>
           <ModalCancleButton onClick={onClose}>취소</ModalCancleButton>
-          <ModalCompleteButton type="submit">명 완료</ModalCompleteButton>
+          <ModalCompleteButton type="submit">
+            {fields.length}명 완료
+          </ModalCompleteButton>
         </ModalButtonWrapper>
       </ModalContainer>
     </ModalOverlay>
