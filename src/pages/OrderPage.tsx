@@ -29,9 +29,11 @@ const OrderPage = () => {
     defaultValues: {
       message: selectedCard.defaultTextMessage,
       sender: "",
-      receiver: [{ name: "", phone: "", count: 1 }],
+      receiver: [],
     },
   });
+
+  const watchedReceiver = methods.watch("receiver");
 
   const userInfo = useUserInfo();
 
@@ -56,11 +58,16 @@ const OrderPage = () => {
   }
 
   const onValid: SubmitHandler<OrderFormValue> = data => {
+    const totalCount = data.receiver.reduce(
+      (sum, receiver) => sum + Number(receiver.count),
+      0,
+    );
+
     alert(
       [
         "주문이 완료되었습니다.",
         `상품명: ${gift.name}`,
-        `구매 수량: ${data.receiver[0].count}`,
+        `구매 수량: ${totalCount}개`,
         `보낸 사람: ${data.sender}`,
         `메시지: ${data.message}`,
       ].join("\n"),
@@ -83,7 +90,10 @@ const OrderPage = () => {
             <GiftInformationSection selectedGift={gift} />
             <Button type="submit">
               {gift.price.sellingPrice *
-                Number(methods.getValues("receiver")[0].count)}
+                watchedReceiver.reduce(
+                  (total, receiver) => total + Number(receiver.count || 0),
+                  0,
+                )}
               원 주문하기
             </Button>
           </Form>
