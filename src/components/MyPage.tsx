@@ -1,31 +1,13 @@
 import { useUserInfo } from "@/context/UserInfoProvider";
-import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Theme } from "@emotion/react";
 import { useTheme } from "@emotion/react";
 import { css } from "@emotion/react";
 
 const MyPage: React.FC = () => {
-  const { user, setUser } = useUserInfo();
+  const { user } = useUserInfo();
   const theme = useTheme();
   const navigate = useNavigate();
-
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const email = sessionStorage.getItem("email");
-
-    if (!email) {
-      navigate("/login");
-    } else {
-      setUser({ email });
-    }
-    setIsLoading(false);
-  }, []);
-
-  if (isLoading) {
-    return null; // 로딩 중일 땐 아무것도 안 보여줌
-  }
 
   return (
     <div css={ContainerStyle(theme)}>

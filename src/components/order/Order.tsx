@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { cardData } from "@/data/cardData";
 import { useTheme } from "@emotion/react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { giftData } from "@/data/giftData";
 import CardView from "@/components/order/CardView";
-import { useUserInfo } from "@/context/UserInfoProvider";
 import {
   CardWrapperStyle,
   WrapperStyle,
@@ -37,24 +36,12 @@ const Order: React.FC = () => {
   const ReceiverNameRef = useRef<HTMLInputElement>(null);
   const PhoneNumberRef = useRef<HTMLInputElement>(null);
   const GiftMessageRef = useRef<HTMLTextAreaElement>(null);
-  const navigate = useNavigate();
-  const { setUser } = useUserInfo();
 
   const [messageError, setMessageError] = useState("");
   const [senderError, setSenderError] = useState("");
   const [receiverError, setReceiverError] = useState("");
   const [phoneError, setPhoneError] = useState("");
   const [countError, setCountError] = useState("");
-
-  useEffect(() => {
-    const email = sessionStorage.getItem("email");
-
-    if (!email) {
-      navigate("/login");
-    } else {
-      setUser({ email });
-    }
-  }, [navigate, setUser]);
 
   const handleSubmit = () => {
     const msg = GiftMessageRef.current?.value.trim() ?? "";
