@@ -1,11 +1,68 @@
 import { useModal } from "@/contexts/ModalContext";
 import styled from "@emotion/styled";
 import DescriptionMessage from "../common/DescriptionMessage";
+import { useFormContext, useFieldArray } from "react-hook-form";
+import ReceiverForm from "./ReceiverForm";
+import { useState, useEffect } from "react";
+
+type FormValues = {
+  receiver: {
+    name: string;
+    phone: string;
+    count: number;
+  }[];
+};
 
 const ReceiverModal = () => {
   const { isOpen, closeModal } = useModal();
+  const {
+    control,
+    register,
+    trigger,
+    getValues,
+    setValue,
+    formState: { errors },
+  } = useFormContext<FormValues>();
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "receiver",
+  });
+
+  const [initialReceiverList, setInitialReceiverList] = useState<
+    FormValues["receiver"]
+  >([]);
+
+  useEffect(() => {
+    if (isOpen) {
+      const currentReceiver = getValues("receiver");
+      setInitialReceiverList([...currentReceiver]);
+    }
+  }, [isOpen, getValues]);
 
   if (!isOpen) return null;
+
+  const handlePlus = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    append({ name: "", phone: "", count: 1 });
+  };
+  const handleCencel = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setValue("receiver", initialReceiverList);
+    closeModal();
+  };
+
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const isValid = await trigger("receiver");
+    if (isValid) {
+      closeModal();
+    }
+  };
 
   return (
     <Backdrop>
@@ -14,15 +71,28 @@ const ReceiverModal = () => {
           <Title>받는 사람</Title>
           <DescriptionMessage message="* 최대 10명까지 추가 할 수 있어요." />
           <DescriptionMessage message="* 받는 사람의 전화번호를 중복으로 입력할 수 없어요." />
-          <PlusButton>추가하기</PlusButton>
+          <PlusButton onClick={handlePlus}>추가하기</PlusButton>
         </div>
-        <FormDiv></FormDiv>
+        <FormDiv>
+          {fields.length > 0 &&
+            fields.map((field, index) => (
+              <div key={field.id}>
+                <ReceiverForm
+                  index={index}
+                  register={register}
+                  errors={errors}
+                  remove={remove}
+                />
+                {index < fields.length - 1 && <Divider />}
+              </div>
+            ))}
+        </FormDiv>
         <CloseDiv>
-          <CloseButton variant="cancel" onClick={closeModal}>
+          <CloseButton variant="cancel" onClick={handleCencel}>
             취소
           </CloseButton>
-          <CloseButton variant="submit" onClick={closeModal}>
-            0명 완료
+          <CloseButton variant="submit" onClick={handleSubmit}>
+            {fields.length}명 완료
           </CloseButton>
         </CloseDiv>
       </ModalBox>
@@ -107,4 +177,12 @@ const CloseButton = styled.button<{ variant: "cancel" | "submit" }>`
   font-weight: ${({ theme }) => theme.typography.subtitle2Regular.fontWeight};
   line-height: ${({ theme }) => theme.typography.subtitle2Regular.lineHeight};
   cursor: pointer;
+`;
+
+const Divider = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: ${({ theme }) => theme.colors.gray.gray400};
+  margin: ${({ theme }) =>
+    `${theme.spacing.spacing2} 0 ${theme.spacing.spacing4}`};
 `;

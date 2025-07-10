@@ -7,7 +7,7 @@ import { cards } from "@/data/card";
 import type { Card } from "@/types/card";
 import styled from "@emotion/styled";
 import CardSection from "@/components/order/CardSection";
-import SendSection from "@/components/order/SendSection";
+import SenderSection from "@/components/order/SenderSection";
 import ReceiverSection from "@/components/order/ReceiverSection";
 import GiftInformationSection from "@/components/order/GiftInformationSection";
 import { useUserInfo } from "@/contexts/UserInfoContext";
@@ -17,9 +17,7 @@ import type { SubmitHandler } from "react-hook-form";
 type OrderFormValue = {
   message: string;
   sender: string;
-  receiver: string;
-  phone: string;
-  count: number;
+  receiver: { name: string; phone: string; count: number }[];
 };
 
 const OrderPage = () => {
@@ -27,14 +25,14 @@ const OrderPage = () => {
   const navigate = useNavigate();
   const [selectedCard, setSelectedCard] = useState<Card>(cards[0]);
   const methods = useForm<OrderFormValue>({
+    mode: "onChange",
     defaultValues: {
       message: selectedCard.defaultTextMessage,
       sender: "",
-      receiver: "",
-      phone: "",
-      count: 1,
+      receiver: [{ name: "", phone: "", count: 1 }],
     },
   });
+
   const userInfo = useUserInfo();
 
   useEffect(() => {
@@ -62,7 +60,7 @@ const OrderPage = () => {
       [
         "주문이 완료되었습니다.",
         `상품명: ${gift.name}`,
-        `구매 수량: ${data.count}`,
+        `구매 수량: ${data.receiver[0].count}`,
         `보낸 사람: ${data.sender}`,
         `메시지: ${data.message}`,
       ].join("\n"),
@@ -80,12 +78,13 @@ const OrderPage = () => {
               selectedCard={selectedCard}
               setSelectedCard={setSelectedCard}
             />
-            <SendSection />
+            <SenderSection />
             <ReceiverSection />
             <GiftInformationSection selectedGift={gift} />
-            <Button>
-              {gift.price.sellingPrice * Number(methods.getValues("count"))}원
-              주문하기
+            <Button type="submit">
+              {gift.price.sellingPrice *
+                Number(methods.getValues("receiver")[0].count)}
+              원 주문하기
             </Button>
           </Form>
         </FormProvider>

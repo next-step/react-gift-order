@@ -4,7 +4,7 @@ import DescriptionMessage from "../common/DescriptionMessage";
 import { useFormContext } from "react-hook-form";
 import { checkNameError } from "@/utils/validation";
 
-const SendSection = () => {
+const SenderSection = () => {
   const {
     register,
     formState: { errors },
@@ -13,7 +13,8 @@ const SendSection = () => {
     <Section>
       <Title>보내는 사람</Title>
       <Input
-        error={!!errors.sender}
+        placeholder="이름을 입력하세요."
+        error={!!errors.sender?.message}
         type="text"
         {...register("sender", {
           validate: value => checkNameError(value),
@@ -30,7 +31,7 @@ const SendSection = () => {
   );
 };
 
-export default SendSection;
+export default SenderSection;
 
 const Section = styled.section`
   background-color: ${({ theme }) => theme.colors.semantic.background.default};
