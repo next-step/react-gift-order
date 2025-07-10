@@ -275,10 +275,10 @@ const PresentRanking: React.FC = () => {
 
   const goOrder = () => {
     if (user) {
-      navigate('/Order', { state: { product: productData } });
+      navigate(`/Order?productId=${productData.id}`);
     } else {
       navigate('/login', {
-        state: { from: { pathname: '/Order' } },
+        state: { from: { pathname: '/Order', search: `?productId=${productData.id}` } },
       });
     }
   };

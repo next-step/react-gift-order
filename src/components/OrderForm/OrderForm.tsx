@@ -1,10 +1,11 @@
 import styled from '@emotion/styled';
 import Card from '@/components/OrderForm/Card';
 import { Sender } from '@/components/OrderForm/Sender';
-import { Recipinet } from '@/components/OrderForm/Recipinet';
+import { Recipinet } from '@components/OrderForm/Recipient';
 import { ProductInfo } from '@/components/OrderForm/ProductInfo';
-import { useLocation } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { OrderButton } from '@/components/OrderForm/OrderButton';
+import productData from '@/data/productData';
 
 const Wrapper = styled.section(({ theme }) => ({
   width: '100%',
@@ -19,8 +20,15 @@ const Margin = styled.div<{ height: string }>`
 `;
 
 const OrderForm = () => {
-  const location = useLocation();
-  const selectedProduct = location.state?.product;
+  const [searchParams] = useSearchParams();
+  const productIdParam = searchParams.get('productId');
+
+  const selectedProduct = productIdParam === String(productData.id) ? productData : null;
+
+  if (!selectedProduct) {
+    return <div>존재하지 않는 상품입니다.</div>;
+  }
+
   return (
     <Wrapper>
       <Card />
