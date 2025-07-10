@@ -1,97 +1,102 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import styled from "@emotion/styled";
-import LoginButton from "../components/common/BaseButton";
-import KakaoLogo from "../components/common/KakaoLogo";
-import { useInput } from "../hooks/useInput";
-
-type LocationState = {
-  from?: {
-    pathname: string;
-  };
-};
+import LoginButton from "@/components/common/BaseButton";
+import KakaoLogo from "@/components/common/KakaoLogo";
+import { useForm } from "@/hooks/useForm";
+import { useAuth } from "@/contexts/AuthContext";
+import { useState } from "react";
+import { validateEmail, validatePassword } from "@/utils/validator";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
+  const { login } = useAuth();
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/my";
 
-  const from =
-    typeof location.state?.from?.pathname === "string"
-      ? location.state.from.pathname
-      : "/";
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (
-      emailError ||
-      passwordError ||
-      email.trim() === "" ||
-      password.trim() === ""
-    ) {
-      return;
+  const { values, setValues, errors, setErrors, validateAll } = useForm(
+    {
+      email: "",
+      password: "",
+    },
+    {
+      email: (value) => {
+        if (!value.trim()) return "이메일을 입력해주세요.";
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value))
+          return "이메일은 이메일 형식으로 입력해주세요.";
+        return null;
+      },
+      password: (value) => {
+        if (!value.trim()) return "비밀번호를 입력해주세요.";
+        if (value.length < 8) return "비밀번호는 최소 8자 이상이어야 합니다.";
+        return null;
+      },
     }
-    navigate(from, { replace: true });
+  );
+
+  const [touched, setTouched] = useState({ email: false, password: false });
+
+  const handleBlur = (key: "email" | "password") => {
+    setTouched((prev) => ({ ...prev, [key]: true }));
+    const error =
+      key === "email"
+        ? validateEmail(values.email)
+        : validatePassword(values.password);
+    setErrors((prev) => ({ ...prev, [key]: error ?? undefined }));
   };
 
-  const emailValidation = (value: string) => {
-    if (!value.trim()) return "이메일을 입력해주세요.";
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(value))
-      return "이메일은 이메일 형식으로 입력해주세요.";
-    return "";
+  const handleChange = (key: "email" | "password", value: string) => {
+    setValues({ ...values, [key]: value });
+    if (touched[key]) {
+      const error =
+        key === "email" ? validateEmail(value) : validatePassword(value);
+      setErrors((prev) => ({ ...prev, [key]: error ?? undefined }));
+    }
   };
-
-  const passwordValidation = (value: string) => {
-    if (!value.trim()) return "비밀번호를 입력해주세요.";
-    if (value.length < 8) return "비밀번호는 최소 8자 이상이어야 합니다.";
-    return "";
-  };
-
-  const {
-    value: email,
-    error: emailError,
-    handleChange: handleEmailChange,
-    handleBlur: handleEmailBlur,
-  } = useInput(emailValidation);
-
-  const {
-    value: password,
-    error: passwordError,
-    handleChange: handlePasswordChange,
-    handleBlur: handlePasswordBlur,
-  } = useInput(passwordValidation);
 
   return (
     <Wrapper>
       <Logo>
         <KakaoLogo />
       </Logo>
-      <Form onSubmit={handleSubmit}>
+      <Form
+        onSubmit={(e) => {
+          e.preventDefault();
+          const isValid = validateAll();
+          if (isValid) {
+            login(values.email);
+            navigate(redirectTo);
+          }
+        }}
+      >
         <Input
           type="email"
+          name="email"
           placeholder="이메일"
-          value={email}
-          onChange={handleEmailChange}
-          onBlur={handleEmailBlur}
+          value={values.email}
+          onChange={(e) => handleChange("email", e.target.value)}
+          onBlur={() => handleBlur("email")}
         />
-        {emailError && <ErrorText>{emailError}</ErrorText>}
+        {errors.email && <ErrorText>{errors.email}</ErrorText>}
         <Input
           type="password"
+          name="password"
           placeholder="비밀번호"
-          value={password}
-          onChange={handlePasswordChange}
-          onBlur={handlePasswordBlur}
+          value={values.password}
+          onChange={(e) => handleChange("password", e.target.value)}
+          onBlur={() => handleBlur("password")}
         />
-        {passwordError && <ErrorText>{passwordError}</ErrorText>}
+        {errors.password && <ErrorText>{errors.password}</ErrorText>}
         <LoginButton
           color="yellow"
           type="submit"
           label="로그인"
           size="large"
           disabled={
-            !!emailError ||
-            !!passwordError ||
-            email.trim() === "" ||
-            password.trim() === ""
+            !!errors.email ||
+            !!errors.password ||
+            values.email.trim() === "" ||
+            values.password.trim() === ""
           }
         />
       </Form>

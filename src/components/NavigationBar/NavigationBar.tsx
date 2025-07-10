@@ -1,11 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
-import { useNavigate, useLocation } from "react-router-dom";
-import MyPageIcon from "../common/MyPageIcon";
+import { useNavigate, Link } from "react-router-dom";
+import MyPageIcon from "@/components/common/MyPageIcon";
 
 export default function NavigationBar() {
   const navigate = useNavigate();
-  const location = useLocation();
 
   const handleBack = () => {
     const isInternalReferrer = document.referrer.includes(window.location.host);
@@ -15,13 +14,12 @@ export default function NavigationBar() {
       navigate(-1);
     }
   };
-  const handleLogin = () => navigate("/login", { state: { from: location } });
 
   return (
     <NavBar>
       <BackButton onClick={handleBack}>←</BackButton>
-      <NavTitle>선물하기</NavTitle>
-      <LoginButton onClick={handleLogin}>
+      <NavTitle to="/">선물하기</NavTitle>
+      <LoginButton onClick={() => navigate("/my")}>
         <MyPageIcon />
       </LoginButton>
     </NavBar>
@@ -43,10 +41,11 @@ const BackButton = styled.div`
   color: ${({ theme }) => theme.colors.gray1000};
 `;
 
-const NavTitle = styled.div`
+const NavTitle = styled(Link)`
   font-size: ${({ theme }) => theme.typography.title1Regular.fontSize};
   font-weight: bold;
   color: ${({ theme }) => theme.colors.gray1000};
+  text-decoration: none;
 `;
 
 const LoginButton = styled.button`
