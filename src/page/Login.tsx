@@ -28,12 +28,10 @@ const Login = () => {
     }
   }, [auth.user, navigate]);
 
-  const canSubmit = id.isValid && pw.isValid;
+  const canSubmit = !id.error && !pw.error && id.value != '' && pw.value!= ''
   const handleLoginClick = () => {
-    if (canSubmit) {
-      auth.logIn(id.value);
-      navigate('/My');
-    }
+    auth.logIn(id.value);
+    navigate('/My');
   };
 
   return (
@@ -48,9 +46,9 @@ const Login = () => {
               value={id.value}
               onChange={id.onChange}
               onBlur={id.onBlur}
-              hasError={!!id.error}
+              hasError={!id.isValid}
             />
-            {id.error && <ErrorMessage>{id.error}</ErrorMessage>}
+            {!id.isValid && <ErrorMessage>{id.error}</ErrorMessage>}
           </div>
           <EmptyDiv16h />
           <div>
@@ -60,9 +58,9 @@ const Login = () => {
               value={pw.value}
               onChange={pw.onChange}
               onBlur={pw.onBlur}
-              hasError={!!pw.error}
+              hasError={!pw.isValid}
             />
-            {pw.error && <ErrorMessage>{pw.error}</ErrorMessage>}
+            {!pw.isValid && <ErrorMessage>{pw.error}</ErrorMessage>}
           </div>
           <EmptyDiv48h />
           <LoginButton

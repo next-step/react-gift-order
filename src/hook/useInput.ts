@@ -9,19 +9,17 @@ function useInput(validator: ValidatorFn, initialValue ='') {
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
-    if (touched) {
-      const errorMsg = validator(e.target.value);
-      setError(errorMsg);
-    }
+    const errorMsg = validator(e.target.value);
+    setError(errorMsg);
   };
 
   const onBlur = () => {
-    setTouched(true);
+    if(!touched) setTouched(true);
     const errorMsg = validator(value);
     setError(errorMsg);
   };
 
-  const isValid = !error && touched;
+  const isValid = touched ? !error : true
 
   return { value, onChange, onBlur, error, isValid };
 }
