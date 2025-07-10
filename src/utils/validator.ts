@@ -29,19 +29,18 @@ export const receiverSchema = z.object({
 export type OrderFormValues = z.infer<typeof orderSchema>;
 export type ReceiverFormValues = z.infer<typeof receiverSchema>;
 
-export const receiverArraySchema = z
-  .object({
-    receivers: z.array(receiverSchema),
-  })
-  .superRefine(({ receivers }, ctx) => {
-    const phoneMap = new Map<string, number[]>();
+const baseReceiverArraySchema = z.object({
+  receivers: z.array(receiverSchema),
+});
 
+export const receiverArraySchema = baseReceiverArraySchema.superRefine(
+  ({ receivers }, ctx) => {
+    const phoneMap = new Map<string, number[]>();
     receivers.forEach((receiver, index) => {
       const indices = phoneMap.get(receiver.phone) ?? [];
       phoneMap.set(receiver.phone, [...indices, index]);
     });
-
-    for (const [_, indices] of phoneMap.entries()) {
+    for (const indices of phoneMap.values()) {
       if (indices.length > 1) {
         indices.forEach((i) => {
           ctx.addIssue({
@@ -52,6 +51,10 @@ export const receiverArraySchema = z
         });
       }
     }
-  });
+  }
+);
 
 export type ReceiverArrayFormValues = z.infer<typeof receiverArraySchema>;
+
+export const fullOrderSchema = orderSchema.merge(baseReceiverArraySchema);
+export type FullOrderFormValues = z.infer<typeof fullOrderSchema>;

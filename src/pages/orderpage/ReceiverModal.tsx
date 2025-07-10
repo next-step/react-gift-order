@@ -1,9 +1,9 @@
 import { useForm, FormProvider, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import styled from "@emotion/styled";
-import { receiverArraySchema } from "../../utils/validator";
+import { receiverArraySchema } from "@/utils/validator";
 import ReceiverFormItem from "./ReceiverFormItem";
-import type { ReceiverArrayFormValues } from "../../utils/validator";
+import type { ReceiverArrayFormValues } from "@/utils/validator";
 
 type Props = {
   isOpen: boolean;
@@ -46,38 +46,36 @@ const ReceiverModal = ({ isOpen, onClose, onSubmit }: Props) => {
         </div>
         <FormProvider {...methods}>
           <ModalContentWrapper>
-            <div>
-              <FormWrapper>
-                {fields.map((field, index) => (
-                  <ReceiverFormItem
-                    key={field.id}
-                    field={field}
-                    index={index}
-                    onRemove={() => remove(index)}
-                  />
-                ))}
-              </FormWrapper>
-              <FixedButtonWrapper>
-                <button
-                  type="button"
-                  onClick={methods.handleSubmit(
-                    (data) => {
-                      onSubmit(data);
-                      onClose();
-                    },
-                    (errors) => {
-                      console.log("유효성 검사 실패", errors);
-                    }
-                  )}
-                >
-                  완료
-                </button>
-                <button type="button" onClick={onClose}>
-                  취소
-                </button>
-              </FixedButtonWrapper>
-            </div>
+            <FormWrapper>
+              {fields.map((field, index) => (
+                <ReceiverFormItem
+                  key={field.id}
+                  field={field}
+                  index={index}
+                  onRemove={() => remove(index)}
+                />
+              ))}
+            </FormWrapper>
           </ModalContentWrapper>
+          <FixedButtonWrapper>
+            <button
+              type="button"
+              onClick={methods.handleSubmit(
+                (data) => {
+                  onSubmit(data);
+                  onClose();
+                },
+                (errors) => {
+                  console.log("유효성 검사 실패", errors);
+                }
+              )}
+            >
+              완료
+            </button>
+            <button type="button" onClick={onClose}>
+              취소
+            </button>
+          </FixedButtonWrapper>
         </FormProvider>
       </ModalContainer>
     </>

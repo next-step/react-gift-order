@@ -1,14 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
 import type { UseFormRegister } from "react-hook-form";
-
-interface FormValues {
-  message: string;
-  sender: string;
-}
+import type { FullOrderFormValues } from "@/utils/validator";
 
 interface Props {
-  register: UseFormRegister<FormValues>;
+  register: UseFormRegister<FullOrderFormValues>;
   error?: string;
 }
 

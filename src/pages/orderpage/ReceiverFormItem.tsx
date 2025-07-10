@@ -1,9 +1,14 @@
 import { useFormContext } from "react-hook-form";
+import type { FieldArrayWithId } from "react-hook-form";
 import type { ReceiverFormValues } from "../../utils/validator";
 import styled from "@emotion/styled";
 
 interface Props {
-  field: ReceiverFormValues;
+  field: FieldArrayWithId<
+    { receivers: ReceiverFormValues[] },
+    "receivers",
+    "id"
+  >;
   index: number;
   onRemove: () => void;
 }
@@ -15,11 +20,11 @@ const ReceiverFormItem = ({ field, index, onRemove }: Props) => {
   } = useFormContext<{ receivers: ReceiverFormValues[] }>();
 
   return (
-    <div key={field.name}>
+    <Container>
       <TitleRow>
         <Title>받는 사람 {index + 1}</Title>
         <RemoveButton type="button" onClick={onRemove} aria-label="삭제">
-          <svg
+          <StyledIcon
             xmlns="http://www.w3.org/2000/svg"
             width="20"
             height="20"
@@ -29,18 +34,18 @@ const ReceiverFormItem = ({ field, index, onRemove }: Props) => {
             strokeWidth="1.5"
             strokeLinecap="round"
             strokeLinejoin="round"
-            style={{ marginLeft: "0.25rem" }}
             aria-hidden="true"
           >
             <path d="M18 6 6 18" />
             <path d="m6 6 12 12" />
-          </svg>
+          </StyledIcon>
         </RemoveButton>
       </TitleRow>
 
       <FormRow>
         <Label>이름</Label>
         <Input
+          defaultValue={field.name}
           {...register(`receivers.${index}.name`)}
           placeholder="이름을 입력하세요."
         />
@@ -52,6 +57,7 @@ const ReceiverFormItem = ({ field, index, onRemove }: Props) => {
       <FormRow>
         <Label>전화번호</Label>
         <Input
+          defaultValue={field.phone}
           {...register(`receivers.${index}.phone`)}
           placeholder="전화번호를 입력하세요."
         />
@@ -64,6 +70,7 @@ const ReceiverFormItem = ({ field, index, onRemove }: Props) => {
         <Label>수량</Label>
         <Input
           type="number"
+          defaultValue={field.quantity}
           {...register(`receivers.${index}.quantity`, {
             valueAsNumber: true,
           })}
@@ -72,11 +79,15 @@ const ReceiverFormItem = ({ field, index, onRemove }: Props) => {
       {errors.receivers?.[index]?.quantity && (
         <ErrorText>{errors.receivers[index]?.quantity?.message}</ErrorText>
       )}
-    </div>
+    </Container>
   );
 };
 
 export default ReceiverFormItem;
+
+const Container = styled.div`
+  width: 100%;
+`;
 
 const TitleRow = styled.div`
   display: flex;
@@ -131,4 +142,8 @@ const RemoveButton = styled.button`
   font-size: 18px;
   font-weight: bold;
   cursor: pointer;
+`;
+
+const StyledIcon = styled.svg`
+  margin-left: 0.25rem;
 `;

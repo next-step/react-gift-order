@@ -1,10 +1,17 @@
 /** @jsxImportSource @emotion/react */
-import { useState } from "react";
+import { useFormContext, useFieldArray } from "react-hook-form";
 import styled from "@emotion/styled";
-import ReceiverModal from "./ReceiverModal";
+import ReceiverModal from "@/pages/orderpage/ReceiverModal";
+import { useState } from "react";
+import type { FullOrderFormValues } from "@/utils/validator";
 
 const ReceiverInfoSection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { control, watch } = useFormContext<FullOrderFormValues>();
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "receivers",
+  });
 
   const handleClickAdd = () => {
     setIsModalOpen(true);
@@ -17,9 +24,8 @@ const ReceiverInfoSection = () => {
   const handleSubmitReceiverData = (data: {
     receivers: { name: string; phone: string; quantity: number }[];
   }) => {
-    console.log("Received data:", data);
+    data.receivers.forEach((receiver) => append(receiver));
     setIsModalOpen(false);
-    // TODO: store in parent via callback or form state
   };
 
   return (
@@ -27,12 +33,34 @@ const ReceiverInfoSection = () => {
       <HeaderRow>
         <Title>받는 사람</Title>
         <AddButton type="button" onClick={handleClickAdd}>
-          추가
+          {fields.length > 0 ? "수정" : "추가"}
         </AddButton>
       </HeaderRow>
-      <EmptyMessage>
-        받는 사람이 없습니다. 받는 사람을 추가해주세요.
-      </EmptyMessage>
+
+      {fields.length === 0 ? (
+        <EmptyMessage>
+          받는 사람이 없습니다. 받는 사람을 추가해주세요.
+        </EmptyMessage>
+      ) : (
+        <Table>
+          <thead>
+            <tr>
+              <th>이름</th>
+              <th>전화번호</th>
+              <th>수량</th>
+            </tr>
+          </thead>
+          <tbody>
+            {fields.map((field, index) => (
+              <tr key={field.id}>
+                <td>{field.name}</td>
+                <td>{field.phone}</td>
+                <td>{field.quantity}</td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      )}
 
       {isModalOpen && (
         <ReceiverModal
@@ -69,6 +97,10 @@ const AddButton = styled.button`
   background-color: ${({ theme }) => theme.colors.gray800};
   color: white;
   cursor: pointer;
+  &:disabled {
+    background-color: ${({ theme }) => theme.colors.gray300};
+    cursor: not-allowed;
+  }
 `;
 
 const EmptyMessage = styled.div`
@@ -78,6 +110,19 @@ const EmptyMessage = styled.div`
   border-radius: 8px;
   font-size: ${({ theme }) => theme.typography.body2Regular.fontSize};
   color: ${({ theme }) => theme.colors.gray600};
+`;
+
+const Table = styled.table`
+  margin-top: 12px;
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid ${({ theme }) => theme.colors.gray200};
+  }
 `;
 
 export default ReceiverInfoSection;

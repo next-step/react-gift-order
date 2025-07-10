@@ -6,30 +6,32 @@ import MessageCardSection from "@/pages/orderpage/MessageCardSection";
 import SenderInfoSection from "@/pages/orderpage/SenderInfoSection";
 import ReceiverInfoSection from "@/pages/orderpage/ReceiverInfoSection";
 import ProductSummarySection from "@/pages/orderpage/ProductSummarySection";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import OrderButton from "@/components/common/BaseButton";
 import { MOCK_PRODUCTS } from "@/mocks/products_list_mock";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { orderSchema } from "@/utils/validator";
-import type { OrderFormValues } from "@/utils/validator";
+import { fullOrderSchema } from "@/utils/validator";
+import type { FullOrderFormValues } from "@/utils/validator";
 
 const OrderPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const product = MOCK_PRODUCTS.find((item) => item.id === Number(id));
 
+  const methods = useForm<FullOrderFormValues>({
+    resolver: zodResolver(fullOrderSchema),
+    defaultValues: {
+      message: "",
+      sender: "",
+      receivers: [],
+    },
+  });
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<OrderFormValues>({
-    resolver: zodResolver(orderSchema),
-    defaultValues: {
-      message: "",
-      sender: "",
-    },
-  });
+  } = methods;
 
   useEffect(() => {
     if (!product) {
@@ -39,25 +41,36 @@ const OrderPage = () => {
 
   if (!product) return null;
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: FullOrderFormValues) => {
+    console.log(data);
     alert(
-      `주문이 완료되었습니다.\n상품명: ${product.name}\n구매 수량: ${data.quantity}\n발신자 이름: ${data.sender}\n메시지: ${data.message}`
+      `주문이 완료되었습니다.\n상품명: ${product.name}\n구매 수량: ${data.receivers.reduce(
+        (acc, cur) => acc + cur.quantity,
+        0
+      )}\n발신자 이름: ${data.sender}\n메시지: ${data.message}`
     );
     navigate("/", { replace: true });
   };
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
-      <MessageCardSection
-        register={register}
-        setValue={setValue}
-        error={errors.message?.message}
-      />
-      <SenderInfoSection register={register} error={errors.sender?.message} />
-      <ReceiverInfoSection />
-      <ProductSummarySection product={product} />
-      <OrderButton color="yellow" label="주문하기" size="large" type="submit" />
-    </Form>
+    <FormProvider {...methods}>
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        <MessageCardSection
+          register={register}
+          setValue={setValue}
+          error={errors.message?.message}
+        />
+        <SenderInfoSection register={register} error={errors.sender?.message} />
+        <ReceiverInfoSection />
+        <ProductSummarySection product={product} />
+        <OrderButton
+          color="yellow"
+          label="주문하기"
+          size="large"
+          type="submit"
+        />
+      </Form>
+    </FormProvider>
   );
 };
 

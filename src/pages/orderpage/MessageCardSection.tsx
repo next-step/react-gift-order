@@ -4,15 +4,11 @@ import { useState, useEffect } from "react";
 import { MESSAGE_CARD_LIST } from "@/mocks/messagecard_mock";
 import type { MessageCard } from "@/mocks/types";
 import type { UseFormRegister, UseFormSetValue } from "react-hook-form";
-
-interface FormValues {
-  message: string;
-  sender: string;
-}
+import type { FullOrderFormValues } from "@/utils/validator";
 
 interface Props {
-  register: UseFormRegister<FormValues>;
-  setValue: UseFormSetValue<FormValues>;
+  register: UseFormRegister<FullOrderFormValues>;
+  setValue: UseFormSetValue<FullOrderFormValues>;
   error?: string;
 }
 
