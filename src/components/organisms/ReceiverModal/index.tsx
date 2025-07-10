@@ -1,4 +1,6 @@
 import { useEffect } from 'react';
+import { useReceiverForm } from '@/hooks/useReceiverForm';
+import { ReceiverForm } from '@/components';
 import * as S from './styles';
 
 interface ReceiverModalProps {
@@ -6,7 +8,6 @@ interface ReceiverModalProps {
   onClose: () => void;
   onCancel?: () => void;
   onComplete?: () => void;
-  onAddReceiver?: () => void;
 }
 
 const ReceiverModal = ({
@@ -14,8 +15,9 @@ const ReceiverModal = ({
   onClose,
   onCancel,
   onComplete,
-  onAddReceiver,
 }: ReceiverModalProps) => {
+  const formHook = useReceiverForm();
+  const { addReceiver, canAddMore, fields, handleSubmit } = formHook;
 
   useEffect(() => {
     if (isOpen) {
@@ -36,6 +38,7 @@ const ReceiverModal = ({
   };
 
   const handleComplete = () => {
+    handleSubmit();
     onComplete?.();
     onClose();
   };
@@ -49,17 +52,22 @@ const ReceiverModal = ({
             * 최대 10명까지 추가 할 수 있어요.<br />
             * 받는 사람의 전화번호를 중복으로 입력할 수 없어요.
           </S.Description>
-          <S.AddButton onClick={onAddReceiver}>
+          <S.AddButton 
+            onClick={addReceiver}
+            disabled={!canAddMore}
+          >
             추가하기
           </S.AddButton>
         </S.Header>
-        <S.ContentArea/>
+        <S.ContentArea>
+          <ReceiverForm formHook={formHook} />
+        </S.ContentArea>
         <S.ButtonArea>
           <S.CancelButton onClick={handleCancel}>
             취소
           </S.CancelButton>
           <S.CompleteButton onClick={handleComplete}>
-            0명 완료
+            {fields.length}명 완료
           </S.CompleteButton>
         </S.ButtonArea>
       </S.ModalContent>

@@ -32,9 +32,8 @@ export const Header = styled.div`
 `;
 
 export const ContentArea = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  overflow-y: auto;
+  border: none;
 `;
 
 export const Title = styled.p`
@@ -54,6 +53,12 @@ export const AddButton = styled.button`
   padding: ${({ theme }) => theme.spacing.spacing2} ${({ theme }) => theme.spacing.spacing3};
   cursor: pointer;
   align-self: flex-start;
+
+  &:disabled {
+    background-color: ${({ theme }) => theme.semantic.background.disabled};
+    color: ${({ theme }) => theme.semantic.text.disabled};
+    cursor: not-allowed;
+  }
 `;
 
 export const ButtonArea = styled.div`

@@ -1,81 +1,81 @@
 import React from 'react';
-import { Label, InputField, type InputChangeHandler } from '@/components';
+import { InputField, IconButton } from '@/components';
+import { useReceiverForm } from '@/hooks/useReceiverForm';
 import * as S from './styles';
 
-interface ReceiverSectionProps {
-  receiverName: string;
-  receiverPhone: string;
-  quantity: number;
-  onReceiverNameChange: InputChangeHandler;
-  onReceiverPhoneChange: InputChangeHandler;
-  onQuantityChange: InputChangeHandler;
-  receiverNameError?: string;
-  receiverPhoneError?: string;
-  quantityError?: string;
+interface ReceiverFormProps {
+  formHook: ReturnType<typeof useReceiverForm>;
 }
 
-const ReceiverSection = ({
-  receiverName,
-  receiverPhone,
-  quantity,
-  onReceiverNameChange,
-  onReceiverPhoneChange,
-  onQuantityChange,
-  receiverNameError,
-  receiverPhoneError,
-  quantityError,
-}: ReceiverSectionProps) => {
-  const formFields = [
-    {
-      label: '이름',
-      placeholder: '이름을 입력하세요.',
-      value: receiverName,
-      onChange: onReceiverNameChange,
-      type: 'text' as const,
-      error: receiverNameError,
-    },
-    {
-      label: '전화번호',
-      placeholder: '전화번호를 입력하세요.',
-      value: receiverPhone,
-      onChange: onReceiverPhoneChange,
-      type: 'tel' as const,
-      error: receiverPhoneError,
-    },
-    {
-      label: '수량',
-      placeholder: '수량을 입력하세요.',
-      value: String(quantity),
-      onChange: onQuantityChange,
-      type: 'number' as const,
-      error: quantityError,
-    },
-  ];
+const ReceiverForm = ({ formHook }: ReceiverFormProps) => {
+  const { register, watch, fields, remove, formState: { errors } } = formHook;
 
   return (
     <S.Container>
-      <S.SectionTitle>
-        <Label variant="bold">받는 사람</Label>
-      </S.SectionTitle>
       <S.FormContent>
-        {formFields.map((field, index) => (
-          <React.Fragment key={field.label}>
-            <InputField
-              label={field.label}
-              placeholder={field.placeholder}
-              value={field.value}
-              onChange={field.onChange}
-              type={field.type}
-              labelMinWidth="3.75rem"
-              layout="horizontal"
-              error={field.error}
-            />
-            {index < formFields.length - 1 && <S.FormSpacer />}
-          </React.Fragment>
-        ))}
+        {fields.map((field, index) => {
+          const watchedValues = watch(`receivers.${index}`);
+          
+          const formFields = [
+            {
+              label: '이름',
+              placeholder: '이름을 입력하세요.',
+              registerProps: register(`receivers.${index}.name`),
+              value: watchedValues?.name || '',
+              type: 'text' as const,
+              error: errors.receivers?.[index]?.name?.message,
+            },
+            {
+              label: '전화번호',
+              placeholder: '전화번호를 입력하세요.',
+              registerProps: register(`receivers.${index}.phone`),
+              value: watchedValues?.phone || '',
+              type: 'tel' as const,
+              error: errors.receivers?.[index]?.phone?.message,
+            },
+            {
+              label: '수량',
+              placeholder: '수량을 입력하세요.',
+              registerProps: register(`receivers.${index}.quantity`, { 
+                valueAsNumber: true 
+              }),
+              value: watchedValues?.quantity?.toString() || '1',
+              type: 'number' as const,
+              error: errors.receivers?.[index]?.quantity?.message,
+            },
+          ];
+
+          return (
+            <S.ReceiverCard key={field.id}>
+              <S.ReceiverHeader>
+                <S.ReceiverTitle>받는 사람 {index + 1}</S.ReceiverTitle>
+                <IconButton onClick={() => remove(index)}>
+                  ✕
+                </IconButton>
+              </S.ReceiverHeader>
+              <S.ReceiverContent>
+                {formFields.map((formField, fieldIndex) => (
+                  <React.Fragment key={formField.label}>
+                    <InputField
+                      label={formField.label}
+                      placeholder={formField.placeholder}
+                      value={formField.value}
+                      onChange={formField.registerProps.onChange}
+                      type={formField.type}
+                      labelMinWidth="3.75rem"
+                      layout="horizontal"
+                      error={formField.error}
+                    />
+                    {fieldIndex < formFields.length - 1 && <S.FormSpacer />}
+                  </React.Fragment>
+                ))}
+              </S.ReceiverContent>
+            </S.ReceiverCard>
+          );
+        })}
       </S.FormContent>
     </S.Container>
   );
 };
 
-export default ReceiverSection; 
+export default ReceiverForm; 
