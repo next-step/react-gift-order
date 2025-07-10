@@ -37,6 +37,8 @@ const Textarea = styled.textarea<{ error: boolean }>`
 
   &:focus {
     outline: none;
-    border: 1px solid ${({ theme }) => theme.colors.gray.gray900};
+    border: 1px solid
+      ${({ theme, error }) =>
+        error ? theme.colors.red.red500 : theme.colors.gray.gray900};
   }
 `;
