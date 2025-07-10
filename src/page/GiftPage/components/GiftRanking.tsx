@@ -2,7 +2,10 @@ import styled from '@emotion/styled';
 import { filters, generations } from '@/data/categoryDatas';
 import useSearchParamState from '../hooks/useSearchParamState';
 import useToggleCollapse from '../hooks/useToggleCollapse';
-import { rankingDatas } from '@/data/rankingDatas';
+import { rankingDatas } from '@/data/rankingDatas.ts';
+import { useUserInfo } from '@/contexts/UserInfoContext';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/routes/routes';
 
 interface ButtonProps {
   isActive: boolean;
@@ -67,6 +70,7 @@ const RankContainer = styled.div`
 const RankItem = styled.div`
   width: 100%;
   position: relative;
+  cursor: pointer;
 `;
 
 const RankNumber = styled.span`
@@ -153,6 +157,16 @@ const GiftRanking = () => {
   } = useSearchParamState();
 
   const { isCollapsed, visibleItemsCount, toggleCollapse } = useToggleCollapse(rankingDatas.length);
+  const { isLoggedIn } = useUserInfo();
+
+  const navigate = useNavigate();
+  const handleItemClick = (id: number) => {
+    if (isLoggedIn) {
+      navigate(`/order/${id}`);
+    } else {
+      navigate(ROUTES.LOGIN);
+    }
+  };
 
   return (
     <Section>
@@ -187,7 +201,7 @@ const GiftRanking = () => {
 
       <RankContainer>
         {rankingDatas.slice(0, visibleItemsCount).map(rank => (
-          <RankItem key={rank.id}>
+          <RankItem key={rank.id} onClick={() => handleItemClick(rank.id)}>
             <RankNumber>{rank.id}</RankNumber>
 
             <ItemContainer>

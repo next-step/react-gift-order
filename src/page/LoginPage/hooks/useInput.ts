@@ -1,11 +1,14 @@
 import { useState } from 'react';
-import { validateEmail, validatePassword } from '../utils/validate';
+import { getValidator } from '@/utils/validate';
 
-const useInput = (type: string) => {
-  const validator = type === 'email' ? validateEmail : validatePassword;
+type FieldType = 'email' | 'password';
+
+const useInput = (type: FieldType) => {
+  const validator = getValidator(type);
 
   const [value, setValue] = useState<string>('');
   const [error, setError] = useState<string>('');
+  const [touched, setTouched] = useState<boolean>(false);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const targetValue = e.target.value;
@@ -13,8 +16,14 @@ const useInput = (type: string) => {
     setError(validator(targetValue));
   };
 
-  const isValid = error === '';
+  const onBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const targetValue = e.target.value;
+    setError(validator(targetValue));
+    setTouched(true);
+  };
 
-  return { value, onChange, error, isValid };
+  const isValid = touched && error === '';
+
+  return { value, onChange, onBlur, error, isValid };
 };
 export default useInput;

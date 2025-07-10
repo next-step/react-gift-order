@@ -1,7 +1,10 @@
 import styled from '@emotion/styled';
-import useNavigateBackOrHome from '@/hooks/useNavigateBackOrHome';
 import useInput from './hooks/useInput';
 import InputField from './components/InputField';
+import { useUserInfo } from '@/contexts/UserInfoContext';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/routes/routes';
+import { fakeAuthApi } from './utils/fakeAuthApi';
 
 const Container = styled.div`
   display: flex;
@@ -49,16 +52,23 @@ const Button = styled.button`
 `;
 
 const LoginPage = () => {
-  const navigateBackOrHome = useNavigateBackOrHome();
+  const { login } = useUserInfo();
+  const navigate = useNavigate();
   const username = useInput('email');
   const password = useInput('password');
 
   const isButtonActive = username.isValid && password.isValid;
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    navigateBackOrHome();
+
+    if (!username.isValid || !password.isValid) return;
+    const token = await fakeAuthApi(username.value, password.value);
+    login(username.value, token);
+    navigate(ROUTES.MY, { replace: true });
   };
+  // const token = await fakeAuthApi(username.value, password.value);
+  
 
   return (
     <Container>

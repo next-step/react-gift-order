@@ -4,6 +4,7 @@ import { ThemeProvider } from '@emotion/react';
 import { theme } from '@/styles/theme';
 import styled from '@emotion/styled';
 import AppRouter from './routes/Routers';
+import { UserInfoProvider } from './contexts/UserInfoContext';
 
 const AppContainer = styled.div`
   width: 100%;
@@ -21,10 +22,12 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
-      <AppContainer>
-        <Navigation />
-        <AppRouter />
-      </AppContainer>
+      <UserInfoProvider>
+        <AppContainer>
+          <Navigation />
+          <AppRouter />
+        </AppContainer>
+      </UserInfoProvider>
     </ThemeProvider>
   );
 }

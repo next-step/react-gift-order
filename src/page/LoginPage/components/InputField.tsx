@@ -38,6 +38,7 @@ const P = styled.p`
 export interface InputHook {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur: (e: React.ChangeEvent<HTMLInputElement>) => void;
   isValid: boolean;
   error?: string;
   [key: string]: unknown;
@@ -50,10 +51,16 @@ interface InputFieldProps {
 }
 // value, onChange, error, isValid
 const InputField: React.FC<InputFieldProps> = ({ hook, placeholder, type }) => {
-  const { value, error, onChange } = hook;
+  const { value, error, onChange, onBlur } = hook;
   return (
     <InputContainer>
-      <Input placeholder={placeholder} type={type} value={value} onChange={onChange} />
+      <Input
+        placeholder={placeholder}
+        type={type}
+        value={value}
+        onChange={onChange}
+        onBlur={onBlur}
+      />
       {error && <P>{error}</P>}
     </InputContainer>
   );
