@@ -13,8 +13,9 @@ export { default as OrderCard } from './molecules/OrderCard';
 // Organisms
 export { default as CardCarousel } from './organisms/CardCarousel';
 export { default as ProductInfo } from './organisms/ProductInfo';
-export { default as ReceiverSection } from './organisms/ReceiverSection';
+export { default as ReceiverForm } from './organisms/ReceiverForm';
 export { default as SenderSection } from './organisms/SenderSection';
+export { default as ReceiverSection } from './organisms/ReceiverSection';
 
 //******Atomic Design Pattern적용 전 컴포넌트들도 추후에 Atomic Design Pattern적용 예정******//
 
@@ -33,4 +34,4 @@ export { default as Layout } from './Layout/Layout';
 export { default as Navigation } from './Navigation';
 
 // Other
-export { default as ProtectedRoute } from './ProtectedRoute';
+export { default as ProtectedRoute } from './hoc/ProtectedRoute';

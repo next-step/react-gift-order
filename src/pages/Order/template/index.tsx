@@ -77,16 +77,7 @@ const OrderTemplate = ({
           />       
           <S.Spacer /> 
           <ReceiverSection
-            receiverName={formData.receiverName}
-            receiverPhone={formData.receiverPhone}
-            quantity={formData.quantity}
-            onReceiverNameChange={formHandlers.onReceiverNameChange}
-            onReceiverPhoneChange={formHandlers.onReceiverPhoneChange}
-            onQuantityChange={formHandlers.onQuantityChange}
-            receiverNameError={errors.receiverName}
-            receiverPhoneError={errors.receiverPhone}
-            quantityError={errors.quantity}
-          />          
+          />        
           {product && (
             <>
               <S.Spacer />
