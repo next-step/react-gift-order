@@ -48,12 +48,13 @@ const SectionBox = styled.div`
   padding: 20px;
 `;
 
-const BottomOrderButton = styled.div`
+const BottomOrderButton = styled.div<{ disabled: boolean }>`
   position: fixed;
   bottom: 0;
   width: 100%;
   max-width: 720px;
-  background-color: ${({ theme }) => theme.colors.kakaoYellow};
+  background-color: ${({ theme, disabled }) =>
+    disabled ? theme.colors.yellow300 : theme.colors.kakaoYellow};
   text-align: center;
   padding-top: 16px;
   padding-bottom: 16px;
@@ -166,8 +167,9 @@ const validateQuantity = (value: string) => {
 };
 
 const Order = () => {
-  const [selected, setSelected] = useState(
-    orderCardTemplates[0].imageUrl
+  const [selected, setSelected] = useState(orderCardTemplates[0].id);
+  const selectedCard = orderCardTemplates.find(
+    card => card.id === selected
   );
   const product = giftItem;
 
@@ -209,10 +211,10 @@ const Order = () => {
           {' '}
           <MessageCard
             selected={selected}
-            onSelect={setSelected}
+            onCardSelect={setSelected}
           ></MessageCard>
           <MainWrapper>
-            <MainImg src={selected} />
+            <MainImg src={selectedCard?.imageUrl} />
 
             <MessageInput
               placeholder="메시지를 입력해주세요."
@@ -315,6 +317,7 @@ const Order = () => {
               <Input
                 type="number"
                 onChange={e => quantityInput.setValue(e.target.value)}
+                onBlur={quantityInput.handleBlur}
               />
               {!quantityInput.isValid && (
                 <ErrorText>{quantityInput.error}</ErrorText>
@@ -343,7 +346,10 @@ const Order = () => {
           </ProductInfo>
         </Section>
       </OrderInfoWrapper>
-      <BottomOrderButton onClick={handleOrder}>
+      <BottomOrderButton
+        disabled={!isFormValid}
+        onClick={handleOrder}
+      >
         {priceSum}원 주문하기
       </BottomOrderButton>
     </>

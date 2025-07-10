@@ -13,8 +13,8 @@ const ScrollContainer = styled.div`
 `;
 
 const Thumbnail = styled.img<{ selected: boolean }>`
-  width: 82px;
-  height: 56px;
+  width: 76px;
+  height: 50px;
   border: ${({ selected }) =>
     selected ? '3px solid #2A3038' : 'none'};
   border-radius: 8px;
@@ -22,11 +22,11 @@ const Thumbnail = styled.img<{ selected: boolean }>`
 `;
 
 type Props = {
-  selected: string;
-  onSelect: (src: string) => void;
+  selected: number;
+  onCardSelect: (src: number) => void;
 };
 
-const MessageCard = ({ selected, onSelect }: Props) => {
+const MessageCard = ({ selected, onCardSelect }: Props) => {
   return (
     <Wrapper>
       <ScrollContainer>
@@ -37,8 +37,8 @@ const MessageCard = ({ selected, onSelect }: Props) => {
                 key={card.id}
                 src={card.imageUrl}
                 alt={card.defaultTextMessage}
-                selected={selected === card.imageUrl}
-                onClick={() => onSelect(card.imageUrl)}
+                selected={selected === card.id}
+                onClick={() => onCardSelect(card.id)}
               />
             </>
           );
