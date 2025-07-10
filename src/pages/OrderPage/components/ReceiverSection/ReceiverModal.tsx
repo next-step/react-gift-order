@@ -20,7 +20,7 @@ import {
   RECEIVER_MODAL_CONSTANTS,
   DEFAULT_RECEIVER,
 } from "../../constants/receiverSection";
-import type { Receiver } from "./ReceiverSection";
+import type { Receiver } from "../../OrderPage";
 
 interface ReceiverModalProps {
   handleCloseModal: () => void;

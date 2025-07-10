@@ -13,6 +13,7 @@ import {
 } from "./ReceiverModal.styles";
 import ReceiverModal from "./ReceiverModal";
 import styled from "@emotion/styled";
+import type { Receiver } from "../../OrderPage";
 
 const ReceiverTable = styled.div`
   display: flex;
@@ -55,21 +56,15 @@ const TableHeaderCell = styled(TableCell)`
   color: ${({ theme }) => theme.colors.text.default};
 `;
 
-export interface Receiver {
-  name: string;
-  phone: string;
-  quantity: string;
+interface ReceiverSectionComponentProps {
+  receivers: Receiver[];
+  setReceivers: (receivers: Receiver[]) => void;
 }
 
-function ReceiverSectionComponent() {
-  const [receivers, setReceivers] = useState<Receiver[]>([
-    {
-      name: "홍길동",
-      phone: "01012345678",
-      quantity: "1",
-    },
-  ]);
-
+function ReceiverSectionComponent({
+  receivers,
+  setReceivers,
+}: ReceiverSectionComponentProps) {
   const [showModal, setShowModal] = useState(false);
 
   const handleOpenModal = () => {

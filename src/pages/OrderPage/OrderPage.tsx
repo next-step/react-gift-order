@@ -19,6 +19,12 @@ export interface CardSelectionFormData {
   cardMessage: string;
 }
 
+export interface Receiver {
+  name: string;
+  phone: string;
+  quantity: string;
+}
+
 const OrderPageContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -91,6 +97,14 @@ function OrderPage() {
     setIsSubmittedOnce(true);
   };
 
+  const [receivers, setReceivers] = useState<Receiver[]>([
+    {
+      name: "홍길동",
+      phone: "01012345678",
+      quantity: "1",
+    },
+  ]);
+
   const product = useProductInfo();
 
   if (!product) {
@@ -113,8 +127,16 @@ function OrderPage() {
             control={senderControl}
             errors={senderErrors}
           />
-          <ReceiverSectionComponent />
-          <ProductInfo product={product} quantity="1" />
+          <ReceiverSectionComponent
+            receivers={receivers}
+            setReceivers={setReceivers}
+          />
+          <ProductInfo
+            product={product}
+            quantity={receivers
+              .reduce((acc, cur) => acc + Number(cur.quantity), 0)
+              .toString()}
+          />
         </OrderPageContainer>
       </form>
     </Layout>
