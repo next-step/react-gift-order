@@ -109,6 +109,7 @@ const ReceiverAdder = forwardRef<ReceiverAdderHandle, ReceiverAdderProps>(
                        },
                      })}
                      placeholder="전화번호"
+                     error={!!errors.receivers?.[idx]?.phone}
                    />
                    {errors.receivers?.[idx]?.phone && (
                      <ErrorMessage>{errors.receivers[idx].phone.message}</ErrorMessage>
