@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 import SENDER_SECTION_CONSTANTS from "@/pages/OrderPage/constants/senderSection";
 import { Controller, type Control, type FieldErrors } from "react-hook-form";
 import type { SenderFormData } from "../../OrderPage";
+import { FORM_FIELD } from "../../constants/formField";
 
 interface SenderProps {
   control: Control<SenderFormData>;
@@ -36,7 +37,7 @@ function SenderSectionComponent({ control, errors }: SenderProps) {
       <SendForm>
         <Controller
           control={control}
-          name="senderName"
+          name={FORM_FIELD.SENDER_NAME}
           render={({ field }) => (
             <Input
               {...field}

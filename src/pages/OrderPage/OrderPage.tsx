@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VALIDATE_LABELS } from "./constants/validateLabels";
+import { FORM_FIELD } from "./constants/formField";
 
 export interface SenderFormData {
   senderName: string;
@@ -70,10 +71,10 @@ function OrderPage() {
     );
 
     if (selectedCard) {
-      setValue("cardMessage", selectedCard.defaultTextMessage);
+      setValue(FORM_FIELD.CARD_MESSAGE, selectedCard.defaultTextMessage);
 
       if (isSubmittedOnce) {
-        cardSelectionTrigger("cardMessage");
+        cardSelectionTrigger(FORM_FIELD.CARD_MESSAGE);
       }
     }
   }, [messageCard, setValue, cardSelectionTrigger, isSubmittedOnce]);
@@ -109,8 +110,8 @@ function OrderPage() {
           `주문이 완료되었습니다.
           상품명: ${product?.name}
           구매 수량: ${receivers.reduce((acc, cur) => acc + Number(cur.quantity), 0)}
-          발신자 이름: ${senderGetValues("senderName")}
-          메시지: ${cardSelectionGetValues("cardMessage")}`
+          발신자 이름: ${senderGetValues(FORM_FIELD.SENDER_NAME)}
+          메시지: ${cardSelectionGetValues(FORM_FIELD.CARD_MESSAGE)}`
         );
         navigate(ROUTES.HOME);
         return;

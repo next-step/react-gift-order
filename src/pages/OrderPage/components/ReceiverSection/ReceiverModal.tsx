@@ -25,6 +25,7 @@ import { z } from "zod";
 import { validatePhoneNumber } from "../../utils/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VALIDATE_LABELS } from "../../constants/validateLabels";
+import { FORM_FIELD } from "../../constants/formField";
 
 interface ReceiverModalProps {
   handleCloseModal: () => void;
@@ -91,7 +92,7 @@ function ReceiverModal({
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "receivers",
+    name: FORM_FIELD.RECEIVERS,
   });
 
   const handleAddReceiver = () => {

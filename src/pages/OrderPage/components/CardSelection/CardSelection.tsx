@@ -15,6 +15,7 @@ import CARD_SELECTION_CONSTANTS from "@/pages/OrderPage/constants/cardSelection"
 import { Controller } from "react-hook-form";
 import type { Control, FieldErrors } from "react-hook-form";
 import type { CardSelectionFormData } from "../../OrderPage";
+import { FORM_FIELD } from "../../constants/formField";
 
 interface CardSelectionProps {
   cards: OrderCardType[];
@@ -52,7 +53,7 @@ function CardSelection({
         <MainCardImage src={selectedCard?.imageUrl} alt="selected-card" />
         <MessageTextAreaContainer>
           <Controller
-            name="cardMessage"
+            name={FORM_FIELD.CARD_MESSAGE}
             control={control}
             render={({ field }) => (
               <>
