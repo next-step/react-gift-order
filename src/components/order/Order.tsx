@@ -54,7 +54,7 @@ const Order: React.FC = () => {
     } else {
       setUser({ email });
     }
-  }, []);
+  }, [navigate, setUser]);
 
   const handleSubmit = () => {
     const msg = GiftMessageRef.current?.value.trim() ?? "";
