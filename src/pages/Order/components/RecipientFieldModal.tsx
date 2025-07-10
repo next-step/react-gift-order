@@ -38,8 +38,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* border: 1px solid ${({ theme }) => theme.color.gray500};
-  border-radius: 0.5rem; */
 `;
 const InputWrapper = styled.div`
   width: 100%;
