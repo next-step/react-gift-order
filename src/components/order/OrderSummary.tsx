@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
+/** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form";
 import type { OrderFormValues } from "@/validations/orderSchema";
 import type { RankingList as Product } from "@/mock/rankingList";
 
@@ -9,11 +10,17 @@ interface ProductSummarySectionProps {
 }
 
 export default function OrderSummary({ product }: ProductSummarySectionProps) {
-  const { watch } = useFormContext<OrderFormValues>();
+  const { control } = useFormContext<OrderFormValues>();
 
-  const receivers = watch("receivers") ?? [];
+  const receivers = useWatch({
+    name: "receivers",
+    control,
+  }) ?? [];
 
-  const totalQuantity = receivers.reduce((sum, r) => sum + r.quantity, 0);
+  const totalQuantity = receivers.reduce(
+    (sum, r) => sum + (r.quantity ?? 0),
+    0
+  );
 
   const totalPrice = product.price.sellingPrice * totalQuantity;
 
@@ -44,6 +51,7 @@ export default function OrderSummary({ product }: ProductSummarySectionProps) {
     </Container>
   );
 }
+
 
 
 
