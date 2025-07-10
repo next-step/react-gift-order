@@ -1,6 +1,6 @@
-import Login from '@/Components/NavigationBar/LoginIcon';
-import Back from '@/Components/NavigationBar/BackIcon';
-import Title from '@/Components/NavigationBar/Title';
+import Login from '@/components/navigation-bar/LoginIcon';
+import Back from '@/components/navigation-bar/BackIcon';
+import Title from '@/components/navigation-bar/Title';
 import styled from '@emotion/styled';
 
 const Container = styled.div`

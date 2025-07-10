@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import userIcon from '@/assets/icons/user.png';
+import { useAuth } from '@/context/AuthContext';
 
 const User = styled.div`
   width: 24px;
@@ -12,8 +13,17 @@ const User = styled.div`
 
 const LoginIcon = () => {
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
 
-  return <User onClick={() => navigate('/login')} />;
+  const handleClick = () => {
+    if (isLoggedIn) {
+      navigate('/my');
+    } else {
+      navigate('/login');
+    }
+  };
+
+  return <User onClick={handleClick} />;
 };
 
 export default LoginIcon;
