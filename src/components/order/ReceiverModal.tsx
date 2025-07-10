@@ -39,11 +39,14 @@ export default function ReceiverModal({
             <RecieverTitle>받는 사람</RecieverTitle>
             <Spacing height="4px" />
             <ReceiverText>
-              * 최대 10명까지 추가할 수 있어요. * 받는 사람의 전화번호를
+              * 최대 10명까지 추가할 수 있어요.
+              <br /> * 받는 사람의 전화번호를
               중복으로 입력할 수 없어요.
             </ReceiverText>
             <Spacing height="8px" />
-            <AddButton onClick={() => adderRef.current?.appendReceiver()}>추가하기</AddButton>
+            <AddButton 
+              disabled={validCount >= 10}
+              onClick={() => adderRef.current?.appendReceiver()}>추가하기</AddButton>
           </ReceiverTitleBox>
           <AdderWrapper>
             <ReceiverAdder
@@ -128,13 +131,16 @@ const ReceiverText = styled.p`
   text-align: left;
 `;
 
-const AddButton = styled.button`
+const AddButton = styled.button<{ disabled?: boolean }>`
   ${({ theme }) => theme.typography.label2Regular};
+  color: ${({ theme, disabled }) =>
+    disabled ? theme.colors.gray[600] : theme.colors.gray[900]};
   padding: 8px 16px;
   border-radius: 8px;
-  background-color: ${({ theme }) => theme.colors.gray[300]};
+  background-color: ${({ theme, disabled }) =>
+    disabled ? theme.colors.gray[200] : theme.colors.gray[300]};
   border: none;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
   transition:
     background-color 200ms,
     opacity 200ms;
