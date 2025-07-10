@@ -122,7 +122,11 @@ const ReceiverListModal = ({
               <FieldRow key={field.id}>
                 <ReceiverInfoHeader>
                   <ReceiverIndex>받는사람{index + 1}</ReceiverIndex>
-                  <FaX size={16} />
+                  <DeleteReceiverButton
+                    size={16}
+                    type="button"
+                    onClick={() => remove(index)}
+                  />
                 </ReceiverInfoHeader>
                 <Controller
                   name={`receivers.${index}.receiverName`}
@@ -306,6 +310,8 @@ const FieldRow = styled.div`
 const ReceiverInfoHeader = styled.div`
   flex-direction: row;
   display: flex;
+  align-items: center;
+  gap: 4px;
 `;
 const ReceiverIndex = styled.div`
   ${({ theme }) => `
@@ -313,6 +319,10 @@ const ReceiverIndex = styled.div`
     font-weight: ${theme.font.subtitle2Bold.weight};
     line-height: ${theme.font.subtitle2Bold.lineHeight};
   `}
+`;
+
+const DeleteReceiverButton = styled(FaX)`
+  cursor: pointer;
 `;
 const ReceiverInputWrapper = styled.div`
   display: flex;
