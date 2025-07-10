@@ -74,18 +74,19 @@ const ReceiverListModal = ({
   onClose,
   onAdd,
 }: ReceiverListModalProps) => {
-  const { control, handleSubmit } = useForm<FormValues>({
+  const initialDefaultValues: FormValues = {
+    receivers: [
+      {
+        receiverName: '',
+        receiverPhoneNumber: '',
+        itemCount: 1,
+        message: '',
+      },
+    ],
+  };
+  const { control, handleSubmit, reset } = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
-    defaultValues: {
-      receivers: [
-        {
-          receiverName: '',
-          receiverPhoneNumber: '',
-          itemCount: 1,
-          message: '',
-        },
-      ],
-    },
+    defaultValues: initialDefaultValues,
     mode: 'onSubmit',
   });
 
@@ -97,6 +98,12 @@ const ReceiverListModal = ({
   const onSubmit = (data: FormValues) => {
     onAdd(data.receivers);
     onClose();
+    reset(initialDefaultValues);
+  };
+
+  const handleClose = () => {
+    onClose();
+    reset(initialDefaultValues);
   };
 
   useEffect(() => {
@@ -106,7 +113,7 @@ const ReceiverListModal = ({
     return () => {
       document.body.style.overflow = '';
     };
-  }, [open]);
+  }, [open, reset]);
 
   if (!open) return null;
 
@@ -222,7 +229,7 @@ const ReceiverListModal = ({
           })}
         </ModalContent>
         <ModalButtonWrapper>
-          <ModalCancleButton onClick={onClose}>취소</ModalCancleButton>
+          <ModalCancleButton onClick={handleClose}>취소</ModalCancleButton>
           <ModalCompleteButton type="submit">
             {fields.length}명 완료
           </ModalCompleteButton>
