@@ -1,7 +1,7 @@
 import NavigationBar from '@/common/NavigationBar';
 import GiftCardSelector from '@/components/ProductOrder/GiftCardSelector';
 import SenderInfoSection from '@/components/ProductOrder/SenderInfoSection';
-import ReceiverInfoSection from '@/components/ProductOrder/ReceiverInfoSection';
+import ReceiverInfoSection from '@/components/ProductOrder/ReceiverInfo/ReceiverInfoSection';
 import styled from '@emotion/styled';
 import { useLocation } from 'react-router-dom';
 import ProductInfo from '@/components/giftHome/GiftThemes/ProductInfo';

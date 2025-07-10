@@ -1,6 +1,8 @@
-import InputOrder from '@/common/InputOrder';
 import useOrderForm from '@/hooks/useOrderForm';
 import styled from '@emotion/styled';
+import { useState } from 'react';
+import ReceiverInfoModal from '@/components/ProductOrder/ReceiverInfo/ReceiverInfoModal';
+import BaseButton from '@/common/BaseButton';
 
 type OrderFormField = Pick<
   ReturnType<typeof useOrderForm>,
@@ -18,16 +20,27 @@ const ReceiverInfoSection = ({
   receiverPhone,
   quantity,
 }: ReceiverInfoSectionProps) => {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  const handleAddClick = (): void => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = (): void => {
+    setIsModalOpen(false);
+  };
+
   return (
     <Section>
       <RecipientHeaderContainer>
         <Title>받는 사람</Title>
-        <AddBtn>추가</AddBtn>
+        <BaseButton onClick={handleAddClick}>추가</BaseButton>
       </RecipientHeaderContainer>
       <RecipientListContainer>
         받는 사람이 없습니다. <br />
         받는 사람을 추가해주세요.
       </RecipientListContainer>
+      <ReceiverInfoModal isOpen={isModalOpen} onClose={handleCloseModal} />
     </Section>
   );
 };
@@ -49,16 +62,6 @@ const RecipientHeaderContainer = styled.div`
 const Title = styled.h3`
   font-size: 16px;
   font-weight: bold;
-`;
-
-const AddBtn = styled.button`
-  background-color: ${({ theme }) => theme.colors.gray300};
-  padding: ${({ theme }) => theme.spacing.spacing2}
-    ${({ theme }) => theme.spacing.spacing4}
-    ${({ theme }) => theme.spacing.spacing2}
-    ${({ theme }) => theme.spacing.spacing4};
-  border-radius: ${({ theme }) => theme.spacing.spacing2};
-  border: 0px;
 `;
 
 const RecipientListContainer = styled.div`
