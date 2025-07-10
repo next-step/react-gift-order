@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import type { ThemeItemType } from '@/types/theme';
 
-const ThemeItem = ({ themeId, name, image }: ThemeItemType) => {
+const ThemeItem = ({ name, image }: ThemeItemType) => {
   return (
     <ItemWrapper>
       <ItemImage src={image} alt={name} />

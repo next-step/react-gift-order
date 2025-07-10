@@ -1,13 +1,23 @@
 import kakaologo from '@/assets/icons/kakaologo.svg';
-import InputBox from '@/components/Common/InputBox';
-import Header from '@/components/Header';
+import InputBox from '@/components/Common/UnderLineInputBox';
+import Header from '@/components/Common/Header';
 import styled from '@emotion/styled';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useLoginForm } from '@/hooks/useLoginForm';
+import { useAuthContext } from '@/contexts/useAuthContext';
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/';
+
   const { email, password, isFormValid } = useLoginForm();
+  const { login } = useAuthContext();
+
+  const handleLogin = () => {
+    login({ email: email.value });
+    navigate(from);
+  };
 
   return (
     <>
@@ -32,7 +42,7 @@ const Login = () => {
             onBlur={password.onBlur}
             error={password.error}
           />
-          <LoginButton onClick={() => navigate('/')} disabled={!isFormValid}>
+          <LoginButton onClick={handleLogin} disabled={!isFormValid}>
             로그인
           </LoginButton>
         </LoginSection>
@@ -48,8 +58,7 @@ const LoginContainer = styled.main`
   align-items: center;
   display: flex;
   background-color: ${({ theme }) => theme.colors.backgroundDefault};
-  height: 100vh;
-  width: 100%;
+  height: calc(100vh - 56px);
 `;
 
 const LoginSection = styled.section`
@@ -86,7 +95,7 @@ const LoginButton = styled.button`
   }
 
   &:disabled {
-    background-color: ${({ theme }) => theme.colors.yellow300};
+    background-color: ${({ theme }) => theme.colors.yellow100};
     cursor: not-allowed;
   }
 `;

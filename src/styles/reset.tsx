@@ -128,6 +128,13 @@ const reset = (theme: Theme) => css`
     border-spacing: 0;
   }
 
+  input,
+  textarea,
+  button,
+  select {
+    color: inherit;
+  }
+
   body {
     font-family: 'Pretendard', sans-serif;
     color: ${theme.colors.textDefault};

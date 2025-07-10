@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { FiUser } from 'react-icons/fi';
 import { FaChevronLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from '@/contexts/useAuthContext';
 
 type HeaderProps = {
   title: string;
@@ -9,13 +10,14 @@ type HeaderProps = {
 
 const Header = ({ title }: HeaderProps) => {
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuthContext();
 
   return (
     <HeaderWrapper>
       <HeaderContainer>
         <FaChevronLeftIcon size={16} onClick={() => navigate('/')} />
         <Title>{title}</Title>
-        <FiUserIcon size={24} onClick={() => navigate('/login')} />
+        <FiUserIcon size={24} onClick={() => navigate(isLoggedIn ? '/my' : '/login')} />
       </HeaderContainer>
     </HeaderWrapper>
   );
@@ -25,7 +27,7 @@ export default Header;
 
 const HeaderWrapper = styled.div`
   height: 56px;
-  position: fixed;
+  position: sticky;
   top: 0;
   width: 100%;
   max-width: 720px;

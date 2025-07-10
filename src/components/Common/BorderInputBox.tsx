@@ -3,55 +3,58 @@ import styled from '@emotion/styled';
 
 type InputBoxProps = {
   type?: string;
+  id: string;
   placeholder?: string;
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onBlur?: () => void;
-  error?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  message?: string;
+  isError?: boolean;
 };
 
-const InputBox = ({
+const BorderInputBox = ({
+  id,
   type = 'text',
   placeholder,
   value,
   onChange,
-  onBlur,
-  error,
+  message,
+  isError = false,
 }: InputBoxProps) => {
   return (
     <Wrapper>
       <StyledInput
+        id={id}
         type={type}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        onBlur={onBlur}
-        hasError={!!error}
+        hasError={isError}
       />
-      {error && <ErrorText>{error}</ErrorText>}
+      {message && <CaptionText isError={isError}>{message}</CaptionText>}
     </Wrapper>
   );
 };
 
-export default InputBox;
+export default BorderInputBox;
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin-bottom: ${({ theme }) => theme.spacing.spacing1};
+  margin-top: ${({ theme }) => theme.spacing.spacing4};
+  margin-bottom: ${({ theme }) => theme.spacing.spacing4};
 `;
 
 const StyledInput = styled.input<{ hasError: boolean }>`
-  border: none;
-  border-bottom: 1px solid
+  border: 1px solid
     ${({ theme, hasError }) => (hasError ? theme.colors.critical : theme.colors.gray500)};
-  padding: ${({ theme }) => theme.spacing.spacing2};
+  padding: ${({ theme }) => theme.spacing.spacing3};
   font-size: ${({ theme }) => theme.font.body1Regular.size};
-
+  background-color: ${({ theme }) => theme.colors.backgroundDefault};
+  border-radius: 12px;
   &:focus {
     outline: none;
-    border-bottom-color: ${({ theme }) => theme.colors.gray700};
+    border-color: ${({ theme }) => theme.colors.gray700};
   }
 
   &::placeholder {
@@ -60,8 +63,8 @@ const StyledInput = styled.input<{ hasError: boolean }>`
   }
 `;
 
-const ErrorText = styled.span`
-  color: red;
+const CaptionText = styled.span<{ isError: boolean }>`
+  color: ${({ isError, theme }) => (isError ? theme.colors.critical : theme.colors.gray600)};
   font-size: ${({ theme }) => theme.font.label2Regular.size};
   margin-top: 4px;
 `;

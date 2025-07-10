@@ -1,4 +1,4 @@
-import Header from '@/components/Header';
+import Header from '@/components/Common/Header';
 import styled from '@emotion/styled';
 import { FiPlus } from 'react-icons/fi';
 import { mockThemeList } from '@/mocks/themeListMock';
@@ -6,8 +6,12 @@ import ThemeItem from '@/components/ThemeItem';
 import type { ThemeItemType } from '@/types/theme';
 import RankingSection from '@/components/RankingSection';
 import { SectionContainer, SectionTitle } from '@/components/Common/SectionLayout';
+import { parseNickname } from '@/utils/parseNickName';
+import { useAuthContext } from '@/contexts/useAuthContext';
 
 const Home = () => {
+  const { user } = useAuthContext();
+  const nickname = user ? parseNickname(user.email) : '';
   return (
     <>
       <Header title="선물하기" />
@@ -15,7 +19,9 @@ const Home = () => {
         <SelectFriendSection>
           <SelectFriend>
             <FiPlusIcon size={16} />
-            <SelectFriendText>선물할 친구를 선택해 주세요.</SelectFriendText>
+            <SelectFriendText>
+              {nickname ? `${nickname}님! ` : ''}선물할 친구를 선택해 주세요.
+            </SelectFriendText>
           </SelectFriend>
         </SelectFriendSection>
         <SectionContainer>
@@ -42,10 +48,8 @@ const Home = () => {
 export default Home;
 
 const HomeContainer = styled.main`
-  padding-top: 56px;
   width: 100%;
   max-width: 720px;
-  height: 100vh;
   background-color: ${({ theme }) => theme.colors.backgroundDefault};
   overflow-y: auto;
   margin: 0 auto;
