@@ -11,14 +11,7 @@ export type OrderValues = {
 
 type OrderErrors = Partial<Record<keyof OrderValues, string>>;
 
-const unitPrice = 29000;
-
 const isEmpty = (value: string): boolean => !value.trim();
-
-const isValidPhoneNumber = (value: string): boolean =>
-  /^010\d{7,8}$/.test(value);
-
-const isValidQuantity = (value: string): boolean => Number(value) >= 1;
 
 const useOrderForm = () => {
   const [values, setValues] = useState<OrderValues>({
@@ -38,37 +31,37 @@ const useOrderForm = () => {
   const validate = () => {
     const newErrors: OrderErrors = {};
     if (isEmpty(values.message)) newErrors.message = '메시지를 입력해주세요.';
-
     if (isEmpty(values.senderName))
       newErrors.senderName = '이름을 입력해주세요.';
-
-    if (isEmpty(values.recipientName))
-      newErrors.recipientName = '이름을 입력해주세요.';
-
-    if (isEmpty(values.recipientPhone)) {
-      newErrors.recipientPhone = '전화번호를 입력해주세요.';
-    } else if (!isValidPhoneNumber(values.recipientPhone)) {
-      newErrors.recipientPhone = '올바른 전화번호 형식이 아닙니다.';
-    }
-    if (!isValidQuantity(values.quantity)) {
-      newErrors.quantity = '구매수량은 1개 이상이어야 합니다.';
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const totalPrice = isValidQuantity(values.quantity)
-    ? unitPrice * Number(values.quantity)
-    : 0;
-
   return {
     values,
     errors,
-    totalPrice,
     handleChange,
     validate,
   };
+};
+
+export const validateField = (name: string, value: string) => {
+  switch (name) {
+    case 'recipientName':
+      if (!value.trim()) return '이름을 입력해주세요.';
+      break;
+    case 'recipientPhone':
+      if (!value.trim()) return '전화번호를 입력해주세요.';
+      if (!/^010\d{7,8}$/.test(value))
+        return '올바른 전화번호 형식이 아닙니다.';
+      break;
+    case 'quantity':
+      if (Number(value) < 1) return '구매수량은 1개 이상이어야 합니다.';
+      break;
+    default:
+      return undefined;
+  }
+  return undefined;
 };
 
 export default useOrderForm;

@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import theme from '@src/styles/tokens/index';
 import OrderFormInput from '@src/components/OrderFormInput';
+import RecipientList from '@src/components/RecipientList';
 import type { OrderValues } from '@src/hooks/useOrderForm';
 
 const coverStyle = css`
@@ -18,29 +19,6 @@ const noticeP = css`
   text-align: left;
 `;
 
-const recipientFormDiv = css`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-`;
-
-const recipientSideP = css`
-  font-size: ${theme.typography.body1Regular.fontSize};
-  font-weight: ${theme.typography.body1Regular.fontWeight};
-  line-height: ${theme.typography.body1Regular.lineHeight};
-  color: ${theme.colors.textDefault};
-  margin: 0px;
-  text-align: left;
-  min-width: 3.75rem;
-`;
-
-const recipientRightInputDiv = css`
-  width: 100%;
-  box-sizing: border-box;
-`;
-
 const pTitle = css`
   font-size: ${theme.typography.title2Bold.fontSize};
   font-weight: ${theme.typography.title2Bold.fontWeight};
@@ -50,16 +28,52 @@ const pTitle = css`
   text-align: left;
 `;
 
+const recipientTitleStyle = css`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+`;
+
+const recipientButtonStyle = css`
+  font-size: ${theme.typography.label1Regular.fontSize};
+  font-weight: ${theme.typography.label1Regular.fontWeight};
+  line-height: ${theme.typography.label1Regular.lineHeight};
+  padding: 8px 16px;
+  border-radius: 8px;
+  background-color: ${theme.colors.borderDisabled};
+  border: none;
+  cursor: pointer;
+  transition:
+    background-color 200ms,
+    opacity 200ms;
+`;
+
+const recipientInfoDiv = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  border: 1px solid ${theme.colors.borderDisabled};
+  border-radius: 8px;
+`;
+
+const recipientInfoP = css`
+  font-size: ${theme.typography.label1Regular.fontSize};
+  font-weight: ${theme.typography.label1Regular.fontWeight};
+  line-height: ${theme.typography.label1Regular.lineHeight};
+  color: ${theme.colors.textSub};
+  text-align: center;
+  margin: 0px;
+`;
+
 const space12 = css`
   height: ${theme.spacing.spacing3};
 `;
 
 const space24 = css`
   height: ${theme.spacing.spacing6};
-`;
-
-const space8 = css`
-  height: ${theme.spacing.spacing2};
 `;
 
 const colorspace8 = css`
@@ -71,9 +85,17 @@ interface Props {
   values: OrderValues;
   errors: Partial<OrderValues>;
   onChange: (name: string, value: string) => void;
+  onOpenRecipientModal: () => void;
+  recipients?: OrderValues[];
 }
 
-const OrderForm = ({ values, errors, onChange }: Props) => {
+const OrderForm = ({
+  values,
+  errors,
+  onChange,
+  onOpenRecipientModal,
+  recipients = [],
+}: Props) => {
   return (
     <>
       <div css={coverStyle}>
@@ -99,54 +121,26 @@ const OrderForm = ({ values, errors, onChange }: Props) => {
 
       <div css={coverStyle}>
         <div css={space12} />
-        <p css={pTitle}>받는 사람</p>
+        <div css={recipientTitleStyle}>
+          <p css={pTitle}>받는 사람</p>
+          <button css={recipientButtonStyle} onClick={onOpenRecipientModal}>
+            {recipients.length > 0 ? '수정' : '추가'}
+          </button>
+        </div>
+
         <div css={space12} />
 
-        <div css={recipientFormDiv}>
-          <p css={recipientSideP}>이름</p>
-          <div css={recipientRightInputDiv}>
-            <OrderFormInput
-              name="recipientName"
-              value={values.recipientName}
-              placeholder="이름을 입력하세요."
-              error={errors.recipientName}
-              onChange={(e) => onChange('recipientName', e.target.value)}
-            />
+        {recipients.length > 0 ? (
+          <RecipientList recipients={recipients} />
+        ) : (
+          <div css={recipientInfoDiv}>
+            <p css={recipientInfoP}>
+              받는 사람이 없습니다.
+              <br />
+              받는 사람을 추가해 주세요.
+            </p>
           </div>
-        </div>
-
-        <div css={space8} />
-
-        <div css={recipientFormDiv}>
-          <p css={recipientSideP}>전화번호</p>
-          <div css={recipientRightInputDiv}>
-            <OrderFormInput
-              name="recipientPhone"
-              value={values.recipientPhone}
-              placeholder="전화번호를 입력하세요."
-              error={errors.recipientPhone}
-              onChange={(e) => onChange('recipientPhone', e.target.value)}
-            />
-          </div>
-        </div>
-
-        <div css={space8} />
-
-        <div css={recipientFormDiv}>
-          <p css={recipientSideP}>수량</p>
-          <div css={recipientRightInputDiv}>
-            <OrderFormInput
-              name="quantity"
-              type="number"
-              min={1}
-              value={values.quantity}
-              placeholder="수량을 입력하세요."
-              error={errors.quantity}
-              onChange={(e) => onChange('quantity', e.target.value)}
-            />
-          </div>
-        </div>
-
+        )}
         <div css={space24} />
       </div>
 

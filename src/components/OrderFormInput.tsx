@@ -11,7 +11,7 @@ const inputStyle = css`
   color: ${theme.colors.textDefault};
   transition: border-color 200ms;
   border-style: solid;
-  min-height: 2.75rem;
+  min-height: 2.5rem;
   font-size: ${theme.typography.body1Regular.fontSize};
   font-weight: ${theme.typography.body1Regular.fontWeight};
   line-height: ${theme.typography.body1Regular.lineHeight};
@@ -37,10 +37,7 @@ const errorText = css`
 const OrderFormInput = ({ error, ...inputProps }: Props) => {
   return (
     <div>
-      <input
-        css={[inputStyle, error && inputErrorStyle]}
-        {...inputProps}
-      />
+      <input css={[inputStyle, error && inputErrorStyle]} {...inputProps} />
       {error && <p css={errorText}>{error}</p>}
     </div>
   );

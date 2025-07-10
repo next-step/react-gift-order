@@ -46,6 +46,7 @@ const mainCardDiv = css`
   padding: 0px 1rem;
   display: flex;
   justify-content: center;
+  box-sizing: border-box;
 `;
 
 const mainCardBox = css`
