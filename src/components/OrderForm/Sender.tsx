@@ -5,15 +5,9 @@ const Wrapper = styled.div`
   padding: 0px 1rem;
 `;
 
-const Margin1 = styled.div`
+const Margin = styled.div<{ height: string }>`
   width: 100%;
-  height: 12px;
-  background-color: transparent;
-`;
-
-const Margin2 = styled.div`
-  width: 100%;
-  height: 24px;
+  height: ${({ height }) => height};
   background-color: transparent;
 `;
 
@@ -53,12 +47,6 @@ const InputBox = styled.input(({ theme }) => ({
   },
 }));
 
-const Margin3 = styled.div`
-  width: 100%;
-  height: 4px;
-  background-color: transparent;
-`;
-
 const InputBoxNotice = styled.p(({ theme }) => ({
   marginLeft: '0.5rem',
   fontSize: '0.75rem',
@@ -72,15 +60,15 @@ const InputBoxNotice = styled.p(({ theme }) => ({
 export const Sender = () => {
   return (
     <Wrapper>
-      <Margin1 />
+      <Margin height={'12px'} />
       <Text>보내는 사람</Text>
-      <Margin1 />
+      <Margin height={'12px'} />
       <Container>
         <InputBox placeholder="이름을 입력하세요." />
-        <Margin3 />
+        <Margin height={'4px'} />
         <InputBoxNotice>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</InputBoxNotice>
       </Container>
-      <Margin2 />
+      <Margin height={'24px'} />
     </Wrapper>
   );
 };

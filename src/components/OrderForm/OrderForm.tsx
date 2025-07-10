@@ -12,11 +12,11 @@ const Wrapper = styled.section(({ theme }) => ({
   backgroundColor: theme.semanticColors.background.default,
 }));
 
-const Margin1 = styled.div(({ theme }) => ({
-  width: '100%',
-  height: '8px',
-  backgroundColor: theme.semanticColors.background.fill,
-}));
+const Margin = styled.div<{ height: string }>`
+  width: 100%;
+  height: ${({ height }) => height};
+  background-color: transparent;
+`;
 
 const OrderForm = () => {
   const location = useLocation();
@@ -24,11 +24,11 @@ const OrderForm = () => {
   return (
     <Wrapper>
       <Card />
-      <Margin1 />
+      <Margin height={'8px'} />
       <Sender />
-      <Margin1 />
+      <Margin height={'8px'} />
       <Recipinet />
-      <Margin1 />
+      <Margin height={'8px'} />
       <ProductInfo product={selectedProduct} />
       <OrderButton />
     </Wrapper>

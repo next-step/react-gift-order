@@ -4,16 +4,12 @@ const Wrapper = styled.div`
   width: 100%;
   padding: 0px 1rem;
 `;
-const Margin1 = styled.div`
+const Margin = styled.div<{ height: string }>`
   width: 100%;
-  height: 12px;
+  height: ${({ height }) => height};
   background-color: transparent;
 `;
-const Margin2 = styled.div`
-  width: 100%;
-  height: 24px;
-  background-color: transparent;
-`;
+
 const Title = styled.p(({ theme }) => ({
   fontSize: '1rem',
   fontWeight: 700,
@@ -56,11 +52,7 @@ const BrandName = styled.p(({ theme }) => ({
   margin: '0px',
   textAlign: 'left',
 }));
-const Margin3 = styled.div`
-  width: 100%;
-  height: 4px;
-  background-color: transparent;
-`;
+
 const PriceHolder = styled.p(({ theme }) => ({
   fontSize: '1rem',
   fontWeight: 700,
@@ -93,22 +85,22 @@ export const ProductInfo = ({ product }: ProductInfoProps) => {
 
   return (
     <Wrapper>
-      <Margin1 />
+      <Margin height={'12px'} />
       <Title>상품 정보</Title>
-      <Margin1 />
+      <Margin height={'12px'} />
       <Container>
         <ProductImage src={imageURL} alt={name} />
         <div>
           <ProductName>{name}</ProductName>
           <BrandName>{brandInfo.name}</BrandName>
-          <Margin3 />
+          <Margin height={'4px'} />
           <PriceHolder>
             <PriceTitle>상품가</PriceTitle>
             {price.sellingPrice}원
           </PriceHolder>
         </div>
       </Container>
-      <Margin2 />
+      <Margin height={'24px'} />
     </Wrapper>
   );
 };

@@ -8,21 +8,9 @@ import { Message } from '@/components/OrderForm/Message';
 const Wrapper = styled.div`
   width: 100%;
 `;
-const Margin1 = styled.div`
+const Margin = styled.div<{ height: string }>`
   width: 100%;
-  height: 12px;
-  background-color: transparent;
-`;
-
-const Margin2 = styled.div`
-  width: 100%;
-  height: 40px;
-  background-color: transparent;
-`;
-
-const Margin3 = styled.div`
-  width: 100%;
-  height: 32px;
+  height: ${({ height }) => height};
   background-color: transparent;
 `;
 
@@ -43,13 +31,13 @@ const Card = () => {
 
   return (
     <Wrapper>
-      <Margin1 />
+      <Margin height={'12px'} />
       <CardSelector selectedCardId={selectedCardId} onChange={handleCardSelect} />
-      <Margin1 />
+      <Margin height={'12px'} />
       {selectedCard && <CardImg selectedImgUrl={selectedCard.imageUrl} />}
-      <Margin2 />
+      <Margin height={'40px'} />
       <Message value={message} onChange={(e) => setMessage(e.target.value)} />
-      <Margin3 />
+      <Margin height={'32px'} />
     </Wrapper>
   );
 };

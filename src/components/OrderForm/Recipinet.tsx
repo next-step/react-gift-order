@@ -5,21 +5,9 @@ const Wrapper = styled.div`
   padding: 0px 1rem;
 `;
 
-const Margin1 = styled.div`
+const Margin = styled.div<{ height: string }>`
   width: 100%;
-  height: 12px;
-  background-color: transparent;
-`;
-
-const Margin2 = styled.div`
-  width: 100%;
-  height: 8px;
-  background-color: transparent;
-`;
-
-const Margin3 = styled.div`
-  width: 100%;
-  height: 24px;
+  height: ${({ height }) => height};
   background-color: transparent;
 `;
 
@@ -82,30 +70,30 @@ const InputBox = styled.input(({ theme }) => ({
 export const Recipinet = () => {
   return (
     <Wrapper>
-      <Margin1 />
+      <Margin height="12px" />
       <Title>받는 사람</Title>
-      <Margin1 />
+      <Margin height="12px" />
       <InputBoxContainer>
         <InputBoxTitle>이름</InputBoxTitle>
         <InputBoxStyle>
           <InputBox placeholder="이름을 입력하세요." />
         </InputBoxStyle>
       </InputBoxContainer>
-      <Margin2 />
+      <Margin height="8px" />
       <InputBoxContainer>
         <InputBoxTitle>전화번호</InputBoxTitle>
         <InputBoxStyle>
           <InputBox placeholder="전화번호를 입력하세요." />
         </InputBoxStyle>
       </InputBoxContainer>
-      <Margin2 />
+      <Margin height="8px" />
       <InputBoxContainer>
         <InputBoxTitle>수량</InputBoxTitle>
         <InputBoxStyle>
           <InputBox placeholder="수량을 입력하세요." type="number" value="1" />
         </InputBoxStyle>
       </InputBoxContainer>
-      <Margin3 />
+      <Margin height="24px" />
     </Wrapper>
   );
 };
