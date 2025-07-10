@@ -31,7 +31,7 @@ export function useValidationInput<T extends string | number>(
     return result === '';
   }, [validator, value]);
 
-  const isValid = error === '';
+  const isValid = validator(value) === '';
 
   return { value, error, onChange, onBlur, validate, setValue, isValid };
 }

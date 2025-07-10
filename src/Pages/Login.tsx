@@ -95,7 +95,7 @@ const LoginButton = styled.button`
   }
 
   &:disabled {
-    background-color: ${({ theme }) => theme.colors.yellow300};
+    background-color: ${({ theme }) => theme.colors.yellow100};
     cursor: not-allowed;
   }
 `;
