@@ -1,14 +1,26 @@
 import Header from '@/components/Common/Header';
 import Divider from '@/components/Common/Divider';
 import styled from '@emotion/styled';
-import { SectionContainer, SectionTitle } from '@/components/Common/SectionLayout';
+import { SectionContainer } from '@/components/Common/SectionLayout';
 import CardList from '@/components/Order/CardList';
 import { useCardSelection } from '@/hooks/useCardSelection';
 import { useOrderForm } from '@/hooks/useOrderForm';
-import BorderInputBox from '@/components/Common/BorderInputBox';
 import { useParams, useNavigate } from 'react-router-dom';
 import { mockGiftItems } from '@/mocks/itemListMock';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import ReceiverListModal from '@/components/Order/ReceiverListModal';
+import {
+  InputWrapper,
+  StyledInput,
+  CaptionText,
+} from '@/components/Common/BorderInputBox';
+
+type Receiver = {
+  receiverName: string;
+  receiverPhoneNumber: string;
+  itemCount: number;
+  message: string;
+};
 
 const Order = () => {
   const { itemId } = useParams<{ itemId: string }>();
@@ -16,7 +28,8 @@ const Order = () => {
   const item = mockGiftItems.find((item) => item.id === id);
 
   const { selectedCard, selectCard } = useCardSelection();
-  const { message, senderName, receiverName, receiverPhoneNumber, itemCount } = useOrderForm();
+  const { message, senderName, receiverName, receiverPhoneNumber, itemCount } =
+    useOrderForm();
 
   const hasUserEditedMessage = useRef(false);
 
@@ -25,8 +38,19 @@ const Order = () => {
     message.onChange(e);
   };
 
+  const [isReceiverModalOpen, setIsReceiverModalOpen] = useState(false);
+  const [receivers, setReceivers] = useState<Receiver[]>([]);
+
+  const handleAddReceivers = (newReceivers: Receiver[]) => {
+    setReceivers((prev) => [...prev, ...newReceivers]);
+  };
+
   useEffect(() => {
-    if (selectedCard?.defaultTextMessage && !hasUserEditedMessage.current && message.value === '') {
+    if (
+      selectedCard?.defaultTextMessage &&
+      !hasUserEditedMessage.current &&
+      message.value === ''
+    ) {
       message.onChange({
         target: { value: selectedCard.defaultTextMessage },
       } as React.ChangeEvent<HTMLTextAreaElement>);
@@ -61,10 +85,12 @@ const Order = () => {
   return (
     <>
       <Header title="선물하기" />
-
       <OrderContainer>
         <SectionContainer>
-          <CardList selectedCardId={selectedCard?.id} onSelectCard={selectCard} />
+          <CardList
+            selectedCardId={selectedCard?.id}
+            onSelectCard={selectCard}
+          />
 
           {selectedCard && (
             <SelectedCardPreview>
@@ -86,72 +112,63 @@ const Order = () => {
         </SectionContainer>
         <Divider />
         <SectionContainer>
-          <SectionTitle>보내는 사람</SectionTitle>
-          <BorderInputBox
-            id="sender-name"
-            type="text"
-            value={senderName.value}
-            onChange={senderName.onChange}
-            message={senderName.error || '* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.'}
-            placeholder="이름을 입력하세요."
-            isError={Boolean(senderName.error)}
-          />
-        </SectionContainer>
-        <Divider />
-        <SectionContainer>
-          <SectionTitle>받는 사람</SectionTitle>
-          <ReceiverInputWrapper>
-            <InfoTitle>이름</InfoTitle>
-            <BorderInputBox
-              id="receiver-name"
+          <OrderSectionTitle>보내는 사람</OrderSectionTitle>
+          <InputWrapper>
+            <StyledInput
+              id="sender-name"
               type="text"
-              value={receiverName.value}
-              onChange={receiverName.onChange}
-              message={receiverName.error}
               placeholder="이름을 입력하세요."
-              isError={Boolean(receiverName.error)}
+              value={senderName.value}
+              onChange={senderName.onChange}
+              hasError={!!senderName.error}
             />
-          </ReceiverInputWrapper>
-          <ReceiverInputWrapper>
-            <InfoTitle>전화번호</InfoTitle>
-            <BorderInputBox
-              id="phonenumber"
-              type="text"
-              value={receiverPhoneNumber.value}
-              onChange={receiverPhoneNumber.onChange}
-              message={receiverPhoneNumber.error}
-              placeholder="전화번호를 입력하세요."
-              isError={Boolean(receiverPhoneNumber.error)}
-            />
-          </ReceiverInputWrapper>
-          <ReceiverInputWrapper>
-            <InfoTitle>수량</InfoTitle>
-            <BorderInputBox
-              id="item-count"
-              type="number"
-              value={itemCount.value.toString()}
-              onChange={itemCount.onChange}
-              message={itemCount.error}
-              isError={Boolean(itemCount.error)}
-              placeholder="수량을 입력하세요"
-            />
-          </ReceiverInputWrapper>
+            <CaptionText isError={Boolean(senderName.error)}>
+              {senderName.error ||
+                '* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.'}
+            </CaptionText>
+          </InputWrapper>
         </SectionContainer>
         <Divider />
         <SectionContainer>
-          <SectionTitle>상품 정보</SectionTitle>
+          <ReceiveContainerHeader>
+            <OrderSectionTitle>받는 사람</OrderSectionTitle>
+            <OpenReceiverListModalButton
+              onClick={() => setIsReceiverModalOpen(true)}
+            >
+              추가
+            </OpenReceiverListModalButton>
+          </ReceiveContainerHeader>
+          <ReceiverList>
+            받는 사람이 없습니다.<br></br>받는 사람을 추가해주세요.
+            {receivers.map((r, i) => (
+              <li key={i}>
+                {r.receiverName} / {r.receiverPhoneNumber} / {r.itemCount}개
+              </li>
+            ))}
+          </ReceiverList>
+        </SectionContainer>
+        <Divider />
+        <SectionContainer>
+          <OrderSectionTitle>상품 정보</OrderSectionTitle>
           <ItemWrapper>
             <ItemImg src={item.imageURL} />
             <ItemTextInfoWrapper>
               <ItemBrand>{item.brandInfo.name}</ItemBrand>
               <ItemName>{item.name}</ItemName>
-              <ItemPrice>{item.price.sellingPrice.toLocaleString()}원</ItemPrice>
+              <ItemPrice>
+                {item.price.sellingPrice.toLocaleString()}원
+              </ItemPrice>
             </ItemTextInfoWrapper>
           </ItemWrapper>
         </SectionContainer>
         <OrderButton onClick={handleOrderSubmit}>
           {item.price.sellingPrice.toLocaleString()}원 주문하기
         </OrderButton>
+        <ReceiverListModal
+          open={isReceiverModalOpen}
+          onClose={() => setIsReceiverModalOpen(false)}
+          onAdd={handleAddReceivers}
+        />
       </OrderContainer>
     </>
   );
@@ -168,6 +185,12 @@ const OrderContainer = styled.main`
   padding-bottom: 60px;
 `;
 
+const OrderSectionTitle = styled.p`
+  ${({ theme }) => `
+    font-size: ${theme.font.subtitle1Bold.size};
+    font-weight: ${theme.font.subtitle1Bold.weight};
+    line-height: ${theme.font.subtitle1Bold.lineHeight};`}
+`;
 const SelectedCardPreview = styled.div`
   margin-top: ${({ theme }) => theme.spacing.spacing4};
   display: flex;
@@ -191,29 +214,71 @@ const CardMessageTextArea = styled.textarea<{ isError: boolean }>`
   width: 100%;
   border-radius: 4px;
   border: 1px solid
-    ${({ isError, theme }) => (isError ? theme.colors.critical : theme.colors.gray400)};
+    ${({ isError, theme }) =>
+      isError ? theme.colors.critical : theme.colors.gray400};
   min-height: 100px;
   background-color: ${({ theme }) => theme.colors.backgroundDefault};
   padding: ${({ theme }) => theme.spacing.spacing4};
+
+  ${({ theme }) => `
+    font-size: ${theme.font.body1Regular.size};
+    font-weight: ${theme.font.body1Regular.weight};
+    line-height: ${theme.font.body1Regular.lineHeight};
+  `}
 `;
 
 const MessageTextAreaCaption = styled.span<{ isError: boolean }>`
-  color: ${({ isError, theme }) => (isError ? theme.colors.critical : theme.colors.gray600)};
+  color: ${({ isError, theme }) =>
+    isError ? theme.colors.critical : theme.colors.gray600};
   font-size: ${({ theme }) => theme.font.label2Regular.size};
   margin-top: 4px;
 `;
 
-const ReceiverInputWrapper = styled.div`
+const ReceiveContainerHeader = styled.div`
   display: flex;
+  width: 100%;
   flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: ${({ theme }) => theme.spacing.spacing4};
+`;
+
+const OpenReceiverListModalButton = styled.button`
+  background-color: ${({ theme }) => theme.colors.gray300};
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  ${({ theme }) => `
+    font-size: ${theme.font.body2Regular.size};
+    font-weight: ${theme.font.body2Regular.weight};
+    line-height: ${theme.font.body2Regular.lineHeight};
+  `}
+
+  &:focus {
+    outline: none;
+  }
+  &:hover {
+    outline: none;
+    background-color: ${({ theme }) => theme.colors.gray400};
+  }
+`;
+
+const ReceiverList = styled.div`
+  padding: ${({ theme }) => theme.spacing.spacing4};
+  border: 1px solid ${({ theme }) => theme.colors.borderDefault};
+  display: flex;
   width: 100%;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-`;
+  text-align: center;
+  color: ${({ theme }) => theme.colors.textPlaceholder};
+  border-radius: 12px;
 
-const InfoTitle = styled.p`
-  min-width: 3.5rem;
+  ${({ theme }) => `
+    font-size: ${theme.font.body2Regular.size};
+    font-weight: ${theme.font.body2Regular.weight};
+    line-height: ${theme.font.body2Regular.lineHeight};
+  `}
 `;
 
 const ItemWrapper = styled.div`
