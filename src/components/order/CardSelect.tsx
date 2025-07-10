@@ -57,7 +57,7 @@ const CardSelect = () => {
   const [selectedId, setSelectedId] = useState<number>(CardData[0].id);
   const [message, setMessage] = useState<string>(CardData[0].defaultTextMessage);
 
-  const handleClick = (id: number) => {
+  const handleSelectCard = (id: number) => {
     const selectedCard = CardData.find((card) => card.id === id);
     if (selectedCard) {
       setSelectedId(id);
@@ -69,7 +69,7 @@ const CardSelect = () => {
     setMessage(e.target.value);
   };
 
-  const selectedCard = CardData.find((card) => card.id === selectedId);
+  const selectedCard = CardData.find((card) => card.id === selectedId) ?? CardData[0];
 
   return (
     <Wrapper>
@@ -80,19 +80,13 @@ const CardSelect = () => {
             src={card.thumbUrl}
             alt="카드 썸네일"
             isSelected={selectedId === card.id}
-            onClick={() => handleClick(card.id)}
+            onClick={() => handleSelectCard(card.id)}
           />
         ))}
       </Card>
 
       <ImageUrl>
-        <img
-          src={
-            selectedCard?.imageUrl ??
-            'https://t1.daumcdn.net/gift/message-card/template/image/20240124_NRPQT.gif'
-          }
-          alt="선택된 카드 이미지"
-        />
+        <img src={selectedCard.imageUrl} />
       </ImageUrl>
 
       <MessageArea

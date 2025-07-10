@@ -63,7 +63,7 @@ const LoginForm = () => {
     e.preventDefault();
     if (!isValid) return;
 
-    const userData = { email: email };
+    const userData = { email };
     login(userData);
 
     navigate(from, { replace: true });

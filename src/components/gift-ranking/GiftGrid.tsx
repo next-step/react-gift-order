@@ -9,7 +9,7 @@ const GiftGrid = () => {
   const [visibleCount, setVisibleCount] = useState(6);
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
-  
+
   const handleCount = () => {
     if (visibleCount >= 21) {
       setVisibleCount(6);
@@ -19,7 +19,6 @@ const GiftGrid = () => {
   };
 
   const visibleGifts = GiftList.slice(0, visibleCount);
-
 
   return (
     <>
