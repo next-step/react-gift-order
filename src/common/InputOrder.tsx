@@ -2,7 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 type InputOrderProps = {
-  label: string;
+  label?: string;
   placeholder?: string;
   value: string | number;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;

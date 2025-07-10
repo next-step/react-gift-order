@@ -39,7 +39,7 @@ const StyledButton = styled.button<{
   padding: ${({ theme }) => theme.spacing.spacing2}
     ${({ theme }) => theme.spacing.spacing4};
   border-radius: ${({ theme }) => theme.spacing.spacing2};
-  border: 0px;
-  width: ${({ width }) => width || 'auto'};
+  border: 0;
   cursor: pointer;
+  width: ${({ width }) => width || 'auto'};
 `;
