@@ -43,27 +43,26 @@ function OrderPage() {
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (isSubmittedOnce) {
-      const isValid = await validateAllForms();
+    const isValid = await validateAllForms();
 
-      if (isValid) {
-        const formValues = getFormValues();
-        alert(
-          ORDER_MESSAGES.ORDER_COMPLETE_TEMPLATE({
-            productName: product?.name || "",
-            totalQuantity: formValues.totalQuantity,
-            senderName: formValues.senderName,
-            cardMessage: formValues.cardMessage,
-          })
-        );
-        navigate(ROUTES.HOME);
-        return;
-      }
-
-      return;
+    if (!isValid) {
+      setIsSubmittedOnce(true);
     }
 
-    setIsSubmittedOnce(true);
+    if (isValid) {
+      const formValues = getFormValues();
+      alert(
+        ORDER_MESSAGES.ORDER_COMPLETE_TEMPLATE({
+          productName: product?.name || "",
+          totalQuantity: formValues.totalQuantity,
+          senderName: formValues.senderName,
+          cardMessage: formValues.cardMessage,
+        })
+      );
+
+      navigate(ROUTES.HOME);
+      return;
+    }
   };
 
   if (!product) {

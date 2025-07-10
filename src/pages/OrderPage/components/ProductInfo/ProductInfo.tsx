@@ -1,4 +1,4 @@
-import PRODUCT_INFO_CONSTANTS from "../../constants/productInfo";
+import { PRODUCT_INFO_CONSTANTS } from "../../constants/productInfo";
 import {
   ProductSection,
   SectionTitle,
