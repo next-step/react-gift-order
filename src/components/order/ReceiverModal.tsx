@@ -3,11 +3,12 @@ import styled from "@emotion/styled";
 import { FormProvider } from "react-hook-form";
 import { useReceiverForm } from "@/hooks/useReceiverForm";
 import ReceiverList from "./ReceiverList";
+import type { ReceiverFormValues } from "@/validations/receiverSchema";
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  onComplete: (data: any) => void;
+  onComplete: (data: ReceiverFormValues["receivers"]) => void;
 };
 
 const ReceiverModal = ({ isOpen, onClose, onComplete }: Props) => {
