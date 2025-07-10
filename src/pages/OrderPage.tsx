@@ -11,12 +11,13 @@ import ReceiverForm from '@/components/OrderSection/ReceiverForm';
 import ProductInfo from '@/components/OrderSection/ProductInfo';
 import OrderSubmitButton from '@/components/OrderSection/OrderSubmitButton';
 import { useOrderForm } from '@/hooks/useOrderForm';
+import type { FormField } from '@/hooks/useOrderForm';
+import { ROUTES } from '@/constants/routes';
 
 const OrderPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const product = mockProducts[Number(id) - 1];
-  if (!product) return <div>잘못된 접근입니다.</div>;
 
   const {
     formValues,
@@ -34,6 +35,16 @@ const OrderPage = () => {
     handleChange('textMessage', selectedCard.defaultTextMessage);
   }, [selectedCardId]);
 
+  const isFormField = (name: string): name is FormField => {
+    return [
+      'senderName',
+      'receiverName',
+      'receiverPhone',
+      'quantity',
+      'textMessage',
+    ].includes(name);
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -48,20 +59,26 @@ const OrderPage = () => {
         `메시지: ${formValues.textMessage}`
     );
 
-    navigate('/');
+    navigate(ROUTES.HOME);
   };
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    const parsedValue = name === 'quantity' ? Number(value) : value;
-    handleChange(name as any, parsedValue);
 
-    if (formErrors[name as keyof typeof formErrors]) {
-      validateField(name as any);
+    if (!isFormField(name)) return;
+
+    const parsedValue = name === 'quantity' ? Number(value) : value;
+
+    handleChange(name, parsedValue);
+
+    if (formErrors[name]) {
+      validateField(name);
     }
   };
+
+  if (!product) return <div>잘못된 접근입니다.</div>;
 
   return (
     <>

@@ -14,7 +14,7 @@ type FormValues = {
 };
 
 type FormErrors = Record<keyof FormValues, string>;
-type FormField = keyof FormValues;
+export type FormField = keyof FormValues;
 
 const DEFAULT_FORM_VALUES: FormValues = {
   senderName: '',
