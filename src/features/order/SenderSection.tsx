@@ -3,29 +3,30 @@ import { theme } from '@/shared/styles/theme'
 import { typographyInput } from '@/shared/styles/typography'
 import { ORDER_FORM_PLACEHOLDER } from '@/entities/order/orderContent'
 import { Typography } from '@/shared/ui'
+import { Controller, type Control } from 'react-hook-form'
+import type { OrderFormData } from './schema'
 
 type SenderSectionProps = {
-  sender: string
-  onSenderChange: (sender: string) => void
+  control: Control<OrderFormData>
   error?: string | null
 }
 
-export const SenderSection = ({ sender, onSenderChange, error }: SenderSectionProps) => {
-  // * 값 변경 핸들러
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onSenderChange(e.target.value)
-  }
-
+export const SenderSection = ({ control, error }: SenderSectionProps) => {
   return (
     <SectionContainer>
       <SectionTitle variant="title2Bold">보내는 사람</SectionTitle>
       <FormField>
-        <Input
-          type="text"
-          placeholder={ORDER_FORM_PLACEHOLDER.sender.name}
-          value={sender}
-          onChange={handleChange}
-          hasError={!!error}
+        <Controller
+          name="sender"
+          control={control}
+          render={({ field }) => (
+            <Input
+              {...field}
+              type="text"
+              placeholder={ORDER_FORM_PLACEHOLDER.sender.name}
+              hasError={!!error}
+            />
+          )}
         />
         {error ? (
           <ErrorMessage variant="label2Regular">{error}</ErrorMessage>

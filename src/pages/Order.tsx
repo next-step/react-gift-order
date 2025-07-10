@@ -7,13 +7,14 @@ import { NotFound } from './NotFound'
 import styled from '@emotion/styled'
 import { theme } from '@/shared/styles/theme'
 import { OrderCardSection } from '@/features/order/OrderCardSection'
-import type { CardData, ReceiverData } from '@/features/order/types'
+import type { CardData } from '@/features/order/types'
 import { orderCardMock } from '@/entities/order/orderCardMock'
 import { SenderSection } from '@/features/order/SenderSection'
 import { ReceiverSection } from '@/features/order/ReceiverSection'
-import { validateValue } from '@/shared/lib/validateValue'
-import { VALIDATE_RULES } from '@/shared/lib/validateRules'
 import { ROUTE_PATH } from '@/app/Router'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { orderFormSchema, type OrderFormData } from '@/features/order/schema'
 
 // * 주문하기 페이지
 export const Order = () => {
@@ -22,31 +23,33 @@ export const Order = () => {
   const { id } = useParams<{ id: string }>()
   const [productInfo, setProductInfo] = useState<Product>()
 
-  // * 카드 섹션 상태
+  // * 카드 리스트
   const cardList: CardData[] = orderCardMock
-  const [selectedCard, setSelectedCard] = useState<CardData>(orderCardMock[0])
-  const [cardMessage, setCardMessage] = useState(orderCardMock[0].defaultTextMessage)
 
-  // * 보내는 사람 상태
-  const [sender, setSender] = useState('')
-
-  // * 받는 사람 상태
-  const [receiver, setReceiver] = useState<ReceiverData>({
-    name: '',
-    phone: '',
-    count: 1,
-  })
-
-  // * 폼 에러 상태
-  const [formErrors, setFormErrors] = useState({
-    cardMessage: null as string | null,
-    sender: null as string | null,
-    receiver: {
-      name: null as string | null,
-      phone: null as string | null,
-      count: null as string | null,
+  // * React Hook Form 설정
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<OrderFormData>({
+    resolver: zodResolver(orderFormSchema),
+    defaultValues: {
+      cardMessage: orderCardMock[0].defaultTextMessage,
+      sender: '',
+      receiver: {
+        name: '',
+        phone: '',
+        count: 1,
+      },
+      selectedCard: orderCardMock[0],
     },
   })
+
+  // * 폼 데이터 실시간 추적
+  const watchedData = watch()
+  const { selectedCard, receiver } = watchedData
 
   // * 상품 데이터 id 를 통한 필터링
   useEffect(() => {
@@ -56,79 +59,17 @@ export const Order = () => {
 
   // * 카드 선택 핸들러
   const handleCardSelect = (card: CardData) => {
-    setSelectedCard(card)
-    setCardMessage(card.defaultTextMessage) // * 선택된 카드의 기본 메시지로 업데이트
+    setValue('selectedCard', card)
+    setValue('cardMessage', card.defaultTextMessage) // * 선택된 카드의 기본 메시지로 업데이트
   }
 
-  // * 메시지 변경 핸들러
-  const handleMessageChange = (message: string) => {
-    setCardMessage(message)
-    // * 에러가 있었다면 지우기
-    if (formErrors.cardMessage) {
-      setFormErrors((prev) => ({ ...prev, cardMessage: null }))
-    }
-  }
-
-  // * 보내는 사람 변경 핸들러
-  const handleSenderChange = (newSender: string) => {
-    setSender(newSender)
-    // * 에러가 있었다면 지우기
-    if (formErrors.sender) {
-      setFormErrors((prev) => ({ ...prev, sender: null }))
-    }
-  }
-
-  // * 받는 사람 변경 핸들러
-  const handleReceiverChange = (newReceiver: ReceiverData) => {
-    setReceiver(newReceiver)
-    // * 에러가 있었다면 지우기
-    const hasReceiverErrors =
-      formErrors.receiver.name || formErrors.receiver.phone || formErrors.receiver.count
-    if (hasReceiverErrors) {
-      setFormErrors((prev) => ({
-        ...prev,
-        receiver: {
-          name: null,
-          phone: null,
-          count: null,
-        },
-      }))
-    }
-  }
-
-  // * 폼 유효성 검사
-  const validateForm = () => {
-    const errors = {
-      cardMessage: validateValue(cardMessage, VALIDATE_RULES.message),
-      sender: validateValue(sender, VALIDATE_RULES.name),
-      receiver: {
-        name: validateValue(receiver.name, VALIDATE_RULES.name),
-        phone: validateValue(receiver.phone, VALIDATE_RULES.phone),
-        count: validateValue(receiver.count.toString(), VALIDATE_RULES.quantity),
-      },
-    }
-
-    setFormErrors(errors)
-
-    // * 모든 에러가 null인지 확인
-    return (
-      !errors.cardMessage &&
-      !errors.sender &&
-      !errors.receiver.name &&
-      !errors.receiver.phone &&
-      !errors.receiver.count
+  // * 폼 제출 핸들러
+  const onSubmit = (data: OrderFormData) => {
+    // * 유효성 검사가 자동으로 통과된 데이터
+    alert(
+      `주문이 완료되었습니다!\n상품명: ${productInfo?.name}\n구매 수량: ${data.receiver.count}\n상품가: ${totalPrice.toLocaleString()}원\n보낸 사람 명: ${data.sender}\n받는 사람 명: ${data.receiver.name}\n메시지: ${data.cardMessage}`,
     )
-  }
-
-  // * 주문하기 버튼 클릭 핸들러
-  const handleOrderSubmit = () => {
-    if (validateForm()) {
-      // * 유효성 검사 통과 시 주문 처리 로직
-      alert(
-        `주문이 완료되었습니다!\n상품명: ${productInfo?.name}\n구매 수량: ${receiver.count}\n상품가: ${totalPrice.toLocaleString()}원\n보낸 사람 명: ${sender}\n받는 사람 명: ${receiver.name}\n메시지: ${cardMessage}`,
-      )
-      navigate(ROUTE_PATH.HOME)
-    }
+    navigate(ROUTE_PATH.HOME)
   }
 
   // * 주문 총액 계산
@@ -144,24 +85,22 @@ export const Order = () => {
       <OrderCardSection
         cardList={cardList}
         selectedCard={selectedCard}
-        cardMessage={cardMessage}
+        control={control}
         onCardSelect={handleCardSelect}
-        onMessageChange={handleMessageChange}
-        messageError={formErrors.cardMessage}
+        messageError={errors.cardMessage?.message}
       />
 
       {/* 보내는 사람 폼 섹션 */}
-      <SenderSection
-        sender={sender}
-        onSenderChange={handleSenderChange}
-        error={formErrors.sender}
-      />
+      <SenderSection control={control} error={errors.sender?.message} />
 
       {/* 받는 사람 폼 섹션 */}
       <ReceiverSection
-        receiver={receiver}
-        onReceiverChange={handleReceiverChange}
-        errors={formErrors.receiver}
+        control={control}
+        errors={{
+          name: errors.receiver?.name?.message,
+          phone: errors.receiver?.phone?.message,
+          count: errors.receiver?.count?.message,
+        }}
       />
 
       {/* 상품 정보 섹션 */}
@@ -207,7 +146,7 @@ export const Order = () => {
 
       {/* 주문하기 버튼 */}
       <OrderButtonSection>
-        <OrderButton variant="kakao" size="large" onClick={handleOrderSubmit}>
+        <OrderButton variant="kakao" size="large" onClick={handleSubmit(onSubmit)}>
           {totalPrice.toLocaleString()}원 주문하기
         </OrderButton>
       </OrderButtonSection>

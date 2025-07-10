@@ -2,12 +2,12 @@ import styled from '@emotion/styled'
 import { theme } from '@/shared/styles/theme'
 import { typographyInput, typographyLabel } from '@/shared/styles/typography'
 import { ORDER_FORM_PLACEHOLDER } from '@/entities/order/orderContent'
-import type { ReceiverData } from './types'
 import { Typography } from '@/shared/ui'
+import { Controller, type Control } from 'react-hook-form'
+import type { OrderFormData } from './schema'
 
 type ReceiverSectionProps = {
-  receiver: ReceiverData
-  onReceiverChange: (receiver: ReceiverData) => void
+  control: Control<OrderFormData>
   errors?: {
     name?: string | null
     phone?: string | null
@@ -15,32 +15,7 @@ type ReceiverSectionProps = {
   }
 }
 
-export const ReceiverSection = ({ receiver, onReceiverChange, errors }: ReceiverSectionProps) => {
-  // * 이름 변경 핸들러
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onReceiverChange({
-      ...receiver,
-      name: e.target.value,
-    })
-  }
-
-  // * 전화번호 변경 핸들러
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onReceiverChange({
-      ...receiver,
-      phone: e.target.value,
-    })
-  }
-
-  // * 수량 변경 핸들러
-  const handleCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newCount = Number(e.target.value) || 1
-    onReceiverChange({
-      ...receiver,
-      count: newCount,
-    })
-  }
-
+export const ReceiverSection = ({ control, errors }: ReceiverSectionProps) => {
   return (
     <SectionContainer>
       <SectionTitle variant="title2Bold">받는 사람</SectionTitle>
@@ -48,12 +23,17 @@ export const ReceiverSection = ({ receiver, onReceiverChange, errors }: Receiver
       <FormField>
         <Label>이름</Label>
         <InputContainer>
-          <Input
-            type="text"
-            placeholder={ORDER_FORM_PLACEHOLDER.reciever.name}
-            value={receiver.name}
-            onChange={handleNameChange}
-            hasError={!!errors?.name}
+          <Controller
+            name="receiver.name"
+            control={control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                type="text"
+                placeholder={ORDER_FORM_PLACEHOLDER.reciever.name}
+                hasError={!!errors?.name}
+              />
+            )}
           />
           {errors?.name && <ErrorMessage variant="label2Regular">{errors?.name}</ErrorMessage>}
         </InputContainer>
@@ -62,12 +42,17 @@ export const ReceiverSection = ({ receiver, onReceiverChange, errors }: Receiver
       <FormField>
         <Label>전화번호</Label>
         <InputContainer>
-          <Input
-            type="tel"
-            placeholder={ORDER_FORM_PLACEHOLDER.reciever.phone}
-            value={receiver.phone}
-            onChange={handlePhoneChange}
-            hasError={!!errors?.phone}
+          <Controller
+            name="receiver.phone"
+            control={control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                type="tel"
+                placeholder={ORDER_FORM_PLACEHOLDER.reciever.phone}
+                hasError={!!errors?.phone}
+              />
+            )}
           />
           {errors?.phone && <ErrorMessage variant="label2Regular">{errors?.phone}</ErrorMessage>}
         </InputContainer>
@@ -76,12 +61,19 @@ export const ReceiverSection = ({ receiver, onReceiverChange, errors }: Receiver
       <FormField>
         <Label>수량</Label>
         <InputContainer>
-          <QuantityInput
-            type="number"
-            placeholder="1"
-            value={receiver.count.toString()}
-            onChange={handleCountChange}
-            hasError={!!errors?.count}
+          <Controller
+            name="receiver.count"
+            control={control}
+            render={({ field: { onChange, value, ...field } }) => (
+              <QuantityInput
+                {...field}
+                type="number"
+                placeholder="1"
+                value={value.toString()}
+                onChange={(e) => onChange(Number(e.target.value) || 1)}
+                hasError={!!errors?.count}
+              />
+            )}
           />
           {errors?.count && <ErrorMessage variant="label2Regular">{errors?.count}</ErrorMessage>}
         </InputContainer>

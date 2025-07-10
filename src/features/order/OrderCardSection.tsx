@@ -4,13 +4,14 @@ import styled from '@emotion/styled'
 import type { CardData } from './types'
 import { ORDER_FORM_PLACEHOLDER } from '@/entities/order/orderContent'
 import { Typography } from '@/shared/ui'
+import { Controller, type Control } from 'react-hook-form'
+import type { OrderFormData } from './schema'
 
 type OrderCardSectionProps = {
   cardList: CardData[]
   selectedCard: CardData
-  cardMessage: string
+  control: Control<OrderFormData>
   onCardSelect: (card: CardData) => void
-  onMessageChange: (message: string) => void
   messageError?: string | null
 }
 
@@ -18,16 +19,10 @@ type OrderCardSectionProps = {
 export const OrderCardSection = ({
   cardList,
   selectedCard,
-  cardMessage,
+  control,
   onCardSelect,
-  onMessageChange,
   messageError,
 }: OrderCardSectionProps) => {
-  // * 메시지 변경 핸들러
-  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onMessageChange(e.target.value)
-  }
-
   return (
     <SectionContainer>
       <CardList>
@@ -50,11 +45,16 @@ export const OrderCardSection = ({
         />
       </SelectedCard>
       <MessageContainer>
-        <CardMessageArea
-          placeholder={ORDER_FORM_PLACEHOLDER.card_message}
-          value={cardMessage}
-          onChange={handleMessageChange}
-          hasError={!!messageError}
+        <Controller
+          name="cardMessage"
+          control={control}
+          render={({ field }) => (
+            <CardMessageArea
+              {...field}
+              placeholder={ORDER_FORM_PLACEHOLDER.card_message}
+              hasError={!!messageError}
+            />
+          )}
         />
         {messageError && <ErrorMessage variant="label2Regular">{messageError}</ErrorMessage>}
       </MessageContainer>
