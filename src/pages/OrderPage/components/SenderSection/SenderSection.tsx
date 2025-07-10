@@ -37,7 +37,6 @@ function SenderSectionComponent({ control, errors }: SenderProps) {
         <Controller
           control={control}
           name="senderName"
-          rules={{ required: SENDER_SECTION_CONSTANTS.NAME_ERROR }}
           render={({ field }) => (
             <Input
               {...field}

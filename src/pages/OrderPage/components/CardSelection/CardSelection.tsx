@@ -54,9 +54,6 @@ function CardSelection({
           <Controller
             name="cardMessage"
             control={control}
-            rules={{
-              required: CARD_SELECTION_CONSTANTS.MESSAGE_ERROR,
-            }}
             render={({ field }) => (
               <>
                 <MessageTextArea

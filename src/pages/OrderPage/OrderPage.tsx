@@ -10,6 +10,9 @@ import { ROUTES } from "@/constants/routes";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { VALIDATE_LABELS } from "./constants/validateLabels";
 
 export interface SenderFormData {
   senderName: string;
@@ -32,6 +35,14 @@ const OrderPageContainer = styled.div`
   gap: ${({ theme }) => theme.spacing[2]};
 `;
 
+const messageCardSchema = z.object({
+  cardMessage: z.string().nonempty(VALIDATE_LABELS.MESSAGE_EMPTY),
+});
+
+const senderSchema = z.object({
+  senderName: z.string().nonempty(VALIDATE_LABELS.NAME_EMPTY),
+});
+
 function OrderPage() {
   const navigate = useNavigate();
 
@@ -50,6 +61,7 @@ function OrderPage() {
     defaultValues: {
       cardMessage: messageCard.defaultTextMessage,
     },
+    resolver: zodResolver(messageCardSchema),
   });
 
   useEffect(() => {
@@ -76,6 +88,7 @@ function OrderPage() {
     defaultValues: {
       senderName: "",
     },
+    resolver: zodResolver(senderSchema),
   });
 
   const [receivers, setReceivers] = useState<Receiver[]>([]);

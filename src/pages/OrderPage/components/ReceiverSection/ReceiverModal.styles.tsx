@@ -88,7 +88,7 @@ export const AddSection = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing[5]};
 `;
 
-export const AddSectionButton = styled.button`
+export const AddSectionButton = styled.button<{ disabled: boolean }>`
   font-size: ${({ theme }) => theme.typography.label.label1Regular.fontSize};
   font-weight: ${({ theme }) =>
     theme.typography.label.label1Regular.fontWeight};
@@ -98,6 +98,8 @@ export const AddSectionButton = styled.button`
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   border: 0;
   cursor: pointer;
+
+  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 `;
 
 export const ModalFooter = styled.div`

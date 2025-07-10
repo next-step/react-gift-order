@@ -13,8 +13,6 @@ import {
   FormField,
   SectionTitle,
 } from "./ReceiverSection.styles";
-import { validatePhoneNumber, validateQuantity } from "../../utils/validation";
-import { VALIDATE_LABELS } from "../../constants/validateLabels";
 
 interface FormData {
   receivers: {
@@ -29,11 +27,6 @@ interface ReceiverFormProps {
   totalCount: number;
   control: Control<FormData>;
   errors: FieldErrors<FormData>;
-  watchedReceivers: {
-    name: string;
-    phone: string;
-    quantity: string;
-  }[];
   onRemove: () => void;
 }
 
@@ -42,7 +35,6 @@ function ReceiverForm({
   totalCount,
   control,
   errors,
-  watchedReceivers,
   onRemove,
 }: ReceiverFormProps) {
   return (
@@ -59,9 +51,9 @@ function ReceiverForm({
           <Controller
             name={`receivers.${index}.name`}
             control={control}
-            rules={{
-              required: VALIDATE_LABELS.NAME_EMPTY,
-            }}
+            // rules={{
+            //   required: VALIDATE_LABELS.NAME_EMPTY,
+            // }}
             render={({ field }) => (
               <Input
                 type="text"
@@ -78,21 +70,21 @@ function ReceiverForm({
           <Controller
             name={`receivers.${index}.phone`}
             control={control}
-            rules={{
-              required: VALIDATE_LABELS.PHONE_EMPTY,
-              validate: {
-                format: (value) =>
-                  validatePhoneNumber(value) || VALIDATE_LABELS.PHONE_INVALID,
-                unique: (value) => {
-                  if (!value) return true;
-                  const hasDuplicate = watchedReceivers.some(
-                    (receiver, receiverIndex) =>
-                      receiverIndex !== index && receiver.phone === value
-                  );
-                  return !hasDuplicate || VALIDATE_LABELS.PHONE_DUPLICATE;
-                },
-              },
-            }}
+            // rules={{
+            //   required: VALIDATE_LABELS.PHONE_EMPTY,
+            //   validate: {
+            //     format: (value) =>
+            //       validatePhoneNumber(value) || VALIDATE_LABELS.PHONE_INVALID,
+            //     unique: (value) => {
+            //       if (!value) return true;
+            //       const hasDuplicate = watchedReceivers.some(
+            //         (receiver, receiverIndex) =>
+            //           receiverIndex !== index && receiver.phone === value
+            //       );
+            //       return !hasDuplicate || VALIDATE_LABELS.PHONE_DUPLICATE;
+            //     },
+            //   },
+            // }}
             render={({ field }) => (
               <Input
                 type="tel"
@@ -109,11 +101,11 @@ function ReceiverForm({
           <Controller
             name={`receivers.${index}.quantity`}
             control={control}
-            rules={{
-              required: VALIDATE_LABELS.QUANTITY_EMPTY,
-              validate: (value) =>
-                validateQuantity(value) || VALIDATE_LABELS.QUANTITY_INVALID,
-            }}
+            // rules={{
+            //   required: VALIDATE_LABELS.QUANTITY_EMPTY,
+            //   validate: (value) =>
+            //     validateQuantity(value) || VALIDATE_LABELS.QUANTITY_INVALID,
+            // }}
             render={({ field }) => (
               <Input
                 type="number"
