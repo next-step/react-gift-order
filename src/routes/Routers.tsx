@@ -20,7 +20,14 @@ const AppRouter = () => {
           </RequireAuth>
         }
       />
-      <Route path={ROUTES.ORDER} element={<OrderPage />} />
+      <Route
+        path={ROUTES.ORDER}
+        element={
+          <RequireAuth>
+            <OrderPage />
+          </RequireAuth>
+        }
+      />
       <Route path={ROUTES.NOTFOUND} element={<NotFound />} />
     </Routes>
   );
