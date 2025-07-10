@@ -24,25 +24,25 @@ const LoginFormSection = () => {
     ? fromState.pathname + (fromState.search ?? '')
     : ROUTES.HOME;
 
-  const {
-    userInfo,
-    handleChange,
-    errors,
-    validateEmail,
-    validatePassword,
-    isValidForm,
-  } = useLoginForm();
+  const { userInfo, handleChange, errors, validateField, isValidForm } =
+    useLoginForm();
+
+  const isLoginField = (name: string): name is 'email' | 'password' => {
+    return name === 'email' || name === 'password';
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    handleChange(name as 'email' | 'password', value);
+    if (isLoginField(name)) {
+      handleChange(name, value);
+    }
   };
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const isEmailOk = validateEmail();
-    const isPasswordOk = validatePassword();
+    const isEmailOk = validateField('email');
+    const isPasswordOk = validateField('password');
     if (!isEmailOk || !isPasswordOk) return;
 
     login({ email: userInfo.email });
@@ -59,7 +59,7 @@ const LoginFormSection = () => {
             type="email"
             value={userInfo.email}
             onChange={handleInputChange}
-            onBlur={validateEmail}
+            onBlur={() => validateField('email')}
             error={errors.email}
             placeholder="이메일"
           />
@@ -68,7 +68,7 @@ const LoginFormSection = () => {
             type="password"
             value={userInfo.password}
             onChange={handleInputChange}
-            onBlur={validatePassword}
+            onBlur={() => validateField('password')}
             error={errors.password}
             placeholder="비밀번호"
           />

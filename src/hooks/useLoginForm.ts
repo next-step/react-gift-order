@@ -1,35 +1,34 @@
 import { useState } from 'react';
 import { getEmailError, getPasswordError } from '@/utils/validators';
 
+type Field = 'email' | 'password';
+
 const useLoginForm = () => {
-  const [userInfo, setUserInfo] = useState({
+  const [userInfo, setUserInfo] = useState<Record<Field, string>>({
     email: '',
     password: '',
   });
 
-  const [errors, setErrors] = useState({
+  const [errors, setErrors] = useState<Record<Field, string>>({
     email: '',
     password: '',
   });
 
-  const handleChange = (field: 'email' | 'password', value: string) => {
+  const validators: Record<Field, (value: string) => string> = {
+    email: getEmailError,
+    password: getPasswordError,
+  };
+
+  const handleChange = (field: Field, value: string) => {
     setUserInfo(prev => ({ ...prev, [field]: value }));
-    if (field == 'email') {
-      validateEmail();
-    } else {
-      validatePassword();
-    }
+    validateField(field);
   };
 
-  const validateEmail = () => {
-    const error = getEmailError(userInfo.email);
-    setErrors(prev => ({ ...prev, email: error }));
-    return !error;
-  };
+  const validateField = (field: Field): boolean => {
+    const validator = validators[field];
+    const error = validator(userInfo[field]);
 
-  const validatePassword = () => {
-    const error = getPasswordError(userInfo.password);
-    setErrors(prev => ({ ...prev, password: error }));
+    setErrors(prev => ({ ...prev, [field]: error }));
     return !error;
   };
 
@@ -39,8 +38,7 @@ const useLoginForm = () => {
     userInfo,
     handleChange,
     errors,
-    validateEmail,
-    validatePassword,
+    validateField,
     isValidForm,
   };
 };
