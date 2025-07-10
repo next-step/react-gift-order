@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 import styled from '@emotion/styled';
 
 import MobileLayout from '@/layouts/MobileLayout';
@@ -11,9 +11,7 @@ import ReceiverInfo from '@/components/order/ReceiverInfo';
 import ProductInfo from '@/components/order/ProductInfo';
 import OrderButton from '@/components/order/OrderButton';
 
-import { validateOrder, validateField } from '@/utils/validation';
-import type { OrderErrors } from '@/utils/validation';
-
+import { isBlank, isPhone } from '@/utils/validation';
 import { products } from '@/mock/productsData';
 import { cardTemplates } from '@/mock/cardTemplates';
 
@@ -24,68 +22,52 @@ const Wrapper = styled.div`
   background: ${({ theme }) => theme.colors.gray[200]};
 `;
 
+interface FormValues {
+  message: string;
+  sender: string;
+  name: string;
+  phone: string;
+  qty: number;
+}
+
 export default function OrderPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const product = products.find((p) => p.id === Number(id));
-  const [tpl, setTpl] = useState(cardTemplates[0]);
-  const [message, setMessage] = useState(tpl.defaultTextMessage);
-  const [sender, setSender] = useState('');
-  const [receiver, setReceiver] = useState({ name: '', phone: '', qty: 1 });
-  const [errors, setErrors] = useState<OrderErrors>({});
+  const defaultTpl = cardTemplates[0];
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<FormValues>({
+    defaultValues: {
+      message: defaultTpl.defaultTextMessage,
+      sender: '',
+      name: '',
+      phone: '',
+      qty: 1,
+    },
+  });
 
   if (!product) return <div>상품을 찾을 수 없습니다.</div>;
 
-  const handleMessage = (msg: string) => {
-    setMessage(msg);
-    setErrors((prev) => ({
-      ...prev,
-      message: validateField('message', msg),
-    }));
-  };
-
-  const handleSender = (name: string) => {
-    setSender(name);
-    setErrors((prev) => ({
-      ...prev,
-      sender: validateField('sender', name),
-    }));
-  };
-
-  const handleReceiver = (next: typeof receiver) => {
-    setReceiver(next);
-    setErrors((prev) => ({
-      ...prev,
-      recvName: validateField('recvName', next.name),
-      recvPhone: validateField('recvPhone', next.phone),
-      qty: validateField('qty', next.qty),
-    }));
-  };
-
-  const handleOrder = () => {
-    const newErr = validateOrder({
-      message,
-      sender,
-      recvName: receiver.name,
-      recvPhone: receiver.phone,
-      qty: receiver.qty,
-    });
-    setErrors(newErr);
-
-    if (Object.keys(newErr).length) return;
-
+  const onSubmit = (data: FormValues) => {
     window.alert(
       [
         '주문이 완료되었습니다.',
         `상품명: ${product.name}`,
-        `구매 수량: ${receiver.qty}`,
-        `발신자 이름: ${sender}`,
-        `메시지: ${message || '(없음)'}`,
+        `구매 수량: ${data.qty}`,
+        `발신자 이름: ${data.sender}`,
+        `메시지: ${data.message || '(없음)'}`,
       ].join('\n'),
     );
-
     navigate('/');
   };
+
+  const qty = watch('qty');
 
   return (
     <MobileLayout>
@@ -94,31 +76,47 @@ export default function OrderPage() {
 
         {/* 카드 선택 */}
         <CardPicker
-          selectedId={tpl.id}
-          onSelect={(t) => {
-            setTpl(t);
-            setMessage(t.defaultTextMessage);
-          }}
+          selectedId={defaultTpl.id}
+          onSelect={(tpl) => setValue('message', tpl.defaultTextMessage)}
         />
         {/* 카드 + 메세지 */}
         <CardMessage
-          tpl={tpl}
-          message={message}
-          onMessageChange={handleMessage}
-          error={errors.message}
+          tpl={defaultTpl}
+          register={register('message', {
+            validate: (v) => !isBlank(v) || '메시지를 입력해주세요.',
+          })}
+          error={errors.message?.message}
         />
 
         {/* 보내는 사람 */}
-        <SenderInfo sender={sender} onChange={handleSender} error={errors.sender} />
+        <SenderInfo
+          register={register('sender', {
+            validate: (v) => !isBlank(v) || '이름을 입력해주세요.',
+          })}
+          error={errors.sender?.message}
+        />
 
         {/* 받는 사람 */}
         <ReceiverInfo
-          value={receiver}
-          onChange={handleReceiver}
+          registerName={register('name', {
+            validate: (v) => !isBlank(v) || '이름을 입력해주세요.',
+          })}
+          registerPhone={register('phone', {
+            validate: (v) =>
+              !isBlank(v)
+                ? isPhone(v)
+                  ? true
+                  : '올바른 전화번호 형식이 아닙니다.'
+                : '전화번호를 입력해주세요.',
+          })}
+          registerQty={register('qty', {
+            valueAsNumber: true,
+            validate: (v) => v >= 1 || '구매 수량은 1개 이상이어야 합니다.',
+          })}
           errors={{
-            name: errors.recvName,
-            phone: errors.recvPhone,
-            qty: errors.qty,
+            name: errors.name?.message,
+            phone: errors.phone?.message,
+            qty: errors.qty?.message,
           }}
         />
 
@@ -128,8 +126,8 @@ export default function OrderPage() {
         {/* 주문하기 버튼 */}
         <OrderButton
           priceSum={product.price.sellingPrice}
-          qty={receiver.qty}
-          onClick={handleOrder}
+          qty={qty}
+          onClick={handleSubmit(onSubmit)}
         />
       </Wrapper>
     </MobileLayout>

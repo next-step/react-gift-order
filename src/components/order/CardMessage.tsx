@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import type { CardTemplate } from '@/mock/cardTemplates';
+import type { UseFormRegisterReturn } from 'react-hook-form';
 
 const Content = styled.section`
   padding: 12px 16px 34px;
@@ -51,21 +52,15 @@ const ErrorMsg = styled.p`
 
 interface Props {
   tpl: CardTemplate;
-  message: string;
-  onMessageChange: (msg: string) => void;
+  register: UseFormRegisterReturn;
   error?: string;
 }
 
-export default function CardMessage({ tpl, message, onMessageChange, error }: Props) {
+export default function CardMessage({ tpl, register, error }: Props) {
   return (
     <Content>
       <BigImg src={tpl.imageUrl} alt="카드보기" />
-      <TextArea
-        value={message}
-        placeholder="메시지를 입력해주세요."
-        onChange={(e) => onMessageChange(e.target.value)}
-        error={!!error}
-      />
+      <TextArea placeholder="메시지를 입력해주세요." {...register} error={!!error} />
       {error && <ErrorMsg>{error}</ErrorMsg>}
     </Content>
   );

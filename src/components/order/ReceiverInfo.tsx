@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import type { ChangeEvent } from 'react';
+import type { UseFormRegisterReturn } from 'react-hook-form';
 
 const Content = styled.section`
   padding: 0 16px 16px;
@@ -54,28 +54,23 @@ const Error = styled.p`
   margin-left: 80px;
 `;
 
-interface Value {
-  name: string;
-  phone: string;
-  qty: number;
-}
-
-interface FieldErrors {
-  name?: string;
-  phone?: string;
-  qty?: string;
-}
-
 interface Props {
-  value: Value;
-  onChange: (v: Value) => void;
-  errors?: FieldErrors;
+  registerName: UseFormRegisterReturn;
+  registerPhone: UseFormRegisterReturn;
+  registerQty: UseFormRegisterReturn;
+  errors?: {
+    name?: string;
+    phone?: string;
+    qty?: string;
+  };
 }
 
-export default function ReceiverInfo({ value, onChange, errors = {} }: Props) {
-  const update = (field: keyof Value) => (e: ChangeEvent<HTMLInputElement>) =>
-    onChange({ ...value, [field]: field === 'qty' ? Number(e.target.value) : e.target.value });
-
+export default function ReceiverInfo({
+  registerName,
+  registerPhone,
+  registerQty,
+  errors = {},
+}: Props) {
   return (
     <Content>
       <Title>받는 사람</Title>
@@ -87,8 +82,7 @@ export default function ReceiverInfo({ value, onChange, errors = {} }: Props) {
           <Input
             id="recvName"
             placeholder="이름을 입력하세요."
-            value={value.name}
-            onChange={update('name')}
+            {...registerName}
             error={!!errors.name}
           />
         </LabelRow>
@@ -102,8 +96,7 @@ export default function ReceiverInfo({ value, onChange, errors = {} }: Props) {
           <Input
             id="recvPhone"
             placeholder="전화번호를 입력하세요."
-            value={value.phone}
-            onChange={update('phone')}
+            {...registerPhone}
             error={!!errors.phone}
           />
         </LabelRow>
@@ -114,14 +107,7 @@ export default function ReceiverInfo({ value, onChange, errors = {} }: Props) {
       <Field>
         <LabelRow>
           <Label htmlFor="recvQty">수량</Label>
-          <Input
-            id="recvQty"
-            type="number"
-            min={1}
-            value={value.qty}
-            onChange={update('qty')}
-            error={!!errors.qty}
-          />
+          <Input id="recvQty" type="number" min={1} {...registerQty} error={!!errors.qty} />
         </LabelRow>
         {errors.qty && <Error>{errors.qty}</Error>}
       </Field>
