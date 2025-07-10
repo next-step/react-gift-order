@@ -5,7 +5,7 @@ import ReceiverForm from "@/components/order/ReceiverForm";
 import GiftInfo from "@/components/order/GiftInfo";
 import { useNavigate, useParams } from "react-router-dom";
 import { ranking } from "@/data/ranking";
-import useOrderForm from "./useOrderForm";
+import useOrderForm from "../components/order/useOrderForm";
 import { useState } from "react";
 
 export default function OrderPage() {
@@ -58,17 +58,7 @@ export default function OrderPage() {
         error={sender.error}
       />
       <Divider />
-      <ReceiverForm
-        name={receiver.value}
-        onChangeName={receiver.onChange}
-        nameError={receiver.error}
-        phone={phone.value}
-        onChangePhone={phone.onChange}
-        phoneError={phone.error}
-        quantity={quantity}
-        onChangeQuantity={setQuantity}
-        quantityError={quantityError}
-      />
+      <ReceiverForm/>
       <Divider />
       <GiftInfo />
       <OrderBtn onClick={handleOrder}>
