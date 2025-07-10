@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, useEffect, useMemo, type ReactNode } from 'react';
+import { createContext, useState, useContext, useEffect, useMemo, useCallback, type ReactNode } from 'react';
 
 // 사용자 정보 타입 정의
 interface User {
@@ -50,8 +50,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, []);
 
-  // 로그인 처리
-  const login = (email: string) => {
+  // 로그인 처리 (useCallback으로 메모이제이션)
+  const login = useCallback((email: string) => {
     const newUser = { email, nickname: email.split('@')[0] };
     
     // 사용자 정보 업데이트
@@ -59,16 +59,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     
     // localStorage에 사용자 정보 저장
     localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(newUser));
-  };
+  }, []);
 
-  // 로그아웃 처리
-  const logout = () => {
+  // 로그아웃 처리 (useCallback으로 메모이제이션)
+  const logout = useCallback(() => {
     // 사용자 정보 초기화
     setUser(null);
     
     // localStorage에서 사용자 정보 삭제
     localStorage.removeItem(USER_STORAGE_KEY);
-  };
+  }, []);
 
   // 컨텍스트 값 정의
   const value = useMemo(() => ({
