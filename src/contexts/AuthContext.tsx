@@ -8,6 +8,7 @@ type AuthContextType = {
   user: User | null;
   login: (user: User) => void;
   logout: () => void;
+  isLoggedIn: boolean;
 };
 
 const SESSION_KEY = 'kakaotech/userInfo';
@@ -34,7 +35,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider
+      value={{ user, login, logout, isLoggedIn: user !== null }}
+    >
       {children}
     </AuthContext.Provider>
   );

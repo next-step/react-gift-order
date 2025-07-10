@@ -5,6 +5,7 @@ import LoginPage from '@/pages/LoginPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 import MyPage from './pages/Mypage';
 import OrderPage from '@/pages/OrderPage';
+import PrivateRoute from '@/routes/PrivateRoute';
 import { ROUTES } from '@/constants/routes';
 
 function App() {
@@ -15,8 +16,12 @@ function App() {
         <Routes>
           <Route path={ROUTES.HOME} element={<HomePage />} />
           <Route path={ROUTES.LOGIN} element={<LoginPage />} />
-          <Route path={ROUTES.MY} element={<MyPage />} />
-          <Route path={ROUTES.ORDER_PATH} element={<OrderPage />} />
+
+          <Route element={<PrivateRoute />}>
+            <Route path={ROUTES.MY} element={<MyPage />} />
+            <Route path={ROUTES.ORDER_PATH} element={<OrderPage />} />
+          </Route>
+
           <Route path={ROUTES.NOT_FOUND} element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
