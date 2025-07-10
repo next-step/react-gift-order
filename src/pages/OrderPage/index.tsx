@@ -2,14 +2,21 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { Container, Title, Box, Image, Label, ProductName, ProductBrand, Price, PriceName, ProductPrice } from './styles';
-import { FixedButton, Button } from '@/components/OrderForm/styles';
-import OrderForm from '@/components/OrderForm';
+import { FixedButton, Button } from '@/components/SenderForm/styles';
+import SenderForm from '@/components/SenderForm';
 import MessageCard from '@/components/MessageCard';
-import ReceiverSelectBox from '@/components/RecieverSelectBox';
+import ReceiverSelectBox from '@/components/ReceiverSelectBox';
 import ReceiverModal from '@/components/ReceiverModal';
 import { mockItem } from '@/components/GiftRanking/mockItem';
-import { ORDER_SUCCESS_MESSAGE, formatOrderButtonText } from '@/components/OrderForm/constants';
+import { ORDER_SUCCESS_MESSAGE, formatOrderButtonText } from '@/components/SenderForm/constants';
 import type { IFormData } from '@/types/order.d';
+import {
+  RECEIVER_REQUIRED_MESSAGE,
+  FINAL_ORDER_DATA_LOG,
+  ORDER_INFO_TITLE,
+  PRODUCT_PRICE_LABEL,
+  CURRENCY_UNIT,
+} from './constants';
 
 interface ReceiverFormInput {
   name: string;
@@ -39,7 +46,7 @@ function OrderPage() {
 
   const onSubmit: SubmitHandler<IFormData> = (data) => {
     if (receivers.length === 0) {
-      alert('받는 사람을 1명 이상 추가해주세요.');
+      alert(RECEIVER_REQUIRED_MESSAGE);
       return;
     }
 
@@ -53,7 +60,7 @@ function OrderPage() {
         data.message,
       ),
     );
-    console.log('Final Order Data:', { ...data, receivers });
+    console.log(FINAL_ORDER_DATA_LOG, { ...data, receivers });
   };
 
   const handleReceiverModalComplete = (selectedReceivers: ReceiverFormInput[]) => {
@@ -65,7 +72,7 @@ function OrderPage() {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <MessageCard register={register} setValue={setValue} />
-      <OrderForm register={register} errors={errors} productPrice={product.price} />
+      <SenderForm register={register} errors={errors} productPrice={product.price} />
       <ReceiverSelectBox onAddClick={() => setIsReceiverModalOpen(true)} recipients={receivers} />
       <ReceiverModal
         isOpen={isReceiverModalOpen}
@@ -74,15 +81,15 @@ function OrderPage() {
         initialReceivers={receivers}
       />
       <Container>
-        <Title>주문 정보</Title>
+        <Title>{ORDER_INFO_TITLE}</Title>
         <Box>
           <Image src={product.imageURL} alt={product.name} width="100" />
           <Label>
             <ProductName>{product.name}</ProductName>
             <ProductBrand>{product.brand}</ProductBrand>
             <Price>
-              <PriceName>상품가</PriceName>
-              <ProductPrice>{product.price.toLocaleString()}원</ProductPrice>
+              <PriceName>{PRODUCT_PRICE_LABEL}</PriceName>
+              <ProductPrice>{product.price.toLocaleString()}{CURRENCY_UNIT}</ProductPrice>
             </Price>
           </Label>
         </Box>

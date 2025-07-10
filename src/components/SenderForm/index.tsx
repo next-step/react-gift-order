@@ -8,14 +8,14 @@ import {
 } from './constants';
 import type { IFormData } from '@/types/order.d';
 
-interface OrderFormProps {
+interface SenderFormProps {
   register: UseFormRegister<IFormData>;
   errors: FieldErrors<IFormData>;
   watch: UseFormWatch<IFormData>;
   productPrice: number;
 }
 
-function OrderForm({ register, errors }: OrderFormProps) {
+function SenderForm({ register, errors }: SenderFormProps) {
   return (
     <>
       <Container>
@@ -30,6 +30,4 @@ function OrderForm({ register, errors }: OrderFormProps) {
   );
 }
 
-export default OrderForm;
-
-
+export default SenderForm;

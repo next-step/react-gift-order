@@ -4,7 +4,7 @@ import * as S from './styles';
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  title: React.ReactNode; 
+  title: React.ReactNode;
   children: React.ReactNode;
   footerContent?: React.ReactNode;
 }

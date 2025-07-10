@@ -2,13 +2,26 @@ import React from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import Modal from '@/components/common/Modal';
 import * as S from './styles';
-import { Input, InputRow, Label, ErrorMessage } from '@/components/OrderForm/styles';
-const RECEIVER_NAME_ERROR = '받는 사람 이름을 입력해주세요.';
-const RECEIVER_PHONE_ERROR = '받는 사람 연락처를 입력해주세요.';
-const PHONE_REGEX_ERROR = '01012341234 형식으로 입력해주세요.';
-
-const NAME_LABEL = '이름';
-const PHONE_LABEL = '전화번호';
+import { Input, InputRow, Label, ErrorMessage } from '@/components/SenderForm/styles';
+import {
+  RECEIVER_NAME_ERROR,
+  RECEIVER_PHONE_ERROR,
+  PHONE_REGEX_ERROR,
+  NAME_LABEL,
+  PHONE_LABEL,
+  MAX_RECEIVERS,
+  QUANTITY_MIN_ERROR,
+  QUANTITY_LABEL,
+  DUPLICATE_PHONE_ERROR,
+  CANCEL_BUTTON_TEXT,
+  COMPLETE_BUTTON_SUFFIX,
+  MODAL_TITLE,
+  MAX_RECEIVERS_HINT_PREFIX,
+  MAX_RECEIVERS_HINT_SUFFIX,
+  DUPLICATE_PHONE_HINT,
+  ADD_BUTTON_TEXT,
+  RECEIVER_TITLE_PREFIX,
+} from './constants';
 
 interface ReceiverFormInput {
   name: string;
@@ -22,10 +35,6 @@ interface ReceiverModalProps {
   onComplete: (receivers: ReceiverFormInput[]) => void;
   initialReceivers?: ReceiverFormInput[];
 }
-
-const MAX_RECEIVERS = 10;
-const QUANTITY_MIN_ERROR = '수량은 1개 이상이어야 합니다.';
-const QUANTITY_LABEL = '수량';
 
 const ReceiverModal: React.FC<ReceiverModalProps> = ({
   isOpen,
@@ -66,7 +75,7 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
 
     data.receivers.forEach((receiver, index) => {
       if (phoneNumbers.has(receiver.phone)) {
-        setError(`receivers.${index}.phone`, { type: 'manual', message: '중복된 전화번호입니다.' });
+        setError(`receivers.${index}.phone`, { type: 'manual', message: DUPLICATE_PHONE_ERROR });
         hasDuplicatePhone = true;
       } else {
         phoneNumbers.add(receiver.phone);
@@ -84,20 +93,20 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
 
   const footerContent = (
     <>
-      <S.CancelButton onClick={onClose}>취소</S.CancelButton>
+      <S.CancelButton onClick={onClose}>{CANCEL_BUTTON_TEXT}</S.CancelButton>
       <S.FinishButton onClick={handleSubmit(onSubmit)}>
-        {fields.length}명 완료
+        {fields.length}{COMPLETE_BUTTON_SUFFIX}
       </S.FinishButton>
     </>
   );
 
   const modalHeaderContent = (
     <>
-      <S.ModalTitle>받는사람</S.ModalTitle>
-      <S.HintText>최대 {MAX_RECEIVERS}명까지 추가 할 수 있어요.</S.HintText>
-      <S.HintText>받는사람의 전화번호를 중복으로 입력할 수 없어요.</S.HintText>
+      <S.ModalTitle>{MODAL_TITLE}</S.ModalTitle>
+      <S.HintText>{MAX_RECEIVERS_HINT_PREFIX}{MAX_RECEIVERS}{MAX_RECEIVERS_HINT_SUFFIX}</S.HintText>
+      <S.HintText>{DUPLICATE_PHONE_HINT}</S.HintText>
       <S.AddButton onClick={handleAddReceiver} disabled={fields.length >= MAX_RECEIVERS}>
-        추가하기
+        {ADD_BUTTON_TEXT}
       </S.AddButton>
     </>
   );
@@ -107,7 +116,7 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
 
       {fields.map((field, index) => (
         <S.ReceiverFormWrapper key={field.id}>
-          <S.ReceiverTitle>받는사람 {index + 1}</S.ReceiverTitle>
+          <S.ReceiverTitle>{RECEIVER_TITLE_PREFIX}{index + 1}</S.ReceiverTitle>
           {fields.length > 1 && (
             <S.RemoveButton onClick={() => handleRemoveReceiver(index)}>
               &times;
