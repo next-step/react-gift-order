@@ -41,7 +41,7 @@ export const Message = ({ value, onChange }: MessageProps) => {
   return (
     <Wrapper>
       <Container>
-        <TextArea value={value} onChange={onChange} placeholder="메세지를 입력해주세요."></TextArea>
+        <TextArea value={value} onChange={onChange} placeholder="메세지를 입력해주세요." />
       </Container>
     </Wrapper>
   );
