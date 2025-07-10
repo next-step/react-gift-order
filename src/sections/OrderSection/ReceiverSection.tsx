@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import type { UseFormRegister, FieldErrors } from "react-hook-form";
 
 const Section = styled.section`
   width: 100%;
@@ -31,27 +32,13 @@ const FieldWrapper = styled.div`
 `;
 
 interface Props {
-    receiverName: string;
-    receiverPhone: string;
-    quantity: number;
-    setReceiverName: (name: string) => void;
-    setReceiverPhone: (phone: string) => void;
-    setQuantity: (qty: number) => void;
-    touched: boolean;
-    errors: {
-        receiverName: string;
-        receiverPhone: string;
-        quantity: string;
-    };
-    onBlurs: {
-        receiverName: () => void;
-        receiverPhone: () => void;
-        quantity: () => void;
-    };
+  register: UseFormRegister<any>;
+  errors: FieldErrors;
+  touched: Partial<Record<string, boolean>>;
 }
 
 
-export default function ReceiverSection({ receiverName, receiverPhone, quantity, setReceiverName, setReceiverPhone, setQuantity, touched, errors, onBlurs, }: Props) {
+export default function ReceiverSection({ register, errors, touched }: Props) {
     return (
         <Section>
             <FieldWrapper>
@@ -59,12 +46,9 @@ export default function ReceiverSection({ receiverName, receiverPhone, quantity,
                 <Input
                     id="receiverName"
                     type="text"
-                    placeholder="이름을 입력하세요."
-                    value={receiverName}
-                    onChange={(e) => setReceiverName(e.target.value)}
-                    onBlur={onBlurs.receiverName}
+                    {...register("receiverName")}
                 />
-                {touched && errors.receiverName && <ErrorText>{errors.receiverName}</ErrorText>}
+                {touched && errors.receiverName && <ErrorText>{errors.receiverName.message as string}</ErrorText>}
             </FieldWrapper>
 
             <FieldWrapper>
@@ -72,12 +56,9 @@ export default function ReceiverSection({ receiverName, receiverPhone, quantity,
                 <Input
                     id="receiverPhone"
                     type="tel"
-                    placeholder="전화번호를 입력하세요 (01012345678)"
-                    value={receiverPhone}
-                    onChange={(e) => setReceiverPhone(e.target.value)}
-                    onBlur={onBlurs.receiverPhone}
+                    {...register("receiverPhone")}
                 />
-                {touched && errors.receiverPhone && <ErrorText>{errors.receiverPhone}</ErrorText>}
+                {touched && errors.receiverPhone && <ErrorText>{errors.receiverPhone.message as string}</ErrorText>}
 
             </FieldWrapper>
 
@@ -86,11 +67,9 @@ export default function ReceiverSection({ receiverName, receiverPhone, quantity,
                 <Input
                     id="quantity"
                     type="number"
-                    value={quantity}
-                    onChange={(e) => setQuantity(Number(e.target.value))}
-                    onBlur={onBlurs.quantity}
+                    {...register("quantity", { valueAsNumber: true })}
                 />
-                {touched && errors.quantity && <ErrorText>{errors.quantity}</ErrorText>}
+                {touched && errors.quantity && <ErrorText>{errors.quantity.message as string}</ErrorText>}
             </FieldWrapper>
         </Section>
     );
