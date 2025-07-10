@@ -1,14 +1,14 @@
-import { LOGIN_CONTENT } from '@/data/loginContent'
-import { theme } from '@/styles/theme'
-import { typographyMixin } from '@/components/common'
+import { LOGIN_CONTENT } from '@/entities/user/loginContent'
+import { theme } from '@/shared/styles/theme'
+import { typographyMixin } from '@/shared/ui'
 import styled from '@emotion/styled'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { PageContainer } from '@/components/common/PageContainer'
-import { Button } from '@/components/common/Button'
-import { useInput } from '@/hooks/useInput'
-import { ROUTE_PATH } from '@/Router'
-import { VALIDATE_RULES } from '@/data/validateRules'
-import { useAuth } from '@/contexts/AuthContext'
+import { PageContainer } from '@/shared/ui/PageContainer'
+import { Button } from '@/shared/ui/Button'
+import { useInput } from '@/shared/hooks/useInput'
+import { ROUTE_PATH } from '@/app/Router'
+import { VALIDATE_RULES } from '@/shared/lib/validateRules'
+import { useAuth } from '@/app/providers/AuthContext'
 
 // * 로그인 화면
 export const Login = () => {

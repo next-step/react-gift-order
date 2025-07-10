@@ -1,9 +1,9 @@
-import { Button, PageContainer, Typography } from '@/components/common'
-import { useAuth } from '@/contexts/AuthContext'
+import { Button, PageContainer, Typography } from '@/shared/ui'
+import { useAuth } from '@/app/providers/AuthContext'
 import { useNavigate } from 'react-router-dom'
-import { ROUTE_PATH } from '@/Router'
+import { ROUTE_PATH } from '@/app/Router'
 import styled from '@emotion/styled'
-import { theme } from '@/styles/theme'
+import { theme } from '@/shared/styles/theme'
 
 // * 마이 페이지
 export const MyPage = () => {
