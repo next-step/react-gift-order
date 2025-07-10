@@ -44,7 +44,10 @@ const ReceiverModal = () => {
   const handlePlus = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    append({ name: "", phone: "", count: 1 });
+
+    if (fields.length < 10) {
+      append({ name: "", phone: "", count: 1 });
+    }
   };
   const handleCencel = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -60,6 +63,8 @@ const ReceiverModal = () => {
 
     const isValid = await trigger("receiver");
     if (isValid) {
+      const updated = getValues("receiver");
+      setValue("receiver", [...updated]);
       closeModal();
     }
   };
@@ -71,7 +76,9 @@ const ReceiverModal = () => {
           <Title>받는 사람</Title>
           <DescriptionMessage message="* 최대 10명까지 추가 할 수 있어요." />
           <DescriptionMessage message="* 받는 사람의 전화번호를 중복으로 입력할 수 없어요." />
-          <PlusButton onClick={handlePlus}>추가하기</PlusButton>
+          <PlusButton onClick={handlePlus} disabled={fields.length >= 10}>
+            추가하기
+          </PlusButton>
         </div>
         <FormDiv>
           {fields.length > 0 &&
@@ -148,6 +155,12 @@ const PlusButton = styled.button`
   background-color: ${({ theme }) => theme.colors.gray.gray300};
   color: ${({ theme }) => theme.colors.semantic.text.default};
   cursor: pointer;
+
+  &:disabled {
+    background-color: ${({ theme }) => theme.colors.gray.gray200};
+    color: ${({ theme }) => theme.colors.gray.gray500};
+    cursor: not-allowed;
+  }
 `;
 
 const FormDiv = styled.div`
