@@ -57,7 +57,7 @@ const NavBarLoginBtn = styled.button`
 
 function NavBar() {
   const navigate = useNavigate();
-  const userId = useUser();
+  const userId = useUser(); // session storage에 있는 로그인 정보
 
   function handleBackNavigation() {
     if(window.history.length > 1) {
@@ -67,6 +67,8 @@ function NavBar() {
     }
   }
 
+  // TODO: 좀 손 봐야할듯
+  // session storage에 있는 로그인 정보로 로그인이 되어있으면 my page로 아니면 login페이지로 유도
   function handleLoginClick() {
     if (userId !== '') {
       navigate('/my');
