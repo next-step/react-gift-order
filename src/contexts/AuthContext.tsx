@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   // 로그인 처리
-  const login = (email: string, password: string) => {
+  const login = (email: string) => {
     const newUser = { email, nickname: email.split('@')[0] };
     
     // 사용자 정보 업데이트
