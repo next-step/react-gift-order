@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import styled from '@emotion/styled';
-import { CardData } from '@/components/order/CardData';
+import { CardData } from '@/mock-data/CardData';
 
 const Wrapper = styled.div`
   display: flex;

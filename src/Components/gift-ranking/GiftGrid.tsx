@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import GiftItem from '@/components/gift-ranking/GiftItem';
-import { GiftList } from '@/components/gift-ranking/GiftList';
+import { GiftList } from '@/mock-data/GiftList';
 import { GridWrapper, MoreButton, ButtonWrapper } from '@/components/gift-ranking/Grid.style';
 import { useAuth } from '@/context/AuthContext';
 import type { Gift } from '@/types/gift';

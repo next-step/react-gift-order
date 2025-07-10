@@ -1,4 +1,4 @@
-import { DataCategory } from '@/components/category/DataCategory';
+import { DataCategory } from '@/mock-data/DataCategory';
 import { Grid, Item, ImageStyle } from '@/components/category/GiftCategoryGrid';
 import { Wrapper, Title } from '@/components/category/GiftCategory.style';
 

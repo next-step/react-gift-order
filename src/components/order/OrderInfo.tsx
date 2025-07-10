@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { useOrderForm } from '@/hooks/useOrderForm';
-import { GiftList } from '@/components/gift-ranking/GiftList';
+import { GiftList } from '@/mock-data/GiftList';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Wrapper = styled.div`
