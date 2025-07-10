@@ -19,6 +19,10 @@ const inputStyle = css`
   border-width: 1px;
   border-radius: 8px;
   border-color: ${theme.colors.borderDefault};
+  &:focus {
+    outline: none;
+    border-color: ${theme.colors.gray700};
+  }
 `;
 
 const inputErrorStyle = css`

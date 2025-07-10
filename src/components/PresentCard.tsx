@@ -87,6 +87,10 @@ const textareaStyle = css`
   border-width: 1px;
   border-radius: 8px;
   border-color: ${theme.colors.borderDefault};
+  &:focus {
+    outline: none;
+    border-color: ${theme.colors.gray700};
+  }
 `;
 
 const inputErrorStyle = css`
@@ -172,7 +176,6 @@ const PresentCard = ({ message, onMessageChange, errorMessage }: Props) => {
             onChange={(e) => onMessageChange('message', e.target.value)}
             placeholder="메시지를 입력해 주세요"
             name="message"
-            rows={3}
           />
           {errorMessage && <p css={errorText}>{errorMessage}</p>}
         </div>
