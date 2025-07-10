@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import { colors } from '@/styles/colors';
 import { spacing } from '@/styles/spacing';
 import { typography } from '@/styles/typography';
+import { useFormContext, Controller } from 'react-hook-form';
 
 // 인풋 필드 스타일
 const inputField = css({
@@ -55,71 +56,84 @@ const deleteButton = css({
     fontSize: 24,
 });
 
-function ReceiverInput({
-  idx,
-  receivers,
-  setReceivers,
-}: {
+// 에러 메시지 스타일
+const errorMessage = css({
+  color: colors.red600,
+  fontSize: '14px',
+  marginTop: '-16px',
+  marginBottom: spacing.spacing4,
+});
+
+function ReceiverInput({ idx, remove, isPhoneDuplicate, isLast }: {
   idx: number;
-  receivers: Array<{
-    receiverName: string;
-    phoneNumber: string;
-    quantity: number;
-  }>;
-  setReceivers: React.Dispatch<React.SetStateAction<{
-    receiverName: string;
-    phoneNumber: string;
-    quantity: number;
-  }[]>>;
+  remove: (index: number) => void;
+  isPhoneDuplicate: (value: string, idx: number) => true | string;
+  isLast: boolean;
 }) {
-  const receiver = receivers[idx];
-  const handleChange = (field: string, value: string | number) => {
-    setReceivers(receivers.map((r, i) => i === idx ? { ...r, [field]: value } : r));
-  };
-  const handleRemove = () => {
-    setReceivers(receivers.filter((_, i) => i !== idx));
-  };
+  const { control, formState: { errors } } = useFormContext();
+  const receiverErrors = errors.receivers as any;
   return (
     <div css={wrapper}>
       <div>
         받는 사람 {idx + 1}
         <button
           css={deleteButton}
-          onClick={handleRemove}
+          type="button"
+          onClick={() => remove(idx)}
+          disabled={isLast}
         >
           &times;
         </button>
       </div>
       <div css={inputContainer}>
         <div css={inputLabel}>이름</div>
-        <input
-          css={inputField}
-          type="text"
-          placeholder="이름을 입력하세요."
-          value={receiver.receiverName}
-          onChange={e => handleChange('receiverName', e.target.value)}
+        <Controller
+          control={control}
+          name={`receivers.${idx}.receiverName`}
+          rules={{ required: '이름을 입력하세요.' }}
+          render={({ field }) => (
+            <input css={inputField} type="text" placeholder="이름을 입력하세요." {...field} />
+          )}
         />
       </div>
+      {receiverErrors?.[idx]?.receiverName && (
+        <div css={errorMessage}>{receiverErrors[idx].receiverName.message}</div>
+      )}
       <div css={inputContainer}>
         <div css={inputLabel}>전화번호</div>
-        <input
-          css={inputField}
-          type="text"
-          placeholder="전화번호를 입력하세요."
-          value={receiver.phoneNumber}
-          onChange={e => handleChange('phoneNumber', e.target.value)}
+        <Controller
+          control={control}
+          name={`receivers.${idx}.phoneNumber`}
+          rules={{
+            required: '전화번호를 입력하세요.',
+            pattern: { value: /^010\d{8}$/, message: '01012341234 형식만 허용' },
+            validate: value => isPhoneDuplicate(value, idx)
+          }}
+          render={({ field }) => (
+            <input css={inputField} type="text" placeholder="전화번호를 입력하세요." {...field} />
+          )}
         />
       </div>
+      {receiverErrors?.[idx]?.phoneNumber && (
+        <div css={errorMessage}>{receiverErrors[idx].phoneNumber.message}</div>
+      )}
       <div css={inputContainer}>
         <div css={inputLabel}>수량</div>
-        <input
-          css={quantityInput}
-          type="number"
-          min="1"
-          value={receiver.quantity}
-          onChange={e => handleChange('quantity', Number(e.target.value))}
+        <Controller
+          control={control}
+          name={`receivers.${idx}.quantity`}
+          rules={{
+            required: '수량을 입력하세요.',
+            min: { value: 1, message: '최소 1개 이상' }
+          }}
+          render={({ field }) => (
+            <input css={quantityInput} type="number" min={1} {...field} />
+          )}
         />
       </div>
+      {receiverErrors?.[idx]?.quantity && (
+        <div css={errorMessage}>{receiverErrors[idx].quantity.message}</div>
+      )}
     </div>
   );
 }

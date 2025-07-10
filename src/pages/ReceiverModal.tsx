@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { colors } from '@/styles/colors';
 import { spacing } from '@/styles/spacing';
 import { typography } from '@/styles/typography';
-import { useState } from 'react';
+import { useForm, useFieldArray, FormProvider } from 'react-hook-form';
 import ReceiverInput from '@/components/ReceiverInput';
 
 const modalOverlay = css({
@@ -113,48 +113,58 @@ interface ReceiverModalProps {
 }
 
 function ReceiverModal({ receivers, setReceivers, onClose }: ReceiverModalProps) {
-  const [localReceivers, setLocalReceivers] = useState<Receiver[]>(receivers);
+  const methods = useForm({
+    defaultValues: {
+      receivers: receivers.length > 0 ? receivers : [{ receiverName: '', phoneNumber: '', quantity: 1 }],
+    },
+    mode: 'onChange',
+  });
+  const { control, handleSubmit, getValues} = methods;
+  const { fields, append, remove } = useFieldArray({ control, name: 'receivers' });
 
-  const handleAdd = () => {
-    if (localReceivers.length < 10) {
-      setLocalReceivers([...localReceivers, { receiverName: '', phoneNumber: '', quantity: 1 }]);
-    }
+  // 전화번호 중복 체크
+  const isPhoneDuplicate = (value: string, idx: number) => {
+    const all = getValues('receivers');
+    return all.filter((r, i) => r.phoneNumber === value && i !== idx).length === 0 || '전화번호가 중복됩니다.';
   };
 
-  const handleComplete = () => {
-    setReceivers(localReceivers.filter(r => r.receiverName && r.phoneNumber));
+  const onComplete = (data: any) => {
+    setReceivers(data.receivers);
     onClose();
   };
 
   return (
-    <div css={modalOverlay}>
-      <div css={modalContainer}>
-        <div css={modalHeader}>
-          받는 사람
-        </div>
-        <div style={{ padding: '0 32px' }}>
-          <div css={modalDesc}>
-            <p>• 최대 10명까지 추가 할 수 있어요.</p>
-            <p >• 받는 사람의 전화번호를 중복으로 입력할 수 없어요.</p>
-          </div>
-          <button css={addButton} onClick={handleAdd}>추가하기</button>
-          <div css={receiverListWrapper}>
-            {localReceivers.map((_, idx) => (
-              <ReceiverInput
-                key={idx}
-                idx={idx}
-                receivers={localReceivers}
-                setReceivers={setLocalReceivers}
-              />
-            ))}
-          </div>
-        </div>
-        <div css={modalFooter}>
-          <button css={cancelBtn} onClick={onClose}>취소</button>
-          <button css={completeBtn} onClick={handleComplete}>{localReceivers.length}명 완료</button>
+    <FormProvider {...methods}>
+      <div css={modalOverlay}>
+        <div css={modalContainer}>
+          <form onSubmit={handleSubmit(onComplete)}>
+            <div css={modalHeader}>받는 사람</div>
+            <div>
+              <div css={modalDesc}>
+                <p>• 최대 10명까지 추가 할 수 있어요.</p>
+                <p>• 받는 사람의 전화번호를 중복으로 입력할 수 없어요.</p>
+              </div>
+              <button type="button" css={addButton} onClick={() => fields.length < 10 && append({ receiverName: '', phoneNumber: '', quantity: 1 })}>추가하기</button>
+              <div css={receiverListWrapper}>
+                {fields.map((field, idx) => (
+                  <ReceiverInput
+                    key={field.id}
+                    idx={idx}
+                    remove={remove}
+                    isPhoneDuplicate={isPhoneDuplicate}
+                    isLast={fields.length === 1}
+                  />
+                ))}
+              </div>
+            </div>
+            <div css={modalFooter}>
+              <button css={cancelBtn} type="button" onClick={onClose}>취소</button>
+              <button css={completeBtn} type="submit">{fields.length}명 완료</button>
+            </div>
+          </form>
         </div>
       </div>
-    </div>
+    </FormProvider>
   );
 }
 
