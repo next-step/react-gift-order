@@ -1,8 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
 import { useFormContext, useWatch } from "react-hook-form";
-import type { FieldErrors } from "react-hook-form";
 import type { OrderFormValues } from "@/validations/orderSchema";
+import type { FieldError } from "react-hook-form";
 
 interface Props {
   index: number;
@@ -15,22 +15,22 @@ const ReceiverItem = ({ index, onRemove, autoFocus = false }: Props) => {
     register,
     formState: { errors },
     control,
-  } = useFormContext();
-
-  const phoneError =
-    (errors.receivers as FieldErrors<OrderFormValues>["receivers"])?.[index]?.phone;
+  } = useFormContext<OrderFormValues>();
 
   const receivers = useWatch({
     name: "receivers",
     control,
-  });
+  }) ?? [];
 
-  const phoneCounts = receivers?.reduce((acc: Record<string, number>, r: any) => {
+  const phoneCounts = receivers.reduce((acc: Record<string, number>, r) => {
     if (r?.phone) {
       acc[r.phone] = (acc[r.phone] || 0) + 1;
     }
     return acc;
   }, {});
+
+  const phoneErrorMsg =
+    (errors?.receivers?.[index]?.phone as FieldError | undefined)?.message;
 
   const isPhoneDuplicated =
     receivers?.[index]?.phone &&
@@ -40,9 +40,7 @@ const ReceiverItem = ({ index, onRemove, autoFocus = false }: Props) => {
     <ItemBlock>
       <RowHeader>
         <Label>받는 사람 {index + 1}</Label>
-        <Remove type="button" onClick={onRemove} aria-label="삭제">
-          ✕
-        </Remove>
+        <Remove type="button" onClick={onRemove} aria-label="삭제">✕</Remove>
       </RowHeader>
 
       <FieldGroup>
@@ -60,15 +58,15 @@ const ReceiverItem = ({ index, onRemove, autoFocus = false }: Props) => {
           {...register(`receivers.${index}.phone`)}
           placeholder="전화번호를 입력하세요."
         />
-        {phoneError && <ErrorMsg>{(phoneError as any).message}</ErrorMsg>}
-        {isPhoneDuplicated && <ErrorMsg>중복된 전화번호입니다. 다시 입력해주세요.</ErrorMsg>}
+        {phoneErrorMsg && <ErrorMsg>{phoneErrorMsg}</ErrorMsg>}
+        {isPhoneDuplicated && <ErrorMsg>중복된 전화번호입니다.</ErrorMsg>}
       </FieldGroup>
 
       <FieldGroup>
         <Label>수량</Label>
         <Input
           type="number"
-          min={0}
+          min={1}
           {...register(`receivers.${index}.quantity`, { valueAsNumber: true })}
         />
       </FieldGroup>
@@ -131,7 +129,7 @@ const Remove = styled.button`
 `;
 
 const ErrorMsg = styled.p`
-  color: ${({ theme }) => theme.colors.red500 || "red"};
+  color: ${({ theme }) => theme.colors.red500};
   font-size: 12px;
   margin: 2px 0 0;
 `;

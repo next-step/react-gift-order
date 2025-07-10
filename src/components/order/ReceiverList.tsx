@@ -17,7 +17,7 @@ const ReceiverList = ({ fields, remove }: Props) => {
     <ListWrapper>
       {fields.map((field, index) => (
         <ReceiverItem
-          key={field.id} // ✅ FieldArray의 각 항목에는 고유한 id가 있습니다
+          key={field.id} 
           index={index}
           onRemove={() => remove(index)}
         />
