@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 type Props = {
   label: string;
   htmlFor?: string;
-  error?: string | null;
+  error?: string;
   children: ReactNode;
 };
 
