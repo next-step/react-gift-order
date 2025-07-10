@@ -1,3 +1,4 @@
+// src/context/AuthContext.tsx
 import React, { createContext, useState, useEffect, ReactNode } from 'react'
 
 // 1) Context 에 담길 타입 정의
@@ -8,24 +9,45 @@ interface User {
 interface AuthContextType {
   user: User | null
   token: string | null
+  initialized: boolean               // ← 복원 완료 여부
   login: (data: { user: User; token: string }) => void
   logout: () => void
 }
-const saved = sessionStorage.getItem('auth')
-const parsed = saved ? JSON.parse(saved) : null
-// 2) Context 생성
+
+// 2) Context 생성 (초기값에 initialized=false 포함)
 export const AuthContext = createContext<AuthContextType>({
   user: null,
   token: null,
+  initialized: false,
   login: () => {},
   logout: () => {},
 })
 
 // 3) Provider 컴포넌트
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(() => parsed?.user ?? null)
-  const [token, setToken] = useState<string | null>(() => parsed?.token ?? null)
+  const [user, setUser] = useState<User | null>(null)
+  const [token, setToken] = useState<string | null>(null)
+  const [initialized, setInitialized] = useState<boolean>(false)
 
+  // 세션스토리지에서 복원
+  useEffect(() => {
+    const saved = sessionStorage.getItem('auth')
+    if (saved) {
+      try {
+        const { user: u, token: t } = JSON.parse(saved)
+        setUser(u)
+        setToken(t)
+      } catch {
+        sessionStorage.removeItem('auth')
+      }
+    }
+    setInitialized(true)
+  }, [])
+
+  // (디버깅용) 언제 복원/변경되는지 로그
+  useEffect(() => {
+    console.log('AuthContext ▶︎', { user, token, initialized })
+  }, [user, token, initialized])
 
   const login = ({ user, token }: { user: User; token: string }) => {
     setUser(user)
@@ -40,7 +62,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
+    <AuthContext.Provider value={{ user, token, initialized, login, logout }}>
       {children}
     </AuthContext.Provider>
   )
