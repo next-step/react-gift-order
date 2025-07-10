@@ -6,9 +6,12 @@ interface PrivateRouteProps {
 }
 
 export const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const location = useLocation();
 
+  if (loading) {
+    return null;
+  }
   if (!user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
