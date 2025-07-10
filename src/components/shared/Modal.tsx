@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import type { StateHook } from "@src/hooks/stateHookType";
+import { useEffect } from "react";
 
 type ModalProps = {
   open: StateHook<boolean>;
@@ -12,6 +13,18 @@ function Modal({ open, children }: ModalProps) {
       open.setValue(false);
     }
   };
+
+  useEffect(() => {
+    if (open.value) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open.value]);
 
   return (
     open.value && <ModalWrapper onClick={closeModal}>{children}</ModalWrapper>
