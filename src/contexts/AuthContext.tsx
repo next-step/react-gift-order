@@ -12,29 +12,49 @@ interface AuthContextType {
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
+const STORAGE_KEY = 'auth';
+const LEGACY_EMAIL = 'email';
+const LEGACY_TOKEN = 'token';
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
-  // localStorage 확인
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const email = localStorage.getItem('email');
-    if (token && email) {
-      // 토큰 유효성 확인 필요
-      setUser({ email });
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      try {
+        const { email } = JSON.parse(raw) as { email: string; token: string };
+        setUser({ email });
+      } catch {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    } else {
+      const legacyEmail = localStorage.getItem(LEGACY_EMAIL);
+      const legacyToken = localStorage.getItem(LEGACY_TOKEN);
+      if (legacyEmail && legacyToken) {
+        localStorage.setItem(
+          STORAGE_KEY,
+          JSON.stringify({ email: legacyEmail, token: legacyToken })
+        );
+        setUser({ email: legacyEmail });
+      }
+      localStorage.removeItem(LEGACY_EMAIL);
+      localStorage.removeItem(LEGACY_TOKEN);
     }
   }, []);
 
   const login = (user: User, token: string) => {
     setUser(user);
-    localStorage.setItem('token', token);
-    localStorage.setItem('email', user.email);
+    localStorage.removeItem(LEGACY_EMAIL);
+    localStorage.removeItem(LEGACY_TOKEN);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ email: user.email, token }));
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('token');
-    localStorage.removeItem('email');
+    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(LEGACY_EMAIL);
+    localStorage.removeItem(LEGACY_TOKEN);
   };
 
   return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>;
