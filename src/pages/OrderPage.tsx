@@ -9,6 +9,7 @@ import GlobalStyle from '@/styles/GlobalStyle';
 import { useAuth } from '@/contexts/AuthContext';
 import product from '@/data/product';
 import orderCardsData from '@/data/orderCard';
+import ReceiverModal from './ReceiverModal';
 
 // orderCard.ts 데이터 타입 정의
 interface OrderCard {
@@ -16,6 +17,13 @@ interface OrderCard {
   thumbUrl: string;
   imageUrl: string;
   defaultTextMessage: string;
+}
+
+// 받는 사람 타입 정의
+interface Receiver {
+  receiverName: string;
+  phoneNumber: string;
+  quantity: number;
 }
 
 // 카드 컨테이너 스타일
@@ -102,16 +110,6 @@ const inputContainer = css({
   marginBottom: spacing.spacing3,
 });
 
-// 수량 인풋 스타일
-const quantityInput = css({
-  width: '100%',
-  padding: `${spacing.spacing3} ${spacing.spacing4}`,
-  border: `1px solid ${colors.borderDefault}`,
-  borderRadius: '8px',
-  marginBottom: spacing.spacing4,
-  fontSize: '16px',
-});
-
 // 주문 정보 컨테이너 스타일
 const orderInfoContainer = css({
   padding: spacing.spacing4,
@@ -159,12 +157,68 @@ const errorMessage = css({
   marginLeft: '70px',
 });
 
-// 페이지 컨테이너 스타일
-const pageContainer = css({
-  maxWidth: '720px',
-  margin: '0 auto',
-  padding: `0 ${spacing.spacing4}`,
+// 받는 사람 영역 스타일
+const receiverSectionHeader = css({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  marginBottom: spacing.spacing3,
 });
+const receiverAddButton = css({
+  padding: `${spacing.spacing2} ${spacing.spacing4}`,
+  background: colors.gray100,
+  border: 'none',
+  borderRadius: '8px',
+  color: colors.gray700,
+  fontWeight: 'bold',
+  cursor: 'pointer',
+  fontSize: '14px',
+});
+const receiverEmptyBox = css({
+  border: `1px solid ${colors.borderDefault}`,
+  borderRadius: '8px',
+  padding: spacing.spacing6,
+  minHeight: '60px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: colors.gray400,
+  fontSize: '15px',
+  marginBottom: spacing.spacing4,
+  background: colors.gray100,
+});
+
+// 받는 사람 테이블 wrapper 스타일
+const receiverTableWrapper = css({
+  border: `1px solid ${colors.borderDefault}`,
+  borderRadius: 8,
+  background: colors.gray100,
+  padding: 16,
+  marginBottom: 24,
+});
+const receiverTable = css({
+  width: '100%',
+  borderCollapse: 'separate',
+  borderSpacing: 0,
+});
+const receiverTableHeadRow = css({
+  background: colors.gray100,
+  color: colors.gray700,
+  fontWeight: 700,
+});
+const receiverTableTh = css({
+  padding: '12px 8px',
+  textAlign: 'left',
+});
+const receiverTableTr = css({
+  background: '#fff',
+  borderRadius: 8,
+});
+const receiverTableTd = (isFirst: boolean) => css({
+  padding: '12px 8px',
+  borderTop: isFirst ? 'none' : `1px solid ${colors.borderDefault}`,
+});
+
 
 const OrderPage = () => {
   const { isAuthenticated } = useAuth();
@@ -191,6 +245,12 @@ const OrderPage = () => {
     phoneNumberError: '',
     quantityError: '',
   });
+
+  // 모달 열기/닫기 상태
+  const [receiverModalOpen, setReceiverModalOpen] = useState(false);
+
+  // 받는 사람 리스트 상태 추가
+  const [receivers, setReceivers] = useState<Receiver[]>([]);
 
   // 상태 업데이트 핸들러
   const updateFormState = (field: string, value: string | number) => {
@@ -273,7 +333,7 @@ const OrderPage = () => {
     <>
       <GlobalStyle />
       <Header />
-      <div css={pageContainer}>
+      <div>
         
         {/* 카드 선택 영역 */}
         <div>
@@ -324,40 +384,42 @@ const OrderPage = () => {
         {errorState.senderNameError && <div css={errorMessage}>{errorState.senderNameError}</div>}
         
         {/* 받는 사람 정보 */}
-        <h2 css={sectionTitle}>받는 사람</h2>
-        <div css={inputContainer}>
-          <div css={inputLabel}>이름</div>
-          <input 
-            css={inputField} 
-            type="text" 
-            placeholder="이름을 입력하세요." 
-            value={formState.receiverName}
-            onChange={(e) => updateFormState('receiverName', e.target.value)}
-          />
+        <div css={receiverSectionHeader}>
+          <span css={sectionTitle}>받는 사람</span>
+          <button
+            css={receiverAddButton}
+            type="button"
+            onClick={() => setReceiverModalOpen(true)}
+          >
+            수정
+          </button>
         </div>
-        {errorState.receiverNameError && <div css={errorMessage}>{errorState.receiverNameError}</div>}
-        <div css={inputContainer}>
-          <div css={inputLabel}>전화번호</div>
-          <input 
-            css={inputField} 
-            type="text" 
-            placeholder="전화번호를 입력하세요." 
-            value={formState.phoneNumber}
-            onChange={(e) => updateFormState('phoneNumber', e.target.value)}
-          />
-        </div>
-        {errorState.phoneNumberError && <div css={errorMessage}>{errorState.phoneNumberError}</div>}
-        <div css={inputContainer}>
-          <div css={inputLabel}>수량</div>
-          <input 
-            css={quantityInput} 
-            type="number" 
-            min="1" 
-            value={formState.quantity}
-            onChange={(e) => updateFormState('quantity', Number(e.target.value))}
-          />
-        </div>
-        {errorState.quantityError && <div css={errorMessage}>{errorState.quantityError}</div>}
+        {receivers.length === 0 ? (
+          <div css={receiverEmptyBox}>
+            받는 사람이 없습니다.<br />받는 사람을 추가해주세요.
+          </div>
+        ) : (
+          <div css={receiverTableWrapper}>
+            <table css={receiverTable}>
+              <thead>
+                <tr css={receiverTableHeadRow}>
+                  <th css={receiverTableTh}>이름</th>
+                  <th css={receiverTableTh}>전화번호</th>
+                  <th css={receiverTableTh}>수량</th>
+                </tr>
+              </thead>
+              <tbody>
+                {receivers.map((r, i) => (
+                  <tr key={i} css={receiverTableTr}>
+                    <td css={receiverTableTd(i === 0)}>{r.receiverName}</td>
+                    <td css={receiverTableTd(i === 0)}>{r.phoneNumber}</td>
+                    <td css={receiverTableTd(i === 0)}>{r.quantity}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
         
         {/* 상품 정보 */}
         <h2 css={sectionTitle}>상품 정보</h2>
@@ -378,6 +440,15 @@ const OrderPage = () => {
         <button css={orderButton} onClick={handleOrder}>
           {product.price.sellingPrice.toLocaleString()}원 주문하기
         </button>
+
+        {/* 모달 컴포넌트 */}
+        {receiverModalOpen && (
+          <ReceiverModal
+            receivers={receivers}
+            setReceivers={setReceivers}
+            onClose={() => setReceiverModalOpen(false)}
+          />
+        )}
       </div>
     </>
   );
