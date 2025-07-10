@@ -157,6 +157,14 @@ const reset = (theme: Theme) => css`
     padding: 0;
     boerder: 0;
   }
+
+  body,
+  input,
+  button,
+  textarea,
+  select {
+    font-family: inherit;
+  }
 `;
 
 export default reset;
