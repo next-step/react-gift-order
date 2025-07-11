@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 function useOrderForm() {
-    const [selectedId, setSelectedId] = useState(0);
+    const [selectedId, setSelectedId] = useState(904);
     const [senderName, setSenderName] = useState('');
     const [receiverName, setReceiverName] = useState('');
     const [receiverPhoneNum, setReceiverPhoneNum] = useState('');

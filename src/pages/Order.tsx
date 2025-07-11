@@ -2,13 +2,11 @@ import orderCard from '@/mocks/order_card.mock';
 import NavBar from '@/components/NavBar';
 import Layout from '@/components/Layout';
 import styled from '@emotion/styled';
-import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { PHONE_NUM_REGEX } from '@/utils/regex';
 
 import useOrderForm from '@/hooks/useOrderForm';
-
 
 // 슬라이딩 카드 시작
 const SlidingCardSelectorWrapper = styled.div`
@@ -27,7 +25,7 @@ const SlidingCardSelectorWrapper = styled.div`
 const SlidingCard = styled.img<{ isActive: boolean }>`
   width: 100px;
   height: 50px;
-  border-radius: 5px;
+  border-radius: ${({ theme }) => theme.spacing.spacing2};
   border: 3px solid transparent;
   ${({ isActive }) => isActive && `border: 3px solid black;`}
 `;
@@ -36,7 +34,7 @@ const SlidingCard = styled.img<{ isActive: boolean }>`
 const CardViewWrapper = styled.div`
   width: auto;
   height: auto;
-  padding: 10px;
+  padding: ${({ theme }) => theme.spacing.spacing4};
 
   display: flex;
   flex-direction: column;
@@ -45,46 +43,61 @@ const CardViewWrapper = styled.div`
 `;
 
 const CardViewImg = styled.img`
-  width: 380px;
-  height: 250px;
+  width: 360px;
+  height: 240px;
   border-radius: 15px;
   margin-bottom: 30px;
 `;
 
 const CardViewTxt = styled.textarea`
-  width: 650px;
-  height: 50px;
-  border-radius: 5px;
+  width: 95%;
+  height: ${({ theme }) => theme.spacing.spacing10};
+
+  border-radius: 10px;
   border: 1px solid ${({ theme }) => theme.colors.gray.gray400};
-  padding: 10px;
+  &:focus {
+    outline: none;
+    border: 1px solid ${({ theme }) => theme.colors.gray.gray900};
+  }
+  padding: ${({ theme }) => theme.spacing.spacing3};
+
+  font-size: ${({ theme }) => theme.typography.body.body1Regular};
+  font-weight: ${({ theme }) => theme.typography.body.body1Regular};
+  line-height: ${({ theme }) => theme.typography.body.body1Regular};
 `;
 
 // 보내는 사람 시작
 const SenderInputWrapper = styled.div`
-  padding: 20px;
+  padding: ${({ theme }) => theme.spacing.spacing4};
 `;
 
 const SenderInputTitle = styled.h2`
-  font-size: ${({ theme }) => theme.typography.title.title2Bold.fontSize};
-  font-weight: ${({ theme }) => theme.typography.title.title2Bold.fontWeight};
-  line-height: ${({ theme }) => theme.typography.title.title2Bold.lineHeight};
+  font-size: ${({ theme }) => theme.typography.subtitle.subtitle1Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.subtitle.subtitle1Bold.fontWeight};
+  line-height: ${({ theme }) => theme.typography.subtitle.subtitle1Bold.lineHeight};
   margin-bottom: 10px;
 `;
 
 const SenderInput = styled.input`
-  width: 660px;
+  width: 95%;
   height: 30px;
+
   border-radius: 7px;
   border: 1px solid ${({ theme }) => theme.colors.gray.gray400};
-  padding: 10px;
+  &:focus {
+    outline: none;
+    border: 1px solid ${({ theme }) => theme.colors.gray.gray900};
+  }
+
+  padding: ${({ theme }) => theme.spacing.spacing3};
 `;
 
 // 받는사람 시작
 const ReceiverInputWrapper = styled.div`
-  padding: 20px;
+  padding: ${({ theme }) => theme.spacing.spacing4};
 `;
 
-const ReceiverInput = styled.h2`
+const ReceiverInputTitle = styled.h2`
   font-size: ${({ theme }) => theme.typography.title.title2Bold.fontSize};
   font-weight: ${({ theme }) => theme.typography.title.title2Bold.fontWeight};
   line-height: ${({ theme }) => theme.typography.title.title2Bold.lineHeight};
@@ -92,76 +105,185 @@ const ReceiverInput = styled.h2`
 `;
 
 
-const ReceiverInputNameLabel = styled.label``;
+const ReceiverInputNameWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
+const ReceiverInputNameLabel = styled.label`
+  font-size: ${({ theme }) => theme.typography.body.body1Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.body.body1Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.body.body1Regular.lineHeight};
+  color: ${({ theme }) => theme.colors.gray.gray900};
+`;
+const ReceiverInputName = styled.input`
+  width:85%;
+  height: ${({ theme }) => theme.spacing.spacing9};
+  border-radius: 5px;
+  border: 1px solid gray;
+`;
 
-const ReceiverInputName = styled.input``;
 
-const ReceiverInputPhoneNumberLabel = styled.label``;
+const ReceiverInputPhoneNumberWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
+const ReceiverInputPhoneNumberLabel = styled.label`
+  font-size: ${({ theme }) => theme.typography.body.body1Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.body.body1Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.body.body1Regular.lineHeight};
+  color: ${({ theme }) => theme.colors.gray.gray900};
+`;
+const ReceiverInputPhoneNumber = styled.input`
+  width:85%;
+  height: ${({ theme }) => theme.spacing.spacing9};
+  border-radius: 5px;
+  border: 1px solid gray;
+`;
 
-const ReceiverInputPhoneNumber = styled.input``;
 
-const ReceiverItemNumInputLabel = styled.label``;
+const ReceiverItemNumWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
 
-const ReceiverItemNumInput = styled.input``;
+const ReceiverItemNumInputLabel = styled.label`
+  font-size: ${({ theme }) => theme.typography.body.body1Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.body.body1Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.body.body1Regular.lineHeight};
+  color: ${({ theme }) => theme.colors.gray.gray900};
+`;
+const ReceiverItemNumInput = styled.input`
+  width:85%;
+  height: ${({ theme }) => theme.spacing.spacing9};
+  border-radius: 5px;
+  border: 1px solid gray;
+`;
 
 
 // 상품정보 시작
+const ItemInfoWrapper = styled.div`
+  width: auto;
+  height: auto;
+  padding: ${({ theme }) => theme.spacing.spacing4};
+`;
+
 const ItemInfoTitle = styled.h2`
   font-size: ${({ theme }) => theme.typography.title.title2Bold.fontSize};
   font-weight: ${({ theme }) => theme.typography.title.title2Bold.fontWeight};
   line-height: ${({ theme }) => theme.typography.title.title2Bold.lineHeight};
-  margin-bottom: 10px;
+  margin-bottom: ${({ theme }) => theme.spacing.spacing3};
 `;
 
-const ItemInfoWrapperStyle = styled.div`
-  padding: 20px;
-`;
+const ItemInfoBox = styled.div`
+  width: auto;
+  height: auto;
+  padding: ${({ theme }) => theme.spacing.spacing4};
+  border: 1px solid ${({ theme }) => theme.colors.gray.gray300};
+  border-radius: 7px;
 
-interface ItemInfoWrapperProps {
-  selectedItem: {
-    brandInfo: { name: string };
-    id: string;
-    imageURL: string;
-    name: string;
-    price: { sellingPrice: number };
-  };
-}
+  display: flex;
+  align-items: center;
+`
 
-function ItemInfoWrapper({ selectedItem }: ItemInfoWrapperProps) {
-  return (
-    <ItemInfoWrapperStyle>
-      <ItemInfoTitle>상품 정보</ItemInfoTitle>
-      <img src={selectedItem.imageURL} alt={selectedItem.name} />
-      <h2>{selectedItem.name}</h2>
-      <p>{selectedItem.brandInfo.name}</p>
-      <p>{selectedItem.price.sellingPrice.toLocaleString()}원</p>
-    </ItemInfoWrapperStyle>
-  );
-}
+const ItemInfoBoxImg = styled.img`
+  width: ${({ theme }) => theme.spacing.spacing15};
+  height: ${({ theme }) => theme.spacing.spacing15};
+  border-radius: 5px;
+`
+
+const ItemBoxTxtWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-left: ${({ theme }) => theme.spacing.spacing2};
+`
+
+const ItemBoxTxtTitle = styled.p`
+  font-size: ${({ theme }) => theme.typography.label.label1Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label.label1Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label.label1Regular.lineHeight};
+`
+
+const ItemBoxTxtSubTitle = styled.p`
+  font-size: ${({ theme }) => theme.typography.label.label1Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label.label1Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label.label1Regular.lineHeight};
+  color: ${({ theme }) => theme.colors.gray.gray600};
+`
+
+const ItemBoxTxtPrice = styled.p`
+    font-size: ${({ theme }) => theme.typography.label.label1Bold.fontSize};
+    font-weight: ${({ theme }) => theme.typography.label.label1Bold.fontWeight};
+    line-height: ${({ theme }) => theme.typography.label.label1Bold.lineHeight};
+`
+
+const ItemBoxTxtPriceLabel = styled.span`
+    font-size: ${({ theme }) => theme.typography.label.label1Regular.fontSize};
+    font-weight: ${({ theme }) => theme.typography.label.label1Regular.fontWeight};
+    line-height: ${({ theme }) => theme.typography.label.label1Regular.lineHeight};
+    color: ${({ theme }) => theme.colors.gray.gray600};
+`
+
 
 // 주문 버튼 시작
-const OrderButtonStyle = styled.button`
-  background-color: ${({ theme }) => theme.colors.brand.kakaoYellow};
+const OrderBtnWrapper = styled.div`
   width: 100%;
-  height: 50px;
+  height: ${({ theme }) => theme.spacing.spacing12};
+
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 10;
+`
+
+const OrderButton = styled.button`
+  width: 100%;
+  height: 100%;
+  background-color: ${({ theme }) => theme.colors.brand.kakaoYellow};
   border: none;
+
+  font-size: ${({ theme }) => theme.typography.body.body1Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.body.body1Bold.fontWeight};
+  line-height: ${({ theme }) => theme.typography.body.body1Bold.lineHeight};
 `;
 
-interface ButtonProps {
-  receiverName: string;
-  // setReceiverName: React.Dispatch<React.SetStateAction<string>>;
-  receiverPhoneNum: string;
-  // setReceiverPhoneNum: React.Dispatch<React.SetStateAction<string>>;
-  itemCount: number;
-  // setItemCount: React.Dispatch<React.SetStateAction<number>>;
-}
+function Order() {
+  const {
+    selectedId,
+    senderName,
+    receiverName,
+    receiverPhoneNum,
+    itemCount,
+    handleChangeSelectedId,
+    handleChangeSenderName,
+    handleChangeReceiverName,
+    handleChangeReceiverPhoneNum,
+    handleChangeItemCount,
+  } = useOrderForm();
 
-function OrderButton({
-  receiverName,
-  receiverPhoneNum,
-  itemCount,
-}: ButtonProps) {
+  const [searchParams] = useSearchParams();
+  const brandInfo = searchParams.get('brandInfo');
+  const id = searchParams.get('id');
+  const imageURL = searchParams.get('imageURL');
+  const name = searchParams.get('name');
+  const price = Number(searchParams.get('price'));
+
+  // const selectedItem = sessionStorage.getItem('selectedItem');
+
+
   const navigate = useNavigate();
+
+  // 이벤트 핸들러
+  function onCardClick(id: number) {
+    handleChangeSelectedId(id);
+  }
 
   function onClickHandler() {
     let blocking = 0;
@@ -185,45 +307,6 @@ function OrderButton({
   }
 
   return (
-    <OrderButtonStyle onClick={onClickHandler}>
-      {29000 * itemCount}원 주문하기
-    </OrderButtonStyle>
-  );
-}
-
-function Order() {
-  const {
-    selectedId,
-    senderName,
-    receiverName,
-    receiverPhoneNum,
-    itemCount,
-    handleChangeSelectedId,
-    handleChangeSenderName,
-    handleChangeReceiverName,
-    handleChangeReceiverPhoneNum,
-    handleChangeItemCount,
-  } = useOrderForm();
-
-  const [searchParams] = useSearchParams();
-  const selectedItem = {
-    brandInfo: { name: searchParams.get('brandInfo') || '' },
-    id: searchParams.get('id') || '',
-    imageURL: searchParams.get('imageURL') || '',
-    name: searchParams.get('name') || '',
-    price: {
-      sellingPrice: Number(searchParams.get('price') || '0'),
-    },
-  };
-  // const selectedItem = sessionStorage.getItem('selectedItem');
-
-
-  // 이벤트 핸들러
-  function onCardClick(id: number) {
-    handleChangeSelectedId(id);
-  }
-
-  return (
     <Layout>
       <NavBar></NavBar>
       {/* 슬라이딩 카드 */}
@@ -233,9 +316,7 @@ function Order() {
             key={item.id}
             src={item.thumbUrl}
             alt={item.defaultTextMessage}
-            onClick={() =>
-              onCardClick(item.id)
-            }
+            onClick={() => onCardClick(item.id)}
             isActive={selectedId === item.id}
           ></SlidingCard>
         ))}
@@ -250,25 +331,28 @@ function Order() {
 
       {/* 보내는 사람 */}
       <SenderInputWrapper>
-          <SenderInputTitle>보내는 사람</SenderInputTitle>
-          <SenderInput
-            placeholder="이름을 입력하세요."
-            onChange={((e) => handleChangeSenderName(e.target.value))}
-            value={senderName}
-          ></SenderInput>
+        <SenderInputTitle>보내는 사람</SenderInputTitle>
+        <SenderInput
+          placeholder="이름을 입력하세요."
+          onChange={((e) => handleChangeSenderName(e.target.value))}
+          value={senderName}
+        ></SenderInput>
       </SenderInputWrapper>
 
       {/* 받는사람 */}
       <ReceiverInputWrapper>
-          <ReceiverInput>받는 사람</ReceiverInput>
+        <ReceiverInputTitle>받는 사람</ReceiverInputTitle>
+        <ReceiverInputNameWrapper>
           <ReceiverInputNameLabel htmlFor="ReceiverInputName">
             이름
           </ReceiverInputNameLabel>
           <ReceiverInputName
             placeholder="이름을 입력하세요."
             value={receiverName}
-            onChange={(e) => {handleChangeReceiverName(e.target.value)}}
+            onChange={(e) => { handleChangeReceiverName(e.target.value) }}
           ></ReceiverInputName>
+        </ReceiverInputNameWrapper>
+        <ReceiverInputPhoneNumberWrapper>
           <ReceiverInputPhoneNumberLabel htmlFor="ReceiverInputName">
             전화번호
           </ReceiverInputPhoneNumberLabel>
@@ -277,6 +361,8 @@ function Order() {
             value={receiverPhoneNum}
             onChange={(e) => handleChangeReceiverPhoneNum(e.target.value)}
           ></ReceiverInputPhoneNumber>
+        </ReceiverInputPhoneNumberWrapper>
+        <ReceiverItemNumWrapper>
           <ReceiverItemNumInputLabel htmlFor="ReceiverInputName">
             수량
           </ReceiverItemNumInputLabel>
@@ -285,19 +371,28 @@ function Order() {
             value={itemCount}
             onChange={(e) => handleChangeItemCount(parseInt(e.target.value))}
           ></ReceiverItemNumInput>
+        </ReceiverItemNumWrapper>
       </ReceiverInputWrapper>
 
       {/* 상품 정보 */}
-      <ItemInfoWrapper selectedItem={selectedItem}>
-
+      <ItemInfoWrapper>
+        <ItemInfoTitle>상품 정보</ItemInfoTitle>
+        <ItemInfoBox>
+          <ItemInfoBoxImg src={String(imageURL)} alt={String(name)} />
+          <ItemBoxTxtWrapper>
+            <ItemBoxTxtTitle>{name}</ItemBoxTxtTitle>
+            <ItemBoxTxtSubTitle>{brandInfo}</ItemBoxTxtSubTitle>
+            <ItemBoxTxtPrice><ItemBoxTxtPriceLabel>상품가 </ItemBoxTxtPriceLabel>{price}원</ItemBoxTxtPrice>
+          </ItemBoxTxtWrapper>
+        </ItemInfoBox>
       </ItemInfoWrapper>
 
       {/* 주문 버튼 */}
-      <OrderButton
-        receiverName={receiverName}
-        receiverPhoneNum={receiverPhoneNum}
-        itemCount={itemCount}
-      ></OrderButton>
+      <OrderBtnWrapper>
+        <OrderButton onClick={onClickHandler}>
+          {29000 * itemCount}원 주문하기
+        </OrderButton>
+      </OrderBtnWrapper>
     </Layout>
   );
 }

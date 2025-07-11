@@ -7,6 +7,8 @@ const Layout = styled.div`
   margin: 0 auto;
 
   background-color: ${({ theme }) => theme.colors.gray.gray00};
+
+  position: relative;
 `;
 
 export default Layout;
