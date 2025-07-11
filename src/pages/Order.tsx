@@ -6,7 +6,7 @@ import GlobalStyle from '../styles/GlobalStyle';
 import theme from '../styles/theme';
 import styled from '@emotion/styled';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { PHONE_NUM_REGEX } from '@/utils/regex';
 
@@ -218,18 +218,24 @@ const ItemInfoWrapperStyle = styled.div`
   padding: 20px;
 `;
 
-function ItemInfoWrapper({ selectedItem }: { selectedItem: string | null }) {
-  const item = selectedItem ? JSON.parse(selectedItem) : null;
+interface ItemInfoWrapperProps {
+  selectedItem: {
+    brandInfo: { name: string };
+    id: string;
+    imageURL: string;
+    name: string;
+    price: { sellingPrice: number };
+  };
+}
 
-  if (!item) return null;
-
+function ItemInfoWrapper({ selectedItem }: ItemInfoWrapperProps) {
   return (
     <ItemInfoWrapperStyle>
       <ItemInfoTitle>상품 정보</ItemInfoTitle>
-      <img src={item.imageURL} alt="item.name" />
-      <h2>{item.name}</h2>
-      <p>{item.brandInfo.name}</p>
-      <p>{item.price.sellingPrice}원</p>
+      <img src={selectedItem.imageURL} alt={selectedItem.name} />
+      <h2>{selectedItem.name}</h2>
+      <p>{selectedItem.brandInfo.name}</p>
+      <p>{selectedItem.price.sellingPrice.toLocaleString()}원</p>
     </ItemInfoWrapperStyle>
   );
 }
@@ -298,8 +304,19 @@ function Order() {
   const [receiverPhoneNum, setReceiverPhoneNum] = useState('');
   const [itemCount, setItemCount] = useState(1);
 
-  const selectedItem = sessionStorage.getItem('selectedItem');
+  const [searchParams] = useSearchParams();
 
+  const selectedItem = {
+    brandInfo: { name: searchParams.get('brandInfo') || '' },
+    id: searchParams.get('id') || '',
+    imageURL: searchParams.get('imageURL') || '',
+    name: searchParams.get('name') || '',
+    price: {
+      sellingPrice: Number(searchParams.get('price') || '0'),
+    },
+  };
+  // const selectedItem = sessionStorage.getItem('selectedItem');
+  
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />

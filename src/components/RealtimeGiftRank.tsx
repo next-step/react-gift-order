@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import itemList from '../mocks/item_list.mock';
+import useUser from '@/hooks/useUser';
 
 const RealtimeRankWrapper = styled.div`
   width: auto;
@@ -171,6 +172,7 @@ function RealtimeGiftRank() {
   const [selectedGroup, setSelectedGroup] = useState('');
   const [selectedType, setSelectedType] = useState('');
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const {getId} = useUser();
 
   const navigate = useNavigate();
 
@@ -183,8 +185,8 @@ function RealtimeGiftRank() {
 
   const rankingTypeMock = [
     {key: 0, type: 'WANT', label: '받고 싶어한'},
-    {key: 1, type: 'MANY', label: '받고 싶어한'},
-    {key: 2, type: 'WISH', label: '받고 싶어한'},
+    {key: 1, type: 'MANY', label: '많이 선물한'},
+    {key: 2, type: 'WISH', label: '위시로 받은'},
   ];
 
   useEffect(() => {
@@ -222,15 +224,22 @@ function RealtimeGiftRank() {
     name: any,
     price: any,
   ) {
-    const userId = sessionStorage.getItem('userId')?.split('@')[0] ?? '';
+    const userId = getId();
     
     if (userId !== '') {
-      sessionStorage.setItem(
-        'selectedItem',
-        JSON.stringify({ brandInfo, id, imageURL, name, price }),
-      );
+      const query = new URLSearchParams({
+        brandInfo,
+        id,
+        imageURL,
+        name,
+        price: price.toString(),
+      }).toString();
+      // sessionStorage.setItem(
+      //   'selectedItem',
+      //   JSON.stringify({ brandInfo, id, imageURL, name, price }),
+      // );
 
-      navigate('/order');
+      navigate(`/order?${query}`);
     } else {
       navigate('/login');
     }
