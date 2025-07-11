@@ -1,7 +1,7 @@
 import { OrderBtnContainer } from '@/styles/Order/OrderBtn.styles';
 
 type OrderBtnProps = {
-  cost: number;
+  cost:number;
 };
 
 function OrderBtn({ cost }: OrderBtnProps) {
