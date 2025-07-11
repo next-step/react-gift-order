@@ -9,7 +9,7 @@ import {
   WrapperStyle,
   MessageStyle,
   FormSectionWrapperStyle,
-  ReceiverFormStyle,
+  // ReceiverFormStyle,
   InputRowStyle,
   TextStyle,
   TinyTextStyle,
@@ -25,29 +25,23 @@ import {
   InputWrapperStyle,
   ErrorMessageStyle,
 } from "@/components/order/Order.style";
+import OrderForm from "@/components/order/OrderFoam";
 
 const Order: React.FC = () => {
   const theme = useTheme();
   const [selectedId, setSelectedId] = useState<number>();
   const { id } = useParams<{ id: string }>();
-  const [quantity, setQuantity] = useState(1);
+  const [quantity] = useState(1);
   const [totalPrice, setTotalPrice] = useState(0);
   const SenderNameRef = useRef<HTMLInputElement>(null);
-  const ReceiverNameRef = useRef<HTMLInputElement>(null);
-  const PhoneNumberRef = useRef<HTMLInputElement>(null);
   const GiftMessageRef = useRef<HTMLTextAreaElement>(null);
 
   const [messageError, setMessageError] = useState("");
   const [senderError, setSenderError] = useState("");
-  const [receiverError, setReceiverError] = useState("");
-  const [phoneError, setPhoneError] = useState("");
-  const [countError, setCountError] = useState("");
 
   const handleSubmit = () => {
     const msg = GiftMessageRef.current?.value.trim() ?? "";
     const sender = SenderNameRef.current?.value.trim() ?? "";
-    const receiver = ReceiverNameRef.current?.value.trim() ?? "";
-    const phone = PhoneNumberRef.current?.value.trim() ?? "";
 
     let isValid = true;
 
@@ -58,26 +52,6 @@ const Order: React.FC = () => {
       setSenderError("");
     }
 
-    if (receiver === "") {
-      setReceiverError("받는 사람 이름을 입력해주세요.");
-      isValid = false;
-    } else {
-      setReceiverError("");
-    }
-
-    if (!/^01[016789]-?\d{3,4}-?\d{4}$/.test(phone)) {
-      setPhoneError("유효한 전화번호를 입력해주세요. ex.(010-0000-0000)");
-      isValid = false;
-    } else {
-      setPhoneError("");
-    }
-
-    if (Number(quantity) < 1) {
-      setCountError("수량은 최소 1개입니다.");
-      isValid = false;
-    } else {
-      setCountError("");
-    }
     if (msg === "") {
       setMessageError("메시지를 입력해주세요.");
       isValid = false;
@@ -98,6 +72,7 @@ const Order: React.FC = () => {
 
   return (
     <div css={WrapperStyle(theme)}>
+      <OrderForm />
       <div css={CardWrapperStyle(theme)}>
         <CardView
           theme={theme}
@@ -134,44 +109,6 @@ const Order: React.FC = () => {
         </p>
       </div>
 
-      <div css={FormSectionWrapperStyle(theme)}>
-        <p css={TextStyle(theme)}>받는 사람</p>
-        <div css={ReceiverFormStyle(theme)}>
-          <div css={InputRowStyle(theme)}>
-            <span>이름</span>
-            <div css={InputWrapperStyle}>
-              <input
-                ref={ReceiverNameRef}
-                placeholder="이름을 입력하세요."
-              ></input>
-              {receiverError && <p css={ErrorMessageStyle}> {receiverError}</p>}
-            </div>
-          </div>
-          <div css={InputRowStyle(theme)}>
-            <span>전화번호</span>
-            <div css={InputWrapperStyle}>
-              <input
-                ref={PhoneNumberRef}
-                placeholder="전화번호를 입력하세요."
-              ></input>
-              {phoneError && <p css={ErrorMessageStyle}>{phoneError}</p>}
-            </div>
-          </div>
-
-          <div css={InputRowStyle(theme)}>
-            <span>수량</span>
-            <div css={InputWrapperStyle}>
-              <input
-                type="number"
-                min={1}
-                value={quantity}
-                onChange={(e) => setQuantity(Number(e.target.value))}
-              />
-              {countError && <p css={ErrorMessageStyle}>{countError}</p>}
-            </div>
-          </div>
-        </div>
-      </div>
       <div css={productWrapper(theme)}>
         <img
           css={productImage(theme)}
