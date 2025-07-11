@@ -177,7 +177,12 @@ const Order: React.FC = () => {
           }}
           css={totalPriceBoxStyle}
         >
-          <p css={SubmitStyle(theme)}>{totalPrice}원 주문하기</p>
+          <p css={SubmitStyle(theme)}>
+            {receivers.length === 0
+              ? totalPrice
+              : totalPrice * receivers.length}
+            원 주문하기
+          </p>
         </div>
       </div>
     </div>
