@@ -75,14 +75,7 @@ const ReceiverListModal = ({
   onAdd,
 }: ReceiverListModalProps) => {
   const initialDefaultValues: FormValues = {
-    receivers: [
-      {
-        receiverName: '',
-        receiverPhoneNumber: '',
-        itemCount: 1,
-        message: '',
-      },
-    ],
+    receivers: [],
   };
   const { control, handleSubmit, reset } = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
