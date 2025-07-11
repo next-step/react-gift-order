@@ -1,7 +1,7 @@
-import { Padding3, PaddingLg, PaddingSm } from "./../padding/Padding";
-import styled from "@emotion/styled";
-import { PaddingMd } from "@/components/padding/Padding";
-import { type ProductCardProps } from "@/types/product";
+import { Padding3, PaddingLg, PaddingSm } from '../common/Padding';
+import styled from '@emotion/styled';
+import { PaddingMd } from '@/components/common/Padding';
+import { type ProductCardProps } from '@/types/product';
 const SidePadding = styled.div`
   width: 100%;
   padding: 0px 1rem;
@@ -74,14 +74,13 @@ const ProductInfo = ({ product }: ProductCardProps) => {
           <Brand>{product.brandInfo.name}</Brand>
           <PaddingSm />
           <Price>
-            <PriceText>상품가</PriceText> {product.price.sellingPrice}원{" "}
+            <PriceText>상품가</PriceText> {product.price.sellingPrice}원{' '}
           </Price>
         </ProductInfoWrapper>
       </ProductCard>
       <PaddingMd />
-      <PaddingLg/>
+      <PaddingLg />
     </SidePadding>
-
   );
 };
 

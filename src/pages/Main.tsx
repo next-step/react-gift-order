@@ -1,14 +1,14 @@
 import Banner from '@/components/banner/Banner';
 import Category from '@/components/category/Category';
+import { PaddingLg, PaddingMd } from '@/components/common/Padding';
 import FriendsBox from '@/components/friendsbox/FriendsBox';
 import Navbar from '@/components/navbar/Navbar';
-import { PaddingLg, PaddingMd } from '@/components/padding/Padding';
 import Ranking from '@/components/ranking/Ranking';
 
 const Main = () => {
   return (
     <>
-      <Navbar/>
+      <Navbar />
       <FriendsBox />
       <PaddingMd />
       <Category />
@@ -18,6 +18,6 @@ const Main = () => {
       <Ranking />
     </>
   );
-}
+};
 
-export default Main
+export default Main;

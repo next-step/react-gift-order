@@ -1,5 +1,5 @@
-import type { Validator } from "@/utils/validators";
-import { useState } from "react";
+import type { Validator } from '@/utils/validators';
+import { useState } from 'react';
 
 interface UseInputReturn {
   value: string;
@@ -32,7 +32,7 @@ export const useInput = (options: UseInputOptions = {}): UseInputReturn => {
     setIsTouched(true);
   };
   const reset = () => {
-    setValue("");
+    setValue('');
     setIsTouched(false);
   };
   return {

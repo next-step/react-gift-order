@@ -1,7 +1,7 @@
-import { PaddingMd } from "../padding/Padding";
+import { PaddingMd } from "../common/Padding";
 import styled from "@emotion/styled";
 import RankingItem from "./RankingItem";
-import { PaddingLg } from "./../padding/Padding";
+import { PaddingLg } from "../common/Padding";
 import PersonCategory from "./PersonCategory";
 import BehaviorCategory from "./BehaviorCategory";
 import { useState } from "react";
@@ -34,7 +34,7 @@ const behaviorOptions: BehaviorFilterLabels[] = [
 const RankingWrapper = styled.section`
   align-items: left;
   width: 100%;
-  padding: ${({ theme }) => theme.spacing.spacing4}  ${({ theme }) => theme.spacing.spacing3};
+  padding: ${({ theme }) => theme.spacing.spacing4} ${({ theme }) => theme.spacing.spacing3};
 `;
 const RankingTitle = styled.h3`
   ${({ theme }) => theme.typography.title1Bold};

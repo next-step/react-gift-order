@@ -1,86 +1,67 @@
-import Navbar from "@/components/navbar/Navbar";
-import {
-  PaddingLg,
-  PaddingSm,
-  PaddingGraySm,
-  PaddingMd,
-} from "./../components/padding/Padding";
-import CardMessage from '@/components/order/CardMessage';
-import SenderForm from '@/components/order/SenderForm';
-import ReceiverForm from '@/components/order/ReceiverForm';
+import Navbar from '@/components/navbar/Navbar';
+import { PaddingLg, PaddingSm, PaddingGraySm, PaddingMd } from '../components/common/Padding';
+import CardMessage from '@/components/common/cardmessage/CardMessage';
+import SenderForm from '@/components/order/senderform/SenderForm';
 import ProductInfo from '@/components/order/ProductInfo';
 import OrderBtn from '@/components/order/OrderBtn';
 import { useParams } from 'react-router-dom';
 import { allProducts } from '@/mocks/product';
-import {cardMessageValidatior, nameValidatior, phoneValidator, quantityValidatior } from '@/utils/validators';
-import useForm from '@/hooks/useForm';
-import CardSelector from './../components/order/CardSelector';
-const Order = () => {
-  const {productId} = useParams();
-  const matchedProducts = allProducts.filter(
-    (item) => item.id === Number(productId)
-  );
 
-  const product= matchedProducts[0]
-  const { values, errors, isValid, handleChange, handleBlur, reset } = useForm({
-    cardmessage:{initialValue: "축하해요.", validator: cardMessageValidatior},
-    sendername: { initialValue: "", validator: nameValidatior },
-    phone: { initialValue: "", validator: phoneValidator },
-    receivername: { initialValue: "", validator: nameValidatior },
-    quantity: { initialValue: "", validator: quantityValidatior },
+import CardSelector from './../components/order/CardSelector';
+import ReceiverModal from '@/components/order/receivermodal/ReceiverModal';
+import { useForm } from 'react-hook-form';
+import type { OrderFormData } from '@/components/order/receiverlist/types';
+import ReceiverList from '@/components/order/receiverlist/ReceiverList';
+import { useState } from 'react';
+const Order = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    control,
+    watch,
+  } = useForm<OrderFormData>({
+    defaultValues: {
+      senderName: '',
+      cardMessage: '',
+      receivers: [],
+    },
   });
-  const handleClickOrderBtn = () => {
-    if (!isValid) {
-      const fields = [
-        "cardmessage",
-        "sendername",
-        "phone",
-        "receivername",
-        "quantity",
-      ];
-      fields.forEach((field) => handleBlur(field));
-      return;
-    
-  };
-}
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const { productId } = useParams();
+  const matchedProducts = allProducts.filter((item) => item.id === Number(productId));
+
+  const product = matchedProducts[0];
+  const productPrice = product.price.basicPrice;
+  const receivers = watch('receivers');
+  const receiversTotalQuantity = receivers.reduce((sum, receiver) => sum + receiver.quantity, 0);
+  const totalPrice = productPrice * receiversTotalQuantity;
+  const handleClickOrderBtn = () => {};
+
   return (
     <div>
       <Navbar />
       <PaddingSm />
-     <CardSelector/>
+      <CardSelector />
       <PaddingLg />
-      <CardMessage
-        value={values.cardmessage}
-        error={errors.cardmessage}
-        onChange={handleChange}
-        onBlur={handleBlur}
-      />
+      <CardMessage register={register} error={errors.cardMessage?.message} />
       <PaddingMd />
       <PaddingGraySm />
-      <SenderForm
-        value={values.sendername}
-        error={errors.sendername}
-        onChange={handleChange}
-        onBlur={handleBlur}
-      />
+      <SenderForm register={register} error={errors.senderName?.message} />
       <PaddingGraySm />
-      <ReceiverForm
-        values={{
-          receivername: values.receivername,
-          phone: values.phone,
-          quantity: values.quantity,
-        }}
-        errors={{
-          receivername: errors.receivername,
-          phone: errors.phone,
-          quantity: errors.quantity,
-        }}
-        onChange={handleChange}
-        onBlur={handleBlur}
-      />
+      <ReceiverList receivers={receivers} setIsVisible={setIsModalVisible} />
       <PaddingGraySm />
       <ProductInfo product={product} />
-      <OrderBtn onClick={handleClickOrderBtn} />
+      <OrderBtn totalPrice={totalPrice} onClick={handleClickOrderBtn} />
+      {isModalVisible && (
+        <ReceiverModal
+          setIsVisible={setIsModalVisible}
+          handleSubmit={handleSubmit}
+          register={register}
+          control={control}
+          error={errors.receivers}
+        />
+      )}
     </div>
   );
 };

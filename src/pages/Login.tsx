@@ -1,11 +1,10 @@
 import Navbar from "./../components/navbar/Navbar";
-import { PaddingSm } from "./../components/padding/Padding";
-import { PaddingMd } from "@/components/padding/Padding";
 import styled from "@emotion/styled";
 import { useNavigate } from "react-router-dom";
 import useInput from "@/hooks/useInput";
 import { emailValidator, passwordValidator } from "@/utils/validators";
 import { useAuth } from "@/contexts/AuthContext";
+import { PaddingMd, PaddingSm } from '@/components/common/Padding';
 
 const LoginWrapper = styled.div`
   display: flex;
@@ -36,7 +35,6 @@ const Input = styled.input<{ hasError: boolean }>`
   padding: 8px 0px;
   border-color: ${({ hasError, theme }) =>
     hasError ? theme.colors.red.red700 : theme.colors.gray.gray400};
-
   ${({ theme }) => theme.typography.body1Regular}
   &:focus {
     border-color: ${({ theme }) => theme.colors.gray.gray900};
@@ -52,7 +50,7 @@ const LoginBtn = styled.button<{ activated: boolean }>`
   width: 100%;
   height: 2.75rem;
   opacity: ${({ activated }) => (activated ? 1 : 0.5)};
-  cursor: ${({ activated }) => (activated ? "pointer" : "not-allowed")};
+  cursor: ${({ activated }) => (activated ? 'pointer' : 'not-allowed')};
 `;
 
 const ValidationMsg = styled.p`
@@ -67,16 +65,14 @@ const Login = () => {
   const password = useInput({ validator: passwordValidator });
   const username = email.value.split("@")[0];
   const isActivatedBtn = email.isValid && password.isValid;
+  console.log(email.isValid, password.isValid);
   const handleLoginClick = () => {
     if (isActivatedBtn) {
       password.reset();
       const userData = { username: username, isLoggedIn: true };
       setUser(userData);
-      localStorage.setItem(
-        "user",
-        JSON.stringify({ username: username, isLoggedIn: true })
-      );
-      navigate("/");
+      localStorage.setItem('user', JSON.stringify({ username: username, isLoggedIn: true }));
+      navigate('/');
     }
   };
   return (

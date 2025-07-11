@@ -1,5 +1,5 @@
-import React from 'react'
-import  styled  from '@emotion/styled';
+import React from 'react';
+import styled from '@emotion/styled';
 const Button = styled.button`
   width: 100%;
   max-width: 720px;
@@ -25,9 +25,10 @@ const Button = styled.button`
 `;
 interface OrderBtnProps {
   onClick: () => void;
+  totalPrice: number;
 }
-const OrderBtn = ({onClick}:OrderBtnProps) => {
-  return <Button onClick={onClick}>29000원 주문하기</Button>;
+const OrderBtn = ({ onClick, totalPrice }: OrderBtnProps) => {
+  return <Button onClick={onClick}>{totalPrice}원 주문하기</Button>;
 };
 
-export default OrderBtn
+export default OrderBtn;

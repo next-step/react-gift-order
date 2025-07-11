@@ -1,6 +1,6 @@
-import Navbar from '@/components/navbar/Navbar';
-import styled from '@emotion/styled'
-import { PaddingSm, PaddingMd, PaddingLg } from "@/components/padding/Padding";
+import Navbar from "@/components/navbar/Navbar";
+import styled from "@emotion/styled";
+import { PaddingSm, PaddingMd, PaddingLg } from "@/components/common/Padding";
 const MainSection = styled.section`
   display: flex;
   flex-direction: column;
@@ -18,7 +18,7 @@ const WarningImg = styled.img`
 `;
 const WarnigText = styled.h3`
   ${({ theme }) => theme.typography.title1Bold}
-  color:${({theme})=>theme.colors.gray.gray900}
+  color:${({ theme }) => theme.colors.gray.gray900}
 `;
 const WarningSubText = styled.p`
   ${({ theme }) => theme.typography.body1Regular}
@@ -48,6 +48,6 @@ const NotFound = () => {
       </MainSection>
     </>
   );
-}
+};
 
-export default NotFound
+export default NotFound;
