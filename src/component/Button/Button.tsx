@@ -23,10 +23,10 @@ const variantStyles = {
   },
   secondory: {
     background: theme.colors.colorScale.gray[300],
-    inactiveBackground: theme.colors.colorScale.gray[300],
+    inactiveBackground: theme.colors.colorScale.gray[200],
     hoverBackground: theme.colors.colorScale.gray[500],
     color: theme.colors.semanticColor.textColor.default,
-    inactiveColor: theme.colors.semanticColor.textColor.default,
+    inactiveColor: theme.colors.colorScale.gray[700],
     border: 'none',
   },
   outlined: {
