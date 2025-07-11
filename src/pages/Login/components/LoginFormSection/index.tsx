@@ -1,4 +1,3 @@
-// src/components/LoginFormSection/index.tsx
 import React from 'react';
 import styled from '@emotion/styled';
 import { HorizontalSpacing } from '@/components/common/Spacing/HorizontalSpacing';
@@ -65,7 +64,6 @@ const Button = styled.button(({ theme }) => ({
   width: '100%',
   height: '2.75rem',
   ...theme.typography.body2Regular,
-  // 텍스트 색상: semantic.text가 없으니 scale.gray900 사용
   color: theme.colors.scale.gray900,
   backgroundColor: theme.colors.semantic.brand.kakaoYellow,
   borderRadius: theme.spacing.spacing1,
@@ -79,12 +77,10 @@ const Button = styled.button(({ theme }) => ({
     backgroundColor: theme.colors.semantic.brand.kakaoYellowActive,
   },
   '&:disabled': {
-    // disabled 백그라운드도 scale.gray300 사용
     backgroundColor: theme.colors.scale.gray300,
     cursor: 'not-allowed',
   },
 }));
 
-// barrel export
 export { LoginForm } from './LoginForm';   // barrel export
 
