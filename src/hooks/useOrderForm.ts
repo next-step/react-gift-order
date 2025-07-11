@@ -1,92 +1,71 @@
-import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { cardTemplates } from '@/data/cardTemplates';
-import { isValidPhoneNumber } from '@/utils';
+
+import type { SingleRecipientFormData } from '@/types';
 
 export const useOrderForm = () => {
   const navigate = useNavigate();
 
-  // 폼 상태
-  const [selectedCardId, setSelectedCardId] = useState(cardTemplates[0].id);
+  // React Hook Form 설정
+  const {
+    control,
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+    trigger,
+  } = useForm<SingleRecipientFormData>({
+    defaultValues: {
+      selectedCardId: cardTemplates[0].id,
+      message: cardTemplates[0].defaultTextMessage || '',
+      sender: '',
+      receiver: '',
+      receiverPhone: '',
+      quantity: 1,
+    },
+    mode: 'onChange',
+  });
+
+  // 현재 폼 값들 watch
+  const selectedCardId = watch('selectedCardId');
+  const message = watch('message');
+  const sender = watch('sender');
+  const receiver = watch('receiver');
+  const receiverPhone = watch('receiverPhone');
+  const quantity = watch('quantity');
+
+  // 선택된 카드 정보
   const selectedCard =
     cardTemplates.find((card) => card.id === selectedCardId) ||
     cardTemplates[0];
-  const [message, setMessage] = useState(selectedCard.defaultTextMessage || '');
-  const [sender, setSender] = useState('');
-  const [receiver, setReceiver] = useState('');
-  const [receiverPhone, setReceiverPhone] = useState('');
-  const [quantity, setQuantity] = useState(1);
-
-  // 에러 상태
-  const [messageError, setMessageError] = useState('');
-  const [senderError, setSenderError] = useState('');
-  const [receiverError, setReceiverError] = useState('');
-  const [phoneError, setPhoneError] = useState('');
-  const [quantityError, setQuantityError] = useState('');
 
   // 카드 선택 핸들러
   const handleSelectCard = (cardId: number) => {
-    setSelectedCardId(cardId);
+    setValue('selectedCardId', cardId);
     const card = cardTemplates.find((c) => c.id === cardId);
-    setMessage(card?.defaultTextMessage || '');
-  };
-
-  // 전화번호 입력 핸들러
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setReceiverPhone(e.target.value);
-    if (phoneError) setPhoneError('');
-  };
-
-  // 폼 유효성 검사
-  const validateForm = (): boolean => {
-    let valid = true;
-
-    if (!message.trim()) {
-      setMessageError('메시지를 입력해주세요.');
-      valid = false;
-    } else {
-      setMessageError('');
-    }
-
-    if (!sender.trim()) {
-      setSenderError('이름을 입력해주세요.');
-      valid = false;
-    } else {
-      setSenderError('');
-    }
-
-    if (!receiver.trim()) {
-      setReceiverError('이름을 입력해주세요.');
-      valid = false;
-    } else {
-      setReceiverError('');
-    }
-
-    if (!isValidPhoneNumber(receiverPhone)) {
-      setPhoneError('올바른 전화번호 형식이 아닙니다.');
-      valid = false;
-    } else {
-      setPhoneError('');
-    }
-
-    if (quantity < 1) {
-      setQuantityError('구매 수량은 1개 이상이어야 합니다.');
-      valid = false;
-    } else {
-      setQuantityError('');
-    }
-
-    return valid;
+    setValue('message', card?.defaultTextMessage || '');
   };
 
   // 주문 제출 핸들러
-  const handleOrder = (product: any) => {
+  const handleOrder = async (product: any) => {
     if (!product) return;
 
-    if (!validateForm()) return;
+    const isValid = await trigger();
+    if (!isValid) return;
 
     // 안내 메시지 구성
-    const msg = `주문이 완료되었습니다.\n상품명: ${product.name}\n구매 수량: ${quantity}\n발신자 이름: ${sender}\n메시지: ${message}`;
+    const formData = {
+      selectedCardId,
+      message,
+      sender,
+      receiver,
+      receiverPhone,
+      quantity,
+    };
+
+    const msg = `주문이 완료되었습니다.\n상품명: ${product.name}\n구매 수량: ${formData.quantity}\n발신자 이름: ${formData.sender}\n메시지: ${formData.message}`;
     alert(msg);
     navigate('/');
   };
@@ -102,23 +81,22 @@ export const useOrderForm = () => {
       receiverPhone,
       quantity,
     },
-    // 에러 상태
+    // 에러 상태 (React Hook Form 형식에 맞게 변환)
     errors: {
-      messageError,
-      senderError,
-      receiverError,
-      phoneError,
-      quantityError,
+      messageError: errors.message?.message || '',
+      senderError: errors.sender?.message || '',
+      receiverError: errors.receiver?.message || '',
+      phoneError: errors.receiverPhone?.message || '',
+      quantityError: errors.quantity?.message || '',
     },
     // 핸들러 함수들
     handlers: {
       handleSelectCard,
-      handlePhoneChange,
       handleOrder,
-      setMessage,
-      setSender,
-      setReceiver,
-      setQuantity: (value: number) => setQuantity(Math.max(1, value)),
     },
+    // React Hook Form 관련
+    register,
+    control,
+    handleSubmit,
   };
 };

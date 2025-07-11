@@ -5,6 +5,11 @@ import Container from '@/components/layout/Container';
 import { products } from '@/data/products';
 import { cardTemplates } from '@/data/cardTemplates';
 import { useOrderForm } from '@/hooks';
+import {
+  getPhoneErrorMessage,
+  getNameErrorMessage,
+  getQuantityErrorMessage,
+} from '@/utils';
 
 const CardSlider = styled.div`
   overflow-x: auto;
@@ -137,16 +142,8 @@ const OrderPage = () => {
   const navigate = useNavigate();
   const product = products.find((p) => String(p.id) === String(productId));
 
-  const { formData, errors, handlers } = useOrderForm();
-  const {
-    selectedCardId,
-    selectedCard,
-    message,
-    sender,
-    receiver,
-    receiverPhone,
-    quantity,
-  } = formData;
+  const { formData, errors, handlers, register } = useOrderForm();
+  const { selectedCardId, selectedCard } = formData;
   const {
     messageError,
     senderError,
@@ -154,15 +151,7 @@ const OrderPage = () => {
     phoneError,
     quantityError,
   } = errors;
-  const {
-    handleSelectCard,
-    handlePhoneChange,
-    handleOrder,
-    setMessage,
-    setSender,
-    setReceiver,
-    setQuantity,
-  } = handlers;
+  const { handleSelectCard, handleOrder } = handlers;
 
   if (!product) {
     return (
@@ -196,8 +185,11 @@ const OrderPage = () => {
           <CardLargeImg src={selectedCard.imageUrl} alt="선택된 카드" />
         </CardImagePreview>
         <MessageTextarea
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          {...register('message', {
+            required: '메시지를 입력해주세요.',
+            validate: (value) =>
+              value.trim().length > 0 || '메시지를 입력해주세요.',
+          })}
           placeholder="메시지를 입력하세요."
           error={!!messageError}
         />
@@ -206,8 +198,13 @@ const OrderPage = () => {
           <FormLabel>보내는 사람</FormLabel>
           <Input
             type="text"
-            value={sender}
-            onChange={(e) => setSender(e.target.value)}
+            {...register('sender', {
+              required: '이름을 입력해주세요.',
+              validate: (value) => {
+                const error = getNameErrorMessage(value);
+                return error || true;
+              },
+            })}
             placeholder="이름을 입력하세요."
             error={!!senderError}
           />
@@ -221,26 +218,42 @@ const OrderPage = () => {
           <FormLabel>받는 사람</FormLabel>
           <Input
             type="text"
-            value={receiver}
-            onChange={(e) => setReceiver(e.target.value)}
+            {...register('receiver', {
+              required: '이름을 입력해주세요.',
+              validate: (value) => {
+                const error = getNameErrorMessage(value);
+                return error || true;
+              },
+            })}
             placeholder="이름을 입력하세요."
             error={!!receiverError}
           />
           {receiverError && <ErrorText>{receiverError}</ErrorText>}
           <Input
             type="tel"
-            value={receiverPhone}
-            onChange={handlePhoneChange}
+            {...register('receiverPhone', {
+              required: '전화번호를 입력해주세요.',
+              validate: (value) => {
+                const error = getPhoneErrorMessage(value);
+                return error || true;
+              },
+            })}
             placeholder="전화번호를 입력하세요."
             error={!!phoneError}
-            maxLength={13}
+            maxLength={11}
           />
           {phoneError && <ErrorText>{phoneError}</ErrorText>}
           <Input
             type="number"
             min={1}
-            value={quantity}
-            onChange={(e) => setQuantity(Number(e.target.value))}
+            {...register('quantity', {
+              required: '수량을 입력해주세요.',
+              valueAsNumber: true,
+              validate: (value) => {
+                const error = getQuantityErrorMessage(value);
+                return error || true;
+              },
+            })}
             placeholder="수량"
             error={!!quantityError}
           />
