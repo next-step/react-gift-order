@@ -1,13 +1,12 @@
-import React from 'react';
-import { type InputChangeHandler } from '@/components';
+import { type InputChangeHandler, type InputBlurHandler } from '@/components';
 import * as S from './styles';
 
 interface LoginInputFieldProps {
-  type: string;
+  type: 'text' | 'password' | 'email';
   placeholder: string;
   value: string;
   onChange: InputChangeHandler;
-  onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onBlur: InputBlurHandler;
   error?: string; //hasError삭제 
 }
 

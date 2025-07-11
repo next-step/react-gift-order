@@ -1,14 +1,18 @@
 import React from 'react';
 
-// Types
+// Event Handler Types
 export type InputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => void;
+export type InputBlurHandler = (e: React.FocusEvent<HTMLInputElement>) => void;
+export type TextAreaChangeHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+export type FormSubmitHandler = (e: React.FormEvent) => void;
+export type ClickHandler = () => void;
 
 // Atoms
 export { default as Image } from './atoms/Image';
 export { default as Input } from './atoms/Input';
 export { default as Label } from './atoms/Label';
 export { default as Text } from './atoms/Text';
-export { default as TextArea, type TextAreaChangeHandler } from './atoms/TextArea';
+export { default as TextArea } from './atoms/TextArea';
 
 // Molecules
 export { default as InputField } from './molecules/InputField';

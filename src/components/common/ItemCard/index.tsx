@@ -1,11 +1,12 @@
 import * as S from './styles';
+import { type ClickHandler } from '@/components';
 
 // 기본 프로퍼티
 interface BaseItemCardProps {
   imageUrl: string;
   title: string;
   variant: 'category' | 'product'; 
-  onClick?: () => void;
+  onClick?: ClickHandler;
 }
 
 // 리뷰, 늘어날 가능성있는 부분 분리해서 사용 

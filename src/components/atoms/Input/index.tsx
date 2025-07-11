@@ -1,14 +1,15 @@
 import React from 'react';
 import * as S from './styles';
+import { type InputChangeHandler, type InputBlurHandler } from '../..';
 
 interface InputProps {
-  type?: 'text' | 'number' | 'tel';
+  type?: 'text' | 'number' | 'tel' | 'password' | 'email';
   placeholder?: string;
   style?: React.CSSProperties;
   hasError?: boolean;
   name?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onChange?: InputChangeHandler;
+  onBlur?: InputBlurHandler;
   value?: string;
 }
 

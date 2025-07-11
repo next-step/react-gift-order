@@ -1,19 +1,20 @@
 import React from 'react';
 import { Input, Label, Text } from '@/components';
+import { type InputChangeHandler, type InputBlurHandler } from '@/components';
 import * as S from './styles';
 
 interface InputFieldProps {
   label?: string;
   placeholder?: string;
-  type?: 'text' | 'number' | 'tel';
+  type?: 'text' | 'number' | 'tel' | 'password' | 'email';
   description?: string;
   labelMinWidth?: string;
   layout?: 'vertical' | 'horizontal';
   error?: string;
   showError?: boolean;
   name?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onChange?: InputChangeHandler;
+  onBlur?: InputBlurHandler;
   value?: string;
 }
 

@@ -1,16 +1,15 @@
-import { type ReactNode } from 'react';
+import React from 'react';
 import * as S from './styles';
+import { type ClickHandler } from '@/components';
 
 interface IconButtonProps {
-  children: ReactNode;
-  onClick: () => void;
+  children: React.ReactNode;
+  onClick: ClickHandler;
 }
 
 const IconButton = ({children, onClick}: IconButtonProps) => {
   return (
-    <S.IconButton 
-      onClick={onClick} 
-    >
+    <S.IconButton onClick={onClick}>
       {children}
     </S.IconButton>
   );
