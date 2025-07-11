@@ -8,7 +8,7 @@ import Navigation from '@/components/Navigation';
 import CardSelector from '@/components/OrderSection/CardSelector';
 import MessageInput from '@/components/OrderSection/MessageInput';
 import SenderForm from '@/components/OrderSection/SenderForm';
-import ReceiverForm from '@/components/OrderSection/ReceiverForm';
+import ReceiverForm from '@/components/ReceiverFormSection/ReceiverForm';
 import ProductInfo from '@/components/OrderSection/ProductInfo';
 import OrderSubmitButton from '@/components/OrderSection/OrderSubmitButton';
 import { ROUTES } from '@/constants/routes';
