@@ -134,12 +134,18 @@ const AddButtonWrapper = styled.div`
 
 const AddButton = styled.button<{ disabled?: boolean }>`
   ${({ theme }) => theme.typography.body.body2Regular};
-  color: ${({ theme, disabled }) =>
-    disabled ? theme.color.semantic.text.disabled : theme.color.blue[700]};
-  background: none;
+  background-color: ${({ theme }) => theme.color.gray[200]};
+  color: ${({ theme }) => theme.color.semantic.text.default};
   border: none;
-  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
-  opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
+  padding: ${({ theme }) => theme.spacing[2]} ${({ theme }) => theme.spacing[4]};
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:disabled {
+    background-color: ${({ theme }) => theme.color.gray[300]};
+    color: ${({ theme }) => theme.color.semantic.text.disabled};
+    cursor: not-allowed;
+  }
 `;
 
 const ScrollableContent = styled.div`
@@ -164,15 +170,16 @@ const Footer = styled.div`
 
 const CancelButton = styled.button`
   ${({ theme }) => theme.typography.body.body2Regular};
+  background-color: ${({ theme }) => theme.color.gray[300]};
+  border-radius: 8px;
   color: ${({ theme }) => theme.color.semantic.text.default};
-  background: none;
   border: none;
 `;
 
 const ConfirmButton = styled.button`
-  ${({ theme }) => theme.typography.body.body2Bold};
-  background-color: ${({ theme }) => theme.color.blue[700]};
-  color: ${({ theme }) => theme.color.gray[0]};
+  ${({ theme }) => theme.typography.body.body2Regular};
+  background-color: ${({ theme }) => theme.color.semantic.kakaoYellow};
+  color: ${({ theme }) => theme.color.semantic.text.default};
   padding: ${({ theme }) => theme.spacing[2]} ${({ theme }) => theme.spacing[4]};
   border-radius: 8px;
   border: none;

@@ -5,7 +5,7 @@ export const PLACEHOLDERS = {
 } as const;
 
 export const LABELS = {
-  DELETE: '삭제',
+  DELETE: 'X',
   getReceiverTitle: (i: number) => `받는 사람 ${i + 1}`,
   RECEIVER_MODAL_TITLE: '받는 사람',
   RECEIVER_MODAL_DESCRIPTION:

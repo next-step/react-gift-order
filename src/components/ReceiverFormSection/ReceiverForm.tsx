@@ -70,12 +70,12 @@ const Title = styled.p`
 
 const AddButton = styled.button<{ disabled?: boolean }>`
   ${({ theme }) => theme.typography.body.body2Regular};
-  color: ${({ theme, disabled }) =>
-    disabled ? theme.color.gray[400] : theme.color.blue[500]};
-  background: none;
+  background-color: ${({ theme }) => theme.color.gray[200]};
+  color: ${({ theme }) => theme.color.semantic.text.default};
   border: none;
-  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
-  opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
+  padding: ${({ theme }) => theme.spacing[2]} ${({ theme }) => theme.spacing[4]};
+  border-radius: 8px;
+  cursor: pointer;
 `;
 
 const EmptyNotice = styled.p`

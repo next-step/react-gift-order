@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import type { Receiver } from '@/types/receiver';
 
-interface FormValues {
+export interface ReceiverFormValues {
   receivers: Receiver[];
 }
 
@@ -14,7 +14,7 @@ export const useReceiverForm = (initialValues: Receiver[] = []) => {
     reset,
     watch,
     formState: { errors },
-  } = useForm<FormValues>({
+  } = useForm<ReceiverFormValues>({
     defaultValues: {
       receivers: [],
     },

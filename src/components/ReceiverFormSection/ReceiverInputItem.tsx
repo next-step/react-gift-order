@@ -107,7 +107,7 @@ const InputHeader = styled.div`
 const DeleteButton = styled.button`
   background: none;
   border: none;
-  color: ${({ theme }) => theme.color.red[500]};
+  color: ${({ theme }) => theme.color.gray[500]};
   cursor: pointer;
   ${({ theme }) => theme.typography.body.body2Regular};
 `;
