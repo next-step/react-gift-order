@@ -14,21 +14,37 @@ export const OrderCalculationProvider = ({
   const { order } = useOrderState();
 
   const calculateTotalPrice = useCallback(() => {
-    const items = [
-      {
-        price: order.product?.price.sellingPrice || 0,
-        quantity: order.quantity || 1,
-      },
-    ];
-    return items.reduce((total, item) => total + item.price * item.quantity, 0);
-  }, [order.product, order.quantity]);
+    if (!order.product || !order.receivers || order.receivers.length === 0) {
+      return 0;
+    }
+
+    const productPrice = order.product.price.sellingPrice || 0;
+
+    const totalQuantity = order.receivers.reduce((total, receiver) => {
+      return total + (receiver.quantity || 0);
+    }, 0);
+
+    return productPrice * totalQuantity;
+  }, [order.product, order.receivers]);
+
+  const calculateTotalQuantity = useCallback(() => {
+    if (!order.receivers || order.receivers.length === 0) {
+      return 0;
+    }
+
+    return order.receivers.reduce((total, receiver) => {
+      return total + (receiver.quantity || 0);
+    }, 0);
+  }, [order.receivers]);
 
   const totalPrice = calculateTotalPrice();
+  const totalQuantity = calculateTotalQuantity();
 
   return (
     <OrderCalculationContext.Provider
       value={{
         totalPrice,
+        totalQuantity,
       }}
     >
       {children}
