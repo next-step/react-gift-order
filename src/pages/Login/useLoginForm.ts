@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { PascalCase } from './PascalCase';
+import { PascalCase } from './UserManagement';
 import { useEmailInput } from './useEmailInput';
 import { usePasswordInput } from './usePasswordInput';
 

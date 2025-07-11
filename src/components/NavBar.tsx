@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { FiArrowLeft, FiUser } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import theme from '../styles/theme';
-import { PascalCase } from '../pages/Login/PascalCase';
+import { PascalCase } from '../pages/Login/UserManagement';
 
 const NavBar = () => {
   const navigate = useNavigate();
