@@ -4,13 +4,6 @@ import styled from "@emotion/styled";
 import { cardTemplates } from "@/Components/cardTemplates";
 import { useParams } from "react-router-dom";
 import { products } from "@/data/products";
-// MUI 관련 import 제거
-// import Dialog from '@mui/material/Dialog';
-// import DialogTitle from '@mui/material/DialogTitle';
-// import DialogContent from '@mui/material/DialogContent';
-// import DialogActions from '@mui/material/DialogActions';
-// import Button from '@mui/material/Button';
-import { useState } from 'react';
 
 // ===== 타입 정의 =====
 type Receiver = {
@@ -25,91 +18,6 @@ type OrderFormValues = {
   sender: string;
   receivers: Receiver[];
 };
-
-// ===== 초기 상태 =====
-// const initialState: OrderState = {
-//   selectedId: cardTemplates[0]?.id ?? null,
-//   message: cardTemplates[0]?.defaultTextMessage ?? "",
-//   sender: "",
-//   receiverName: "",
-//   receiverPhone: "",
-//   quantity: 1,
-//   messageError: "",
-//   senderError: "",
-// };
-
-// ===== 리듀서 함수 =====
-// const orderReducer = (state: OrderState, action: OrderAction): OrderState => {
-//   switch (action.type) {
-//     case 'SELECT_CARD': {
-//       const selectedCard = cardTemplates.find(card => card.id === action.payload);
-//       return {
-//         ...state,
-//         selectedId: action.payload,
-//         message: selectedCard?.defaultTextMessage ?? "",
-//         messageError: "", // 카드 선택 시 메시지 에러 초기화
-//       };
-//     }
-//     case 'UPDATE_MESSAGE': {
-//       return {
-//         ...state,
-//         message: action.payload,
-//         messageError: "", // 메시지 입력 시 에러 초기화
-//       };
-//     }
-//     case 'UPDATE_SENDER': {
-//       return {
-//         ...state,
-//         sender: action.payload,
-//         senderError: "", // 발신자 입력 시 에러 초기화
-//       };
-//     }
-//     case 'UPDATE_RECEIVER_NAME': {
-//       return {
-//         ...state,
-//         receiverName: action.payload,
-//       };
-//     }
-//     case 'UPDATE_RECEIVER_PHONE': {
-//       return {
-//         ...state,
-//         receiverPhone: action.payload,
-//       };
-//     }
-//     case 'UPDATE_QUANTITY': {
-//       return {
-//         ...state,
-//         quantity: action.payload,
-//       };
-//     }
-//     case 'SET_MESSAGE_ERROR': {
-//       return {
-//         ...state,
-//         messageError: action.payload,
-//       };
-//     }
-//     case 'SET_SENDER_ERROR': {
-//       return {
-//         ...state,
-//         senderError: action.payload,
-//       };
-//     }
-//     case 'CLEAR_MESSAGE_ERROR': {
-//       return {
-//         ...state,
-//         messageError: "",
-//       };
-//     }
-//     case 'CLEAR_SENDER_ERROR': {
-//       return {
-//         ...state,
-//         senderError: "",
-//       };
-//     }
-//     default:
-//       return state;
-//   }
-// };
 
 // ===== 카드 미리보기 관련 스타일 =====
 const PreviewWrapper = styled.div`
@@ -373,53 +281,6 @@ const ErrorMessage = styled.div`
   margin: 4px 0 8px 4px;
 `;
 
-// ===== 커스텀 모달 스타일 =====
-const ModalOverlay = styled.div`
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.25);
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-const ModalContent = styled.div`
-  background: #fff;
-  border-radius: 16px;
-  max-width: 400px;
-  width: 90vw;
-  padding: 32px 24px 24px 24px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-`;
-const ModalTitle = styled.h2`
-  font-size: 1.2rem;
-  font-weight: 700;
-  margin-bottom: 18px;
-`;
-const ModalActions = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 24px;
-`;
-const ModalButton = styled.button`
-  background: #f7e244;
-  color: #222;
-  font-size: 1rem;
-  font-weight: 700;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 24px;
-  cursor: pointer;
-  transition: background 0.2s;
-  &:hover {
-    background: #ffe14a;
-  }
-`;
-
 const Order = () => {
   const { id } = useParams();
   const product = products.find(p => String(p.id) === String(id));
@@ -527,6 +388,13 @@ const Order = () => {
                   pattern: {
                     value: /^010[0-9]{8}$/,
                     message: "01012341234 형식으로 입력하세요."
+                  },
+                  validate: value => {
+                    const phones = watch("receivers").map(r => r.phone);
+                    if (phones.filter(p => p === value).length > 1) {
+                      return "전화번호가 중복되었습니다.";
+                    }
+                    return true;
                   }
                 })}
                 placeholder="01012341234"
