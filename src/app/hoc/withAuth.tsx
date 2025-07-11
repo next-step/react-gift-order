@@ -1,4 +1,4 @@
-import { useAuth } from '@/app/providers/AuthContext'
+import { useAuth } from '@/shared/contexts/auth'
 import { ROUTE_PATH } from '@/app/Router'
 import type { ComponentType, ReactElement } from 'react'
 import { Navigate, useLocation } from 'react-router-dom'

@@ -1,5 +1,5 @@
 import { Button, PageContainer, Typography } from '@/shared/ui'
-import { useAuth } from '@/app/providers/AuthContext'
+import { useAuth } from '@/shared/contexts/auth'
 import { useNavigate } from 'react-router-dom'
 import { ROUTE_PATH } from '@/app/Router'
 import styled from '@emotion/styled'
