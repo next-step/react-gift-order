@@ -1,46 +1,52 @@
+import { useEffect } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import type { Receiver } from '@/types/receiver';
 
-export interface ReceiverFormValues {
+interface FormValues {
   receivers: Receiver[];
 }
 
-export const useReceiverForm = () => {
+export const useReceiverForm = (initialValues: Receiver[] = []) => {
   const {
     register,
-    handleSubmit,
     control,
+    handleSubmit,
     reset,
     watch,
     formState: { errors },
-  } = useForm<ReceiverFormValues>({
-    defaultValues: { receivers: [] },
+  } = useForm<FormValues>({
+    defaultValues: {
+      receivers: [],
+    },
   });
 
   const { fields, append, remove } = useFieldArray({
-    control,
     name: 'receivers',
+    control,
   });
 
-  const watchPhones = watch('receivers');
+  const values = watch('receivers');
 
-  const isDuplicate = (phone: string, index: number): boolean => {
-    return (
-      watchPhones.filter((r, i) => r.phone === phone && i !== index).length > 0
+  useEffect(() => {
+    if (initialValues.length > 0) {
+      reset({ receivers: initialValues });
+    }
+  }, [initialValues, reset]);
+
+  const isDuplicate = (phone: string, index: number) => {
+    return values.some(
+      (receiver, i) => receiver.phone === phone && i !== index
     );
   };
 
   return {
     register,
     handleSubmit,
-    control,
     reset,
-    watch,
     errors,
     fields,
     append,
     remove,
-    watchPhones,
     isDuplicate,
   };
 };

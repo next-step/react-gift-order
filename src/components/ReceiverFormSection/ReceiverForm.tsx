@@ -40,6 +40,7 @@ const ReceiverForm = ({ receiverList, setReceiverList }: Props) => {
 
       {isModalOpen && (
         <ReceiverModal
+          initialValues={receiverList}
           onConfirmList={handleConfirm}
           onClose={() => setIsModalOpen(false)}
         />

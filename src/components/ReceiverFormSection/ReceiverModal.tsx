@@ -2,15 +2,15 @@ import styled from '@emotion/styled';
 import ReceiverInputItem from '@/components/ReceiverFormSection/ReceiverInputItem';
 import { useReceiverForm } from '@/hooks/useReceiverForm';
 import { BUTTON_TEXT, LABELS } from '@/constants/receiverLabels';
+import type { Receiver } from '@/types/receiver';
 
 interface Props {
-  onConfirmList: (
-    receivers: { name: string; phone: string; quantity: number }[]
-  ) => void;
+  onConfirmList: (receivers: Receiver[]) => void;
   onClose: () => void;
+  initialValues: Receiver[];
 }
 
-const ReceiverModal = ({ onConfirmList, onClose }: Props) => {
+const ReceiverModal = ({ onConfirmList, onClose, initialValues }: Props) => {
   const {
     register,
     handleSubmit,
@@ -20,7 +20,7 @@ const ReceiverModal = ({ onConfirmList, onClose }: Props) => {
     append,
     remove,
     isDuplicate,
-  } = useReceiverForm();
+  } = useReceiverForm(initialValues);
 
   const canAddMore = fields.length < 10;
   const confirmButtonLabel = BUTTON_TEXT.CONFIRM_COUNT(fields.length);
