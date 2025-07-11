@@ -58,7 +58,7 @@ const StyledButton = styled.button<ButtonProps>(
       padding: `${theme.spacing3} 0`,
     }),
     ...(size === "medium" && {
-      padding: `${theme.spacing4} ${theme.spacing6}`,
+      padding: `${theme.spacing3} ${theme.spacing4}`,
     }),
 
     ...getVariantStyles(variant, theme),
