@@ -1,19 +1,18 @@
-import React from 'react';
 import styled from '@emotion/styled';
 
-interface ProductInfoProps {
+type ProductInfoProps = {
   imageURL: string;
   name: string;
   price: { basicPrice: number };
   brandInfo: { name: string };
-}
+};
 
-const ProductInfo: React.FC<ProductInfoProps> = ({
+const ProductInfo = ({
   imageURL,
   name,
   price,
   brandInfo,
-}) => {
+}: ProductInfoProps) => {
   return (
     <Wrapper>
       <Title>상품 정보</Title>
@@ -21,9 +20,9 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
         <Image src={imageURL} alt={name} />
         <TextArea>
           <ProductName>{name}</ProductName>
-          <BrandName>{brandInfo?.name}</BrandName>
+          <BrandName>{brandInfo.name}</BrandName>
           <Price>
-            상품가 <strong>{price?.basicPrice.toLocaleString()}원</strong>
+            상품가 <strong>{price.basicPrice.toLocaleString()}원</strong>
           </Price>
         </TextArea>
       </InfoBox>

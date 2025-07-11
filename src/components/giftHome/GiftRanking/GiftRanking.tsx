@@ -22,7 +22,7 @@ const rankTypeLabels: Record<RankType, string> = {
   MANY_WISHLIST: '위시로 받은',
 };
 
-const GiftChart: React.FC = () => {
+const GiftChart = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const selectedTarget = (searchParams.get('target') as TargetType) || 'ALL';
