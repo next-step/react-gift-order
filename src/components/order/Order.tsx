@@ -87,7 +87,13 @@ const Order: React.FC = () => {
       setMessageError("");
     }
     if (!isValid) return;
-    alert("결제 완료!");
+    alert(
+      `주문 상품명: ${selectedGift?.name}\n` +
+        `보내는 사람: ${SenderNameRef.current?.value}\n` +
+        `메시지: ${GiftMessageRef.current?.value}\n` +
+        `받는 사람 수: ${receivers.length}명\n` +
+        `총 수량: ${receivers.length === 1 ? quantity : quantity * receivers.length}개`
+    );
   };
 
   const selectedGiftId = id ? parseInt(id, 10) : undefined;
@@ -178,7 +184,7 @@ const Order: React.FC = () => {
           css={totalPriceBoxStyle}
         >
           <p css={SubmitStyle(theme)}>
-            {receivers.length === 0
+            {receivers.length === 1
               ? totalPrice
               : totalPrice * receivers.length}
             원 주문하기
