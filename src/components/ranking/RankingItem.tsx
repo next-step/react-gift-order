@@ -1,8 +1,8 @@
-import styled from '@emotion/styled';
-import { PaddingSm } from '../padding/Padding';
-const RankingItemWrap= styled.div`
+import styled from "@emotion/styled";
+import { PaddingSm } from "../common/Padding";
+const RankingItemWrap = styled.div`
   cursor: pointer;
-`
+`;
 const Image = styled.img`
   width: 100%;
   object-fit: cover;
@@ -11,7 +11,7 @@ const Image = styled.img`
   overflow: hidden;
 `;
 const Brand = styled.p`
-  ${({theme}) => theme.typography.subtitle2Regular};
+  ${({ theme }) => theme.typography.subtitle2Regular};
   color: ${({ theme }) => theme.colors.gray.gray600};
 `;
 const Name = styled.p`
@@ -19,14 +19,14 @@ const Name = styled.p`
   color: ${({ theme }) => theme.colors.gray.gray900};
 `;
 const Price = styled.p`
-  ${({theme}) => theme.typography.subtitle2Bold};
+  ${({ theme }) => theme.typography.subtitle2Bold};
   color: ${({ theme }) => theme.colors.gray.gray900};
 `;
 interface RankingItemProps {
   id: number;
   name: string;
   imageURL: string;
-  onClick:()=>void;
+  onClick: () => void;
 
   price: {
     basicPrice: number;
@@ -58,4 +58,4 @@ const RankingItem = ({
   );
 };
 
-export default RankingItem
+export default RankingItem;

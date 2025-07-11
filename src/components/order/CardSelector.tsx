@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import styled from "@emotion/styled";
-import { order_cards } from "@/mocks";
+import React, { useState } from 'react';
+import styled from '@emotion/styled';
+import { order_cards } from '@/mocks';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -54,9 +54,7 @@ const CardImg = styled.img`
 `;
 
 const CardSelector = () => {
-  const [selectedCardUrl, setSelectedCardUrl] = useState(
-    order_cards[0].imageUrl
-  );
+  const [selectedCardUrl, setSelectedCardUrl] = useState(order_cards[0].imageUrl);
 
   return (
     <Wrapper>
