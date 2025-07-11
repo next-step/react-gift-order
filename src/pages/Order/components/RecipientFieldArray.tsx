@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import type { OrderFormType } from "@/types/OrderFormType";
+import type { OrderFormType } from "@/pages/Order/components/Order";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 const DEFAULT_MESSAGE = `받는 사람이 없습니다.\n받는 사람을 추가해주세요.`;
@@ -7,15 +7,22 @@ const DEFAULT_MESSAGE = `받는 사람이 없습니다.\n받는 사람을 추가
 interface RecipientFieldProps {
   isEmpty: boolean;
 }
+interface MsgProps {
+  isValid: boolean;
+}
 
 const RecipientFieldArray = () => {
-  const { control } = useFormContext<OrderFormType>();
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext<OrderFormType>();
   const { fields } = useFieldArray({ control, name: "recipients" });
   const isEmpty = fields.length === 0;
+  const isValidField = !errors.recipients;
   return (
     <Container isEmpty={isEmpty}>
       {isEmpty ? (
-        <Msg>{DEFAULT_MESSAGE}</Msg>
+        <Msg isValid={isValidField}>{DEFAULT_MESSAGE}</Msg>
       ) : (
         <>
           <Items>
@@ -47,7 +54,7 @@ const Container = styled.div<RecipientFieldProps>`
   overflow: hidden;
   ${({ isEmpty, theme }) =>
     isEmpty
-      ? `
+      ? ` 
           justify-content: center;
           align-items: center;
           padding: ${theme.spacing.spacing6};
@@ -57,13 +64,13 @@ const Container = styled.div<RecipientFieldProps>`
             background-color: white;
             border-top: 1px solid ${theme.color.gray300};
           }
-        `}
+  `}
 `;
-const Msg = styled.p`
+const Msg = styled.p<MsgProps>`
   white-space: pre-line;
   text-align: center;
   font: ${({ theme }) => theme.typography.body2Regular};
-  color: ${({ theme }) => theme.color.gray600};
+  color: ${({ theme, isValid }) => (isValid ? theme.color.gray600 : theme.color.stateColor.critical)};
 `;
 const Items = styled.div`
   display: grid;

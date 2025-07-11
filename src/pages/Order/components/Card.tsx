@@ -3,7 +3,7 @@ import Divider from "@/components/common/Divider";
 import styled from "@emotion/styled";
 import ErrorMsg from "@/pages/Order/components/ErrorMsg";
 import { useFormContext } from "react-hook-form";
-import type { OrderFormType } from "@/types/OrderFormType";
+import type { OrderFormType } from "@/pages/Order/components/Order";
 
 const Card = () => {
   const {
@@ -42,10 +42,7 @@ const Card = () => {
       </SelectedCardWrapper>
       <Divider spacing="2.5rem" />
       <CardMsgInputWrapper>
-        <CardMsgInput
-          {...register("message", { required: "메세지를 입력해주세요." })}
-          placeholder="메세지를 입력해주세요."
-        />
+        <CardMsgInput {...register("message")} placeholder="메세지를 입력해주세요." />
         {errors.message && <ErrorMsg>{errors.message.message}</ErrorMsg>}
       </CardMsgInputWrapper>
       <Divider spacing="2rem" />

@@ -1,5 +1,5 @@
 import { rankingItemMock } from "@/assets/rankingItemMock";
-import type { OrderFormType } from "@/types/OrderFormType";
+import type { OrderFormType } from "@/pages/Order/components/Order";
 import styled from "@emotion/styled";
 import { useFormContext } from "react-hook-form";
 

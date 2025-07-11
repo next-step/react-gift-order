@@ -2,8 +2,9 @@ import styled from "@emotion/styled";
 import Divider from "@/components/common/Divider";
 import RecipientFieldModalInputForm from "./RecipientFieldModalInputForm";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import type { OrderFormType, RecipientType } from "@/types/OrderFormType";
+import type { OrderFormType, RecipientType } from "@/pages/Order/components/Order";
 import { useEffect, useRef, type ComponentPropsWithoutRef } from "react";
+import ErrorMsg from "./ErrorMsg";
 
 interface RecipientFieldModalProps {
   onClose: () => void;
@@ -11,7 +12,14 @@ interface RecipientFieldModalProps {
 }
 
 const RecipientFieldModal = ({ onClose, initialRecipients: initialRecipientsProp }: RecipientFieldModalProps) => {
-  const { control, trigger, setValue, getValues } = useFormContext<OrderFormType>();
+  const {
+    control,
+    trigger,
+    setValue,
+    getValues,
+    clearErrors,
+    formState: { errors },
+  } = useFormContext<OrderFormType>();
   const { fields, append, remove } = useFieldArray({ control, name: "recipients" });
   const initialRecipients = useRef(initialRecipientsProp);
 
@@ -31,6 +39,7 @@ const RecipientFieldModal = ({ onClose, initialRecipients: initialRecipientsProp
   };
   const cancelRecipients = () => {
     setValue("recipients", initialRecipients.current);
+    clearErrors("recipients");
     onClose();
   };
   const isValidAddBtn = fields.length < 10;
@@ -42,6 +51,7 @@ const RecipientFieldModal = ({ onClose, initialRecipients: initialRecipientsProp
           <Divider spacing="0.25rem" />
           <HelpMsg>* 최대 10명까지 추가할 수 있어요.</HelpMsg>
           <HelpMsg>* 받는 사람의 전화번호를 중복으로 입력할 수 없어요.</HelpMsg>
+          {errors.recipients && <ErrorMsg>{errors.recipients.message}</ErrorMsg>}
           <Divider spacing="0.5rem" />
           <AddBtn type="button" onClick={() => append({ name: "", phone: "", quantity: 1 })} disabled={!isValidAddBtn}>
             추가하기

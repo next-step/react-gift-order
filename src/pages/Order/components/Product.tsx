@@ -1,7 +1,7 @@
 import { rankingItemMock } from "@/assets/rankingItemMock";
 import Divider from "@/components/common/Divider";
 import { ROUTE_PATH } from "@/components/routes/routePath";
-import type { OrderFormType } from "@/types/OrderFormType";
+import type { OrderFormType } from "@/pages/Order/components/Order";
 import styled from "@emotion/styled";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
