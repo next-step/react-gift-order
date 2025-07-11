@@ -48,24 +48,32 @@ const ReceiverModal: React.FC<Props> = ({
   const [errors, setErrors] = useState<{ name: string; phone: string }[]>([]);
 
   const validate = () => {
-    const newErrors = localReceivers.map((receiver) => {
+    const phoneList = localReceivers.map((r) => r.phone);
+    const newErrors = localReceivers.map((receiver, idx) => {
       let nameError = '';
       let phoneError = '';
+
       if (!receiver.name.trim()) {
         nameError = '이름을 입력해 주세요.';
       }
+
       // 전화번호: 010으로 시작, 11자리
       const phoneRegex = /^010\d{8}$/;
       if (!receiver.phone.trim()) {
         phoneError = '전화번호를 입력해 주세요.';
       } else if (!phoneRegex.test(receiver.phone)) {
         phoneError = '올바른 전화번호 형식이 아닙니다.';
+      } else if (
+        receiver.phone &&
+        phoneList.filter((phone) => phone === receiver.phone).length > 1
+      ) {
+        phoneError = '중복된 전화번호가 있습니다.';
       }
+
       return { name: nameError, phone: phoneError };
     });
-    setErrors(newErrors);
 
-    // 에러가 하나라도 있으면 false
+    setErrors(newErrors);
     return newErrors.every((e) => !e.name && !e.phone);
   };
 
@@ -207,7 +215,7 @@ const ReceiverModal: React.FC<Props> = ({
                     style={{
                       width: '100%',
                       height: 36,
-                      border: errors[idx]?.phone
+                      border: errors[idx]?.name
                         ? '2px solid #f44336'
                         : '1px solid #ccc',
                       borderRadius: 8,
@@ -219,7 +227,13 @@ const ReceiverModal: React.FC<Props> = ({
                   />
                   {errors[idx]?.name && (
                     <div
-                      style={{ color: '#f44336', fontSize: 13, marginTop: 2 }}
+                      style={{
+                        color: '#f44336',
+                        fontSize: 13,
+                        marginTop: 4,
+                        marginBottom: 8,
+                        marginLeft: 4,
+                      }}
                     >
                       {errors[idx].name}
                     </div>
@@ -261,7 +275,13 @@ const ReceiverModal: React.FC<Props> = ({
                   />
                   {errors[idx]?.phone && (
                     <div
-                      style={{ color: '#f44336', fontSize: 13, marginTop: 2 }}
+                      style={{
+                        color: '#f44336',
+                        fontSize: 13,
+                        marginTop: 4,
+                        marginBottom: 8,
+                        marginLeft: 4,
+                      }}
                     >
                       {errors[idx].phone}
                     </div>
