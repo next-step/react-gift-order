@@ -2,6 +2,8 @@ import styled from '@emotion/styled';
 import { Modal } from '../Modal';
 import { useState } from 'react';
 import { RecipientInputInModal } from './RecipientInputInModal';
+import useOrderInfo from '@/hooks/useOrderInfo';
+import { CompleteButton } from './CompleteButton';
 
 const Container = styled.div`
   display: flex;
@@ -174,21 +176,8 @@ const CancelButton = styled.button`
   font-size: 0.9rem;
 `;
 
-const CompleteButton = styled.button`
-  all: unset;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 24rem;
-  height: 2.7rem;
-  margin-left: 0.75rem;
-  border-radius: 0.4rem;
-  background-color: ${({ theme }) => theme.colors.yellow600};
-  font-size: 0.9rem;
-`;
-
 export const RecipientListTable = () => {
+  const { recipient } = useOrderInfo();
   const [isEmpty, setIsEmpty] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -223,14 +212,15 @@ export const RecipientListTable = () => {
           <Description>* 받는 사람의 전화번호를 중복으로 입력할 수 없어요.</Description>
           <ModalAddButton>추가하기</ModalAddButton>
           <List>
-            <RecipientInputInModal />
-            <RecipientInputInModal />
-            <RecipientInputInModal />
-            <RecipientInputInModal />
+            {recipient.fields.map((field, index) => (
+              <div key={field.id}>
+                <RecipientInputInModal index={index} />
+              </div>
+            ))}
           </List>
           <ModalBottomBar>
             <CancelButton onClick={() => setModalVisible(false)}>취소</CancelButton>
-            <CompleteButton>1명 완료</CompleteButton>
+            <CompleteButton />
           </ModalBottomBar>
         </ModalBody>
       </Modal>

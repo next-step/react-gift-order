@@ -123,8 +123,8 @@ const ErrorText = styled.div`
 
 const svgSize = 20;
 
-export const RecipientInputInModal = () => {
-  const { setIsFirstTry, recipient, product, error } = useOrderInfo();
+export const RecipientInputInModal = ({ index }: { index: number }) => {
+  const { setIsFirstTry, form, product, error } = useOrderInfo();
   const [selectedInput, setSelectedInput] = useState<inputType>('');
   const [nameInputFieldStyle, setNameInputFieldStyle] = useState<inputStyle>('idle');
   const [phoneNumberInputFieldStyle, setPhoneNumberInputFieldStyle] = useState<inputStyle>('idle');
@@ -156,12 +156,12 @@ export const RecipientInputInModal = () => {
   );
 
   useEffect(() => {
-    handleInputFieldStyle('name', selectedInput, error.recipientNameError);
-  }, [handleInputFieldStyle, selectedInput, error.recipientNameError]);
+    handleInputFieldStyle('name', selectedInput, error.recipientNameErrorArr[index]);
+  }, [handleInputFieldStyle, selectedInput, error.recipientNameErrorArr, index]);
 
   useEffect(() => {
-    handleInputFieldStyle('phoneNumber', selectedInput, error.phoneNumberError);
-  }, [handleInputFieldStyle, selectedInput, error.phoneNumberError]);
+    handleInputFieldStyle('phoneNumber', selectedInput, error.phoneNumberErrorArr[index]);
+  }, [handleInputFieldStyle, selectedInput, error.phoneNumberErrorArr, index]);
 
   useEffect(() => {
     handleInputFieldStyle('amount', selectedInput, error.amountError);
@@ -178,10 +178,9 @@ export const RecipientInputInModal = () => {
         <InputContainer>
           <InputField
             inputFieldStyle={nameInputFieldStyle}
-            value={recipient.name}
+            {...form.register(`recipientInfo.${index}.recipientName`)}
             placeholder={'이름을 입력하세요.'}
-            onChange={(e) => {
-              recipient.setName(e.target.value);
+            onChange={() => {
               error.setTargetRecipientName('modifying..');
             }}
             onFocus={() => {
@@ -191,7 +190,9 @@ export const RecipientInputInModal = () => {
               setSelectedInput('');
             }}
           />
-          {error.recipientNameError && <ErrorText>{error.recipientNameError}</ErrorText>}
+          {error.recipientNameErrorArr[index] && (
+            <ErrorText>{error.recipientNameErrorArr[index]}</ErrorText>
+          )}
         </InputContainer>
       </FormField>
       <FormField>
@@ -199,10 +200,9 @@ export const RecipientInputInModal = () => {
         <InputContainer>
           <InputField
             inputFieldStyle={phoneNumberInputFieldStyle}
-            value={recipient.phoneNumber}
+            {...form.register(`recipientInfo.${index}.phoneNumber`)}
             placeholder={'전화번호를 입력하세요.'}
-            onChange={(e) => {
-              recipient.setPhoneNumber(e.target.value);
+            onChange={() => {
               error.setTargetPhoneNumber('modifying..');
             }}
             onFocus={() => {
@@ -212,7 +212,9 @@ export const RecipientInputInModal = () => {
               setSelectedInput('');
             }}
           />
-          {error.phoneNumberError && <ErrorText>{error.phoneNumberError}</ErrorText>}
+          {error.phoneNumberErrorArr[index] && (
+            <ErrorText>{error.phoneNumberErrorArr[index]}</ErrorText>
+          )}
         </InputContainer>
       </FormField>
       <FormField>

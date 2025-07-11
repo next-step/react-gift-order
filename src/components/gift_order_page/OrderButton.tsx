@@ -25,18 +25,12 @@ const Text = styled.div`
 export const OrderButton = () => {
   const navigate = useNavigate();
   const [isValid, setIsValid] = useState(false);
-  const { isFirstTry, message, sender, recipient, product, error } = useOrderInfo();
+  const { isFirstTry, message, sender, product, error } = useOrderInfo();
   const totalPrice = product.price * parseInt(product.amount);
 
   useEffect(() => {
     if (!isFirstTry) {
-      setIsValid(
-        !error.messageError &&
-          !error.senderNameError &&
-          !error.recipientNameError &&
-          !error.phoneNumberError &&
-          !error.amountError
-      );
+      setIsValid(!error.messageError && !error.senderNameError && !error.amountError);
     }
   }, [error, isFirstTry]);
 
@@ -45,8 +39,6 @@ export const OrderButton = () => {
       onClick={() => {
         error.setTargetMessage(message);
         error.setTargetSenderName(sender.name);
-        error.setTargetRecipientName(recipient.name);
-        error.setTargetPhoneNumber(recipient.phoneNumber);
         error.setTargetAmount(product.amount);
 
         if (isValid) {

@@ -1,6 +1,16 @@
-export interface RecipientInfo {
-  name: string;
-  setName: React.Dispatch<React.SetStateAction<string>>;
+import type { FieldArrayWithId, UseFieldArrayAppend, UseFieldArrayRemove } from 'react-hook-form';
+
+interface RecipientForm {
+  recipientName: string;
   phoneNumber: string;
-  setPhoneNumber: React.Dispatch<React.SetStateAction<string>>;
+}
+
+type FormValues = {
+  recipientInfo: RecipientForm[];
+};
+
+export interface RecipientInfo {
+  fields: FieldArrayWithId<FormValues, 'recipientInfo', 'id'>[];
+  append: UseFieldArrayAppend<FormValues, 'recipientInfo'>;
+  remove: UseFieldArrayRemove;
 }
