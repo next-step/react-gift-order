@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useState } from 'react';
 
+
 const Container = styled.div`
   padding: 24px;
 `;
@@ -131,6 +132,7 @@ export const RankingGrid = () => {
         {mockData.slice(0, visibleCount).map((item, index) => (
           <GiftCard key={index} onClick={() => handleClick(item.id)}>
             <RankBadge index={index}>{index + 1}</RankBadge>
+
             <ProductImage src={item.imageURL} alt={item.name} />
             <ProductInfo>
               <Brand>{item.brandInfo.name}</Brand>

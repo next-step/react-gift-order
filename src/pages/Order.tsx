@@ -9,6 +9,7 @@ import ReceiverModal, {
 } from '../components/ReceiverModal';
 import { useReceiverForm } from '../hooks/useReceiverForm';
 
+
 const MessaageWrapper = styled.div`
   padding: 8px 20px;
 `;
@@ -38,12 +39,14 @@ const MessageInput = styled.textarea`
   font-size: 16px;
   box-sizing: border-box;
   border: 1px solid ${({ theme }) => theme.colors.borderDefault};
+
   border-radius: 8px;
 `;
 
 const SectionBox = styled.div`
   max-width: 720px;
   background-color: ${({ theme }) => theme.colors.gray00};
+
   margin: 12px 20px;
   padding: 20px;
 `;
@@ -61,6 +64,7 @@ const BottomOrderButton = styled.div<{ disabled: boolean }>`
   font-size: 18px;
   font-weight: bold;
   color: ${({ theme }) => theme.colors.textDefault};
+
   cursor: pointer;
 `;
 
@@ -73,6 +77,7 @@ const Section = styled.div`
   background-color: ${({ theme }) => theme.colors.gray00};
   padding: 20px;
   border-bottom: 8px solid ${({ theme }) => theme.colors.gray200};
+
 `;
 
 const Label = styled.div`
@@ -84,6 +89,7 @@ const Label = styled.div`
 const Description = styled.div`
   font-size: 12px;
   color: ${({ theme }) => theme.colors.textSub};
+
   margin-top: 4px;
 `;
 
@@ -189,6 +195,7 @@ const QuantityCell = styled(TableCell)`
   text-align: center;
 `;
 
+
 const Order = () => {
   const [selected, setSelected] = useState(orderCardTemplates[0].id);
   const selectedCard = orderCardTemplates.find(
@@ -214,6 +221,7 @@ const Order = () => {
 
     alert(
       `주문이 완료되었습니다.\n 상품명: ${product.name}\n 구매 수량: ${totalQuantity}\n 발신자 이름: ${sendorNameInput.value}\n 메시지: ${message}\n`
+
     );
   };
 
@@ -304,7 +312,6 @@ const Order = () => {
             onClose={() => setModalOpen(false)}
             onComplete={data => setReceiverList(data)}
           />
-
           <Label>상품 정보</Label>
           <ProductInfo>
             <img
@@ -332,6 +339,7 @@ const Order = () => {
         onClick={handleOrder}
       >
         {priceSum.toLocaleString()}원 주문하기
+
       </BottomOrderButton>
     </>
   );
