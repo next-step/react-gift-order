@@ -5,7 +5,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { FaUser } from 'react-icons/fa';
 import { MdFace2, MdFace, MdFace6 } from 'react-icons/md';
 
-import { mockItems } from '../../data/mockItems';
+import { mockItems } from '../../../../data/mockItems';
 
 import {
   sectionWrapper,
@@ -17,7 +17,7 @@ import {
 
 import TabButton from '../Shared/TabButton';
 import RankingCard from '../Shared/RankingCard';
-import { UserManagement } from '../../pages/Login/contexts/UserManagement';
+import { UserManagement } from '../../../Login/contexts/UserManagement';
 
 const genderTabs = [
   { label: '전체', icon: <FaUser /> },

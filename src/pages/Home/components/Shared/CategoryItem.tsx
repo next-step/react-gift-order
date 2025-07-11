@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css, type Theme as ThemeType } from '@emotion/react';
-import theme from '../../styles/theme';
+import theme from '../../../../styles/theme';
 
 type CategoryItemProps = {
   themeId: number;

@@ -1,18 +1,18 @@
 /** @jsxImportSource @emotion/react */
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import NavBar from './components/NavBar';
-import CategorySection from './components/CategorySection';
+import NavBar from './pages/Home/components/NavBar';
+import CategorySection from './pages/Home/components/CategorySection';
 import { categories } from './data/categories';
-import FriendSelector from './components/FriendSelector';
-import Banner from './components/Banner';
-import RankingSection from './components/RankingSection/RankingSection';
+import FriendSelector from './pages/Home/components/FriendSelector';
+import Banner from './pages/Home/components/Banner';
+import RankingSection from './pages/Home/components/RankingSection/RankingSection';
 import LoginPage from './pages/Login/LoginPage';
 import NotFoundPage from './pages/NotFoundPage';
 import MyPage from './pages/MyPage';
 import { UserManagementProvider, UserManagement } from './pages/Login/contexts/UserManagement';
 import React from 'react';
 import OrderPage from './pages/Order/OrderPage';
-import ScrollToTop from './components/ScrollToTop';
+import ScrollToTop from './pages/Home/ScrollToTop';
 
 const Home = () => (
   <main>
