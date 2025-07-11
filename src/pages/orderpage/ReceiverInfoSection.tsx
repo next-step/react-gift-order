@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { useFormContext, useFieldArray } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import styled from "@emotion/styled";
 import ReceiverModal from "@/pages/orderpage/ReceiverModal";
 import { useState } from "react";
@@ -10,14 +10,11 @@ const ReceiverInfoSection = () => {
   const [initialReceivers, setInitialReceivers] = useState<
     { name: string; phone: string; quantity: number }[]
   >([]);
-  const { control } = useFormContext<FullOrderFormValues>();
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "receivers",
-  });
+  const { setValue, watch } = useFormContext<FullOrderFormValues>();
+  const receivers = watch("receivers");
 
   const handleClickAdd = () => {
-    setInitialReceivers([...fields]);
+    setInitialReceivers([...receivers]);
     setIsModalOpen(true);
   };
 
@@ -28,10 +25,7 @@ const ReceiverInfoSection = () => {
   const handleSubmitReceiverData = (data: {
     receivers: { name: string; phone: string; quantity: number }[];
   }) => {
-    for (let i = fields.length - 1; i >= 0; i--) {
-      remove(i);
-    }
-    data.receivers.forEach((receiver) => append(receiver));
+    setValue("receivers", data.receivers);
     setIsModalOpen(false);
   };
 
@@ -40,11 +34,11 @@ const ReceiverInfoSection = () => {
       <HeaderRow>
         <Title>받는 사람</Title>
         <AddButton type="button" onClick={handleClickAdd}>
-          {fields.length > 0 ? "수정" : "추가"}
+          {receivers.length > 0 ? "수정" : "추가"}
         </AddButton>
       </HeaderRow>
 
-      {fields.length === 0 ? (
+      {receivers.length === 0 ? (
         <EmptyMessage>
           받는 사람이 없습니다.
           <br />
@@ -60,8 +54,8 @@ const ReceiverInfoSection = () => {
             </tr>
           </thead>
           <tbody>
-            {fields.map((field, index) => (
-              <tr key={field.id}>
+            {receivers.map((field, index) => (
+              <tr key={index}>
                 <td>{field.name}</td>
                 <td>{field.phone}</td>
                 <td>{field.quantity}</td>
