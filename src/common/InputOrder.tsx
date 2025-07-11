@@ -48,7 +48,7 @@ const Label = styled.label`
 `;
 
 const Input = styled.input<{ hasError: boolean }>`
-  width: 100%;
+  width: 95%;
   padding: 12px;
   border: 1px solid ${(props) => (props.hasError ? '#ff4757' : '#ddd')};
   border-radius: 8px;
