@@ -1,17 +1,22 @@
 /** @jsxImportSource @emotion/react */
-import styled from "@emotion/styled";
-import { useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import * as S from "@/styles/OrderPageStyles";
+import { useEffect, useState } from "react";
+import { Navigate, useParams, useNavigate } from "react-router-dom";
+import { useForm, FormProvider } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { orderFormSchema } from "@/validations/orderSchema";
+import type { OrderFormValues } from "@/validations/orderSchema";
 
 import { PageLayout } from "@/components/layout/PageLayout";
 import { PageContainer } from "@/components/layout/PageContainer";
 import { Navigation } from "@/components/header/Navigation";
 import MessageCardSection from "@/components/order/MessageCardSection";
 import SenderInfoSection from "@/components/order/SenderInfoSection";
-import ReceiverSection from "@/components/order/ReceiverSection";
+import ReceiverModal from "@/components/order/ReceiverModal";
+import ReceiverTable from "@/components/order/ReceiverTable";
 import OrderSummary from "@/components/order/OrderSummary";
 import OrderButton from "@/components/order/OrderButton";
-import { useOrderForm } from "@/components/order/useOrderForm";
 
 import { rankingList } from "@/mock/rankingList";
 
@@ -20,7 +25,40 @@ const OrderPage = () => {
   const { id } = useParams();
   const product = rankingList.find((item) => item.id === Number(id));
 
-  const { values, updateField, errors, isFormValid, resetForm } = useOrderForm();
+  if (!product) return <Navigate to="/not-found" replace />;
+
+  const methods = useForm<OrderFormValues>({
+    resolver: zodResolver(orderFormSchema),
+    defaultValues: {
+      senderName: "",
+      message: "",
+      selectedCardId: null,
+      receivers: [],
+    },
+    mode: "onBlur",
+  });
+
+  const { handleSubmit, watch, setValue } = methods;
+
+  const receivers = watch("receivers") ?? [];
+
+  const [isReceiverModalOpen, setReceiverModalOpen] = useState(false);
+
+  const totalQuantity = receivers.reduce((sum, r) => sum + r.quantity, 0);
+
+  const totalAmount = product.price.sellingPrice * totalQuantity;
+
+  const onReceiverComplete = (data: OrderFormValues["receivers"]) => {
+    setValue("receivers", data);
+  };
+
+  const onValid = (data: OrderFormValues) => {
+    const qty = data.receivers.reduce((sum, r) => sum + r.quantity, 0);
+    alert(
+      `주문 완료!\n상품명: ${product?.name}\n수량: ${qty}개\n보낸 사람: ${data.senderName}\n메시지: ${data.message}`
+    );
+    navigate("/", { replace: true });
+  };
 
   useEffect(() => {
     if (!product) {
@@ -30,77 +68,64 @@ const OrderPage = () => {
 
   if (!product) return null;
 
-  const totalAmount = product.price?.sellingPrice * values.quantity;
-
-  const handleSubmit = () => {
-    if (!isFormValid) {
-      alert("모든 필드를 올바르게 입력해주세요.");
-      return;
-    }
-
-    alert(
-      `주문이 완료되었습니다!\n` +
-        `상품명: ${product.name}\n` +
-        `구매 수량: ${values.quantity}\n` +
-        `발신자: ${values.senderName}\n` +
-        `메시지: ${values.message}`
-    );
-
-    resetForm();
-    navigate("/", { replace: true });
-  };
-
   return (
     <PageLayout>
       <PageContainer>
         <Navigation />
-        <Form>
-          <Container>
-            <SectionCard>
-              <MessageCardSection
-                selectedCardId={values.selectedCardId}
-                message={values.message}
-                onChange={updateField}
-                error={errors.message}
-              />
-            </SectionCard>
 
-            <SectionCard>
-              <SenderInfoSection
-                senderName={values.senderName}
-                onChange={(value) => updateField("senderName", value)}
-                error={errors.senderName}
-              />
-            </SectionCard>
+        <FormProvider {...methods}>
+          <S.Form onSubmit={handleSubmit(onValid)}>
+            <S.Container>
+              <S.SectionCard>
+                <MessageCardSection />
+              </S.SectionCard>
 
-            <SectionCard>
-              <ReceiverSection
-                receiverName={values.receiverName}
-                phone={values.receiverPhone}
-                quantity={values.quantity}
-                onChange={updateField}
-                errors={{
-                  receiverName: errors.receiverName,
-                  receiverPhone: errors.receiverPhone,
-                  quantity: errors.quantity,
-                }}
-              />
-            </SectionCard>
+              <S.SectionCard>
+                <SenderInfoSection />
+              </S.SectionCard>
 
-            <SectionCard>
-              <OrderSummary product={product} />
-            </SectionCard>
-          </Container>
-        </Form>
+              <S.SectionCard>
+                <S.SectionHeader>
+                  <S.SectionTitle>받는 사람</S.SectionTitle>
+                  <S.AddReceiverButton
+                    type="button"
+                    onClick={() => setReceiverModalOpen(true)}
+                  >
+                    {watch("receivers").length > 0 ? "수정" : "추가"}
+                  </S.AddReceiverButton>
+                </S.SectionHeader>
 
-        <StickyFooter>
-  <StickyInner>
-    {Number.isFinite(totalAmount) && (
-      <OrderButton amount={totalAmount} onClick={handleSubmit} />
-    )}
-  </StickyInner>
-</StickyFooter>
+                {watch("receivers").length === 0 ? (
+                  <S.EmptyBox>
+                    <S.EmptyText>
+                      받는 사람이 없습니다.
+                      <br />
+                      받는 사람을 추가해주세요.
+                    </S.EmptyText>
+                  </S.EmptyBox>
+                ) : (
+                  <ReceiverTable />
+                )}
+              </S.SectionCard>
 
+              <S.SectionCard>
+                <OrderSummary product={product} />
+              </S.SectionCard>
+            </S.Container>
+
+            <S.StickyFooter>
+              <S.StickyInner>
+                <OrderButton amount={totalAmount} type="submit" />
+              </S.StickyInner>
+            </S.StickyFooter>
+          </S.Form>
+        </FormProvider>
+
+        <ReceiverModal
+          isOpen={isReceiverModalOpen}
+          onClose={() => setReceiverModalOpen(false)}
+          onComplete={onReceiverComplete}
+        />
       </PageContainer>
     </PageLayout>
   );
@@ -108,42 +133,3 @@ const OrderPage = () => {
 
 export default OrderPage;
 
-
-const Form = styled.div`
-  display: flex;
-  flex-direction: column;
-  background-color: ${({ theme }) => theme.colors.gray100};
-  padding: 16px 0 120px; 
-`;
-
-const Container = styled.div`
-  width: 100%;
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 0 16px;
-  box-sizing: border-box;
-`;
-
-const SectionCard = styled.section`
-  width: 100%;
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-`;
-
-const StickyFooter = styled.div`
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: transparent;
-`;
-
-const StickyInner = styled.div`
-  max-width: 720px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
-`;

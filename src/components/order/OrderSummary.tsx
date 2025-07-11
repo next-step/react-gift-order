@@ -1,13 +1,25 @@
+/** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
-import type { RankingList as Product } from "@/mock/rankingList"; // ✅ 타입 import
+import { useFormContext, useWatch } from "react-hook-form";
+import type { OrderFormValues } from "@/validations/orderSchema";
+import type { RankingList } from "@/mock/rankingList";
+import { calculateTotalQuantity } from "@/utils/order";
 
 interface ProductSummarySectionProps {
-  product: Product;
+  product: RankingList; 
 }
 
-export default function OrderSummary({
-  product,
-}: ProductSummarySectionProps) {
+export default function OrderSummary({ product }: ProductSummarySectionProps) {
+  const { control } = useFormContext<OrderFormValues>();
+
+  const receivers = useWatch({
+    name: "receivers",
+    control,
+  }) ?? [];
+
+  const totalQuantity = calculateTotalQuantity(receivers);
+  const totalPrice = product.price.sellingPrice * totalQuantity;
+
   return (
     <Container>
       <Wrapper>
@@ -18,15 +30,26 @@ export default function OrderSummary({
             <ProductName>{product.name}</ProductName>
             <BrandName>{product.brandInfo.name}</BrandName>
             <PriceText>
-              상품가{" "}
-              <strong>{product.price.sellingPrice.toLocaleString()}원</strong>
+              상품가 <strong>{product.price.sellingPrice.toLocaleString()}원</strong>
             </PriceText>
           </Content>
         </Card>
+
+        <SummaryRow>
+          <Label>총 수량</Label>
+          <Value>{totalQuantity}개</Value>
+        </SummaryRow>
+        <SummaryRow>
+          <Label>총 결제금액</Label>
+          <Value>{totalPrice.toLocaleString()}원</Value>
+        </SummaryRow>
       </Wrapper>
     </Container>
   );
 }
+
+
+
 
 const Container = styled.div`
   width: 100%;
@@ -43,9 +66,8 @@ const Wrapper = styled.div`
 `;
 
 const SectionTitle = styled.h3`
-  font-size: ${({ theme }) => theme.typography.title1Regular.fontSize};
+  font-size: ${({ theme }) => theme.typography.title2Regular.fontSize};
   font-weight: bold;
-  margin-bottom: 10px;
 `;
 
 const Card = styled.div`
@@ -88,4 +110,21 @@ const PriceText = styled.div`
     font-weight: bold;
     color: black;
   }
+`;
+
+const SummaryRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding-top: 4px;
+`;
+
+const Label = styled.div`
+  font-size: ${({ theme }) => theme.typography.body2Regular.fontSize};
+  color: ${({ theme }) => theme.colors.gray700};
+`;
+
+const Value = styled.div`
+  font-size: ${({ theme }) => theme.typography.subtitle1Regular.fontSize};
+  font-weight: bold;
+  color: ${({ theme }) => theme.colors.gray900};
 `;
