@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
 
 const TextArea = styled.textarea(({ theme }) => ({
   width: '100%',
   height: theme.spacing.spacing10,
+  margin: theme.spacing.spacing3,
   padding: theme.spacing.spacing3,
   borderRadius: theme.spacing.spacing2,
   border: `1px solid ${theme.colors.semantic.borderDefault}`,
@@ -11,11 +11,13 @@ const TextArea = styled.textarea(({ theme }) => ({
   outline: 'none',
 }));
 
-const MessageInput = () => {
-  const [message, setMessage] = useState('축하합니다.');
-  return (
-    <TextArea value={message} onChange={(e) => setMessage(e.target.value)} />
-  );
+type Props = {
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+};
+
+const MessageInput = ({ value, onChange }: Props) => {
+  return <TextArea value={value} onChange={onChange} />;
 };
 
 export default MessageInput;

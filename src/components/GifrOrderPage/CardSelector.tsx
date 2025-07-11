@@ -1,6 +1,7 @@
 import cardTemplate from '@data/cardTemplate.json';
 import styled from '@emotion/styled';
 import { useState } from 'react';
+import MessageInput from './MessageInput';
 
 interface CardTemplate {
   id: number;
@@ -23,8 +24,8 @@ const ThumbnailList = styled.div(({ theme }) => ({
 }));
 
 const Thumbnail = styled.img<{ selected: boolean }>(({ theme, selected }) => ({
-  width: theme.spacing.spacing16,
-  height: theme.spacing.spacing10,
+  width: '5rem',
+  height: 'auto',
   borderRadius: theme.spacing.spacing2,
   cursor: 'pointer',
   border: selected
@@ -43,6 +44,12 @@ const SelectedImage = styled.img(({ theme }) => ({
 const CardSelector = () => {
   const defaultCard = cardTemplate[0];
   const [selectedCard, setSelectedCard] = useState(defaultCard.imageUrl);
+  const [message, setMessage] = useState(defaultCard.defaultTextMessage);
+
+  const handleCardSelect = (card: CardTemplate) => {
+    setSelectedCard(card.imageUrl);
+    setMessage(card.defaultTextMessage);
+  };
 
   return (
     <Wrapper>
@@ -53,11 +60,15 @@ const CardSelector = () => {
             src={card.thumbUrl}
             alt={`card-${card.id}`}
             selected={selectedCard === card.imageUrl}
-            onClick={() => setSelectedCard(card.imageUrl)}
+            onClick={() => handleCardSelect(card)}
           />
         ))}
       </ThumbnailList>
       <SelectedImage src={selectedCard} alt="선택된 카드" />
+      <MessageInput
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+      />
     </Wrapper>
   );
 };
