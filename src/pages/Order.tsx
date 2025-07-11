@@ -371,6 +371,10 @@ const Order = () => {
   };
   // 모달 완료: 메인 폼에 반영
   const handleReceiverModalComplete = modalHandleSubmit((data) => {
+    if (data.receivers.length === 0) return; // 0명일 때 반영 X
+    // 모든 정보가 정확히 입력되어야만 반영
+    const valid = data.receivers.every(r => r.name && /^010[0-9]{8}$/.test(r.phone) && r.quantity >= 1);
+    if (!valid) return;
     setValue("receivers", data.receivers);
     setReceiverModalOpen(false);
   });
@@ -546,7 +550,22 @@ const Order = () => {
             ))}
             <ModalActions>
               <ModalButton type="button" onClick={() => setReceiverModalOpen(false)} style={{ background: '#f5f6fa', color: '#222' }}>취소</ModalButton>
-              <ModalButton type="button" onClick={handleReceiverModalComplete} style={{ background: '#f7e244', color: '#222', fontWeight: 700 }}>
+              <ModalButton
+                type="button"
+                onClick={handleReceiverModalComplete}
+                style={{
+                  background: modalFields.length > 0 && Object.keys(modalErrors).length === 0 && modalWatch('receivers').every(r => r.name && /^010[0-9]{8}$/.test(r.phone) && r.quantity >= 1) ? '#f7e244' : '#f5f6fa',
+                  color: '#222',
+                  fontWeight: 700
+                }}
+                disabled={
+                  modalFields.length === 0 ||
+                  Object.keys(modalErrors).length > 0 ||
+                  !modalWatch('receivers').every(
+                    r => r.name && /^010[0-9]{8}$/.test(r.phone) && r.quantity >= 1
+                  )
+                }
+              >
                 {modalFields.length}명 완료
               </ModalButton>
             </ModalActions>
