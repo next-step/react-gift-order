@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import styled from '@emotion/styled';
@@ -11,7 +12,7 @@ import ReceiverInfo from '@/components/order/ReceiverInfo';
 import ProductInfo from '@/components/order/ProductInfo';
 import OrderButton from '@/components/order/OrderButton';
 
-import { isBlank, isPhone } from '@/utils/validation';
+import { isBlank } from '@/utils/validation';
 import { products } from '@/mock/productsData';
 import { cardTemplates } from '@/mock/cardTemplates';
 
@@ -30,16 +31,22 @@ interface FormValues {
   qty: number;
 }
 
+interface Receiver {
+  name: string;
+  phone: string;
+  qty: number;
+}
+
 export default function OrderPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const product = products.find((p) => p.id === Number(id));
   const defaultTpl = cardTemplates[0];
+  const [receivers, setReceivers] = useState<Receiver[]>([]);
 
   const {
     register,
     handleSubmit,
-    watch,
     setValue,
     formState: { errors },
   } = useForm<FormValues>({
@@ -67,7 +74,7 @@ export default function OrderPage() {
     navigate('/');
   };
 
-  const qty = watch('qty');
+  const totalQty = receivers.reduce((sum, r) => sum + r.qty, 0);
 
   return (
     <MobileLayout>
@@ -97,28 +104,7 @@ export default function OrderPage() {
         />
 
         {/* 받는 사람 */}
-        <ReceiverInfo
-          registerName={register('name', {
-            validate: (v) => !isBlank(v) || '이름을 입력해주세요.',
-          })}
-          registerPhone={register('phone', {
-            validate: (v) =>
-              !isBlank(v)
-                ? isPhone(v)
-                  ? true
-                  : '올바른 전화번호 형식이 아닙니다.'
-                : '전화번호를 입력해주세요.',
-          })}
-          registerQty={register('qty', {
-            valueAsNumber: true,
-            validate: (v) => v >= 1 || '구매 수량은 1개 이상이어야 합니다.',
-          })}
-          errors={{
-            name: errors.name?.message,
-            phone: errors.phone?.message,
-            qty: errors.qty?.message,
-          }}
-        />
+        <ReceiverInfo onReceiverChange={(data) => setReceivers(data)} />
 
         {/* 상품 정보 */}
         <ProductInfo product={product} />
@@ -126,7 +112,7 @@ export default function OrderPage() {
         {/* 주문하기 버튼 */}
         <OrderButton
           priceSum={product.price.sellingPrice}
-          qty={qty}
+          qty={totalQty}
           onClick={handleSubmit(onSubmit)}
         />
       </Wrapper>

@@ -164,14 +164,17 @@ interface FormValues {
 
 interface Props {
   onClose: () => void;
+  onSave: (data: Receiver[]) => void;
+  initialReceivers?: Receiver[];
 }
 
-export default function ReceiverListModal({ onClose }: Props) {
+export default function ReceiverListModal({ onClose, onSave, initialReceivers = [] }: Props) {
   const methods = useForm<FormValues>({
     defaultValues: {
-      receivers: [],
+      receivers: initialReceivers,
     },
     mode: 'onChange',
+    reValidateMode: 'onChange',
   });
 
   const {
@@ -228,6 +231,7 @@ export default function ReceiverListModal({ onClose }: Props) {
       return;
     }
 
+    onSave(values);
     onClose();
   };
 
