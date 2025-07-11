@@ -86,7 +86,9 @@ const OrderForm = ({ onSubmitCallback }: OrderFormProps) => {
                   .filter(
                     (savedPhoneNumber) => savedPhoneNumber === inputPhoneNumber
                   );
-                return isDuplicate.length <= 1 || "전화번호가 중복되었습니다.";
+                return isDuplicate.length > 1
+                  ? "중복된 전화번호가 존재합니다."
+                  : true;
               },
             })}
           />
