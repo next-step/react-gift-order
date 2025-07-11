@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
+import isPropValid from "@emotion/is-prop-valid";
 import { useFormContext, useWatch } from "react-hook-form";
 import type { OrderFormValues } from "@/validations/orderSchema";
 import type { FieldError } from "react-hook-form";
@@ -17,10 +18,11 @@ const ReceiverItem = ({ index, onRemove, autoFocus = false }: Props) => {
     control,
   } = useFormContext<OrderFormValues>();
 
-  const receivers = useWatch({
-    name: "receivers",
-    control,
-  }) ?? [];
+  const receivers =
+    useWatch({
+      name: "receivers",
+      control,
+    }) ?? [];
 
   const phoneCounts = receivers.reduce((acc: Record<string, number>, r) => {
     if (r?.phone) {
@@ -29,18 +31,20 @@ const ReceiverItem = ({ index, onRemove, autoFocus = false }: Props) => {
     return acc;
   }, {});
 
-  const phoneErrorMsg =
-    (errors?.receivers?.[index]?.phone as FieldError | undefined)?.message;
+  const phoneErrorMsg = (
+    errors?.receivers?.[index]?.phone as FieldError | undefined
+  )?.message;
 
   const isPhoneDuplicated =
-    receivers?.[index]?.phone &&
-    phoneCounts?.[receivers[index].phone] > 1;
+    receivers?.[index]?.phone && phoneCounts?.[receivers[index].phone] > 1;
 
   return (
     <ItemBlock>
       <RowHeader>
         <Label>받는 사람 {index + 1}</Label>
-        <Remove type="button" onClick={onRemove} aria-label="삭제">✕</Remove>
+        <Remove type="button" onClick={onRemove} aria-label="삭제">
+          ✕
+        </Remove>
       </RowHeader>
 
       <FieldGroup>
@@ -58,8 +62,8 @@ const ReceiverItem = ({ index, onRemove, autoFocus = false }: Props) => {
           {...register(`receivers.${index}.phone`)}
           placeholder="전화번호를 입력하세요."
         />
-        {phoneErrorMsg && <ErrorMsg>{phoneErrorMsg}</ErrorMsg>}
-        {isPhoneDuplicated && <ErrorMsg>중복된 전화번호입니다.</ErrorMsg>}
+        <ErrorMsg when={!!phoneErrorMsg}>{phoneErrorMsg}</ErrorMsg>
+        <ErrorMsg when={!!isPhoneDuplicated}>중복된 전화번호입니다.</ErrorMsg>
       </FieldGroup>
 
       <FieldGroup>
@@ -128,7 +132,10 @@ const Remove = styled.button`
   }
 `;
 
-const ErrorMsg = styled.p`
+const ErrorMsg = styled("p", {
+  shouldForwardProp: (prop) => isPropValid(prop) && prop !== "when",
+})<{ when?: boolean }>`
+  display: ${({ when }) => (when ? "block" : "none")};
   color: ${({ theme }) => theme.colors.red500};
   font-size: 12px;
   margin: 2px 0 0;
