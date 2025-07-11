@@ -2,7 +2,9 @@ import styled from '@emotion/styled';
 import { colors, fontSizes, spaces, radii, shadows } from '@/tokens/designTokens';
 import products from '@/data/products';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
+
+import useAuth from '@/contexts/useAuth';
+
 
 const Wrap = styled.section`
   padding: ${spaces.lg} ${spaces.md};
