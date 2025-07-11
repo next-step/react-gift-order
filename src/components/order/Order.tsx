@@ -26,6 +26,8 @@ import {
   ErrorMessageStyle,
 } from "@/components/order/Order.style";
 import OrderForm from "@/components/order/OrderFoam";
+import { css } from "@emotion/react";
+import type { FormData } from "@/components/order/OrderForm";
 
 const Order: React.FC = () => {
   const theme = useTheme();
@@ -35,9 +37,12 @@ const Order: React.FC = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const SenderNameRef = useRef<HTMLInputElement>(null);
   const GiftMessageRef = useRef<HTMLTextAreaElement>(null);
-
   const [messageError, setMessageError] = useState("");
   const [senderError, setSenderError] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [receivers, setReceivers] = useState<
+    { name: string; phoneNumber: string; quantity: number }[]
+  >([]);
 
   const handleSubmit = () => {
     const msg = GiftMessageRef.current?.value.trim() ?? "";
@@ -72,7 +77,6 @@ const Order: React.FC = () => {
 
   return (
     <div css={WrapperStyle(theme)}>
-      <OrderForm />
       <div css={CardWrapperStyle(theme)}>
         <CardView
           theme={theme}
@@ -91,7 +95,6 @@ const Order: React.FC = () => {
         <textarea ref={GiftMessageRef} defaultValue="축하해요."></textarea>
         {messageError && <p css={ErrorMessageStyle}>{messageError}</p>}
       </div>
-
       <div css={FormSectionWrapperStyle(theme)}>
         <p css={TextStyle(theme)}>보내는 사람</p>
         <div css={InputRowStyle(theme)}>
@@ -107,6 +110,23 @@ const Order: React.FC = () => {
         <p css={TinyTextStyle}>
           * 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.
         </p>
+      </div>
+
+      <div css={ReceiverSection}>
+        <div css={ReceiverHeader}>
+          <h2>받는 사람</h2>
+          <button onClick={() => setIsModalOpen(true)}>추가</button>
+        </div>
+
+        {isModalOpen && (
+          <ReceiverModal
+            onClose={() => setIsModalOpen(false)}
+            onSave={(formData: FormData) => {
+              setReceivers((prev) => [...prev, ...formData.order]);
+              setIsModalOpen(false);
+            }}
+          />
+        )}
       </div>
 
       <div css={productWrapper(theme)}>
@@ -138,3 +158,50 @@ const Order: React.FC = () => {
 };
 
 export default Order;
+
+const ReceiverSection = css`
+  width: 100%;
+`;
+
+const ReceiverHeader = css`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const ReceiverModal = ({
+  onClose,
+  onSave,
+}: {
+  onClose: () => void;
+  onSave: formData;
+}) => {
+  return (
+    <>
+      <div css={OverlayStyle} onClick={onClose} />
+      <div css={ModalStyle}>
+        <h2>받는 사람 추가</h2>
+        <OrderForm
+          onSubmitCallback={(formData) => {
+            onSave(formData);
+          }}
+        />
+        <button onClick={onClose}>취소</button>
+      </div>
+    </>
+  );
+};
+
+const ModalStyle = css`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+`;
+
+const OverlayStyle = css`
+  position: fixed;
+`;
