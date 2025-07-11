@@ -20,22 +20,26 @@ const LoginInputWrapper = styled.div(({ theme }) => ({
 }));
 
 export const LoginForm = () => {
-  const { isFormValid, handleSubmit, register } = useLoginForm();
-
-  const { error: idFieldError, ...idField } = register("id");
-  const { error: passwordFieldError, ...passwordField } = register("password");
+  const { isFormValid, handleSubmit, register, errors } = useLoginForm();
 
   return (
     <LoginFormContainer as="form" onSubmit={handleSubmit}>
       <LoginInputWrapper>
-        <Input placeholder="이메일" type="email" {...idField} />
-        <ErrorMessage>{idFieldError || NON_BREAKING_SPACE}</ErrorMessage>
+        <Input placeholder="이메일" type="email" {...register("id")} />
+        <ErrorMessage>{errors.id?.message || NON_BREAKING_SPACE}</ErrorMessage>
       </LoginInputWrapper>
 
       <LoginInputWrapper>
-        <Input placeholder="비밀번호" type="password" {...passwordField} />
-        <ErrorMessage>{passwordFieldError || NON_BREAKING_SPACE}</ErrorMessage>
+        <Input
+          placeholder="비밀번호"
+          type="password"
+          {...register("password")}
+        />
+        <ErrorMessage>
+          {errors.password?.message || NON_BREAKING_SPACE}
+        </ErrorMessage>
       </LoginInputWrapper>
+
       <LoginButton isDisabled={!isFormValid} />
     </LoginFormContainer>
   );
