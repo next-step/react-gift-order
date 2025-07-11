@@ -1,4 +1,6 @@
 import { useForm, useFieldArray } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Layout } from "@/Components/layout/Layout";
 import styled from "@emotion/styled";
 import { cardTemplates } from "@/Components/cardTemplates";
@@ -6,19 +8,29 @@ import { useParams } from "react-router-dom";
 import { products } from "@/data/products";
 import { useState } from 'react';
 
-// ===== 타입 정의 =====
-type Receiver = {
-  name: string;
-  phone: string;
-  quantity: number;
-};
+// ===== 타입 정의 및 Zod 스키마 =====
+const receiverSchema = z.object({
+  name: z.string().min(1, '이름을 입력하세요.'),
+  phone: z.string().regex(/^010[0-9]{8}$/, '01012345678 형식으로 입력하세요.'),
+  quantity: z.coerce.number().min(1, '최소 1개 이상'),
+});
 
-type OrderFormValues = {
-  selectedCardId: number;
-  message: string;
-  sender: string;
-  receivers: Receiver[];
-};
+const receiversSchema = z.array(receiverSchema)
+  .min(1, '최소 1명 이상')
+  .max(10, '최대 10명까지')
+  .refine(arr => new Set(arr.map(r => r.phone)).size === arr.length, {
+    message: '전화번호가 중복되었습니다.',
+    path: ['phoneDup'],
+  });
+
+const orderSchema = z.object({
+  selectedCardId: z.number(),
+  message: z.string().min(1, '메시지를 입력하세요.'),
+  sender: z.string().min(1, '보내는 사람 이름을 입력하세요.'),
+  receivers: receiversSchema
+});
+
+type OrderFormValues = z.infer<typeof orderSchema>;
 
 // ===== 카드 미리보기 관련 스타일 =====
 const PreviewWrapper = styled.div`
@@ -334,8 +346,9 @@ const Order = () => {
   const product = products.find(p => String(p.id) === String(id));
   const selectedCardDefault = cardTemplates[0];
 
-  // react-hook-form 세팅 (메인 폼)
+  // react-hook-form 세팅 (메인 폼, Zod resolver 적용)
   const { control, register, handleSubmit, setValue, watch, formState: { errors } } = useForm<OrderFormValues>({
+    resolver: zodResolver(orderSchema),
     defaultValues: {
       selectedCardId: selectedCardDefault?.id ?? 0,
       message: selectedCardDefault?.defaultTextMessage ?? "",
@@ -356,7 +369,8 @@ const Order = () => {
     watch: modalWatch,
     formState: { errors: modalErrors },
     reset: modalReset
-  } = useForm<{ receivers: Receiver[] }>({
+  } = useForm<{ receivers: OrderFormValues["receivers"] }>({
+    resolver: zodResolver(z.object({ receivers: receiversSchema })),
     defaultValues: { receivers: [] }
   });
   const { fields: modalFields, append: modalAppend, remove: modalRemove, replace: modalReplace } = useFieldArray({
@@ -507,27 +521,14 @@ const Order = () => {
                 <ReceiverRow>
                   <ReceiverLabel>이름</ReceiverLabel>
                   <ReceiverInput
-                    {...modalRegister(`receivers.${idx}.name`, { required: '이름을 입력하세요.' })}
+                    {...modalRegister(`receivers.${idx}.name`)}
                     placeholder="이름"
                   />
                 </ReceiverRow>
                 <ReceiverRow>
                   <ReceiverLabel>전화번호</ReceiverLabel>
                   <ReceiverInput
-                    {...modalRegister(`receivers.${idx}.phone`, {
-                      required: '전화번호를 입력하세요.',
-                      pattern: {
-                        value: /^010[0-9]{8}$/,
-                        message: '01012345678 형식으로 입력하세요.'
-                      },
-                      validate: value => {
-                        const phones = modalWatch('receivers').map(r => r.phone);
-                        if (phones.filter(p => p === value).length > 1) {
-                          return '전화번호가 중복되었습니다.';
-                        }
-                        return true;
-                      }
-                    })}
+                    {...modalRegister(`receivers.${idx}.phone`)}
                     placeholder="01012345678"
                   />
                 </ReceiverRow>
@@ -536,10 +537,7 @@ const Order = () => {
                   <ReceiverInput
                     type="number"
                     min={1}
-                    {...modalRegister(`receivers.${idx}.quantity`, {
-                      required: '수량을 입력하세요.',
-                      min: { value: 1, message: '최소 1개 이상' }
-                    })}
+                    {...modalRegister(`receivers.${idx}.quantity`)}
                   />
                 </ReceiverRow>
                 {/* 에러 메시지 */}
@@ -548,6 +546,10 @@ const Order = () => {
                 {modalErrors.receivers?.[idx]?.quantity && <ErrorMessage>{modalErrors.receivers[idx]?.quantity?.message}</ErrorMessage>}
               </div>
             ))}
+            {/* 배열 전체 중복 에러 메시지 */}
+            {modalErrors.receivers?.root?.phoneDup && (
+              <ErrorMessage>{modalErrors.receivers.root.phoneDup.message}</ErrorMessage>
+            )}
             <ModalActions>
               <ModalButton type="button" onClick={() => setReceiverModalOpen(false)} style={{ background: '#f5f6fa', color: '#222' }}>취소</ModalButton>
               <ModalButton
