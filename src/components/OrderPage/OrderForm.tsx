@@ -143,82 +143,91 @@ export function OrderForm({ product }: OrderFormProps) {
       ))}
 
       {showReceiverModal && (
-        <ReceiverModal>
-          <ReceiverModalHeader>
-            <strong>받는 사람</strong>
-          </ReceiverModalHeader>
+        <ModalOverlay>
+          <ModalContainer>
+            <ReceiverModal>
+              <ReceiverModalHeader>
+                <strong>받는 사람</strong>
+              </ReceiverModalHeader>
 
-          {fields.map((field, index) => (
-            <ReceiverInputGroup key={field.id}>
-              <div>
-                <input
-                  placeholder="이름"
-                  {...register(`receivers.${index}.name` as const, {
-                    required: '이름을 입력해주세요.',
-                  })}
-                />
-                {errors.receivers?.[index]?.name && (
-                  <Error>{errors.receivers[index]?.name?.message}</Error>
-                )}
-              </div>
+              {fields.map((field, index) => (
+                <ReceiverInputGroup key={field.id}>
+                  <div>
+                    <input
+                      placeholder="이름"
+                      {...register(`receivers.${index}.name` as const, {
+                        required: '이름을 입력해주세요.',
+                      })}
+                    />
+                    {errors.receivers?.[index]?.name && (
+                      <Error>{errors.receivers[index]?.name?.message}</Error>
+                    )}
+                  </div>
 
-              <div>
-                <input
-                  placeholder="전화번호"
-                  {...register(`receivers.${index}.phone` as const, {
-                    required: '전화번호를 입력해주세요.',
-                    pattern: {
-                      value: /^010\d{8}$/,
-                      message: '올바른 전화번호 형식이 아니에요.',
-                    },
-                  })}
-                />
-                {errors.receivers?.[index]?.phone && (
-                  <Error>{errors.receivers[index]?.phone?.message}</Error>
-                )}
-              </div>
+                  <div>
+                    <input
+                      placeholder="전화번호"
+                      {...register(`receivers.${index}.phone` as const, {
+                        required: '전화번호를 입력해주세요.',
+                        pattern: {
+                          value: /^010\d{8}$/,
+                          message: '올바른 전화번호 형식이 아니에요.',
+                        },
+                      })}
+                    />
+                    {errors.receivers?.[index]?.phone && (
+                      <Error>{errors.receivers[index]?.phone?.message}</Error>
+                    )}
+                  </div>
 
-              <div>
-                <input
-                  type="number"
-                  placeholder="수량"
-                  {...register(`receivers.${index}.quantity` as const, {
-                    required: '수량을 입력해주세요.',
-                    min: {
-                      value: 1,
-                      message: '구매 수량은 1개 이상이어야 해요.',
-                    },
-                  })}
-                />
-                {errors.receivers?.[index]?.quantity && (
-                  <Error>{errors.receivers[index]?.quantity?.message}</Error>
-                )}
-              </div>
+                  <div>
+                    <input
+                      type="number"
+                      placeholder="수량"
+                      {...register(`receivers.${index}.quantity` as const, {
+                        required: '수량을 입력해주세요.',
+                        min: {
+                          value: 1,
+                          message: '구매 수량은 1개 이상이어야 해요.',
+                        },
+                      })}
+                    />
+                    {errors.receivers?.[index]?.quantity && (
+                      <Error>
+                        {errors.receivers[index]?.quantity?.message}
+                      </Error>
+                    )}
+                  </div>
 
-              <button type="button" onClick={() => remove(index)}>
-                삭제
-              </button>
-            </ReceiverInputGroup>
-          ))}
+                  <button type="button" onClick={() => remove(index)}>
+                    삭제
+                  </button>
+                </ReceiverInputGroup>
+              ))}
 
-          {fields.length < 10 && (
-            <button
-              type="button"
-              onClick={() => append({ name: '', phone: '', quantity: 1 })}
-            >
-              추가하기
-            </button>
-          )}
+              {fields.length < 10 && (
+                <button
+                  type="button"
+                  onClick={() => append({ name: '', phone: '', quantity: 1 })}
+                >
+                  추가하기
+                </button>
+              )}
 
-          <ReceiverModalFooter>
-            <button type="button" onClick={() => setShowReceiverModal(false)}>
-              취소
-            </button>
-            <button type="button" onClick={validateAndSaveReceivers}>
-              {fields.length}명 완료
-            </button>
-          </ReceiverModalFooter>
-        </ReceiverModal>
+              <ReceiverModalFooter>
+                <button
+                  type="button"
+                  onClick={() => setShowReceiverModal(false)}
+                >
+                  취소
+                </button>
+                <button type="button" onClick={validateAndSaveReceivers}>
+                  {fields.length}명 완료
+                </button>
+              </ReceiverModalFooter>
+            </ReceiverModal>
+          </ModalContainer>
+        </ModalOverlay>
       )}
 
       <ProductInfo>
@@ -311,13 +320,32 @@ export const ReceiverSummary = styled.div`
   font-size: 14px;
   color: #333;
 `
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+`
+
+const ModalContainer = styled.div`
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  z-index: 1000;
+`
 
 export const ReceiverModal = styled.div`
   background-color: white;
-  border: 1px solid ${({ theme }) => theme.colors.gray400};
-  border-radius: 10px;
-  padding: 16px;
-  margin-top: 8px;
 `
 
 export const ReceiverModalHeader = styled.div`
