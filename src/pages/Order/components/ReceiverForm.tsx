@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import type { Receiver, ReceiverError } from '../hooks/useReceivers';
 import { horizontalFormStyle, receiverLabelStyle, errorInputStyle, errorMessageStyle } from '../styles/OrderPage.style';
+import { useTheme } from '@emotion/react'; 
 
 type Props = {
   receiver: Receiver;
@@ -11,14 +12,16 @@ type Props = {
 };
 
 const ReceiverForm = ({ receiver, error, index, onChange, onRemove }: Props) => {
+  const theme = useTheme();
+
   return (
-    <div css={{ marginTop: '20px' }}>
-      <h4 css={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+    <div css={{ marginTop: theme.spacing[5] }}>
+      <h4 css={{ display: 'flex', alignItems: 'center', gap: theme.spacing[2], marginBottom: theme.spacing[2] }}>
         받는 사람 {index + 1}
         <button
           type="button"
           onClick={onRemove}
-          css={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '18px' }}
+          css={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: theme.spacing[5] }}
         >
           X
         </button>
