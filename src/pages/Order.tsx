@@ -153,11 +153,13 @@ const Order = () => {
   const { nameInput, quantityInput } = useReceiverForm();
   const sendorNameInput = nameInput;
 
-  const priceSum =
-    product.price.sellingPrice * Number(quantityInput.value);
-
   const [modalOpen, setModalOpen] = useState(false);
   const [receiverList, setReceiverList] = useState<Receiver[]>([]);
+  const totalQuantity = receiverList.reduce(
+    (sum, r) => sum + Number(r.quantity),
+    0
+  );
+  const priceSum = product.price.sellingPrice * totalQuantity;
 
   const handleOrder = () => {
     if (!sendorNameInput.isValid) return;
@@ -268,7 +270,7 @@ const Order = () => {
         disabled={!sendorNameInput.isValid}
         onClick={handleOrder}
       >
-        {priceSum}원 주문하기
+        {priceSum.toLocaleString()}원 주문하기
       </BottomOrderButton>
     </>
   );
