@@ -518,7 +518,7 @@ const Order = () => {
                       required: '전화번호를 입력하세요.',
                       pattern: {
                         value: /^010[0-9]{8}$/,
-                        message: '01012341234 형식으로 입력하세요.'
+                        message: '01012345678 형식으로 입력하세요.'
                       },
                       validate: value => {
                         const phones = modalWatch('receivers').map(r => r.phone);
@@ -528,7 +528,7 @@ const Order = () => {
                         return true;
                       }
                     })}
-                    placeholder="01012341234"
+                    placeholder="01012345678"
                   />
                 </ReceiverRow>
                 <ReceiverRow>
