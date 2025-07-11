@@ -19,5 +19,6 @@ export const ERROR_MESSAGES = {
     QUANTITY: "수량은 최소 1개 이상이어야 합니다.",
     SELECT_RECEIVER: "받는 사람을 선택해주세요.",
     DUPLICATE_PHONE: "중복된 전화번호입니다.",
+    MAX_RECEIVER_NUMBER: "최대 10명까지 등록할 수 있습니다.",
   },
 };
