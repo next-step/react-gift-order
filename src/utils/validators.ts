@@ -65,3 +65,19 @@ export function validateReceiverCount(receiverCount: number): string {
   }
   return "";
 }
+
+export function createPhoneValidator(getReceivers: () => { phone: string }[]) {
+  return (value: string): string | true => {
+    const formatError = validatePhone(value);
+    if (formatError) return formatError;
+
+    const receivers = getReceivers() ?? [];
+    const sameCount = receivers.filter((r) => r.phone === value).length;
+
+    if (sameCount > 1) {
+      return ERROR_MESSAGES.VALIDATE.DUPLICATE_PHONE;
+    }
+
+    return true;
+  };
+}
