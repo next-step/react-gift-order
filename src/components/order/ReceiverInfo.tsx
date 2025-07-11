@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
 import type { UseFormRegisterReturn } from 'react-hook-form';
+import { useState } from 'react';
+import ReceiverListModal from './receiver/ReceiverListModal';
 
 const Content = styled.section`
   padding: 0 16px 16px;
@@ -54,6 +56,8 @@ const Error = styled.p`
   margin-left: 80px;
 `;
 
+const AddButton = styled.button``;
+
 interface Props {
   registerName: UseFormRegisterReturn;
   registerPhone: UseFormRegisterReturn;
@@ -71,46 +75,53 @@ export default function ReceiverInfo({
   registerQty,
   errors = {},
 }: Props) {
+  const [open, setOpen] = useState(false);
   return (
-    <Content>
-      <Title>받는 사람</Title>
+    <>
+      <Content>
+        <Title>받는 사람</Title>
+        <AddButton type="button" onClick={() => setOpen(true)}>
+          추가
+        </AddButton>
 
-      {/* 이름 필드 */}
-      <Field>
-        <LabelRow>
-          <Label htmlFor="recvName">이름</Label>
-          <Input
-            id="recvName"
-            placeholder="이름을 입력하세요."
-            {...registerName}
-            error={!!errors.name}
-          />
-        </LabelRow>
-        {errors.name && <Error>{errors.name}</Error>}
-      </Field>
+        {/* 이름 필드 */}
+        <Field>
+          <LabelRow>
+            <Label htmlFor="recvName">이름</Label>
+            <Input
+              id="recvName"
+              placeholder="이름을 입력하세요."
+              {...registerName}
+              error={!!errors.name}
+            />
+          </LabelRow>
+          {errors.name && <Error>{errors.name}</Error>}
+        </Field>
 
-      {/* 전화번호 필드 */}
-      <Field>
-        <LabelRow>
-          <Label htmlFor="recvPhone">전화번호</Label>
-          <Input
-            id="recvPhone"
-            placeholder="전화번호를 입력하세요."
-            {...registerPhone}
-            error={!!errors.phone}
-          />
-        </LabelRow>
-        {errors.phone && <Error>{errors.phone}</Error>}
-      </Field>
+        {/* 전화번호 필드 */}
+        <Field>
+          <LabelRow>
+            <Label htmlFor="recvPhone">전화번호</Label>
+            <Input
+              id="recvPhone"
+              placeholder="전화번호를 입력하세요."
+              {...registerPhone}
+              error={!!errors.phone}
+            />
+          </LabelRow>
+          {errors.phone && <Error>{errors.phone}</Error>}
+        </Field>
 
-      {/* 수량 필드 */}
-      <Field>
-        <LabelRow>
-          <Label htmlFor="recvQty">수량</Label>
-          <Input id="recvQty" type="number" min={1} {...registerQty} error={!!errors.qty} />
-        </LabelRow>
-        {errors.qty && <Error>{errors.qty}</Error>}
-      </Field>
-    </Content>
+        {/* 수량 필드 */}
+        <Field>
+          <LabelRow>
+            <Label htmlFor="recvQty">수량</Label>
+            <Input id="recvQty" type="number" min={1} {...registerQty} error={!!errors.qty} />
+          </LabelRow>
+          {errors.qty && <Error>{errors.qty}</Error>}
+        </Field>
+      </Content>
+      {open && <ReceiverListModal onClose={() => setOpen(false)} />}
+    </>
   );
 }
