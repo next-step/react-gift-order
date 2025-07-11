@@ -1,7 +1,6 @@
 import { createContext, useState, useEffect, useContext } from 'react';
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-const AUTH_TOKEN_KEY = 'authToken';
 const USER_INFO_KEY = 'userInfo';
 interface User {
   id: string;
@@ -18,7 +17,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(() => {
+  const [user, setUser] = useState(() => {
     const savedUser = sessionStorage.getItem(USER_INFO_KEY);
     return savedUser ? JSON.parse(savedUser) : null;
   });
