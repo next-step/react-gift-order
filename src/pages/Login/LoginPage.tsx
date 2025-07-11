@@ -8,7 +8,6 @@ import { useAuth } from "@/contexts/authContext";
 
 const LoginPage = () => {
   const { user, onChange, onBlur, errorMsg } = useLoginInput();
-  // useForm();
   const { login } = useAuth();
 
   const handleLoginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
