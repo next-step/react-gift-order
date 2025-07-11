@@ -19,6 +19,7 @@ const OrderForm = ({ onSubmitCallback }: OrderFormProps) => {
     register,
     handleSubmit,
     control,
+    watch,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
@@ -77,6 +78,15 @@ const OrderForm = ({ onSubmitCallback }: OrderFormProps) => {
               pattern: {
                 value: /^01[016789]-?\d{3,4}-?\d{4}$/,
                 message: "전화번호 형식을 다시 확인하세요",
+              },
+
+              validate: (inputPhoneNumber) => {
+                const isDuplicate = watch("order")
+                  .map((order) => order.phoneNumber)
+                  .filter(
+                    (savedPhoneNumber) => savedPhoneNumber === inputPhoneNumber
+                  );
+                return isDuplicate.length <= 1 || "전화번호가 중복되었습니다.";
               },
             })}
           />
