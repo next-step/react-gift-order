@@ -1,4 +1,6 @@
 import { useOrderForm } from '@/hooks/useOrderForm';
+import { validateReceivers } from '@/hooks/validateReceivers';
+
 import { GiftList } from '@/mock-data/GiftList';
 import ReceiverInfo from '@/components/Order/ReceiverInfo';
 
@@ -53,6 +55,10 @@ const GiftForm = ({ templateMessage }: GiftSenderProps) => {
     if (receiverList.length === 0) {
       alert('최소 1명의 받는 사람을 등록해주세요.');
       return;
+    }
+
+    if (!validateReceivers(receiverList)) {
+      return; 
     }
 
     alert(
