@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { Label, ReceiverModal } from '@/components';
+import { Label, ReceiverModal, ReceiverTable } from '@/components';
+import { useReceiver } from '@/contexts/ReceiverContext';
 import * as S from './styles';
 
 const ReceiverSection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { receiverList } = useReceiver();
 
   const handleModalOpen = () => {
     setIsModalOpen(true);
@@ -13,21 +15,29 @@ const ReceiverSection = () => {
     setIsModalOpen(false);
   };
 
+  const hasReceivers = receiverList.length > 0;
+
   return (
     <>
       <S.Container>
         <S.FirstSection>
           <S.SectionTitle>
             <Label variant="bold">받는 사람</Label>
-            <S.ModalBtn onClick={handleModalOpen}>추가</S.ModalBtn>
+            <S.ModalBtn onClick={handleModalOpen}>
+              {hasReceivers ? '수정' : '추가'}
+            </S.ModalBtn>
           </S.SectionTitle>
         </S.FirstSection>
-        <S.EmptyState>
-          <S.EmptyStateText>
-            받는 사람이 없습니다.<br />
-            받는 사람을 추가해주세요.
-          </S.EmptyStateText>
-        </S.EmptyState>
+        {hasReceivers ? (
+          <ReceiverTable receivers={receiverList} />
+        ) : (
+          <S.EmptyState>
+            <S.EmptyStateText>
+              받는 사람이 없습니다.<br />
+              받는 사람을 추가해주세요.
+            </S.EmptyStateText>
+          </S.EmptyState>
+        )}
       </S.Container>
 
       <ReceiverModal

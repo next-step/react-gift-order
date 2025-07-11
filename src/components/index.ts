@@ -14,6 +14,8 @@ export { default as TextArea, type TextAreaChangeHandler } from './atoms/TextAre
 export { default as InputField } from './molecules/InputField';
 export { default as MessageTextArea } from './molecules/MessageTextArea';
 export { default as OrderCard } from './molecules/OrderCard';
+export { default as ReceiverRow } from './molecules/ReceiverRow';
+export { default as ReceiverTable } from './molecules/ReceiverTable';
 
 // Organisms
 export { default as CardCarousel } from './organisms/CardCarousel';
