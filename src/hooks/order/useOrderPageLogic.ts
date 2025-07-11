@@ -32,7 +32,6 @@ export const useOrderPageLogic = () => {
   }, [id, goHomePage, setOrder]);
 
   const handleOrderSubmit = async () => {
-    console.log(order);
     try {
       const isValidForm = await validateAllFields();
 
