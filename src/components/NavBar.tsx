@@ -57,7 +57,7 @@ const NavBarLoginBtn = styled.button`
 
 function NavBar() {
   const navigate = useNavigate();
-  const {getId} = useUser(); // session storage에 있는 로그인 정보
+  // const {getId} = useUser(); // session storage에 있는 로그인 정보
 
   function handleBackNavigation() {
     if(window.history.length > 1) {
@@ -68,11 +68,13 @@ function NavBar() {
   }
 
   function handleLoginClick() {
-    if (getId() !== '') {
-      navigate('/my');
-    } else {
-      navigate('/login');
-    }
+    navigate('/my');
+    // if (getId() !== '') {
+    //   navigate('/my');
+    // } else {
+    //   navigate('/login');
+    // }
+    // 혹시 몰라서 주석 남겨둠
   }
 
   return (

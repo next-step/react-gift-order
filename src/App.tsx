@@ -10,6 +10,15 @@ import NotFound from './pages/NotFound.tsx';
 import My from './pages/My.tsx';
 import Order from './pages/Order.tsx';
 
+import useUser from './hooks/useUser.ts';
+import type { ReactNode } from 'react';
+
+const ProtectedRoute = ({children}: {children: ReactNode}) => {
+  const { getId } = useUser();
+
+  return getId() === '' ? <Navigate to='/login' replace /> : children;
+};
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
@@ -19,7 +28,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/notfound" element={<NotFound />} />
-          <Route path="/my" element={<My />} />
+          <Route path="/my" element={<ProtectedRoute><My /></ProtectedRoute>} />
           <Route path="/order" element={<Order />} />
           <Route path="*" element={<Navigate to="/notfound" replace />} />
         </Routes>
