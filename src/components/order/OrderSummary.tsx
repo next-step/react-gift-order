@@ -66,9 +66,8 @@ const Wrapper = styled.div`
 `;
 
 const SectionTitle = styled.h3`
-  font-size: ${({ theme }) => theme.typography.title1Regular.fontSize};
+  font-size: ${({ theme }) => theme.typography.title2Regular.fontSize};
   font-weight: bold;
-  margin-bottom: 10px;
 `;
 
 const Card = styled.div`

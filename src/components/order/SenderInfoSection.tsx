@@ -31,7 +31,7 @@ const SenderInfoSection = () => {
 export default SenderInfoSection;
 
 const Container = styled.section`
-  width: 90%;
+  width: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -39,18 +39,25 @@ const Container = styled.section`
   margin-top: 10px;
 `;
 
-const Title = styled.label`
-  font-size: ${({ theme }) => theme.typography.title1Regular.fontSize};
+const Title = styled.h3`
+  font-size: ${({ theme }) => theme.typography.title2Regular.fontSize};
   font-weight: bold;
-  text-align: left;
   margin-bottom: 8px;
+  color: #000;
 `;
+
+const Notice = styled.div`
+  font-size: 12px;
+  margin-top: 8px;
+  color: ${({ theme }) => theme.colors.gray600};
+`;
+
 
 const Input = styled.input`
   width: 100%;
   height: 40px;
   padding: 10px;
-  border: 1px solid ${({ theme }) => theme.colors.gray600};
+  border: 1px solid ${({ theme }) => theme.colors.gray500};
   border-radius: 10px;
   color: black;
   font-size: ${({ theme }) => theme.typography.subtitle1Regular.fontSize};
@@ -68,8 +75,4 @@ const ErrorMessage = styled.div`
   margin-top: 4px;
 `;
 
-const Notice = styled.div`
-  font-size: 12px;
-  text-align: left;
-  color: ${({ theme }) => theme.colors.gray600};
-`;
+
