@@ -1,11 +1,6 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
-
-export interface Receiver {
-  name: string;
-  phone: string;
-  quantity: number;
-}
+import { useForm, useFieldArray } from 'react-hook-form';
+import type { Receiver } from '@/types/receiver';
 
 interface Props {
   receivers: Receiver[];
@@ -64,63 +59,40 @@ const ButtonRow = styled.div`
   margin-top: 16px;
 `;
 
-
-
 const ReceiverModal = ({ receivers, onSave, onCancel }: Props) => {
-  const [formList, setFormList] = useState<Receiver[]>(
-    receivers.length ? receivers : [{ name: '', phone: '', quantity: 1 }]
-  );
-  const [errors, setErrors] = useState<string[]>([]);
+  const {
+    control,
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm<{ receivers: Receiver[] }>({
+    defaultValues: {
+      receivers: receivers.length > 0 ? receivers : [{ name: '', phone: '', quantity: 1 }],
+    },
+  });
 
-  const handleChange = (index: number, field: keyof Receiver, value: string | number) => {
-    const updated = [...formList];
-    updated[index] = {
-      ...updated[index],
-      [field]: field === 'quantity' ? Number(value) : value,
-    };
-    setFormList(updated);
-  };
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'receivers',
+  });
 
-  const addReceiver = () => {
-    if (formList.length >= 10) {
-      alert('최대 10명까지 추가할 수 있습니다.');
-      return;
-    }
-    setFormList([...formList, { name: '', phone: '', quantity: 1 }]);
-  };
-
-  const removeReceiver = (index: number) => {
-    setFormList(formList.filter((_, i) => i !== index));
-  };
-
-  const validate = () => {
-    const errorList: string[] = [];
+  const onSubmit = (data: { receivers: Receiver[] }) => {
     const phoneSet = new Set<string>();
 
-    formList.forEach((r, i) => {
-      if (!r.name.trim()) {
-        errorList.push(`${i + 1}번 이름을 입력해주세요.`);
+    for (let i = 0; i < data.receivers.length; i++) {
+      const phone = data.receivers[i].phone;
+      if (phoneSet.has(phone)) {
+        setError(`receivers.${i}.phone`, {
+          type: 'duplicate',
+          message: '전화번호가 중복됩니다.',
+        });
+        return;
       }
-      if (!/^010\d{8}$/.test(r.phone)) {
-        errorList.push(`${i + 1}번 전화번호는 01012345678 형식이어야 합니다.`);
-      }
-      if (phoneSet.has(r.phone)) {
-        errorList.push(`${i + 1}번 전화번호가 중복됩니다.`);
-      }
-      phoneSet.add(r.phone);
-      if (r.quantity < 1) {
-        errorList.push(`${i + 1}번 수량은 1 이상이어야 합니다.`);
-      }
-    });
-
-    setErrors(errorList);
-    return errorList.length === 0;
-  };
-
-  const handleComplete = () => {
-    if (validate()) {
-      onSave(formList);
+      phoneSet.add(phone);
     }
+
+    onSave(data.receivers);
   };
 
   return (
@@ -129,60 +101,85 @@ const ReceiverModal = ({ receivers, onSave, onCancel }: Props) => {
       <p>* 최대 10명까지 추가할 수 있어요.</p>
       <p>* 전화번호는 중복될 수 없어요.</p>
 
-      <AddBtn onClick={addReceiver}>+ 받는 사람 추가</AddBtn>
+      <AddBtn
+        type="button"
+        onClick={() => {
+          if (fields.length >= 10) {
+            alert('최대 10명까지 추가할 수 있습니다.');
+            return;
+          }
+          append({ name: '', phone: '', quantity: 1 });
+        }}
+      >
+        + 받는 사람 추가
+      </AddBtn>
 
-      {formList.map((r, idx) => (
-        <div key={idx} style={{ marginBottom: '16px' }}>
-          <h4>
-            받는 사람 {idx + 1}
-            {formList.length > 1 && (
-              <button
-                style={{ marginLeft: '8px', cursor: 'pointer' }}
-                onClick={() => removeReceiver(idx)}
-              >
-                x
-              </button>
-            )}
-          </h4>
-          <Input
-            type="text"
-            placeholder="이름"
-            value={r.name}
-            onChange={(e) => handleChange(idx, 'name', e.target.value)}
-            autoComplete="off"
-          />
-          <Input
-            type="tel"
-            placeholder="전화번호"
-            value={r.phone}
-            maxLength={11}
-            onChange={(e) => handleChange(idx, 'phone', e.target.value)}
-            autoComplete="off"
-          />
-          <label>
-            수량
-            <QuantityInput
-              type="number"
-              min={1}
-              value={r.quantity}
-              onChange={(e) => handleChange(idx, 'quantity', e.target.value)}
+      <div>
+        {fields.map((field, index) => (
+          <div key={field.id} style={{ marginBottom: '16px' }}>
+            <h4>
+              받는 사람 {index + 1}
+              {fields.length > 1 && (
+                <button type="button" onClick={() => remove(index)}>
+                  x
+                </button>
+              )}
+            </h4>
+            <Input
+              placeholder="이름"
+              {...register(`receivers.${index}.name`, {
+                required: '이름을 입력해주세요.',
+              })}
             />
-          </label>
-        </div>
-      ))}
+            {errors.receivers?.[index]?.name && (
+              <Error>{errors.receivers[index]?.name?.message}</Error>
+            )}
 
-      {errors.length > 0 && (
-        <div>
-          {errors.map((err, i) => (
-            <Error key={i}>{err}</Error>
-          ))}
-        </div>
-      )}
+            <Input
+              placeholder="전화번호 (01012345678)"
+              maxLength={11}
+              {...register(`receivers.${index}.phone`, {
+                required: '전화번호를 입력해주세요.',
+                pattern: {
+                  value: /^010\d{8}$/,
+                  message: '전화번호 형식이 올바르지 않습니다.',
+                },
+              })}
+            />
+            {errors.receivers?.[index]?.phone && (
+              <Error>{errors.receivers[index]?.phone?.message}</Error>
+            )}
 
-      <ButtonRow>
-        <button onClick={onCancel}>취소</button>
-        <button onClick={handleComplete}>{formList.length}명 완료</button>
-      </ButtonRow>
+            <label>
+              수량
+              <QuantityInput
+                type="number"
+                min={1}
+                {...register(`receivers.${index}.quantity`, {
+                  valueAsNumber: true,
+                  min: {
+                    value: 1,
+                    message: '수량은 최소 1개 이상이어야 해요.',
+                  },
+                })}
+              />
+            </label>
+            {errors.receivers?.[index]?.quantity && (
+              <Error>{errors.receivers[index]?.quantity?.message}</Error>
+            )}
+          </div>
+        ))}
+
+        <ButtonRow>
+          <button type="button" onClick={onCancel}>
+            취소
+          </button>
+          
+          <button type="button" onClick={handleSubmit(onSubmit)}>
+            {fields.length}명 완료
+          </button>
+        </ButtonRow>
+      </div>
     </Modal>
   );
 };

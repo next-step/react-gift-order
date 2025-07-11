@@ -57,7 +57,7 @@ const ReceiverInfo = ({ receivers, onUpdate }: ReceiverInfoProps) => {
   return (
     <div>
       <ButtonWrapper>
-        <AddButton onClick={() => setShowModal(true)}>
+        <AddButton type= "button" onClick={() => setShowModal(true)}>
           {receivers.length > 0 ? '수정' : '추가'}
         </AddButton>
       </ButtonWrapper>
