@@ -1,6 +1,11 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
 import InputField from '@/components/common/InputField';
+import {
+  PHONE_REGEX,
+  MIN_QUANTITY,
+  ERROR_MESSAGES,
+} from '@/constants/validation';
 
 type ReceiverInput = {
   name: string;
@@ -8,17 +13,61 @@ type ReceiverInput = {
   quantity: number;
 };
 
+type ReceiverError = {
+  name: string;
+  phone: string;
+  quantity: string;
+};
+
 const ReceiverForm = () => {
   const [receiverInputs, setReceiverInputs] = useState<ReceiverInput[]>([]);
+  const [receiverErrors, setReceiverErrors] = useState<ReceiverError[]>([]);
   const [receivers, setReceivers] = useState<ReceiverInput[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmed, setIsConfirmed] = useState(false);
 
   const handleAddReceiverInput = () => {
-    if (receiverInputs.length >= 10) {
-      alert('최대 10명까지 입력할 수 있어요!');
-      return;
-    }
+    if (receiverInputs.length >= 10) return;
     setReceiverInputs(prev => [...prev, { name: '', phone: '', quantity: 1 }]);
+    setReceiverErrors(prev => [...prev, { name: '', phone: '', quantity: '' }]);
+  };
+
+  const validateReceiverField = (
+    field: keyof ReceiverInput,
+    value: string | number
+  ): string => {
+    if (field === 'name') {
+      return value.toString().trim() === ''
+        ? ERROR_MESSAGES.EMPTY_RECEIVER_NAME
+        : '';
+    }
+    if (field === 'phone') {
+      const text = value.toString().trim();
+      if (!text) return ERROR_MESSAGES.EMPTY_RECEIVER_PHONE;
+      if (!PHONE_REGEX.test(text)) return ERROR_MESSAGES.INVALID_PHONE;
+      return '';
+    }
+    if (field === 'quantity') {
+      return Number(value) < MIN_QUANTITY
+        ? ERROR_MESSAGES.INVALID_QUANTITY
+        : '';
+    }
+    return '';
+  };
+
+  const checkForDuplicatePhones = (
+    inputs: ReceiverInput[]
+  ): Record<string, boolean> => {
+    const phoneCount: Record<string, number> = {};
+    inputs.forEach(({ phone }) => {
+      const trimmed = phone.trim();
+      if (trimmed) {
+        phoneCount[trimmed] = (phoneCount[trimmed] || 0) + 1;
+      }
+    });
+    return Object.fromEntries(
+      Object.entries(phoneCount).map(([phone, count]) => [phone, count > 1])
+    );
   };
 
   const handleInputChange = (
@@ -28,37 +77,78 @@ const ReceiverForm = () => {
   ) => {
     setReceiverInputs(prev => {
       const updated = [...prev];
-      const target = { ...updated[index] };
+      updated[index] = {
+        ...updated[index],
+        [field]: field === 'quantity' ? Number(value) : value,
+      };
 
-      if (field === 'name') {
-        target.name = value;
-      } else if (field === 'phone') {
-        target.phone = value;
-      } else if (field === 'quantity') {
-        target.quantity = Number(value);
-      }
+      const duplicatePhones = checkForDuplicatePhones(updated);
 
-      updated[index] = target;
+      setReceiverErrors(errors => {
+        const newErrors = [...errors];
+        const phone = updated[index].phone.trim();
+        newErrors[index] = {
+          ...newErrors[index],
+          [field]:
+            validateReceiverField(field, value) ||
+            (field === 'phone' && duplicatePhones[phone]
+              ? '전화번호가 중복되었습니다.'
+              : ''),
+        };
+        return newErrors;
+      });
+
       return updated;
     });
   };
 
   const handleDelete = (index: number) => {
-    setReceiverInputs(prev => prev.filter((_, i) => i !== index));
+    const newInputs = receiverInputs.filter((_, i) => i !== index);
+    const newErrors = receiverErrors.filter((_, i) => i !== index);
+    setReceiverInputs(newInputs);
+    setReceiverErrors(newErrors);
   };
 
   const handleConfirm = () => {
-    const validReceivers = receiverInputs.filter(
-      r => r.name.trim() !== '' && /^010\d{8}$/.test(r.phone)
+    const phoneCounts: Record<string, number> = {};
+    receiverInputs.forEach(r => {
+      const phone = r.phone.trim();
+      if (phone) {
+        phoneCounts[phone] = (phoneCounts[phone] || 0) + 1;
+      }
+    });
+
+    const newErrors: ReceiverError[] = receiverInputs.map(r => {
+      const nameError = validateReceiverField('name', r.name);
+      const phoneError = validateReceiverField('phone', r.phone);
+      const quantityError = validateReceiverField('quantity', r.quantity);
+      const isDuplicate = phoneCounts[r.phone.trim()] > 1;
+
+      return {
+        name: nameError,
+        phone: phoneError || (isDuplicate ? '전화번호가 중복되었습니다.' : ''),
+        quantity: quantityError,
+      };
+    });
+
+    setReceiverErrors(newErrors);
+
+    const allValid = newErrors.every(
+      error => !error.name && !error.phone && !error.quantity
     );
-    setReceivers(validReceivers);
-    setIsModalOpen(false);
-    setReceiverInputs([]);
+
+    if (allValid) {
+      setReceivers(receiverInputs);
+      setIsConfirmed(true);
+      setIsModalOpen(false);
+    }
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
     setReceiverInputs([]);
+    setReceiverErrors([]);
+    setIsConfirmed(false);
   };
 
   return (
@@ -66,8 +156,12 @@ const ReceiverForm = () => {
       <Spacer />
       <Header>
         <Title>받는 사람</Title>
-        <AddButton type="button" onClick={() => setIsModalOpen(true)}>
-          추가
+        <AddButton
+          type="button"
+          onClick={() => setIsModalOpen(true)}
+          disabled={receiverInputs.length >= 10}
+        >
+          {isConfirmed ? '수정' : '추가'}
         </AddButton>
       </Header>
       <Spacer />
@@ -99,7 +193,11 @@ const ReceiverForm = () => {
               </ModalHeader>
 
               <AddButtonWrapper>
-                <AddButton type="button" onClick={handleAddReceiverInput}>
+                <AddButton
+                  type="button"
+                  onClick={handleAddReceiverInput}
+                  disabled={receiverInputs.length >= 10}
+                >
                   추가하기
                 </AddButton>
               </AddButtonWrapper>
@@ -124,6 +222,7 @@ const ReceiverForm = () => {
                         handleInputChange(index, 'name', e.target.value)
                       }
                       placeholder="이름을 입력하세요."
+                      error={receiverErrors[index]?.name}
                     />
                     <InputField
                       name={`phone-${index}`}
@@ -133,6 +232,7 @@ const ReceiverForm = () => {
                         handleInputChange(index, 'phone', e.target.value)
                       }
                       placeholder="전화번호를 입력하세요."
+                      error={receiverErrors[index]?.phone}
                     />
                     <InputField
                       name={`quantity-${index}`}
@@ -142,6 +242,7 @@ const ReceiverForm = () => {
                         handleInputChange(index, 'quantity', e.target.value)
                       }
                       placeholder="수량"
+                      error={receiverErrors[index]?.quantity}
                     />
                   </ReceiverInputItem>
                 ))}
@@ -190,12 +291,14 @@ const Title = styled.p`
   color: ${({ theme }) => theme.color.semantic.text.default};
 `;
 
-const AddButton = styled.button`
+const AddButton = styled.button<{ disabled?: boolean }>`
   ${({ theme }) => theme.typography.body.body2Regular};
-  color: ${({ theme }) => theme.color.blue[500]};
+  color: ${({ theme, disabled }) =>
+    disabled ? theme.color.gray[400] : theme.color.blue[500]};
   background: none;
   border: none;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+  opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
 `;
 
 const EmptyNotice = styled.p`
