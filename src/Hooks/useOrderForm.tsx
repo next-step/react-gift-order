@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
 interface FormValues {
   sender: string;
@@ -16,12 +16,12 @@ export const useOrderForm = (initialValues: FormValues) => {
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState<FormErrors>({});
 
-  const handleChange = (field: keyof FormValues, value: string | number) => {
+  const handleChange = useCallback((field: keyof FormValues, value: string | number) => {
     setValues((prev) => ({ ...prev, [field]: value }));
     setErrors((prev) => ({ ...prev, [field]: '' }));
-  };
+  }, []);
 
-  const validate = () => {
+  const validate = useCallback(() => {
     const newErrors: FormErrors = {};
 
     if (!values.message.trim()) {
@@ -47,7 +47,7 @@ export const useOrderForm = (initialValues: FormValues) => {
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  };
+  }, [values]);
 
   return {
     values,
