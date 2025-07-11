@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { useState } from 'react';
 import styled from '@emotion/styled';
+import { useReceiverForm } from '../hooks/useReceiverForm';
 
 const Overlay = styled.div`
   position: fixed;
@@ -61,12 +62,20 @@ const Label = styled.label`
   display: block;
 `;
 
-const Input = styled.input`
+const Input = styled.input<{ isInvalid?: boolean }>`
   width: 100%;
   padding: 8px;
   margin-top: 4px;
-  border: 1px solid #ddd;
+  border: 1px solid
+    ${({ theme, isInvalid }) =>
+      isInvalid ? 'red' : theme.colors.gray400};
   border-radius: 6px;
+
+  &:focus {
+    outline: none;
+    border-color: ${({ theme, isInvalid }) =>
+      isInvalid ? 'red' : theme.colors.gray700};
+  }
 `;
 
 const Bottom = styled.div`
@@ -82,12 +91,19 @@ const Cancel = styled.button`
   border: none;
 `;
 
-const Confirm = styled.button`
+const Confirm = styled.button<{ disabled: boolean }>`
   background: #ffeb00;
   padding: 12px 20px;
   border-radius: 8px;
   border: none;
   font-weight: bold;
+`;
+
+const ErrorText = styled.div`
+  color: red;
+  font-size: 12px;
+  margin-left: 1px;
+  margin-top: 5px;
 `;
 
 export interface Receiver {
@@ -109,6 +125,14 @@ const ReceiverModal = ({
   onComplete,
 }: ReceiverModalProps) => {
   const [receivers, setReceivers] = useState<Receiver[]>([]);
+  const {
+    nameInput,
+    receiverPhoneInput,
+    quantityInput,
+    isReceiverFormValid,
+  } = useReceiverForm();
+
+  const receiverNameInput = nameInput;
 
   if (!isOpen) return null;
 
@@ -172,16 +196,26 @@ const ReceiverModal = ({
               onChange={e =>
                 handleChange(r.id, 'name', e.target.value)
               }
+              onBlur={receiverNameInput.handleBlur}
               placeholder="이름 입력"
+              isInvalid={!receiverNameInput.isValid}
             />
+            {!receiverNameInput.isValid && (
+              <ErrorText>{receiverNameInput.error}</ErrorText>
+            )}
             <Label>전화번호</Label>
             <Input
               value={r.phone}
               onChange={e =>
                 handleChange(r.id, 'phone', e.target.value)
               }
+              onBlur={receiverPhoneInput.handleBlur}
               placeholder="전화번호 입력"
+              isInvalid={!receiverPhoneInput.isValid}
             />
+            {!receiverPhoneInput.isValid && (
+              <ErrorText>{receiverPhoneInput.error}</ErrorText>
+            )}
             <Label>수량</Label>
             <Input
               type="number"
@@ -189,13 +223,21 @@ const ReceiverModal = ({
               onChange={e =>
                 handleChange(r.id, 'quantity', Number(e.target.value))
               }
+              onBlur={quantityInput.handleBlur}
+              isInvalid={!quantityInput.isValid}
             />
+            {!quantityInput.isValid && (
+              <ErrorText>{quantityInput.error}</ErrorText>
+            )}
           </ReceiverCard>
         ))}
 
         <Bottom>
           <Cancel onClick={onClose}>취소</Cancel>
-          <Confirm onClick={handleComplete}>
+          <Confirm
+            disabled={!isReceiverFormValid}
+            onClick={handleComplete}
+          >
             {receivers.length}명 완료
           </Confirm>
         </Bottom>
