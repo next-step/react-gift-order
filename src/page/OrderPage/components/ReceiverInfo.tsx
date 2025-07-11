@@ -53,17 +53,19 @@ const ErrorMessage = styled.p`
 `;
 
 const ReceiverInfo = ({
+  index,
   nameHook,
   numberHook,
   amountHook,
 }: {
+  index: number;
   nameHook: UseInputReturn<HTMLInputElement>;
   numberHook: UseInputReturn<HTMLInputElement>;
   amountHook: useCheckAmountReturn;
 }) => {
   return (
     <ReceiverInfoContainer>
-      <h3>받는 사람</h3>
+      <h3>받는 사람 {index}</h3>
       <InputContainer>
         <Text>이름</Text>
         <InputWrapper>
