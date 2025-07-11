@@ -1,4 +1,5 @@
 import type { Product } from '@/features/product/trend/types'
+import type { ReceiverData } from '@/entities/order'
 
 export type CardData = {
   id: number
@@ -7,15 +8,12 @@ export type CardData = {
   defaultTextMessage: string
 }
 
-export type ReceiverData = {
-  name: string
-  phone: string
-  count: number
-}
+// * ReceiverData는 entities/order에서 import
+export type { ReceiverData }
 
 export type OrderForm = {
   card_data: CardData
   sender: string
-  receiver: ReceiverData
+  receivers: ReceiverData[]
   product: Product
 }

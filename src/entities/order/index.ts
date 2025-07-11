@@ -7,4 +7,10 @@ export { orderCardMock } from './orderCardMock'
 export { ORDER_FORM_PLACEHOLDER } from './orderContent'
 
 // 폼 스키마
-export { orderFormSchema, type OrderFormData } from './orderFormSchema'
+export {
+  orderFormSchema,
+  receiverSchema,
+  receiversSchema,
+  type OrderFormData,
+  type ReceiverData,
+} from './orderFormSchema'

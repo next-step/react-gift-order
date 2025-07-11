@@ -12,12 +12,20 @@ import { orderCardMock } from '@/entities/order/orderCardMock'
 import { SenderSection } from '@/features/order/SenderSection'
 import { ReceiverSection } from '@/features/order/ReceiverSection'
 import { ROUTE_PATH } from '@/app/Router'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { orderFormSchema, type OrderFormData } from '@/entities/order'
+import { OrderFormProvider, useOrderForm } from '@/shared/contexts/order'
 
-// * 주문하기 페이지
+// * 주문하기 페이지 (주문하기 폼 Provider 포함)
 export const Order = () => {
+  return (
+    // * Context API를 통해 전역적으로 관리되는 주문하기 폼 적용
+    <OrderFormProvider>
+      <OrderContent />
+    </OrderFormProvider>
+  )
+}
+
+// * 주문하기 컨텐츠
+export const OrderContent = () => {
   const navigate = useNavigate()
   // * URL 파라미터로 부터 상품 id 값 가져오기
   const { id } = useParams<{ id: string }>()
@@ -26,30 +34,21 @@ export const Order = () => {
   // * 카드 리스트
   const cardList: CardData[] = orderCardMock
 
-  // * React Hook Form 설정
+  // * OrderForm 컨텍스트 사용
   const {
-    control,
-    handleSubmit,
-    setValue,
-    watch,
-    formState: { errors },
-  } = useForm<OrderFormData>({
-    resolver: zodResolver(orderFormSchema),
-    defaultValues: {
-      cardMessage: orderCardMock[0].defaultTextMessage,
-      sender: '',
-      receiver: {
-        name: '',
-        phone: '',
-        count: 1,
-      },
-      selectedCard: orderCardMock[0],
+    form: {
+      handleSubmit,
+      formState: { errors },
+      watch,
+      control,
     },
-  })
+    handleCardSelect,
+    getTotalPrice,
+  } = useOrderForm()
 
   // * 폼 데이터 실시간 추적
   const watchedData = watch()
-  const { selectedCard, receiver } = watchedData
+  const { selectedCard } = watchedData
 
   // * 상품 데이터 id 를 통한 필터링
   useEffect(() => {
@@ -57,23 +56,43 @@ export const Order = () => {
     if (newProductInfo) setProductInfo(newProductInfo)
   }, [id])
 
-  // * 카드 선택 핸들러
-  const handleCardSelect = (card: CardData) => {
-    setValue('selectedCard', card)
-    setValue('cardMessage', card.defaultTextMessage) // * 선택된 카드의 기본 메시지로 업데이트
-  }
-
   // * 폼 제출 핸들러
-  const onSubmit = (data: OrderFormData) => {
-    // * 유효성 검사가 자동으로 통과된 데이터
+  const onSubmit = handleSubmit((data) => {
+    if (!productInfo) return
+
+    if (data.receivers.length === 0) {
+      alert('받는 사람이 최소 1명 필요합니다.')
+      return
+    }
+
+    // * 받는 사람들 정보를 문자열로 변환
+    const receiverInfo = data.receivers
+      .map(
+        (receiver, index) =>
+          `받는 사람 ${index + 1}: ${receiver.name} (${receiver.phone}) - ${receiver.count}개`,
+      )
+      .join('\n')
+
+    // * 총 수량 계산
+    const totalQuantity = data.receivers.reduce((sum, r) => sum + r.count, 0)
+
+    // * 총 가격 계산
+    const totalPrice = getTotalPrice(productInfo.price.sellingPrice)
+
     alert(
-      `주문이 완료되었습니다!\n상품명: ${productInfo?.name}\n구매 수량: ${data.receiver.count}\n상품가: ${totalPrice.toLocaleString()}원\n보낸 사람 명: ${data.sender}\n받는 사람 명: ${data.receiver.name}\n메시지: ${data.cardMessage}`,
+      `주문이 완료되었습니다!\n\n` +
+        `상품명: ${productInfo.name}\n` +
+        `총 수량: ${totalQuantity}개\n` +
+        `총 가격: ${totalPrice.toLocaleString()}원\n\n` +
+        `보낸 사람: ${data.sender}\n\n` +
+        `${receiverInfo}\n\n` +
+        `메시지: ${data.cardMessage}`,
     )
     navigate(ROUTE_PATH.HOME)
-  }
+  })
 
   // * 주문 총액 계산
-  const totalPrice = productInfo ? productInfo.price.sellingPrice * receiver.count : 0
+  const totalPrice = productInfo ? getTotalPrice(productInfo.price.sellingPrice) : 0
 
   // * 상품 정보가 없을 경우 NotFound 페이지로 이동하도록 처리
   if (!productInfo) return <NotFound />
@@ -94,14 +113,7 @@ export const Order = () => {
       <SenderSection control={control} error={errors.sender?.message} />
 
       {/* 받는 사람 폼 섹션 */}
-      <ReceiverSection
-        control={control}
-        errors={{
-          name: errors.receiver?.name?.message,
-          phone: errors.receiver?.phone?.message,
-          count: errors.receiver?.count?.message,
-        }}
-      />
+      <ReceiverSection />
 
       {/* 상품 정보 섹션 */}
       <ProductInfoSection>
@@ -146,7 +158,7 @@ export const Order = () => {
 
       {/* 주문하기 버튼 */}
       <OrderButtonSection>
-        <OrderButton variant="kakao" size="large" onClick={handleSubmit(onSubmit)}>
+        <OrderButton variant="kakao" size="large" onClick={onSubmit}>
           {totalPrice.toLocaleString()}원 주문하기
         </OrderButton>
       </OrderButtonSection>
