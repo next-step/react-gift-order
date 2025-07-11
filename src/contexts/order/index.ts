@@ -1,5 +1,10 @@
 export * from "@/contexts/order/order-validation";
 export * from "@/contexts/order/types";
+export {
+  orderSchema,
+  isOrderComplete,
+  type OrderFormData,
+} from "@/contexts/order/order-schema";
 
 export {
   OrderProvider,
@@ -31,6 +36,5 @@ export type {
   OrderFormContextType,
   OrderCalculationContextType,
   OrderValidationContextType,
-  OrderFormChangeEvent,
   CardTemplateHookType,
 } from "@/contexts/order/types";
