@@ -8,7 +8,11 @@ type FormData = {
   }[];
 };
 
-const OrderForm = () => {
+type OrderFormProps = {
+  onSubmitCallback?: (data: FormData) => void;
+};
+
+const OrderForm = ({ onSubmitCallback }: OrderFormProps) => {
   const {
     register,
     handleSubmit,
@@ -34,6 +38,9 @@ const OrderForm = () => {
   const onSubmit = (data: FormData) => {
     console.log("제출된 데이터:", data);
     alert("주문 완료!");
+    if (onSubmitCallback) {
+      onSubmitCallback(data);
+    }
   };
 
   return (
@@ -95,9 +102,9 @@ const OrderForm = () => {
           append({ receiverName: "", phoneNumber: "", quantity: 1 })
         }
       >
-        상품 추가
+        추가하기
       </button>
-      <button type="submit">주문하기</button>
+      <button type="submit">완료</button>
     </form>
   );
 };
