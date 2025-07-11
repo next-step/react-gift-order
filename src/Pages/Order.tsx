@@ -137,14 +137,29 @@ const Order = () => {
               추가
             </OpenReceiverListModalButton>
           </ReceiveContainerHeader>
-          <ReceiverList>
-            받는 사람이 없습니다.<br></br>받는 사람을 추가해주세요.
-            {receivers.map((r, i) => (
-              <li key={i}>
-                {r.receiverName} / {r.receiverPhoneNumber} / {r.itemCount}개
-              </li>
-            ))}
-          </ReceiverList>
+
+          {receivers.length === 0 ? (
+            <ReceiverList>
+              받는 사람이 없습니다.<br></br>받는 사람을 추가해주세요.
+            </ReceiverList>
+          ) : (
+            <ReceiverListTable>
+              <TableHead>
+                <HeadContent>이름</HeadContent>
+                <HeadContent>전화번호</HeadContent>
+                <HeadContent>수량</HeadContent>
+              </TableHead>
+              {receivers.map((r, i) => {
+                return (
+                  <TableBody key={i}>
+                    <BodyContent>{r.receiverName}</BodyContent>
+                    <BodyContent>{r.receiverPhoneNumber}</BodyContent>
+                    <BodyContent>{r.itemCount}</BodyContent>
+                  </TableBody>
+                );
+              })}
+            </ReceiverListTable>
+          )}
         </SectionContainer>
         <Divider />
         <SectionContainer>
@@ -279,6 +294,43 @@ const ReceiverList = styled.div`
     line-height: ${theme.font.body2Regular.lineHeight};
   `}
 `;
+
+const ReceiverListTable = styled.div`
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  border: 1px solid ${({ theme }) => theme.colors.borderDefault};
+`;
+
+const TableHead = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  background-color: ${({ theme }) => theme.colors.gray300};
+  ${({ theme }) => `
+    font-size: ${theme.font.subtitle2Bold.size};
+    font-weight: ${theme.font.subtitle2Bold.weight};
+    line-height: ${theme.font.subtitle2Bold.lineHeight};
+  `};
+  padding: ${({ theme }) => theme.spacing.spacing3};
+`;
+
+const TableBody = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  background-color: ${({ theme }) => theme.colors.backgroundDefault};
+  ${({ theme }) => `
+    font-size: ${theme.font.body2Regular.size};
+    font-weight: ${theme.font.body2Regular.weight};
+    line-height: ${theme.font.body2Regular.lineHeight};
+  `};
+  padding: ${({ theme }) => theme.spacing.spacing3};
+`;
+
+const HeadContent = styled.p``;
+
+const BodyContent = styled.p``;
 
 const ItemWrapper = styled.div`
   padding: ${({ theme }) => theme.spacing.spacing4};
