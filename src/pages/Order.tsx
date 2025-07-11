@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useForm, useFieldArray } from "react-hook-form";
 import { Layout } from "@/Components/layout/Layout";
 import styled from "@emotion/styled";
 import { cardTemplates } from "@/Components/cardTemplates";
@@ -13,113 +13,103 @@ import { products } from "@/data/products";
 import { useState } from 'react';
 
 // ===== 타입 정의 =====
-interface OrderState {
-  selectedId: number | null;
+type Receiver = {
+  name: string;
+  phone: string;
+  quantity: number;
+};
+
+type OrderFormValues = {
+  selectedCardId: number;
   message: string;
   sender: string;
-  receiverName: string;
-  receiverPhone: string;
-  quantity: number;
-  messageError: string;
-  senderError: string;
-}
-
-type OrderAction =
-  | { type: 'SELECT_CARD'; payload: number }
-  | { type: 'UPDATE_MESSAGE'; payload: string }
-  | { type: 'UPDATE_SENDER'; payload: string }
-  | { type: 'UPDATE_RECEIVER_NAME'; payload: string }
-  | { type: 'UPDATE_RECEIVER_PHONE'; payload: string }
-  | { type: 'UPDATE_QUANTITY'; payload: number }
-  | { type: 'SET_MESSAGE_ERROR'; payload: string }
-  | { type: 'SET_SENDER_ERROR'; payload: string }
-  | { type: 'CLEAR_MESSAGE_ERROR' }
-  | { type: 'CLEAR_SENDER_ERROR' };
+  receivers: Receiver[];
+};
 
 // ===== 초기 상태 =====
-const initialState: OrderState = {
-  selectedId: cardTemplates[0]?.id ?? null,
-  message: cardTemplates[0]?.defaultTextMessage ?? "",
-  sender: "",
-  receiverName: "",
-  receiverPhone: "",
-  quantity: 1,
-  messageError: "",
-  senderError: "",
-};
+// const initialState: OrderState = {
+//   selectedId: cardTemplates[0]?.id ?? null,
+//   message: cardTemplates[0]?.defaultTextMessage ?? "",
+//   sender: "",
+//   receiverName: "",
+//   receiverPhone: "",
+//   quantity: 1,
+//   messageError: "",
+//   senderError: "",
+// };
 
 // ===== 리듀서 함수 =====
-const orderReducer = (state: OrderState, action: OrderAction): OrderState => {
-  switch (action.type) {
-    case 'SELECT_CARD': {
-      const selectedCard = cardTemplates.find(card => card.id === action.payload);
-      return {
-        ...state,
-        selectedId: action.payload,
-        message: selectedCard?.defaultTextMessage ?? "",
-        messageError: "", // 카드 선택 시 메시지 에러 초기화
-      };
-    }
-    case 'UPDATE_MESSAGE': {
-      return {
-        ...state,
-        message: action.payload,
-        messageError: "", // 메시지 입력 시 에러 초기화
-      };
-    }
-    case 'UPDATE_SENDER': {
-      return {
-        ...state,
-        sender: action.payload,
-        senderError: "", // 발신자 입력 시 에러 초기화
-      };
-    }
-    case 'UPDATE_RECEIVER_NAME': {
-      return {
-        ...state,
-        receiverName: action.payload,
-      };
-    }
-    case 'UPDATE_RECEIVER_PHONE': {
-      return {
-        ...state,
-        receiverPhone: action.payload,
-      };
-    }
-    case 'UPDATE_QUANTITY': {
-      return {
-        ...state,
-        quantity: action.payload,
-      };
-    }
-    case 'SET_MESSAGE_ERROR': {
-      return {
-        ...state,
-        messageError: action.payload,
-      };
-    }
-    case 'SET_SENDER_ERROR': {
-      return {
-        ...state,
-        senderError: action.payload,
-      };
-    }
-    case 'CLEAR_MESSAGE_ERROR': {
-      return {
-        ...state,
-        messageError: "",
-      };
-    }
-    case 'CLEAR_SENDER_ERROR': {
-      return {
-        ...state,
-        senderError: "",
-      };
-    }
-    default:
-      return state;
-  }
-};
+// const orderReducer = (state: OrderState, action: OrderAction): OrderState => {
+//   switch (action.type) {
+//     case 'SELECT_CARD': {
+//       const selectedCard = cardTemplates.find(card => card.id === action.payload);
+//       return {
+//         ...state,
+//         selectedId: action.payload,
+//         message: selectedCard?.defaultTextMessage ?? "",
+//         messageError: "", // 카드 선택 시 메시지 에러 초기화
+//       };
+//     }
+//     case 'UPDATE_MESSAGE': {
+//       return {
+//         ...state,
+//         message: action.payload,
+//         messageError: "", // 메시지 입력 시 에러 초기화
+//       };
+//     }
+//     case 'UPDATE_SENDER': {
+//       return {
+//         ...state,
+//         sender: action.payload,
+//         senderError: "", // 발신자 입력 시 에러 초기화
+//       };
+//     }
+//     case 'UPDATE_RECEIVER_NAME': {
+//       return {
+//         ...state,
+//         receiverName: action.payload,
+//       };
+//     }
+//     case 'UPDATE_RECEIVER_PHONE': {
+//       return {
+//         ...state,
+//         receiverPhone: action.payload,
+//       };
+//     }
+//     case 'UPDATE_QUANTITY': {
+//       return {
+//         ...state,
+//         quantity: action.payload,
+//       };
+//     }
+//     case 'SET_MESSAGE_ERROR': {
+//       return {
+//         ...state,
+//         messageError: action.payload,
+//       };
+//     }
+//     case 'SET_SENDER_ERROR': {
+//       return {
+//         ...state,
+//         senderError: action.payload,
+//       };
+//     }
+//     case 'CLEAR_MESSAGE_ERROR': {
+//       return {
+//         ...state,
+//         messageError: "",
+//       };
+//     }
+//     case 'CLEAR_SENDER_ERROR': {
+//       return {
+//         ...state,
+//         senderError: "",
+//       };
+//     }
+//     default:
+//       return state;
+//   }
+// };
 
 // ===== 카드 미리보기 관련 스타일 =====
 const PreviewWrapper = styled.div`
@@ -431,34 +421,41 @@ const ModalButton = styled.button`
 `;
 
 const Order = () => {
-  // ===== 상태 관리 =====
   const { id } = useParams();
   const product = products.find(p => String(p.id) === String(id));
-  const [state, dispatch] = useReducer(orderReducer, initialState);
-  const [receiverModalOpen, setReceiverModalOpen] = useState(false);
+  const selectedCardDefault = cardTemplates[0];
 
-  const selectedCard = cardTemplates.find(card => card.id === state.selectedId);
+  // react-hook-form 세팅
+  const { control, register, handleSubmit, setValue, watch, formState: { errors } } = useForm<OrderFormValues>({
+    defaultValues: {
+      selectedCardId: selectedCardDefault?.id ?? 0,
+      message: selectedCardDefault?.defaultTextMessage ?? "",
+      sender: "",
+      receivers: [
+        { name: "", phone: "", quantity: 1 }
+      ]
+    }
+  });
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "receivers",
+  });
 
-  // ===== 이벤트 핸들러 =====
-  // 카드 선택 시 메시지 입력란에 기본 메시지 세팅
-  const handleSelect = (id: number) => {
-    dispatch({ type: 'SELECT_CARD', payload: id });
+  // 카드 선택 핸들러
+  const handleSelect = (cardId: number) => {
+    setValue("selectedCardId", cardId);
+    const card = cardTemplates.find(c => c.id === cardId);
+    setValue("message", card?.defaultTextMessage ?? "");
   };
 
-  const handleOrder = () => {
-    if (!state.message.trim()) {
-      dispatch({ type: 'SET_MESSAGE_ERROR', payload: "메시지를 입력해주세요." });
-      return;
-    } else {
-      dispatch({ type: 'CLEAR_MESSAGE_ERROR' });
-    }
-    if (!state.sender.trim()) {
-      dispatch({ type: 'SET_SENDER_ERROR', payload: "보내는 사람 이름을 입력해주세요." });
-      return;
-    } else {
-      dispatch({ type: 'CLEAR_SENDER_ERROR' });
-    }
+  // 주문 제출 핸들러
+  const onSubmit = (data: OrderFormValues) => {
+    // TODO: 유효성 검사/중복 체크 등은 다음 단계에서 추가
+    alert(JSON.stringify(data, null, 2));
   };
+
+  // 선택된 카드
+  const selectedCard = cardTemplates.find(card => card.id === watch("selectedCardId"));
 
   return (
     <Layout>
@@ -468,10 +465,10 @@ const Order = () => {
         {cardTemplates.map(card => (
           <CardItem
             key={card.id}
-            selected={state.selectedId === card.id}
+            selected={watch("selectedCardId") === card.id}
             onClick={() => handleSelect(card.id)}
           >
-            <Thumb src={card.thumbUrl} alt={card.defaultTextMessage} selected={state.selectedId === card.id} />
+            <Thumb src={card.thumbUrl} alt={card.defaultTextMessage} selected={watch("selectedCardId") === card.id} />
           </CardItem>
         ))}
       </CardList>
@@ -482,14 +479,10 @@ const Order = () => {
           <>
             <PreviewImage src={selectedCard.imageUrl} alt={selectedCard.defaultTextMessage} />
             <MessageInput
-              value={state.message}
-              onChange={e => {
-                dispatch({ type: 'UPDATE_MESSAGE', payload: e.target.value });
-                if (state.messageError) dispatch({ type: 'CLEAR_MESSAGE_ERROR' });
-              }}
+              {...register("message", { required: "메시지를 입력하세요." })}
               placeholder="메시지를 입력하세요."
             />
-            {state.messageError && <ErrorMessage>{state.messageError}</ErrorMessage>}
+            {errors.message && <ErrorMessage>{errors.message.message}</ErrorMessage>}
           </>
         )}
       </PreviewWrapper>
@@ -500,70 +493,66 @@ const Order = () => {
         <SenderInput
           type="text"
           placeholder="이름을 입력하세요."
-          value={state.sender}
-          onChange={e => {
-            dispatch({ type: 'UPDATE_SENDER', payload: e.target.value });
-            if (state.senderError) dispatch({ type: 'CLEAR_SENDER_ERROR' });
-          }}
+          {...register("sender", { required: "보내는 사람 이름을 입력하세요." })}
         />
-        {state.senderError && <ErrorMessage>{state.senderError}</ErrorMessage>}
+        {errors.sender && <ErrorMessage>{errors.sender.message}</ErrorMessage>}
         <SenderGuide>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</SenderGuide>
       </SenderSection>
 
-      {/* ===== 받는 사람 섹션 ===== */}
+      {/* ===== 받는 사람 섹션 (useFieldArray) ===== */}
       <ReceiverSection>
         <ReceiverTitle>받는 사람</ReceiverTitle>
-        <OrderButton type="button" onClick={() => setReceiverModalOpen(true)} style={{ marginBottom: 16 }}>
+        <OrderButton
+          type="button"
+          onClick={() => append({ name: "", phone: "", quantity: 1 })}
+          disabled={fields.length >= 10}
+          style={{ marginBottom: 16 }}
+        >
           추가
         </OrderButton>
-        {/* 기존 받는 사람 입력 폼은 유지 */}
-        <ReceiverRow>
-          <ReceiverLabel htmlFor="receiverName">이름</ReceiverLabel>
-          <ReceiverInput
-            id="receiverName"
-            type="text"
-            placeholder="이름을 입력하세요."
-            value={state.receiverName}
-            onChange={e => dispatch({ type: 'UPDATE_RECEIVER_NAME', payload: e.target.value })}
-          />
-        </ReceiverRow>
-        <ReceiverRow>
-          <ReceiverLabel htmlFor="receiverPhone">전화번호</ReceiverLabel>
-          <ReceiverInput
-            id="receiverPhone"
-            type="tel"
-            placeholder="전화번호를 입력하세요."
-            value={state.receiverPhone}
-            onChange={e => dispatch({ type: 'UPDATE_RECEIVER_PHONE', payload: e.target.value })}
-          />
-        </ReceiverRow>
-        <ReceiverRow>
-          <ReceiverLabel htmlFor="quantity">수량</ReceiverLabel>
-          <ReceiverInput
-            id="quantity"
-            type="number"
-            min={1}
-            value={state.quantity}
-            onChange={e => dispatch({ type: 'UPDATE_QUANTITY', payload: Number(e.target.value) })}
-          />
-        </ReceiverRow>
+        {fields.map((field, idx) => (
+          <div key={field.id} style={{ marginBottom: 12, borderBottom: "1px solid #eee", paddingBottom: 8 }}>
+            <ReceiverRow>
+              <ReceiverLabel>이름</ReceiverLabel>
+              <ReceiverInput
+                {...register(`receivers.${idx}.name`, { required: "이름을 입력하세요." })}
+                placeholder="이름"
+              />
+            </ReceiverRow>
+            <ReceiverRow>
+              <ReceiverLabel>전화번호</ReceiverLabel>
+              <ReceiverInput
+                {...register(`receivers.${idx}.phone`, {
+                  required: "전화번호를 입력하세요.",
+                  pattern: {
+                    value: /^010[0-9]{8}$/,
+                    message: "01012341234 형식으로 입력하세요."
+                  }
+                })}
+                placeholder="01012341234"
+              />
+            </ReceiverRow>
+            <ReceiverRow>
+              <ReceiverLabel>수량</ReceiverLabel>
+              <ReceiverInput
+                type="number"
+                min={1}
+                {...register(`receivers.${idx}.quantity`, {
+                  required: "수량을 입력하세요.",
+                  min: { value: 1, message: "최소 1개 이상" }
+                })}
+              />
+            </ReceiverRow>
+            <OrderButton type="button" onClick={() => remove(idx)} style={{ background: "#eee", color: "#222", marginTop: 4 }}>
+              삭제
+            </OrderButton>
+            {/* 에러 메시지 */}
+            {errors.receivers?.[idx]?.name && <ErrorMessage>{errors.receivers[idx]?.name?.message}</ErrorMessage>}
+            {errors.receivers?.[idx]?.phone && <ErrorMessage>{errors.receivers[idx]?.phone?.message}</ErrorMessage>}
+            {errors.receivers?.[idx]?.quantity && <ErrorMessage>{errors.receivers[idx]?.quantity?.message}</ErrorMessage>}
+          </div>
+        ))}
       </ReceiverSection>
-
-      {/* ===== 받는 사람 추가 모달 (emotion styled) ===== */}
-      {receiverModalOpen && (
-        <ModalOverlay onClick={() => setReceiverModalOpen(false)}>
-          <ModalContent onClick={e => e.stopPropagation()}>
-            <ModalTitle>받는 사람</ModalTitle>
-            <div style={{ minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888' }}>
-              받는 사람을 추가할 수 있는 UI가 들어갑니다.
-            </div>
-            <ModalActions>
-              <ModalButton type="button" onClick={() => setReceiverModalOpen(false)}>취소</ModalButton>
-              <ModalButton type="button" onClick={() => setReceiverModalOpen(false)}>완료</ModalButton>
-            </ModalActions>
-          </ModalContent>
-        </ModalOverlay>
-      )}
 
       {/* ===== 상품 정보 섹션 ===== */}
       <ProductSection>
@@ -585,9 +574,11 @@ const Order = () => {
       {/* ===== 고정 푸터 (주문 버튼) ===== */}
       <PageWrapper>
         <FixedFooter>
-          <OrderButton type="button" onClick={handleOrder} disabled={!state.message.trim()}>
-            주문하기
-          </OrderButton>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <OrderButton type="submit">
+              주문하기
+            </OrderButton>
+          </form>
         </FixedFooter>
       </PageWrapper>
     </Layout>
