@@ -1,9 +1,5 @@
 import styled from '@emotion/styled';
-import React from 'react';
-
-interface Props {
-  children: React.ReactNode;
-}
+import type { PropsWithChildren } from 'react';
 
 const StyledError = styled.p(({ theme }) => ({
   color: theme.colors.semantic.critical,
@@ -14,7 +10,7 @@ const StyledError = styled.p(({ theme }) => ({
   textAlign: 'left',
 }));
 
-const ErrorText = ({ children }: Props) => {
+const ErrorText = ({ children }: PropsWithChildren<object>) => {
   return <StyledError>{children}</StyledError>;
 };
 
