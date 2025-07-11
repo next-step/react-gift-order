@@ -1,5 +1,6 @@
 import Layout from '@components/Layout';
 import { useAuth } from '@contexts/AuthContext';
+import GiftOrderPage from '@pages/GiftOrderPage';
 import Home from '@pages/Home';
 import Login from '@pages/Login';
 import MyPage from '@pages/MyPage';
@@ -33,6 +34,7 @@ const Router = () => {
                 </PrivateRoute>
               }
             />
+            <Route path="/order/:id" element={<GiftOrderPage />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
