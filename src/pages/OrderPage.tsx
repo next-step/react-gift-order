@@ -101,19 +101,7 @@ const OrderPage = () => {
             onChange={handleInputChange}
             error={formErrors.senderName}
           />
-          <ReceiverForm
-            values={{
-              receiverName: String(formValues.receiverName),
-              receiverPhone: String(formValues.receiverPhone),
-              quantity: Number(formValues.quantity),
-            }}
-            errors={{
-              receiverName: formErrors.receiverName,
-              receiverPhone: formErrors.receiverPhone,
-              quantity: formErrors.quantity,
-            }}
-            onChange={handleInputChange}
-          />
+          <ReceiverForm />
           <ProductInfo product={product} />
           <OrderSubmitButton amount={totalPrice} />
         </Form>
