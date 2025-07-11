@@ -105,3 +105,4 @@
 - Form/Validation 라이브러리 미사용
 - 기능별로 커밋을 쪼개어 협업 및 코드리뷰에 용이하게 관리
 - Emotion styled-components로 일관된 디자인 시스템 구축
+
