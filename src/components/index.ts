@@ -1,3 +1,8 @@
+import React from 'react';
+
+// Types
+export type InputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => void;
+
 // Atoms
 export { default as Image } from './atoms/Image';
 export { default as Input } from './atoms/Input';
@@ -6,7 +11,7 @@ export { default as Text } from './atoms/Text';
 export { default as TextArea, type TextAreaChangeHandler } from './atoms/TextArea';
 
 // Molecules
-export { default as InputField, type InputChangeHandler } from './molecules/InputField';
+export { default as InputField } from './molecules/InputField';
 export { default as MessageTextArea } from './molecules/MessageTextArea';
 export { default as OrderCard } from './molecules/OrderCard';
 

@@ -13,10 +13,6 @@ const ReceiverSection = () => {
     setIsModalOpen(false);
   };
 
-  const handleAddReceiver = () => {
-    console.log('받는 사람 추가');
-  };
-
   return (
     <>
       <S.Container>
@@ -39,7 +35,6 @@ const ReceiverSection = () => {
         onClose={handleModalClose}
         onCancel={handleModalClose}
         onComplete={handleModalClose}
-        onAddReceiver={handleAddReceiver}
       />
     </>
   );

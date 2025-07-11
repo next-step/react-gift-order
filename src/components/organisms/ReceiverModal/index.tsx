@@ -38,9 +38,12 @@ const ReceiverModal = ({
   };
 
   const handleComplete = () => {
-    handleSubmit();
-    onComplete?.();
-    onClose();
+    handleSubmit(
+      () => {
+        onComplete?.();
+        onClose();
+      }
+    );
   };
 
   return (

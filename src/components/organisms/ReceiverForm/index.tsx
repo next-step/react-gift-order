@@ -8,20 +8,17 @@ interface ReceiverFormProps {
 }
 
 const ReceiverForm = ({ formHook }: ReceiverFormProps) => {
-  const { register, watch, fields, remove, formState: { errors } } = formHook;
+  const { register, fields, remove, formState: { errors } } = formHook;
 
   return (
     <S.Container>
       <S.FormContent>
         {fields.map((field, index) => {
-          const watchedValues = watch(`receivers.${index}`);
-          
           const formFields = [
             {
               label: '이름',
               placeholder: '이름을 입력하세요.',
               registerProps: register(`receivers.${index}.name`),
-              value: watchedValues?.name || '',
               type: 'text' as const,
               error: errors.receivers?.[index]?.name?.message,
             },
@@ -29,7 +26,6 @@ const ReceiverForm = ({ formHook }: ReceiverFormProps) => {
               label: '전화번호',
               placeholder: '전화번호를 입력하세요.',
               registerProps: register(`receivers.${index}.phone`),
-              value: watchedValues?.phone || '',
               type: 'tel' as const,
               error: errors.receivers?.[index]?.phone?.message,
             },
@@ -39,7 +35,6 @@ const ReceiverForm = ({ formHook }: ReceiverFormProps) => {
               registerProps: register(`receivers.${index}.quantity`, { 
                 valueAsNumber: true 
               }),
-              value: watchedValues?.quantity?.toString() || '1',
               type: 'number' as const,
               error: errors.receivers?.[index]?.quantity?.message,
             },
@@ -59,8 +54,7 @@ const ReceiverForm = ({ formHook }: ReceiverFormProps) => {
                     <InputField
                       label={formField.label}
                       placeholder={formField.placeholder}
-                      value={formField.value}
-                      onChange={formField.registerProps.onChange}
+                      {...formField.registerProps}
                       type={formField.type}
                       labelMinWidth="3.75rem"
                       layout="horizontal"

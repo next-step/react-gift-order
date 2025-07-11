@@ -12,7 +12,8 @@ export const useReceiverForm = () => {
   const form = useForm<ReceiversFormData>({
     resolver: zodResolver(receiversModalSchema),
     defaultValues: { receivers: receiverList },
-    mode: 'onChange',
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -24,9 +25,14 @@ export const useReceiverForm = () => {
     append({ name: '', phone: '', quantity: 1 });
   };
 
-  const handleFormSubmit = form.handleSubmit((data) => {
-    updateReceiverList(data.receivers);
-  });
+  const handleFormSubmit = (onSuccess?: () => void) => {
+    return form.handleSubmit(
+      (data) => {
+        updateReceiverList(data.receivers);
+        onSuccess?.();
+      }
+    )();
+  };
 
   const canAddMore = fields.length < 10;
 
@@ -39,7 +45,6 @@ export const useReceiverForm = () => {
   return {
     register: form.register,
     formState: form.formState,
-    watch: form.watch,
     getValues: form.getValues,
     handleSubmit: handleFormSubmit,
     fields,
