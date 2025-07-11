@@ -11,12 +11,19 @@ const ReceiverInfoModal = ({
   isOpen: boolean;
   onClose: () => void;
 }) => {
-  const { control, getValues, trigger } = useFormContext();
+  const { control, getValues, trigger, setValue, formState } = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'recipients',
+    name: 'tempRecipients',
   });
+
+  React.useEffect(() => {
+    if (isOpen) {
+      const currentRecipients = getValues('recipients') || [];
+      setValue('tempRecipients', currentRecipients);
+    }
+  }, [isOpen, getValues, setValue]);
 
   if (!isOpen) return null;
 
@@ -27,10 +34,35 @@ const ReceiverInfoModal = ({
   };
 
   const handleComplete = async () => {
-    const isValid = await trigger('recipients');
-    if (isValid) {
+    const tempRecipients = getValues('tempRecipients');
+
+    if (!tempRecipients || tempRecipients.length === 0) {
+      alert('받는 사람을 최소 1명 이상 추가해주세요.');
+      return;
+    }
+
+    let hasError = false;
+
+    for (let i = 0; i < tempRecipients.length; i++) {
+      const nameValid = await trigger(`tempRecipients.${i}.name`);
+      if (!nameValid) hasError = true;
+
+      const phoneValid = await trigger(`tempRecipients.${i}.phone`);
+      if (!phoneValid) hasError = true;
+
+      const quantityValid = await trigger(`tempRecipients.${i}.quantity`);
+      if (!quantityValid) hasError = true;
+    }
+
+    if (!hasError) {
+      setValue('recipients', tempRecipients);
       onClose();
     }
+  };
+
+  const handleCancel = () => {
+    setValue('tempRecipients', []);
+    onClose();
   };
 
   return (
@@ -65,8 +97,9 @@ const ReceiverInfoModal = ({
                   <DeleteButton onClick={() => remove(index)}>×</DeleteButton>
                 </RecipientHeader>
                 <Controller
-                  name={`recipients.${index}.name`}
+                  name={`tempRecipients.${index}.name`}
                   control={control}
+                  defaultValue=""
                   rules={{
                     required: '이름을 입력해주세요.',
                     validate: (value) =>
@@ -83,8 +116,9 @@ const ReceiverInfoModal = ({
                   )}
                 />
                 <Controller
-                  name={`recipients.${index}.phone`}
+                  name={`tempRecipients.${index}.phone`}
                   control={control}
+                  defaultValue=""
                   rules={{
                     required: '전화번호를 입력해주세요.',
                     validate: (value) => {
@@ -93,8 +127,8 @@ const ReceiverInfoModal = ({
                         return '올바른 전화번호 형식이 아닙니다 (010XXXXXXXX)';
                       }
 
-                      const recipients = getValues('recipients');
-                      const duplicateCount = recipients.filter(
+                      const tempRecipients = getValues('tempRecipients');
+                      const duplicateCount = tempRecipients.filter(
                         (recipient: any) => recipient.phone === value
                       ).length;
                       if (duplicateCount > 1) {
@@ -115,8 +149,9 @@ const ReceiverInfoModal = ({
                   )}
                 />
                 <Controller
-                  name={`recipients.${index}.quantity`}
+                  name={`tempRecipients.${index}.quantity`}
                   control={control}
+                  defaultValue={1}
                   rules={{
                     required: '수량을 입력해주세요.',
                     min: { value: 1, message: '수량은 1 이상이어야 합니다.' },
@@ -138,7 +173,7 @@ const ReceiverInfoModal = ({
         </ModalBody>
 
         <ModalFooter>
-          <BaseButton width="30%" onClick={onClose}>
+          <BaseButton width="30%" onClick={handleCancel}>
             취소
           </BaseButton>
           <BaseButton
