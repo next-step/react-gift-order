@@ -46,23 +46,29 @@ export const useReceivers = (initialReceivers: Receiver[]) => {
 
   const validateAll = () => {
     const result = receiverListSchema.safeParse(receivers);
+
     if (!result.success) {
-      const newErrors: ReceiverError[] = receivers.map(() => ({}));
-      for (const issue of result.error.issues) {
-        if (issue.path.length === 2) {
-          const [index, field] = issue.path;
+      const newErrors = receivers.map(() => ({} as ReceiverError));
+
+      result.error.issues.forEach((issue) => {
+        const { path, message } = issue;
+
+        if (path.length === 2) {
+          const [index, field] = path;
           if (typeof index === 'number' && typeof field === 'string') {
-            newErrors[index][field as keyof Receiver] = issue.message;
+            newErrors[index][field as keyof Receiver] = message;
           }
-        } else if (issue.message.includes('전화번호가 중복')) {
-          receivers.forEach((_r, i) => {
-            newErrors[i].phone = '중복된 전화번호입니다.';
+        } else if (message.includes('전화번호가 중복')) {
+          newErrors.forEach((err) => {
+            err.phone = '중복된 전화번호입니다.';
           });
         }
-      }
+      });
+
       setErrors(newErrors);
       return false;
     }
+
     setErrors(receivers.map(() => ({})));
     return true;
   };
@@ -76,5 +82,5 @@ export const useReceivers = (initialReceivers: Receiver[]) => {
     validateAll,
   };
 };
-export type { Receiver, ReceiverError };
 
+export type { Receiver, ReceiverError };
