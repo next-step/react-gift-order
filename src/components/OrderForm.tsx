@@ -2,7 +2,8 @@ import { css } from '@emotion/react';
 import theme from '@src/styles/tokens/index';
 import OrderFormInput from '@src/components/OrderFormInput';
 import RecipientList from '@src/components/RecipientList';
-import type { OrderValues } from '@src/hooks/useOrderForm';
+import { useFormContext } from 'react-hook-form';
+import type { OrderSchema } from '@src/hooks/useOrderForm';
 
 const coverStyle = css`
   width: 100%;
@@ -82,20 +83,16 @@ const colorspace8 = css`
 `;
 
 interface Props {
-  values: OrderValues;
-  errors: Partial<OrderValues>;
-  onChange: (name: string, value: string) => void;
   onOpenRecipientModal: () => void;
-  recipients?: OrderValues[];
+  recipients?: OrderSchema[];
 }
 
-const OrderForm = ({
-  values,
-  errors,
-  onChange,
-  onOpenRecipientModal,
-  recipients = [],
-}: Props) => {
+const OrderForm = ({ onOpenRecipientModal, recipients = [] }: Props) => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<OrderSchema>();
+
   return (
     <>
       <div css={coverStyle}>
@@ -103,11 +100,9 @@ const OrderForm = ({
         <p css={pTitle}>보내는 사람</p>
         <div css={space12} />
         <OrderFormInput
-          name="senderName"
-          value={values.senderName}
+          {...register('senderName')}
           placeholder="이름을 입력하세요."
-          error={errors.senderName}
-          onChange={(e) => onChange('senderName', e.target.value)}
+          error={errors.senderName?.message}
         />
         {!errors.senderName && (
           <p css={noticeP}>
@@ -123,7 +118,11 @@ const OrderForm = ({
         <div css={space12} />
         <div css={recipientTitleStyle}>
           <p css={pTitle}>받는 사람</p>
-          <button css={recipientButtonStyle} onClick={onOpenRecipientModal}>
+          <button
+            css={recipientButtonStyle}
+            onClick={onOpenRecipientModal}
+            type="button"
+          >
             {recipients.length > 0 ? '수정' : '추가'}
           </button>
         </div>

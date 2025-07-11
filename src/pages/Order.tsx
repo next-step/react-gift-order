@@ -3,11 +3,12 @@ import theme from '@src/styles/tokens/index';
 import PresentCard from '@/components/PresentCard';
 import OrderForm from '@/components/OrderForm';
 import ItemInfo from '@/components/ItemInfo';
-import useOrderForm from '@/hooks/useOrderForm';
 import product from '@/assets/mock/itemList_mock';
 import RecipientFormList from '@/components/RecipientFormList';
 import { useState } from 'react';
-import type { OrderValues } from '@src/hooks/useOrderForm';
+import type { OrderSchema } from '@src/hooks/useOrderForm';
+import { FormProvider } from 'react-hook-form';
+import useOrderFormComplete from '@/hooks/useOrderFormComplete';
 
 const sectionStyle = css`
   width: 100%;
@@ -42,14 +43,14 @@ const buttonStyle = css`
 const space24 = css`
   height: 24px;
 `;
-
 const Order = () => {
   const [recipientModalOpen, setRecipientModalOpen] = useState(false);
-  const [recipients, setRecipients] = useState<OrderValues[]>([]);
+  const [recipients, setRecipients] = useState<OrderSchema[]>([]);
 
   const unitPrice = Number(product.price?.sellingPrice) || 0;
 
-  const { values, errors, handleChange, validate } = useOrderForm();
+  const methods = useOrderFormComplete();
+  const { handleSubmit } = methods;
 
   const totalRecipientQuantity = recipients.reduce(
     (sum, r) => sum + (Number(r.quantity) || 0),
@@ -58,47 +59,41 @@ const Order = () => {
 
   const totalOrderPrice = unitPrice * totalRecipientQuantity;
 
-  const handleOrderClick = () => {
-    if (validate()) {
-      if (totalRecipientQuantity === 0) {
-        alert('받는 사람을 추가해 주세요!');
-        return;
-      }
-      alert(
-        `주문이 완료되었습니다.\n` +
-          `상품명: ${product.name}\n` +
-          `구매수량: ${totalRecipientQuantity}\n` +
-          `발신자이름: ${values.senderName}\n` +
-          `메시지: ${values.message}`
-      );
-      window.history.back();
+  const onSubmit = (data: any) => {
+    if (totalRecipientQuantity === 0) {
+      alert('받는 사람을 추가해 주세요!');
+      return;
     }
-  };
 
-  console.log('product:', product);
-  console.log('product.price:', product.price);
+    alert(
+      `주문이 완료되었습니다.\n` +
+        `상품명: ${product.name}\n` +
+        `구매수량: ${totalRecipientQuantity}\n` +
+        `발신자이름: ${data.senderName}\n` +
+        `메시지: ${data.message}`
+    );
+    window.history.back();
+  };
 
   return (
     <>
-      <section css={sectionStyle}>
-        <PresentCard
-          message={values.message}
-          onMessageChange={handleChange}
-          errorMessage={errors.message}
-        />
-        <OrderForm
-          values={values}
-          errors={errors}
-          onChange={handleChange}
-          onOpenRecipientModal={() => setRecipientModalOpen(true)}
-          recipients={recipients}
-        />
-        <ItemInfo />
-        <div css={space24} />
-        <button css={buttonStyle} onClick={handleOrderClick}>
-          {totalOrderPrice.toLocaleString()}원 주문하기
-        </button>
-      </section>
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <section css={sectionStyle}>
+            <PresentCard />
+            <OrderForm
+              onOpenRecipientModal={() => setRecipientModalOpen(true)}
+              recipients={recipients}
+            />
+            <ItemInfo />
+            <div css={space24} />
+            <button type="submit" css={buttonStyle}>
+              {totalOrderPrice.toLocaleString()}원 주문하기
+            </button>
+          </section>
+        </form>
+      </FormProvider>
+
       <RecipientFormList
         open={recipientModalOpen}
         onClose={() => setRecipientModalOpen(false)}

@@ -25,7 +25,7 @@ const recipientFormDiv = css`
   align-items: center;
   gap: 12px;
   width: 100%;
-  padding 8px 0px;
+  padding: 8px 0px;
 `;
 
 const recipientSideP = css`
