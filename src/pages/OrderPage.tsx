@@ -1,15 +1,14 @@
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { Section } from '@/components/layout';
 import Container from '@/components/layout/Container';
+import { RecipientList } from '@/components/order';
 import { products } from '@/data/products';
 import { cardTemplates } from '@/data/cardTemplates';
 import { useOrderForm } from '@/hooks';
-import {
-  getPhoneErrorMessage,
-  getNameErrorMessage,
-  getQuantityErrorMessage,
-} from '@/utils';
+import { createNewRecipient } from '@/utils';
+import type { Recipient } from '@/types';
 
 const CardSlider = styled.div`
   overflow-x: auto;
@@ -144,14 +143,26 @@ const OrderPage = () => {
 
   const { formData, errors, handlers, register } = useOrderForm();
   const { selectedCardId, selectedCard } = formData;
-  const {
-    messageError,
-    senderError,
-    receiverError,
-    phoneError,
-    quantityError,
-  } = errors;
+  const { messageError, senderError } = errors;
   const { handleSelectCard, handleOrder } = handlers;
+
+  // 임시 받는사람 목록 상태 (기존 단일 폼과 연동)
+  const [recipients, setRecipients] = useState<Recipient[]>([]);
+
+  // 받는사람 추가
+  const handleAddRecipient = () => {
+    if (recipients.length >= 10) return;
+
+    const newRecipient = createNewRecipient();
+    setRecipients((prev: Recipient[]) => [...prev, newRecipient]);
+  };
+
+  // 받는사람 제거
+  const handleRemoveRecipient = (index: number) => {
+    setRecipients((prev: Recipient[]) =>
+      prev.filter((_: Recipient, i: number) => i !== index)
+    );
+  };
 
   if (!product) {
     return (
@@ -200,10 +211,8 @@ const OrderPage = () => {
             type="text"
             {...register('sender', {
               required: '이름을 입력해주세요.',
-              validate: (value) => {
-                const error = getNameErrorMessage(value);
-                return error || true;
-              },
+              validate: (value) =>
+                value.trim().length > 0 || '이름을 입력해주세요.',
             })}
             placeholder="이름을 입력하세요."
             error={!!senderError}
@@ -214,51 +223,13 @@ const OrderPage = () => {
             정보입니다.
           </InputHelper>
         </FormSection>
-        <FormSection>
-          <FormLabel>받는 사람</FormLabel>
-          <Input
-            type="text"
-            {...register('receiver', {
-              required: '이름을 입력해주세요.',
-              validate: (value) => {
-                const error = getNameErrorMessage(value);
-                return error || true;
-              },
-            })}
-            placeholder="이름을 입력하세요."
-            error={!!receiverError}
-          />
-          {receiverError && <ErrorText>{receiverError}</ErrorText>}
-          <Input
-            type="tel"
-            {...register('receiverPhone', {
-              required: '전화번호를 입력해주세요.',
-              validate: (value) => {
-                const error = getPhoneErrorMessage(value);
-                return error || true;
-              },
-            })}
-            placeholder="전화번호를 입력하세요."
-            error={!!phoneError}
-            maxLength={11}
-          />
-          {phoneError && <ErrorText>{phoneError}</ErrorText>}
-          <Input
-            type="number"
-            min={1}
-            {...register('quantity', {
-              required: '수량을 입력해주세요.',
-              valueAsNumber: true,
-              validate: (value) => {
-                const error = getQuantityErrorMessage(value);
-                return error || true;
-              },
-            })}
-            placeholder="수량"
-            error={!!quantityError}
-          />
-          {quantityError && <ErrorText>{quantityError}</ErrorText>}
-        </FormSection>
+        <RecipientList
+          recipients={recipients}
+          onRemoveRecipient={handleRemoveRecipient}
+          onAddRecipient={handleAddRecipient}
+          canAddMore={recipients.length < 10}
+          maxReached={recipients.length >= 10}
+        />
         <ProductInfo>
           <ProductImg src={product.imageURL} alt={product.name} />
           <ProductInfoText>
