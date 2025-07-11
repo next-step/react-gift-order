@@ -90,9 +90,9 @@ const ReceiverModal = ({
             >
               완료
             </CompleteButton>
-            <CancleButton type="button" onClick={onClose}>
+            <CancelButton type="button" onClick={onClose}>
               취소
-            </CancleButton>
+            </CancelButton>
           </ModalFooter>
         </FormProvider>
       </ModalContainer>
@@ -188,7 +188,7 @@ const CompleteButton = styled.button`
   font-size: ${({ theme }) => theme.typography.subtitle1Regular.fontSize};
 `;
 
-const CancleButton = styled.button`
+const CancelButton = styled.button`
   background-color: ${({ theme }) => theme.colors.gray300};
   border: none;
   border-radius: 1rem;
