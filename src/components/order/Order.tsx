@@ -41,7 +41,7 @@ const Order: React.FC = () => {
   const [senderError, setSenderError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [receivers, setReceivers] = useState<
-    { name: string; phoneNumber: string; quantity: number }[]
+    { receiverName: string; phoneNumber: string; quantity: number }[]
   >([]);
 
   const handleSubmit = () => {
@@ -173,7 +173,7 @@ const ReceiverModal = ({
   onSave,
 }: {
   onClose: () => void;
-  onSave: FormData;
+  onSave: (formData: FormData) => void;
 }) => {
   return (
     <>
