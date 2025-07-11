@@ -38,3 +38,7 @@ export const getPasswordErrorMessage = (password: string): string | null => {
 
   return null;
 };
+
+export const isValidPhoneNumber = (phone: string): boolean => {
+  return /^010-\d{4}-\d{4}$/.test(phone) || /^010\d{8}$/.test(phone);
+};

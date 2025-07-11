@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom';
 import BackButton from './BackButton';
 import ProfileButton from './ProfileButton';
 
@@ -59,11 +60,13 @@ const NavigationBar = ({
   onBackClick,
   onProfileClick,
 }: NavigationBarProps) => {
+  const navigate = useNavigate();
+
   const handleBackClick = () => {
     if (onBackClick) {
       onBackClick();
     } else {
-      window.history.back();  // 기본 뒤로가기 동작 (브라우저 히스토리)
+      navigate(-1);
     }
   };
 

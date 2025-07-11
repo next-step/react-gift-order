@@ -4,6 +4,7 @@ import ProductCard, { type Product } from './ProductCard';
 interface ProductGridProps {
   products: Product[];
   showMore: boolean;
+  onProductClick?: (product: Product) => void;
 }
 
 const GridContainer = styled.div<{ showMore: boolean }>`
@@ -15,7 +16,11 @@ const GridContainer = styled.div<{ showMore: boolean }>`
   margin-bottom: ${(props) => props.theme.spacing.spacing4};
 `;
 
-const ProductGrid = ({ products, showMore }: ProductGridProps) => {
+const ProductGrid = ({
+  products,
+  showMore,
+  onProductClick,
+}: ProductGridProps) => {
   const displayProducts = showMore
     ? products.slice(0, 21)
     : products.slice(0, 6);
@@ -23,7 +28,13 @@ const ProductGrid = ({ products, showMore }: ProductGridProps) => {
   return (
     <GridContainer showMore={showMore}>
       {displayProducts.map((product) => (
-        <ProductCard key={product.id} product={product} />
+        <div
+          key={product.id}
+          onClick={() => onProductClick?.(product)}
+          style={{ cursor: onProductClick ? 'pointer' : undefined }}
+        >
+          <ProductCard product={product} />
+        </div>
       ))}
     </GridContainer>
   );
