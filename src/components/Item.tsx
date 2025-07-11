@@ -9,6 +9,9 @@ import {
   ItemPrice,
 } from '@/styles/Item/Item.styles';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { LoginInfoContext } from '@/contexts/LoginInfoContext';
+// import useLoginForm from '@/hooks/useLoginForm';
 
 type ItemProps = {
   index: number;
@@ -17,9 +20,16 @@ type ItemProps = {
 
 function Item({ index, itemData }: ItemProps) {
   const navigate = useNavigate();
-
+  const { loginInfo } = useContext(LoginInfoContext);
+  // const { id } = useLoginForm();
   function handleItemClick(itemId: number) {
-    navigate(`/order/${itemId}`, { state: { item: itemData } });
+    // if (id == '') navigate('/login');
+    // 이렇게 하니까 로그인한 후 Item을 눌러도 다시 로그인 화면으로 넘어가던데 이유를 모르겠습니다.
+    if (!loginInfo) {
+      navigate('/login');
+    } else {
+      navigate(`/order/${itemId}`, { state: { item: itemData } });
+    }
   }
 
   return (
