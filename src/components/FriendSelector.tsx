@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import styled from '@emotion/styled';
 import { FaPlus } from 'react-icons/fa';
-import { PascalCase } from '../pages/Login/UserManagement';
+import { UserManagement } from '../pages/Login/UserManagement';
 
 const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.color.gray.gray300};
@@ -37,7 +37,7 @@ const Text = styled.span`
 `;
 
 const FriendSelector = () => {
-  const { user } = PascalCase();
+  const { user } = UserManagement();
   const name = user?.email.split('@')[0];
 
   return (

@@ -1,14 +1,14 @@
 import { useNavigate } from 'react-router-dom';
-import { PascalCase } from './UserManagement';
-import { useEmailInput } from './useEmailInput';
-import { usePasswordInput } from './usePasswordInput';
+import { UserManagement } from './UserManagement';
+import { useEmailInput } from './hooks/useEmailInput';
+import { usePasswordInput } from './hooks/usePasswordInput';
 
 export const useLoginForm = () => {
   const email = useEmailInput();
   const password = usePasswordInput();
 
   const navigate = useNavigate();
-  const { login } = PascalCase();
+  const { login } = UserManagement();
 
   const isValid = email.isValid && password.isValid;
 

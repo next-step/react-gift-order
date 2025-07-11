@@ -1,12 +1,12 @@
 /** @jsxImportSource @emotion/react */
 import { useTheme } from '@emotion/react';
-import { PascalCase } from './Login/UserManagement';
+import { UserManagement } from './Login/UserManagement';
 import { css } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
 
 const MyPage = () => {
   const theme = useTheme();
-  const { user, logout } = PascalCase();
+  const { user, logout } = UserManagement();
   const navigate = useNavigate();
 
   const name = user?.email.split('@')[0] ?? '사용자';

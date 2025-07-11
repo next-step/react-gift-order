@@ -9,7 +9,7 @@ import RankingSection from './components/RankingSection/RankingSection';
 import LoginPage from './pages/Login/LoginPage';
 import NotFoundPage from './pages/NotFoundPage';
 import MyPage from './pages/MyPage';
-import { PascalCaseProvider, PascalCase } from './pages/Login/UserManagement';
+import { UserManagementProvider, UserManagement } from './pages/Login/UserManagement';
 import React from 'react';
 import OrderPage from './pages/Order/OrderPage';
 import ScrollToTop from './components/ScrollToTop';
@@ -25,7 +25,7 @@ const Home = () => (
 
 // 로그인 안 한 상태면 마이 페이지 접근 불가(login페이지로 넘어감)
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user } = PascalCase();
+  const { user } = UserManagement();
 
   if (!user) {
     return <Navigate to="/login" replace />;
@@ -35,7 +35,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
 // 로그인한 상태면 로그인 페이지 접근 불가(my페이지로 넘어감)
 const RedirectIfLoggedIn = ({ children }: { children: React.ReactNode }) => {
-  const { user } = PascalCase();
+  const { user } = UserManagement();
 
   if (user) {
     return <Navigate to="/my" replace />;
@@ -46,7 +46,7 @@ const RedirectIfLoggedIn = ({ children }: { children: React.ReactNode }) => {
 function App() {
   return (
     <BrowserRouter>
-      <PascalCaseProvider>
+      <UserManagementProvider>
         <ScrollToTop />
         <NavBar />
         <Routes>
@@ -73,7 +73,7 @@ function App() {
           <Route path="/order" element={<OrderPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
-      </PascalCaseProvider>
+      </UserManagementProvider>
     </BrowserRouter>
   );
 }

@@ -48,8 +48,8 @@ export const UserManagementProvider = ({ children }: { children: ReactNode }) =>
   );
 };
 
-export const useUserManagement = () => {
+export const UserManagement = () => {
   const context = useContext(UserManagementContext);
-  if (!context) throw new Error('useUserManagement must be used within UserManagementProvider');
+  if (!context) throw new Error('UserManagement must be used within UserManagementProvider');
   return context;
 };
