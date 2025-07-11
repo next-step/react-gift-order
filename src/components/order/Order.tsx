@@ -177,7 +177,6 @@ const ReceiverModal = ({
 }) => {
   return (
     <>
-      <div css={OverlayStyle} onClick={onClose} />
       <div css={ModalStyle}>
         <h2>받는 사람 추가</h2>
         <OrderForm
