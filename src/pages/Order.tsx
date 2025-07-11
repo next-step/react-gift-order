@@ -37,13 +37,13 @@ const MessageInput = styled.textarea`
   flex: 1;
   font-size: 16px;
   box-sizing: border-box;
-  border: 1px solid #ccc;
+  border: 1px solid ${({ theme }) => theme.colors.borderDefault};
   border-radius: 8px;
 `;
 
 const SectionBox = styled.div`
   max-width: 720px;
-  background-color: white;
+  background-color: ${({ theme }) => theme.colors.gray00};
   margin: 12px 20px;
   padding: 20px;
 `;
@@ -60,7 +60,7 @@ const BottomOrderButton = styled.div<{ disabled: boolean }>`
   padding-bottom: 16px;
   font-size: 18px;
   font-weight: bold;
-  color: black;
+  color: ${({ theme }) => theme.colors.textDefault};
   cursor: pointer;
 `;
 
@@ -70,9 +70,9 @@ const OrderInfoWrapper = styled.div`
 `;
 
 const Section = styled.div`
-  background-color: white;
+  background-color: ${({ theme }) => theme.colors.gray00};
   padding: 20px;
-  border-bottom: 8px solid #f1f1f1;
+  border-bottom: 8px solid ${({ theme }) => theme.colors.gray200};
 `;
 
 const Label = styled.div`
@@ -83,7 +83,7 @@ const Label = styled.div`
 
 const Description = styled.div`
   font-size: 12px;
-  color: #999;
+  color: ${({ theme }) => theme.colors.textSub};
   margin-top: 4px;
 `;
 
@@ -98,13 +98,13 @@ const Input = styled.input`
   width: 100%;
   flex: 1;
   padding: 12px 0px 12px 10px;
-  border: 1px solid #dcdee3;
+  border: 1px solid ${({ theme }) => theme.colors.borderDefault};
   border-radius: 8px;
   font-size: 14px;
   flex-direction: column;
 
   &::placeholder {
-    color: #b0b0b0;
+    color: ${({ theme }) => theme.colors.textPlaceholder};
   }
   &:focus {
     border: 1px solid ${({ theme }) => theme.colors.gray400};
@@ -112,7 +112,7 @@ const Input = styled.input`
 `;
 
 const ErrorText = styled.div`
-  color: red;
+  color: ${({ theme }) => theme.colors.critical};
   font-size: 12px;
   margin-left: 1px;
   margin-top: 5px;
@@ -122,8 +122,8 @@ const ProductInfo = styled.div`
   width: 100%;
   padding: 12px 0px 12px 10px;
   border-radius: 0.5rem;
-  background-color: rgb(255, 255, 255);
-  border: 1px solid rgb(238, 239, 241);
+  background-color: ${({ theme }) => theme.colors.gray00};
+  border: 1px solid ${({ theme }) => theme.colors.borderDisabled};
   display: flex;
   gap: 12px;
 `;
@@ -141,6 +141,54 @@ const ReceiverAddButton = styled.button`
   border: none;
 `;
 
+const ReceiverTable = styled.table`
+  width: 100%;
+  border-collapse: separate;
+  border-radius: 12px;
+  border-spacing: 0;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  overflow: hidden;
+`;
+
+const TableHead = styled.thead`
+  background-color: ${({ theme }) => theme.colors.gray100};
+`;
+
+const TableRow = styled.tr``;
+
+const TableHeader = styled.th`
+  border: 1px solid ${({ theme }) => theme.colors.borderDefault};
+  padding: 8px;
+  font-weight: bold;
+  text-align: left;
+
+  &:first-of-type {
+    border-top-left-radius: 12px;
+  }
+
+  &:last-of-type {
+    border-top-right-radius: 12px;
+  }
+`;
+
+const TableCell = styled.td`
+  border: 1px solid ${({ theme }) => theme.colors.borderDefault};
+  padding: 8px;
+
+  &:first-of-type {
+    border-bottom-left-radius: 12px;
+  }
+
+  &:last-of-type {
+    border-bottom-right-radius: 12px;
+  }
+`;
+
+const QuantityCell = styled(TableCell)`
+  text-align: center;
+`;
+
 const Order = () => {
   const [selected, setSelected] = useState(orderCardTemplates[0].id);
   const selectedCard = orderCardTemplates.find(
@@ -150,7 +198,7 @@ const Order = () => {
 
   const [message, setMessage] = useState('축하해요.');
 
-  const { nameInput, quantityInput } = useReceiverForm();
+  const { nameInput } = useReceiverForm();
   const sendorNameInput = nameInput;
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -165,7 +213,7 @@ const Order = () => {
     if (!sendorNameInput.isValid) return;
 
     alert(
-      `주문이 완료되었습니다.\n 상품명: ${product.name}\n 구매 수량: ${quantityInput.value}\n 발신자 이름: ${sendorNameInput.value}\n 메시지: ${message}\n`
+      `주문이 완료되었습니다.\n 상품명: ${product.name}\n 구매 수량: ${totalQuantity}\n 발신자 이름: ${sendorNameInput.value}\n 메시지: ${message}\n`
     );
   };
 
@@ -230,11 +278,24 @@ const Order = () => {
             </div>
           ) : (
             <ul>
-              {receiverList.map((r, i) => (
-                <li key={r.id}>
-                  {i + 1}. {r.name} / {r.phone} / 수량: {r.quantity}
-                </li>
-              ))}
+              <ReceiverTable>
+                <TableHead>
+                  <TableRow>
+                    <TableHeader>이름</TableHeader>
+                    <TableHeader>전화번호</TableHeader>
+                    <TableHeader>수량</TableHeader>
+                  </TableRow>
+                </TableHead>
+                <tbody>
+                  {receiverList.map((r, i) => (
+                    <TableRow key={r.id}>
+                      <TableCell>{r.name}</TableCell>
+                      <TableCell>{r.phone}</TableCell>
+                      <QuantityCell>{r.quantity}</QuantityCell>
+                    </TableRow>
+                  ))}
+                </tbody>
+              </ReceiverTable>
             </ul>
           )}
 
