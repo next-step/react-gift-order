@@ -2,10 +2,11 @@
 import styled from "@emotion/styled";
 import { useFormContext, useWatch } from "react-hook-form";
 import type { OrderFormValues } from "@/validations/orderSchema";
-import type { RankingList as Product } from "@/mock/rankingList";
+import type { RankingList } from "@/mock/rankingList";
+import { calculateTotalQuantity } from "@/utils/order";
 
 interface ProductSummarySectionProps {
-  product: Product;
+  product: RankingList; 
 }
 
 export default function OrderSummary({ product }: ProductSummarySectionProps) {
@@ -16,11 +17,7 @@ export default function OrderSummary({ product }: ProductSummarySectionProps) {
     control,
   }) ?? [];
 
-  const totalQuantity = receivers.reduce(
-    (sum, r) => sum + (r.quantity ?? 0),
-    0
-  );
-
+  const totalQuantity = calculateTotalQuantity(receivers);
   const totalPrice = product.price.sellingPrice * totalQuantity;
 
   return (
