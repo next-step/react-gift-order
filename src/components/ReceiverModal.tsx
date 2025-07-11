@@ -1,85 +1,73 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useForm, useFieldArray } from 'react-hook-form';
 
-interface Receiver {
+type Receiver = {
   name: string;
   phone: string;
   quantity: number;
-}
+};
 
-interface Props {
+type FormValues = {
   receivers: Receiver[];
-  setReceivers: React.Dispatch<React.SetStateAction<Receiver[]>>;
+};
+
+interface ReceiverModalProps {
+  receivers: Receiver[];
+  setReceivers: (receivers: Receiver[]) => void;
   onClose: () => void;
 }
 
-const ReceiverModal: React.FC<Props> = ({
-  receivers,
+const ReceiverModal: React.FC<ReceiverModalProps> = ({
+  receivers: defaultReceivers,
   setReceivers,
   onClose,
 }) => {
-  const [localReceivers, setLocalReceivers] = useState<Receiver[]>(receivers);
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    watch,
+    setError,
+    clearErrors,
+    register,
+  } = useForm<FormValues>({
+    defaultValues: {
+      receivers:
+        defaultReceivers.length > 0
+          ? defaultReceivers
+          : [{ name: '', phone: '', quantity: 1 }],
+    },
+    mode: 'onChange',
+  });
 
-  // 추가
-  const handleAdd = () => {
-    if (localReceivers.length < 10) {
-      setLocalReceivers([
-        ...localReceivers,
-        { name: '', phone: '', quantity: 1 },
-      ]);
-    }
-  };
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'receivers',
+  });
 
-  // 삭제
-  const handleDelete = (idx: number) => {
-    setLocalReceivers(localReceivers.filter((_, i) => i !== idx));
-  };
-
-  // 변경
-  const handleChange = (
-    idx: number,
-    field: keyof Receiver,
-    value: string | number,
-  ) => {
-    setLocalReceivers(
-      localReceivers.map((r, i) => (i === idx ? { ...r, [field]: value } : r)),
-    );
-  };
-
-  const [errors, setErrors] = useState<{ name: string; phone: string }[]>([]);
-
-  const validate = () => {
-    const phoneList = localReceivers.map((r) => r.phone);
-    const newErrors = localReceivers.map((receiver, idx) => {
-      let nameError = '';
-      let phoneError = '';
-
-      if (!receiver.name.trim()) {
-        nameError = '이름을 입력해 주세요.';
+  // 중복 전화번호 체크
+  const receivers = watch('receivers');
+  React.useEffect(() => {
+    const phoneCount: Record<string, number> = {};
+    receivers.forEach((r) => {
+      if (r.phone) {
+        phoneCount[r.phone] = (phoneCount[r.phone] || 0) + 1;
       }
-
-      // 전화번호: 010으로 시작, 11자리
-      const phoneRegex = /^010\d{8}$/;
-      if (!receiver.phone.trim()) {
-        phoneError = '전화번호를 입력해 주세요.';
-      } else if (!phoneRegex.test(receiver.phone)) {
-        phoneError = '올바른 전화번호 형식이 아닙니다.';
-      } else if (
-        receiver.phone &&
-        phoneList.filter((phone) => phone === receiver.phone).length > 1
-      ) {
-        phoneError = '중복된 전화번호가 있습니다.';
-      }
-
-      return { name: nameError, phone: phoneError };
     });
+    receivers.forEach((r, idx) => {
+      if (r.phone && phoneCount[r.phone] > 1) {
+        setError(`receivers.${idx}.phone`, {
+          type: 'duplicate',
+          message: '중복된 전화번호가 있습니다.',
+        });
+      } else if (errors.receivers?.[idx]?.phone?.type === 'duplicate') {
+        clearErrors(`receivers.${idx}.phone`);
+      }
+    });
+  }, [receivers, setError, clearErrors, errors.receivers]);
 
-    setErrors(newErrors);
-    return newErrors.every((e) => !e.name && !e.phone);
-  };
-
-  const handleComplete = () => {
-    if (!validate()) return;
-    setReceivers(localReceivers);
+  const onSubmit = (data: FormValues) => {
+    setReceivers(data.receivers);
     onClose();
   };
 
@@ -98,7 +86,8 @@ const ReceiverModal: React.FC<Props> = ({
         alignItems: 'center',
       }}
     >
-      <div
+      <form
+        onSubmit={handleSubmit(onSubmit)}
         style={{
           background: '#fff',
           borderRadius: 16,
@@ -112,6 +101,7 @@ const ReceiverModal: React.FC<Props> = ({
           boxSizing: 'border-box',
         }}
       >
+        {/* 상단 고정 영역 */}
         <div
           style={{
             padding: '32px 32px 0 32px',
@@ -119,28 +109,44 @@ const ReceiverModal: React.FC<Props> = ({
             flexShrink: 0,
           }}
         >
-          <h2 style={{ marginBottom: 8 }}>받는 사람</h2>
-          <div style={{ color: '#888', fontSize: 14, marginBottom: 12 }}>
+          <div
+            style={{
+              fontWeight: 700,
+              fontSize: 18,
+              marginBottom: 8,
+            }}
+          >
+            받는 사람
+          </div>
+          <div
+            style={{
+              color: '#535353',
+              fontSize: 12,
+              marginBottom: 12,
+            }}
+          >
             * 최대 10명까지 추가할 수 있어요.
             <br />* 받는 사람의 전화번호를 중복으로 입력할 수 없어요.
           </div>
           <button
-            onClick={handleAdd}
-            disabled={localReceivers.length >= 10}
+            type="button"
+            onClick={() => append({ name: '', phone: '', quantity: 1 })}
+            disabled={fields.length >= 10}
             style={{
               marginBottom: 16,
-              color: localReceivers.length >= 10 ? '#bbb' : '#222',
-              cursor: localReceivers.length >= 10 ? 'not-allowed' : 'pointer',
-              fontSize: 13,
-              background: '#eee',
-              padding: '10px 30px',
               borderRadius: 8,
+              padding: '8px 20px',
+              fontWeight: 500,
+              fontSize: 13,
+              cursor: fields.length >= 10 ? 'not-allowed' : 'pointer',
+              background: '#eee',
               border: 'none',
             }}
           >
             추가하기
           </button>
         </div>
+        {/* 가운데 스크롤 영역 */}
         <div
           style={{
             flex: 1,
@@ -149,9 +155,9 @@ const ReceiverModal: React.FC<Props> = ({
             minHeight: 0,
           }}
         >
-          {localReceivers.map((receiver, idx) => (
+          {fields.map((field, idx) => (
             <div
-              key={idx}
+              key={field.id}
               style={{
                 border: '1px solid #eee',
                 borderRadius: 8,
@@ -166,24 +172,19 @@ const ReceiverModal: React.FC<Props> = ({
                   marginBottom: 8,
                 }}
               >
-                <b style={{ padding: 'auto auto auto 10' }}>
-                  받는 사람 {idx + 1}
-                </b>
+                <b>받는 사람 {idx + 1}</b>
                 <button
-                  onClick={() => handleDelete(idx)}
+                  type="button"
+                  onClick={() => remove(idx)}
                   style={{
+                    marginLeft: 8,
                     background: 'transparent',
                     border: 'none',
                     borderRadius: '50%',
                     width: 32,
                     height: 32,
-                    fontSize: 18,
+                    fontSize: 20,
                     cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: 0,
-                    margin: 0,
                   }}
                   aria-label="삭제"
                 >
@@ -201,45 +202,34 @@ const ReceiverModal: React.FC<Props> = ({
                 <label style={{ minWidth: 60, marginRight: 8 }}>이름</label>
                 <div style={{ flex: 1 }}>
                   <input
-                    placeholder="이름을 입력하세요."
-                    value={receiver.name}
-                    onChange={(e) => {
-                      handleChange(idx, 'name', e.target.value);
-                      // 입력 시 에러 초기화
-                      if (errors[idx]?.name) {
-                        const newErrors = [...errors];
-                        newErrors[idx] = { ...newErrors[idx], name: '' };
-                        setErrors(newErrors);
-                      }
-                    }}
+                    {...register(`receivers.${idx}.name`, {
+                      required: '이름을 입력해 주세요.',
+                    })}
                     style={{
                       width: '100%',
                       height: 36,
-                      border: errors[idx]?.name
+                      border: errors.receivers?.[idx]?.name
                         ? '2px solid #f44336'
                         : '1px solid #ccc',
                       borderRadius: 8,
                       padding: '0 12px',
-                      outline: 'none',
-                      boxSizing: 'border-box',
-                      marginBottom: 0,
                     }}
+                    placeholder="이름을 입력하세요."
                   />
-                  {errors[idx]?.name && (
+                  {errors.receivers?.[idx]?.name && (
                     <div
                       style={{
                         color: '#f44336',
                         fontSize: 13,
                         marginTop: 4,
-                        marginBottom: 8,
-                        marginLeft: 4,
                       }}
                     >
-                      {errors[idx].name}
+                      {errors.receivers[idx].name.message}
                     </div>
                   )}
                 </div>
               </div>
+              {/* 전화번호 */}
               <div
                 style={{
                   display: 'flex',
@@ -250,40 +240,45 @@ const ReceiverModal: React.FC<Props> = ({
                 <label style={{ minWidth: 60, marginRight: 8 }}>전화번호</label>
                 <div style={{ flex: 1 }}>
                   <input
-                    placeholder="전화번호를 입력하세요."
-                    value={receiver.phone}
-                    onChange={(e) => {
-                      handleChange(idx, 'phone', e.target.value);
-                      if (errors[idx]?.phone) {
-                        const newErrors = [...errors];
-                        newErrors[idx] = { ...newErrors[idx], phone: '' };
-                        setErrors(newErrors);
-                      }
-                    }}
+                    {...register(`receivers.${idx}.phone`, {
+                      required: '전화번호를 입력해 주세요.',
+                      pattern: {
+                        value: /^010\d{8}$/,
+                        message: '올바른 전화번호 형식이 아닙니다.',
+                      },
+                      validate: (value) => {
+                        // 중복 체크
+                        if (
+                          value &&
+                          watch('receivers').filter(
+                            (r, i) => r.phone === value && i !== idx,
+                          ).length > 0
+                        ) {
+                          return '중복된 전화번호가 있습니다.';
+                        }
+                        return true;
+                      },
+                    })}
                     style={{
                       width: '100%',
                       height: 36,
-                      border: errors[idx]?.phone
+                      border: errors.receivers?.[idx]?.phone
                         ? '2px solid #f44336'
                         : '1px solid #ccc',
                       borderRadius: 8,
                       padding: '0 12px',
-                      outline: 'none',
-                      boxSizing: 'border-box',
-                      marginBottom: 0,
                     }}
+                    placeholder="전화번호를 입력하세요."
                   />
-                  {errors[idx]?.phone && (
+                  {errors.receivers?.[idx]?.phone && (
                     <div
                       style={{
                         color: '#f44336',
                         fontSize: 13,
                         marginTop: 4,
-                        marginBottom: 8,
-                        marginLeft: 4,
                       }}
                     >
-                      {errors[idx].phone}
+                      {errors.receivers[idx].phone.message}
                     </div>
                   )}
                 </div>
@@ -300,29 +295,39 @@ const ReceiverModal: React.FC<Props> = ({
                 <input
                   type="number"
                   min={1}
-                  value={receiver.quantity}
-                  onChange={(e) =>
-                    handleChange(
-                      idx,
-                      'quantity',
-                      Math.max(1, Number(e.target.value)),
-                    )
-                  }
+                  {...register(`receivers.${idx}.quantity`, {
+                    required: true,
+                    min: {
+                      value: 1,
+                      message: '수량은 1개 이상이어야 해요.',
+                    },
+                  })}
                   style={{
-                    width: '100%',
+                    width: 100,
                     height: 36,
-                    border: '1px solid #ccc',
+                    border: errors.receivers?.[idx]?.quantity
+                      ? '2px solid #f44336'
+                      : '1px solid #ccc',
                     borderRadius: 8,
                     padding: '0 12px',
-                    outline: 'none',
-                    boxSizing: 'border-box',
-                    marginBottom: 0,
                   }}
                 />
+                {errors.receivers?.[idx]?.quantity && (
+                  <div
+                    style={{
+                      color: '#f44336',
+                      fontSize: 13,
+                      marginTop: 4,
+                    }}
+                  >
+                    {errors.receivers[idx].quantity.message}
+                  </div>
+                )}
               </div>
             </div>
           ))}
         </div>
+        {/* 하단 고정 버튼 */}
         <div
           style={{
             width: '100%',
@@ -334,12 +339,15 @@ const ReceiverModal: React.FC<Props> = ({
             padding: '24px 32px',
             boxSizing: 'border-box',
             borderTop: '1px solid #eee',
+            flexShrink: 0,
           }}
         >
           <button
+            type="button"
             onClick={onClose}
             style={{
               background: '#eee',
+              width: '120px',
               padding: '10px 30px',
               borderRadius: 8,
               fontSize: 15,
@@ -350,9 +358,10 @@ const ReceiverModal: React.FC<Props> = ({
             취소
           </button>
           <button
-            onClick={handleComplete}
+            type="submit"
             style={{
               background: '#ffe812',
+              width: '300px',
               padding: '10px 30px',
               borderRadius: 8,
               fontWeight: 'bold',
@@ -361,10 +370,10 @@ const ReceiverModal: React.FC<Props> = ({
               cursor: 'pointer',
             }}
           >
-            {localReceivers.length}명 완료
+            {fields.length}명 완료
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 };
