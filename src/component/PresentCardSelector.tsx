@@ -2,15 +2,12 @@ import { CardTemplete } from '@/mock/CardTemplete';
 import { CentorAlignDiv, DefaultComponentDiv, EmptyDiv40h, EmptyDiv8h, LowSlideDiv, SideBlankDiv } from '@/styles/Common.styled';
 import React, { useState } from 'react'
 import { CardBiGImg, CardBiGImgDiv, CardMessage, CardMiniImg } from './PresentCardSelector.styled';
+import { useOrder } from '@/context/OrderContext';
 
 
-interface PresentCardSelectorProps {
-  cardMessage : string,
-  setCardMessage : ( newMessage :string) => void
-}
 
-
-const PresentCardSelector : React.FC<PresentCardSelectorProps>= ({cardMessage, setCardMessage}) => {
+const PresentCardSelector= () => {
+  const {cardMessage, setCardMessage} = useOrder()
   const [selectedCard, setSelectedCard] = useState(CardTemplete[0]);
 
   return (

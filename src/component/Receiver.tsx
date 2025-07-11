@@ -1,31 +1,13 @@
-import { DefaultComponentDiv, Div100p, EmptyDiv12h, EmptyDiv24h, EmptyDiv8h, ErrorText, LowField, MiniText, SideBlankDiv, SimpleInput, SubText, SubTitle } from '@/styles/Common.styled';
+import { useOrder } from '@/context/OrderContext';
+import { DefaultComponentDiv, Div100p, EmptyDiv12h, EmptyDiv24h, EmptyDiv8h, ErrorText, LowField, MiniText, SideBlankDiv, SimpleInput, SubTitle } from '@/styles/Common.styled';
 
-interface ReceiverProps {
-    nameInput: {
-        value: string;
-        onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-        onBlur: () => void;
-        error: string | null;
-    };
-    phoneInput: {
-        value: string;
-        onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-        onBlur: () => void;
-        error: string | null;
-    };
-    quantityInput: {
-        value: string;
-        onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-        onBlur: () => void;
-        error: string | null;
-    };
-}
 
-const Receiver: React.FC<ReceiverProps> = ({
-    nameInput,
-    phoneInput,
-    quantityInput,
-}) => {
+
+const Receiver = () => {
+      const {
+        recipientNameInput,
+        recipientPhoneInput,
+        quantityInput }= useOrder()
     return (
         <DefaultComponentDiv>
             <EmptyDiv8h />
@@ -40,12 +22,11 @@ const Receiver: React.FC<ReceiverProps> = ({
                         <SimpleInput
                             type="text"
                             placeholder="이름을 입력하세요."
-                            value={nameInput.value}
-                            onChange={nameInput.onChange}
-                            onBlur={nameInput.onBlur}
+                            value={recipientNameInput.value}
+                            onChange={recipientNameInput.onChange}
                         />
-                        {nameInput.error && (
-                            <ErrorText>{nameInput.error}</ErrorText>
+                        {recipientNameInput.error && (
+                            <ErrorText>{recipientNameInput.error}</ErrorText>
                         )}
                     </Div100p>
                 </LowField>
@@ -60,12 +41,11 @@ const Receiver: React.FC<ReceiverProps> = ({
                         <SimpleInput
                             type="text"
                             placeholder="전화번호를 입력하세요."
-                            value={phoneInput.value}
-                            onChange={phoneInput.onChange}
-                            onBlur={phoneInput.onBlur}
+                            value={recipientPhoneInput.value}
+                            onChange={recipientPhoneInput.onChange}
                         />
-                        {phoneInput.error && (
-                            <ErrorText>{phoneInput.error}</ErrorText>
+                        {recipientPhoneInput.error && (
+                            <ErrorText>{recipientPhoneInput.error}</ErrorText>
                         )}
                     </Div100p>
                 </LowField>
@@ -80,7 +60,6 @@ const Receiver: React.FC<ReceiverProps> = ({
                             min={1}
                             value={quantityInput.value}
                             onChange={quantityInput.onChange}
-                            onBlur={quantityInput.onBlur}
                         />
                         {quantityInput.error && (
                             <ErrorText>{quantityInput.error}</ErrorText>

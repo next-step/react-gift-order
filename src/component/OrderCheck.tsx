@@ -1,19 +1,65 @@
-import { DefaultComponentDiv, OrderButton, Price, ProductBox, ProductImage, ProductInfo, ProductName, SubText, SubTitle } from '@/styles/Common.styled'
+import { useOrder } from '@/context/OrderContext';
+import { DefaultComponentDiv, EmptyDiv8h, OrderButton, Price, ProductBox, ProductImage, ProductInfo, ProductName, SideBlankDiv, SubText, SubTitle } from '@/styles/Common.styled'
 
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-interface OrderCheckProps {
-  onOrder: () => void;
-  message: string;
-  quantity : number
-}
 
-const OrderCheck: React.FC<OrderCheckProps> = ({ onOrder, message, quantity }) => {
+
+const OrderCheck = () => {
+  const navigate = useNavigate();
+  const {
+    senderNameInput,
+    recipientNameInput,
+    recipientPhoneInput,
+    quantityInput,
+    cardMessage,
+  } = useOrder()
+
 
   const location = useLocation();
 
-    interface ProductItem {
+  interface ProductItem {
+    id: number;
+    name: string;
+    imageURL: string;
+    price: {
+      basicPrice: number;
+      discountRate: number;
+      sellingPrice: number;
+    };
+    brandInfo: {
+      id: number;
+      name: string;
+      imageURL: string;
+    };
+  }
+
+  const handleOrder = () => {
+    senderNameInput.validate();
+    recipientNameInput.validate();
+    recipientPhoneInput.validate();
+    quantityInput.validate();
+
+    const isValid =
+      !senderNameInput.error &&
+      !recipientNameInput.error &&
+      !recipientPhoneInput.error &&
+      !quantityInput.error;
+
+    if (isValid) {
+      alert(`주문이 완료되었습니다. 
+        상품명:${item.name} 
+        구매수량: ${quantityInput.value}
+        발신자 이름: ${senderNameInput.value}
+        메세지: ${cardMessage}
+        `
+      );
+      navigate('/');
+    }
+  };
+
+  interface ProductItem {
     id: number;
     name: string;
     imageURL: string;
@@ -38,27 +84,27 @@ const OrderCheck: React.FC<OrderCheckProps> = ({ onOrder, message, quantity }) =
   const brandName = item.brandInfo.name
   return (
     <DefaultComponentDiv>
-      <SubTitle>상품 정보</SubTitle>
+      <SideBlankDiv>
+        <EmptyDiv8h />
+        <SubTitle>상품 정보</SubTitle>
 
-      <ProductBox>
-        <ProductImage
-          src={imageUrl}
-          alt={Name}
-        />
-        <ProductInfo>
-          <ProductName>{Name}</ProductName>
-          <SubText>{brandName}</SubText>
-          <Price>
-            상품가 <span>{price}원</span>
-          </Price>
-        </ProductInfo>
-      </ProductBox>
+        <ProductBox>
+          <ProductImage
+            src={imageUrl}
+            alt={Name}
+          />
+          <ProductInfo>
+            <ProductName>{Name}</ProductName>
+            <SubText>{brandName}</SubText>
+            <Price>
+              상품가 <span>{price}원</span>
+            </Price>
+          </ProductInfo>
+        </ProductBox>
 
-      {message && (
-        <SubText style={{ color: 'green', marginTop: '12px' }}>{message}</SubText>
-      )}
+      </SideBlankDiv>
 
-      <OrderButton onClick={onOrder}> {quantity*price} 원 주문하기</OrderButton>
+      <OrderButton onClick={handleOrder}> {Number(quantityInput.value) * price} 원 주문하기</OrderButton>
     </DefaultComponentDiv>
   );
 };

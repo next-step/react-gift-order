@@ -1,14 +1,11 @@
+import { useOrder } from '@/context/OrderContext';
 import { DefaultComponentDiv, EmptyDiv12h, EmptyDiv24h, EmptyDiv4h, EmptyDiv8h, ErrorText, SideBlankDiv, SimpleInput, SubText, SubTitle } from '@/styles/Common.styled';
 
 
-interface SenderProps {
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onBlur: () => void;
-    error: string | null;
-}
 
-const Sender: React.FC<SenderProps> = ({ value, onChange, onBlur, error }) => {
+const Sender = () => {
+    const { senderNameInput } = useOrder();
+    const { value, onChange, onBlur, error, isValid } = senderNameInput
     return (
         <DefaultComponentDiv>
             <SideBlankDiv>
@@ -22,15 +19,16 @@ const Sender: React.FC<SenderProps> = ({ value, onChange, onBlur, error }) => {
                     onChange={onChange}
                     onBlur={onBlur}
                 />
-                {error ? (
-                    <>
-                        <EmptyDiv4h />
-                        <ErrorText>{error}</ErrorText>
-                    </>
-                ) : (
+                {isValid ? (
                     <>
                         <EmptyDiv4h />
                         <SubText>* 실제 선물 발송 시 발신자 이름으로 반영되는 정보입니다.</SubText>
+                    </>
+
+                ) : (
+                    <>
+                        <EmptyDiv4h />
+                        <ErrorText>{error}</ErrorText>
                     </>
                 )}
                 <EmptyDiv24h />
