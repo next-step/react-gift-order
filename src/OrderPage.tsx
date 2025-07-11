@@ -2,7 +2,7 @@ import PageContainer from "@/components/PageContainer";
 import CardSelectionSection from "@/sections/OrderSection/CardSelectionSection";
 import MessageInputSection from "@/sections/OrderSection/MessageInputSection";
 import SenderSection from "@/sections/OrderSection/SenderSection";
-import ReceiverSection from "@/sections/OrderSection/ReceiverSection";
+import ReceiverModalSection from "@/sections/OrderSection/ReceiverModalSection";
 import ProductInfoSection from "@/sections/OrderSection/ProductInfoSection";
 import BottomOrderBar from "@/sections/OrderSection/BottomOrderBar";
 import { useParams, useNavigate } from "react-router";
@@ -14,14 +14,26 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
+const receiverSchema = z.object({
+  name: z.string().min(1, "이름을 입력해주세요."),
+  phone: z.string().regex(/^010\d{8}$/, "전화번호는 010으로 시작하는 11자리 숫자여야 합니다."),
+  quantity: z.number().min(1, "수량은 최소 1개 이상이어야 합니다."),
+});
+
 const schema = z.object({
   message: z.string().min(1, "메시지를 입력해주세요."),
   sender: z.string().min(1, "보내는 사람을 입력해주세요."),
-  receiverName: z.string().min(1, "받는 사람을 입력해주세요."),
-  receiverPhone: z
-    .string()
-    .regex(/^010\d{8}$/, "전화번호는 010으로 시작하는 11자리 숫자여야 합니다."),
-  quantity: z.number().min(1, "최소 1개 이상 주문해야 합니다."),
+  receivers: z
+    .array(receiverSchema)
+    .min(1, "최소 1명 이상의 받는 사람을 추가해주세요.")
+    .max(10, "최대 10명까지만 등록할 수 있어요.")
+    .refine(
+      (receivers) => {
+        const phones = receivers.map((r) => r.phone);
+        return new Set(phones).size === phones.length;
+      },
+      { message: "전화번호가 중복되었습니다." }
+    ),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -40,26 +52,26 @@ function OrderPage() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, touchedFields, isSubmitted },
     setValue,
     watch,
+    trigger,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
       message: "",
       sender: "",
-      receiverName: "",
-      receiverPhone: "",
-      quantity: 1,
+      receivers: [],
     },
   });
 
-  const quantity = watch("quantity");
+  const totalQuantity = watch("receivers").reduce((sum, r) => sum + (r.quantity || 0), 0);
 
-  const totalPrice = product?.price.sellingPrice * quantity;
+  const totalPrice = product?.price.sellingPrice * totalQuantity;
 
-  const onSubmit = (data: FormData) => {
-    alert(`🎁 ${rank}등 상품 주문 완료!\n${JSON.stringify(data, null, 2)}`);
+  const onSubmit = (_data: FormData) => {
+    alert(`🎁 ${rank}등 상품 주문 완료!`);
     navigate("/");
   };
 
@@ -85,10 +97,11 @@ function OrderPage() {
           error={errors.sender?.message || ""}
           touched={!!touchedFields.sender || isSubmitted}
         />
-        <ReceiverSection
+        <ReceiverModalSection
           register={register}
+          control={control}
           errors={errors}
-          touched={touchedFields}
+          trigger={trigger}
         />
         <ProductInfoSection
           product={{
