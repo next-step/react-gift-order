@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
 import { css } from '@emotion/react';
 import RecipientForm from '@src/components/RecipientForm';
-import { validateField } from '@src/hooks/useOrderForm';
+import { orderSchema } from '@src/hooks/useOrderForm';
 import type { OrderValues } from '@src/hooks/useOrderForm';
 import theme from '@/styles/tokens';
 
 const initialValues: OrderValues = {
-  message: '',
-  senderName: '',
   recipientName: '',
   recipientPhone: '',
   quantity: '1',
@@ -172,13 +170,21 @@ const RecipientFormList = ({
     }
   }, [open, recipients]);
 
-  const onChange = (idx: number, name: string, value: string) => {
+  const onChange = (idx: number, name: keyof OrderValues, value: string) => {
     const newRecipients = localRecipients.map((item, i) =>
       i === idx ? { ...item, [name]: value } : item
     );
     setLocalRecipients(newRecipients);
 
-    let errorMsg = validateField(name, value);
+    let errorMsg: string | undefined;
+    const fieldSchema = orderSchema.shape[name];
+
+    try {
+      fieldSchema.parse(value);
+    } catch (e: any) {
+      errorMsg = e?.errors?.[0]?.message;
+    }
+
     if (name === 'recipientPhone') {
       const phoneCount = newRecipients.filter(
         (r) => r.recipientPhone === value
@@ -187,13 +193,14 @@ const RecipientFormList = ({
         errorMsg = '중복된 전화번호가 있습니다.';
       }
     }
+
     const newErrors = errors.map((item, i) =>
       i === idx ? { ...item, [name]: errorMsg } : item
     );
     setErrors(newErrors);
   };
 
-  const onBlur = (idx: number, name: string) => {
+  const onBlur = (idx: number, name: keyof OrderValues) => {
     const newTouched = touched.map((item, i) =>
       i === idx ? { ...item, [name]: true } : item
     );
@@ -221,19 +228,39 @@ const RecipientFormList = ({
       }
     });
 
-    const newErrors = localRecipients.map((recipient) => {
-      const err: Partial<OrderValues> = {};
-      Object.keys(recipient).forEach((key) => {
-        const field = key as keyof OrderValues;
-        const msg = validateField(field, recipient[field] ?? '');
-        if (msg) err[field] = msg;
-      });
+    const newErrors: Partial<OrderValues>[] = localRecipients.map(
+      (recipient) => {
+        const err: Partial<OrderValues> = {};
 
-      if (recipient.recipientPhone && phoneMap[recipient.recipientPhone] > 1) {
-        err.recipientPhone = '중복된 전화번호가 있습니다.';
+        Object.keys(recipient).forEach((key) => {
+          const field = key as keyof OrderValues;
+          let value = recipient[field];
+
+          try {
+            const fieldSchema = orderSchema.shape[field];
+            fieldSchema.parse(value);
+          } catch (e: any) {
+            if (e?.issues && e.issues.length > 0) {
+              err[field] = e.issues[0].message;
+            } else if (e.message) {
+              err[field] = e.message;
+            } else {
+              err[field] = '유효성 검사 오류';
+            }
+          }
+        });
+
+        if (
+          recipient.recipientPhone &&
+          phoneMap[recipient.recipientPhone] > 1
+        ) {
+          err.recipientPhone = '중복된 전화번호가 있습니다.';
+        }
+
+        return err;
       }
-      return err;
-    });
+    );
+
     setErrors(newErrors);
 
     const newTouched = localRecipients.map((recipient) => {
@@ -246,10 +273,13 @@ const RecipientFormList = ({
     setTouched(newTouched);
 
     const hasError = newErrors.some((err) => Object.values(err).some(Boolean));
-    if (!hasError) {
-      setRecipients(localRecipients);
-      onClose();
+
+    if (hasError) {
+      return;
     }
+
+    setRecipients(localRecipients);
+    onClose();
   };
 
   if (!open) return null;

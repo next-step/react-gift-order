@@ -3,6 +3,7 @@ import OrderFormInput from './OrderFormInput';
 import type { OrderValues } from '@src/hooks/useOrderForm';
 import theme from '@/styles/tokens';
 import close from '@/assets/icons/close.svg';
+
 const cover = css`
   margin: 0;
   padding: 0;
@@ -68,10 +69,10 @@ const space8 = css`
 interface Props {
   values: OrderValues;
   errors: Partial<OrderValues>;
-  onChange: (name: string, value: string) => void;
+  onChange: (name: keyof OrderValues, value: string) => void;
   onRemove?: () => void;
   index?: number;
-  onBlur?: (name: string) => void;
+  onBlur?: (name: keyof OrderValues) => void;
 }
 
 const RecipientForm = ({
@@ -80,6 +81,7 @@ const RecipientForm = ({
   onChange,
   onRemove,
   index,
+  onBlur,
 }: Props) => {
   return (
     <div css={cover}>
@@ -107,6 +109,7 @@ const RecipientForm = ({
             placeholder="이름을 입력하세요."
             error={errors.recipientName}
             onChange={(e) => onChange('recipientName', e.target.value)}
+            onBlur={onBlur ? () => onBlur('recipientName') : undefined}
           />
         </div>
       </div>
@@ -122,6 +125,7 @@ const RecipientForm = ({
             placeholder="전화번호를 입력하세요."
             error={errors.recipientPhone}
             onChange={(e) => onChange('recipientPhone', e.target.value)}
+            onBlur={onBlur ? () => onBlur('recipientPhone') : undefined}
           />
         </div>
       </div>
@@ -139,6 +143,7 @@ const RecipientForm = ({
             placeholder="수량을 입력하세요."
             error={errors.quantity}
             onChange={(e) => onChange('quantity', e.target.value)}
+            onBlur={onBlur ? () => onBlur('quantity') : undefined}
           />
         </div>
       </div>
