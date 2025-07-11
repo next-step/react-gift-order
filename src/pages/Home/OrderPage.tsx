@@ -15,6 +15,15 @@ export default function OrderPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { token } = useContext(AuthContext)!;
+  // 1) 페이지 진입 시 한 번만 로그인 체크
+  useEffect(() => {
+    if (!token) {
+      // 현재 URL (템플릿 선택 파라미터까지 포함) 을 redirect 에 넘겨줍니다
+      const redirectTo = `${location.pathname}${location.search}`;
+      navigate(`/login?redirect=${encodeURIComponent(redirectTo)}`, { replace: true });
+    }
+  }, [token, navigate, location]);
+    if (!token) return null;
 
   // 1) 상품 찾기
   const id = params.id;
