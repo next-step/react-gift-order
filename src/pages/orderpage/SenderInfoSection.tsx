@@ -1,20 +1,19 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
-import type { UseFormRegister } from "react-hook-form";
+import { useFormContext, Controller } from "react-hook-form";
 import type { FullOrderFormValues } from "@/utils/validator";
 
-interface Props {
-  register: UseFormRegister<FullOrderFormValues>;
-  error?: string;
-}
-
-const SenderInfoSection = ({ register, error }: Props) => {
+const SenderInfoSection = ({ error }: { error?: string }) => {
+  const { control } = useFormContext<FullOrderFormValues>();
   return (
     <>
       <Title>보내는 사람 이름</Title>
-      <SenderNameInput
-        {...register("sender")}
-        placeholder="이름을 입력하세요"
+      <Controller
+        name="sender"
+        control={control}
+        render={({ field }) => (
+          <SenderNameInput {...field} placeholder="이름을 입력하세요" />
+        )}
       />
       {error && <ErrorMessage>{error}</ErrorMessage>}
       <Notice>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</Notice>

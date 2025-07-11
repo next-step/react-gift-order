@@ -27,7 +27,6 @@ const OrderPage = () => {
     },
   });
   const {
-    register,
     handleSubmit,
     setValue,
     formState: { errors },
@@ -51,12 +50,8 @@ const OrderPage = () => {
   return (
     <FormProvider {...methods}>
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <MessageCardSection
-          register={register}
-          setValue={setValue}
-          error={errors.message?.message}
-        />
-        <SenderInfoSection register={register} error={errors.sender?.message} />
+        <MessageCardSection error={errors.message?.message} />
+        <SenderInfoSection error={errors.sender?.message} />
         <ReceiverInfoSection />
         <ProductSummarySection product={product} />
         <OrderButton

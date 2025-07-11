@@ -1,18 +1,17 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
 import { useState, useEffect } from "react";
+import { Controller, useFormContext } from "react-hook-form";
 import { MESSAGE_CARD_LIST } from "@/mocks/messagecard_mock";
 import type { MessageCard } from "@/mocks/types";
-import type { UseFormRegister, UseFormSetValue } from "react-hook-form";
 import type { FullOrderFormValues } from "@/utils/validator";
 
 interface Props {
-  register: UseFormRegister<FullOrderFormValues>;
-  setValue: UseFormSetValue<FullOrderFormValues>;
   error?: string;
 }
 
-const MessageCardSection = ({ register, setValue, error }: Props) => {
+const MessageCardSection = ({ error }: Props) => {
+  const { setValue, control } = useFormContext<FullOrderFormValues>();
   const [selectedCard, setSelectedCard] = useState<MessageCard>(
     MESSAGE_CARD_LIST[0]
   );
@@ -44,9 +43,16 @@ const MessageCardSection = ({ register, setValue, error }: Props) => {
       <PreviewImage src={selectedCard.imageUrl} alt="preview" />
 
       <MessageInputWrapper>
-        <MessageInput
-          placeholder="메시지를 입력해주세요."
-          {...register("message")}
+        <Controller
+          control={control}
+          name="message"
+          render={({ field }) => (
+            <MessageInput
+              placeholder="메시지를 입력해주세요."
+              value={field.value}
+              onChange={(e) => field.onChange(e)}
+            />
+          )}
         />
         {error && <ErrorText>{error}</ErrorText>}
       </MessageInputWrapper>
