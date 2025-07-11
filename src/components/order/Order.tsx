@@ -25,9 +25,9 @@ import {
   InputWrapperStyle,
   ErrorMessageStyle,
 } from "@/components/order/Order.style";
-import OrderForm from "@/components/order/OrderFoam";
-import { css } from "@emotion/react";
+import OrderForm from "@/components/order/OrderForm";
 import type { FormData } from "@/components/order/OrderForm";
+import { css } from "@emotion/react";
 
 const Order: React.FC = () => {
   const theme = useTheme();
@@ -200,6 +200,9 @@ const ModalStyle = css`
   padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  width: 400px;
+  max-height: 80vh;
+  overflow-y: auto;
 `;
 
 const OverlayStyle = css`
