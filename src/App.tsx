@@ -16,13 +16,12 @@ const muiTheme = createTheme()
 
 function App() {
   return (
-    <LoginProvider>
-      <MuiThemeProvider theme={muiTheme}>
-        <EmotionThemeProvider theme={emotionTheme}>
+    <MuiThemeProvider theme={muiTheme}>
+      <LoginProvider>
+        <EmotionThemeProvider theme={{ ...muiTheme, ...emotionTheme }}>
           <BrowserRouter>
             <GlobalStyle />
             <Routes>
-              
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/my" element={
@@ -36,8 +35,8 @@ function App() {
             </Routes>
           </BrowserRouter>
         </EmotionThemeProvider>
-      </MuiThemeProvider>
-    </LoginProvider>
+      </LoginProvider>
+    </MuiThemeProvider>
   )
 }
 

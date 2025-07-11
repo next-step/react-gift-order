@@ -4,6 +4,13 @@ import styled from "@emotion/styled";
 import { cardTemplates } from "@/Components/cardTemplates";
 import { useParams } from "react-router-dom";
 import { products } from "@/data/products";
+// MUI 관련 import 제거
+// import Dialog from '@mui/material/Dialog';
+// import DialogTitle from '@mui/material/DialogTitle';
+// import DialogContent from '@mui/material/DialogContent';
+// import DialogActions from '@mui/material/DialogActions';
+// import Button from '@mui/material/Button';
+import { useState } from 'react';
 
 // ===== 타입 정의 =====
 interface OrderState {
@@ -376,11 +383,59 @@ const ErrorMessage = styled.div`
   margin: 4px 0 8px 4px;
 `;
 
+// ===== 커스텀 모달 스타일 =====
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.25);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+const ModalContent = styled.div`
+  background: #fff;
+  border-radius: 16px;
+  max-width: 400px;
+  width: 90vw;
+  padding: 32px 24px 24px 24px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+`;
+const ModalTitle = styled.h2`
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 18px;
+`;
+const ModalActions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+`;
+const ModalButton = styled.button`
+  background: #f7e244;
+  color: #222;
+  font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  cursor: pointer;
+  transition: background 0.2s;
+  &:hover {
+    background: #ffe14a;
+  }
+`;
+
 const Order = () => {
   // ===== 상태 관리 =====
   const { id } = useParams();
   const product = products.find(p => String(p.id) === String(id));
   const [state, dispatch] = useReducer(orderReducer, initialState);
+  const [receiverModalOpen, setReceiverModalOpen] = useState(false);
 
   const selectedCard = cardTemplates.find(card => card.id === state.selectedId);
 
@@ -458,6 +513,10 @@ const Order = () => {
       {/* ===== 받는 사람 섹션 ===== */}
       <ReceiverSection>
         <ReceiverTitle>받는 사람</ReceiverTitle>
+        <OrderButton type="button" onClick={() => setReceiverModalOpen(true)} style={{ marginBottom: 16 }}>
+          추가
+        </OrderButton>
+        {/* 기존 받는 사람 입력 폼은 유지 */}
         <ReceiverRow>
           <ReceiverLabel htmlFor="receiverName">이름</ReceiverLabel>
           <ReceiverInput
@@ -489,6 +548,22 @@ const Order = () => {
           />
         </ReceiverRow>
       </ReceiverSection>
+
+      {/* ===== 받는 사람 추가 모달 (emotion styled) ===== */}
+      {receiverModalOpen && (
+        <ModalOverlay onClick={() => setReceiverModalOpen(false)}>
+          <ModalContent onClick={e => e.stopPropagation()}>
+            <ModalTitle>받는 사람</ModalTitle>
+            <div style={{ minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888' }}>
+              받는 사람을 추가할 수 있는 UI가 들어갑니다.
+            </div>
+            <ModalActions>
+              <ModalButton type="button" onClick={() => setReceiverModalOpen(false)}>취소</ModalButton>
+              <ModalButton type="button" onClick={() => setReceiverModalOpen(false)}>완료</ModalButton>
+            </ModalActions>
+          </ModalContent>
+        </ModalOverlay>
+      )}
 
       {/* ===== 상품 정보 섹션 ===== */}
       <ProductSection>
