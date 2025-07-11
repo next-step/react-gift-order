@@ -1,53 +1,95 @@
-import { useState } from 'react'
+import { useEffect } from 'react'
+import { useForm, useFieldArray } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 
-interface Order {
-  message: string
-  sender: string
+export interface Receiver {
   receiver: string
   phone: string
   quantity: number
 }
 
-interface OrderError {
-  message?: string
-  sender?: string
-  receiver?: string
-  phone?: string
-  quantity?: string
+export interface Order {
+  message: string
+  sender: string
+  receivers: Receiver[]
 }
 
-export const useOrderForm = (defaultMessage: string) => {
-  const [order, setOrderState] = useState<Order>({
-    message: defaultMessage,
-    sender: '',
-    receiver: '',
-    phone: '',
-    quantity: 1,
+interface UseOrderFormParams {
+  defaultMessage: string
+  productName: string
+  sellingPrice: number
+  selectedCardId: number
+  selectedCardMessage: string
+}
+
+export const useOrderForm = ({
+  defaultMessage,
+  productName,
+  sellingPrice,
+  selectedCardId,
+  selectedCardMessage,
+}: UseOrderFormParams) => {
+  const navigate = useNavigate()
+
+  const {
+    control,
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    trigger,
+    getValues,
+    formState: { errors },
+  } = useForm<Order>({
+    defaultValues: {
+      message: defaultMessage,
+      sender: '',
+      receivers: [],
+    },
+    mode: 'onChange',
   })
 
-  const [errors, setErrors] = useState<OrderError>({})
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'receivers',
+  })
 
-  const setOrder = (newData: Partial<Order>) => {
-    setOrderState((prev) => ({ ...prev, ...newData }))
+  const order = watch()
+  const totalPrice = order.receivers.reduce(
+    (sum: number, r) => sum + r.quantity * sellingPrice,
+    0
+  )
+
+  useEffect(() => {
+    setValue('message', selectedCardMessage || '')
+  }, [selectedCardId, selectedCardMessage, setValue])
+
+  const onSubmit = handleSubmit((data) => {
+    const totalQuantity = data.receivers.reduce(
+      (sum, r) => sum + Number(r.quantity),
+      0
+    )
+
+    alert(`주문이 완료되었습니다.
+상품명: ${productName}
+총 수량: ${totalQuantity}
+발신자 이름: ${data.sender}
+메시지: ${data.message}`)
+
+    navigate('/')
+  })
+
+  return {
+    register,
+    onSubmit,
+    errors,
+    order,
+    totalPrice,
+    fields,
+    append,
+    remove,
+    control,
+    getValues,
+    trigger,
   }
-
-  const validate = (): boolean => {
-    const newErrors: OrderError = {}
-    const phoneRegex = /^010\d{8}$/
-
-    if (!order.message) newErrors.message = '메세지를 입력해주세요.'
-    if (!order.sender) newErrors.sender = '이름을 입력해주세요.'
-    if (!order.receiver) newErrors.receiver = '이름을 입력해주세요.'
-    if (!order.phone) newErrors.phone = '전화번호를 입력해주세요.'
-    else if (!phoneRegex.test(order.phone))
-      newErrors.phone = '올바른 전화번호 형식이 아닙니다.'
-    if (order.quantity < 1)
-      newErrors.quantity = '구매 수량은 1개 이상이어야 합니다.'
-
-    setErrors(newErrors)
-
-    return Object.keys(newErrors).length === 0
-  }
-
-  return { order, errors, setOrder, validate }
 }

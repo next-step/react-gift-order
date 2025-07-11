@@ -1,18 +1,17 @@
 import * as S from './MessageInput.styles'
+import type { UseFormRegisterReturn } from 'react-hook-form'
 
-interface Props {
-  message: string
-  setMessage: (msg: string) => void
+interface MessageInputProps {
+  register: UseFormRegisterReturn
   error?: string
 }
 
-const MessageInput: React.FC<Props> = ({ message, setMessage, error }) => {
+const MessageInput = ({ register, error }: MessageInputProps) => {
   return (
     <S.Container>
       <S.TextArea
         placeholder="메시지를 입력해주세요."
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
+        {...register}
         isError={!!error}
       />
       {error && <S.ErrorText>{error}</S.ErrorText>}

@@ -1,19 +1,18 @@
 import * as S from './SenderInput.styles'
+import type { UseFormRegisterReturn } from 'react-hook-form'
 
 interface SenderInputProps {
-  sender: string
-  setSender: (name: string) => void
-  error: string
+  register: UseFormRegisterReturn
+  error?: string
 }
 
-const SenderInput = ({ sender, setSender, error }: SenderInputProps) => {
+const SenderInput = ({ register, error }: SenderInputProps) => {
   return (
     <S.Container>
       <S.Title>보내는 사람</S.Title>
       <S.InputContainer>
         <S.InputText
-          value={sender}
-          onChange={(e) => setSender(e.target.value)}
+          {...register}
           placeholder="이름을 입력하세요."
           isError={!!error}
         />
