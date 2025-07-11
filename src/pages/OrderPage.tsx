@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { useState } from 'react';
 import { messageCards } from '@/data/messageCards';
 import { mockProducts } from '@/data/products';
 import Navigation from '@/components/Navigation';
@@ -10,62 +11,57 @@ import SenderForm from '@/components/OrderSection/SenderForm';
 import ReceiverForm from '@/components/OrderSection/ReceiverForm';
 import ProductInfo from '@/components/OrderSection/ProductInfo';
 import OrderSubmitButton from '@/components/OrderSection/OrderSubmitButton';
-import { useOrderForm } from '@/hooks/useOrderForm';
-import type { FormField } from '@/hooks/useOrderForm';
 import { ROUTES } from '@/constants/routes';
+import { ERROR_MESSAGES } from '@/constants/validation';
+
+type FormValues = {
+  senderName: string;
+  textMessage: string;
+};
 
 const OrderPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const product = mockProducts[Number(id) - 1];
 
-  const { formValues, formErrors, handleChange, validateField, validateForm } =
-    useOrderForm();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<FormValues>({
+    defaultValues: {
+      senderName: '',
+      textMessage: messageCards[0].defaultTextMessage,
+    },
+  });
 
   const [receiverList, setReceiverList] = useState<
     { name: string; phone: string; quantity: number }[]
   >([]);
 
   const totalQuantity = receiverList.reduce((sum, r) => sum + r.quantity, 0);
-
   const totalPrice = product ? totalQuantity * product.price.sellingPrice : 0;
 
   const [selectedCardId, setSelectedCardId] = useState(messageCards[0].id);
-  const selectedCard = messageCards.find(card => card.id === selectedCardId)!;
 
-  useEffect(() => {
-    handleChange('textMessage', selectedCard.defaultTextMessage);
-  }, [selectedCardId]);
+  const handleCardChange = (cardId: number) => {
+    setSelectedCardId(cardId);
+    const card = messageCards.find(c => c.id === cardId);
+    if (card) {
+      setValue('textMessage', card.defaultTextMessage);
+    }
+  };
 
-  const isFormField = (name: string): name is FormField =>
-    ['senderName', 'textMessage'].includes(name);
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const isValid = validateForm();
-    if (!isValid) return;
-
+  const onSubmit = (data: FormValues) => {
     alert(
       `주문이 완료되었습니다.\n` +
         `상품명: ${product.name}\n` +
         `총 수량: ${totalQuantity}개\n` +
         `총 가격: ${totalPrice.toLocaleString()}원\n` +
-        `발신자: ${formValues.senderName}`
+        `발신자: ${data.senderName}`
     );
-
     navigate(ROUTES.HOME);
-  };
-
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    if (!isFormField(name)) return;
-    handleChange(name, value);
-    if (formErrors[name]) {
-      validateField(name);
-    }
   };
 
   if (!product) return <div>잘못된 접근입니다.</div>;
@@ -74,22 +70,22 @@ const OrderPage = () => {
     <>
       <Navigation />
       <Main>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit(onSubmit)}>
           <CardSelector
             selectedCardId={selectedCardId}
-            onSelect={setSelectedCardId}
+            onSelect={handleCardChange}
           />
           <MessageInput
-            name="textMessage"
-            value={String(formValues.textMessage)}
-            onChange={handleInputChange}
-            error={formErrors.textMessage}
+            {...register('textMessage', {
+              required: ERROR_MESSAGES.EMPTY_MESSAGE,
+            })}
+            error={errors.textMessage?.message}
           />
           <SenderForm
-            name="senderName"
-            value={String(formValues.senderName)}
-            onChange={handleInputChange}
-            error={formErrors.senderName}
+            {...register('senderName', {
+              required: ERROR_MESSAGES.EMPTY_SENDER,
+            })}
+            error={errors.senderName?.message}
           />
           <ReceiverForm
             receiverList={receiverList}

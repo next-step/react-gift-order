@@ -1,25 +1,21 @@
 import styled from '@emotion/styled';
+import { forwardRef } from 'react';
 
-interface MessageInputProps {
-  name: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+interface MessageInputProps
+  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   error?: string;
 }
 
-const MessageInput = ({ name, value, onChange, error }: MessageInputProps) => {
-  return (
-    <Wrapper>
-      <InputArea
-        name={name}
-        value={value}
-        onChange={onChange}
-        placeholder="메시지를 입력해주세요."
-      />
-      {error && <ErrorText>{error}</ErrorText>}
-    </Wrapper>
-  );
-};
+const MessageInput = forwardRef<HTMLTextAreaElement, MessageInputProps>(
+  ({ error, ...props }, ref) => {
+    return (
+      <Wrapper>
+        <InputArea ref={ref} {...props} placeholder="메시지를 입력해주세요." />
+        {error && <ErrorText>{error}</ErrorText>}
+      </Wrapper>
+    );
+  }
+);
 
 export default MessageInput;
 

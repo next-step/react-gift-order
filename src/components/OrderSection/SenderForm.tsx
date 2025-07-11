@@ -1,29 +1,27 @@
 import styled from '@emotion/styled';
 import InputField from '@/components/common/InputField';
+import { forwardRef } from 'react';
 
-interface SenderFormProps {
-  name: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+interface SenderFormProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: string;
 }
 
-const SenderForm = ({ name, value, onChange, error }: SenderFormProps) => {
-  return (
-    <Wrapper>
-      <Label>보내는 사람</Label>
-      <InputField
-        name={name}
-        type="text"
-        value={value}
-        onChange={onChange}
-        error={error}
-        placeholder="이름을 입력하세요."
-      />
-      <Note>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</Note>
-    </Wrapper>
-  );
-};
+const SenderForm = forwardRef<HTMLInputElement, SenderFormProps>(
+  ({ error, ...props }, ref) => {
+    return (
+      <Wrapper>
+        <Label>보내는 사람</Label>
+        <InputField
+          ref={ref}
+          {...props}
+          placeholder="이름을 입력하세요."
+          error={error}
+        />
+        <Note>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</Note>
+      </Wrapper>
+    );
+  }
+);
 
 export default SenderForm;
 

@@ -1,39 +1,20 @@
 import styled from '@emotion/styled';
+import { forwardRef } from 'react';
 
-interface InputFieldProps {
-  name: string;
-  type: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onBlur?: () => void;
+interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: string;
-  placeholder?: string;
 }
 
-const InputField = ({
-  name,
-  type,
-  value,
-  onChange,
-  onBlur,
-  error,
-  placeholder,
-}: InputFieldProps) => {
-  return (
-    <Wrapper>
-      <StyledInput
-        name={name}
-        type={type}
-        value={value}
-        onChange={onChange}
-        onBlur={onBlur}
-        placeholder={placeholder}
-        hasError={!!error}
-      />
-      {error && <ErrorText>{error}</ErrorText>}
-    </Wrapper>
-  );
-};
+const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
+  ({ error, ...props }, ref) => {
+    return (
+      <Wrapper>
+        <StyledInput ref={ref} {...props} hasError={!!error} />
+        {error && <ErrorText>{error}</ErrorText>}
+      </Wrapper>
+    );
+  }
+);
 
 export default InputField;
 
