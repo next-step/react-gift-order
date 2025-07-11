@@ -4,6 +4,7 @@ import styled from "@emotion/styled";
 import { cardTemplates } from "@/Components/cardTemplates";
 import { useParams } from "react-router-dom";
 import { products } from "@/data/products";
+import { useState } from 'react';
 
 // ===== 타입 정의 =====
 type Receiver = {
@@ -281,25 +282,97 @@ const ErrorMessage = styled.div`
   margin: 4px 0 8px 4px;
 `;
 
+// ===== 커스텀 모달 스타일 =====
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.25);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+const ModalContent = styled.div`
+  background: #fff;
+  border-radius: 16px;
+  max-width: 480px;
+  width: 95vw;
+  padding: 32px 24px 24px 24px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+`;
+const ModalTitle = styled.h2`
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 18px;
+`;
+const ModalActions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+`;
+const ModalButton = styled.button`
+  background: #f7e244;
+  color: #222;
+  font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  cursor: pointer;
+  transition: background 0.2s;
+  &:hover {
+    background: #ffe14a;
+  }
+`;
+
 const Order = () => {
   const { id } = useParams();
   const product = products.find(p => String(p.id) === String(id));
   const selectedCardDefault = cardTemplates[0];
 
-  // react-hook-form 세팅
+  // react-hook-form 세팅 (메인 폼)
   const { control, register, handleSubmit, setValue, watch, formState: { errors } } = useForm<OrderFormValues>({
     defaultValues: {
       selectedCardId: selectedCardDefault?.id ?? 0,
       message: selectedCardDefault?.defaultTextMessage ?? "",
       sender: "",
-      receivers: [
-        { name: "", phone: "", quantity: 1 }
-      ]
+      receivers: []
     }
   });
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "receivers",
+
+  // 모달 상태
+  const [receiverModalOpen, setReceiverModalOpen] = useState(false);
+
+  // 모달용 react-hook-form 세팅 (받는 사람 입력/수정)
+  const {
+    control: modalControl,
+    register: modalRegister,
+    handleSubmit: modalHandleSubmit,
+    setValue: modalSetValue,
+    watch: modalWatch,
+    formState: { errors: modalErrors },
+    reset: modalReset
+  } = useForm<{ receivers: Receiver[] }>({
+    defaultValues: { receivers: [] }
+  });
+  const { fields: modalFields, append: modalAppend, remove: modalRemove, replace: modalReplace } = useFieldArray({
+    control: modalControl,
+    name: "receivers"
+  });
+
+  // 모달 열기: 기존 데이터 복사
+  const openReceiverModal = () => {
+    modalReset({ receivers: watch("receivers") });
+    setReceiverModalOpen(true);
+  };
+  // 모달 완료: 메인 폼에 반영
+  const handleReceiverModalComplete = modalHandleSubmit((data) => {
+    setValue("receivers", data.receivers);
+    setReceiverModalOpen(false);
   });
 
   // 카드 선택 핸들러
@@ -400,12 +473,86 @@ const Order = () => {
         )}
         <OrderButton
           type="button"
-          // 다음 단계에서 onClick에 모달 오픈 핸들러 연결 예정
+          onClick={openReceiverModal}
           style={{ marginBottom: 0, background: '#f5f6fa', color: '#222', fontWeight: 500 }}
         >
           {watch("receivers").length === 0 ? '추가' : '수정'}
         </OrderButton>
       </ReceiverSection>
+
+      {/* ===== 받는 사람 입력/수정 모달 ===== */}
+      {receiverModalOpen && (
+        <ModalOverlay onClick={() => setReceiverModalOpen(false)}>
+          <ModalContent onClick={e => e.stopPropagation()}>
+            <ModalTitle>받는 사람</ModalTitle>
+            <div style={{ fontSize: '0.98rem', color: '#888', marginBottom: 12 }}>
+              * 최대 10명까지 추가 할 수 있어요.<br/>
+              * 받는 사람의 전화번호를 중복으로 입력할 수 없어요.
+            </div>
+            <ModalButton type="button" onClick={() => modalAppend({ name: '', phone: '', quantity: 1 })} disabled={modalFields.length >= 10} style={{ marginBottom: 16 }}>
+              추가하기
+            </ModalButton>
+            {modalFields.length === 0 && (
+              <div style={{ minHeight: 120, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#b0b3ba', background: '#f8f8f8', borderRadius: 12, border: '1.5px solid #e0e0e0', marginBottom: 16 }}>
+                받는 사람이 없습니다.<br/>받는 사람을 추가해주세요.
+              </div>
+            )}
+            {modalFields.map((field, idx) => (
+              <div key={field.id} style={{ marginBottom: 18, background: '#fafbfc', borderRadius: 12, padding: 16, position: 'relative' }}>
+                <div style={{ fontWeight: 700, marginBottom: 8 }}>받는 사람 {idx + 1} <span style={{ cursor: 'pointer', color: '#e74c3c', marginLeft: 8 }} onClick={() => modalRemove(idx)}>×</span></div>
+                <ReceiverRow>
+                  <ReceiverLabel>이름</ReceiverLabel>
+                  <ReceiverInput
+                    {...modalRegister(`receivers.${idx}.name`, { required: '이름을 입력하세요.' })}
+                    placeholder="이름"
+                  />
+                </ReceiverRow>
+                <ReceiverRow>
+                  <ReceiverLabel>전화번호</ReceiverLabel>
+                  <ReceiverInput
+                    {...modalRegister(`receivers.${idx}.phone`, {
+                      required: '전화번호를 입력하세요.',
+                      pattern: {
+                        value: /^010[0-9]{8}$/,
+                        message: '01012341234 형식으로 입력하세요.'
+                      },
+                      validate: value => {
+                        const phones = modalWatch('receivers').map(r => r.phone);
+                        if (phones.filter(p => p === value).length > 1) {
+                          return '전화번호가 중복되었습니다.';
+                        }
+                        return true;
+                      }
+                    })}
+                    placeholder="01012341234"
+                  />
+                </ReceiverRow>
+                <ReceiverRow>
+                  <ReceiverLabel>수량</ReceiverLabel>
+                  <ReceiverInput
+                    type="number"
+                    min={1}
+                    {...modalRegister(`receivers.${idx}.quantity`, {
+                      required: '수량을 입력하세요.',
+                      min: { value: 1, message: '최소 1개 이상' }
+                    })}
+                  />
+                </ReceiverRow>
+                {/* 에러 메시지 */}
+                {modalErrors.receivers?.[idx]?.name && <ErrorMessage>{modalErrors.receivers[idx]?.name?.message}</ErrorMessage>}
+                {modalErrors.receivers?.[idx]?.phone && <ErrorMessage>{modalErrors.receivers[idx]?.phone?.message}</ErrorMessage>}
+                {modalErrors.receivers?.[idx]?.quantity && <ErrorMessage>{modalErrors.receivers[idx]?.quantity?.message}</ErrorMessage>}
+              </div>
+            ))}
+            <ModalActions>
+              <ModalButton type="button" onClick={() => setReceiverModalOpen(false)} style={{ background: '#f5f6fa', color: '#222' }}>취소</ModalButton>
+              <ModalButton type="button" onClick={handleReceiverModalComplete} style={{ background: '#f7e244', color: '#222', fontWeight: 700 }}>
+                {modalFields.length}명 완료
+              </ModalButton>
+            </ModalActions>
+          </ModalContent>
+        </ModalOverlay>
+      )}
 
       {/* ===== 상품 정보 섹션 ===== */}
       <ProductSection>
