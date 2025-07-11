@@ -228,6 +228,22 @@ interface ItemInfoWrapperProps {
   };
 }
 
+// function ItemInfoWrapper({ selectedItem }: { selectedItem: string | null }) {
+//   const item = selectedItem ? JSON.parse(selectedItem) : null;
+
+//   if (!item) return null;
+
+//   return (
+//     <ItemInfoWrapperStyle>
+//       <ItemInfoTitle>상품 정보</ItemInfoTitle>
+//       <img src={item.imageURL} alt="item.name" />
+//       <h2>{item.name}</h2>
+//       <p>{item.brandInfo.name}</p>
+//       <p>{item.price.sellingPrice}원</p>
+//     </ItemInfoWrapperStyle>
+//   );
+// }
+
 function ItemInfoWrapper({ selectedItem }: ItemInfoWrapperProps) {
   return (
     <ItemInfoWrapperStyle>
@@ -318,8 +334,6 @@ function Order() {
   // const selectedItem = sessionStorage.getItem('selectedItem');
   
   return (
-    <ThemeProvider theme={theme}>
-      <GlobalStyle />
       <Layout>
         <NavBar></NavBar>
         <SlidingOrderCardWrapper
@@ -351,7 +365,6 @@ function Order() {
           itemCount={itemCount}
         ></OrderButton>
       </Layout>
-    </ThemeProvider>
   );
 }
 
