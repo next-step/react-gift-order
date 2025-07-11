@@ -347,7 +347,7 @@ const Order = () => {
   const selectedCardDefault = cardTemplates[0];
 
   // react-hook-form 세팅 (메인 폼, Zod resolver 적용)
-  const { control, register, handleSubmit, setValue, watch, formState: { errors } } = useForm<OrderFormValues>({
+  const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<OrderFormValues>({
     resolver: zodResolver(orderSchema),
     defaultValues: {
       selectedCardId: selectedCardDefault?.id ?? 0,
@@ -365,7 +365,6 @@ const Order = () => {
     control: modalControl,
     register: modalRegister,
     handleSubmit: modalHandleSubmit,
-    setValue: modalSetValue,
     watch: modalWatch,
     formState: { errors: modalErrors },
     reset: modalReset
@@ -373,7 +372,7 @@ const Order = () => {
     resolver: zodResolver(z.object({ receivers: receiversSchema })),
     defaultValues: { receivers: [] }
   });
-  const { fields: modalFields, append: modalAppend, remove: modalRemove, replace: modalReplace } = useFieldArray({
+  const { fields: modalFields, append: modalAppend, remove: modalRemove } = useFieldArray({
     control: modalControl,
     name: "receivers"
   });
@@ -547,8 +546,8 @@ const Order = () => {
               </div>
             ))}
             {/* 배열 전체 중복 에러 메시지 */}
-            {modalErrors.receivers?.root?.phoneDup && (
-              <ErrorMessage>{modalErrors.receivers.root.phoneDup.message}</ErrorMessage>
+            {modalErrors.receivers?.root?.message && (
+              <ErrorMessage>{modalErrors.receivers.root.message}</ErrorMessage>
             )}
             <ModalActions>
               <ModalButton type="button" onClick={() => setReceiverModalOpen(false)} style={{ background: '#f5f6fa', color: '#222' }}>취소</ModalButton>
