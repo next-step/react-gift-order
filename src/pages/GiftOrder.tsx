@@ -3,10 +3,10 @@ import { TopNavBar } from '@/components/TopNavBar';
 import { GiftMessageCardTemplates } from '@/components/gift_order_page/GiftMessageCardTemplates';
 import { Spacing } from '@/components/gift_order_page/Spacing';
 import { SenderInput } from '@/components/gift_order_page/SenderInput';
-import { RecipientInput } from '@/components/gift_order_page/RecipientInput';
 import { ProductInfo } from '@/components/gift_order_page/ProductInfo';
 import { OrderButton } from '@/components/gift_order_page/OrderButton';
 import { OrderInfoProvider } from '@/providers/OrderInfoProvider';
+import { RecipientListTable } from '@/components/gift_order_page/RecipientListTable';
 
 const Container = styled.div`
   display: flex;
@@ -30,7 +30,7 @@ const GiftOrder = () => {
         <Spacing />
         <SenderInput />
         <Spacing />
-        <RecipientInput />
+        <RecipientListTable />
         <Spacing />
         <ProductInfo />
         <OrderButton />
