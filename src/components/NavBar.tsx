@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { css } from '@emotion/react';
 import { palette, spacing } from '@/styles/theme';
 import { useAuth } from '@/contexts/AuthContext';
+import { PATHS } from '@/constants/paths';
 
 const headerStyle = css`
   position: sticky;
@@ -30,9 +31,9 @@ export const NavBar = () => {
 
   const goProfile = () => {
     if (isLoggedIn) {
-      navigate('/my');
+      navigate(PATHS.MY_PAGE);
     } else {
-      navigate('/login', { state: { from: location.pathname } });
+      navigate(PATHS.LOGIN, { state: { from: location.pathname } });
     }
   };
 
