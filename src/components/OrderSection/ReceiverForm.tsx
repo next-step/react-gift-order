@@ -10,6 +10,7 @@ type ReceiverInput = {
 
 const ReceiverForm = () => {
   const [receiverInputs, setReceiverInputs] = useState<ReceiverInput[]>([]);
+  const [receivers, setReceivers] = useState<ReceiverInput[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleAddReceiverInput = () => {
@@ -46,6 +47,20 @@ const ReceiverForm = () => {
     setReceiverInputs(prev => prev.filter((_, i) => i !== index));
   };
 
+  const handleConfirm = () => {
+    const validReceivers = receiverInputs.filter(
+      r => r.name.trim() !== '' && /^010\d{8}$/.test(r.phone)
+    );
+    setReceivers(validReceivers);
+    setIsModalOpen(false);
+    setReceiverInputs([]);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+    setReceiverInputs([]);
+  };
+
   return (
     <Wrapper>
       <Spacer />
@@ -56,14 +71,14 @@ const ReceiverForm = () => {
         </AddButton>
       </Header>
       <Spacer />
-      {receiverInputs.length === 0 ? (
+      {receivers.length === 0 ? (
         <EmptyNotice>
           받는 사람이 없습니다.
           <br />
           받는 사람을 추가해주세요.
         </EmptyNotice>
       ) : (
-        receiverInputs.map((r, i) => (
+        receivers.map((r, i) => (
           <ReceiverCard key={i}>
             {r.name} / {r.phone} / {r.quantity}개
           </ReceiverCard>
@@ -134,13 +149,10 @@ const ReceiverForm = () => {
             </ScrollableContent>
 
             <ModalFooter>
-              <CancelButton type="button" onClick={() => setIsModalOpen(false)}>
+              <CancelButton type="button" onClick={handleCancel}>
                 취소
               </CancelButton>
-              <ConfirmButton
-                type="button"
-                onClick={() => setIsModalOpen(false)}
-              >
+              <ConfirmButton type="button" onClick={handleConfirm}>
                 {receiverInputs.length}명 완료
               </ConfirmButton>
             </ModalFooter>
