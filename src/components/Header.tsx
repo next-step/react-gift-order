@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { IoArrowBackOutline, IoPersonOutline } from 'react-icons/io5';
 import { colors, spaces, fontSizes } from '@/tokens/designTokens';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
+import useAuth from '@/contexts/useAuth';
 
 const Wrap = styled.header`
   display: flex;
