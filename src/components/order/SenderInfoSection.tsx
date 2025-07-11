@@ -35,9 +35,7 @@ const InputWrapper = styled.div(({ theme }) => ({
 }));
 
 export const SenderInfoSection = () => {
-  const { register } = useOrderForm();
-  const { error: senderNameFieldError, ...senderNameField } =
-    register("senderName");
+  const { register, errors } = useOrderForm();
 
   return (
     <SenderInfoContainer>
@@ -46,10 +44,10 @@ export const SenderInfoSection = () => {
         <Input
           placeholder="이름을 입력하세요."
           variant="outlined"
-          {...senderNameField}
+          {...register("senderName")}
         />
-        {senderNameFieldError ? (
-          <ErrorMessage>{senderNameFieldError}</ErrorMessage>
+        {errors.senderName?.message ? (
+          <ErrorMessage>{errors.senderName.message}</ErrorMessage>
         ) : (
           <SenderInfoDescription>
             * 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.

@@ -47,8 +47,7 @@ const MessageInput = styled.textarea<{ hasError?: boolean }>(
 );
 
 export const SelectedCardView = () => {
-  const { register } = useOrderForm();
-  const { error: messageFieldError, ...messageField } = register("message");
+  const { register, errors } = useOrderForm();
   const currentCardTemplate = useCardTemplate();
 
   return (
@@ -60,9 +59,12 @@ export const SelectedCardView = () => {
       />
       <MessageInput
         placeholder={currentCardTemplate.cardTemplate?.defaultTextMessage}
-        {...messageField}
+        hasError={!!errors.message}
+        {...register("message")}
       />
-      {messageFieldError && <ErrorMessage>{messageFieldError}</ErrorMessage>}
+      {errors.message?.message && (
+        <ErrorMessage>{errors.message.message}</ErrorMessage>
+      )}
     </SelectedCardContainer>
   );
 };
