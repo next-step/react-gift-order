@@ -1,19 +1,23 @@
-import { useForm } from 'react-hook-form'
 import styled from '@emotion/styled'
 import { cardMock } from '@/pages/OrderPage/cardMock'
 import type { Product } from '@/types/product'
 import { useState } from 'react'
+import { useForm, useFieldArray } from 'react-hook-form'
 
 interface OrderFormProps {
   product: Product
 }
 
+interface ReceiverInfo {
+  name: string
+  phone: string
+  quantity: number
+}
+
 interface FormValues {
   sender: string
-  receiver: string
-  receiverPhone: string
-  quantity: number
   message: string
+  receivers: ReceiverInfo[]
 }
 
 export function OrderForm({ product }: OrderFormProps) {
@@ -21,33 +25,68 @@ export function OrderForm({ product }: OrderFormProps) {
     register,
     handleSubmit,
     setValue,
-    formState: { errors },
+    control,
     watch,
     reset,
+    getValues,
+    trigger,
+    formState: { errors },
   } = useForm<FormValues>({
+    mode: 'onChange',
     defaultValues: {
       sender: '',
-      receiver: '',
-      receiverPhone: '',
-      quantity: 1,
       message: cardMock[0].defaultTextMessage,
+      receivers: [],
     },
   })
 
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'receivers',
+  })
+
+  const [showReceiverModal, setShowReceiverModal] = useState(false)
   const [selectedCard, setSelectedCard] = useState(cardMock[0])
+  const [finalReceivers, setFinalReceivers] = useState<ReceiverInfo[]>([])
+
+  const totalQuantity = finalReceivers.reduce(
+    (acc, receiver) => acc + Number(receiver.quantity || 0),
+    0
+  )
+  const totalPrice = product.price.sellingPrice * totalQuantity
+  const message = watch('message')
 
   const onSubmit = (data: FormValues) => {
     alert(`주문이 완료되었습니다.
       상품명: ${product.name}
-      구매 수량: ${data.quantity}
+      구매 수량: ${totalQuantity}
       발신자 이름: ${data.sender}
       메시지: ${data.message}`)
     reset()
     setSelectedCard(cardMock[0])
     setValue('message', cardMock[0].defaultTextMessage)
+    setFinalReceivers([])
   }
 
-  const message = watch('message')
+  const validateAndSaveReceivers = async () => {
+    const isValid = await trigger('receivers')
+
+    if (!isValid) {
+      return
+    }
+
+    const receivers = getValues('receivers')
+    const phones = receivers.map((r) => r.phone)
+    const hasDuplicatePhone = new Set(phones).size !== phones.length
+
+    if (hasDuplicatePhone) {
+      alert('중복된 전화번호가 있습니다.')
+      return
+    }
+
+    setFinalReceivers(receivers)
+    setShowReceiverModal(false)
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -80,10 +119,10 @@ export function OrderForm({ product }: OrderFormProps) {
       </SelectedCard>
 
       <PersonSection>
-        <PersonLabel>보내는 사람</PersonLabel>
+        <SectionTitle>보내는 사람</SectionTitle>
         <input
           {...register('sender', {
-            required: '보내는 사람 이름을 입력해주세요.',
+            required: '이름을 입력해주세요.',
           })}
           placeholder="이름을 입력하세요."
         />
@@ -91,49 +130,99 @@ export function OrderForm({ product }: OrderFormProps) {
       </PersonSection>
 
       <PersonSection>
-        <PersonLabel>받는 사람</PersonLabel>
-        <ReceiverSection>
-          <FieldLabel>이름</FieldLabel>
-          <input
-            {...register('receiver', {
-              required: '받는 사람 이름을 입력해주세요.',
-            })}
-            placeholder="이름을 입력하세요."
-          />
-        </ReceiverSection>
-        {errors.receiver && <Error>{errors.receiver.message}</Error>}
-
-        <ReceiverSection>
-          <FieldLabel>전화번호</FieldLabel>
-          <input
-            {...register('receiverPhone', {
-              required: '전화번호를 입력해주세요.',
-              pattern: {
-                value: /^010\d{8}$/,
-                message: '올바른 전화번호 형식이 아닙니다.',
-              },
-            })}
-            placeholder="전화번호를 입력하세요."
-          />
-        </ReceiverSection>
-        {errors.receiverPhone && <Error>{errors.receiverPhone.message}</Error>}
-
-        <ReceiverSection>
-          <FieldLabel>수량</FieldLabel>
-          <input
-            type="number"
-            min="0"
-            {...register('quantity', {
-              required: '수량을 입력해주세요.',
-              min: { value: 1, message: '수량은 1개 이상이어야 합니다.' },
-            })}
-          />
-        </ReceiverSection>
-        {errors.quantity && <Error>{errors.quantity.message}</Error>}
+        <SectionTitle>받는 사람</SectionTitle>
+        <AddButton type="button" onClick={() => setShowReceiverModal(true)}>
+          추가
+        </AddButton>
       </PersonSection>
 
+      {finalReceivers.map((r, i) => (
+        <ReceiverSummary key={i}>
+          {r.name} ({r.phone}) - {r.quantity}개
+        </ReceiverSummary>
+      ))}
+
+      {showReceiverModal && (
+        <ReceiverModal>
+          <ReceiverModalHeader>
+            <strong>받는 사람</strong>
+          </ReceiverModalHeader>
+
+          {fields.map((field, index) => (
+            <ReceiverInputGroup key={field.id}>
+              <div>
+                <input
+                  placeholder="이름"
+                  {...register(`receivers.${index}.name` as const, {
+                    required: '이름을 입력해주세요.',
+                  })}
+                />
+                {errors.receivers?.[index]?.name && (
+                  <Error>{errors.receivers[index]?.name?.message}</Error>
+                )}
+              </div>
+
+              <div>
+                <input
+                  placeholder="전화번호"
+                  {...register(`receivers.${index}.phone` as const, {
+                    required: '전화번호를 입력해주세요.',
+                    pattern: {
+                      value: /^010\d{8}$/,
+                      message: '올바른 전화번호 형식이 아니에요.',
+                    },
+                  })}
+                />
+                {errors.receivers?.[index]?.phone && (
+                  <Error>{errors.receivers[index]?.phone?.message}</Error>
+                )}
+              </div>
+
+              <div>
+                <input
+                  type="number"
+                  placeholder="수량"
+                  {...register(`receivers.${index}.quantity` as const, {
+                    required: '수량을 입력해주세요.',
+                    min: {
+                      value: 1,
+                      message: '구매 수량은 1개 이상이어야 해요.',
+                    },
+                  })}
+                />
+                {errors.receivers?.[index]?.quantity && (
+                  <Error>{errors.receivers[index]?.quantity?.message}</Error>
+                )}
+              </div>
+
+              <button type="button" onClick={() => remove(index)}>
+                삭제
+              </button>
+            </ReceiverInputGroup>
+          ))}
+
+          {fields.length < 10 && (
+            <button
+              type="button"
+              onClick={() => append({ name: '', phone: '', quantity: 1 })}
+            >
+              추가하기
+            </button>
+          )}
+
+          <ReceiverModalFooter>
+            <button type="button" onClick={() => setShowReceiverModal(false)}>
+              취소
+            </button>
+            <button type="button" onClick={validateAndSaveReceivers}>
+              {fields.length}명 완료
+            </button>
+          </ReceiverModalFooter>
+        </ReceiverModal>
+      )}
+
       <ProductInfo>
-        <label>상품 정보</label>
+        <SectionTitle>상품 정보</SectionTitle>
         <ProductBox>
           <ProductImage src={product.imageURL} alt={product.name} />
           <ProductDetails>
@@ -147,7 +236,7 @@ export function OrderForm({ product }: OrderFormProps) {
       </ProductInfo>
 
       <OrderButton type="submit">
-        {product.price.sellingPrice.toLocaleString()}원 주문하기
+        {totalPrice.toLocaleString()}원 주문하기
       </OrderButton>
     </form>
   )
@@ -164,7 +253,7 @@ const CardThumbnail = styled.img<{ selected: boolean }>`
   width: 100px;
   border: 2px solid
     ${({ selected, theme }) =>
-      selected ? theme.colors.blue500 : 'transparent'};
+      selected ? theme.colors.gray1000 : 'transparent'};
   border-radius: 8px;
   cursor: pointer;
 `
@@ -175,54 +264,109 @@ const SelectedCard = styled.div`
 
   img {
     width: 100%;
-    max-width: 300px;
-    border-radius: 8px;
-    margin-bottom: 12px;
+    max-width: 360px;
+    border-radius: 12px;
+    margin-bottom: 34px;
   }
 
   textarea {
     width: 100%;
     height: 60px;
     padding: 8px;
-    border: 1px solid #ccc;
+    border: 1px solid ${({ theme }) => theme.colors.gray400};
+    border-radius: 12px;
     resize: none;
   }
 `
 
 const PersonSection = styled.div`
-  margin-bottom: 16px;
-
-  label {
-    margin-bottom: 7px;
-    font-weight: 600;
-  }
+  margin-top: 34px;
 
   input {
     flex: 1;
     width: 100%;
-    padding: 8px;
+    padding: 10px;
+    margin-top: 14px;
     border-radius: 6px;
-    border: 1px solid #ccc;
+    border: 1px solid ${({ theme }) => theme.colors.gray400};
   }
 `
 
-const PersonLabel = styled.label`
+const SectionTitle = styled.label`
   font-weight: 600;
 `
 
-const ReceiverSection = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
+export const AddButton = styled.button`
+  font-size: 14px;
+  background: ${({ theme }) => theme.colors.gray300};
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  color: black;
+  cursor: pointer;
 `
 
-const FieldLabel = styled.label`
-  width: 70px;
-  font-weight: 200;
-  flex-shrink: 0;
+export const ReceiverSummary = styled.div`
+  margin-left: 8px;
+  font-size: 14px;
+  color: #333;
+`
+
+export const ReceiverModal = styled.div`
+  background-color: white;
+  border: 1px solid ${({ theme }) => theme.colors.gray400};
+  border-radius: 10px;
+  padding: 16px;
+  margin-top: 8px;
+`
+
+export const ReceiverModalHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+`
+
+export const ReceiverInputGroup = styled.div`
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+
+  input {
+    padding: 6px;
+    border: 1px solid ${({ theme }) => theme.colors.gray400};
+    border-radius: 6px;
+    flex: 1;
+  }
+
+  button {
+    background: none;
+    border: 1px solid ${({ theme }) => theme.colors.gray400};
+    border-radius: 6px;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 12px;
+  }
+`
+
+export const ReceiverModalFooter = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 12px;
+
+  button {
+    background-color: ${({ theme }) => theme.colors.kakaoYellow};
+    color: black;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
 `
 
 const ProductInfo = styled.div`
+  margin-top: 34px;
   label {
     display: block;
     margin-bottom: 4px;
@@ -235,7 +379,7 @@ const ProductBox = styled.div`
   align-items: center;
   gap: 16px;
   padding: 12px;
-  border: 1px solid #ddd;
+  border: 1px solid ${({ theme }) => theme.colors.gray500};
   border-radius: 8px;
   margin-top: 8px;
 `
@@ -283,6 +427,7 @@ const OrderButton = styled.button`
 
 const Error = styled.div`
   margin-top: 4px;
+  margin-bottom: 4px;
   font-size: 14px;
   color: red;
 `
