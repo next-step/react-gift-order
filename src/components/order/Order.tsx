@@ -29,6 +29,29 @@ import type { FormData } from "@/components/order/OrderForm";
 import { css } from "@emotion/react";
 import ReceiverModal from "@/components/order/ReceiveModal";
 
+const ReceiverInfoTable: React.FC<{
+  receivers: { receiverName: string; phoneNumber: string; quantity: number }[];
+}> = ({ receivers }) => (
+  <table>
+    <thead>
+      <tr>
+        <th>이름</th>
+        <th>전화번호</th>
+        <th>수량</th>
+      </tr>
+    </thead>
+    <tbody>
+      {receivers.map((r) => (
+        <tr key={r.phoneNumber}>
+          <td>{r.receiverName}</td>
+          <td>{r.phoneNumber}</td>
+          <td>{r.quantity}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+);
+
 const Order: React.FC = () => {
   const theme = useTheme();
   const [selectedId, setSelectedId] = useState<number>();
@@ -126,6 +149,10 @@ const Order: React.FC = () => {
               setIsModalOpen(false);
             }}
           />
+        )}
+
+        {receivers.length > 0 && (
+          <ReceiverInfoTable receivers={receivers}></ReceiverInfoTable>
         )}
       </div>
 
