@@ -45,7 +45,6 @@ export const RecieverInput = styled.input`
     outline: none;
   }
 `;
-
 export const RecieverTable = styled.table`
   width: 100%;
   margin-top: 12px;
