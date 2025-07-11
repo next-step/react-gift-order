@@ -360,66 +360,51 @@ const Order = () => {
         <SenderGuide>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</SenderGuide>
       </SenderSection>
 
-      {/* ===== 받는 사람 섹션 (useFieldArray) ===== */}
+      {/* ===== 받는 사람 섹션 (요약 테이블/리스트 + 추가/수정 버튼만) ===== */}
       <ReceiverSection>
         <ReceiverTitle>받는 사람</ReceiverTitle>
+        {/* 받는 사람 요약 테이블 */}
+        {watch("receivers").length === 0 ? (
+          <div style={{
+            minHeight: 120,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#b0b3ba',
+            background: '#fff',
+            borderRadius: 12,
+            border: '1.5px solid #e0e0e0',
+            marginBottom: 16
+          }}>
+            받는 사람이 없습니다.<br/>받는 사람을 추가해주세요.
+          </div>
+        ) : (
+          <table style={{ width: '100%', background: '#fff', borderRadius: 12, borderCollapse: 'collapse', marginBottom: 16 }}>
+            <thead>
+              <tr style={{ background: '#f5f6fa' }}>
+                <th style={{ padding: '10px 0', fontWeight: 700 }}>이름</th>
+                <th style={{ padding: '10px 0', fontWeight: 700 }}>전화번호</th>
+                <th style={{ padding: '10px 0', fontWeight: 700 }}>수량</th>
+              </tr>
+            </thead>
+            <tbody>
+              {watch("receivers").map((r, idx) => (
+                <tr key={idx} style={{ textAlign: 'center', borderTop: '1px solid #eee' }}>
+                  <td style={{ padding: '8px 0' }}>{r.name}</td>
+                  <td style={{ padding: '8px 0' }}>{r.phone}</td>
+                  <td style={{ padding: '8px 0' }}>{r.quantity}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
         <OrderButton
           type="button"
-          onClick={() => append({ name: "", phone: "", quantity: 1 })}
-          disabled={fields.length >= 10}
-          style={{ marginBottom: 16 }}
+          // 다음 단계에서 onClick에 모달 오픈 핸들러 연결 예정
+          style={{ marginBottom: 0, background: '#f5f6fa', color: '#222', fontWeight: 500 }}
         >
-          추가
+          {watch("receivers").length === 0 ? '추가' : '수정'}
         </OrderButton>
-        {fields.map((field, idx) => (
-          <div key={field.id} style={{ marginBottom: 12, borderBottom: "1px solid #eee", paddingBottom: 8 }}>
-            <ReceiverRow>
-              <ReceiverLabel>이름</ReceiverLabel>
-              <ReceiverInput
-                {...register(`receivers.${idx}.name`, { required: "이름을 입력하세요." })}
-                placeholder="이름"
-              />
-            </ReceiverRow>
-            <ReceiverRow>
-              <ReceiverLabel>전화번호</ReceiverLabel>
-              <ReceiverInput
-                {...register(`receivers.${idx}.phone`, {
-                  required: "전화번호를 입력하세요.",
-                  pattern: {
-                    value: /^010[0-9]{8}$/,
-                    message: "01012341234 형식으로 입력하세요."
-                  },
-                  validate: value => {
-                    const phones = watch("receivers").map(r => r.phone);
-                    if (phones.filter(p => p === value).length > 1) {
-                      return "전화번호가 중복되었습니다.";
-                    }
-                    return true;
-                  }
-                })}
-                placeholder="01012341234"
-              />
-            </ReceiverRow>
-            <ReceiverRow>
-              <ReceiverLabel>수량</ReceiverLabel>
-              <ReceiverInput
-                type="number"
-                min={1}
-                {...register(`receivers.${idx}.quantity`, {
-                  required: "수량을 입력하세요.",
-                  min: { value: 1, message: "최소 1개 이상" }
-                })}
-              />
-            </ReceiverRow>
-            <OrderButton type="button" onClick={() => remove(idx)} style={{ background: "#eee", color: "#222", marginTop: 4 }}>
-              삭제
-            </OrderButton>
-            {/* 에러 메시지 */}
-            {errors.receivers?.[idx]?.name && <ErrorMessage>{errors.receivers[idx]?.name?.message}</ErrorMessage>}
-            {errors.receivers?.[idx]?.phone && <ErrorMessage>{errors.receivers[idx]?.phone?.message}</ErrorMessage>}
-            {errors.receivers?.[idx]?.quantity && <ErrorMessage>{errors.receivers[idx]?.quantity?.message}</ErrorMessage>}
-          </div>
-        ))}
       </ReceiverSection>
 
       {/* ===== 상품 정보 섹션 ===== */}
