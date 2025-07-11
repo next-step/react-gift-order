@@ -6,7 +6,7 @@ import Container from '@/components/layout/Container';
 import { RecipientList, RecipientModal } from '@/components/order';
 import { products } from '@/data/products';
 import { cardTemplates } from '@/data/cardTemplates';
-import { useOrderForm } from '@/hooks';
+import { useMultipleRecipientsForm } from '@/hooks';
 import type { Recipient } from '@/types';
 
 const CardSlider = styled.div`
@@ -123,16 +123,21 @@ const OrderButtonBar = styled.div`
   z-index: 100;
   padding: 0 0 12px 0;
 `;
-const OrderButton = styled.div`
-  background: #fee500;
-  color: #222;
+const OrderButton = styled.div<{ disabled?: boolean }>`
+  background: ${(props) => (props.disabled ? '#f3f4f6' : '#fee500')};
+  color: ${(props) => (props.disabled ? '#9ca3af' : '#222')};
   font-weight: 700;
   font-size: 18px;
   text-align: center;
   padding: 18px 0;
   border-radius: 12px;
   box-shadow: 0 -2px 8px #0001;
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
+  transition: all 0.2s ease;
+
+  &:hover:not([disabled]) {
+    background: ${(props) => (props.disabled ? '#f3f4f6' : '#fde047')};
+  }
 `;
 
 const OrderPage = () => {
@@ -140,13 +145,19 @@ const OrderPage = () => {
   const navigate = useNavigate();
   const product = products.find((p) => String(p.id) === String(productId));
 
-  const { formData, errors, handlers, register } = useOrderForm();
-  const { selectedCardId, selectedCard } = formData;
-  const { messageError, senderError } = errors;
-  const { handleSelectCard, handleOrder } = handlers;
+  const { formData, errors, recipientActions, handlers, register, setValue } =
+    useMultipleRecipientsForm();
 
-  // 받는사람 목록 상태
-  const [recipients, setRecipients] = useState<Recipient[]>([]);
+  const { selectedCardId, selectedCard, recipients, totalQuantity } = formData;
+  const { messageError, senderError, recipientsError } = errors;
+  const {
+    addRecipient,
+    removeRecipient,
+    setRecipients,
+    canAddMore,
+    maxReached,
+  } = recipientActions;
+  const { handleSelectCard, handleOrder, validateForm } = handlers;
 
   // 모달 상태
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -158,14 +169,12 @@ const OrderPage = () => {
 
   // 받는사람 제거
   const handleRemoveRecipient = (index: number) => {
-    setRecipients((prev: Recipient[]) =>
-      prev.filter((_: Recipient, i: number) => i !== index)
-    );
+    removeRecipient(index);
   };
 
   // 모달에서 받는사람 저장
   const handleSaveRecipients = (newRecipients: Recipient[]) => {
-    setRecipients((prev) => [...prev, ...newRecipients]);
+    setRecipients([...recipients, ...newRecipients]);
     setIsModalOpen(false);
   };
 
@@ -173,6 +182,14 @@ const OrderPage = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+
+  // 주문 가능 여부 확인
+  const canOrder =
+    recipients.length > 0 &&
+    totalQuantity > 0 &&
+    !messageError &&
+    !senderError &&
+    !recipientsError;
 
   if (!product) {
     return (
@@ -237,9 +254,10 @@ const OrderPage = () => {
           recipients={recipients}
           onRemoveRecipient={handleRemoveRecipient}
           onAddRecipient={handleAddRecipient}
-          canAddMore={recipients.length < 10}
-          maxReached={recipients.length >= 10}
+          canAddMore={canAddMore}
+          maxReached={maxReached}
         />
+        {recipientsError && <ErrorText>{recipientsError}</ErrorText>}
         <ProductInfo>
           <ProductImg src={product.imageURL} alt={product.name} />
           <ProductInfoText>
@@ -253,8 +271,13 @@ const OrderPage = () => {
       </Container>
       <OrderButtonBar>
         <Container>
-          <OrderButton onClick={() => handleOrder(product)}>
-            {product.price.sellingPrice.toLocaleString()}원 주문하기
+          <OrderButton
+            disabled={!canOrder}
+            onClick={() => canOrder && handleOrder(product)}
+          >
+            {totalQuantity > 0
+              ? `${(product.price.sellingPrice * totalQuantity).toLocaleString()}원 주문하기 (${totalQuantity}개)`
+              : `${product.price.sellingPrice.toLocaleString()}원 주문하기`}
           </OrderButton>
         </Container>
       </OrderButtonBar>
