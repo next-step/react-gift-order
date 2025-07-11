@@ -7,7 +7,7 @@ export const theme = {
   zIndex: {
     base: 1,
     cardSelector: 100,
-    // zIndex 필요하면 더 추가할 예정
+    modal: 9999,
   },
 };
 
