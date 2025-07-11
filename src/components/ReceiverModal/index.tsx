@@ -42,7 +42,7 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
   onComplete,
   initialReceivers = [],
 }) => {
-  const { control, register, handleSubmit, formState: { errors }, watch, setError, clearErrors } = useForm<{
+  const { control, register, handleSubmit, formState: { errors }, setError, clearErrors } = useForm<{
     receivers: ReceiverFormInput[];
   }>({
     defaultValues: {
