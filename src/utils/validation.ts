@@ -40,5 +40,46 @@ export const getPasswordErrorMessage = (password: string): string | null => {
 };
 
 export const isValidPhoneNumber = (phone: string): boolean => {
-  return /^010-\d{4}-\d{4}$/.test(phone) || /^010\d{8}$/.test(phone);
+  // 01012341234 형태로만 허용
+  return /^010\d{8}$/.test(phone);
+};
+
+export const getPhoneErrorMessage = (phone: string): string | null => {
+  const trimmedPhone = phone.trim();
+
+  if (!trimmedPhone) {
+    return '전화번호를 입력해주세요.';
+  }
+
+  if (!isValidPhoneNumber(trimmedPhone)) {
+    return '전화번호는 01012341234 형태로 입력해주세요.';
+  }
+
+  return null;
+};
+
+export const isValidName = (name: string): boolean => {
+  return name.trim().length > 0;
+};
+
+export const getNameErrorMessage = (name: string): string | null => {
+  const trimmedName = name.trim();
+
+  if (!trimmedName) {
+    return '이름을 입력해주세요.';
+  }
+
+  return null;
+};
+
+export const isValidQuantity = (quantity: number): boolean => {
+  return quantity >= 1;
+};
+
+export const getQuantityErrorMessage = (quantity: number): string | null => {
+  if (quantity < 1) {
+    return '구매 수량은 1개 이상이어야 합니다.';
+  }
+
+  return null;
 };
