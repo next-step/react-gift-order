@@ -9,12 +9,16 @@ import {
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FaX } from 'react-icons/fa6';
+import type { Receiver } from '@/types/receiver';
 
 type ReceiverListModalProps = {
   open: boolean;
   onClose: () => void;
-  onAdd: (data: FormValues['receivers']) => void;
+  onAdd: (data: Receiver[]) => void;
+  editingReceivers: Receiver[] | null;
 };
+
+type FormValues = { receivers: Receiver[] };
 
 const RECEIVER_COUNT_LIMIT = 10;
 
@@ -27,10 +31,12 @@ const ReceiverSchema = z.object({
     .string()
     .nonempty('전화번호를 입력해주세요.')
     .regex(/^\d{10,11}$/, '올바른 전화번호 형식이 아니에요.'),
-  itemCount: z
+  itemCount: z.coerce
     .number()
     .positive('구매 수량은 1개 이상이어야 해요.')
-    .min(1, '구매 수량을 입력해주세요.'),
+    .min(1, '구매 수량을 입력해주세요.')
+    .default(1)
+    .transform(Number),
 });
 
 const ReceiversNumberListSchema = z
@@ -65,19 +71,15 @@ const FormSchema = z.object({
   receivers: ReceiversNumberListSchema,
 });
 
-type FormValues = z.infer<typeof FormSchema>;
-
 const ReceiverListModal = ({
   open,
   onClose,
   onAdd,
+  editingReceivers,
 }: ReceiverListModalProps) => {
-  const initialDefaultValues: FormValues = {
-    receivers: [],
-  };
   const { control, handleSubmit, reset } = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
-    defaultValues: initialDefaultValues,
+    defaultValues: { receivers: editingReceivers || [] },
     mode: 'onSubmit',
   });
 
@@ -88,23 +90,17 @@ const ReceiverListModal = ({
 
   const onSubmit = (data: FormValues) => {
     onAdd(data.receivers);
-    onClose();
-    reset(initialDefaultValues);
-  };
-
-  const handleClose = () => {
-    onClose();
-    reset(initialDefaultValues);
   };
 
   useEffect(() => {
     if (open) {
+      reset({ receivers: editingReceivers || [] });
       document.body.style.overflow = 'hidden';
     }
     return () => {
       document.body.style.overflow = '';
     };
-  }, [open, reset]);
+  }, [open, reset, editingReceivers]);
 
   if (!open) return null;
 
@@ -219,7 +215,7 @@ const ReceiverListModal = ({
           })}
         </ModalContent>
         <ModalButtonWrapper>
-          <ModalCancleButton onClick={handleClose}>취소</ModalCancleButton>
+          <ModalCancleButton onClick={onClose}>취소</ModalCancleButton>
           <ModalCompleteButton type="submit">
             {fields.length}명 완료
           </ModalCompleteButton>

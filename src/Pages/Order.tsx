@@ -14,12 +14,7 @@ import {
   StyledInput,
   CaptionText,
 } from '@/components/Common/BorderInputBox';
-
-type Receiver = {
-  receiverName: string;
-  receiverPhoneNumber: string;
-  itemCount: number;
-};
+import type { Receiver } from '@/types/receiver';
 
 const Order = () => {
   const { itemId } = useParams<{ itemId: string }>();
@@ -39,9 +34,24 @@ const Order = () => {
 
   const [isReceiverModalOpen, setIsReceiverModalOpen] = useState(false);
   const [receivers, setReceivers] = useState<Receiver[]>([]);
+  const [editingReceivers, setEditingReceivers] = useState<Receiver[] | null>(
+    null
+  );
 
-  const handleAddReceivers = (newReceivers: Receiver[]) => {
-    setReceivers((prev) => [...prev, ...newReceivers]);
+  const handleOpenReceiverModal = () => {
+    setEditingReceivers(receivers.length > 0 ? receivers : null);
+    setIsReceiverModalOpen(true);
+  };
+
+  const handleModalAddOrEdit = (newReceivers: Receiver[]) => {
+    setReceivers(newReceivers);
+    setEditingReceivers(null);
+    setIsReceiverModalOpen(false);
+  };
+
+  const handleModalClose = () => {
+    setIsReceiverModalOpen(false);
+    setEditingReceivers(null);
   };
 
   useEffect(() => {
@@ -60,6 +70,12 @@ const Order = () => {
 
   if (!item) return <p>상품 정보를 찾을 수 없습니다.</p>;
 
+  const totalCount = receivers.reduce(
+    (acc, curr) => acc + (curr.itemCount ?? 0),
+    0
+  );
+  const totalPrice = totalCount * (item?.price.sellingPrice ?? 0);
+
   const handleOrderSubmit = () => {
     const isMessageVaild = message.validate();
     const isSenderNameValid = senderName.validate();
@@ -75,7 +91,7 @@ const Order = () => {
       isItemCountValid;
     if (valid) {
       alert(
-        `주문이 완료되었습니다.\n상품명: ${item?.name}\n구매 수량: ${itemCount.value}\n발신자 이름: ${senderName.value}\n메시지: ${message.value}`
+        `주문이 완료되었습니다.\n상품명: ${item?.name}\n구매 수량: ${totalCount}\n발신자 이름: ${senderName.value}\n메시지: ${message.value}`
       );
       navigate('/');
     }
@@ -131,10 +147,8 @@ const Order = () => {
         <SectionContainer>
           <ReceiveContainerHeader>
             <OrderSectionTitle>받는 사람</OrderSectionTitle>
-            <OpenReceiverListModalButton
-              onClick={() => setIsReceiverModalOpen(true)}
-            >
-              추가
+            <OpenReceiverListModalButton onClick={handleOpenReceiverModal}>
+              {receivers.length > 0 ? '수정' : '추가'}
             </OpenReceiverListModalButton>
           </ReceiveContainerHeader>
 
@@ -176,12 +190,13 @@ const Order = () => {
           </ItemWrapper>
         </SectionContainer>
         <OrderButton onClick={handleOrderSubmit}>
-          {item.price.sellingPrice.toLocaleString()}원 주문하기
+          {totalPrice.toLocaleString()}원 주문하기
         </OrderButton>
         <ReceiverListModal
           open={isReceiverModalOpen}
-          onClose={() => setIsReceiverModalOpen(false)}
-          onAdd={handleAddReceivers}
+          onClose={handleModalClose}
+          onAdd={handleModalAddOrEdit}
+          editingReceivers={editingReceivers}
         />
       </OrderContainer>
     </>
