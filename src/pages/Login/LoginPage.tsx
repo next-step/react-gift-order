@@ -1,8 +1,7 @@
-// src/pages/LoginPage.tsx
 import styled from '@emotion/styled';
 import logo from '@/resources/images/kakao_logo.svg';
-// 경로를 '@/components/LoginFormSection'로 고정
 import { LoginForm } from "./components/LoginFormSection";
+
 const LoginPage = () => (
   <Wrapper>
     <Logo src={logo} alt="카카오 공식 로고" />
