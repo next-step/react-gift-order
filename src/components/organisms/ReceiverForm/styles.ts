@@ -5,7 +5,7 @@ export const Container = styled.div`
   flex-direction: column;
   width: 100%;
   background-color: ${({ theme }) => theme.semantic.background.default};
-  padding: ${({ theme }) => theme.spacing.spacing4};
+  padding: ${({ theme }) => theme.spacing.spacing2};
   border: 1px solid ${({ theme }) => theme.semantic.background.fill};
 `;
 
@@ -14,22 +14,26 @@ export const FormContent = styled.div`
 `;
 
 export const FormSpacer = styled.div`
-  height: ${({ theme }) => theme.spacing.spacing3};
+  height: ${({ theme }) => theme.spacing.spacing2};
 `;
 
 export const ReceiverCard = styled.div`
   background-color: ${({ theme }) => theme.semantic.background.default};
   border: 1px solid ${({ theme }) => theme.semantic.background.fill};
   border-radius: ${({ theme }) => theme.spacing.spacing2};
-  padding: ${({ theme }) => theme.spacing.spacing4};
-  margin-bottom: ${({ theme }) => theme.spacing.spacing3};
+  padding: ${({ theme }) => theme.spacing.spacing3};
+  margin-bottom: ${({ theme }) => theme.spacing.spacing2};
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
 `;
 
 export const ReceiverHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: ${({ theme }) => theme.spacing.spacing3};
+  margin-bottom: ${({ theme }) => theme.spacing.spacing2};
 `;
 
 export const ReceiverTitle = styled.div`
@@ -40,5 +44,5 @@ export const ReceiverTitle = styled.div`
 export const ReceiverContent = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.spacing3};
+  gap: ${({ theme }) => `calc(${theme.spacing.spacing2} * 0.75)`};
 `;

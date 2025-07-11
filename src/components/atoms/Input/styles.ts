@@ -6,7 +6,7 @@ interface InputStyledProps {
 
 export const Input = styled.input<InputStyledProps>`
   width: 100%;
-  padding: ${({ theme }) => theme.spacing.spacing2} ${({ theme }) => theme.spacing.spacing3};
+  padding: ${({ theme }) => `${theme.spacing.spacing2} ${theme.spacing.spacing2}`};
   border: 1px solid ${({ theme, hasError }) => 
     hasError ? theme.colors.red[700] : theme.semantic.border.default
   };
@@ -17,5 +17,6 @@ export const Input = styled.input<InputStyledProps>`
   
   &::placeholder {
     color: ${({ theme }) => theme.semantic.text.placeholder};
+    ${({ theme }) => theme.typography.label2Regular};
   }
 `; 
