@@ -173,7 +173,7 @@ const ReceiverModal = ({
   onSave,
 }: {
   onClose: () => void;
-  onSave: formData;
+  onSave: FormData;
 }) => {
   return (
     <>
