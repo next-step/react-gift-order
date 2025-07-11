@@ -1,4 +1,4 @@
-import type { UserInfo } from '@/app/providers/AuthContext'
+import type { UserInfo } from '@/shared/contexts/auth'
 
 // * 유저 정보 암호화
 // ? 조금이라도 보안성을 주기 위해 간단한 Base64 인코딩 적용

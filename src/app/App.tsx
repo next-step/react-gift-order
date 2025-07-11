@@ -3,7 +3,7 @@ import GlobalStyles from '@/shared/styles/GlobalStyles'
 import { theme } from '@/shared/styles/theme'
 import { BrowserRouter } from 'react-router-dom'
 import Router from './Router'
-import { AuthProvider } from './providers/AuthContext'
+import { AuthProvider } from '@/shared/contexts/auth'
 
 const App = () => {
   return (
