@@ -32,7 +32,7 @@ import ReceiverModal from "@/components/order/ReceiveModal";
 const ReceiverInfoTable: React.FC<{
   receivers: { receiverName: string; phoneNumber: string; quantity: number }[];
 }> = ({ receivers }) => (
-  <table>
+  <table css={tableStyle}>
     <thead>
       <tr>
         <th>이름</th>
@@ -193,4 +193,22 @@ const ReceiverSection = css`
 const ReceiverHeader = css`
   display: flex;
   justify-content: space-between;
+`;
+
+const tableStyle = css`
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+
+  th,
+  td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+  }
+
+  th {
+    background-color: #f9f9f9;
+    font-weight: bold;
+  }
 `;
