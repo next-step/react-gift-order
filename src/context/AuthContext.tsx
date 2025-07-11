@@ -40,9 +40,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setInitialized(true)
   }, [])
 
-  useEffect(() => {
-    console.log('AuthContext ▶︎', { user, token, initialized })
-  }, [user, token, initialized])
 
   const login = ({ user, token }: { user: User; token: string }) => {
     setUser(user)
