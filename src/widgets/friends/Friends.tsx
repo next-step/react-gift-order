@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { theme } from '@/shared/styles/theme'
 import { typographyMixin } from '@/shared/ui'
 import { Plus } from 'lucide-react'
-import { useAuth } from '@/app/providers/AuthContext'
+import { useAuth } from '@/shared/contexts/auth'
 
 // * 선물할 친구 섹션
 export const Friends = () => {

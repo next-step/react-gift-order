@@ -109,7 +109,7 @@ const CloseButton = styled(Button)`
 // * 모달 헤더
 const ModalHeader = styled.div`
   padding: ${theme.spacing.spacing5};
-  border-bottom: 1px solid ${theme.semanticColors.border.default};
+  /* border-bottom: 1px solid ${theme.semanticColors.border.default}; */
 
   display: flex;
   flex-direction: column;
@@ -138,7 +138,7 @@ const ModalContent = styled.div<{ hasHeader: boolean; hasFooter: boolean }>`
 // * 모달 푸터
 const ModalFooter = styled.div`
   padding: ${theme.spacing.spacing4};
-  border-top: 1px solid ${theme.semanticColors.border.default};
+  /* border-top: 1px solid ${theme.semanticColors.border.default}; */
   display: flex;
   gap: ${theme.spacing.spacing2};
   justify-content: flex-end;

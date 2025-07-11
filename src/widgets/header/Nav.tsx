@@ -3,7 +3,7 @@ import { theme } from '@/shared/styles/theme'
 import { Link, useNavigate } from 'react-router-dom'
 import { ChevronLeft, UserRound } from 'lucide-react'
 import { ROUTE_PATH } from '@/app/Router'
-import { useAuth } from '@/app/providers/AuthContext'
+import { useAuth } from '@/shared/contexts/auth'
 
 // * 네비게이션 컴포넌트
 export const Nav = () => {
