@@ -11,20 +11,20 @@ const MessageCardSection = () => {
   const selectedCardId = useWatch({ control, name: "selectedCardId" });
   const message = useWatch({ control, name: "message" });
 
-  const selectedCard =
-    messageCards.find((card) => card.id === selectedCardId) ?? messageCards[0];
-
-  const isDefaultMessage = messageCards.some(
-    (card) => card.defaultTextMessage === message
-  );
-
   const handleSelectCard = (card: MessageCard) => {
     setValue("selectedCardId", card.id);
 
-    if (isDefaultMessage || !message?.trim()) {
+    const isCurrentMessageDefault = messageCards.some(
+      (c) => c.defaultTextMessage === message
+    );
+
+    if (isCurrentMessageDefault || !message?.trim()) {
       setValue("message", card.defaultTextMessage);
     }
   };
+
+  const selectedCard =
+    messageCards.find((card) => card.id === selectedCardId) ?? messageCards[0];
 
   return (
     <Wrapper>
