@@ -82,6 +82,7 @@ if (!/^01[016789]-?\d{3,4}-?\d{4}$/.test(phone)) {
     }
     if (!validate()) return;
     alert("주문이 완료되었습니다!");
+    navigate("/", { replace: true });
   };
 
   return (
