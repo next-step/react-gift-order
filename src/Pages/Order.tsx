@@ -19,7 +19,6 @@ type Receiver = {
   receiverName: string;
   receiverPhoneNumber: string;
   itemCount: number;
-  message: string;
 };
 
 const Order = () => {

@@ -31,8 +31,6 @@ const ReceiverSchema = z.object({
     .number()
     .positive('구매 수량은 1개 이상이어야 해요.')
     .min(1, '구매 수량을 입력해주세요.'),
-
-  message: z.string().nonempty('메시지를 입력해주세요.'),
 });
 
 const ReceiversNumberListSchema = z
@@ -111,7 +109,7 @@ const ReceiverListModal = ({
   if (!open) return null;
 
   return (
-    <ModalOverlay onClick={onClose}>
+    <ModalOverlay>
       <ModalContainer
         onClick={(e) => e.stopPropagation()}
         onSubmit={handleSubmit(onSubmit)}
@@ -131,7 +129,6 @@ const ReceiverListModal = ({
                   receiverName: '',
                   receiverPhoneNumber: '',
                   itemCount: 1,
-                  message: '',
                 });
               }
             }}
