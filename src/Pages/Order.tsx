@@ -22,8 +22,7 @@ const Order = () => {
   const item = mockGiftItems.find((item) => item.id === id);
 
   const { selectedCard, selectCard } = useCardSelection();
-  const { message, senderName, receiverName, receiverPhoneNumber, itemCount } =
-    useOrderForm();
+  const { message, senderName } = useOrderForm();
 
   const hasUserEditedMessage = useRef(false);
 
@@ -37,6 +36,7 @@ const Order = () => {
   const [editingReceivers, setEditingReceivers] = useState<Receiver[] | null>(
     null
   );
+  const [receiverError, setReceiverError] = useState(false);
 
   const handleOpenReceiverModal = () => {
     setEditingReceivers(receivers.length > 0 ? receivers : null);
@@ -79,16 +79,9 @@ const Order = () => {
   const handleOrderSubmit = () => {
     const isMessageVaild = message.validate();
     const isSenderNameValid = senderName.validate();
-    const isReceiverNameValid = receiverName.validate();
-    const isPhoneValid = receiverPhoneNumber.validate();
-    const isItemCountValid = itemCount.validate();
 
-    const valid =
-      isMessageVaild &&
-      isSenderNameValid &&
-      isReceiverNameValid &&
-      isPhoneValid &&
-      isItemCountValid;
+    const valid = isMessageVaild && isSenderNameValid && receivers.length >= 1;
+    setReceiverError(receivers.length < 1);
     if (valid) {
       alert(
         `주문이 완료되었습니다.\n상품명: ${item?.name}\n구매 수량: ${totalCount}\n발신자 이름: ${senderName.value}\n메시지: ${message.value}`
@@ -153,7 +146,7 @@ const Order = () => {
           </ReceiveContainerHeader>
 
           {receivers.length === 0 ? (
-            <ReceiverList>
+            <ReceiverList error={receiverError}>
               받는 사람이 없습니다.<br></br>받는 사람을 추가해주세요.
             </ReceiverList>
           ) : (
@@ -292,7 +285,7 @@ const OpenReceiverListModalButton = styled.button`
   }
 `;
 
-const ReceiverList = styled.div`
+const ReceiverList = styled.div<{ error?: boolean }>`
   padding: ${({ theme }) => theme.spacing.spacing4};
   border: 1px solid ${({ theme }) => theme.colors.borderDefault};
   display: flex;
@@ -300,7 +293,8 @@ const ReceiverList = styled.div`
   align-items: center;
   justify-content: center;
   text-align: center;
-  color: ${({ theme }) => theme.colors.textPlaceholder};
+  color: ${({ error, theme }) =>
+    error ? theme.colors.critical : theme.colors.textPlaceholder};
   border-radius: 12px;
 
   ${({ theme }) => `
