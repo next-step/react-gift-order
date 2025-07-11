@@ -3,11 +3,10 @@ import { useParams, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { Section } from '@/components/layout';
 import Container from '@/components/layout/Container';
-import { RecipientList } from '@/components/order';
+import { RecipientList, RecipientModal } from '@/components/order';
 import { products } from '@/data/products';
 import { cardTemplates } from '@/data/cardTemplates';
 import { useOrderForm } from '@/hooks';
-import { createNewRecipient } from '@/utils';
 import type { Recipient } from '@/types';
 
 const CardSlider = styled.div`
@@ -146,15 +145,15 @@ const OrderPage = () => {
   const { messageError, senderError } = errors;
   const { handleSelectCard, handleOrder } = handlers;
 
-  // 임시 받는사람 목록 상태 (기존 단일 폼과 연동)
+  // 받는사람 목록 상태
   const [recipients, setRecipients] = useState<Recipient[]>([]);
 
-  // 받는사람 추가
-  const handleAddRecipient = () => {
-    if (recipients.length >= 10) return;
+  // 모달 상태
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const newRecipient = createNewRecipient();
-    setRecipients((prev: Recipient[]) => [...prev, newRecipient]);
+  // 받는사람 추가 (모달 열기)
+  const handleAddRecipient = () => {
+    setIsModalOpen(true);
   };
 
   // 받는사람 제거
@@ -162,6 +161,17 @@ const OrderPage = () => {
     setRecipients((prev: Recipient[]) =>
       prev.filter((_: Recipient, i: number) => i !== index)
     );
+  };
+
+  // 모달에서 받는사람 저장
+  const handleSaveRecipients = (newRecipients: Recipient[]) => {
+    setRecipients((prev) => [...prev, ...newRecipients]);
+    setIsModalOpen(false);
+  };
+
+  // 모달 닫기
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
   };
 
   if (!product) {
@@ -248,6 +258,13 @@ const OrderPage = () => {
           </OrderButton>
         </Container>
       </OrderButtonBar>
+
+      <RecipientModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onSave={handleSaveRecipients}
+        existingRecipients={recipients}
+      />
     </Section>
   );
 };
