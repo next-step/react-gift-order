@@ -30,7 +30,7 @@ export const LoginForm: React.FC = () => {
     if (!password) {
       setPasswordError('비밀번호를 입력해주세요.');
     } else if (password.length < PASSWORD_LENGTH) {
-      setPasswordError(`비밀번호는 최소 ${PASSWORD_LENGTH}자 이상이어야 합니다.`);
+      setPasswordError(`비밀번호는 ${PASSWORD_LENGTH}자 이상이어야 합니다.`);
     } else {
       setPasswordError(null);
     }
