@@ -2,20 +2,23 @@ import {
   Image, CardCarousel, ProductInfo, MessageTextArea, 
   SenderSection, ReceiverSection, type InputChangeHandler, type TextAreaChangeHandler
 } from '@/components';
+import { useReceiver } from '@/contexts/ReceiverContext';
 import { type RankingItem } from '@/data/ranking';
 import { type Order } from '@/data/orders';
-import { 
-  type CardState,
-  type FormData,
-  type ValidationErrors 
-} from '@/utils/validation/orderForm';
 import * as S from './styles';
 
-interface FormHandlers {
-  onSenderNameChange: InputChangeHandler;
-  onReceiverNameChange: InputChangeHandler;
-  onReceiverPhoneChange: InputChangeHandler;
-  onQuantityChange: InputChangeHandler;
+interface CardState {
+  selectedCardId: number;
+  message: string;
+}
+
+interface FormData {
+  senderName: string;
+}
+
+interface ValidationErrors {
+  message: string;
+  senderName: string;
 }
 
 interface OrderTemplateProps {
@@ -25,7 +28,7 @@ interface OrderTemplateProps {
   onCardClick: (id: number) => void;
   onMessageChange: TextAreaChangeHandler;
   formData: FormData;
-  formHandlers: FormHandlers;
+  onSenderNameChange: InputChangeHandler;
   errors: ValidationErrors;
   product?: RankingItem;
   onSubmit: () => void;
@@ -38,11 +41,15 @@ const OrderTemplate = ({
   onCardClick,
   onMessageChange,
   formData,
-  formHandlers,
+  onSenderNameChange,
   errors,
   product,
   onSubmit,
 }: OrderTemplateProps) => {
+  const { receiverList } = useReceiver();
+
+  const totalQuantity = receiverList.reduce((sum, receiver) => sum + receiver.quantity, 0);
+
   return (
     <>
       <S.ContentWrapper>
@@ -72,7 +79,7 @@ const OrderTemplate = ({
           <S.Spacer />        
           <SenderSection
             senderName={formData.senderName}
-            onSenderNameChange={formHandlers.onSenderNameChange}
+            onSenderNameChange={onSenderNameChange}
             error={errors.senderName}
           />       
           <S.Spacer /> 
@@ -87,7 +94,7 @@ const OrderTemplate = ({
         </S.Container>
       </S.ContentWrapper> 
       <S.FixedBottomButton onClick={onSubmit}>
-        {product ? `${(product.price.sellingPrice * formData.quantity).toLocaleString()}원 결제하기` : '선물하기'}
+        {product && totalQuantity > 0 ? `${(product.price.sellingPrice * totalQuantity).toLocaleString()}원 결제하기` : '선물하기'}
       </S.FixedBottomButton>
     </>
   );

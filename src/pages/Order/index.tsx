@@ -18,18 +18,8 @@ const Order = () => {
     handleCardClick,
     handleMessageChange,
     handleSenderNameChange,
-    handleReceiverNameChange,
-    handleReceiverPhoneChange,
-    handleQuantityChange,
     handleOrder,
   } = useOrderForm({ product });
-
-  const formHandlers = {
-    onSenderNameChange: handleSenderNameChange,
-    onReceiverNameChange: handleReceiverNameChange,
-    onReceiverPhoneChange: handleReceiverPhoneChange,
-    onQuantityChange: handleQuantityChange,
-  };
 
   return (
     <OrderTemplate
@@ -39,7 +29,7 @@ const Order = () => {
       onCardClick={handleCardClick}
       onMessageChange={handleMessageChange}
       formData={formData}
-      formHandlers={formHandlers}
+      onSenderNameChange={handleSenderNameChange}
       errors={errors}
       product={product}
       onSubmit={handleOrder}
