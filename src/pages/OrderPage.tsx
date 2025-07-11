@@ -11,7 +11,7 @@ import * as S from '@/styles/OrderPage.styles';
 import { MessageCardSection } from '@/components/order/MessageCardSection';
 import { ProductInfoSection } from '@/components/order/ProductInfoSection';
 import { OrderPageFooter } from '@/components/order/OrderPageFooter';
-import { GiftingForm } from '@/components/order/GiftingFOrm';
+import { GiftingForm } from '@/components/order/GiftingForm';
 
 const phoneRegex = /^010\d{8}$/;
 
