@@ -1,36 +1,48 @@
 import styled from "@emotion/styled";
 import UserContext from "@src/contexts/UserContext";
-import type { InputErrorHandlerHook } from "@src/hooks/useInputErrorHandler";
-import useInputErrorHandler from "@src/hooks/useInputErrorHandler";
 import useUserInfo, { type UserInfoHook } from "@src/hooks/useUserInfo";
 import theme from "@src/styles/kakaoTheme";
-import { createNewIDEvaluator } from "@src/utils/evaluator/implementation/idEvaluator";
-import { createNewPWEvaluator } from "@src/utils/evaluator/implementation/passwordEvaluator";
 import { useContext, useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
+
+type LoginFormData = {
+  email: string;
+  password: string;
+};
 
 function LoginForm() {
   const navigate = useNavigate();
   const location = useLocation();
-  const userInfo: UserInfoHook = useUserInfo();
-
-  const idEvaluator = createNewIDEvaluator();
-  const pwEvaluator = createNewPWEvaluator();
-  const inputErrorHandler: InputErrorHandlerHook = useInputErrorHandler();
-
   const userContext = useContext(UserContext);
 
   const searchParams = new URLSearchParams(location.search);
   const redirectPath = searchParams.get("redirect");
 
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid },
+    watch
+  } = useForm<LoginFormData>({
+    mode: "onChange",
+    defaultValues: {
+      email: "",
+      password: ""
+    }
+  });
+
+  const emailValue = watch("email");
+  const passwordValue = watch("password");
+
   const nagivateToRedirectionTarget = () => {
     navigate(redirectPath ? decodeURIComponent(redirectPath) : "/");
   };
 
-  const handleLogin = () => {
+  const handleLogin = (data: LoginFormData) => {
     userContext?.valid.setValue(true);
-    userContext?.email.setValue(userInfo.email.value);
-    userContext?.user.setValue(userInfo.email.value.split("@")[0]);
+    userContext?.email.setValue(data.email);
+    userContext?.user.setValue(data.email.split("@")[0]);
     nagivateToRedirectionTarget();
   };
 
@@ -41,52 +53,48 @@ function LoginForm() {
   }, [userContext?.valid.value]);
 
   return (
-    <InputForm onSubmit={(e) => e.preventDefault()}>
+    <InputForm onSubmit={handleSubmit(handleLogin)}>
       <h1>Kakao</h1>
+
       <InputElement>
-        <InputField
-          type="text"
-          placeholder="이메일"
-          value={userInfo.email.value}
-          onChange={(e) => {
-            const newValue = e.target.value;
-            userInfo.email.setValue(newValue);
-            const isValid = idEvaluator.evaluate(newValue);
-            inputErrorHandler.idValid.setValue(isValid);
-            inputErrorHandler.idReason.setValue(idEvaluator.reason());
+        <Controller
+          name="email"
+          control={control}
+          rules={{
+            required: "이메일을 입력해주세요.",
+            pattern: {
+              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              message: "이메일 형식이 올바르지 않습니다."
+            }
           }}
+          render={({ field }) => (
+            <InputField placeholder="이메일" type="text" {...field} />
+          )}
         />
-        {!inputErrorHandler.idValid.value && (
-          <ErrorP>{inputErrorHandler.idReason.value}</ErrorP>
-        )}
+        {errors.email && <ErrorP>{errors.email.message}</ErrorP>}
       </InputElement>
+
       <InputElement>
-        <InputField
-          type="password"
-          placeholder="비밀번호"
-          value={userInfo.password.value}
-          onChange={(e) => {
-            const newValue = e.target.value;
-            userInfo.password.setValue(newValue);
-            const isValid = pwEvaluator.evaluate(newValue);
-            inputErrorHandler.pwValid.setValue(isValid);
-            inputErrorHandler.pwReason.setValue(pwEvaluator.reason());
+        <Controller
+          name="password"
+          control={control}
+          rules={{
+            required: "비밀번호를 입력해주세요.",
+            minLength: {
+              value: 8,
+              message: "비밀번호는 8자 이상이어야 합니다."
+            }
           }}
+          render={({ field }) => (
+            <InputField placeholder="비밀번호" type="password" {...field} />
+          )}
         />
-        {!inputErrorHandler.pwValid.value && (
-          <ErrorP>{inputErrorHandler.pwReason.value}</ErrorP>
-        )}
+        {errors.password && <ErrorP>{errors.password.message}</ErrorP>}
       </InputElement>
+
       <LoginButton
-        disabled={
-          !(
-            inputErrorHandler.idValid.value &&
-            inputErrorHandler.pwValid.value &&
-            userInfo.email.value.length > 0 &&
-            userInfo.password.value.length > 0
-          )
-        }
-        onClick={handleLogin}
+        type="submit"
+        disabled={!(emailValue && passwordValue && isValid)}
       >
         로그인
       </LoginButton>

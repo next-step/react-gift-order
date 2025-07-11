@@ -2,28 +2,16 @@ import styled from "@emotion/styled";
 import { cardTempleteMockData } from "@src/mock/cardTempleteMockData";
 import { useEffect, useState } from "react";
 import AdvancedTextArea from "../shared/AdvancedTextArea";
-import type { Evaluator } from "@src/utils/evaluator/rulesetEvaluator";
-import type { StateHook } from "@src/hooks/stateHookType";
+import { Controller, useFormContext } from "react-hook-form";
 
-type CardSelectorProps = {
-  evaluator: Evaluator<string>;
-  validHookSet: StateHook<boolean>;
-  reasonHookSet: StateHook<string | null>;
-  valueHookSet: StateHook<string>;
-};
-
-function CardSelector({
-  evaluator,
-  validHookSet,
-  reasonHookSet,
-  valueHookSet
-}: CardSelectorProps) {
+function CardSelector({ name }: { name: string }) {
   const cardTemplete = cardTempleteMockData;
   const [selectedCard, setSelectedCard] = useState<number>(0);
+  const { control, setValue } = useFormContext();
 
   useEffect(() => {
-    valueHookSet.setValue(cardTemplete[selectedCard].defaultTextMessage);
-  }, []);
+    setValue(name, cardTemplete[selectedCard].defaultTextMessage);
+  }, [selectedCard, setValue, name]);
 
   return (
     <CardSelectorWrapper>
@@ -33,7 +21,7 @@ function CardSelector({
             <CardThumbnail
               onClick={() => {
                 setSelectedCard(i);
-                valueHookSet.setValue(cardTemplete[i].defaultTextMessage);
+                setValue(name, cardTemplete[i].defaultTextMessage);
               }}
               key={c.id}
               src={c.thumbUrl}
@@ -44,12 +32,18 @@ function CardSelector({
         })}
       </CardThumbnailWrapper>
       <CardImage src={cardTemplete[selectedCard].imageUrl} alt="card" />
-      <AdvancedTextArea
-        placeholder="메세지를 입력해주세요."
-        evaluator={evaluator}
-        validHookSet={validHookSet}
-        reasonHookSet={reasonHookSet}
-        valueHookSet={valueHookSet}
+      <Controller
+        name={name}
+        control={control}
+        rules={{ required: "메세지를 입력해주세요." }}
+        render={({ field, fieldState }) => (
+          <AdvancedTextArea
+            {...field}
+            placeholder="메세지를 입력해주세요."
+            error={!!fieldState.error}
+            helperText={fieldState.error?.message}
+          />
+        )}
       />
     </CardSelectorWrapper>
   );

@@ -1,45 +1,16 @@
 import styled from "@emotion/styled";
-import type { StateHook } from "@src/hooks/stateHookType";
 import theme from "@src/styles/kakaoTheme";
-import type { Evaluator } from "@src/utils/evaluator/rulesetEvaluator";
 
 type AdvancedInputProps = {
-  placeholder: string;
-  type: string;
-  evaluator: Evaluator<string>;
-  validHookSet: StateHook<boolean>;
-  reasonHookSet: StateHook<string | null>;
-  valueHookSet: StateHook<string>;
-};
+  error: boolean;
+  helperText: string | undefined;
+} & React.InputHTMLAttributes<HTMLInputElement>;
 
-function AdvancedInput({
-  placeholder,
-  type,
-  evaluator,
-  validHookSet,
-  reasonHookSet,
-  valueHookSet
-}: AdvancedInputProps) {
+function AdvancedInput({ error, helperText, ...props }: AdvancedInputProps) {
   return (
     <AdvancedInputWrapper>
-      <InputField
-        valid={validHookSet.value}
-        placeholder={placeholder}
-        type={type}
-        onChange={(e) => {
-          const valid = evaluator.evaluate(e.target.value);
-          const reason = evaluator.reason();
-          if (!validHookSet.value) {
-            reasonHookSet.setValue(reason);
-          } else {
-            reasonHookSet.setValue(null);
-          }
-          validHookSet.setValue(valid);
-          valueHookSet.setValue(e.target.value);
-        }}
-        value={valueHookSet.value}
-      />
-      <ErrorMessage>{reasonHookSet.value}</ErrorMessage>
+      <InputField valid={!error} {...props} />
+      {error && <ErrorMessage>{helperText}</ErrorMessage>}
     </AdvancedInputWrapper>
   );
 }
