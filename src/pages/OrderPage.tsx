@@ -1,9 +1,9 @@
-import { css } from '@emotion/react';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useForm, useFieldArray, useWatch, type SubmitHandler } from 'react-hook-form';
 import { Layout } from '@/components/Layout';
 import { NavBar } from '@/components/NavBar';
-import type { GiftItem, MessageCard } from '@/types';
+import type { MessageCard } from '@/types';
 import { rankingAll } from '@/data/rankings';
 import { messageCardTemplates } from '@/data/messageCards';
 
@@ -12,58 +12,55 @@ import { MessageCardSection } from '@/components/order/MessageCardSection';
 import { ProductInfoSection } from '@/components/order/ProductInfoSection';
 import { OrderPageFooter } from '@/components/order/OrderPageFooter';
 import { GiftingForm } from '@/components/order/GiftingForm';
-
-const phoneRegex = /^010\d{8}$/;
+import { AddRecipientModal } from '@/components/order/AddRecipientModal';
+import { RecipientList } from '@/components/order/RecipientList';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { orderFormSchema, type OrderFormValues } from '@/lib/schemas';
 
 const OrderPage = () => {
   const { itemId } = useParams<{ itemId: string }>();
   const navigate = useNavigate();
   const item = rankingAll.find(it => it.id === Number(itemId));
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [selectedCard, setSelectedCard] = useState<MessageCard>(messageCardTemplates[0]);
-  const [formValues, setFormValues] = useState({
-    message: '',
-    senderName: '내 이름',
-    recipientName: '',
-    recipientPhone: '',
-    quantity: 1,
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    formState: { errors },
+  } = useForm<OrderFormValues>({
+    resolver: zodResolver(orderFormSchema),
+    defaultValues: {
+      senderName: '내 이름',
+      message: messageCardTemplates[0].defaultTextMessage,
+      recipients: [],
+    },
   });
-  const [errors, setErrors] = useState<Record<string, string>>({});
 
+  const { fields, append, remove } = useFieldArray({ control, name: 'recipients' });
+
+  // useWatch를 사용해 특정 필드의 값을 실시간으로 관찰합니다.
+  const recipients = useWatch({ control, name: 'recipients' });
+  const messageValue = useWatch({ control, name: 'message' });
+
+  // 선택된 메시지 카드를 관리하기 위한 별도의 상태
+  const [selectedCard, setSelectedCard] = useState<MessageCard>(messageCardTemplates[0]);
+
+  // 카드가 선택되면, react-hook-form의 message 필드 값을 업데이트합니다.
   useEffect(() => {
-    if (selectedCard) {
-      setFormValues(v => ({ ...v, message: selectedCard.defaultTextMessage }));
-    }
-  }, [selectedCard]);
+    setValue('message', selectedCard.defaultTextMessage);
+  }, [selectedCard, setValue]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormValues(prev => ({
-      ...prev,
-      [name]: name === 'quantity' ? Number(value) : value,
-    }));
+  const handleAddRecipient = (data: { name: string; phone: string; quantity: number }) => {
+    append(data);
+    setIsModalOpen(false);
   };
 
-  const validate = () => {
-    const newErrors: Record<string, string> = {};
-    if (!formValues.senderName.trim()) newErrors.senderName = '이름을 입력해주세요.';
-    if (!formValues.recipientName.trim()) newErrors.recipientName = '이름을 입력해주세요.';
-    if (!formValues.recipientPhone.trim()) {
-      newErrors.recipientPhone = '전화번호를 입력해주세요.';
-    } else if (!phoneRegex.test(formValues.recipientPhone)) {
-      newErrors.recipientPhone = '올바른 전화번호 형식이 아닙니다';
-    }
-    if (formValues.quantity < 1) newErrors.quantity = '구매 수량은 1개 이상이어야 합니다.';
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (validate()) {
-      alert('주문 성공!');
-      navigate('/');
-    }
+  const onSubmit: SubmitHandler<OrderFormValues> = (data) => {
+    console.log('최종 주문 데이터:', data);
+    alert('주문 성공!');
+    navigate('/');
   };
 
   if (!item) {
@@ -75,31 +72,53 @@ const OrderPage = () => {
     );
   }
 
-  const totalPrice = item.price.sellingPrice * formValues.quantity;
+  const totalPrice = (recipients || []).reduce((sum, current) => sum + (item.price.sellingPrice * current.quantity), 0);
 
   return (
     <Layout>
       <NavBar />
-      <div css={S.pageWrapper}>
-        <MessageCardSection
-          selectedCard={selectedCard}
-          onCardSelect={setSelectedCard}
-          message={formValues.message}
-          onMessageChange={handleChange}
-        />
-        <hr css={S.divider} />
-        <GiftingForm
-          formValues={formValues}
-          errors={errors}
-          onFormChange={handleChange}
-        />
-        <hr css={S.divider} />
-      </div>
-      <div css={S.pageWrapper}>
-        <ProductInfoSection item={item as GiftItem} />
-      </div>
-      <OrderPageFooter totalPrice={totalPrice} onSubmit={handleSubmit} />
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div css={S.pageWrapper}>
+          <MessageCardSection
+            selectedCard={selectedCard}
+            onCardSelect={setSelectedCard}
+            message={messageValue || ''}
+            onMessageChange={(e) => setValue('message', e.target.value, { shouldValidate: true })}
+          />
+          <hr css={S.divider} />
+          <GiftingForm
+            register={register}
+            errors={errors}
+          />
+          <hr css={S.divider} />
+          <div css={{ padding: `0 16px` }}>
+            <GiftingForm register={register} errors={errors} />
+            <p css={S.helperTextCss}>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</p>
+            {errors.senderName && <p css={S.errorCss}>{errors.senderName.message}</p>}
+          </div>
+          <hr css={S.divider} />
+          <div css={S.formSection}>
+            <h3>받는 사람</h3>
+            <RecipientList control={control} remove={remove} />
+            <button type="button" onClick={() => setIsModalOpen(true)}>
+              {fields.length > 0 ? '수정하기' : '+ 추가하기'}
+            </button>
+            {errors.recipients && <p css={S.errorCss}>{errors.recipients.message}</p>}
+          </div>
+          <hr css={S.divider} />
+          <ProductInfoSection item={item} />
+        </div>
+        <OrderPageFooter totalPrice={totalPrice} onSubmit={handleSubmit(onSubmit)}/>
 
+      </form>
+      {isModalOpen && (
+        <AddRecipientModal
+          onClose={() => setIsModalOpen(false)}
+          onAdd={handleAddRecipient}
+          initialRecipients={recipients}
+          existingPhones={(recipients || []).map(r => r.phone)}
+        />
+      )}
     </Layout>
   );
 };
