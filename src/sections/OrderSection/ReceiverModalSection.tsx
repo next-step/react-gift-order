@@ -198,7 +198,7 @@ export default function ReceiverModalSection({
         handleClose();
     };
 
-    const receiverValues = useWatch({ control, name: "receivers" });
+    const receiverValues = useWatch({ control, name: "receivers" }) || [];
 
     return (
         <Container>
@@ -219,11 +219,11 @@ export default function ReceiverModalSection({
                         </tr>
                     </thead>
                     <tbody>
-                        {receiverValues.map((receiver: Receiver, index: number) => (
-                            <tr key={fields[index].id}>
-                                <Td>{receiver.name}</Td>
-                                <Td>{receiver.phone}</Td>
-                                <Td>{receiver.quantity}</Td>
+                        {fields.map((field, index) => (
+                            <tr key={field.id}>
+                                <Td>{receiverValues?.[index]?.name ?? ""}</Td>
+                                <Td>{receiverValues?.[index]?.phone ?? ""}</Td>
+                                <Td>{receiverValues?.[index]?.quantity ?? ""}</Td>
                             </tr>
                         ))}
                     </tbody>
