@@ -42,6 +42,10 @@ const ReceiverForm = () => {
     });
   };
 
+  const handleDelete = (index: number) => {
+    setReceiverInputs(prev => prev.filter((_, i) => i !== index));
+  };
+
   return (
     <Wrapper>
       <Spacer />
@@ -70,54 +74,64 @@ const ReceiverForm = () => {
       {isModalOpen && (
         <ModalOverlay>
           <ModalBox>
-            <ModalHeader>
-              <ModalTitle>받는 사람</ModalTitle>
-              <Description>
-                * 최대 10명까지 추가 할 수 있어요.
-                <br />* 받는 사람의 전화번호를 중복으로 입력할 수 없어요.
-              </Description>
-            </ModalHeader>
+            <ScrollableContent>
+              <ModalHeader>
+                <ModalTitle>받는 사람</ModalTitle>
+                <Description>
+                  * 최대 10명까지 추가 할 수 있어요.
+                  <br />* 받는 사람의 전화번호를 중복으로 입력할 수 없어요.
+                </Description>
+              </ModalHeader>
 
-            <AddButtonWrapper>
-              <AddButton type="button" onClick={handleAddReceiverInput}>
-                추가하기
-              </AddButton>
-            </AddButtonWrapper>
+              <AddButtonWrapper>
+                <AddButton type="button" onClick={handleAddReceiverInput}>
+                  추가하기
+                </AddButton>
+              </AddButtonWrapper>
 
-            <ReceiverListWrapper>
-              {receiverInputs.map((input, index) => (
-                <div key={index}>
-                  <h4>받는 사람 {index + 1}</h4>
-                  <InputField
-                    name={`name-${index}`}
-                    type="text"
-                    value={input.name}
-                    onChange={e =>
-                      handleInputChange(index, 'name', e.target.value)
-                    }
-                    placeholder="이름을 입력하세요."
-                  />
-                  <InputField
-                    name={`phone-${index}`}
-                    type="tel"
-                    value={input.phone}
-                    onChange={e =>
-                      handleInputChange(index, 'phone', e.target.value)
-                    }
-                    placeholder="전화번호를 입력하세요."
-                  />
-                  <InputField
-                    name={`quantity-${index}`}
-                    type="number"
-                    value={String(input.quantity)}
-                    onChange={e =>
-                      handleInputChange(index, 'quantity', e.target.value)
-                    }
-                    placeholder="수량"
-                  />
-                </div>
-              ))}
-            </ReceiverListWrapper>
+              <ReceiverListWrapper>
+                {receiverInputs.map((input, index) => (
+                  <ReceiverInputItem key={index}>
+                    <InputHeader>
+                      <h4>받는 사람 {index + 1}</h4>
+                      <DeleteButton
+                        type="button"
+                        onClick={() => handleDelete(index)}
+                      >
+                        삭제
+                      </DeleteButton>
+                    </InputHeader>
+                    <InputField
+                      name={`name-${index}`}
+                      type="text"
+                      value={input.name}
+                      onChange={e =>
+                        handleInputChange(index, 'name', e.target.value)
+                      }
+                      placeholder="이름을 입력하세요."
+                    />
+                    <InputField
+                      name={`phone-${index}`}
+                      type="tel"
+                      value={input.phone}
+                      onChange={e =>
+                        handleInputChange(index, 'phone', e.target.value)
+                      }
+                      placeholder="전화번호를 입력하세요."
+                    />
+                    <InputField
+                      name={`quantity-${index}`}
+                      type="number"
+                      value={String(input.quantity)}
+                      onChange={e =>
+                        handleInputChange(index, 'quantity', e.target.value)
+                      }
+                      placeholder="수량"
+                    />
+                  </ReceiverInputItem>
+                ))}
+              </ReceiverListWrapper>
+            </ScrollableContent>
 
             <ModalFooter>
               <CancelButton type="button" onClick={() => setIsModalOpen(false)}>
@@ -200,10 +214,18 @@ const ModalOverlay = styled.div`
 
 const ModalBox = styled.div`
   background: white;
-  padding: ${({ theme }) => theme.spacing[6]};
+  padding: ${({ theme }) => theme.spacing[6]} ${({ theme }) => theme.spacing[4]};
   border-radius: 12px;
   width: 90%;
   max-width: 420px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+`;
+
+const ScrollableContent = styled.div`
+  overflow-y: auto;
+  padding-right: 4px;
 `;
 
 const ModalHeader = styled.div`
@@ -234,8 +256,29 @@ const ReceiverListWrapper = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing[4]};
 `;
 
+const ReceiverInputItem = styled.div`
+  padding: ${({ theme }) => theme.spacing[3]};
+  border: 1px solid ${({ theme }) => theme.color.gray[300]};
+  border-radius: 8px;
+`;
+
+const InputHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: ${({ theme }) => theme.spacing[2]};
+`;
+
+const DeleteButton = styled.button`
+  background: none;
+  border: none;
+  color: ${({ theme }) => theme.color.red[500]};
+  cursor: pointer;
+  ${({ theme }) => theme.typography.body.body2Regular};
+`;
+
 const ModalFooter = styled.div`
-  margin-top: ${({ theme }) => theme.spacing[6]};
+  margin-top: ${({ theme }) => theme.spacing[4]};
   display: flex;
   justify-content: space-between;
 `;
