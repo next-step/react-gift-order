@@ -56,6 +56,4 @@ export const LoginForm: React.FC = () => {
       isFormValid={isFormValid}
     />
   );
-};
-
-export default LoginForm;
+}
