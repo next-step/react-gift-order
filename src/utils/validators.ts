@@ -28,11 +28,18 @@ export function validatePassword(pw: string): string {
   return "";
 }
 
-export function validateName(name: string): string {
+export function validateSenderName(name: string): string {
   if (!name.trim()) {
     return ERROR_MESSAGES.VALIDATE.NAME;
   }
   return "";
+}
+
+export function validateReceiverName(name: string): string | true {
+  if (!name.trim()) {
+    return ERROR_MESSAGES.VALIDATE.NAME;
+  }
+  return true;
 }
 
 export function validateMessage(message: string): string {
@@ -52,11 +59,11 @@ export function validatePhone(phone: string): string {
   return "";
 }
 
-export function validateQuantity(quantity: number): string {
+export function validateQuantity(quantity: number): string | true {
   if (quantity < MIN_PRODUCT_COUNT) {
     return ERROR_MESSAGES.VALIDATE.QUANTITY;
   }
-  return "";
+  return true;
 }
 
 export function validateReceiverCount(receiverCount: number): string {
