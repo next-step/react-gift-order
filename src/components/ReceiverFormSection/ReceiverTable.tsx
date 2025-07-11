@@ -1,10 +1,6 @@
 import styled from '@emotion/styled';
-
-export type Receiver = {
-  name: string;
-  phone: string;
-  quantity: number;
-};
+import { TABLE_HEADERS, UNIT } from '@/constants/receiverLabels';
+import type { Receiver } from '@/types/receiver';
 
 interface Props {
   receiverList: Receiver[];
@@ -16,15 +12,19 @@ const ReceiverTable = ({ receiverList }: Props) => {
   return (
     <TableWrapper>
       <TableHeader>
-        <Cell>이름</Cell>
-        <Cell>전화번호</Cell>
-        <Cell>수량</Cell>
+        {TABLE_HEADERS.map(header => (
+          <Cell key={header}>{header}</Cell>
+        ))}
       </TableHeader>
+
       {receiverList.map((r, i) => (
         <TableRow key={i}>
           <Cell>{r.name}</Cell>
           <Cell>{r.phone}</Cell>
-          <Cell>{r.quantity}개</Cell>
+          <Cell>
+            {r.quantity}
+            {UNIT.QUANTITY}
+          </Cell>
         </TableRow>
       ))}
     </TableWrapper>

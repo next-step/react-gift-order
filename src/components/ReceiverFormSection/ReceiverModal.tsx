@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
-import ReceiverInputItem from './ReceiverInputItem';
-import { useReceiverForm } from '../../hooks/useReceiverForm';
+import ReceiverInputItem from '@/components/ReceiverFormSection/ReceiverInputItem';
+import { useReceiverForm } from '@/hooks/useReceiverForm';
+import { BUTTON_TEXT, LABELS } from '@/constants/receiverLabels';
 
 interface Props {
   onConfirmList: (
@@ -21,9 +22,20 @@ const ReceiverModal = ({ onConfirmList, onClose }: Props) => {
     isDuplicate,
   } = useReceiverForm();
 
-  const onConfirm = handleSubmit(data => {
+  const canAddMore = fields.length < 10;
+  const confirmButtonLabel = BUTTON_TEXT.CONFIRM_COUNT(fields.length);
+
+  const handleAdd = () => {
+    append({ name: '', phone: '', quantity: 1 });
+  };
+
+  const handleDelete = (index: number) => {
+    remove(index);
+  };
+
+  const handleConfirm = handleSubmit(data => {
     onConfirmList(data.receivers);
-    onClose(); // 모달 닫기
+    onClose();
   });
 
   const handleCancel = () => {
@@ -35,20 +47,13 @@ const ReceiverModal = ({ onConfirmList, onClose }: Props) => {
     <Overlay>
       <Modal>
         <Header>
-          <Title>받는 사람</Title>
-          <Description>
-            * 최대 10명까지 추가 할 수 있어요.
-            <br />* 받는 사람의 전화번호를 중복으로 입력할 수 없어요.
-          </Description>
+          <Title>{LABELS.RECEIVER_MODAL_TITLE}</Title>
+          <Description>{LABELS.RECEIVER_MODAL_DESCRIPTION}</Description>
         </Header>
 
         <AddButtonWrapper>
-          <AddButton
-            type="button"
-            onClick={() => append({ name: '', phone: '', quantity: 1 })}
-            disabled={fields.length >= 10}
-          >
-            추가하기
+          <AddButton type="button" onClick={handleAdd} disabled={!canAddMore}>
+            {BUTTON_TEXT.ADD}
           </AddButton>
         </AddButtonWrapper>
 
@@ -58,7 +63,7 @@ const ReceiverModal = ({ onConfirmList, onClose }: Props) => {
               <ReceiverInputItem
                 key={field.id}
                 index={index}
-                onDelete={() => remove(index)}
+                onDelete={() => handleDelete(index)}
                 register={register}
                 errors={errors}
                 isDuplicate={isDuplicate}
@@ -69,10 +74,10 @@ const ReceiverModal = ({ onConfirmList, onClose }: Props) => {
 
         <Footer>
           <CancelButton type="button" onClick={handleCancel}>
-            취소
+            {BUTTON_TEXT.CANCEL}
           </CancelButton>
-          <ConfirmButton type="button" onClick={onConfirm}>
-            {fields.length}명 완료
+          <ConfirmButton type="button" onClick={handleConfirm}>
+            {confirmButtonLabel}
           </ConfirmButton>
         </Footer>
       </Modal>
@@ -96,7 +101,7 @@ const Overlay = styled.div`
 `;
 
 const Modal = styled.div`
-  background: white;
+  background: ${({ theme }) => theme.color.semantic.background.default};
   padding: ${({ theme }) => theme.spacing[6]} ${({ theme }) => theme.spacing[4]};
   border-radius: 12px;
   width: 90%;
@@ -114,11 +119,12 @@ const Header = styled.div`
 
 const Title = styled.p`
   ${({ theme }) => theme.typography.title.title2Bold};
+  color: ${({ theme }) => theme.color.semantic.text.default};
 `;
 
 const Description = styled.p`
   ${({ theme }) => theme.typography.body.body2Regular};
-  color: ${({ theme }) => theme.color.semantic.text.default};
+  color: ${({ theme }) => theme.color.semantic.text.sub};
   white-space: pre-line;
 `;
 
@@ -129,7 +135,7 @@ const AddButtonWrapper = styled.div`
 const AddButton = styled.button<{ disabled?: boolean }>`
   ${({ theme }) => theme.typography.body.body2Regular};
   color: ${({ theme, disabled }) =>
-    disabled ? theme.color.gray[400] : theme.color.blue[500]};
+    disabled ? theme.color.semantic.text.disabled : theme.color.blue[700]};
   background: none;
   border: none;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
@@ -165,8 +171,10 @@ const CancelButton = styled.button`
 
 const ConfirmButton = styled.button`
   ${({ theme }) => theme.typography.body.body2Bold};
-  background-color: ${({ theme }) => theme.color.blue[500]};
-  color: white;
+  background-color: ${({ theme }) => theme.color.blue[700]};
+  color: ${({ theme }) => theme.color.gray[0]};
   padding: ${({ theme }) => theme.spacing[2]} ${({ theme }) => theme.spacing[4]};
   border-radius: 8px;
+  border: none;
+  cursor: pointer;
 `;

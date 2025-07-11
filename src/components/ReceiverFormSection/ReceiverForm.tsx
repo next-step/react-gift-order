@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import styled from '@emotion/styled';
-import ReceiverModal from './ReceiverModal';
-import ReceiverTable from './ReceiverTable';
-import type { Receiver } from './ReceiverTable';
+import ReceiverModal from '@/components/ReceiverFormSection/ReceiverModal';
+import ReceiverTable from '@/components/ReceiverFormSection//ReceiverTable';
+import { LABELS } from '@/constants/receiverLabels';
+import type { Receiver } from '@/types/receiver';
 
 interface Props {
   receiverList: Receiver[];
@@ -21,22 +22,18 @@ const ReceiverForm = ({ receiverList, setReceiverList }: Props) => {
   return (
     <Wrapper>
       <Header>
-        <Title>받는 사람</Title>
+        <Title>{LABELS.RECEIVER_FORM_TITLE}</Title>
         <AddButton
           type="button"
           onClick={() => setIsModalOpen(true)}
           disabled={receiverList.length >= 10}
         >
-          {isConfirmed ? '수정' : '추가'}
+          {LABELS.getAddOrEditText(isConfirmed)}
         </AddButton>
       </Header>
 
       {receiverList.length === 0 ? (
-        <EmptyNotice>
-          받는 사람이 없습니다.
-          <br />
-          받는 사람을 추가해주세요.
-        </EmptyNotice>
+        <EmptyNotice>{LABELS.EMPTY_RECEIVER_NOTICE}</EmptyNotice>
       ) : (
         <ReceiverTable receiverList={receiverList} />
       )}

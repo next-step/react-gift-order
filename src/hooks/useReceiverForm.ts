@@ -1,10 +1,5 @@
 import { useForm, useFieldArray } from 'react-hook-form';
-
-export type Receiver = {
-  name: string;
-  phone: string;
-  quantity: number;
-};
+import type { Receiver } from '@/types/receiver';
 
 export interface ReceiverFormValues {
   receivers: Receiver[];

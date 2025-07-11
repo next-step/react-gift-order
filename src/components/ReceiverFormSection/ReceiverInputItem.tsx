@@ -5,8 +5,9 @@ import {
   PHONE_REGEX,
   MIN_QUANTITY,
 } from '@/constants/validation';
+import { PLACEHOLDERS, LABELS } from '@/constants/receiverLabels';
 import type { UseFormRegister, FieldErrors } from 'react-hook-form';
-import type { ReceiverFormValues } from '../../hooks/useReceiverForm';
+import type { ReceiverFormValues } from '@/hooks/useReceiverForm';
 
 interface Props {
   index: number;
@@ -23,52 +24,67 @@ const ReceiverInputItem = ({
   errors,
   isDuplicate,
 }: Props) => {
+  const fields = [
+    {
+      key: 'name',
+      type: 'text',
+      placeholder: PLACEHOLDERS.NAME,
+      rules: {
+        required: ERROR_MESSAGES.EMPTY_RECEIVER_NAME,
+      },
+      error: errors.receivers?.[index]?.name?.message,
+    },
+    {
+      key: 'phone',
+      type: 'tel',
+      placeholder: PLACEHOLDERS.PHONE,
+      rules: {
+        required: ERROR_MESSAGES.EMPTY_RECEIVER_PHONE,
+        pattern: {
+          value: PHONE_REGEX,
+          message: ERROR_MESSAGES.INVALID_PHONE,
+        },
+        validate: (value: string | number) =>
+          typeof value === 'string'
+            ? !isDuplicate(value, index) || ERROR_MESSAGES.DUPLICATE_PHONE
+            : true,
+      },
+      error: errors.receivers?.[index]?.phone?.message,
+    },
+    {
+      key: 'quantity',
+      type: 'number',
+      placeholder: PLACEHOLDERS.QUANTITY,
+      rules: {
+        valueAsNumber: true,
+        required: ERROR_MESSAGES.INVALID_QUANTITY,
+        min: {
+          value: MIN_QUANTITY,
+          message: ERROR_MESSAGES.INVALID_QUANTITY,
+        },
+      },
+      error: errors.receivers?.[index]?.quantity?.message,
+    },
+  ] as const;
+
   return (
     <Wrapper>
       <InputHeader>
-        <h4>받는 사람 {index + 1}</h4>
+        <h4>{LABELS.getReceiverTitle(index)}</h4>
         <DeleteButton type="button" onClick={onDelete}>
-          삭제
+          {LABELS.DELETE}
         </DeleteButton>
       </InputHeader>
 
-      <InputField
-        type="text"
-        placeholder="이름을 입력하세요."
-        {...register(`receivers.${index}.name`, {
-          required: ERROR_MESSAGES.EMPTY_RECEIVER_NAME,
-        })}
-        error={errors.receivers?.[index]?.name?.message}
-      />
-
-      <InputField
-        type="tel"
-        placeholder="전화번호를 입력하세요."
-        {...register(`receivers.${index}.phone`, {
-          required: ERROR_MESSAGES.EMPTY_RECEIVER_PHONE,
-          pattern: {
-            value: PHONE_REGEX,
-            message: ERROR_MESSAGES.INVALID_PHONE,
-          },
-          validate: value =>
-            !isDuplicate(value, index) || '전화번호가 중복되었습니다.',
-        })}
-        error={errors.receivers?.[index]?.phone?.message}
-      />
-
-      <InputField
-        type="number"
-        placeholder="수량"
-        {...register(`receivers.${index}.quantity`, {
-          valueAsNumber: true,
-          min: {
-            value: MIN_QUANTITY,
-            message: ERROR_MESSAGES.INVALID_QUANTITY,
-          },
-          required: ERROR_MESSAGES.INVALID_QUANTITY,
-        })}
-        error={errors.receivers?.[index]?.quantity?.message}
-      />
+      {fields.map(({ key, type, placeholder, rules, error }) => (
+        <InputField
+          key={key}
+          type={type}
+          placeholder={placeholder}
+          {...register(`receivers.${index}.${key}` as const, rules)}
+          error={error}
+        />
+      ))}
     </Wrapper>
   );
 };
