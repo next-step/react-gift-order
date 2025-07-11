@@ -9,7 +9,6 @@ import ReceiverSelectBox from '@/components/ReceiverSelectBox';
 import ReceiverModal from '@/components/ReceiverModal';
 import { mockItem } from '@/components/GiftRanking/mockItem';
 import { ORDER_SUCCESS_MESSAGE, formatOrderButtonText } from '@/components/SenderForm/constants';
-import type { IFormData } from '@/types/order.d';
 import {
   RECEIVER_REQUIRED_MESSAGE,
   FINAL_ORDER_DATA_LOG,
@@ -22,6 +21,11 @@ interface ReceiverFormInput {
   name: string;
   phone: string;
   quantity: number;
+}
+interface IFormData {
+  senderName: string;
+  message: string;
+  receivers: ReceiverFormInput[];
 }
 
 function OrderPage() {
