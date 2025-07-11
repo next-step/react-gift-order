@@ -2,16 +2,18 @@ import styled from "@emotion/styled";
 import Divider from "@/components/common/Divider";
 import RecipientFieldModalInputForm from "./RecipientFieldModalInputForm";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import type { OrderFormType } from "@/types/OrderFormType";
-import { useEffect } from "react";
+import type { OrderFormType, RecipientType } from "@/types/OrderFormType";
+import { useEffect, useRef, type ComponentPropsWithoutRef } from "react";
 
 interface RecipientFieldModalProps {
   onClose: () => void;
+  initialRecipients: RecipientType[];
 }
 
-const RecipientFieldModal = ({ onClose }: RecipientFieldModalProps) => {
-  const { control, trigger, resetField } = useFormContext<OrderFormType>();
+const RecipientFieldModal = ({ onClose, initialRecipients: initialRecipientsProp }: RecipientFieldModalProps) => {
+  const { control, trigger, setValue, getValues } = useFormContext<OrderFormType>();
   const { fields, append, remove } = useFieldArray({ control, name: "recipients" });
+  const initialRecipients = useRef(initialRecipientsProp);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -23,11 +25,12 @@ const RecipientFieldModal = ({ onClose }: RecipientFieldModalProps) => {
   const confirmRecipients = async () => {
     const isValid = await trigger("recipients");
     if (isValid) {
+      setValue("recipients", getValues("recipients"));
       onClose();
     }
   };
   const cancelRecipients = () => {
-    resetField("recipients");
+    setValue("recipients", initialRecipients.current);
     onClose();
   };
   const isValidAddBtn = fields.length < 10;
@@ -96,7 +99,7 @@ const HelpMsg = styled.p`
   font: ${({ theme }) => theme.typography.label2Regular};
   color: ${({ theme }) => theme.color.gray800};
 `;
-const AddBtn = styled.button`
+const AddBtn = styled.button<ComponentPropsWithoutRef<"button">>`
   ${({ theme }) => {
     return `
       background-color: ${theme.color.backgroundColor.fill}
@@ -106,12 +109,12 @@ const AddBtn = styled.button`
   }}
   border: none;
   border-radius: 0.5rem;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
 `;
 const FieldWrapper = styled.div`
   flex: 1 1 0%;
   overflow: auto;
-  & > div:not(:first-child) {
+  & > div:not(:first-to-type) {
     border-top: 1px solid ${({ theme }) => theme.color.gray500};
     padding-top: ${({ theme }) => theme.spacing.spacing2};
     margin-top: ${({ theme }) => theme.spacing.spacing4};

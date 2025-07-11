@@ -6,7 +6,7 @@ export type OrderFormType = {
   productId: number;
 };
 
-type RecipientType = {
+export type RecipientType = {
   name: string;
   phone: string;
   quantity: number;

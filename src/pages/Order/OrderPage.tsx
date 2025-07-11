@@ -15,9 +15,11 @@ const OrderPage = () => {
 
 const OrderPageContent = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const openModal = () => setIsModalOpen(true);
+  const { handleSubmit, getValues } = useFormContext();
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
   const closeModal = () => setIsModalOpen(false);
-  const { handleSubmit } = useFormContext();
   const onSubmit = (data: any) => console.log(data);
   return (
     <Container>
@@ -32,7 +34,9 @@ const OrderPageContent = () => {
         <Divider spacing="3.125rem" />
         <Order.Btn />
       </Content>
-      {isModalOpen && <Order.Modal onClose={closeModal} />}
+      {isModalOpen && (
+        <Order.Modal onClose={closeModal} initialRecipients={JSON.parse(JSON.stringify(getValues("recipients")))} />
+      )}
     </Container>
   );
 };

@@ -34,7 +34,7 @@ const RecipientFieldModalInputForm = ({ index, remove }: RecipientFieldModalInpu
         <InputTitle>이름</InputTitle>
         <InputWrapper>
           <Input
-            {...register(`recipients.${index}.name`, { required: "이름을 입력해주세요." })}
+            {...register(`recipients.${index}.name` as const, { required: "이름을 입력해주세요." })}
             placeholder="이름을 입력하세요."
             errorMsg={errors.recipients?.[index]?.name?.message}
           />
@@ -44,7 +44,7 @@ const RecipientFieldModalInputForm = ({ index, remove }: RecipientFieldModalInpu
       <InputWrapper>
         <InputTitle>전화번호</InputTitle>
         <Input
-          {...register(`recipients.${index}.phone`, { required: "전화번호를 입력해주세요." })}
+          {...register(`recipients.${index}.phone` as const, { required: "전화번호를 입력해주세요." })}
           placeholder="전화번호를 입력하세요."
           errorMsg={errors.recipients?.[index]?.phone?.message}
         />
@@ -54,7 +54,7 @@ const RecipientFieldModalInputForm = ({ index, remove }: RecipientFieldModalInpu
         <InputTitle>수량</InputTitle>
         <Input
           type="number"
-          {...register(`recipients.${index}.quantity`, { min: 1 })}
+          {...register(`recipients.${index}.quantity` as const, { min: 1 })}
           placeholder="수량을 입력하세요."
           errorMsg={errors.recipients?.[index]?.quantity?.message}
         />
