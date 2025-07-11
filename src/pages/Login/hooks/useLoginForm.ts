@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import { UserManagement } from './UserManagement';
-import { useEmailInput } from './hooks/useEmailInput';
-import { usePasswordInput } from './hooks/usePasswordInput';
+import { UserManagement } from '../contexts/UserManagement';
+import { useEmailInput } from './useEmailInput';
+import { usePasswordInput } from './usePasswordInput';
 
 export const useLoginForm = () => {
   const email = useEmailInput();

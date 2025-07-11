@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { useTheme } from '@emotion/react';
-import LoginFormSection from './LoginFormSection';
-import { backgroundStyle } from './Login.style';
+import LoginFormSection from './components/LoginFormSection';
+import { backgroundStyle } from './styles/Login.style';
 
 const LoginPage = () => {
   const theme = useTheme();

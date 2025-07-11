@@ -9,7 +9,7 @@ import RankingSection from './components/RankingSection/RankingSection';
 import LoginPage from './pages/Login/LoginPage';
 import NotFoundPage from './pages/NotFoundPage';
 import MyPage from './pages/MyPage';
-import { UserManagementProvider, UserManagement } from './pages/Login/UserManagement';
+import { UserManagementProvider, UserManagement } from './pages/Login/contexts/UserManagement';
 import React from 'react';
 import OrderPage from './pages/Order/OrderPage';
 import ScrollToTop from './components/ScrollToTop';

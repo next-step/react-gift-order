@@ -6,8 +6,8 @@ import {
   loginButtonStyle,
   cardStyle,
   logoStyle,
-} from './Login.style';
-import { useLoginForm } from './useLoginForm';
+} from '../styles/Login.style';
+import { useLoginForm } from '../hooks/useLoginForm';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const LoginFormSection = () => {
