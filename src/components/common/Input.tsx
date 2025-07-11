@@ -1,6 +1,10 @@
 import styled from "@emotion/styled";
 import type { Theme } from "@emotion/react";
-import type { InputHTMLAttributes, CSSProperties } from "react";
+import {
+  type InputHTMLAttributes,
+  type CSSProperties,
+  forwardRef,
+} from "react";
 
 type InputVariant = "bottom-border" | "outlined";
 
@@ -86,22 +90,26 @@ const StyledInput = styled.input<StyledInputProps>(
   },
 );
 
-export const Input = ({
-  placeholder,
-  type = "text",
-  hasError,
-  variant = "bottom-border",
-  value,
-  ...props
-}: InputProps) => {
-  return (
-    <StyledInput
-      placeholder={placeholder}
-      type={type}
-      hasError={hasError}
-      variant={variant}
-      value={value ?? ""}
-      {...props}
-    />
-  );
-};
+export const Input = forwardRef<HTMLInputElement, InputProps>(
+  (
+    {
+      placeholder,
+      type = "text",
+      hasError,
+      variant = "bottom-border",
+      ...props
+    },
+    ref,
+  ) => {
+    return (
+      <StyledInput
+        ref={ref}
+        placeholder={placeholder}
+        type={type}
+        hasError={hasError}
+        variant={variant}
+        {...props}
+      />
+    );
+  },
+);
