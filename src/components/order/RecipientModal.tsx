@@ -7,6 +7,7 @@ import {
   createEmptyRecipientForm,
   validateRecipients,
   checkDuplicatePhone,
+  normalizePhoneNumber,
 } from '@/utils';
 import type { Recipient } from '@/types';
 
@@ -237,11 +238,29 @@ const RecipientModal = ({
       return;
     }
 
-    // 기존 받는사람과의 중복 검사
+    // 기존 받는사람과의 중복 검사 (정규화된 전화번호로 비교)
+    const normalizedExistingPhones = existingRecipients.map((r) =>
+      normalizePhoneNumber(r.phone)
+    );
+    const normalizedNewPhones = recipients.map((r) =>
+      normalizePhoneNumber(r.phone)
+    );
+
+    // 기존 받는사람과 새 받는사람 간 중복 검사
+    const duplicatesWithExisting = normalizedNewPhones.filter(
+      (phone) => phone && normalizedExistingPhones.includes(phone)
+    );
+
+    if (duplicatesWithExisting.length > 0) {
+      setErrors(['이미 등록된 전화번호가 있습니다.']);
+      return;
+    }
+
+    // 새 받는사람들 간의 중복 검사
     const allRecipients = [...existingRecipients, ...recipients];
     const duplicatePhones = checkDuplicatePhone(allRecipients);
     if (duplicatePhones.length > 0) {
-      setErrors([`중복된 전화번호가 있습니다: ${duplicatePhones.join(', ')}`]);
+      setErrors([`중복된 전화번호가 있습니다.`]);
       return;
     }
 

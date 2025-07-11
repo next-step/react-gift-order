@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import {
   validateRecipientForm,
   createEmptyRecipientForm,
-  isPhoneNumberDuplicate,
+  normalizePhoneNumber,
 } from '@/utils';
 import type { Recipient } from '@/types';
 
@@ -146,15 +146,24 @@ const RecipientForm = ({
     let newErrors = { ...validation.errors };
 
     // 전화번호 중복 검사 (기존 받는사람 목록과 비교)
+    const normalizedCurrentPhone = normalizePhoneNumber(formData.phone);
     if (
-      formData.phone &&
-      isPhoneNumberDuplicate(formData.phone, existingRecipients)
+      normalizedCurrentPhone &&
+      existingRecipients.some(
+        (r) => normalizePhoneNumber(r.phone) === normalizedCurrentPhone
+      )
     ) {
       newErrors.phone = '이미 등록된 전화번호입니다.';
     }
 
     setErrors(newErrors);
-    onDataChange(index, formData);
+
+    // 저장할 때는 정규화된 전화번호로 저장
+    const dataToSave = {
+      ...formData,
+      phone: normalizedCurrentPhone,
+    };
+    onDataChange(index, dataToSave);
   }, [formData, index, onDataChange, existingRecipients]);
 
   const handleInputChange = (

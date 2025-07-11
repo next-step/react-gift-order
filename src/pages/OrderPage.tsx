@@ -145,19 +145,14 @@ const OrderPage = () => {
   const navigate = useNavigate();
   const product = products.find((p) => String(p.id) === String(productId));
 
-  const { formData, errors, recipientActions, handlers, register, setValue } =
+  const { formData, errors, recipientActions, handlers, register } =
     useMultipleRecipientsForm();
 
   const { selectedCardId, selectedCard, recipients, totalQuantity } = formData;
   const { messageError, senderError, recipientsError } = errors;
-  const {
-    addRecipient,
-    removeRecipient,
-    setRecipients,
-    canAddMore,
-    maxReached,
-  } = recipientActions;
-  const { handleSelectCard, handleOrder, validateForm } = handlers;
+  const { removeRecipient, setRecipients, canAddMore, maxReached } =
+    recipientActions;
+  const { handleSelectCard, handleOrder } = handlers;
 
   // 모달 상태
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -183,13 +178,14 @@ const OrderPage = () => {
     setIsModalOpen(false);
   };
 
-  // 주문 가능 여부 확인
+  // 주문 가능 여부 확인 (강화)
   const canOrder =
     recipients.length > 0 &&
     totalQuantity > 0 &&
     !messageError &&
     !senderError &&
-    !recipientsError;
+    !recipientsError &&
+    recipients.every((r) => r.name.trim() && r.phone.trim() && r.quantity >= 1);
 
   if (!product) {
     return (

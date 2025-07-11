@@ -40,8 +40,9 @@ export const getPasswordErrorMessage = (password: string): string | null => {
 };
 
 export const isValidPhoneNumber = (phone: string): boolean => {
-  // 01012341234 형태로만 허용
-  return /^010\d{8}$/.test(phone);
+  // 정규화된 형태(01012341234) 또는 포맷된 형태(010-1234-5678) 모두 허용
+  const normalized = phone.replace(/\D/g, '');
+  return /^010\d{8}$/.test(normalized);
 };
 
 export const getPhoneErrorMessage = (phone: string): string | null => {
@@ -51,8 +52,18 @@ export const getPhoneErrorMessage = (phone: string): string | null => {
     return '전화번호를 입력해주세요.';
   }
 
+  const normalized = trimmedPhone.replace(/\D/g, '');
+
+  if (!normalized.startsWith('010')) {
+    return '010으로 시작하는 번호만 입력 가능합니다.';
+  }
+
+  if (normalized.length !== 11) {
+    return '전화번호는 11자리여야 합니다. (010-1234-5678)';
+  }
+
   if (!isValidPhoneNumber(trimmedPhone)) {
-    return '전화번호는 01012341234 형태로 입력해주세요.';
+    return '올바른 전화번호 형식이 아닙니다.';
   }
 
   return null;

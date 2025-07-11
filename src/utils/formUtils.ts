@@ -1,4 +1,5 @@
 import type { Recipient } from '@/types';
+import { isValidPhoneNumberStrict } from './phoneUtils';
 
 /**
  * 받는사람 폼 초기화
@@ -26,7 +27,7 @@ export const validateRecipientForm = (
 
   if (!recipient.phone.trim()) {
     errors.phone = '전화번호를 입력해주세요.';
-  } else if (!/^010\d{8}$/.test(recipient.phone)) {
+  } else if (!isValidPhoneNumberStrict(recipient.phone)) {
     errors.phone = '전화번호는 01012341234 형태로 입력해주세요.';
   }
 
