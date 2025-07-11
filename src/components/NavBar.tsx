@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 
-import { useUser } from '@/hooks/useUser';
+import  useUser  from '@/hooks/useUser';
 
 const NavBarWrapper = styled.div`
   width: auto;
@@ -56,9 +56,8 @@ const NavBarLoginBtn = styled.button`
 `;
 
 function NavBar() {
-  // TODO: 좀 손 봐야할듯
   const navigate = useNavigate();
-  const userId = useUser(); // session storage에 있는 로그인 정보
+  const {getId} = useUser(); // session storage에 있는 로그인 정보
 
   function handleBackNavigation() {
     if(window.history.length > 1) {
@@ -69,7 +68,7 @@ function NavBar() {
   }
 
   function handleLoginClick() {
-    if (userId !== '') {
+    if (getId() !== '') {
       navigate('/my');
     } else {
       navigate('/login');

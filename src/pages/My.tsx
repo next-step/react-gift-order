@@ -6,13 +6,16 @@ import theme from '../styles/theme';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 
+import useUser from '@/hooks/useUser';
+
 function My() {
-  const userId = sessionStorage.getItem('userId')?.split('@')[0] ?? '';
-  const userEmail = sessionStorage.getItem('userId') ?? '';
+  const {getId, getEmail, removeId} = useUser();
+  const userId = getId();
+  const userEmail = getEmail();
   const navigate = useNavigate();
 
   function logOut() {
-    sessionStorage.removeItem('userId');
+    removeId('userId')
     navigate('/login');
   }
   return (

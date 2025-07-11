@@ -1,4 +1,3 @@
-import { useState, createContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 
@@ -6,6 +5,7 @@ import Layout from '../components/Layout';
 import NavBar from '../components/NavBar';
 
 import useInput from '@/hooks/useInput';
+import useUser from '@/hooks/useUser';
 
 const LoginFormWrapper = styled.div`
   width: auto;
@@ -13,15 +13,9 @@ const LoginFormWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.gray.gray00};
 
   display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const LoginForm = styled.form`
-  display: flex;
   flex-direction: column;
   justify-content: center;
-  text-align: center;
+  align-items: center;
 `;
 
 const LoginFormTitle = styled.h1`
@@ -29,11 +23,14 @@ const LoginFormTitle = styled.h1`
   margin-bottom: ${({ theme }) => theme.spacing.spacing9};
 `;
 
-// interface InputProps {
-//   invalid?: string;
-// }
+const LoginForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: start;
+`;
 
-const LoginFormInput = styled.input`
+const LoginFormInput = styled.input<{isValid : boolean}>`
   width: 390px;
   height: ${({ theme }) => theme.spacing.spacing10};
   margin-top: ${({ theme }) => theme.spacing.spacing4};
@@ -41,7 +38,7 @@ const LoginFormInput = styled.input`
   border-top: none;
   border-right: none;
   border-left: none;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray400};
+  border-bottom: 1px solid ${({ theme, isValid }) => isValid ? theme.colors.gray.gray400 : theme.colors.red.red600};
 
   &:focus {
     outline: none;
@@ -61,8 +58,8 @@ const LoginFormInput = styled.input`
 `;
 
 const LoginFormErrorTxt = styled.p`
-  color: red;
-  font-size: 14px;
+  color: ${({ theme }) => theme.colors.red.red600};
+  font-size: 12px;
 `;
 
 const LoginFormBtn = styled.button`
@@ -88,12 +85,11 @@ const LoginFormBtn = styled.button`
   }
 `;
 
-
-
 // 메인 컴포넌트
 function Login() {
   const navigate = useNavigate();
   const location = useLocation();
+  const {setId, setPw} = useUser();
   const from = location.state?.from?.pathname || '/'
 
   const username = useInput('username');
@@ -104,17 +100,17 @@ function Login() {
   const handleLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (!isFormValid) return;
-    sessionStorage.setItem('userId', username.value);
+    setId(username.value);
+    setPw(password.value);
     navigate(from, { replace: true });
   };
 
   return (
-      // <UserInfoContext.Provider value={userInfo}>
         <Layout>
           <NavBar></NavBar>
           <LoginFormWrapper>
+          <LoginFormTitle>KAKAO</LoginFormTitle>
             <LoginForm>
-              <LoginFormTitle>KAKAO</LoginFormTitle>
 
               {/* 아이디 input */}
               <LoginFormInput
@@ -123,6 +119,7 @@ function Login() {
                 value={username.value}
                 onChange={(e) => username.onChange(e.target.value)}
                 onBlur={username.onBlur}
+                isValid={!username.error || !username.touched}
               ></LoginFormInput>
               {username.error && <LoginFormErrorTxt>{username.error}</LoginFormErrorTxt>}
 
@@ -133,6 +130,7 @@ function Login() {
                 value={password.value}
                 onChange={(e) => password.onChange(e.target.value)}
                 onBlur={password.onBlur}
+                isValid={!password.error || !password.touched}
               ></LoginFormInput>
               {password.error && <LoginFormErrorTxt>{password.error}</LoginFormErrorTxt>}
 
@@ -144,7 +142,6 @@ function Login() {
             </LoginForm>
           </LoginFormWrapper>
         </Layout>
-      // </UserInfoContext.Provider>
   );
 }
 

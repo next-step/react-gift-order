@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-import { useUser } from '@/hooks/useUser';
+import  useUser from '@/hooks/useUser';
 
 const FriendSelectorWrapper = styled.div`
   width: auto;
@@ -41,8 +41,9 @@ const FriendSelectorTxt = styled.p`
 `;
 
 function FriendSelector() {
-  const userId = useUser(); // session storage에 있는 로그인 정보
-
+  const {getId} = useUser(); // session storage에 있는 로그인 정보
+  const userName = getId();
+  
   return (
     <FriendSelectorWrapper>
       <FriendSelectorBox>
@@ -53,7 +54,7 @@ function FriendSelector() {
           </svg>
         </FriendSelectorBtn>
         <FriendSelectorTxt>
-          {userId && userId + '님! '}선물할 친구를 선택해 주세요.
+          {userName && userName + '님! '}선물할 친구를 선택해 주세요.
         </FriendSelectorTxt>
       </FriendSelectorBox>
     </FriendSelectorWrapper>
