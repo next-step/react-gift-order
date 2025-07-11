@@ -1,21 +1,23 @@
-import React, { useContext } from 'react';  
+import React, { useContext } from 'react';
 import { Typography } from '@/components/common/Typography';
 import { theme } from '@/styles/theme';
 import styled from '@emotion/styled';
-import { Plus, User } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { AuthContext } from '@/context/AuthContext';
 
 export const SelectFriendSection = () => {
   const { user } = useContext(AuthContext)   // AuthContext 에서 user 꺼내기 :contentReference[oaicite:0]{index=0}
   const userName = user?.name ?? ''
-    return (
+  return (
     <Section>
       <Button>
         <IconWrapper>
           <Plus size={24} color={theme.colors.semantic.text.default} />
         </IconWrapper>
         <Typography as='p' variant='body1Bold' color='default'>
-          {userName}님! 선물할 친구를 선택해 주세요.
+          {userName
+            ? `${userName}님! 선물할 친구를 선택해 주세요.`
+            : '선물할 친구를 선택해 주세요.'}       
         </Typography>
       </Button>
     </Section>
