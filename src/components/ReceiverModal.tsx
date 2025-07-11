@@ -45,7 +45,6 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
     name: 'receivers',
   });
 
-  // 중복 전화번호 체크
   const receivers = watch('receivers');
   React.useEffect(() => {
     const phoneCount: Record<string, number> = {};
@@ -101,7 +100,6 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
           boxSizing: 'border-box',
         }}
       >
-        {/* 상단 고정 영역 */}
         <div
           style={{
             padding: '32px 32px 0 32px',
@@ -146,7 +144,6 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
             추가하기
           </button>
         </div>
-        {/* 가운데 스크롤 영역 */}
         <div
           style={{
             flex: 1,
@@ -191,7 +188,6 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
                   ✕
                 </button>
               </div>
-              {/* 이름 */}
               <div
                 style={{
                   display: 'flex',
@@ -229,7 +225,6 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
                   )}
                 </div>
               </div>
-              {/* 전화번호 */}
               <div
                 style={{
                   display: 'flex',
@@ -247,7 +242,6 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
                         message: '올바른 전화번호 형식이 아닙니다.',
                       },
                       validate: (value) => {
-                        // 중복 체크
                         if (
                           value &&
                           watch('receivers').filter(
@@ -283,7 +277,6 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
                   )}
                 </div>
               </div>
-              {/* 수량 */}
               <div
                 style={{
                   display: 'flex',
@@ -295,7 +288,7 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
                 <input
                   type="number"
                   {...register(`receivers.${idx}.quantity`, {
-                    valueAsNumber: true, // 이 옵션 추가!
+                    valueAsNumber: true,
                     required: true,
                     min: {
                       value: 1,
@@ -327,7 +320,6 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
             </div>
           ))}
         </div>
-        {/* 하단 고정 버튼 */}
         <div
           style={{
             width: '100%',
