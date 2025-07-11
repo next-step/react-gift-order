@@ -11,7 +11,6 @@ import {
   LoadMoreButtonDiv,
   PeopleFilterButton,
   PeopleGroup,
-  PeopleType,
   Price,
   ProductCard,
   ProductDiv,
@@ -21,12 +20,38 @@ import {
   Title,
   WishFilterButton,
   WishGroup,
-  WishType,
 } from './GiftRanking.styled';
 import { useAuth } from '@/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const GIFTLENGTH = 6;
+
+const enum PeopleType {
+  ALL = 'ALL',
+  FEMALE = 'FEMALE',
+  MALE = 'MALE',
+  TEEN = 'TEEN',
+}
+
+const enum WishType {
+  WANT = 'WANT',
+  MANY_GIFT = 'MANY_GIFT',
+  MANY_WISH = 'MANY_WISH',
+}
+
+const peopleFilterOptions = [
+  {type : PeopleType.ALL, icon : 'ALL', label : '전체'},
+  {type : PeopleType.FEMALE, icon : '👩🏻', label : '여성이'},
+  {type : PeopleType.MALE, icon : '👨🏻', label : '남성이'},
+  {type : PeopleType.TEEN, icon : '👦🏻', label : '청소년'}
+]
+
+const WishFilterOption = [
+  {type : WishType.WANT, text : '받고싶어한'},
+  {type : WishType.MANY_GIFT, text : '많이 선물한'},
+  {type : WishType.MANY_WISH, text : '위시로 받은'},
+]
+
 
 const GiftRanking = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -85,56 +110,30 @@ const GiftRanking = () => {
       <BlankSpace />
       <CategoryGroup>
         <PeopleGroup>
-          <PeopleFilterButton
-            active={peopleType === PeopleType.ALL}
-            onClick={() => handlePeopleClick(PeopleType.ALL)}
-          >
-            <IconWrapper>ALL</IconWrapper>
-            <Label>전체</Label>
-          </PeopleFilterButton>
-          <PeopleFilterButton
-            active={peopleType === PeopleType.FEMALE}
-            onClick={() => handlePeopleClick(PeopleType.FEMALE)}
-          >
-            <IconWrapper>👩🏻</IconWrapper>
-            <Label>여성이</Label>
-          </PeopleFilterButton>
-          <PeopleFilterButton
-            active={peopleType === PeopleType.MALE}
-            onClick={() => handlePeopleClick(PeopleType.MALE)}
-          >
-            <IconWrapper>👨🏻</IconWrapper>
-            <Label>남성이</Label>
-          </PeopleFilterButton>
-          <PeopleFilterButton
-            active={peopleType === PeopleType.TEEN}
-            onClick={() => handlePeopleClick(PeopleType.TEEN)}
-          >
-            <IconWrapper>👦🏻</IconWrapper>
-            <Label>청소년이</Label>
-          </PeopleFilterButton>
+
+          {peopleFilterOptions.map(({type, icon, label}) => (
+            <PeopleFilterButton
+              active={peopleType === type}
+              onClick={() => handlePeopleClick(type)}
+            >
+              <IconWrapper>{icon}</IconWrapper>
+              <Label>{label}</Label>
+            </PeopleFilterButton>
+          ))}
         </PeopleGroup>
 
         <BlankSpace />
         <WishGroup>
-          <WishFilterButton
-            active={wishType === WishType.WANT}
-            onClick={() => handleWishClick(WishType.WANT)}
+          {WishFilterOption.map(({type, text})=>(
+            <WishFilterButton
+            active={wishType === type}
+            onClick={() => handleWishClick(type)}
           >
-            받고 싶어한
+            {text}
           </WishFilterButton>
-          <WishFilterButton
-            active={wishType === WishType.MANY_GIFT}
-            onClick={() => handleWishClick(WishType.MANY_GIFT)}
-          >
-            많이 선물한
-          </WishFilterButton>
-          <WishFilterButton
-            active={wishType === WishType.MANY_WISH}
-            onClick={() => handleWishClick(WishType.MANY_WISH)}
-          >
-            위시로 받은
-          </WishFilterButton>
+          ))}
+
+
         </WishGroup>
       </CategoryGroup>
       <BlankSpace />

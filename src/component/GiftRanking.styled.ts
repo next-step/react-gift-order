@@ -1,17 +1,5 @@
 import styled from '@emotion/styled';
 
-export const enum PeopleType {
-  ALL = 'ALL',
-  FEMALE = 'FEMALE',
-  MALE = 'MALE',
-  TEEN = 'TEEN',
-}
-
-export const enum WishType {
-  WANT = 'WANT',
-  MANY_GIFT = 'MANY_GIFT',
-  MANY_WISH = 'MANY_WISH',
-}
 
 export const GiftRanKingSection = styled.div`
   padding: 0px 16px;

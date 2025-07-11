@@ -46,10 +46,10 @@ const Order = () => {
     quantityInput.onBlur();
 
     const isValid =
-      senderNameInput.isValid &&
-      recipientNameInput.isValid &&
-      recipientPhoneInput.isValid &&
-      quantityInput.isValid;
+      !senderNameInput.error &&
+      !recipientNameInput.error &&
+      !recipientPhoneInput.error &&
+      !quantityInput.error;
 
     if (isValid) {
       alert(`주문이 완료되었습니다. 

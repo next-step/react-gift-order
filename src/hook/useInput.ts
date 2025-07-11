@@ -4,7 +4,7 @@ type ValidatorFn = (value: string) => string | null;
 
 function useInput(validator: ValidatorFn, initialValue ='') {
   const [value, setValue] = useState(initialValue);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(' ');
   const [touched, setTouched] = useState(false);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
