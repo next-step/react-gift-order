@@ -2,7 +2,7 @@ import * as S from '@/styles/OrderPage.styles';
 
 interface Props {
   totalPrice: number;
-  onSubmit: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onSubmit: () => void;
 }
 
 export const OrderPageFooter = ({ totalPrice, onSubmit }: Props) => (
