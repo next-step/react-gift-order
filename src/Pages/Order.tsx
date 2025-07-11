@@ -4,7 +4,6 @@ import styled from '@emotion/styled';
 import { SectionContainer } from '@/components/Common/SectionLayout';
 import CardList from '@/components/Order/CardList';
 import { useCardSelection } from '@/hooks/useCardSelection';
-import { useOrderForm } from '@/hooks/useOrderForm';
 import { useParams, useNavigate } from 'react-router-dom';
 import { mockGiftItems } from '@/mocks/itemListMock';
 import { useEffect, useRef, useState } from 'react';
@@ -15,21 +14,48 @@ import {
   CaptionText,
 } from '@/components/Common/BorderInputBox';
 import type { Receiver } from '@/types/receiver';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+const FormSchema = z.object({
+  senderName: z
+    .string()
+    .nonempty('이름을 입력해주세요.')
+    .regex(/^[가-힣a-zA-Z]{2,}$/, '2자 이상 한글/영어만 가능합니다.'),
+  message: z.string().nonempty('메시지를 입력해주세요.'),
+});
+type FormFields = z.infer<typeof FormSchema>;
 
 const Order = () => {
   const { itemId } = useParams<{ itemId: string }>();
-  const id = Number(itemId);
-  const item = mockGiftItems.find((item) => item.id === id);
+  const item = mockGiftItems.find((item) => item.id === Number(itemId));
 
   const { selectedCard, selectCard } = useCardSelection();
-  const { message, senderName } = useOrderForm();
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useForm<FormFields>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: { senderName: '', message: '' },
+    mode: 'onSubmit',
+  });
+
+  const handleSelectCard = (card: typeof selectedCard) => {
+    selectCard(card!);
+    setValue('message', card!.defaultTextMessage);
+    hasUserEditedMessage.current = false;
+  };
+
+  const onMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setValue('message', e.target.value);
+  };
 
   const hasUserEditedMessage = useRef(false);
-
-  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    hasUserEditedMessage.current = true;
-    message.onChange(e);
-  };
 
   const [isReceiverModalOpen, setIsReceiverModalOpen] = useState(false);
   const [receivers, setReceivers] = useState<Receiver[]>([]);
@@ -58,13 +84,11 @@ const Order = () => {
     if (
       selectedCard?.defaultTextMessage &&
       !hasUserEditedMessage.current &&
-      message.value === ''
+      getValues('message') === ''
     ) {
-      message.onChange({
-        target: { value: selectedCard.defaultTextMessage },
-      } as React.ChangeEvent<HTMLTextAreaElement>);
+      setValue('message', selectedCard.defaultTextMessage);
     }
-  }, [selectedCard, message]);
+  }, [selectedCard, getValues, setValue]);
 
   const navigate = useNavigate();
 
@@ -76,28 +100,31 @@ const Order = () => {
   );
   const totalPrice = totalCount * (item?.price.sellingPrice ?? 0);
 
-  const handleOrderSubmit = () => {
-    const isMessageVaild = message.validate();
-    const isSenderNameValid = senderName.validate();
-
-    const valid = isMessageVaild && isSenderNameValid && receivers.length >= 1;
-    setReceiverError(receivers.length < 1);
-    if (valid) {
-      alert(
-        `주문이 완료되었습니다.\n상품명: ${item?.name}\n구매 수량: ${totalCount}\n발신자 이름: ${senderName.value}\n메시지: ${message.value}`
-      );
-      navigate('/');
+  const handleOrderSubmit = (data: FormFields) => {
+    if (receivers.length < 1) {
+      setReceiverError(true);
+      return;
     }
+    setReceiverError(false);
+
+    alert(
+      `주문 완료!\n상품: ${item?.name}\n수량: ${totalCount}\n보내는 사람: ${data.senderName}\n메시지: ${data.message}`
+    );
+    navigate('/');
   };
 
   return (
     <>
       <Header title="선물하기" />
-      <OrderContainer>
+      <OrderContainer
+        onSubmit={handleSubmit(handleOrderSubmit, () =>
+          setReceiverError(receivers.length < 1)
+        )}
+      >
         <SectionContainer>
           <CardList
             selectedCardId={selectedCard?.id}
-            onSelectCard={selectCard}
+            onSelectCard={handleSelectCard}
           />
 
           {selectedCard && (
@@ -106,14 +133,13 @@ const Order = () => {
                 <CardImage src={selectedCard.imageUrl} />
               </CardImageWraaper>
               <CardMessageTextArea
-                id="order-message"
-                value={message.value}
+                {...register('message')}
                 placeholder="메시지를 입력해주세요."
-                isError={Boolean(message.error)}
-                onChange={handleMessageChange}
+                isError={!!errors.message}
+                onChange={onMessageChange}
               />
-              <MessageTextAreaCaption isError={Boolean(message.error)}>
-                {message.error || ' '}{' '}
+              <MessageTextAreaCaption isError={Boolean(errors.message)}>
+                {errors.message?.message || ' '}
               </MessageTextAreaCaption>
             </SelectedCardPreview>
           )}
@@ -123,15 +149,12 @@ const Order = () => {
           <OrderSectionTitle>보내는 사람</OrderSectionTitle>
           <InputWrapper>
             <StyledInput
-              id="sender-name"
-              type="text"
+              {...register('senderName')}
               placeholder="이름을 입력하세요."
-              value={senderName.value}
-              onChange={senderName.onChange}
-              hasError={!!senderName.error}
+              hasError={!!errors.senderName}
             />
-            <CaptionText isError={Boolean(senderName.error)}>
-              {senderName.error ||
+            <CaptionText isError={Boolean(errors.senderName)}>
+              {errors.senderName?.message ||
                 '* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.'}
             </CaptionText>
           </InputWrapper>
@@ -140,7 +163,10 @@ const Order = () => {
         <SectionContainer>
           <ReceiveContainerHeader>
             <OrderSectionTitle>받는 사람</OrderSectionTitle>
-            <OpenReceiverListModalButton onClick={handleOpenReceiverModal}>
+            <OpenReceiverListModalButton
+              type="button"
+              onClick={handleOpenReceiverModal}
+            >
               {receivers.length > 0 ? '수정' : '추가'}
             </OpenReceiverListModalButton>
           </ReceiveContainerHeader>
@@ -182,23 +208,23 @@ const Order = () => {
             </ItemTextInfoWrapper>
           </ItemWrapper>
         </SectionContainer>
-        <OrderButton onClick={handleOrderSubmit}>
+        <OrderButton type="submit">
           {totalPrice.toLocaleString()}원 주문하기
         </OrderButton>
-        <ReceiverListModal
-          open={isReceiverModalOpen}
-          onClose={handleModalClose}
-          onAdd={handleModalAddOrEdit}
-          editingReceivers={editingReceivers}
-        />
       </OrderContainer>
+      <ReceiverListModal
+        open={isReceiverModalOpen}
+        onClose={handleModalClose}
+        onAdd={handleModalAddOrEdit}
+        editingReceivers={editingReceivers}
+      />
     </>
   );
 };
 
 export default Order;
 
-const OrderContainer = styled.main`
+const OrderContainer = styled.form`
   width: 100%;
   max-width: 720px;
   background-color: ${({ theme }) => theme.colors.backgroundDefault};
