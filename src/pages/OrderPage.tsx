@@ -213,7 +213,7 @@ function OrderPage() {
       if (!product) return;
 
       const totalQuantity = receivers.reduce(
-        (sum, receiver) => sum + receiver.quantity,
+        (sum, receiver) => sum + Number(receiver.quantity),
         0,
       );
 

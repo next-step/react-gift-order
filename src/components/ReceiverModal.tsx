@@ -105,7 +105,7 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
         <div
           style={{
             padding: '32px 32px 0 32px',
-            background: '#fff',
+            background: 'transport',
             flexShrink: 0,
           }}
         >
@@ -294,12 +294,12 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
                 <label style={{ minWidth: 60, marginRight: 8 }}>수량</label>
                 <input
                   type="number"
-                  min={1}
                   {...register(`receivers.${idx}.quantity`, {
+                    valueAsNumber: true, // 이 옵션 추가!
                     required: true,
                     min: {
                       value: 1,
-                      message: '수량은 1개 이상이어야 해요.',
+                      message: '구매 수량은 1개 이상이어야 해요.',
                     },
                   })}
                   style={{
