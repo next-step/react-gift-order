@@ -17,7 +17,7 @@ const LoginPage = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
     watch,
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -56,12 +56,7 @@ const LoginPage = () => {
           type="submit"
           label="로그인"
           size="large"
-          disabled={
-            !!errors.email ||
-            !!errors.password ||
-            email?.trim() === "" ||
-            password?.trim() === ""
-          }
+          disabled={!isValid}
         />
       </Form>
     </Wrapper>
