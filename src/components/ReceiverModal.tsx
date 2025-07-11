@@ -1,7 +1,6 @@
 /** @jsxImportSource @emotion/react */
-import { useState } from 'react';
 import styled from '@emotion/styled';
-import { useReceiverForm } from '../hooks/useReceiverForm';
+import { useForm, useFieldArray, Controller } from 'react-hook-form';
 
 const Overlay = styled.div`
   position: fixed;
@@ -119,54 +118,56 @@ interface ReceiverModalProps {
   onComplete: (receivers: Receiver[]) => void;
 }
 
+interface ReceiverFormValues {
+  receivers: {
+    name: string;
+    phone: string;
+    quantity: number;
+  }[];
+}
+
 const ReceiverModal = ({
   isOpen,
   onClose,
   onComplete,
 }: ReceiverModalProps) => {
-  const [receivers, setReceivers] = useState<Receiver[]>([]);
   const {
-    nameInput,
-    receiverPhoneInput,
-    quantityInput,
-    isReceiverFormValid,
-  } = useReceiverForm();
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors, isValid },
+  } = useForm<ReceiverFormValues>({
+    mode: 'onChange',
+    defaultValues: { receivers: [] },
+  });
 
-  const receiverNameInput = nameInput;
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'receivers',
+  });
+
+  const receivers = watch('receivers');
 
   if (!isOpen) return null;
 
   const handleAdd = () => {
-    if (receivers.length >= 10) {
+    if (fields.length >= 10) {
       alert('받는 사람은 최대 10명까지 가능합니다!');
       return;
     }
-    const newReceiver: Receiver = {
-      id: Date.now(),
-      name: '',
-      phone: '',
-      quantity: 1,
-    };
-    setReceivers(prev => [...prev, newReceiver]);
+    append({ name: '', phone: '', quantity: 1 });
   };
 
-  const handleChange = (
-    id: number,
-    field: keyof Receiver,
-    value: string | number
-  ) => {
-    setReceivers(prev =>
-      prev.map(r => (r.id === id ? { ...r, [field]: value } : r))
-    );
-  };
-
-  const handleRemove = (id: number) => {
-    setReceivers(prev => prev.filter(r => r.id !== id));
-  };
-
-  const handleComplete = () => {
-    onComplete(receivers);
+  const onSubmit = (data: ReceiverFormValues) => {
+    onComplete(data.receivers.map((r, i) => ({ ...r, id: i })));
     onClose();
+  };
+
+  const isPhoneDuplicate = (value: string, index: number) => {
+    return (
+      receivers.filter((r, i) => i !== index && r.phone === value)
+        .length === 0 || '중복된 전화번호입니다.'
+    );
   };
 
   return (
@@ -179,68 +180,103 @@ const ReceiverModal = ({
         </SubText>
 
         <AddButtonWrapper>
-          <button onClick={handleAdd}>추가하기</button>
+          <button type="button" onClick={handleAdd}>
+            추가하기
+          </button>
         </AddButtonWrapper>
 
-        {receivers.map((r, idx) => (
-          <ReceiverCard key={r.id}>
-            <Header>
-              <strong>받는 사람 {idx + 1}</strong>
-              <RemoveBtn onClick={() => handleRemove(r.id)}>
-                ×
-              </RemoveBtn>
-            </Header>
-            <Label>이름</Label>
-            <Input
-              value={r.name}
-              onChange={e =>
-                handleChange(r.id, 'name', e.target.value)
-              }
-              onBlur={receiverNameInput.handleBlur}
-              placeholder="이름 입력"
-              isInvalid={!receiverNameInput.isValid}
-            />
-            {!receiverNameInput.isValid && (
-              <ErrorText>{receiverNameInput.error}</ErrorText>
-            )}
-            <Label>전화번호</Label>
-            <Input
-              value={r.phone}
-              onChange={e =>
-                handleChange(r.id, 'phone', e.target.value)
-              }
-              onBlur={receiverPhoneInput.handleBlur}
-              placeholder="전화번호 입력"
-              isInvalid={!receiverPhoneInput.isValid}
-            />
-            {!receiverPhoneInput.isValid && (
-              <ErrorText>{receiverPhoneInput.error}</ErrorText>
-            )}
-            <Label>수량</Label>
-            <Input
-              type="number"
-              value={r.quantity}
-              onChange={e =>
-                handleChange(r.id, 'quantity', Number(e.target.value))
-              }
-              onBlur={quantityInput.handleBlur}
-              isInvalid={!quantityInput.isValid}
-            />
-            {!quantityInput.isValid && (
-              <ErrorText>{quantityInput.error}</ErrorText>
-            )}
-          </ReceiverCard>
-        ))}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          {fields.map((field, idx) => (
+            <ReceiverCard key={field.id}>
+              <Header>
+                <strong>받는 사람 {idx + 1}</strong>
+                <RemoveBtn type="button" onClick={() => remove(idx)}>
+                  ×
+                </RemoveBtn>
+              </Header>
 
-        <Bottom>
-          <Cancel onClick={onClose}>취소</Cancel>
-          <Confirm
-            disabled={!isReceiverFormValid}
-            onClick={handleComplete}
-          >
-            {receivers.length}명 완료
-          </Confirm>
-        </Bottom>
+              <Label>이름</Label>
+              <Controller
+                control={control}
+                name={`receivers.${idx}.name`}
+                rules={{ required: '이름을 입력해주세요.' }}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    placeholder="이름을 입력하세요"
+                    isInvalid={!!errors?.receivers?.[idx]?.name}
+                  />
+                )}
+              />
+              {errors?.receivers?.[idx]?.name && (
+                <ErrorText>
+                  {errors.receivers[idx]?.name?.message}
+                </ErrorText>
+              )}
+
+              <Label>전화번호</Label>
+              <Controller
+                control={control}
+                name={`receivers.${idx}.phone`}
+                rules={{
+                  required: '전화번호를 입력해주세요.',
+                  pattern: {
+                    value: /^010\d{8}$/,
+                    message: '올바른 전화번호 형식이 아니에요.',
+                  },
+                  validate: value => isPhoneDuplicate(value, idx),
+                }}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    placeholder="전화번호를 입력하세요."
+                    isInvalid={!!errors?.receivers?.[idx]?.phone}
+                  />
+                )}
+              />
+              {errors?.receivers?.[idx]?.phone && (
+                <ErrorText>
+                  {errors.receivers[idx]?.phone?.message}
+                </ErrorText>
+              )}
+
+              <Label>수량</Label>
+              <Controller
+                control={control}
+                name={`receivers.${idx}.quantity`}
+                rules={{
+                  required: '수량을 입력해주세요.',
+                  min: {
+                    value: 1,
+                    message: '구매 수량은 1개 이상이어야 해요.',
+                  },
+                }}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    type="number"
+                    min={1}
+                    isInvalid={!!errors?.receivers?.[idx]?.quantity}
+                  />
+                )}
+              />
+              {errors?.receivers?.[idx]?.quantity && (
+                <ErrorText>
+                  {errors.receivers[idx]?.quantity?.message}
+                </ErrorText>
+              )}
+            </ReceiverCard>
+          ))}
+
+          <Bottom>
+            <Cancel type="button" onClick={onClose}>
+              취소
+            </Cancel>
+            <Confirm type="submit" disabled={!isValid}>
+              {fields.length}명 완료
+            </Confirm>
+          </Bottom>
+        </form>
       </Modal>
     </Overlay>
   );
