@@ -70,6 +70,11 @@ function OrderPage() {
     return;
   }
 
+  const totalQuantity = receivers.reduce(
+    (acc, cur) => acc + Number(cur.quantity),
+    0
+  );
+
   return (
     <Layout>
       <form onSubmit={onSubmitHandler}>
@@ -89,12 +94,7 @@ function OrderPage() {
             receivers={receivers}
             setReceivers={setReceivers}
           />
-          <ProductInfo
-            product={product}
-            quantity={receivers
-              .reduce((acc, cur) => acc + Number(cur.quantity), 0)
-              .toString()}
-          />
+          <ProductInfo product={product} quantity={totalQuantity.toString()} />
         </OrderPageContainer>
       </form>
     </Layout>
