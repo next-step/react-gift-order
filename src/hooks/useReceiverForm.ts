@@ -12,7 +12,7 @@ export const useReceiverForm = () => {
   const form = useForm<ReceiversFormData>({
     resolver: zodResolver(receiversModalSchema),
     defaultValues: { receivers: receiverList },
-    mode: 'onSubmit',
+    mode: 'onChange',
     reValidateMode: 'onChange',
   });
 
