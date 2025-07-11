@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { cardData } from "@/data/cardData";
 import { useTheme } from "@emotion/react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { giftData } from "@/data/giftData";
 import CardView from "@/components/order/CardView";
 import {
@@ -66,6 +66,7 @@ const Order: React.FC = () => {
   const [receivers, setReceivers] = useState<
     { receiverName: string; phoneNumber: string; quantity: number }[]
   >([]);
+  const navigate = useNavigate();
 
   const handleSubmit = () => {
     const msg = GiftMessageRef.current?.value.trim() ?? "";
@@ -94,6 +95,7 @@ const Order: React.FC = () => {
         `받는 사람 수: ${receivers.length}명\n` +
         `총 수량: ${receivers.length === 1 ? quantity : quantity * receivers.length}개`
     );
+    navigate("/");
   };
 
   const selectedGiftId = id ? parseInt(id, 10) : undefined;
