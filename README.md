@@ -68,5 +68,5 @@
   - [x] 받는 사람의 전화번호가 중복되면 안돼요.
   - [x] 최소 선택 수량은 1개 이상이어야 해요.
   - [x] 전화번호는 01012341234 형태로만 받을 수 있어요.
-- [ ] 주문하기 페이지 고도화
-  - [ ] [참고 URL](https://kakaotech-mission2-order.pages.dev/)을 살펴보고 변경된 기능을 구현해요.
+- [x] 주문하기 페이지 고도화
+  - [x] [참고 URL](https://kakaotech-mission2-order.pages.dev/)을 살펴보고 변경된 기능을 구현해요.

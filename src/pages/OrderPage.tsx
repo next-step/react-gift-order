@@ -19,14 +19,16 @@ const OrderPage = () => {
   const navigate = useNavigate();
   const product = mockProducts[Number(id) - 1];
 
-  const {
-    formValues,
-    formErrors,
-    handleChange,
-    validateField,
-    validateForm,
-    totalPrice,
-  } = useOrderForm(product.price.sellingPrice);
+  const { formValues, formErrors, handleChange, validateField, validateForm } =
+    useOrderForm();
+
+  const [receiverList, setReceiverList] = useState<
+    { name: string; phone: string; quantity: number }[]
+  >([]);
+
+  const totalQuantity = receiverList.reduce((sum, r) => sum + r.quantity, 0);
+
+  const totalPrice = product ? totalQuantity * product.price.sellingPrice : 0;
 
   const [selectedCardId, setSelectedCardId] = useState(messageCards[0].id);
   const selectedCard = messageCards.find(card => card.id === selectedCardId)!;
@@ -35,15 +37,8 @@ const OrderPage = () => {
     handleChange('textMessage', selectedCard.defaultTextMessage);
   }, [selectedCardId]);
 
-  const isFormField = (name: string): name is FormField => {
-    return [
-      'senderName',
-      'receiverName',
-      'receiverPhone',
-      'quantity',
-      'textMessage',
-    ].includes(name);
-  };
+  const isFormField = (name: string): name is FormField =>
+    ['senderName', 'textMessage'].includes(name);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -54,9 +49,9 @@ const OrderPage = () => {
     alert(
       `주문이 완료되었습니다.\n` +
         `상품명: ${product.name}\n` +
-        `구매 수량: ${formValues.quantity}\n` +
-        `발신자 이름: ${formValues.senderName}\n` +
-        `메시지: ${formValues.textMessage}`
+        `총 수량: ${totalQuantity}개\n` +
+        `총 가격: ${totalPrice.toLocaleString()}원\n` +
+        `발신자: ${formValues.senderName}`
     );
 
     navigate(ROUTES.HOME);
@@ -66,13 +61,8 @@ const OrderPage = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-
     if (!isFormField(name)) return;
-
-    const parsedValue = name === 'quantity' ? Number(value) : value;
-
-    handleChange(name, parsedValue);
-
+    handleChange(name, value);
     if (formErrors[name]) {
       validateField(name);
     }
@@ -101,7 +91,10 @@ const OrderPage = () => {
             onChange={handleInputChange}
             error={formErrors.senderName}
           />
-          <ReceiverForm />
+          <ReceiverForm
+            receiverList={receiverList}
+            setReceiverList={setReceiverList}
+          />
           <ProductInfo product={product} />
           <OrderSubmitButton amount={totalPrice} />
         </Form>

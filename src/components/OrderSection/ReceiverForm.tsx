@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import InputField from '@/components/common/InputField';
 import {
   PHONE_REGEX,
@@ -19,12 +19,20 @@ type ReceiverError = {
   quantity: string;
 };
 
-const ReceiverForm = () => {
+interface ReceiverFormProps {
+  receiverList: ReceiverInput[];
+  setReceiverList: React.Dispatch<React.SetStateAction<ReceiverInput[]>>;
+}
+
+const ReceiverForm = ({ receiverList, setReceiverList }: ReceiverFormProps) => {
   const [receiverInputs, setReceiverInputs] = useState<ReceiverInput[]>([]);
   const [receiverErrors, setReceiverErrors] = useState<ReceiverError[]>([]);
-  const [receivers, setReceivers] = useState<ReceiverInput[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isConfirmed, setIsConfirmed] = useState(false);
+  const [isConfirmed, setIsConfirmed] = useState(receiverList.length > 0);
+
+  useEffect(() => {
+    setIsConfirmed(receiverList.length > 0);
+  }, [receiverList]);
 
   const handleAddReceiverInput = () => {
     if (receiverInputs.length >= 10) return;
@@ -103,10 +111,8 @@ const ReceiverForm = () => {
   };
 
   const handleDelete = (index: number) => {
-    const newInputs = receiverInputs.filter((_, i) => i !== index);
-    const newErrors = receiverErrors.filter((_, i) => i !== index);
-    setReceiverInputs(newInputs);
-    setReceiverErrors(newErrors);
+    setReceiverInputs(inputs => inputs.filter((_, i) => i !== index));
+    setReceiverErrors(errors => errors.filter((_, i) => i !== index));
   };
 
   const handleConfirm = () => {
@@ -138,17 +144,16 @@ const ReceiverForm = () => {
     );
 
     if (allValid) {
-      setReceivers(receiverInputs);
+      setReceiverList(receiverInputs);
       setIsConfirmed(true);
       setIsModalOpen(false);
     }
   };
 
   const handleCancel = () => {
-    setIsModalOpen(false);
     setReceiverInputs([]);
     setReceiverErrors([]);
-    setIsConfirmed(false);
+    setIsModalOpen(false);
   };
 
   return (
@@ -165,18 +170,27 @@ const ReceiverForm = () => {
         </AddButton>
       </Header>
       <Spacer />
-      {receivers.length === 0 ? (
+      {receiverList.length === 0 ? (
         <EmptyNotice>
           받는 사람이 없습니다.
           <br />
           받는 사람을 추가해주세요.
         </EmptyNotice>
       ) : (
-        receivers.map((r, i) => (
-          <ReceiverCard key={i}>
-            {r.name} / {r.phone} / {r.quantity}개
-          </ReceiverCard>
-        ))
+        <TableWrapper>
+          <TableHeader>
+            <Cell>이름</Cell>
+            <Cell>전화번호</Cell>
+            <Cell>수량</Cell>
+          </TableHeader>
+          {receiverList.map((r, i) => (
+            <TableRow key={i}>
+              <Cell>{r.name}</Cell>
+              <Cell>{r.phone}</Cell>
+              <Cell>{r.quantity}개</Cell>
+            </TableRow>
+          ))}
+        </TableWrapper>
       )}
       <BottomSpacer />
 
@@ -308,12 +322,6 @@ const EmptyNotice = styled.p`
   white-space: pre-line;
 `;
 
-const ReceiverCard = styled.div`
-  background-color: ${({ theme }) => theme.color.gray[100]};
-  padding: ${({ theme }) => theme.spacing[4]};
-  border-radius: 8px;
-`;
-
 const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -411,4 +419,32 @@ const ConfirmButton = styled.button`
   color: white;
   padding: ${({ theme }) => theme.spacing[2]} ${({ theme }) => theme.spacing[4]};
   border-radius: 8px;
+`;
+
+const TableWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  border: 1px solid ${({ theme }) => theme.color.gray[300]};
+  border-radius: 8px;
+  overflow: hidden;
+`;
+
+const TableHeader = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 0.5fr;
+  background-color: ${({ theme }) => theme.color.gray[200]};
+  padding: ${({ theme }) => theme.spacing[3]};
+`;
+
+const TableRow = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 0.5fr;
+  border-top: 1px solid ${({ theme }) => theme.color.gray[300]};
+  padding: ${({ theme }) => theme.spacing[3]};
+`;
+
+const Cell = styled.p`
+  ${({ theme }) => theme.typography.body.body2Regular};
+  color: ${({ theme }) => theme.color.semantic.text.default};
+  word-break: break-word;
 `;
