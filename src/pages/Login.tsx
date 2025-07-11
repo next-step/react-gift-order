@@ -1,4 +1,5 @@
 import ErrorText from '@components/common/ErrorText';
+import { useAuth } from '@contexts/AuthContext';
 import styled from '@emotion/styled';
 import { useLoginForm } from '@hooks/useLoginForm';
 import { useState } from 'react';
@@ -97,17 +98,25 @@ const Login = () => {
 
   const [emailTouched, setEmailTouched] = useState(false);
   const [passwordTouched, setPasswordTouched] = useState(false);
+  const [loginError, setLoginError] = useState('');
+  const { login } = useAuth();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const isEmailOk = validateEmail();
     const isPWOk = validatePassword();
-    if (isEmailOk && isPWOk) {
+
+    if (!isEmailOk || !isPWOk) return;
+
+    if (login({ email, password })) {
       if (window.history.length > 2) {
         navigate(-1);
       } else {
         navigate('/');
       }
+    } else {
+      setLoginError('이메일 또는 비밀번호가 올바르지 않습니다.');
+      console.log(loginError); //임시
     }
   };
 

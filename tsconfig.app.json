@@ -10,7 +10,8 @@
       "@data/*": ["src/data/*"],
       "@shared/*": ["src/shared/*"],
       "@hooks/*": ["src/hooks/*"],
-      "@common/*": ["src/components/common/*"]
+      "@common/*": ["src/components/common/*"],
+      "@contexts/*": ["src/contexts/*"]
     },
     "types": ["node"],
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
