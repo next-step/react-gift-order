@@ -12,17 +12,15 @@ import Login from '@/pages/Login';
 import NotFound from '@/pages/NotFound';
 import MyPage from '@/pages/MyPage';
 import OrderPage from '@/pages/OrderPage';
-import ProtectedRoute from '@/components/ProtectedRoute';
-import { AuthProvider } from '@/contexts/AuthContext';
+import ProtectedRoute from '@/hoc/ProtectedRoute';
+import { AuthProvider } from '@/contexts/AuthProvider';
 
 function App() {
   return (
     <AuthProvider>
       <Container>
         <GlobalStyle />
-
         <Header />
-
         <Routes>
           <Route
             path="/"

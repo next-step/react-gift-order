@@ -2,8 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import KakaoLogo from '@/assets/kakao-logo.svg';
 import * as S from '@/pages/LoginStyle';
 import { useValidation } from '@/hooks/useValidation';
-import { useAuth } from '@/contexts/AuthContext';
-
+import useAuth from '@/contexts/useAuth';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -11,7 +10,6 @@ export default function Login() {
   const { login } = useAuth();
 
   const from = location.state?.from ?? '/';
-
 
   const email = useValidation<string>('', v => {
     if (!v) return '이메일을 입력해주세요.';
@@ -27,10 +25,7 @@ export default function Login() {
       : '비밀번호는 최소 8자 이상입니다.';
   });
 
-
   const canSubmit = email.isValid && password.isValid;
-
-
 
   const handleLogin = async () => {
     const success = await login(email.value, password.value);
