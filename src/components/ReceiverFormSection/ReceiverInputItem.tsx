@@ -22,52 +22,7 @@ const ReceiverInputItem = ({ index, onDelete }: Props) => {
   } = useFormContext<{ receivers: Receiver[] }>();
 
   const receivers = useWatch({ name: 'receivers', control });
-
-  const isDuplicate = (phone: string) =>
-    receivers.filter((r, i) => r?.phone === phone && i !== index).length > 0;
-
-  const fields = [
-    {
-      key: 'name',
-      type: 'text',
-      placeholder: PLACEHOLDERS.NAME,
-      rules: {
-        required: ERROR_MESSAGES.EMPTY_RECEIVER_NAME,
-      },
-      error: errors.receivers?.[index]?.name?.message,
-    },
-    {
-      key: 'phone',
-      type: 'tel',
-      placeholder: PLACEHOLDERS.PHONE,
-      rules: {
-        required: ERROR_MESSAGES.EMPTY_RECEIVER_PHONE,
-        pattern: {
-          value: PHONE_REGEX,
-          message: ERROR_MESSAGES.INVALID_PHONE,
-        },
-        validate: (value: string | number) =>
-          typeof value === 'string'
-            ? !isDuplicate(value) || ERROR_MESSAGES.DUPLICATE_PHONE
-            : true,
-      },
-      error: errors.receivers?.[index]?.phone?.message,
-    },
-    {
-      key: 'quantity',
-      type: 'number',
-      placeholder: PLACEHOLDERS.QUANTITY,
-      rules: {
-        valueAsNumber: true,
-        required: ERROR_MESSAGES.INVALID_QUANTITY,
-        min: {
-          value: MIN_QUANTITY,
-          message: ERROR_MESSAGES.INVALID_QUANTITY,
-        },
-      },
-      error: errors.receivers?.[index]?.quantity?.message,
-    },
-  ] as const;
+  const fields = getReceiverFields(index, receivers, errors);
 
   return (
     <Wrapper>
@@ -92,6 +47,67 @@ const ReceiverInputItem = ({ index, onDelete }: Props) => {
 };
 
 export default ReceiverInputItem;
+
+const getReceiverFields = (
+  index: number,
+  receivers: Receiver[],
+  errors: any
+) => {
+  const isDuplicate = (phone: string) =>
+    receivers.filter((r, i) => r?.phone === phone && i !== index).length > 0;
+
+  return [
+    {
+      key: 'name',
+      type: 'text',
+      placeholder: PLACEHOLDERS.NAME,
+      rules: {
+        required: ERROR_MESSAGES.EMPTY_RECEIVER_NAME,
+      },
+      error:
+        typeof errors.receivers?.[index]?.name?.message === 'string'
+          ? errors.receivers[index].name.message
+          : undefined,
+    },
+    {
+      key: 'phone',
+      type: 'tel',
+      placeholder: PLACEHOLDERS.PHONE,
+      rules: {
+        required: ERROR_MESSAGES.EMPTY_RECEIVER_PHONE,
+        pattern: {
+          value: PHONE_REGEX,
+          message: ERROR_MESSAGES.INVALID_PHONE,
+        },
+        validate: (value: string | number) =>
+          typeof value === 'string'
+            ? !isDuplicate(value) || ERROR_MESSAGES.DUPLICATE_PHONE
+            : true,
+      },
+      error:
+        typeof errors.receivers?.[index]?.phone?.message === 'string'
+          ? errors.receivers[index].phone.message
+          : undefined,
+    },
+    {
+      key: 'quantity',
+      type: 'number',
+      placeholder: PLACEHOLDERS.QUANTITY,
+      rules: {
+        valueAsNumber: true,
+        required: ERROR_MESSAGES.INVALID_QUANTITY,
+        min: {
+          value: MIN_QUANTITY,
+          message: ERROR_MESSAGES.INVALID_QUANTITY,
+        },
+      },
+      error:
+        typeof errors.receivers?.[index]?.quantity?.message === 'string'
+          ? errors.receivers[index].quantity.message
+          : undefined,
+    },
+  ] as const;
+};
 
 const Wrapper = styled.div`
   padding: ${({ theme }) => theme.spacing[3]};
