@@ -1,8 +1,8 @@
 import { useForm, useFieldArray } from "react-hook-form";
 import { useEffect, forwardRef, useImperativeHandle } from "react";
 import styled from "@emotion/styled";
-import ErrorMessage from "./ErrorMessage";
 import { validateReceivers } from "./validateReceiver";
+import ErrorField from "./ErrorField";
 
 type Receiver = {
   name: string;
@@ -90,13 +90,12 @@ const ReceiverAdder = forwardRef<ReceiverAdderHandle, ReceiverAdderProps>(
               <ReceiverInputLabel>이름</ReceiverInputLabel>
               <RecevierInputWrapper>
                 <ReceiverInput
-                  {...register(`receivers.${idx}.name`, { required: true })}
+                  {...register(`receivers.${idx}.name`, { 
+                    required: "이름을 입력해주세요." })}
                   placeholder="이름"
                   error={!!errors.receivers?.[idx]?.name}
                 />
-                {errors.receivers?.[idx]?.name && (
-                  <ErrorMessage>이름을 입력해주세요.</ErrorMessage>
-                )}
+                <ErrorField error={errors.receivers?.[idx]?.name} />
               </RecevierInputWrapper>
             </ReceiverInputBox>
             <ReceiverInputBox>
@@ -120,11 +119,7 @@ const ReceiverAdder = forwardRef<ReceiverAdderHandle, ReceiverAdderProps>(
                   placeholder="전화번호"
                   error={!!errors.receivers?.[idx]?.phone}
                 />
-                {errors.receivers?.[idx]?.phone && (
-                  <ErrorMessage>
-                    {errors.receivers[idx].phone.message}
-                  </ErrorMessage>
-                )}
+                <ErrorField error={errors.receivers?.[idx]?.phone} />
               </RecevierInputWrapper>
             </ReceiverInputBox>
             <ReceiverInputBox>
@@ -132,18 +127,17 @@ const ReceiverAdder = forwardRef<ReceiverAdderHandle, ReceiverAdderProps>(
               <RecevierInputWrapper>
                 <ReceiverNumberInput
                   {...register(`receivers.${idx}.quantity`, {
-                    required: true,
-                    min: 1,
+                    required: "구매 수량은 1개 이상이어야 합니다.",
+                    min: {
+                      value: 1,
+                      message: "구매 수량은 1개 이상이어야 합니다.",
+                    }
                   })}
                   placeholder="수량"
                   type="number"
                   error={!!errors.receivers?.[idx]?.quantity}
                 />
-                {errors.receivers?.[idx]?.quantity && (
-                  <ErrorMessage>
-                    구매 수량은 1개 이상이어야 합니다.
-                  </ErrorMessage>
-                )}
+                <ErrorField error={errors.receivers?.[idx]?.quantity} />
               </RecevierInputWrapper>
             </ReceiverInputBox>
           </div>
