@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
 
 type User = {
-  email: string | null;
+  email: string;
 };
 
 type UserInfoContextType = {
@@ -14,8 +14,10 @@ const UserInfoContext = createContext<UserInfoContextType | undefined>(
 );
 
 export function UserInfoProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-
+  const [user, setUser] = useState(() => {
+    const email = sessionStorage.getItem("email");
+    return email ? { email } : null;
+  });
   return (
     <UserInfoContext.Provider value={{ user, setUser }}>
       {children}
