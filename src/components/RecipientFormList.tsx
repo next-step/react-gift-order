@@ -5,6 +5,8 @@ import { orderSchema } from '@src/hooks/useOrderForm';
 import type { OrderValues } from '@src/hooks/useOrderForm';
 import theme from '@/styles/tokens';
 
+const DUPLICATE_PHONE_ERROR_MESSAGE = '중복된 전화번호가 있습니다.';
+
 const initialValues: OrderValues = {
   recipientName: '',
   recipientPhone: '',
@@ -254,7 +256,7 @@ const RecipientFormList = ({
           recipient.recipientPhone &&
           phoneMap[recipient.recipientPhone] > 1
         ) {
-          err.recipientPhone = '중복된 전화번호가 있습니다.';
+          err.recipientPhone = DUPLICATE_PHONE_ERROR_MESSAGE;
         }
 
         return err;

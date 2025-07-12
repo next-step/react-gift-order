@@ -8,7 +8,11 @@ import RecipientFormList from '@/components/RecipientFormList';
 import { useState } from 'react';
 import type { OrderSchema } from '@src/hooks/useOrderForm';
 import { FormProvider } from 'react-hook-form';
-import useOrderFormComplete from '@/hooks/useOrderFormComplete';
+import useOrderFormComplete, {
+  type SenderSchema,
+} from '@/hooks/useOrderFormComplete';
+
+const RECEIVER_REQUIRED_MESSAGE = '받는 사람을 추가해 주세요!';
 
 const sectionStyle = css`
   width: 100%;
@@ -59,9 +63,9 @@ const Order = () => {
 
   const totalOrderPrice = unitPrice * totalRecipientQuantity;
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: SenderSchema) => {
     if (totalRecipientQuantity === 0) {
-      alert('받는 사람을 추가해 주세요!');
+      alert(RECEIVER_REQUIRED_MESSAGE);
       return;
     }
 
@@ -70,7 +74,7 @@ const Order = () => {
         `상품명: ${product.name}\n` +
         `구매수량: ${totalRecipientQuantity}\n` +
         `발신자이름: ${data.senderName}\n` +
-        `메시지: ${data.message}`
+        `메시지: ${data.letter}`
     );
     window.history.back();
   };
