@@ -1,21 +1,30 @@
 import styled from '@emotion/styled';
-import { forwardRef } from 'react';
+import { useFormContext } from 'react-hook-form';
+import { ERROR_MESSAGES } from '@/constants/validation';
 
-interface MessageInputProps
-  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-  error?: string;
-}
+const MessageInput = () => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
 
-const MessageInput = forwardRef<HTMLTextAreaElement, MessageInputProps>(
-  ({ error, ...props }, ref) => {
-    return (
-      <Wrapper>
-        <InputArea ref={ref} {...props} placeholder="메시지를 입력해주세요." />
-        {error && <ErrorText>{error}</ErrorText>}
-      </Wrapper>
-    );
-  }
-);
+  const messageError =
+    typeof errors.textMessage?.message === 'string'
+      ? errors.textMessage.message
+      : undefined;
+
+  return (
+    <Wrapper>
+      <InputArea
+        {...register('textMessage', {
+          required: ERROR_MESSAGES.EMPTY_MESSAGE,
+        })}
+        placeholder="메시지를 입력해주세요."
+      />
+      {messageError && <ErrorText>{messageError}</ErrorText>}
+    </Wrapper>
+  );
+};
 
 export default MessageInput;
 

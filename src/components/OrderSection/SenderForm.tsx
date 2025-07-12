@@ -1,27 +1,33 @@
 import styled from '@emotion/styled';
 import InputField from '@/components/common/InputField';
-import { forwardRef } from 'react';
+import { useFormContext } from 'react-hook-form';
+import { ERROR_MESSAGES } from '@/constants/validation';
 
-interface SenderFormProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  error?: string;
-}
+const SenderForm = () => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
 
-const SenderForm = forwardRef<HTMLInputElement, SenderFormProps>(
-  ({ error, ...props }, ref) => {
-    return (
-      <Wrapper>
-        <Label>보내는 사람</Label>
-        <InputField
-          ref={ref}
-          {...props}
-          placeholder="이름을 입력하세요."
-          error={error}
-        />
-        <Note>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</Note>
-      </Wrapper>
-    );
-  }
-);
+  const senderError =
+    typeof errors.senderName?.message === 'string'
+      ? errors.senderName.message
+      : undefined;
+
+  return (
+    <Wrapper>
+      <Label>보내는 사람</Label>
+      <InputField
+        {...register('senderName', {
+          required: ERROR_MESSAGES.EMPTY_SENDER,
+        })}
+        placeholder="이름을 입력하세요."
+        error={senderError}
+      />
+      <Note>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</Note>
+    </Wrapper>
+  );
+};
 
 export default SenderForm;
 

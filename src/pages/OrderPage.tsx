@@ -12,7 +12,6 @@ import ReceiverForm from '@/components/ReceiverFormSection/ReceiverForm';
 import ProductInfo from '@/components/OrderSection/ProductInfo';
 import OrderSubmitButton from '@/components/OrderSection/OrderSubmitButton';
 import { ROUTES } from '@/constants/routes';
-import { ERROR_MESSAGES } from '@/constants/validation';
 import type { Receiver } from '@/types/receiver';
 
 type FormValues = {
@@ -34,13 +33,7 @@ const OrderPage = () => {
     },
   });
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    formState: { errors },
-  } = methods;
+  const { handleSubmit, setValue, watch } = methods;
 
   const receiverList = watch('receivers');
   const totalQuantity = receiverList.reduce((sum, r) => sum + r.quantity, 0);
@@ -84,18 +77,8 @@ const OrderPage = () => {
               selectedCardId={selectedCardId}
               onSelect={handleCardChange}
             />
-            <MessageInput
-              {...register('textMessage', {
-                required: ERROR_MESSAGES.EMPTY_MESSAGE,
-              })}
-              error={errors.textMessage?.message}
-            />
-            <SenderForm
-              {...register('senderName', {
-                required: ERROR_MESSAGES.EMPTY_SENDER,
-              })}
-              error={errors.senderName?.message}
-            />
+            <MessageInput />
+            <SenderForm />
             <ReceiverForm />
             <ProductInfo product={product} />
             <OrderSubmitButton amount={totalPrice} />
