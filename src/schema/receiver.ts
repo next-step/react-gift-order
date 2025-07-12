@@ -12,8 +12,7 @@ export const ReceiverSchema = z.object({
   itemCount: z
     .number()
     .positive('구매 수량은 1개 이상이어야 해요.')
-    .min(1, '구매 수량을 입력해주세요.')
-    .transform(Number),
+    .min(1, '구매 수량을 입력해주세요.'),
 });
 
 export type Receiver = z.infer<typeof ReceiverSchema>;

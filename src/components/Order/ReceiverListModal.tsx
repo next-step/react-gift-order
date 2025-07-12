@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import styled from '@emotion/styled';
-import { Controller, useFieldArray, useForm } from 'react-hook-form';
+import { useFieldArray, useForm } from 'react-hook-form';
 import {
   CaptionText,
   InputWrapper,
@@ -27,7 +27,13 @@ const ReceiverListModal = ({
   onAdd,
   editingReceivers,
 }: ReceiverListModalProps) => {
-  const { control, handleSubmit, reset } = useForm<FormValues>({
+  const {
+    register,
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
     defaultValues: { receivers: editingReceivers || [] },
     mode: 'onSubmit',
@@ -85,6 +91,7 @@ const ReceiverListModal = ({
         </ModalHeader>
         <ModalContent>
           {fields.map((field, index) => {
+            const err = errors.receivers?.[index] || {};
             return (
               <FieldRow key={field.id}>
                 <ReceiverInfoHeader>
@@ -95,71 +102,56 @@ const ReceiverListModal = ({
                     onClick={() => remove(index)}
                   />
                 </ReceiverInfoHeader>
-                <Controller
-                  name={`receivers.${index}.receiverName`}
-                  control={control}
-                  render={({ field, fieldState }) => (
-                    <ReceiverInputWrapper>
-                      <ModalInfoTitle>이름</ModalInfoTitle>
-                      <InputWrapper>
-                        <ModalStyledInput
-                          {...field}
-                          placeholder="이름을 입력하세요."
-                          hasError={!!fieldState.error}
-                        />
-                        {fieldState.error && (
-                          <CaptionText isError>
-                            {fieldState.error.message}
-                          </CaptionText>
-                        )}
-                      </InputWrapper>
-                    </ReceiverInputWrapper>
-                  )}
-                />
-                <Controller
-                  name={`receivers.${index}.receiverPhoneNumber`}
-                  control={control}
-                  render={({ field, fieldState }) => (
-                    <ReceiverInputWrapper>
-                      <ModalInfoTitle>전화번호</ModalInfoTitle>
-                      <InputWrapper>
-                        <ModalStyledInput
-                          {...field}
-                          placeholder="전화번호를 입력하세요."
-                          hasError={!!fieldState.error}
-                        />
-                        {fieldState.error && (
-                          <CaptionText isError>
-                            {fieldState.error.message}
-                          </CaptionText>
-                        )}
-                      </InputWrapper>
-                    </ReceiverInputWrapper>
-                  )}
-                />
 
-                <Controller
-                  name={`receivers.${index}.itemCount`}
-                  control={control}
-                  render={({ field, fieldState }) => (
-                    <ReceiverInputWrapper>
-                      <ModalInfoTitle>수량</ModalInfoTitle>
-                      <InputWrapper>
-                        <ModalStyledInput
-                          {...field}
-                          type="number"
-                          placeholder="수량을 입력하세요."
-                          hasError={!!fieldState.error}
-                        />
-                        {fieldState.error && (
-                          <CaptionText isError>
-                            {fieldState.error.message}
-                          </CaptionText>
-                        )}
-                      </InputWrapper>
-                    </ReceiverInputWrapper>
-                  )}
-                />
+                <ReceiverInputWrapper>
+                  <ModalInfoTitle>이름</ModalInfoTitle>
+                  <InputWrapper>
+                    <ModalStyledInput
+                      {...register(`receivers.${index}.receiverName` as const)}
+                      placeholder="이름을 입력하세요."
+                      hasError={!!err.receiverName}
+                    />
+                    {err.receiverName && (
+                      <CaptionText isError>
+                        {err.receiverName.message}
+                      </CaptionText>
+                    )}
+                  </InputWrapper>
+                </ReceiverInputWrapper>
+
+                <ReceiverInputWrapper>
+                  <ModalInfoTitle>전화번호</ModalInfoTitle>
+                  <InputWrapper>
+                    <ModalStyledInput
+                      {...register(
+                        `receivers.${index}.receiverPhoneNumber` as const
+                      )}
+                      placeholder="전화번호를 입력하세요."
+                      hasError={!!err.receiverPhoneNumber}
+                    />
+                    {err.receiverPhoneNumber && (
+                      <CaptionText isError>
+                        {err.receiverPhoneNumber.message}
+                      </CaptionText>
+                    )}
+                  </InputWrapper>
+                </ReceiverInputWrapper>
+                <ReceiverInputWrapper>
+                  <ModalInfoTitle>수량</ModalInfoTitle>
+                  <InputWrapper>
+                    <ModalStyledInput
+                      {...register(`receivers.${index}.itemCount` as const, {
+                        valueAsNumber: true,
+                      })}
+                      type="number"
+                      placeholder="수량을 입력하세요."
+                      hasError={!!err.itemCount}
+                    />
+                    {err.itemCount && (
+                      <CaptionText isError>{err.itemCount.message}</CaptionText>
+                    )}
+                  </InputWrapper>
+                </ReceiverInputWrapper>
               </FieldRow>
             );
           })}
