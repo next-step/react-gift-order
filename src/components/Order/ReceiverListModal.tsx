@@ -6,10 +6,11 @@ import {
   InputWrapper,
   StyledInput,
 } from '../Common/BorderInputBox';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FaX } from 'react-icons/fa6';
-import type { Receiver } from '@/types/receiver';
+import type { Receiver } from '@/schema/receiver';
+import type { FormValues } from '@/schema/receiverNumber';
+import { FormSchema } from '@/schema/receiverNumber';
 
 type ReceiverListModalProps = {
   open: boolean;
@@ -18,58 +19,7 @@ type ReceiverListModalProps = {
   editingReceivers: Receiver[] | null;
 };
 
-type FormValues = { receivers: Receiver[] };
-
 const RECEIVER_COUNT_LIMIT = 10;
-
-const ReceiverSchema = z.object({
-  receiverName: z
-    .string()
-    .nonempty('이름을 입력해주세요.')
-    .regex(/^[가-힣a-zA-Z]{2,}$/, '2자 이상 한글 또는 영어만 입력해주세요.'),
-  receiverPhoneNumber: z
-    .string()
-    .nonempty('전화번호를 입력해주세요.')
-    .regex(/^\d{10,11}$/, '올바른 전화번호 형식이 아니에요.'),
-  itemCount: z.coerce
-    .number()
-    .positive('구매 수량은 1개 이상이어야 해요.')
-    .min(1, '구매 수량을 입력해주세요.')
-    .default(1)
-    .transform(Number),
-});
-
-const ReceiversNumberListSchema = z
-  .array(ReceiverSchema)
-  .superRefine((receivers, ctx) => {
-    const seenPhoneNumbers = new Map<string, number[]>();
-    receivers.forEach((receiver, index) => {
-      const phoneNumber = receiver.receiverPhoneNumber;
-      if (phoneNumber) {
-        if (seenPhoneNumbers.has(phoneNumber)) {
-          seenPhoneNumbers.get(phoneNumber)?.forEach((prevIndex) => {
-            ctx.addIssue({
-              code: z.ZodIssueCode.custom,
-              message: '중복된 전화번호입니다.',
-              path: [prevIndex, 'receiverPhoneNumber'],
-            });
-          });
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: '중복된 전화번호입니다.',
-            path: [index, 'receiverPhoneNumber'],
-          });
-          seenPhoneNumbers.get(phoneNumber)?.push(index);
-        } else {
-          seenPhoneNumbers.set(phoneNumber, [index]);
-        }
-      }
-    });
-  });
-
-const FormSchema = z.object({
-  receivers: ReceiversNumberListSchema,
-});
 
 const ReceiverListModal = ({
   open,

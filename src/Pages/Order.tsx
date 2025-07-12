@@ -13,19 +13,11 @@ import {
   StyledInput,
   CaptionText,
 } from '@/components/Common/BorderInputBox';
-import type { Receiver } from '@/types/receiver';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-
-const FormSchema = z.object({
-  senderName: z
-    .string()
-    .nonempty('이름을 입력해주세요.')
-    .regex(/^[가-힣a-zA-Z]{2,}$/, '2자 이상 한글/영어만 가능합니다.'),
-  message: z.string().nonempty('메시지를 입력해주세요.'),
-});
-type FormFields = z.infer<typeof FormSchema>;
+import { OrderSchema } from '@/schema/order';
+import type { Receiver } from '@/schema/receiver';
+import type { Order } from '@/schema/order';
 
 const Order = () => {
   const { itemId } = useParams<{ itemId: string }>();
@@ -39,8 +31,8 @@ const Order = () => {
     setValue,
     getValues,
     formState: { errors },
-  } = useForm<FormFields>({
-    resolver: zodResolver(FormSchema),
+  } = useForm<Order>({
+    resolver: zodResolver(OrderSchema),
     defaultValues: { senderName: '', message: '' },
     mode: 'onSubmit',
   });
@@ -100,7 +92,7 @@ const Order = () => {
   );
   const totalPrice = totalCount * (item?.price.sellingPrice ?? 0);
 
-  const handleOrderSubmit = (data: FormFields) => {
+  const handleOrderSubmit = (data: Order) => {
     if (receivers.length < 1) {
       setReceiverError(true);
       return;
