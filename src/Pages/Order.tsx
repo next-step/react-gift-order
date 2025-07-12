@@ -51,25 +51,19 @@ const Order = () => {
 
   const [isReceiverModalOpen, setIsReceiverModalOpen] = useState(false);
   const [receivers, setReceivers] = useState<Receiver[]>([]);
-  const [editingReceivers, setEditingReceivers] = useState<Receiver[] | null>(
-    null
-  );
   const [receiverError, setReceiverError] = useState(false);
 
   const handleOpenReceiverModal = () => {
-    setEditingReceivers(receivers.length > 0 ? receivers : null);
     setIsReceiverModalOpen(true);
   };
 
   const handleModalAddOrEdit = (newReceivers: Receiver[]) => {
     setReceivers(newReceivers);
-    setEditingReceivers(null);
     setIsReceiverModalOpen(false);
   };
 
   const handleModalClose = () => {
     setIsReceiverModalOpen(false);
-    setEditingReceivers(null);
   };
 
   useEffect(() => {
@@ -206,7 +200,7 @@ const Order = () => {
         open={isReceiverModalOpen}
         onClose={handleModalClose}
         onAdd={handleModalAddOrEdit}
-        editingReceivers={editingReceivers}
+        initialReceives={receivers}
       />
     </>
   );

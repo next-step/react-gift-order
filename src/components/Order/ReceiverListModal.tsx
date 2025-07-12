@@ -16,7 +16,7 @@ type ReceiverListModalProps = {
   open: boolean;
   onClose: () => void;
   onAdd: (data: Receiver[]) => void;
-  editingReceivers: Receiver[] | null;
+  initialReceives: Receiver[];
 };
 
 const RECEIVER_COUNT_LIMIT = 10;
@@ -25,7 +25,7 @@ const ReceiverListModal = ({
   open,
   onClose,
   onAdd,
-  editingReceivers,
+  initialReceives,
 }: ReceiverListModalProps) => {
   const {
     register,
@@ -35,7 +35,7 @@ const ReceiverListModal = ({
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
-    defaultValues: { receivers: editingReceivers || [] },
+    defaultValues: { receivers: initialReceives },
     mode: 'onSubmit',
   });
 
@@ -50,13 +50,13 @@ const ReceiverListModal = ({
 
   useEffect(() => {
     if (open) {
-      reset({ receivers: editingReceivers || [] });
+      reset({ receivers: initialReceives });
       document.body.style.overflow = 'hidden';
     }
     return () => {
       document.body.style.overflow = '';
     };
-  }, [open, reset, editingReceivers]);
+  }, [open, reset, initialReceives]);
 
   if (!open) return null;
 
