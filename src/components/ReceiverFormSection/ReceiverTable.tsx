@@ -1,13 +1,13 @@
 import styled from '@emotion/styled';
+import { useFormContext } from 'react-hook-form';
 import { TABLE_HEADERS, UNIT } from '@/constants/receiverLabels';
 import type { Receiver } from '@/types/receiver';
 
-interface Props {
-  receiverList: Receiver[];
-}
+const ReceiverTable = () => {
+  const { watch } = useFormContext<{ receivers: Receiver[] }>();
+  const receiverList = watch('receivers');
 
-const ReceiverTable = ({ receiverList }: Props) => {
-  if (receiverList.length === 0) return null;
+  if (!receiverList || receiverList.length === 0) return null;
 
   return (
     <TableWrapper>

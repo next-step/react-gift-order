@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { useForm, FormProvider } from 'react-hook-form';
 import { useState } from 'react';
 import { messageCards } from '@/data/messageCards';
 import { mockProducts } from '@/data/products';
@@ -13,10 +13,12 @@ import ProductInfo from '@/components/OrderSection/ProductInfo';
 import OrderSubmitButton from '@/components/OrderSection/OrderSubmitButton';
 import { ROUTES } from '@/constants/routes';
 import { ERROR_MESSAGES } from '@/constants/validation';
+import type { Receiver } from '@/types/receiver';
 
 type FormValues = {
   senderName: string;
   textMessage: string;
+  receivers: Receiver[];
 };
 
 const OrderPage = () => {
@@ -24,22 +26,23 @@ const OrderPage = () => {
   const navigate = useNavigate();
   const product = mockProducts[Number(id) - 1];
 
+  const methods = useForm<FormValues>({
+    defaultValues: {
+      senderName: '',
+      textMessage: messageCards[0].defaultTextMessage,
+      receivers: [],
+    },
+  });
+
   const {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
-  } = useForm<FormValues>({
-    defaultValues: {
-      senderName: '',
-      textMessage: messageCards[0].defaultTextMessage,
-    },
-  });
+  } = methods;
 
-  const [receiverList, setReceiverList] = useState<
-    { name: string; phone: string; quantity: number }[]
-  >([]);
-
+  const receiverList = watch('receivers');
   const totalQuantity = receiverList.reduce((sum, r) => sum + r.quantity, 0);
   const totalPrice = product ? totalQuantity * product.price.sellingPrice : 0;
 
@@ -54,7 +57,7 @@ const OrderPage = () => {
   };
 
   const onSubmit = (data: FormValues) => {
-    if (receiverList.length === 0) {
+    if (data.receivers.length === 0) {
       alert('받는 사람을 한 명 이상 추가해주세요.');
       return;
     }
@@ -75,30 +78,29 @@ const OrderPage = () => {
     <>
       <Navigation />
       <Main>
-        <Form onSubmit={handleSubmit(onSubmit)}>
-          <CardSelector
-            selectedCardId={selectedCardId}
-            onSelect={handleCardChange}
-          />
-          <MessageInput
-            {...register('textMessage', {
-              required: ERROR_MESSAGES.EMPTY_MESSAGE,
-            })}
-            error={errors.textMessage?.message}
-          />
-          <SenderForm
-            {...register('senderName', {
-              required: ERROR_MESSAGES.EMPTY_SENDER,
-            })}
-            error={errors.senderName?.message}
-          />
-          <ReceiverForm
-            receiverList={receiverList}
-            setReceiverList={setReceiverList}
-          />
-          <ProductInfo product={product} />
-          <OrderSubmitButton amount={totalPrice} />
-        </Form>
+        <FormProvider {...methods}>
+          <Form onSubmit={handleSubmit(onSubmit)}>
+            <CardSelector
+              selectedCardId={selectedCardId}
+              onSelect={handleCardChange}
+            />
+            <MessageInput
+              {...register('textMessage', {
+                required: ERROR_MESSAGES.EMPTY_MESSAGE,
+              })}
+              error={errors.textMessage?.message}
+            />
+            <SenderForm
+              {...register('senderName', {
+                required: ERROR_MESSAGES.EMPTY_SENDER,
+              })}
+              error={errors.senderName?.message}
+            />
+            <ReceiverForm />
+            <ProductInfo product={product} />
+            <OrderSubmitButton amount={totalPrice} />
+          </Form>
+        </FormProvider>
       </Main>
     </>
   );

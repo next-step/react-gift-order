@@ -1,27 +1,32 @@
 import styled from '@emotion/styled';
+import { useForm, FormProvider, useFieldArray } from 'react-hook-form';
+import { useEffect } from 'react';
 import ReceiverInputItem from '@/components/ReceiverFormSection/ReceiverInputItem';
-import { useReceiverForm } from '@/hooks/useReceiverForm';
 import { BUTTON_TEXT, LABELS } from '@/constants/receiverLabels';
 import type { Receiver } from '@/types/receiver';
 import ModalPortal from '../common/ModalPortal';
 
 interface Props {
+  initialValues: Receiver[];
   onConfirmList: (receivers: Receiver[]) => void;
   onClose: () => void;
-  initialValues: Receiver[];
 }
 
-const ReceiverModal = ({ onConfirmList, onClose, initialValues }: Props) => {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    errors,
-    fields,
-    append,
-    remove,
-    isDuplicate,
-  } = useReceiverForm(initialValues);
+const ReceiverModal = ({ initialValues, onConfirmList, onClose }: Props) => {
+  const methods = useForm<{ receivers: Receiver[] }>({
+    defaultValues: {
+      receivers: initialValues,
+    },
+    mode: 'onChange',
+    reValidateMode: 'onChange',
+  });
+
+  const { control, getValues, trigger, reset } = methods;
+
+  const { fields, append, remove } = useFieldArray({
+    name: 'receivers',
+    control,
+  });
 
   const canAddMore = fields.length < 10;
   const confirmButtonLabel = BUTTON_TEXT.CONFIRM_COUNT(fields.length);
@@ -34,54 +39,63 @@ const ReceiverModal = ({ onConfirmList, onClose, initialValues }: Props) => {
     remove(index);
   };
 
-  const handleConfirm = handleSubmit(data => {
-    onConfirmList(data.receivers);
-    onClose();
-  });
-
-  const handleCancel = () => {
-    reset();
+  const handleConfirm = async () => {
+    const isValid = await trigger();
+    if (!isValid) return;
+    const values = getValues('receivers');
+    onConfirmList(values);
     onClose();
   };
+
+  const handleCancel = () => {
+    onClose();
+  };
+
+  useEffect(() => {
+    reset({ receivers: initialValues });
+  }, [initialValues, reset]);
 
   return (
     <ModalPortal>
       <Overlay>
         <Modal>
-          <Header>
-            <Title>{LABELS.RECEIVER_MODAL_TITLE}</Title>
-            <Description>{LABELS.RECEIVER_MODAL_DESCRIPTION}</Description>
-          </Header>
+          <FormProvider {...methods}>
+            <Header>
+              <Title>{LABELS.RECEIVER_MODAL_TITLE}</Title>
+              <Description>{LABELS.RECEIVER_MODAL_DESCRIPTION}</Description>
+            </Header>
 
-          <AddButtonWrapper>
-            <AddButton type="button" onClick={handleAdd} disabled={!canAddMore}>
-              {BUTTON_TEXT.ADD}
-            </AddButton>
-          </AddButtonWrapper>
+            <AddButtonWrapper>
+              <AddButton
+                type="button"
+                onClick={handleAdd}
+                disabled={!canAddMore}
+              >
+                {BUTTON_TEXT.ADD}
+              </AddButton>
+            </AddButtonWrapper>
 
-          <ScrollableContent>
-            <List>
-              {fields.map((field, index) => (
-                <ReceiverInputItem
-                  key={field.id}
-                  index={index}
-                  onDelete={() => handleDelete(index)}
-                  register={register}
-                  errors={errors}
-                  isDuplicate={isDuplicate}
-                />
-              ))}
-            </List>
-          </ScrollableContent>
+            <ScrollableContent>
+              <List>
+                {fields.map((field, index) => (
+                  <ReceiverInputItem
+                    key={field.id}
+                    index={index}
+                    onDelete={() => handleDelete(index)}
+                  />
+                ))}
+              </List>
+            </ScrollableContent>
 
-          <Footer>
-            <CancelButton type="button" onClick={handleCancel}>
-              {BUTTON_TEXT.CANCEL}
-            </CancelButton>
-            <ConfirmButton type="button" onClick={handleConfirm}>
-              {confirmButtonLabel}
-            </ConfirmButton>
-          </Footer>
+            <Footer>
+              <CancelButton type="button" onClick={handleCancel}>
+                {BUTTON_TEXT.CANCEL}
+              </CancelButton>
+              <ConfirmButton type="button" onClick={handleConfirm}>
+                {confirmButtonLabel}
+              </ConfirmButton>
+            </Footer>
+          </FormProvider>
         </Modal>
       </Overlay>
     </ModalPortal>

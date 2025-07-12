@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { useFormContext, useWatch } from 'react-hook-form';
 import InputField from '@/components/common/InputField';
 import {
   ERROR_MESSAGES,
@@ -6,24 +7,25 @@ import {
   MIN_QUANTITY,
 } from '@/constants/validation';
 import { PLACEHOLDERS, LABELS } from '@/constants/receiverLabels';
-import type { UseFormRegister, FieldErrors } from 'react-hook-form';
-import type { ReceiverFormValues } from '@/hooks/useReceiverForm';
+import type { Receiver } from '@/types/receiver';
 
 interface Props {
   index: number;
   onDelete: () => void;
-  register: UseFormRegister<ReceiverFormValues>;
-  errors: FieldErrors<ReceiverFormValues>;
-  isDuplicate: (phone: string, index: number) => boolean;
 }
 
-const ReceiverInputItem = ({
-  index,
-  onDelete,
-  register,
-  errors,
-  isDuplicate,
-}: Props) => {
+const ReceiverInputItem = ({ index, onDelete }: Props) => {
+  const {
+    register,
+    formState: { errors },
+    control,
+  } = useFormContext<{ receivers: Receiver[] }>();
+
+  const receivers = useWatch({ name: 'receivers', control });
+
+  const isDuplicate = (phone: string) =>
+    receivers.filter((r, i) => r?.phone === phone && i !== index).length > 0;
+
   const fields = [
     {
       key: 'name',
@@ -46,7 +48,7 @@ const ReceiverInputItem = ({
         },
         validate: (value: string | number) =>
           typeof value === 'string'
-            ? !isDuplicate(value, index) || ERROR_MESSAGES.DUPLICATE_PHONE
+            ? !isDuplicate(value) || ERROR_MESSAGES.DUPLICATE_PHONE
             : true,
       },
       error: errors.receivers?.[index]?.phone?.message,

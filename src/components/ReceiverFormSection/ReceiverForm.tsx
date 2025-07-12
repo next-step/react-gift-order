@@ -1,22 +1,23 @@
 import { useState } from 'react';
 import styled from '@emotion/styled';
+import { useFormContext, useFieldArray } from 'react-hook-form';
 import ReceiverModal from '@/components/ReceiverFormSection/ReceiverModal';
-import ReceiverTable from '@/components/ReceiverFormSection//ReceiverTable';
+import ReceiverTable from '@/components/ReceiverFormSection/ReceiverTable';
 import { LABELS } from '@/constants/receiverLabels';
 import type { Receiver } from '@/types/receiver';
 
-interface Props {
-  receiverList: Receiver[];
-  setReceiverList: React.Dispatch<React.SetStateAction<Receiver[]>>;
-}
+const ReceiverForm = () => {
+  const { control, watch } = useFormContext<{ receivers: Receiver[] }>();
+  const { replace } = useFieldArray({ name: 'receivers', control });
 
-const ReceiverForm = ({ receiverList, setReceiverList }: Props) => {
+  const receiverList = watch('receivers');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmed, setIsConfirmed] = useState(receiverList.length > 0);
 
   const handleConfirm = (receivers: Receiver[]) => {
-    setReceiverList(receivers);
+    replace(receivers);
     setIsConfirmed(true);
+    setIsModalOpen(false);
   };
 
   return (
@@ -35,7 +36,7 @@ const ReceiverForm = ({ receiverList, setReceiverList }: Props) => {
       {receiverList.length === 0 ? (
         <EmptyNotice>{LABELS.EMPTY_RECEIVER_NOTICE}</EmptyNotice>
       ) : (
-        <ReceiverTable receiverList={receiverList} />
+        <ReceiverTable />
       )}
 
       {isModalOpen && (
