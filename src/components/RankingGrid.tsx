@@ -2,6 +2,8 @@
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useState } from 'react';
+
 
 const Container = styled.div`
   padding: 24px;
@@ -22,16 +24,21 @@ const GiftCard = styled.div`
   cursor: pointer;
 `;
 
-const RankBadge = styled.div`
+interface BadgeProps {
+  index: number;
+}
+
+const RankBadge = styled.div<BadgeProps>`
   position: absolute;
   top: 8px;
   left: 8px;
-  background-color: ${({ theme }) => theme.colors.red600};
+  background-color: ${({ index, theme }) =>
+    index < 3 ? theme.colors.red600 : theme.colors.gray600};
   color: #fff;
   font-size: 12px;
   font-weight: bold;
   padding: 4px 8px;
-  border-radius: 12px;
+  border-radius: 4px;
 `;
 
 const ProductImage = styled.img`
@@ -58,6 +65,15 @@ const Price = styled.div`
   color: ${({ theme }) => theme.colors.blue700};
 `;
 
+const MoreButton = styled.button`
+  margin: 24px auto 0;
+  display: block;
+  padding: 12px 24px;
+  border: gray;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+`;
 interface GiftItem {
   id: number;
   name: string;
@@ -106,12 +122,17 @@ export const RankingGrid = () => {
     }
   };
 
+  const [visibleCount, setVisibleCount] = useState(6);
+
+  const handleMore = () => setVisibleCount(mockData.length);
+
   return (
     <Container>
       <Grid>
-        {mockData.map((item, index) => (
+        {mockData.slice(0, visibleCount).map((item, index) => (
           <GiftCard key={index} onClick={() => handleClick(item.id)}>
-            <RankBadge>{index + 1}</RankBadge>
+            <RankBadge index={index}>{index + 1}</RankBadge>
+
             <ProductImage src={item.imageURL} alt={item.name} />
             <ProductInfo>
               <Brand>{item.brandInfo.name}</Brand>
@@ -123,6 +144,9 @@ export const RankingGrid = () => {
           </GiftCard>
         ))}
       </Grid>
+      {visibleCount < mockData.length && (
+        <MoreButton onClick={handleMore}>더보기</MoreButton>
+      )}
     </Container>
   );
 };

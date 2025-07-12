@@ -10,7 +10,6 @@ import { AuthProvider } from './contexts/AuthContext';
 import MyPage from './pages/MyPage';
 import Order from './pages/Order';
 
-
 const containerStyle = css`
   max-width: 720px;
   margin: 0 auto;
@@ -18,7 +17,6 @@ const containerStyle = css`
   justify-content: center;
   align-items: center;
 `;
-
 
 const App = () => {
   return (
