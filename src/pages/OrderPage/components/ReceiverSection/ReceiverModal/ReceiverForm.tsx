@@ -36,7 +36,7 @@ interface ReceiverFormProps {
   onRemove: () => void;
 }
 
-interface ControlledInputProps<T extends FieldValues> {
+interface LabeledInputFieldProps<T extends FieldValues> {
   fieldLabel: string;
   name: FieldPath<T>;
   control: Control<T>;
@@ -45,14 +45,14 @@ interface ControlledInputProps<T extends FieldValues> {
   errorMessage?: string;
 }
 
-function ControlledInputField<T extends FieldValues>({
+function LabeledInputField<T extends FieldValues>({
   fieldLabel,
   name,
   control,
   type = "text",
   placeholder,
   errorMessage,
-}: ControlledInputProps<T>) {
+}: LabeledInputFieldProps<T>) {
   return (
     <FormField>
       <FieldLabel>{fieldLabel}</FieldLabel>
@@ -61,10 +61,9 @@ function ControlledInputField<T extends FieldValues>({
         control={control}
         render={({ field }) => (
           <Input
-            type={type}
+            {...field}
             placeholder={placeholder}
-            value={field.value}
-            onChange={field.onChange}
+            type={type}
             errorMessage={errorMessage}
           />
         )}
@@ -89,7 +88,7 @@ function ReceiverForm({
         <RemoveButton onClick={onRemove}>X</RemoveButton>
       </ReceiverInputHeader>
       <FormContainer>
-        <ControlledInputField
+        <LabeledInputField
           fieldLabel={RECEIVER_SECTION_CONSTANTS.NAME_LABEL}
           name={`receivers.${index}.name`}
           control={control}
@@ -97,7 +96,7 @@ function ReceiverForm({
           placeholder={RECEIVER_SECTION_CONSTANTS.NAME_PLACEHOLDER}
           errorMessage={errors.receivers?.[index]?.name?.message}
         />
-        <ControlledInputField
+        <LabeledInputField
           fieldLabel={RECEIVER_SECTION_CONSTANTS.PHONE_LABEL}
           name={`receivers.${index}.phone`}
           control={control}
@@ -105,7 +104,7 @@ function ReceiverForm({
           placeholder={RECEIVER_SECTION_CONSTANTS.PHONE_PLACEHOLDER}
           errorMessage={errors.receivers?.[index]?.phone?.message}
         />
-        <ControlledInputField
+        <LabeledInputField
           fieldLabel={RECEIVER_SECTION_CONSTANTS.QUANTITY_LABEL}
           name={`receivers.${index}.quantity`}
           control={control}
