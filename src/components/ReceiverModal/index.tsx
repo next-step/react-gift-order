@@ -3,7 +3,6 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import Modal from '@/components/common/Modal';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-
 import * as S from './styles';
 import { Input, InputRow, Label, ErrorMessage } from '@/components/SenderForm/styles';
 import {
@@ -153,7 +152,6 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
               &times;
             </S.RemoveButton>
           )}
-
           <InputRow>
             <Label>{NAME_LABEL}</Label>
             <Input {...register(`receivers.${index}.name`)} />
@@ -163,7 +161,6 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
               {errors.receivers[index]?.name?.message}
             </ErrorMessage>
           )}
-
           <InputRow>
             <Label>{PHONE_LABEL}</Label>
             <Input {...register(`receivers.${index}.phone`)} />
@@ -173,7 +170,6 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
               {errors.receivers[index]?.phone?.message}
             </ErrorMessage>
           )}
-
           <InputRow>
             <Label>{QUANTITY_LABEL}</Label>
             <Input

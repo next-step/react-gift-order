@@ -31,13 +31,14 @@ const OrderFormSchema = z.object({
 });
 
 type OrderFormValues = z.infer<typeof OrderFormSchema>;
+type Receivers = ReceiverFormInput[];
 
 function OrderPage() {
   const { productId } = useParams<{ productId: string }>();
   const product = { ...mockItem, id: parseInt(productId || '1') };
 
   const [isReceiverModalOpen, setIsReceiverModalOpen] = useState(false);
-  const [receivers, setReceivers] = useState<ReceiverFormInput[]>([]);
+  const [receivers, setReceivers] = useState<Receivers>([]);
 
   const {
     register,

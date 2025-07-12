@@ -1,19 +1,16 @@
 import React from 'react';
-import type { UseFormRegister, FieldErrors, UseFormWatch } from 'react-hook-form';
+import type { UseFormRegister, FieldErrors } from 'react-hook-form';
+import type { OrderFormValues } from '@/pages/OrderPage';
 import { Container, Input, Hint, ErrorMessage, Title } from './styles';
 import {
   SENDER_TITLE,
   SENDER_HINT,
 } from './constants';
 
-interface IFormData {
-  senderName: string;
-}
 interface SenderFormProps {
-  register: UseFormRegister<IFormData>;
-  errors: FieldErrors<IFormData>;
+  register: UseFormRegister<OrderFormValues>;
+  errors: FieldErrors<OrderFormValues>;
 }
-
 
 function SenderForm({ register, errors }: SenderFormProps) {
   return (
