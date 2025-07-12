@@ -1,0 +1,5 @@
+export { Banner } from './banner/Banner'
+export { Category } from './category/Category'
+export { Friends } from './friends/Friends'
+export { Layout } from './layout/Layout'
+export { Nav } from './header/Nav'

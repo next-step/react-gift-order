@@ -1,10 +1,10 @@
-import { theme } from '@/styles/theme'
-import { typographyMixin } from '@/components/common'
+import { theme } from '@/shared/styles/theme'
+import { typographyMixin } from '@/shared/ui'
 import styled from '@emotion/styled'
 import { useNavigate } from 'react-router-dom'
-import { PageContainer } from '@/components/common/PageContainer'
-import { Button } from '@/components/common/Button'
-import { ROUTE_PATH } from '@/Router'
+import { PageContainer } from '@/shared/ui/PageContainer'
+import { Button } from '@/shared/ui/Button'
+import { ROUTE_PATH } from '@/app/Router'
 
 // * 404 NotFound 페이지
 export const NotFound = () => {

@@ -1,11 +1,8 @@
+import { Category, Banner, Friends } from '@/widgets'
+import { Trend } from '@/features'
+import { PageContainer } from '@/shared/ui/PageContainer'
 import styled from '@emotion/styled'
-import { Category } from '@/components/home/Category'
-import { Trend } from '@/components/home/Trend/Trend'
-import { Banner } from '@/components/home/Banner'
-import { Friends } from '@/components/home/Friends'
-import { PageContainer } from '@/components/common/PageContainer'
 
-// * 메인
 export const Home = () => {
   return (
     <HomeContainer>
