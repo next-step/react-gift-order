@@ -1,11 +1,13 @@
 import React from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import Modal from '@/components/common/Modal';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
 import * as S from './styles';
 import { Input, InputRow, Label, ErrorMessage } from '@/components/SenderForm/styles';
 import {
   RECEIVER_NAME_ERROR,
-  RECEIVER_PHONE_ERROR,
   PHONE_REGEX_ERROR,
   NAME_LABEL,
   PHONE_LABEL,
@@ -23,17 +25,42 @@ import {
   RECEIVER_TITLE_PREFIX,
 } from './constants';
 
-interface ReceiverFormInput {
-  name: string;
-  phone: string;
-  quantity: number;
-}
+const ReceiverSchema = z.object({
+  name: z.string().nonempty(RECEIVER_NAME_ERROR),
+  phone: z.string().regex(/^010\d{8}$/, PHONE_REGEX_ERROR),
+  quantity: z.number().min(1, QUANTITY_MIN_ERROR),
+});
+type Receiver = z.infer<typeof ReceiverSchema>;
+
+const FormSchema = z.object({
+  receivers: z
+    .array(ReceiverSchema)
+    .min(1)
+    .max(MAX_RECEIVERS, `${MAX_RECEIVERS_HINT_PREFIX}${MAX_RECEIVERS}${MAX_RECEIVERS_HINT_SUFFIX}`)
+    .superRefine((receivers: Receiver[], ctx: z.RefinementCtx) => {
+      const seen = new Set<string>();
+      receivers.forEach((r: Receiver, i: number) => {
+        if (seen.has(r.phone)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: DUPLICATE_PHONE_ERROR,
+            path: ['receivers', i, 'phone'],
+          });
+        } else {
+          seen.add(r.phone);
+        }
+      });
+    }),
+});
+
+type FormValues = z.infer<typeof FormSchema>;
+type Receivers = FormValues['receivers'];
 
 interface ReceiverModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onComplete: (receivers: ReceiverFormInput[]) => void;
-  initialReceivers?: ReceiverFormInput[];
+  onComplete: (receivers: Receivers) => void;
+  initialReceivers?: Receivers;
 }
 
 const ReceiverModal: React.FC<ReceiverModalProps> = ({
@@ -42,11 +69,18 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
   onComplete,
   initialReceivers = [],
 }) => {
-  const { control, register, handleSubmit, formState: { errors }, setError, clearErrors } = useForm<{
-    receivers: ReceiverFormInput[];
-  }>({
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>({
+    resolver: zodResolver(FormSchema),
     defaultValues: {
-      receivers: initialReceivers.length > 0 ? initialReceivers : [{ name: '', phone: '', quantity: 1 }],
+      receivers:
+        initialReceivers.length > 0
+          ? initialReceivers
+          : [{ name: '', phone: '', quantity: 1 }],
     },
     mode: 'onChange',
   });
@@ -55,7 +89,6 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
     control,
     name: 'receivers',
   });
-
 
   const handleAddReceiver = () => {
     if (fields.length < MAX_RECEIVERS) {
@@ -69,24 +102,7 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
     }
   };
 
-  const onSubmit = (data: { receivers: ReceiverFormInput[] }) => {
-    let hasDuplicatePhone = false;
-    const phoneNumbers = new Set<string>();
-
-    data.receivers.forEach((receiver, index) => {
-      if (phoneNumbers.has(receiver.phone)) {
-        setError(`receivers.${index}.phone`, { type: 'manual', message: DUPLICATE_PHONE_ERROR });
-        hasDuplicatePhone = true;
-      } else {
-        phoneNumbers.add(receiver.phone);
-        clearErrors(`receivers.${index}.phone`);
-      }
-    });
-
-    if (hasDuplicatePhone) {
-      return;
-    }
-
+  const onSubmit = (data: FormValues) => {
     onComplete(data.receivers);
     onClose();
   };
@@ -95,7 +111,8 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
     <>
       <S.CancelButton onClick={onClose}>{CANCEL_BUTTON_TEXT}</S.CancelButton>
       <S.FinishButton onClick={handleSubmit(onSubmit)}>
-        {fields.length}{COMPLETE_BUTTON_SUFFIX}
+        {fields.length}
+        {COMPLETE_BUTTON_SUFFIX}
       </S.FinishButton>
     </>
   );
@@ -103,67 +120,73 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
   const modalHeaderContent = (
     <>
       <S.ModalTitle>{MODAL_TITLE}</S.ModalTitle>
-      <S.HintText>{MAX_RECEIVERS_HINT_PREFIX}{MAX_RECEIVERS}{MAX_RECEIVERS_HINT_SUFFIX}</S.HintText>
+      <S.HintText>
+        {MAX_RECEIVERS_HINT_PREFIX}
+        {MAX_RECEIVERS}
+        {MAX_RECEIVERS_HINT_SUFFIX}
+      </S.HintText>
       <S.HintText>{DUPLICATE_PHONE_HINT}</S.HintText>
-      <S.AddButton onClick={handleAddReceiver} disabled={fields.length >= MAX_RECEIVERS}>
+      <S.AddButton
+        onClick={handleAddReceiver}
+        disabled={fields.length >= MAX_RECEIVERS}
+      >
         {ADD_BUTTON_TEXT}
       </S.AddButton>
     </>
   );
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={modalHeaderContent} footerContent={footerContent}>
-
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={modalHeaderContent}
+      footerContent={footerContent}
+    >
       {fields.map((field, index) => (
         <S.ReceiverFormWrapper key={field.id}>
-          <S.ReceiverTitle>{RECEIVER_TITLE_PREFIX}{index + 1}</S.ReceiverTitle>
+          <S.ReceiverTitle>
+            {RECEIVER_TITLE_PREFIX}
+            {index + 1}
+          </S.ReceiverTitle>
           {fields.length > 1 && (
             <S.RemoveButton onClick={() => handleRemoveReceiver(index)}>
               &times;
             </S.RemoveButton>
           )}
+
           <InputRow>
             <Label>{NAME_LABEL}</Label>
-            <Input
-              {...register(`receivers.${index}.name` as const, {
-                required: RECEIVER_NAME_ERROR,
-              })}
-            />
+            <Input {...register(`receivers.${index}.name`)} />
           </InputRow>
           {errors.receivers?.[index]?.name && (
-            <ErrorMessage>{errors.receivers[index]?.name?.message}</ErrorMessage>
+            <ErrorMessage>
+              {errors.receivers[index]?.name?.message}
+            </ErrorMessage>
           )}
+
           <InputRow>
             <Label>{PHONE_LABEL}</Label>
-            <Input
-              {...register(`receivers.${index}.phone` as const, {
-                required: RECEIVER_PHONE_ERROR,
-                pattern: {
-                  value: /^010\d{8}$/,
-                  message: PHONE_REGEX_ERROR,
-                },
-              })}
-            />
+            <Input {...register(`receivers.${index}.phone`)} />
           </InputRow>
           {errors.receivers?.[index]?.phone && (
-            <ErrorMessage>{errors.receivers[index]?.phone?.message}</ErrorMessage>
+            <ErrorMessage>
+              {errors.receivers[index]?.phone?.message}
+            </ErrorMessage>
           )}
+
           <InputRow>
             <Label>{QUANTITY_LABEL}</Label>
             <Input
-              type='number'
-              {...register(`receivers.${index}.quantity` as const, {
-                required: true,
-                min: {
-                  value: 1,
-                  message: QUANTITY_MIN_ERROR,
-                },
+              type="number"
+              {...register(`receivers.${index}.quantity`, {
                 valueAsNumber: true,
               })}
             />
           </InputRow>
           {errors.receivers?.[index]?.quantity && (
-            <ErrorMessage>{errors.receivers[index]?.quantity?.message}</ErrorMessage>
+            <ErrorMessage>
+              {errors.receivers[index]?.quantity?.message}
+            </ErrorMessage>
           )}
         </S.ReceiverFormWrapper>
       ))}
