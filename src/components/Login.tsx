@@ -56,31 +56,13 @@ const spacer48 = css`
 
 const Login = () => {
   const { setUser } = useUserInfo();
-  const { formValue, setValue, isError, setError, loginActivated } =
-    useLoginForm();
+  const { register, handleSubmit, isError, loginActivated } = useLoginForm();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    const field = name as 'email' | 'password';
-
-    setValue(field, value);
-    setError(field, value);
-  };
-
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-
-    if (name === 'email' || name === 'password') {
-      setError(name, value);
-    }
-  };
-
-  const formSubmitted = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const name = formValue.email.split('@')[0];
-    setUser({ name: name, email: formValue.email });
+  const onSubmit = (data: { email: string; password: string }) => {
+    const name = data.email.split('@')[0];
+    setUser({ name, email: data.email });
     const from = location.state?.from?.pathname || ROUTES.HOME;
     navigate(from, { replace: true });
   };
@@ -89,32 +71,25 @@ const Login = () => {
     <main css={mainStyle}>
       <img css={logoStyle} src={kakao_logo} alt="카카오 공식 로고" />
       <section css={sectionStyle}>
-        <form onSubmit={formSubmitted}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <LoginInput
-            name="email"
-            type="email"
+            {...register('email')}
             placeholder="이메일"
-            value={formValue.email}
-            onChange={handleChange}
-            onBlur={handleBlur}
             error={isError.email}
           />
 
           <div css={spacer16} />
 
           <LoginInput
-            name="password"
+            {...register('password')}
             type="password"
             placeholder="비밀번호"
-            value={formValue.password}
-            onChange={handleChange}
-            onBlur={handleBlur}
             error={isError.password}
           />
 
           <div css={spacer48} />
 
-          <button css={buttonStyle} disabled={!loginActivated}>
+          <button css={buttonStyle} disabled={!loginActivated} type="submit">
             로그인
           </button>
         </form>

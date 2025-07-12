@@ -2,6 +2,8 @@ import { css } from '@emotion/react';
 import theme from '@src/styles/tokens/index';
 import templates from '@src/assets/mock/order_card_template';
 import { useState } from 'react';
+import { useFormContext } from 'react-hook-form';
+import type { SenderSchema } from '@/hooks/useOrderFormComplete';
 
 const coverStyle = css`
   width: 100%;
@@ -46,6 +48,7 @@ const mainCardDiv = css`
   padding: 0px 1rem;
   display: flex;
   justify-content: center;
+  box-sizing: border-box;
 `;
 
 const mainCardBox = css`
@@ -86,6 +89,10 @@ const textareaStyle = css`
   border-width: 1px;
   border-radius: 8px;
   border-color: ${theme.colors.borderDefault};
+  &:focus {
+    outline: none;
+    border-color: ${theme.colors.gray700};
+  }
 `;
 
 const inputErrorStyle = css`
@@ -115,21 +122,18 @@ const errorText = css`
   text-align: left;
 `;
 
-interface Props {
-  message: string;
-  onMessageChange: (name: string, value: string) => void;
-  errorMessage?: string;
-}
-
-const PresentCard = ({ message, onMessageChange, errorMessage }: Props) => {
+const PresentCard = () => {
   const [selectedCard, setSelectedCard] = useState(templates[0]);
+
+  const {
+    register,
+    setValue,
+    formState: { errors },
+  } = useFormContext<SenderSchema>();
 
   const handleCardClick = (card: (typeof templates)[0]) => {
     setSelectedCard(card);
-
-    if (!message.trim() || message === selectedCard.defaultTextMessage) {
-      onMessageChange('message', card.defaultTextMessage);
-    }
+    setValue('letter', card.defaultTextMessage, { shouldValidate: true });
   };
 
   return (
@@ -166,14 +170,11 @@ const PresentCard = ({ message, onMessageChange, errorMessage }: Props) => {
       <div css={textDiv}>
         <div css={textBox}>
           <textarea
-            css={[textareaStyle, errorMessage && inputErrorStyle]}
-            value={message}
-            onChange={(e) => onMessageChange('message', e.target.value)}
+            css={[textareaStyle, errors.letter && inputErrorStyle]}
+            {...register('letter')}
             placeholder="메시지를 입력해 주세요"
-            name="message"
-            rows={3}
           />
-          {errorMessage && <p css={errorText}>{errorMessage}</p>}
+          {errors.letter && <p css={errorText}>{errors.letter.message}</p>}
         </div>
       </div>
       <div css={space32} />
