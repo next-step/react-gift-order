@@ -2,6 +2,8 @@ import { FiChevronLeft, FiUser } from "react-icons/fi";
 import styled from "@emotion/styled";
 import { useNavigate } from "react-router-dom";
 import IconButton from "./IconButton";
+import { STORAGE_KEY } from "@/constants/storage";
+import { PATH } from "@/paths";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -12,13 +14,13 @@ export default function Header() {
         <IconButton aria-label="뒤로가기" onClick={() => navigate(-1)}>
           <FiChevronLeft size={24} />
         </IconButton>
-        <Title onClick={() => navigate("/")}>선물하기</Title>
+        <Title onClick={() => navigate(PATH.HOME)}>선물하기</Title>
         <IconButton
           aria-label="마이페이지"
           onClick={() => {
-            const userInfo = sessionStorage.getItem("userInfo");
-            if (userInfo) navigate("/my");
-            else navigate("/login");
+            const userInfo = sessionStorage.getItem(STORAGE_KEY.USER_INFO);
+            if (userInfo) navigate(PATH.MY);
+            else navigate(PATH.LOGIN);
           }}
         >
           <FiUser size={24} />

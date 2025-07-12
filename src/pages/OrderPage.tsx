@@ -1,12 +1,13 @@
 import styled from "@emotion/styled";
-import GiftCardSelector from "@/components/GiftCardSelector";
-import SenderForm from "@/components/SenderForm";
-import ReceiverForm from "@/components/ReceiverForm";
-import GiftInfo from "@/components/GiftInfo";
+import GiftCardSelector from "@/components/order/GiftCardSelector";
+import SenderForm from "@/components/order/SenderForm";
+import ReceiverForm from "@/components/order/ReceiverForm";
+import GiftInfo from "@/components/order/GiftInfo";
 import { useNavigate, useParams } from "react-router-dom";
 import { ranking } from "@/data/ranking";
-import useOrderForm from "./useOrderForm";
+import useOrderForm from "../components/order/useOrderForm";
 import { useState } from "react";
+import type { Receiver } from "@/types/order";
 
 export default function OrderPage() {
   const navigate = useNavigate();
@@ -17,31 +18,32 @@ export default function OrderPage() {
 
   const message = useOrderForm();
   const sender = useOrderForm();
-  const receiver = useOrderForm();
-  const phone = useOrderForm();
 
-  const [quantity, setQuantity] = useState(1);
-  const [quantityError, setQuantityError] = useState(false);
+  const [receiverList, setReceiverList] = useState<Receiver[]>([]);
+
+  const totalQuantity = receiverList.reduce(
+    (sum, receiver) => sum + Number(receiver.quantity),
+    0
+  );
+  const totalPrice = card.price.basicPrice * totalQuantity;
 
   const handleOrder = () => {
     const isMessageValid = message.validate();
     const isSenderValid = sender.validate();
-    const isReceiverValid = receiver.validate();
-    const isPhoneValid = phone.phonevalidate(); 
-    const isQuantityValid = quantity >= 1;
-    setQuantityError(!isQuantityValid);
+    const isQuantityValid = receiverList.length > 0;
 
-    if (!isMessageValid || !isSenderValid || !isReceiverValid || !isPhoneValid || !isQuantityValid) {
-    return;
+    if (!isMessageValid || !isSenderValid || !isQuantityValid) {
+      return;
     }
 
     alert(`주문이 완료되었습니다.
 상품명: ${card.name}
-구매 수량: ${quantity}
-발신자 이름: ${receiver.value}
-메시지: ${message.value}`
-);
-  navigate("/");
+총 구매 수량: ${totalQuantity}
+받는 사람 수: ${receiverList.length}명
+발신자 이름: ${sender.value}
+메시지: ${message.value}`);
+    
+    navigate("/");
   };
 
   return (
@@ -59,24 +61,18 @@ export default function OrderPage() {
       />
       <Divider />
       <ReceiverForm
-        name={receiver.value}
-        onChangeName={receiver.onChange}
-        nameError={receiver.error}
-        phone={phone.value}
-        onChangePhone={phone.onChange}
-        phoneError={phone.error}
-        quantity={quantity}
-        onChangeQuantity={setQuantity}
-        quantityError={quantityError}
+        receiverList={receiverList}
+        setReceiverList={setReceiverList}
       />
       <Divider />
       <GiftInfo />
       <OrderBtn onClick={handleOrder}>
-        {(card.price.basicPrice * quantity).toLocaleString()}원 주문하기
+        {totalPrice.toLocaleString()}원 주문하기
       </OrderBtn>
     </Wrapper>
   );
 }
+
 
 const Wrapper = styled.div`
   max-width: 720px;

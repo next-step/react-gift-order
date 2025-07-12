@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 import Spacing from "@/components/Spacing";
 import { useLoginForm } from "./useLoginForm";
 import { css } from "@emotion/react";
+import { STORAGE_KEY } from "@/constants/storage";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ export default function LoginPage() {
       email,
     };
     
-    sessionStorage.setItem("userInfo", JSON.stringify(userInfo));
+    sessionStorage.setItem(STORAGE_KEY.USER_INFO, JSON.stringify(userInfo));
 
     navigate(from, { replace: true });
   };
