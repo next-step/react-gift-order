@@ -2,12 +2,12 @@
 import { css } from '@emotion/react';
 import { FiArrowLeft, FiUser } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-import theme from '../styles/theme';
-import { useUserManagement } from '../pages/Login/userManagement';
+import theme from '../../../styles/theme';
+import { UserManagement } from '../../Login/contexts/UserManagement';
 
 const NavBar = () => {
   const navigate = useNavigate();
-  const { user } = useUserManagement();
+  const { user } = UserManagement();
 
   const goToBack = () => {
     navigate(-1);

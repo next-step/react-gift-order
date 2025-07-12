@@ -5,7 +5,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { FaUser } from 'react-icons/fa';
 import { MdFace2, MdFace, MdFace6 } from 'react-icons/md';
 
-import { mockItems } from '../../data/mockItems';
+import { mockItems } from '../../../../data/mockItems';
 
 import {
   sectionWrapper,
@@ -17,7 +17,7 @@ import {
 
 import TabButton from '../Shared/TabButton';
 import RankingCard from '../Shared/RankingCard';
-import { useUserManagement } from '../../pages/Login/userManagement';
+import { UserManagement } from '../../../Login/contexts/UserManagement';
 
 const genderTabs = [
   { label: '전체', icon: <FaUser /> },
@@ -31,7 +31,7 @@ const giftTabs = ['받고 싶어한', '많이 선물한', '위시로 받은'];
 const RankingSection = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const { user } = useUserManagement();
+  const { user } = UserManagement();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const initialGender = searchParams.get('gender') || '전체';

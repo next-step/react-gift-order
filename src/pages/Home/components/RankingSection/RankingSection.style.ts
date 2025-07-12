@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css, type Theme as ThemeType } from '@emotion/react';
-import theme from '../../styles/theme';
+import theme from '../../../../styles/theme';
 
 export const sectionWrapper = css`
   margin-top: ${theme.spacing[10]};
@@ -9,7 +9,7 @@ export const sectionWrapper = css`
 export const tabRow = css`
   display: flex;
   justify-content: space-between;
-  width: 700px;
+  width: 95%;
   margin: 0 auto ${theme.spacing[4]};
 `;
 

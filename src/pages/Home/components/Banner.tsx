@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css, useTheme, type Theme as ThemeType } from '@emotion/react';
-import theme from '../styles/theme';
+import theme from '../../../styles/theme';
 
 const bannerStyle = (theme: ThemeType) => css`
   background-color: ${theme.color.semantic.kakaoYellow};

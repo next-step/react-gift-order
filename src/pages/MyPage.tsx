@@ -1,12 +1,12 @@
 /** @jsxImportSource @emotion/react */
 import { useTheme } from '@emotion/react';
-import { useUserManagement } from './Login/userManagement';
+import { UserManagement } from './Login/contexts/UserManagement';
 import { css } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
 
 const MyPage = () => {
   const theme = useTheme();
-  const { user, logout } = useUserManagement();
+  const { user, logout } = UserManagement();
   const navigate = useNavigate();
 
   const name = user?.email.split('@')[0] ?? '사용자';

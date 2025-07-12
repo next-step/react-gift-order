@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import styled from '@emotion/styled';
 import { FaPlus } from 'react-icons/fa';
-import { useUserManagement } from '../pages/Login/userManagement';
+import { UserManagement } from '../../Login/contexts/UserManagement';
 
 const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.color.gray.gray300};
@@ -37,7 +37,7 @@ const Text = styled.span`
 `;
 
 const FriendSelector = () => {
-  const { user } = useUserManagement();
+  const { user } = UserManagement();
   const name = user?.email.split('@')[0];
 
   return (
