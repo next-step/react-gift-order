@@ -263,7 +263,7 @@ const OrderPage = () => {
   }, [isAuthenticated, navigate, productId]);
   
   // 받는 사람 전체 수량 합계 계산
-  const totalQuantity = receivers.reduce((sum, r) => sum + (Number(r.quantity) || 0), 0);
+  const totalQuantity = receivers.reduce((sum, r) => sum + (r.quantity || 0), 0);
   const totalPrice = product.price.sellingPrice * (totalQuantity || 1);
   
   return (
@@ -378,7 +378,7 @@ const OrderPage = () => {
           </button>
         </form>
 
-        {/* 모달 컴포넌트 */}
+        {/* 받는 사람(Receiver) 입력/수정 모달 */}
         {receiverModalOpen && (
           <ReceiverModal
             receivers={receivers}

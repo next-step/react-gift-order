@@ -112,6 +112,7 @@ interface ReceiverModalProps {
   onClose: () => void;
 }
 
+
 function ReceiverModal({ receivers, setReceivers, onClose }: ReceiverModalProps) {
   const methods = useForm({
     defaultValues: {
@@ -119,16 +120,24 @@ function ReceiverModal({ receivers, setReceivers, onClose }: ReceiverModalProps)
     },
     mode: 'onChange',
   });
-  const { control, handleSubmit, getValues} = methods;
+  const { control, handleSubmit, getValues } = methods;
   const { fields, append, remove } = useFieldArray({ control, name: 'receivers' });
 
-  // 전화번호 중복 체크
-  const isPhoneDuplicate = (value: string, idx: number) => {
-    const all = getValues('receivers');
-    return all.filter((r, i) => r.phoneNumber === value && i !== idx).length === 0 || '전화번호가 중복됩니다.';
+  // 받는 사람 추가 버튼 클릭 핸들러 (최대 10명 제한)
+  const handleAddReceiver = () => {
+    if (fields.length < 10) {
+      append({ receiverName: '', phoneNumber: '', quantity: 1 });
+    }
   };
 
-  const onComplete = (data: any) => {
+  // 전화번호 중복 체크 (boolean만 반환)
+  const isPhoneDuplicate = (value: string, idx: number): boolean => {
+    const all = getValues('receivers');
+    const duplicates = all.filter((r, i) => r.phoneNumber === value && i !== idx);
+    return duplicates.length === 0;
+  };
+
+  const onComplete = (data: { receivers: Receiver[] }) => {
     setReceivers(data.receivers);
     onClose();
   };
@@ -144,7 +153,7 @@ function ReceiverModal({ receivers, setReceivers, onClose }: ReceiverModalProps)
                 <p>• 최대 10명까지 추가 할 수 있어요.</p>
                 <p>• 받는 사람의 전화번호를 중복으로 입력할 수 없어요.</p>
               </div>
-              <button type="button" css={addButton} onClick={() => fields.length < 10 && append({ receiverName: '', phoneNumber: '', quantity: 1 })}>추가하기</button>
+              <button type="button" css={addButton} onClick={handleAddReceiver}>추가하기</button>
               <div css={receiverListWrapper}>
                 {fields.map((field, idx) => (
                   <ReceiverInput

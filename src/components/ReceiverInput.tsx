@@ -50,10 +50,10 @@ const wrapper = css({
 
 // 삭제 버튼 스타일
 const deleteButton = css({
-    border: 'none',
-    background: 'none',
-    paddingLeft: 8,
-    fontSize: 24,
+  border: 'none',
+  background: 'none',
+  paddingLeft: 8,
+  fontSize: 24,
 });
 
 // 에러 메시지 스타일
@@ -64,13 +64,22 @@ const errorMessage = css({
   marginBottom: spacing.spacing4,
 });
 
+interface Receiver {
+  receiverName: string;
+  phoneNumber: string;
+  quantity: number;
+}
+interface FormValues {
+  receivers: Receiver[];
+}
+
 function ReceiverInput({ idx, remove, isPhoneDuplicate }: {
   idx: number;
   remove: (index: number) => void;
-  isPhoneDuplicate: (value: string, idx: number) => true | string;
+  isPhoneDuplicate: (value: string, idx: number) => boolean;
 }) {
-  const { control, formState: { errors } } = useFormContext();
-  const receiverErrors = errors.receivers as any;
+  const { control, formState: { errors } } = useFormContext<FormValues>();
+  const receiverErrors = errors.receivers?.[idx];
   return (
     <div css={wrapper}>
       <div>
@@ -94,8 +103,8 @@ function ReceiverInput({ idx, remove, isPhoneDuplicate }: {
           )}
         />
       </div>
-      {receiverErrors?.[idx]?.receiverName && (
-        <div css={errorMessage}>{receiverErrors[idx].receiverName.message}</div>
+      {receiverErrors?.receiverName && (
+        <div css={errorMessage}>{receiverErrors.receiverName.message}</div>
       )}
       <div css={inputContainer}>
         <div css={inputLabel}>전화번호</div>
@@ -105,15 +114,15 @@ function ReceiverInput({ idx, remove, isPhoneDuplicate }: {
           rules={{
             required: '전화번호를 입력하세요.',
             pattern: { value: /^010\d{8}$/, message: '01012341234 형식만 허용' },
-            validate: value => isPhoneDuplicate(value, idx)
+            validate: value => isPhoneDuplicate(value, idx) || '전화번호가 중복됩니다.'
           }}
           render={({ field }) => (
             <input css={inputField} type="text" placeholder="전화번호를 입력하세요." {...field} />
           )}
         />
       </div>
-      {receiverErrors?.[idx]?.phoneNumber && (
-        <div css={errorMessage}>{receiverErrors[idx].phoneNumber.message}</div>
+      {receiverErrors?.phoneNumber && (
+        <div css={errorMessage}>{receiverErrors.phoneNumber.message}</div>
       )}
       <div css={inputContainer}>
         <div css={inputLabel}>수량</div>
@@ -129,8 +138,8 @@ function ReceiverInput({ idx, remove, isPhoneDuplicate }: {
           )}
         />
       </div>
-      {receiverErrors?.[idx]?.quantity && (
-        <div css={errorMessage}>{receiverErrors[idx].quantity.message}</div>
+      {receiverErrors?.quantity && (
+        <div css={errorMessage}>{receiverErrors.quantity.message}</div>
       )}
     </div>
   );
