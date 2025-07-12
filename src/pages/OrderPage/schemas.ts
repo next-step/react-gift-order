@@ -2,12 +2,20 @@ import { z } from "zod";
 import { VALIDATE_LABELS } from "./constants/validateLabels";
 import { validatePhoneNumber } from "./utils/validation";
 import { RECEIVER_SECTION_CONSTANTS } from "./constants/receiverSection";
+import type { OrderCardType } from "@/types/OrderCardType";
 
 export interface MessageCardFormData {
+  messageCard: OrderCardType;
   cardMessage: string;
 }
 
 export const messageCardSchema = z.object({
+  messageCard: z.object({
+    id: z.number(),
+    thumbUrl: z.string(),
+    imageUrl: z.string(),
+    defaultTextMessage: z.string(),
+  }),
   cardMessage: z.string().nonempty(VALIDATE_LABELS.MESSAGE_EMPTY),
 });
 

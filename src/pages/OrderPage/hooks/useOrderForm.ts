@@ -22,8 +22,6 @@ export interface Receiver {
 }
 
 export const useOrderForm = ({ isSubmittedOnce }: UseOrderFormProps) => {
-  const [messageCard, setMessageCard] = useState(orderCardMockData[0]);
-
   const [receivers, setReceivers] = useState<Receiver[]>([]);
 
   const {
@@ -32,13 +30,31 @@ export const useOrderForm = ({ isSubmittedOnce }: UseOrderFormProps) => {
     formState: { errors: cardSelectionErrors },
     setValue,
     getValues: cardSelectionGetValues,
+    watch,
   } = useForm<MessageCardFormData>({
     mode: isSubmittedOnce ? "onChange" : "onSubmit",
     defaultValues: {
-      cardMessage: messageCard.defaultTextMessage,
+      messageCard: orderCardMockData[0],
+      cardMessage: orderCardMockData[0].defaultTextMessage,
     },
     resolver: zodResolver(messageCardSchema),
   });
+
+  const messageCard = watch(FORM_FIELD.MESSAGE_CARD);
+
+  const setMessageCard = (card: (typeof orderCardMockData)[0]) => {
+    setValue(FORM_FIELD.MESSAGE_CARD, card);
+  };
+
+  useEffect(() => {
+    if (messageCard) {
+      setValue(FORM_FIELD.CARD_MESSAGE, messageCard.defaultTextMessage);
+
+      if (isSubmittedOnce) {
+        cardSelectionTrigger(FORM_FIELD.CARD_MESSAGE);
+      }
+    }
+  }, [messageCard, setValue, cardSelectionTrigger, isSubmittedOnce]);
 
   const {
     control: senderControl,
@@ -52,20 +68,6 @@ export const useOrderForm = ({ isSubmittedOnce }: UseOrderFormProps) => {
     },
     resolver: zodResolver(senderSchema),
   });
-
-  useEffect(() => {
-    const selectedCard = orderCardMockData.find(
-      (card) => card.id === messageCard.id
-    );
-
-    if (selectedCard) {
-      setValue(FORM_FIELD.CARD_MESSAGE, selectedCard.defaultTextMessage);
-
-      if (isSubmittedOnce) {
-        cardSelectionTrigger(FORM_FIELD.CARD_MESSAGE);
-      }
-    }
-  }, [messageCard, setValue, cardSelectionTrigger, isSubmittedOnce]);
 
   const validateAllForms = async () => {
     const [cardValid, senderValid] = await Promise.all([
