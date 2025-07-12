@@ -3,6 +3,7 @@ import ReceiverInputItem from '@/components/ReceiverFormSection/ReceiverInputIte
 import { useReceiverForm } from '@/hooks/useReceiverForm';
 import { BUTTON_TEXT, LABELS } from '@/constants/receiverLabels';
 import type { Receiver } from '@/types/receiver';
+import ModalPortal from '../common/ModalPortal';
 
 interface Props {
   onConfirmList: (receivers: Receiver[]) => void;
@@ -44,44 +45,46 @@ const ReceiverModal = ({ onConfirmList, onClose, initialValues }: Props) => {
   };
 
   return (
-    <Overlay>
-      <Modal>
-        <Header>
-          <Title>{LABELS.RECEIVER_MODAL_TITLE}</Title>
-          <Description>{LABELS.RECEIVER_MODAL_DESCRIPTION}</Description>
-        </Header>
+    <ModalPortal>
+      <Overlay>
+        <Modal>
+          <Header>
+            <Title>{LABELS.RECEIVER_MODAL_TITLE}</Title>
+            <Description>{LABELS.RECEIVER_MODAL_DESCRIPTION}</Description>
+          </Header>
 
-        <AddButtonWrapper>
-          <AddButton type="button" onClick={handleAdd} disabled={!canAddMore}>
-            {BUTTON_TEXT.ADD}
-          </AddButton>
-        </AddButtonWrapper>
+          <AddButtonWrapper>
+            <AddButton type="button" onClick={handleAdd} disabled={!canAddMore}>
+              {BUTTON_TEXT.ADD}
+            </AddButton>
+          </AddButtonWrapper>
 
-        <ScrollableContent>
-          <List>
-            {fields.map((field, index) => (
-              <ReceiverInputItem
-                key={field.id}
-                index={index}
-                onDelete={() => handleDelete(index)}
-                register={register}
-                errors={errors}
-                isDuplicate={isDuplicate}
-              />
-            ))}
-          </List>
-        </ScrollableContent>
+          <ScrollableContent>
+            <List>
+              {fields.map((field, index) => (
+                <ReceiverInputItem
+                  key={field.id}
+                  index={index}
+                  onDelete={() => handleDelete(index)}
+                  register={register}
+                  errors={errors}
+                  isDuplicate={isDuplicate}
+                />
+              ))}
+            </List>
+          </ScrollableContent>
 
-        <Footer>
-          <CancelButton type="button" onClick={handleCancel}>
-            {BUTTON_TEXT.CANCEL}
-          </CancelButton>
-          <ConfirmButton type="button" onClick={handleConfirm}>
-            {confirmButtonLabel}
-          </ConfirmButton>
-        </Footer>
-      </Modal>
-    </Overlay>
+          <Footer>
+            <CancelButton type="button" onClick={handleCancel}>
+              {BUTTON_TEXT.CANCEL}
+            </CancelButton>
+            <ConfirmButton type="button" onClick={handleConfirm}>
+              {confirmButtonLabel}
+            </ConfirmButton>
+          </Footer>
+        </Modal>
+      </Overlay>
+    </ModalPortal>
   );
 };
 
