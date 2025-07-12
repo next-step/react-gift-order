@@ -1,23 +1,21 @@
 import Divider from "@/components/common/Divider";
 import styled from "@emotion/styled";
 import Input from "@/pages/Order/components/Input";
-import { useOrderContext } from "@/contexts/orderContext";
+import { useFormContext } from "react-hook-form";
+import type { OrderFormType } from "@/pages/Order/components/Order";
 
 const Sender = () => {
-  const { formData, onChangeOrder, errorMsg } = useOrderContext();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<OrderFormType>();
   return (
     <Content>
       <Divider spacing="1rem" />
       <Title>보내는 사람</Title>
       <Divider spacing="1rem" />
-      <Input
-        name="sender"
-        placeholder="이름을 입력하세요."
-        onChange={onChangeOrder}
-        value={formData.sender}
-        errorMsg={errorMsg.sender}
-      />
-      {!errorMsg.sender && <Msg>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</Msg>}
+      <Input {...register("sender")} placeholder="이름을 입력하세요." errorMsg={errors.sender?.message} />
+      {!errors.sender?.message && <Msg>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</Msg>}
       <Divider spacing="1.5rem" />
     </Content>
   );

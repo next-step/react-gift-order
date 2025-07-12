@@ -1,49 +1,23 @@
 import Divider from "@/components/common/Divider";
 import styled from "@emotion/styled";
-import Input from "@/pages/Order/components/Input";
-import { useOrderContext } from "@/contexts/orderContext";
+import RecipientFieldArray from "./RecipientFieldArray";
 
-const Recipient = () => {
-  const { formData, onChangeOrder, errorMsg } = useOrderContext();
+interface RecipientProps {
+  onOpen: () => void;
+}
+
+const Recipient = ({ onOpen }: RecipientProps) => {
   return (
     <Content>
       <Divider spacing="1rem" />
-      <Title>받는 사람</Title>
+      <Wrapper>
+        <Title>받는 사람</Title>
+        <ModalBtn type="button" onClick={onOpen}>
+          추가
+        </ModalBtn>
+      </Wrapper>
       <Divider spacing="1rem" />
-      <InputWrapper>
-        <InputTitle>이름</InputTitle>
-        <InputWrapper>
-          <Input
-            name="name"
-            placeholder="이름을 입력하세요."
-            value={formData.recipients.name}
-            onChange={onChangeOrder}
-            errorMsg={errorMsg.recipients.name}
-          />
-        </InputWrapper>
-      </InputWrapper>
-      <Divider spacing="0.5rem" />
-      <InputWrapper>
-        <InputTitle>전화번호</InputTitle>
-        <Input
-          name="phone"
-          placeholder="전화번호를 입력하세요."
-          value={formData.recipients.phone}
-          onChange={onChangeOrder}
-          errorMsg={errorMsg.recipients.name}
-        />
-      </InputWrapper>
-      <Divider spacing="0.5rem" />
-      <InputWrapper>
-        <InputTitle>수량</InputTitle>
-        <Input
-          name="quantity"
-          type="number"
-          value={formData.recipients.quantity}
-          onChange={onChangeOrder}
-          errorMsg={errorMsg.recipients.quantity}
-        />
-      </InputWrapper>
+      <RecipientFieldArray />
       <Divider spacing="1.5rem" />
     </Content>
   );
@@ -59,19 +33,27 @@ const Content = styled.div`
   justify-content: center;
   align-items: center;
 `;
+const Wrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
 const Title = styled.p`
   width: 100%;
   font: ${({ theme }) => theme.typography.title2Bold};
   text-align: left;
 `;
-const InputWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.spacing3};
-`;
-const InputTitle = styled.p`
-  min-width: 3.75rem;
-  font: ${({ theme }) => theme.typography.body1Regular};
+const ModalBtn = styled.button`
+  ${({ theme }) => {
+    return `
+      background-color: ${theme.color.backgroundColor.fill}
+      font: ${theme.typography.label1Regular};
+      padding: ${theme.spacing.spacing2} ${theme.spacing.spacing4};
+    `;
+  }}
+  white-space: nowrap;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
 `;
