@@ -54,12 +54,17 @@ const OrderPage = () => {
   };
 
   const onSubmit = (data: FormValues) => {
+    if (receiverList.length === 0) {
+      alert('받는 사람을 한 명 이상 추가해주세요.');
+      return;
+    }
+
     alert(
       `주문이 완료되었습니다.\n` +
         `상품명: ${product.name}\n` +
-        `총 수량: ${totalQuantity}개\n` +
-        `총 가격: ${totalPrice.toLocaleString()}원\n` +
-        `발신자: ${data.senderName}`
+        `구매 수량: ${totalQuantity}\n` +
+        `발신자 이름: ${data.senderName}\n` +
+        `메시지: ${data.textMessage}`
     );
     navigate(ROUTES.HOME);
   };
