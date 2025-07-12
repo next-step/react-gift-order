@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { orderCardMockData } from "@/data/orderCardMockData";
 import {
@@ -44,17 +44,12 @@ export const useOrderForm = ({ isSubmittedOnce }: UseOrderFormProps) => {
 
   const setMessageCard = (card: (typeof orderCardMockData)[0]) => {
     setValue(FORM_FIELD.MESSAGE_CARD, card);
-  };
+    setValue(FORM_FIELD.CARD_MESSAGE, card.defaultTextMessage);
 
-  useEffect(() => {
-    if (messageCard) {
-      setValue(FORM_FIELD.CARD_MESSAGE, messageCard.defaultTextMessage);
-
-      if (isSubmittedOnce) {
-        cardSelectionTrigger(FORM_FIELD.CARD_MESSAGE);
-      }
+    if (isSubmittedOnce) {
+      cardSelectionTrigger(FORM_FIELD.CARD_MESSAGE);
     }
-  }, [messageCard, setValue, cardSelectionTrigger, isSubmittedOnce]);
+  };
 
   const {
     control: senderControl,
