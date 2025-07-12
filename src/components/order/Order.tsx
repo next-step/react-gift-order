@@ -27,35 +27,13 @@ import {
 import type { FormData } from "@/components/order/OrderForm";
 import { css } from "@emotion/react";
 import ReceiverModal from "@/components/order/ReceiveModal";
-
-const ReceiverInfoTable: React.FC<{
-  receivers: { receiverName: string; phoneNumber: string; quantity: number }[];
-}> = ({ receivers }) => (
-  <table css={tableStyle}>
-    <thead>
-      <tr>
-        <th>이름</th>
-        <th>전화번호</th>
-        <th>수량</th>
-      </tr>
-    </thead>
-    <tbody>
-      {receivers.map((r) => (
-        <tr key={r.phoneNumber}>
-          <td>{r.receiverName}</td>
-          <td>{r.phoneNumber}</td>
-          <td>{r.quantity}</td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-);
+import ReceiverInfoTable from "@/components/order/ReceiverInfoTable";
 
 const Order: React.FC = () => {
   const theme = useTheme();
   const [selectedId, setSelectedId] = useState<number>();
   const { id } = useParams<{ id: string }>();
-  const [quantity] = useState(1);
+  const quantity = 1;
   const [totalPrice, setTotalPrice] = useState(0);
   const SenderNameRef = useRef<HTMLInputElement>(null);
   const GiftMessageRef = useRef<HTMLTextAreaElement>(null);
@@ -205,22 +183,4 @@ const ReceiverSection = css`
 const ReceiverHeader = css`
   display: flex;
   justify-content: space-between;
-`;
-
-const tableStyle = css`
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
-
-  th,
-  td {
-    border: 1px solid #ccc;
-    padding: 8px;
-    text-align: center;
-  }
-
-  th {
-    background-color: #f9f9f9;
-    font-weight: bold;
-  }
 `;
