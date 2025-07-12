@@ -1,4 +1,2 @@
-// * Receiver Components Public API
-
-export { ReceiverTable } from './ReceiverTable'
 export { ReceiverAddModal } from './ReceiverAddModal'
+export { ReceiverTable } from './ReceiverTable'

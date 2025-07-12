@@ -1,10 +1,6 @@
-import { Layout } from '@/widgets/layout/Layout'
-import { Home } from '@/pages/Home'
-import { Login } from '@/pages/Login'
-import { NotFound } from '@/pages/NotFound'
+import { Layout } from '@/widgets'
+import { Home, Login, NotFound, MyPage, Order } from '@/pages'
 import { Routes, Route } from 'react-router-dom'
-import { MyPage } from '../pages/MyPage'
-import { Order } from '../pages/Order'
 import { withAuth } from '@/app/hoc/withAuth'
 
 // * 라우터 컴포넌트
