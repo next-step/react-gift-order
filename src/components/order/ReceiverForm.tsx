@@ -11,14 +11,7 @@ import type {
   FieldErrors,
 } from "react-hook-form";
 import Close from "@/components/UI/Close";
-
-type FormValues = {
-  receiver: {
-    name: string;
-    phone: string;
-    count: number;
-  }[];
-};
+import type { FormValues } from "@/types/receiver";
 
 type ReceiverFormProps = {
   index: number;
@@ -33,7 +26,7 @@ const ReceiverForm = ({
   errors,
   remove,
 }: ReceiverFormProps) => {
-  const fieldErrors = errors.receiver?.[index];
+  const fieldErrors = errors.modalReceiver?.[index];
 
   return (
     <>
@@ -55,7 +48,7 @@ const ReceiverForm = ({
             placeholder="이름을 입력하세요."
             error={!!fieldErrors?.name}
             type="text"
-            {...register(`receiver.${index}.name`, {
+            {...register(`modalReceiver.${index}.name`, {
               validate: value => checkNameError(value),
             })}
           />
@@ -71,7 +64,7 @@ const ReceiverForm = ({
             placeholder="전화번호를 입력하세요."
             error={!!fieldErrors?.phone}
             type="text"
-            {...register(`receiver.${index}.phone`, {
+            {...register(`modalReceiver.${index}.phone`, {
               validate: value => checkPhoneError(value),
             })}
           />
@@ -86,7 +79,7 @@ const ReceiverForm = ({
           <Input
             error={!!fieldErrors?.count}
             type="number"
-            {...register(`receiver.${index}.count`, {
+            {...register(`modalReceiver.${index}.count`, {
               validate: value => checkCountError(String(value)),
             })}
           />

@@ -13,12 +13,7 @@ import GiftInformationSection from "@/components/order/GiftInformationSection";
 import { useUserInfo } from "@/contexts/UserInfoContext";
 import { FormProvider, useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
-
-type OrderFormValue = {
-  message: string;
-  sender: string;
-  receiver: { name: string; phone: string; count: number }[];
-};
+import type { OrderFormValue } from "@/types/receiver";
 
 const OrderPage = () => {
   const location = useLocation();

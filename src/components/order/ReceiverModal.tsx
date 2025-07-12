@@ -3,15 +3,8 @@ import styled from "@emotion/styled";
 import DescriptionMessage from "../common/DescriptionMessage";
 import { useFormContext, useFieldArray } from "react-hook-form";
 import ReceiverForm from "./ReceiverForm";
-import { useState, useEffect } from "react";
-
-type FormValues = {
-  receiver: {
-    name: string;
-    phone: string;
-    count: number;
-  }[];
-};
+import { useEffect } from "react";
+import type { FormValues } from "@/types/receiver";
 
 const ReceiverModal = () => {
   const { isOpen, closeModal } = useModal();
@@ -23,21 +16,21 @@ const ReceiverModal = () => {
     setValue,
     formState: { errors },
   } = useFormContext<FormValues>();
-  const { fields, append, remove } = useFieldArray({
+  const {
+    fields: modalFields,
+    append: modalAppend,
+    remove: modalRemove,
+  } = useFieldArray({
     control,
-    name: "receiver",
+    name: "modalReceiver",
   });
-
-  const [initialReceiverList, setInitialReceiverList] = useState<
-    FormValues["receiver"]
-  >([]);
 
   useEffect(() => {
     if (isOpen) {
       const currentReceiver = getValues("receiver");
-      setInitialReceiverList([...currentReceiver]);
+      setValue("modalReceiver", [...currentReceiver]);
     }
-  }, [isOpen, getValues]);
+  }, [isOpen, getValues, setValue]);
 
   if (!isOpen) return null;
 
@@ -45,15 +38,14 @@ const ReceiverModal = () => {
     e.preventDefault();
     e.stopPropagation();
 
-    if (fields.length < 10) {
-      append({ name: "", phone: "", count: 1 });
+    if (modalFields.length < 10) {
+      modalAppend({ name: "", phone: "", count: 1 });
     }
   };
-  const handleCencel = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
 
-    setValue("receiver", initialReceiverList);
     closeModal();
   };
 
@@ -61,10 +53,10 @@ const ReceiverModal = () => {
     e.preventDefault();
     e.stopPropagation();
 
-    const isValid = await trigger("receiver");
+    const isValid = await trigger("modalReceiver");
     if (isValid) {
-      const updated = getValues("receiver");
-      setValue("receiver", [...updated]);
+      const modalData = getValues("modalReceiver");
+      setValue("receiver", [...modalData]);
       closeModal();
     }
   };
@@ -76,30 +68,30 @@ const ReceiverModal = () => {
           <Title>받는 사람</Title>
           <DescriptionMessage message="* 최대 10명까지 추가 할 수 있어요." />
           <DescriptionMessage message="* 받는 사람의 전화번호를 중복으로 입력할 수 없어요." />
-          <PlusButton onClick={handlePlus} disabled={fields.length >= 10}>
+          <PlusButton onClick={handlePlus} disabled={modalFields.length >= 10}>
             추가하기
           </PlusButton>
         </div>
         <FormDiv>
-          {fields.length > 0 &&
-            fields.map((field, index) => (
+          {modalFields.length > 0 &&
+            modalFields.map((field, index) => (
               <div key={field.id}>
                 <ReceiverForm
                   index={index}
                   register={register}
                   errors={errors}
-                  remove={remove}
+                  remove={modalRemove}
                 />
-                {index < fields.length - 1 && <Divider />}
+                {index < modalFields.length - 1 && <Divider />}
               </div>
             ))}
         </FormDiv>
         <CloseDiv>
-          <CloseButton variant="cancel" onClick={handleCencel}>
+          <CloseButton variant="cancel" onClick={handleCancel}>
             취소
           </CloseButton>
           <CloseButton variant="submit" onClick={handleSubmit}>
-            {fields.length}명 완료
+            {modalFields.length}명 완료
           </CloseButton>
         </CloseDiv>
       </ModalBox>
