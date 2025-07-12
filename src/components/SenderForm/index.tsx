@@ -4,16 +4,16 @@ import { Container, Input, Hint, ErrorMessage, Title } from './styles';
 import {
   SENDER_TITLE,
   SENDER_HINT,
-  SENDER_NAME_ERROR,
 } from './constants';
-import type { IFormData } from '@/types/order.d';
 
+interface IFormData {
+  senderName: string;
+}
 interface SenderFormProps {
   register: UseFormRegister<IFormData>;
   errors: FieldErrors<IFormData>;
-  watch: UseFormWatch<IFormData>;
-  productPrice: number;
 }
+
 
 function SenderForm({ register, errors }: SenderFormProps) {
   return (
@@ -21,7 +21,7 @@ function SenderForm({ register, errors }: SenderFormProps) {
       <Container>
         <Title>{SENDER_TITLE}</Title>
         <Input
-          {...register('senderName', { required: SENDER_NAME_ERROR })}
+          {...register('senderName')}
         />
         <Hint>{SENDER_HINT}</Hint>
         {errors.senderName && <ErrorMessage>{errors.senderName.message}</ErrorMessage>}

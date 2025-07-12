@@ -8,7 +8,9 @@ import MessageCard from '@/components/MessageCard';
 import ReceiverSelectBox from '@/components/ReceiverSelectBox';
 import ReceiverModal from '@/components/ReceiverModal';
 import { mockItem } from '@/components/GiftRanking/mockItem';
-import { ORDER_SUCCESS_MESSAGE, formatOrderButtonText } from '@/components/SenderForm/constants';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { ORDER_SUCCESS_MESSAGE, formatOrderButtonText, SENDER_NAME_ERROR } from '@/components/SenderForm/constants';
 import {
   RECEIVER_REQUIRED_MESSAGE,
   FINAL_ORDER_DATA_LOG,
@@ -22,11 +24,13 @@ interface ReceiverFormInput {
   phone: string;
   quantity: number;
 }
-interface IFormData {
-  senderName: string;
-  message: string;
-  receivers: ReceiverFormInput[];
-}
+
+const OrderFormSchema = z.object({
+  senderName: z.string().nonempty(SENDER_NAME_ERROR),
+  message: z.string().optional(),
+});
+
+type OrderFormValues = z.infer<typeof OrderFormSchema>;
 
 function OrderPage() {
   const { productId } = useParams<{ productId: string }>();
@@ -40,15 +44,13 @@ function OrderPage() {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<IFormData>({
-    defaultValues: {
-      senderName: '',
-      message: '',
-    },
+  } = useForm<OrderFormValues>({
+    resolver: zodResolver(OrderFormSchema),
+    defaultValues: { senderName: '', message: '' },
     mode: 'onChange',
   });
 
-  const onSubmit: SubmitHandler<IFormData> = (data) => {
+  const onSubmit: SubmitHandler<OrderFormValues> = (data) => {
     if (receivers.length === 0) {
       alert(RECEIVER_REQUIRED_MESSAGE);
       return;
