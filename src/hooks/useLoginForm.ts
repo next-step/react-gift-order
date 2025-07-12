@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import isEmail from 'validator/lib/isEmail';
+import { z } from 'zod';
 
-function validateEmail(email: string): boolean {
-  return isEmail(email);
-}
+const emailSchema = z.string().email('ID는 이메일 형식으로 입력해주세요.');
 
 export function useLoginForm() {
   const [email, setEmail] = useState('');
@@ -17,7 +15,8 @@ export function useLoginForm() {
   // 이메일 유효성 검사
   const validateEmailField = (value: string) => {
     if (!value) return 'ID를 입력해주세요.';
-    if (!validateEmail(value)) return 'ID는 이메일 형식으로 입력해주세요.';
+    const result = emailSchema.safeParse(value);
+    if (!result.success) return result.error.errors[0].message;
     return '';
   };
 

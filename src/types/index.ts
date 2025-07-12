@@ -43,3 +43,6 @@ export interface GiftOrderForm {
   selectedTemplate: MessageCardTemplate;
   [key: string]: unknown;
 }
+
+export type Recipient = { name: string; phone: string; quantity: number };
+export type RecipientsForm = { recipients: Recipient[] };

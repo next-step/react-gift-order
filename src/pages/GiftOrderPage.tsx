@@ -1,95 +1,111 @@
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { theme } from '@/styles/theme';
 import { NavigationHeader } from '@/components/shared/layout';
 import { FormField } from '@/components/shared/ui';
 import { messageCardTemplates, rankingProducts } from '@/mock/mockData';
-import type { MessageCardTemplate, GiftOrderForm, Product } from '@/types';
-import { useForm } from '@/hooks/useForm';
-import {
-  validateMessage,
-  validateSenderName,
-  validateRecipientName,
-  validateRecipientPhone,
-  validateQuantity,
-} from '@/validators';
+import type { MessageCardTemplate, Product, Recipient } from '@/types';
+import { useForm, useFieldArray } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import RecipientModal from '@/components/features/gift-order/RecipientModal';
+import { RecipientTable } from '@/components/features/gift-order';
+import { orderSchema } from '@/schemas/giftOrderSchemas';
 
 interface GiftOrderPageProps {
   product?: Product;
 }
 
+type OrderForm = z.infer<typeof orderSchema>;
+
 export default function GiftOrderPage({
   product = rankingProducts[0],
 }: GiftOrderPageProps) {
   const navigate = useNavigate();
-
-  const initialFormData: GiftOrderForm = {
-    message: messageCardTemplates[0].defaultTextMessage,
-    senderName: '',
-    recipientName: '',
-    recipientPhone: '',
-    quantity: 1,
-    selectedTemplate: messageCardTemplates[0],
-  };
-
-  const validateForm = (values: GiftOrderForm) => {
-    const errors: Partial<Record<keyof GiftOrderForm, string>> = {};
-
-    const messageError = validateMessage(values.message);
-    if (messageError) errors.message = messageError;
-
-    const senderError = validateSenderName(values.senderName);
-    if (senderError) errors.senderName = senderError;
-
-    const recipientNameError = validateRecipientName(values.recipientName);
-    if (recipientNameError) errors.recipientName = recipientNameError;
-
-    const phoneError = validateRecipientPhone(values.recipientPhone);
-    if (phoneError) errors.recipientPhone = phoneError;
-
-    const quantityError = validateQuantity(values.quantity);
-    if (quantityError) errors.quantity = quantityError;
-
-    return errors;
-  };
+  const modalBodyRef = useRef<HTMLDivElement>(null);
 
   const {
-    values: formData,
-    errors,
-    handleChange,
-    validateForm: validate,
-  } = useForm<GiftOrderForm>(initialFormData, validateForm);
+    control,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    getValues,
+    watch,
+    register,
+  } = useForm<OrderForm>({
+    resolver: zodResolver(orderSchema),
+    defaultValues: {
+      senderName: '',
+      message: messageCardTemplates[0].defaultTextMessage,
+      selectedTemplate: messageCardTemplates[0],
+      recipients: [],
+    },
+  });
 
-  const handleTemplateSelect = (template: MessageCardTemplate) => {
-    // 템플릿 선택 시 관련 상태들을 함께 업데이트
-    updateTemplateSelection(template);
-  };
+  const selectedTemplate = watch('selectedTemplate');
 
-  const updateTemplateSelection = (template: MessageCardTemplate) => {
-    handleChange('message', template.defaultTextMessage);
-    handleChange('selectedTemplate', template);
-  };
+  const { fields } = useFieldArray({
+    control,
+    name: 'recipients',
+  });
 
-  const handleInputChange = (
-    field: keyof GiftOrderForm,
-    value: string | number
-  ) => {
-    handleChange(field, value);
-  };
+  const [isRecipientModalOpen, setIsRecipientModalOpen] = useState(false);
 
-  const handleSubmit = () => {
-    if (validate()) {
-      const orderMsg = `주문이 완료되었습니다!\n\n상품명: ${displayProductName}\n구매수량: ${formData.quantity}\n발신자 이름: ${formData.senderName}\n메시지: ${formData.message}`;
-      alert(orderMsg);
-      navigate('/');
-    }
+  const onSubmit = (data: OrderForm) => {
+    const totalQuantity = data.recipients.reduce(
+      (sum: number, r: Recipient) => sum + r.quantity,
+      0
+    );
+    alert(
+      '주문이 완료되었습니다.' +
+        '\n상품명: ' +
+        displayProductName +
+        '\n구매 수량: ' +
+        totalQuantity +
+        '\n발신자 이름: ' +
+        data.senderName +
+        '\n메시지: ' +
+        data.message
+    );
+    navigate('/');
   };
 
   const handleBackClick = () => {
     navigate(-1);
   };
 
+  const handleTemplateSelect = (template: MessageCardTemplate) => {
+    setValue('message', template.defaultTextMessage);
+    setValue('selectedTemplate', template);
+  };
+
   const displayProductName = product.name.replace(/\s\d+$/, '');
+
+  const openModal = () => {
+    setIsRecipientModalOpen(true);
+  };
+
+  const handleModalSave = (
+    recipients: { name: string; phone: string; quantity: number }[]
+  ) => {
+    setValue('recipients', recipients);
+    setIsRecipientModalOpen(false);
+  };
+
+  const calculateTotalQuantity = (
+    recipients: { quantity: number }[]
+  ): number => {
+    return recipients.reduce((sum, recipient) => sum + recipient.quantity, 0);
+  };
+
+  const calculateTotalPrice = (
+    unitPrice: number,
+    recipients: { quantity: number }[]
+  ): number => {
+    const totalQuantity = calculateTotalQuantity(recipients);
+    return unitPrice * totalQuantity;
+  };
 
   return (
     <AppContainer>
@@ -102,9 +118,8 @@ export default function GiftOrderPage({
               {messageCardTemplates.map(template => (
                 <TemplateThumb
                   key={template.id}
-                  isSelected={formData.selectedTemplate.id === template.id}
+                  isSelected={selectedTemplate.id === template.id}
                   onClick={() => handleTemplateSelect(template)}
-                  hasError={!!errors.recipientPhone}
                 >
                   <img
                     src={template.thumbUrl || '/placeholder.svg'}
@@ -116,7 +131,7 @@ export default function GiftOrderPage({
 
             <MessageCardPreview>
               <img
-                src={formData.selectedTemplate.imageUrl || '/placeholder.svg'}
+                src={selectedTemplate.imageUrl || '/placeholder.svg'}
                 alt="선택된 메시지 카드"
               />
             </MessageCardPreview>
@@ -124,12 +139,11 @@ export default function GiftOrderPage({
           <Separator />
 
           <MessageSection>
-            <FormField label="메시지" error={errors.message}>
+            <FormField error={errors.message?.message}>
               <TextArea
-                value={formData.message}
-                onChange={e => handleInputChange('message', e.target.value)}
+                {...register('message')}
                 placeholder="축하해요"
-                hasError={!!errors.message}
+                hasError={!!errors.message?.message}
               />
             </FormField>
           </MessageSection>
@@ -138,81 +152,33 @@ export default function GiftOrderPage({
           <FormSection>
             <SectionTitle>보내는 사람</SectionTitle>
             <FormField
-              label="발신자 이름"
-              error={errors.senderName}
+              error={errors.senderName?.message}
               helpText="* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다."
             >
               <Input
                 type="text"
-                value={formData.senderName}
-                onChange={e => handleInputChange('senderName', e.target.value)}
+                {...register('senderName')}
                 placeholder="이름을 입력하세요"
-                hasError={!!errors.senderName}
+                hasError={!!errors.senderName?.message}
               />
             </FormField>
           </FormSection>
           <Separator />
-
           <FormSection>
-            <SectionTitle>받는 사람</SectionTitle>
-            <HorizontalFormField>
-              <HorizontalLabel htmlFor="recipientName">이름</HorizontalLabel>
-              <InputWithErrorWrapper>
-                <HorizontalInput
-                  id="recipientName"
-                  type="text"
-                  value={formData.recipientName}
-                  onChange={e =>
-                    handleInputChange('recipientName', e.target.value)
-                  }
-                  placeholder="이름을 입력하세요"
-                  hasError={!!errors.recipientName}
-                />
-                {errors.recipientName && (
-                  <ErrorMessage>{errors.recipientName}</ErrorMessage>
-                )}
-              </InputWithErrorWrapper>
-            </HorizontalFormField>
-            <HorizontalFormField>
-              <HorizontalLabel htmlFor="recipientPhone">
-                전화번호
-              </HorizontalLabel>
-              <InputWithErrorWrapper>
-                <HorizontalInput
-                  id="recipientPhone"
-                  type="tel"
-                  value={formData.recipientPhone}
-                  onChange={e =>
-                    handleInputChange('recipientPhone', e.target.value)
-                  }
-                  placeholder="전화번호를 입력하세요"
-                  hasError={!!errors.recipientPhone}
-                />
-                {errors.recipientPhone && (
-                  <ErrorMessage>{errors.recipientPhone}</ErrorMessage>
-                )}
-              </InputWithErrorWrapper>
-            </HorizontalFormField>
-            <HorizontalFormField>
-              <HorizontalLabel htmlFor="quantity">수량</HorizontalLabel>
-              <InputWithErrorWrapper>
-                <HorizontalInput
-                  id="quantity"
-                  type="number"
-                  value={formData.quantity}
-                  onChange={e =>
-                    handleInputChange(
-                      'quantity',
-                      Number.parseInt(e.target.value) || 0
-                    )
-                  }
-                  hasError={!!errors.quantity}
-                />
-                {errors.quantity && (
-                  <ErrorMessage>{errors.quantity}</ErrorMessage>
-                )}
-              </InputWithErrorWrapper>
-            </HorizontalFormField>
+            <RecipientHeader>
+              <SectionTitle>받는 사람</SectionTitle>
+              <EditButton onClick={openModal}>추가</EditButton>
+            </RecipientHeader>
+            {fields.length === 0 ? (
+              <EmptyRecipientContainer>
+                <EmptyRecipientText>받는 사람이 없습니다.</EmptyRecipientText>
+                <EmptyRecipientSubText>
+                  받는 사람을 추가해주세요.
+                </EmptyRecipientSubText>
+              </EmptyRecipientContainer>
+            ) : (
+              <RecipientTable fields={fields} errors={errors} />
+            )}
           </FormSection>
           <Separator />
 
@@ -230,9 +196,20 @@ export default function GiftOrderPage({
             </ProductInfo>
           </ProductSection>
         </FormContainer>
+        <RecipientModal
+          isOpen={isRecipientModalOpen}
+          onClose={() => setIsRecipientModalOpen(false)}
+          initialRecipients={getValues('recipients')}
+          onSave={handleModalSave}
+          modalBodyRef={modalBodyRef}
+        />
 
-        <OrderButton onClick={handleSubmit}>
-          {product.price.sellingPrice * formData.quantity}원 주문하기
+        <OrderButton onClick={handleSubmit(onSubmit)}>
+          {calculateTotalPrice(
+            product.price.sellingPrice,
+            getValues('recipients')
+          )}
+          원 주문하기
         </OrderButton>
       </MobileViewport>
     </AppContainer>
@@ -301,23 +278,16 @@ const ProductSection = styled.div`
 
 const TemplateThumb = styled.button<{
   isSelected: boolean;
-  hasError?: boolean;
 }>`
   flex-shrink: 0;
   width: 80px;
   height: 55px;
   border: 3px solid
-    ${({ isSelected, hasError, theme }) =>
-      hasError ? 'none' : isSelected ? theme.colors.gray1000 : 'none'};
+    ${({ isSelected, theme }) => (isSelected ? theme.colors.gray1000 : 'none')};
   border-radius: 10px;
   background: none;
   cursor: pointer;
   transition: all 0.2s ease;
-
-  &:hover {
-    border-color: ${({ hasError, theme }) =>
-      hasError ? 'none' : theme.colors.blue500};
-  }
 
   &:active {
     transform: scale(0.95);
@@ -359,20 +329,20 @@ const TemplateScroller = styled.div`
   overflow-x: auto;
   gap: 8px;
   padding: 12px 0;
-  margin-bottom: 24px;
+  margin-bottom: ${theme.spacing.spacing6};
   border-radius: 12px;
-  background: #fff;
+  background: ${theme.colors.default};
   &::-webkit-scrollbar {
     height: 8px;
     border-radius: 8px;
-    background: #f0f0f0;
+    background: ${theme.colors.gray200};
   }
   &::-webkit-scrollbar-thumb {
-    background: #d1d1d1;
+    background: ${theme.colors.gray400};
     border-radius: 8px;
   }
   &::-webkit-scrollbar-track {
-    background: #f0f0f0;
+    background: ${theme.colors.gray200};
     border-radius: 8px;
   }
 `;
@@ -390,7 +360,7 @@ const Input = styled.input<{ hasError?: boolean }>`
   &:focus {
     outline: none;
     border-color: ${props =>
-      props.hasError ? theme.colors.critical : theme.colors.blue700};
+      props.hasError ? theme.colors.critical : theme.colors.gray700};
   }
 
   &::placeholder {
@@ -413,18 +383,12 @@ const TextArea = styled.textarea<{ hasError?: boolean }>`
   &:focus {
     outline: none;
     border-color: ${props =>
-      props.hasError ? theme.colors.critical : theme.colors.blue700};
+      props.hasError ? theme.colors.critical : theme.colors.gray600};
   }
 
   &::placeholder {
     color: ${theme.colors.textPlaceholder};
   }
-`;
-
-const ErrorMessage = styled.div`
-  color: ${theme.colors.critical};
-  font-size: ${theme.typography.label2Regular.fontSize};
-  margin-top: ${theme.spacing.spacing1};
 `;
 
 const ProductInfo = styled.div`
@@ -494,37 +458,50 @@ const OrderButton = styled.button`
   }
 `;
 
-const HorizontalFormField = styled.div`
+const RecipientHeader = styled.div`
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  margin-bottom: ${theme.spacing.spacing4};
+  margin-bottom: ${theme.spacing.spacing3};
+`;
 
-  &:last-child {
-    margin-bottom: 0;
+const EditButton = styled.button`
+  padding: ${theme.spacing.spacing2} ${theme.spacing.spacing4};
+  background: ${theme.colors.gray200};
+  border-radius: 8px;
+  font-size: ${theme.typography.body2Regular.fontSize};
+  color: ${theme.colors.textDefault};
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: ${theme.colors.gray300};
+  }
+
+  &:active {
+    background: ${theme.colors.gray400};
   }
 `;
 
-const HorizontalLabel = styled.label`
-  min-width: 72px;
-  font-size: ${theme.typography.body1Bold.fontSize};
-  font-weight: ${theme.typography.title2Regular.fontWeight};
-  color: ${theme.colors.textDefault};
-  margin-right: ${theme.spacing.spacing3};
-`;
-
-const HorizontalInput = styled(Input)`
-  flex: 1;
-  margin-bottom: 0;
-  ${({ hasError, theme }) =>
-    hasError &&
-    `
-      border-color: ${theme.colors.critical} !important;
-      box-shadow: none;
-    `}
-`;
-
-const InputWithErrorWrapper = styled.div`
-  flex: 1;
+const EmptyRecipientContainer = styled.div`
+  border: 1px solid ${theme.colors.borderDefault};
+  border-radius: 8px;
+  padding: ${theme.spacing.spacing6} ${theme.spacing.spacing4};
+  text-align: center;
+  background: ${theme.colors.default};
+  color: ${theme.colors.textSub};
+  min-height: 50px;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+const EmptyRecipientText = styled.div`
+  font-size: ${theme.typography.body1Regular.fontSize};
+  margin-bottom: ${theme.spacing.spacing1};
+`;
+
+const EmptyRecipientSubText = styled.div`
+  font-size: ${theme.typography.body2Regular.fontSize};
 `;

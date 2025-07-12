@@ -51,33 +51,28 @@ h6 {
   isolation: isolate;
 }
 
-/* Remove list styles */
 ul,
 ol {
   list-style: none;
 }
 
-/* Remove text decoration */
 a {
   text-decoration: none;
   color: inherit;
 }
 
-/* Remove button styles */
 button {
   background: none;
   border: none;
   cursor: pointer;
 }
 
-/* Remove input styles */
 input,
 textarea {
   border: none;
   outline: none;
 }
 
-/* Remove table border spacing */
 table {
   border-collapse: collapse;
   border-spacing: 0;

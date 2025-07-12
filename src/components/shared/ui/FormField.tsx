@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import { theme } from '@/styles/theme';
 
 interface FormFieldProps {
   label?: string;
@@ -37,7 +38,7 @@ const FieldWrapper = styled.div<{ direction: 'row' | 'column' }>`
   display: flex;
   flex-direction: ${props => props.direction};
   align-items: ${props => (props.direction === 'row' ? 'center' : 'stretch')};
-  margin-bottom: 24px;
+  margin-bottom: ${theme.spacing.spacing3};
   &:last-child {
     margin-bottom: 0;
   }
@@ -45,22 +46,22 @@ const FieldWrapper = styled.div<{ direction: 'row' | 'column' }>`
 
 const Label = styled.label`
   min-width: 72px;
-  font-size: 15px;
-  font-weight: 700;
-  color: #222;
-  margin-right: 16px;
+  font-size: ${theme.typography.body2Bold.fontSize};
+  font-weight: ${theme.typography.body2Bold.fontWeight};
+  color: ${theme.colors.textDefault};
+  margin-right: ${theme.spacing.spacing4};
 `;
 
 const ErrorMessage = styled.div`
-  color: #e74c3c;
-  font-size: 13px;
-  margin-top: 4px;
+  color: ${theme.colors.critical};
+  font-size: ${theme.typography.body2Regular.fontSize};
+  margin-top: ${theme.spacing.spacing1};
 `;
 
 const HelpText = styled.div`
-  color: #888;
-  font-size: 12px;
-  margin-top: 4px;
+  color: ${theme.colors.textSub};
+  font-size: ${theme.typography.label1Regular.fontSize};
+  margin-top: ${theme.spacing.spacing1};
 `;
 
 const InputWrapper = styled.div`
