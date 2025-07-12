@@ -39,7 +39,6 @@ export const ReceiverAddModal = () => {
     handleSubmit,
     formState: { errors },
     reset,
-    setError,
   } = modalForm
 
   // * useFieldArray로 동적 폼 관리
@@ -72,40 +71,7 @@ export const ReceiverAddModal = () => {
 
   // * 폼 제출 핸들러
   const onSubmit = handleSubmit((data) => {
-    // 전화번호 중복 체크
-    const phoneNumbers = data.receivers.map((r: { phone: string }) => r.phone)
-    const phoneMap = new Map<string, number[]>()
-
-    // 중복된 전화번호와 해당 인덱스들 찾기
-    phoneNumbers.forEach((phone: string, index: number) => {
-      if (phone.trim()) {
-        if (!phoneMap.has(phone)) {
-          phoneMap.set(phone, [])
-        }
-        phoneMap.get(phone)!.push(index)
-      }
-    })
-
-    // 중복된 전화번호가 있는지 확인하고 에러 설정
-    let hasDuplicate = false
-    for (const indices of phoneMap.values()) {
-      if (indices.length > 1) {
-        // 중복된 모든 필드에 에러 설정
-        indices.forEach((index: number) => {
-          setError(`receivers.${index}.phone`, {
-            type: 'manual',
-            message: '중복된 전화번호입니다.',
-          })
-        })
-        hasDuplicate = true
-      }
-    }
-
-    if (hasDuplicate) {
-      return // 중복이 있으면 제출하지 않음
-    }
-
-    // 실제 메인 form에 데이터 반영
+    // ! 실제 메인 form에 데이터 반영
     setValue('receivers', data.receivers)
     closeModal()
   })
