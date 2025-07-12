@@ -327,7 +327,7 @@ export const OrderPage: React.FC = () => {
         </MainCharacter>
       </CharacterSection>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} id="order-form">
         <FormSection>
           <FormGroup>
             <FormLabel>메시지</FormLabel>
@@ -375,13 +375,6 @@ export const OrderPage: React.FC = () => {
               </ProductDetails>
             </ProductItem>
           </ProductInfo>
-          <OrderButton type="submit" disabled={recipients.length === 0}>
-            {(
-              selectedProduct.price.sellingPrice *
-              recipients.reduce((sum, r) => sum + r.quantity, 0)
-            ).toLocaleString()}
-            원 주문하기
-          </OrderButton>
         </FormSection>
       </form>
       {/* 받는 사람 추가/수정 모달 */}
@@ -394,6 +387,13 @@ export const OrderPage: React.FC = () => {
       />
 
       <SuccessModal showSuccessModal={successModal.isOpen} onClose={successModal.closeModal} />
+
+      <OrderButton form="order-form" type="submit" disabled={recipients.length === 0}>
+        {(
+          selectedProduct.price.sellingPrice * recipients.reduce((sum, r) => sum + r.quantity, 0)
+        ).toLocaleString()}
+        원 주문하기
+      </OrderButton>
     </Container>
   );
 };
