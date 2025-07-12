@@ -10,13 +10,13 @@ import ProtectedRoute from './components/ProtectedRoute'
 import { AuthProvider } from './contexts/AuthContext'
 import OrderPage from './pages/OrderPage'
 
-const PATHS = {
+export const PATHS = {
   HOME: '/',
   LOGIN: '/login',
   NOT_FOUND: '*',
   ORDER: '/order/:productId',
   MY: '/my',
-}
+}as const
 const authProtected = (element: React.ReactNode) => (
   <ProtectedRoute>{element}</ProtectedRoute>
 )
