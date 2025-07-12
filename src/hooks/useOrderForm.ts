@@ -1,14 +1,29 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useReceiver } from '@/contexts/ReceiverContext';
+import { z } from 'zod';
 import { orders } from '@/data/orders';
 import { type RankingItem } from '@/data/ranking';
 import { type TextAreaChangeHandler, type InputChangeHandler } from '@/components';
-import { 
-  type CardState,
-  type FormData,
-  type ValidationErrors, 
-  validateOrderForm 
-} from '@/utils/validation/orderForm';
+
+interface CardState {
+  selectedCardId: number;
+  message: string;
+}
+
+interface FormData {
+  senderName: string;
+}
+
+interface ValidationErrors {
+  message: string;
+  senderName: string;
+}
+
+const orderValidationSchema = z.object({
+  message: z.string().min(1, '메시지를 입력해주세요.'),
+  senderName: z.string().min(1, '보내는 사람 이름을 입력해주세요.'),
+});
 
 interface UseOrderFormProps {
   product?: RankingItem;
@@ -16,6 +31,7 @@ interface UseOrderFormProps {
 
 export const useOrderForm = ({ product }: UseOrderFormProps = {}) => {
   const navigate = useNavigate();
+  const { receiverList } = useReceiver();
 
   const [cardState, setCardState] = useState<CardState>({
     selectedCardId: orders[0]?.id || 904,
@@ -24,17 +40,11 @@ export const useOrderForm = ({ product }: UseOrderFormProps = {}) => {
 
   const [formData, setFormData] = useState<FormData>({
     senderName: '',
-    receiverName: '',
-    receiverPhone: '',
-    quantity: 1,
   });
 
   const [errors, setErrors] = useState<ValidationErrors>({
     message: '',
     senderName: '',
-    receiverName: '',
-    receiverPhone: '',
-    quantity: '',
   });
 
   const selectedCard = useMemo(() => {
@@ -73,51 +83,47 @@ export const useOrderForm = ({ product }: UseOrderFormProps = {}) => {
     clearError('senderName');
   };
 
-  const handleReceiverNameChange: InputChangeHandler = (e) => {
-    setFormData(prev => ({
-      ...prev,
-      receiverName: e.target.value.trim(),
-    }));
-    clearError('receiverName');
-  };
-
-  const handleReceiverPhoneChange: InputChangeHandler = (e) => {
-    setFormData(prev => ({
-      ...prev,
-      receiverPhone: e.target.value.trim(),
-    }));
-    clearError('receiverPhone');
-  };
-
-  const handleQuantityChange: InputChangeHandler = (e) => {
-    const quantity = parseInt(e.target.value, 10) || 0;
-    setFormData(prev => ({
-      ...prev,
-      quantity,
-    }));
-    clearError('quantity');
-  };
-
   const validateForm = (): boolean => {
-    const { isValid, errors: validationErrors } = validateOrderForm(
-      cardState.message,
-      formData.senderName,
-      formData.receiverName,
-      formData.receiverPhone,
-      formData.quantity
-    );
-    
-    setErrors(validationErrors);
-    return isValid;
+    if (receiverList.length === 0) {
+      alert('받는 사람을 추가해주세요.');
+      return false;
+    }
+
+    const result = orderValidationSchema.safeParse({
+      message: cardState.message,
+      senderName: formData.senderName,
+    });
+
+    if (!result.success) {
+      const newErrors: ValidationErrors = {
+        message: '',
+        senderName: '',
+      };
+
+      result.error.issues.forEach((issue) => {
+        const field = issue.path[0] as keyof ValidationErrors;
+        newErrors[field] = issue.message;
+      });
+
+      setErrors(newErrors);
+      return false;
+    }
+
+    setErrors({ message: '', senderName: '' });
+    return true;
   };
 
   const handleOrder = () => {
     if (validateForm()) {
+      const totalQuantity = receiverList.reduce((sum, receiver) => sum + receiver.quantity, 0);
+      const receiverNames = receiverList.map(receiver => receiver.name).join(', ');
+      
       const orderInfo = `주문이 완료되었습니다.
 
 상품명: ${product?.name || '선택된 상품 없음'}
-구매수량: ${formData.quantity}개
+구매수량: ${totalQuantity}개
 발신자이름: ${formData.senderName}
+받는사람: ${receiverNames}
 메시지: ${cardState.message}`;
 
       alert(orderInfo);
@@ -133,9 +139,6 @@ export const useOrderForm = ({ product }: UseOrderFormProps = {}) => {
     handleCardClick,
     handleMessageChange,
     handleSenderNameChange,
-    handleReceiverNameChange,
-    handleReceiverPhoneChange,
-    handleQuantityChange,
     handleOrder,
   };
 }; 

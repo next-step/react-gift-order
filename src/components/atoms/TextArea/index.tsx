@@ -1,7 +1,5 @@
-import React from 'react';
 import * as S from './styles';
-
-export type TextAreaChangeHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+import { type TextAreaChangeHandler } from '@/components';
 
 interface TextAreaProps {
   value: string;

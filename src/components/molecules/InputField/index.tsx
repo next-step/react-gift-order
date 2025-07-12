@@ -1,34 +1,37 @@
 import React from 'react';
 import { Input, Label, Text } from '@/components';
+import { type InputChangeHandler, type InputBlurHandler } from '@/components';
 import * as S from './styles';
-
-export type InputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => void;
 
 interface InputFieldProps {
   label?: string;
   placeholder?: string;
-  value: string;
-  onChange: InputChangeHandler;
-  type?: 'text' | 'number' | 'tel';
+  type?: 'text' | 'number' | 'tel' | 'password' | 'email';
   description?: string;
   labelMinWidth?: string;
   layout?: 'vertical' | 'horizontal';
   error?: string;
   showError?: boolean;
+  name?: string;
+  onChange?: InputChangeHandler;
+  onBlur?: InputBlurHandler;
+  value?: string;
 }
 
-const InputField = ({
+const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(({
   label,
   placeholder,
-  value,
-  onChange,
   type = 'text',
   description,
   labelMinWidth,
   layout = 'vertical',
   error,
   showError = true,
-}: InputFieldProps) => {
+  name,
+  onChange,
+  onBlur,
+  value,
+}, ref) => {
   return (
     <S.Container layout={layout}>
       <S.InputRow layout={layout}>
@@ -39,12 +42,15 @@ const InputField = ({
         )}
         <S.InputWrapper>
           <Input
+            ref={ref}
             type={type}
             placeholder={placeholder}
-            value={value}
-            onChange={onChange}
             style={{ width: '100%' }}
             hasError={!!error}
+            name={name}
+            onChange={onChange}
+            onBlur={onBlur}
+            value={value}
           />
         </S.InputWrapper>
       </S.InputRow>
@@ -60,6 +66,8 @@ const InputField = ({
       )}
     </S.Container>
   );
-};
+});
+
+InputField.displayName = 'InputField';
 
 export default InputField; 

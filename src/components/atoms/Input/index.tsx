@@ -1,34 +1,43 @@
 import React from 'react';
-import { type InputChangeHandler } from '@/components';
 import * as S from './styles';
+import { type InputChangeHandler, type InputBlurHandler } from '../..';
 
 interface InputProps {
-  type?: 'text' | 'number' | 'tel';
+  type?: 'text' | 'number' | 'tel' | 'password' | 'email';
   placeholder?: string;
-  value: string;
-  onChange: InputChangeHandler;
   style?: React.CSSProperties;
   hasError?: boolean;
+  name?: string;
+  onChange?: InputChangeHandler;
+  onBlur?: InputBlurHandler;
+  value?: string;
 }
 
-const Input = ({
+const Input = React.forwardRef<HTMLInputElement, InputProps>(({
   type = 'text',
   placeholder,
-  value,
-  onChange,
   style,
   hasError = false,
-}: InputProps) => {
+  name,
+  onChange,
+  onBlur,
+  value,
+}, ref) => {
   return (
     <S.Input
+      ref={ref}
       type={type}
       placeholder={placeholder}
-      value={value}
-      onChange={onChange}
       style={style}
       hasError={hasError}
+      name={name}
+      onChange={onChange}
+      onBlur={onBlur}
+      value={value}
     />
   );
-};
+});
+
+Input.displayName = 'Input';
 
 export default Input; 

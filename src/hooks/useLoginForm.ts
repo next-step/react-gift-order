@@ -2,6 +2,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useInput } from './useInput';
 import { validateEmail, validatePassword } from '@/utils/validation/login';
+import { type FormSubmitHandler } from '@/components';
 
 export const useLoginForm = () => {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ export const useLoginForm = () => {
 
   const isFormValid = !validateEmail(email.value) && !validatePassword(password.value);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit: FormSubmitHandler = (e) => {
     e.preventDefault();
 
     if (!isFormValid) {
