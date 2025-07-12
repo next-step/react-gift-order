@@ -1,4 +1,4 @@
-import { LOGIN_CONTENT } from '@/entities/user/loginContent'
+import { LOGIN_CONTENT } from '@/entities/user'
 import { theme } from '@/shared/styles/theme'
 import { typographyMixin } from '@/shared/ui'
 import styled from '@emotion/styled'

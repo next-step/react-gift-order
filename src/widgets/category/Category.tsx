@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { categoryMock } from '@/entities/product/categoryMock'
+import { categoryMock } from '@/entities/product'
 import { theme } from '@/shared/styles/theme'
 import { Link } from 'react-router-dom'
 

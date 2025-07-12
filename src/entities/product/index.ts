@@ -1,5 +1,7 @@
 // * Product Entity Public API
 
-// Mock 데이터
-export { productListMock } from './productListMock'
-export { categoryMock } from './categoryMock'
+// Data re-exports
+export * from './data'
+
+// Schema re-exports
+export * from './schema'

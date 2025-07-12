@@ -1,4 +1,4 @@
-import { productListMock } from '@/entities/product/productListMock'
+import { productListMock } from '@/entities/product'
 import { theme } from '@/shared/styles/theme'
 import styled from '@emotion/styled'
 import { useState, useEffect } from 'react'

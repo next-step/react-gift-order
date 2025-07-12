@@ -2,7 +2,7 @@ import { createContext, useContext, useState, type ReactNode } from 'react'
 import { useForm, type UseFormReturn } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { orderFormSchema, type OrderFormData } from '@/entities/order'
-import { orderCardMock } from '@/entities/order/orderCardMock'
+import { orderCardMock } from '@/entities/order'
 import type { CardData } from '@/features/order/types'
 
 // * 주문 폼 컨텍스트 타입
