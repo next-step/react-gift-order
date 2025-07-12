@@ -39,8 +39,6 @@ const OrderForm = ({ onSubmitCallback }: OrderFormProps) => {
   });
 
   const onSubmit = (data: FormData) => {
-    console.log("제출된 데이터:", data);
-    alert("주문 완료!");
     if (onSubmitCallback) {
       onSubmitCallback(data);
     }
@@ -51,7 +49,6 @@ const OrderForm = ({ onSubmitCallback }: OrderFormProps) => {
       <button
         type="button"
         onClick={() => {
-          console.log(fields.length);
           append({ receiverName: "", phoneNumber: "", quantity: 1 });
         }}
         disabled={fields.length >= 10}

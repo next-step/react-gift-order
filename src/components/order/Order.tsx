@@ -9,7 +9,6 @@ import {
   WrapperStyle,
   MessageStyle,
   FormSectionWrapperStyle,
-  // ReceiverFormStyle,
   InputRowStyle,
   TextStyle,
   TinyTextStyle,
