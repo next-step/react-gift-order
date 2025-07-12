@@ -4,6 +4,7 @@ import OrderFormInput from '@src/components/OrderFormInput';
 import RecipientList from '@src/components/RecipientList';
 import { useFormContext } from 'react-hook-form';
 import type { OrderSchema } from '@src/hooks/useOrderForm';
+import type { SenderSchema } from '@src/hooks/useOrderFormComplete';
 
 const coverStyle = css`
   width: 100%;
@@ -89,9 +90,9 @@ interface Props {
 
 const OrderForm = ({ onOpenRecipientModal, recipients = [] }: Props) => {
   const {
-    register,
-    formState: { errors },
-  } = useFormContext<OrderSchema>();
+    register: registerSender,
+    formState: { errors: errorsSender },
+  } = useFormContext<SenderSchema>();
 
   return (
     <>
@@ -100,11 +101,11 @@ const OrderForm = ({ onOpenRecipientModal, recipients = [] }: Props) => {
         <p css={pTitle}>보내는 사람</p>
         <div css={space12} />
         <OrderFormInput
-          {...register('senderName')}
+          {...registerSender('senderName')}
           placeholder="이름을 입력하세요."
-          error={errors.senderName?.message}
+          error={errorsSender.senderName?.message}
         />
-        {!errors.senderName && (
+        {!errorsSender.senderName && (
           <p css={noticeP}>
             * 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.
           </p>

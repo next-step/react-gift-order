@@ -3,7 +3,7 @@ import theme from '@src/styles/tokens/index';
 import templates from '@src/assets/mock/order_card_template';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import type { OrderSchema } from '@/hooks/useOrderForm';
+import type { SenderSchema } from '@/hooks/useOrderFormComplete';
 
 const coverStyle = css`
   width: 100%;
@@ -129,11 +129,11 @@ const PresentCard = () => {
     register,
     setValue,
     formState: { errors },
-  } = useFormContext<OrderSchema>();
+  } = useFormContext<SenderSchema>();
 
   const handleCardClick = (card: (typeof templates)[0]) => {
     setSelectedCard(card);
-    setValue('message', card.defaultTextMessage);
+    setValue('message', card.defaultTextMessage, { shouldValidate: true });
   };
 
   return (
