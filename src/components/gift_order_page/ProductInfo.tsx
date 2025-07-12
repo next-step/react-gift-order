@@ -1,4 +1,4 @@
-import useOrderInfo from '@/hooks/useOrderInfo';
+import useProductInfo from '@/hooks/useProductInfo';
 import giftItemData from '@/mock_data/giftItems';
 import styled from '@emotion/styled';
 import { useEffect } from 'react';
@@ -79,28 +79,30 @@ const PriceValue = styled.div`
 `;
 
 export const ProductInfo = () => {
-  const { product } = useOrderInfo();
   const { id } = useParams();
   if (!id) throw new Error('id가 없습니다');
   const parsedId = parseInt(id!);
+  const currentGift = giftItemData[parsedId];
+  const { setId, setName, setPrice, setBrand } = useProductInfo();
 
   useEffect(() => {
-    product.setId(parsedId);
-    product.setName(giftItemData[parsedId].name);
-    product.setPrice(giftItemData[parsedId].price.basicPrice);
-  }, [product, parsedId]);
+    setId(currentGift.id);
+    setName(currentGift.name);
+    setPrice(currentGift.price.basicPrice);
+    setBrand(currentGift.brandInfo.name);
+  });
 
   return (
     <Container>
       <Label>상품 정보</Label>
       <Body>
-        <ProductImg src={giftItemData[parsedId].imageURL} />
+        <ProductImg src={currentGift.imageURL} />
         <Info>
-          <Name>{giftItemData[parsedId].name}</Name>
-          <Brand>{giftItemData[parsedId].brandInfo.name}</Brand>
+          <Name>{currentGift.name}</Name>
+          <Brand>{currentGift.brandInfo.name}</Brand>
           <Price>
             <PriceLabel>상품가</PriceLabel>
-            <PriceValue>{giftItemData[parsedId].price.basicPrice}원</PriceValue>
+            <PriceValue>{currentGift.price.basicPrice}원</PriceValue>
           </Price>
         </Info>
       </Body>

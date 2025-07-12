@@ -1,7 +1,8 @@
-import useOrderInfo from '@/hooks/useOrderInfo';
-import type { inputStyle } from '@/types/inputStyle';
+import type { InputStyle } from '@/types/inputStyle';
+import type { FormValues } from '@/types/orderFormType';
 import styled from '@emotion/styled';
 import { useCallback, useEffect, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 const Container = styled.div`
   display: flex;
@@ -63,17 +64,21 @@ const ErrorText = styled.div`
 `;
 
 export const SenderInput = () => {
-  const { sender, error } = useOrderInfo();
-  const [senderNameInputFieldStyle, setsenderNameInputFieldStyle] = useState<inputStyle>('idle');
+  const [senderNameInputFieldStyle, setsenderNameInputFieldStyle] = useState<InputStyle>('idle');
   const [isClicked, setIsClicked] = useState(false);
+  const {
+    register,
+    trigger,
+    formState: { errors },
+  } = useFormContext<FormValues>();
 
   const handleInputFieldStyle = useCallback(() => {
-    let inputStatus: inputStyle = 'idle';
+    let inputStatus: InputStyle = 'idle';
 
     if (isClicked) {
       inputStatus = 'isClicked';
     } else {
-      if (error.senderNameError) {
+      if (errors.senderName?.message) {
         inputStatus = 'error';
       } else {
         inputStatus = 'idle';
@@ -81,7 +86,7 @@ export const SenderInput = () => {
     }
 
     setsenderNameInputFieldStyle(inputStatus);
-  }, [isClicked, error]);
+  }, [isClicked, errors.senderName]);
 
   useEffect(() => {
     handleInputFieldStyle();
@@ -91,22 +96,17 @@ export const SenderInput = () => {
     <Container>
       <Label>보내는 사람</Label>
       <InputField
+        {...register('senderName', {
+          required: '이름을 입력해주세요.',
+          onChange: async () => await trigger('senderName'),
+        })}
         senderNameInputFieldStyle={senderNameInputFieldStyle}
-        value={sender.name}
         placeholder={'이름을 입력하세요.'}
-        onChange={(e) => {
-          sender.setName(e.target.value);
-          error.setTargetSenderName('modifying..');
-        }}
-        onFocus={() => {
-          setIsClicked(true);
-        }}
-        onBlur={() => {
-          setIsClicked(false);
-        }}
+        onFocus={() => setIsClicked(true)}
+        onBlur={() => setIsClicked(false)}
       />
-      {error.senderNameError ? (
-        <ErrorText>{error.senderNameError}</ErrorText>
+      {errors.senderName?.message ? (
+        <ErrorText>{errors.senderName?.message}</ErrorText>
       ) : (
         <Description>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</Description>
       )}

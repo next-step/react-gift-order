@@ -5,8 +5,9 @@ import { Spacing } from '@/components/gift_order_page/Spacing';
 import { SenderInput } from '@/components/gift_order_page/SenderInput';
 import { ProductInfo } from '@/components/gift_order_page/ProductInfo';
 import { OrderButton } from '@/components/gift_order_page/OrderButton';
-import { OrderInfoProvider } from '@/providers/OrderInfoProvider';
 import { RecipientListTable } from '@/components/gift_order_page/RecipientListTable';
+import { OrderInfoFormProvider } from '@/providers/OrderInfoFormProvider';
+import { ProductInfoProvider } from '@/providers/ProductInfoProvider';
 
 const Container = styled.div`
   display: flex;
@@ -23,19 +24,21 @@ const Container = styled.div`
 
 const GiftOrder = () => {
   return (
-    <OrderInfoProvider>
-      <Container>
-        <TopNavBar title="선물하기" mainPath="/" />
-        <GiftMessageCardTemplates />
-        <Spacing />
-        <SenderInput />
-        <Spacing />
-        <RecipientListTable />
-        <Spacing />
-        <ProductInfo />
-        <OrderButton />
-      </Container>
-    </OrderInfoProvider>
+    <OrderInfoFormProvider>
+      <ProductInfoProvider>
+        <Container>
+          <TopNavBar title="선물하기" mainPath="/" />
+          <GiftMessageCardTemplates />
+          <Spacing />
+          <SenderInput />
+          <Spacing />
+          <RecipientListTable />
+          <Spacing />
+          <ProductInfo />
+          <OrderButton />
+        </Container>
+      </ProductInfoProvider>
+    </OrderInfoFormProvider>
   );
 };
 

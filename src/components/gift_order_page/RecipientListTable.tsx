@@ -1,9 +1,10 @@
 import styled from '@emotion/styled';
 import { Modal } from '../Modal';
-import { useState } from 'react';
-import { RecipientInputInModal } from './RecipientInputInModal';
-import useOrderInfo from '@/hooks/useOrderInfo';
+import { useEffect, useState } from 'react';
+import { RecipientInput } from './RecipientInput';
 import { CompleteButton } from './CompleteButton';
+import { useFieldArray, useFormContext } from 'react-hook-form';
+import type { FormValues } from '@/types/orderFormType';
 
 const Container = styled.div`
   display: flex;
@@ -84,8 +85,9 @@ const Table = styled.div`
   overflow: hidden;
 `;
 
-const Attribute = styled.div`
-  ${({ theme }) => theme.typography.label1Bold};
+const Attribute = styled.div<{ isLabel: boolean }>`
+  ${({ theme, isLabel }) =>
+    isLabel ? theme.typography.label1Bold : theme.typography.label1Regular};
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -94,7 +96,7 @@ const Attribute = styled.div`
   width: 100%;
   height: 2.7rem;
   padding-left: 1rem;
-  background-color: ${({ theme }) => theme.colors.gray100};
+  background-color: ${({ theme, isLabel }) => (isLabel ? theme.colors.gray100 : 'white')};
 `;
 
 const ModalBody = styled.div`
@@ -176,10 +178,30 @@ const CancelButton = styled.button`
   font-size: 0.9rem;
 `;
 
+const MAX_NUMBER_OF_RECIPIENTS = 10;
+
 export const RecipientListTable = () => {
-  const { recipient } = useOrderInfo();
   const [isEmpty, setIsEmpty] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const { control, watch } = useFormContext<FormValues>();
+  const {
+    fields: recipientFields,
+    append: appendRecipient,
+    remove: removeRecipient,
+  } = useFieldArray<FormValues>({
+    control: control,
+    name: 'recipientInfo',
+  });
+  const recipientInfo = watch('recipientInfo');
+
+  useEffect(() => {
+    if (recipientFields.length === 0) {
+      setIsEmpty(true);
+      return;
+    } else {
+      setIsEmpty(false);
+    }
+  }, [isEmpty, recipientFields]);
 
   return (
     <Container>
@@ -190,7 +212,7 @@ export const RecipientListTable = () => {
             setModalVisible(true);
           }}
         >
-          추가
+          {isEmpty ? '추가' : '수정'}
         </AddButton>
       </Header>
       {isEmpty ? (
@@ -200,27 +222,40 @@ export const RecipientListTable = () => {
         </EmptyTable>
       ) : (
         <Table>
-          <Attribute>이름</Attribute>
-          <Attribute>전화번호</Attribute>
-          <Attribute>수량</Attribute>
+          <Attribute isLabel={true}>이름</Attribute>
+          <Attribute isLabel={true}>전화번호</Attribute>
+          <Attribute isLabel={true}>수량</Attribute>
+          {recipientInfo?.flatMap((recipient) => [
+            <Attribute isLabel={false}>{recipient.recipientName}</Attribute>,
+            <Attribute isLabel={false}>{recipient.phoneNumber}</Attribute>,
+            <Attribute isLabel={false}>{recipient.amount}</Attribute>,
+          ])}
         </Table>
       )}
       <Modal modalVisible={modalVisible}>
         <ModalBody>
           <ModalLabel>받는 사람</ModalLabel>
-          <Description>* 최대 10명까지 추가 할 수 있어요.</Description>
+          <Description>* 최대 {MAX_NUMBER_OF_RECIPIENTS}명까지 추가 할 수 있어요.</Description>
           <Description>* 받는 사람의 전화번호를 중복으로 입력할 수 없어요.</Description>
-          <ModalAddButton>추가하기</ModalAddButton>
+          <ModalAddButton
+            onClick={() => {
+              appendRecipient({
+                recipientName: '',
+                phoneNumber: '',
+                amount: 0,
+              });
+            }}
+          >
+            추가하기
+          </ModalAddButton>
           <List>
-            {recipient.fields.map((field, index) => (
-              <div key={field.id}>
-                <RecipientInputInModal index={index} />
-              </div>
+            {recipientFields.map((field, index) => (
+              <RecipientInput key={field.id} index={index} removeRecipient={removeRecipient} />
             ))}
           </List>
           <ModalBottomBar>
             <CancelButton onClick={() => setModalVisible(false)}>취소</CancelButton>
-            <CompleteButton />
+            <CompleteButton setModalVisible={setModalVisible} />
           </ModalBottomBar>
         </ModalBody>
       </Modal>

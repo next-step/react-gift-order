@@ -2,8 +2,9 @@ import { giftMessageCardTemplatesData } from '@/mock_data/giftMessageCardTemplat
 import styled from '@emotion/styled';
 import { GiftMessageCard } from './GiftMessageCard';
 import { useCallback, useEffect, useState } from 'react';
-import useOrderInfo from '@/hooks/useOrderInfo';
-import type { inputStyle } from '@/types/inputStyle';
+import type { InputStyle } from '@/types/inputStyle';
+import { useFormContext } from 'react-hook-form';
+import type { FormValues } from '@/types/orderFormType';
 
 const Container = styled.div`
   display: flex;
@@ -90,17 +91,21 @@ export const GiftMessageCardTemplates = () => {
   const giftMessageCards = giftMessageCardTemplatesData;
   const [selectedCardId, setSelectedCardId] = useState(giftMessageCards[0].id);
   const index = giftMessageCards.findIndex((item) => item.id === selectedCardId);
-  const [messageInputFieldStyle, setMessageInputFieldStyle] = useState<inputStyle>('idle');
+  const [messageInputFieldStyle, setMessageInputFieldStyle] = useState<InputStyle>('idle');
   const [isClicked, setIsClicked] = useState(false);
-  const { message, setMessage, error } = useOrderInfo();
+  const {
+    register,
+    trigger,
+    formState: { errors },
+  } = useFormContext<FormValues>();
 
   const handleInputFieldStyle = useCallback(() => {
-    let inputStatus: inputStyle = 'idle';
+    let inputStatus: InputStyle = 'idle';
 
     if (isClicked) {
       inputStatus = 'isClicked';
     } else {
-      if (error.messageError) {
+      if (errors.message?.message) {
         inputStatus = 'error';
       } else {
         inputStatus = 'idle';
@@ -108,11 +113,7 @@ export const GiftMessageCardTemplates = () => {
     }
 
     setMessageInputFieldStyle(inputStatus);
-  }, [isClicked, error]);
-
-  useEffect(() => {
-    setMessage(giftMessageCards[index].defaultTextMessage);
-  }, [setMessage, giftMessageCards, index]);
+  }, [isClicked, errors.message]);
 
   useEffect(() => {
     handleInputFieldStyle();
@@ -136,16 +137,16 @@ export const GiftMessageCardTemplates = () => {
       <Card image={giftMessageCards[index].imageUrl} />
       <InputContainer>
         <MessageInputField
+          {...register('message', {
+            required: '메시지를 입력해주세요.',
+            onChange: async () => await trigger('message'),
+          })}
+          value={giftMessageCards[index].defaultTextMessage}
           messageInputFieldStyle={messageInputFieldStyle}
-          value={message}
-          onChange={(e) => {
-            setMessage(e.target.value);
-            error.setTargetMessage('modifying..');
-          }}
           onFocus={() => setIsClicked(true)}
           onBlur={() => setIsClicked(false)}
         />
-        {error.messageError && <ErrorText>{error.messageError}</ErrorText>}
+        {errors.message?.message && <ErrorText>{errors.message?.message}</ErrorText>}
       </InputContainer>
     </Container>
   );

@@ -1,6 +1,7 @@
-import useOrderInfo from '@/hooks/useOrderInfo';
+import useProductInfo from '@/hooks/useProductInfo';
+import type { FormValues } from '@/types/orderFormType';
 import styled from '@emotion/styled';
-import { useEffect, useState } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 const Container = styled.button`
@@ -24,29 +25,32 @@ const Text = styled.div`
 
 export const OrderButton = () => {
   const navigate = useNavigate();
-  const [isValid, setIsValid] = useState(false);
-  const { isFirstTry, message, sender, product, error } = useOrderInfo();
-  const totalPrice = product.price * parseInt(product.amount);
+  const {
+    control,
+    watch,
+    formState: { isValid },
+  } = useFormContext<FormValues>();
+  const { name, price } = useProductInfo();
+  const message = watch('message');
+  const senderName = watch('senderName');
+  const recipientInfo = useWatch({ control, name: 'recipientInfo' });
+  let totalAmount = 0;
+  let totalPrice = 0;
 
-  useEffect(() => {
-    if (!isFirstTry) {
-      setIsValid(!error.messageError && !error.senderNameError && !error.amountError);
-    }
-  }, [error, isFirstTry]);
+  recipientInfo?.forEach((recipientForm) => {
+    totalAmount = totalAmount + Number(recipientForm.amount);
+  });
+  totalPrice = price * totalAmount;
 
   return (
     <Container
-      onClick={() => {
-        error.setTargetMessage(message);
-        error.setTargetSenderName(sender.name);
-        error.setTargetAmount(product.amount);
-
+      onClick={async () => {
         if (isValid) {
           alert(`
             주문이 완료되었습니다.
-            상품명: ${product.name}
-            구매 수량: ${product.amount}
-            발신자 이름: ${sender.name}
+            상품명: ${name}
+            구매 수량: ${totalAmount}
+            발신자 이름: ${senderName}
             메시지: ${message}
           `);
 

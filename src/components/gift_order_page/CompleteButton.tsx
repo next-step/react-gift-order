@@ -1,6 +1,7 @@
-import useOrderInfo from '@/hooks/useOrderInfo';
+import type { FormValues } from '@/types/orderFormType';
 import styled from '@emotion/styled';
-import { useEffect } from 'react';
+import type React from 'react';
+import { useFormContext, type FieldPath } from 'react-hook-form';
 
 const Container = styled.button`
   all: unset;
@@ -20,24 +21,29 @@ const Text = styled.div`
   ${({ theme }) => theme.typography.title2Bold};
 `;
 
-export const CompleteButton = () => {
-  const { isFirstTry, form, recipient, error } = useOrderInfo();
-  const totalPerson = recipient.fields.length;
-
-  useEffect(() => {
-    if (!isFirstTry) {
-      recipient.fields.map((_, index) => {
-        const values = form.getValues();
-
-        error.setTargetRecipientName(values.recipientInfo[index].recipientName);
-        error.setTargetPhoneNumber(values.recipientInfo[index].phoneNumber);
-      });
-    }
-  }, [form, recipient, error, isFirstTry]);
+export const CompleteButton = ({
+  setModalVisible,
+}: {
+  setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  const { watch, trigger } = useFormContext<FormValues>();
+  const recipientInfo = watch('recipientInfo');
 
   return (
-    <Container onClick={() => {}}>
-      <Text>{totalPerson}명 완료</Text>
+    <Container
+      onClick={async () => {
+        const keysToValidate: FieldPath<FormValues>[] = recipientInfo.flatMap((_, index) => [
+          `recipientInfo.${index}.recipientName`,
+          `recipientInfo.${index}.phoneNumber`,
+          `recipientInfo.${index}.amount`,
+        ]) as FieldPath<FormValues>[];
+        const isValid = await trigger(keysToValidate);
+        if (isValid) {
+          setModalVisible(false);
+        }
+      }}
+    >
+      <Text>{recipientInfo.length}명 완료</Text>
     </Container>
   );
 };
