@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import templates from '@src/assets/mock/order_card_template';
 
 export const senderSchema = z.object({
-  message: z.string().min(1, '메시지를 입력해주세요.'),
+  letter: z.string().min(1, '메시지를 입력해주세요.'),
   senderName: z.string().min(1, '이름을 입력해주세요.'),
 });
 
@@ -14,7 +14,7 @@ const useOrderFormComplete = () => {
   const methods = useForm<SenderSchema>({
     resolver: zodResolver(senderSchema),
     defaultValues: {
-      message: templates[0].defaultTextMessage,
+      letter: templates[0].defaultTextMessage,
       senderName: '',
     },
   });

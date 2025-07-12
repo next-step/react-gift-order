@@ -133,7 +133,7 @@ const PresentCard = () => {
 
   const handleCardClick = (card: (typeof templates)[0]) => {
     setSelectedCard(card);
-    setValue('message', card.defaultTextMessage, { shouldValidate: true });
+    setValue('letter', card.defaultTextMessage, { shouldValidate: true });
   };
 
   return (
@@ -170,11 +170,11 @@ const PresentCard = () => {
       <div css={textDiv}>
         <div css={textBox}>
           <textarea
-            css={[textareaStyle, errors.message && inputErrorStyle]}
-            {...register('message')}
+            css={[textareaStyle, errors.letter && inputErrorStyle]}
+            {...register('letter')}
             placeholder="메시지를 입력해 주세요"
           />
-          {errors.message && <p css={errorText}>{errors.message.message}</p>}
+          {errors.letter && <p css={errorText}>{errors.letter.message}</p>}
         </div>
       </div>
       <div css={space32} />
