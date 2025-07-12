@@ -1,15 +1,16 @@
 import ErrorMessage from "../common/ErrorMessage";
 import styled from "@emotion/styled";
 import {
-  checkPhoneError,
   checkCountError,
   checkNameError,
+  checkPhoneError,
 } from "@/utils/validation";
 import type {
   UseFormRegister,
   UseFieldArrayRemove,
   FieldErrors,
 } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import Close from "@/components/UI/Close";
 import type { FormValues } from "@/types/receiver";
 
@@ -26,6 +27,7 @@ const ReceiverForm = ({
   errors,
   remove,
 }: ReceiverFormProps) => {
+  const { getValues } = useFormContext<FormValues>();
   const fieldErrors = errors.modalReceiver?.[index];
 
   return (
@@ -65,7 +67,12 @@ const ReceiverForm = ({
             error={!!fieldErrors?.phone}
             type="text"
             {...register(`modalReceiver.${index}.phone`, {
-              validate: value => checkPhoneError(value),
+              validate: value => {
+                const phones = getValues("modalReceiver").map(
+                  receiver => receiver.phone || "",
+                );
+                return checkPhoneError(value, index, phones);
+              },
             })}
           />
           {fieldErrors?.phone?.message && (

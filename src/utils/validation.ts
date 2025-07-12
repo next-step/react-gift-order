@@ -32,7 +32,14 @@ export const checkNameError = (name: string): string | undefined => {
   return undefined;
 };
 
-export const checkPhoneError = (phone: string): string | undefined => {
+export const checkCountError = (count: string): string | undefined => {
+  if (Number(count) <= 0) {
+    return "구매 수량은 1개 이상이어야 합니다.";
+  }
+  return undefined;
+};
+
+export const checkPhoneBasicError = (phone: string): string | undefined => {
   if (!phone.trim()) {
     return "전화번호를 입력해주세요.";
   } else if (!PHONE_REGEX.test(phone)) {
@@ -41,9 +48,23 @@ export const checkPhoneError = (phone: string): string | undefined => {
   return undefined;
 };
 
-export const checkCountError = (count: string): string | undefined => {
-  if (Number(count) <= 0) {
-    return "구매 수량은 1개 이상이어야 합니다.";
+export const checkPhoneError = (
+  currentPhone: string,
+  currentIndex: number,
+  allPhones: string[],
+): string | undefined => {
+  const basicError = checkPhoneBasicError(currentPhone);
+  if (basicError) {
+    return basicError;
+  }
+
+  const trimmed = currentPhone.trim();
+  const isDuplicate = allPhones.some(
+    (phone, index) => index !== currentIndex && phone.trim() === trimmed,
+  );
+
+  if (isDuplicate) {
+    return "중복된 전화번호가 있습니다.";
   }
   return undefined;
 };
