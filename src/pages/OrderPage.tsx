@@ -21,6 +21,12 @@ export default function OrderPage() {
 
   const [receiverList, setReceiverList] = useState<Receiver[]>([]);
 
+  const totalQuantity = receiverList.reduce(
+    (sum, receiver) => sum + Number(receiver.quantity),
+    0
+  );
+  const totalPrice = card.price.basicPrice * totalQuantity;
+
   const handleOrder = () => {
     const isMessageValid = message.validate();
     const isSenderValid = sender.validate();
@@ -30,15 +36,13 @@ export default function OrderPage() {
       return;
     }
 
-    const totalQuantity = receiverList.reduce((sum, receiver) => sum + Number(receiver.quantity), 0);
-
     alert(`주문이 완료되었습니다.
 상품명: ${card.name}
 총 구매 수량: ${totalQuantity}
 받는 사람 수: ${receiverList.length}명
 발신자 이름: ${sender.value}
-메시지: ${message.value}`
-);
+메시지: ${message.value}`);
+    
     navigate("/");
   };
 
@@ -63,11 +67,12 @@ export default function OrderPage() {
       <Divider />
       <GiftInfo />
       <OrderBtn onClick={handleOrder}>
-        {(card.price.basicPrice * (receiverList.reduce((sum, receiver) => sum + Number(receiver.quantity), 0))).toLocaleString()}원 주문하기
+        {totalPrice.toLocaleString()}원 주문하기
       </OrderBtn>
     </Wrapper>
   );
 }
+
 
 const Wrapper = styled.div`
   max-width: 720px;

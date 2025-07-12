@@ -40,31 +40,36 @@ export default function ReceiverModal({
             <Spacing height="4px" />
             <ReceiverText>
               * 최대 10명까지 추가할 수 있어요.
-              <br /> * 받는 사람의 전화번호를
-              중복으로 입력할 수 없어요.
+              <br /> * 받는 사람의 전화번호를 중복으로 입력할 수 없어요.
             </ReceiverText>
             <Spacing height="8px" />
-            <AddButton 
+            <AddButton
               disabled={validCount >= 10}
-              onClick={() => adderRef.current?.appendReceiver()}>추가하기</AddButton>
+              onClick={() => adderRef.current?.appendReceiver()}
+            >
+              추가하기
+            </AddButton>
           </ReceiverTitleBox>
           <AdderWrapper>
             <ReceiverAdder
-            ref={adderRef}
-            initialReceivers={initialReceivers}
-            onComplete={onComplete}
-            onClose={onClose}
-            onValidCountChange={setValidCount}
-          />
+              ref={adderRef}
+              initialReceivers={initialReceivers}
+              onComplete={onComplete}
+              onClose={onClose}
+              onValidCountChange={setValidCount}
+            />
           </AdderWrapper>
           <ButtonWrapper>
             <CancelButton type="button" onClick={onClose}>
               취소
             </CancelButton>
-            <SubmitButton type="button" onClick={() => adderRef.current?.submitForm()}>
+            <SubmitButton
+              type="button"
+              onClick={() => adderRef.current?.submitForm()}
+            >
               {validCount}명 완료
             </SubmitButton>
-            </ButtonWrapper>
+          </ButtonWrapper>
         </ModalInner>
       </ModalBox>
     </Modal>
@@ -160,7 +165,7 @@ const CancelButton = styled.button`
   ${({ theme }) => theme.typography.label1Regular};
   padding: 12px 24px;
   border-radius: 8px;
-  background-color:${({ theme }) => theme.colors.gray[300]};
+  background-color: ${({ theme }) => theme.colors.gray[300]};
   border: none;
   cursor: pointer;
   transition:
