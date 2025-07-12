@@ -31,7 +31,7 @@ const Login = () => {
         <Input
           onChange={email.onChange}
           onBlur={email.onBlur}
-          css={inputStyle(theme)}
+          css={inputStyle(theme, email.isValid)}
           type="email"
           placeholder="이메일"
           message={email.message}
@@ -39,7 +39,7 @@ const Login = () => {
         <Input
           onChange={password.onChange}
           onBlur={password.onBlur}
-          css={inputStyle(theme)}
+          css={inputStyle(theme, password.isValid)}
           type="password"
           placeholder="패스워드"
           message={password.message}
@@ -99,7 +99,7 @@ const inputContainerStyle = (theme: Theme) => css`
   padding: ${theme.spacing.spacing0};
 `;
 
-const inputStyle = (theme: Theme) => css`
+const inputStyle = (theme: Theme, isFormValid: boolean) => css`
   width: 100%;
   padding: ${theme.spacing.spacing8};
   border: none;
@@ -108,9 +108,7 @@ const inputStyle = (theme: Theme) => css`
   font-weight: ${theme.typography.body1Regular.weight};
   line-height: ${theme.typography.body1Regular.lineHeight};
   outline: none;
-  &:focus {
-    border-color: red;
-  }
+  border-color: ${!isFormValid ? "red" : theme.colors.gray.gray500};
 `;
 
 const containerStyle = () => css`
@@ -118,6 +116,6 @@ const containerStyle = () => css`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-  width: 100%;
+  100vh;
+  width: 100%; : height
 `;
