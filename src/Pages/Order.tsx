@@ -93,11 +93,9 @@ const Order = () => {
   const totalPrice = totalCount * (item?.price.sellingPrice ?? 0);
 
   const handleOrderSubmit = (data: Order) => {
-    if (receivers.length < 1) {
-      setReceiverError(true);
-      return;
-    }
-    setReceiverError(false);
+    const hasNoReceivers = receivers.length < 1;
+    setReceiverError(hasNoReceivers);
+    if (hasNoReceivers) return;
 
     alert(
       `주문 완료!\n상품: ${item?.name}\n수량: ${totalCount}\n보내는 사람: ${data.senderName}\n메시지: ${data.message}`
