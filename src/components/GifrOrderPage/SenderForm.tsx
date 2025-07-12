@@ -20,6 +20,11 @@ const Input = styled.input(({ theme }) => ({
   padding: theme.spacing.spacing3,
   border: `1px solid ${theme.colors.semantic.borderDefault}`,
   borderRadius: theme.spacing.spacing2,
+
+  outline: 'none',
+  '&:focus': {
+    borderColor: theme.colors.semantic.textDefault,
+  },
 }));
 
 const Notice = styled.div(({ theme }) => ({
