@@ -1,8 +1,7 @@
-import { Navigate, useLocation } from 'react-router-dom'
-import type { PropsWithChildren } from 'react'
+import { Navigate, useLocation, Outlet } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 
-export default function RequireAuth({ children }: PropsWithChildren) {
+export default function RequireAuth() {
   const { isLoggedIn } = useAuth()
   const location = useLocation()
 
@@ -10,5 +9,5 @@ export default function RequireAuth({ children }: PropsWithChildren) {
     return <Navigate to="/login" state={{ from: location.pathname }} replace />
   }
 
-  return <>{children}</>
+  return <Outlet />
 }

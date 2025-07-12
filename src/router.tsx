@@ -17,20 +17,17 @@ const router = createBrowserRouter([
     element: <LoginPage />,
   },
   {
-    path: '/profile',
-    element: (
-      <RequireAuth>
-        <MyPage />
-      </RequireAuth>
-    ),
-  },
-    {
-    path: '/order/:id',
-    element: (
-      <RequireAuth>
-        <OrderPage />
-      </RequireAuth>
-    ),
+    element: <RequireAuth />,
+    children: [
+      {
+        path: '/profile',
+        element: <MyPage />,
+      },
+      {
+        path: '/order/:id',
+        element: <OrderPage />,
+      },
+    ],
   },
     {
     path: '*',
