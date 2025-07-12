@@ -12,36 +12,40 @@ export const orderSchema = z
   .object({
     message: z.string().min(1, '메시지를 입력해주세요.'),
     senderName: z.string().min(1, '보내는 사람 이름을 입력해주세요.'),
-    selectedCardId: z
-      .number()
-      .nullable()
-      .refine((v) => v !== null, {
-        message: '카드를 선택해주세요.',
-      }),
+    selectedCardId: z.union([z.number(), z.null()]).refine((v) => v !== null, {
+      message: '카드를 선택해주세요.',
+    }),
     recipients: z
       .array(recipientSchema)
       .min(1, '최소 1명 이상 입력해주세요.')
       .max(10, '최대 10명까지만 입력할 수 있어요.'),
   })
-  .refine(
-    (data) => {
-      const phones = data.recipients.map((r) => r.phone);
-      return new Set(phones).size === phones.length;
-    },
-    {
-      message: '전화번호가 중복되었습니다.',
-      path: ['recipients'],
-    }
-  );
+  .superRefine((data, ctx) => {
+    const phoneMap = new Map<string, number[]>();
 
-// 🔒 타입 명시적으로 선언
+    data.recipients.forEach((recipient, index) => {
+      if (!phoneMap.has(recipient.phone)) {
+        phoneMap.set(recipient.phone, []);
+      }
+      phoneMap.get(recipient.phone)?.push(index);
+    });
+
+    for (const [, indices] of phoneMap.entries()) {
+      if (indices.length > 1) {
+        indices.forEach((i) => {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: '전화번호가 중복되었습니다.',
+            path: ['recipients', i, 'phone'],
+          });
+        });
+      }
+    }
+  });
+
 export type OrderFormData = {
   message: string;
   senderName: string;
   selectedCardId: number | null;
-  recipients: {
-    name: string;
-    phone: string;
-    quantity: number;
-  }[];
+  recipients: { name: string; phone: string; quantity: number }[];
 };
