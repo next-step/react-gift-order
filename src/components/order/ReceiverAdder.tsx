@@ -3,6 +3,8 @@ import { useEffect, forwardRef, useImperativeHandle } from "react";
 import styled from "@emotion/styled";
 import { validateReceivers } from "./validateReceiver";
 import ErrorField from "./ErrorField";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { receiverSchema } from "./receiverShema";
 
 type Receiver = {
   name: string;
@@ -31,6 +33,7 @@ const ReceiverAdder = forwardRef<ReceiverAdderHandle, ReceiverAdderProps>(
       watch,
       formState: { errors },
     } = useForm({
+      resolver: zodResolver(receiverSchema),
       defaultValues: {
         receivers: initialReceivers.length > 0 ? initialReceivers : [],
       },
@@ -49,12 +52,7 @@ const ReceiverAdder = forwardRef<ReceiverAdderHandle, ReceiverAdderProps>(
       },
       submitForm: () => {
         handleSubmit((data) => {
-          const valid = validateReceivers(data.receivers);
-          if (valid.length < data.receivers.length) {
-            alert("모든 정보를 정확히 입력해주세요");
-            return;
-          }
-          onComplete(valid);
+          onComplete(data.receivers);
           onClose();
         })();
       },
@@ -90,8 +88,7 @@ const ReceiverAdder = forwardRef<ReceiverAdderHandle, ReceiverAdderProps>(
               <ReceiverInputLabel>이름</ReceiverInputLabel>
               <RecevierInputWrapper>
                 <ReceiverInput
-                  {...register(`receivers.${idx}.name`, { 
-                    required: "이름을 입력해주세요." })}
+                  {...register(`receivers.${idx}.name`)}
                   placeholder="이름"
                   error={!!errors.receivers?.[idx]?.name}
                 />
@@ -102,20 +99,7 @@ const ReceiverAdder = forwardRef<ReceiverAdderHandle, ReceiverAdderProps>(
               <ReceiverInputLabel>전화번호</ReceiverInputLabel>
               <RecevierInputWrapper>
                 <ReceiverInput
-                  {...register(`receivers.${idx}.phone`, {
-                    required: "전화번호를 입력해주세요.",
-                    pattern: {
-                      value: /^010\d{8}$/,
-                      message: "올바른 전화번호 형식이 아닙니다.",
-                    },
-                    validate: (value) => {
-                      const phones = receivers.map((r) => r.phone);
-                      return (
-                        phones.filter((p) => p === value).length === 1 ||
-                        "중복된 전화번호가 있습니다."
-                      );
-                    },
-                  })}
+                  {...register(`receivers.${idx}.phone`)}
                   placeholder="전화번호"
                   error={!!errors.receivers?.[idx]?.phone}
                 />
@@ -127,11 +111,7 @@ const ReceiverAdder = forwardRef<ReceiverAdderHandle, ReceiverAdderProps>(
               <RecevierInputWrapper>
                 <ReceiverNumberInput
                   {...register(`receivers.${idx}.quantity`, {
-                    required: "구매 수량은 1개 이상이어야 합니다.",
-                    min: {
-                      value: 1,
-                      message: "구매 수량은 1개 이상이어야 합니다.",
-                    }
+                    valueAsNumber: true,
                   })}
                   placeholder="수량"
                   type="number"
