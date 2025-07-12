@@ -4,14 +4,18 @@ import OrderButton from '@components/GifrOrderPage/OrderButton';
 import ProductSummary from '@components/GifrOrderPage/ProductSummary';
 import ReceiveForm from '@components/GifrOrderPage/ReceiveForm';
 import SenderForm from '@components/GifrOrderPage/SenderForm';
+import { useState } from 'react';
 
 const GiftOrderPage = () => {
+  const [sender, setSender] = useState('');
   return (
     <>
       <CardSelector />
       <Divider />
-      <SenderForm />
+      <SenderForm value={sender} onChange={setSender} />
+      <Divider />
       <ReceiveForm />
+      <Divider />
       <ProductSummary />
       <OrderButton />
     </>
