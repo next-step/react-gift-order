@@ -51,12 +51,13 @@ const ReceiverListModal = ({
   useEffect(() => {
     if (open) {
       reset({ receivers: initialReceives });
-      document.body.style.overflow = 'hidden';
     }
-    return () => {
-      document.body.style.overflow = '';
-    };
   }, [open, reset, initialReceives]);
+
+  const handleCancel = () => {
+    reset({ receivers: initialReceives });
+    onClose();
+  };
 
   if (!open) return null;
 
@@ -157,7 +158,7 @@ const ReceiverListModal = ({
           })}
         </ModalContent>
         <ModalButtonWrapper>
-          <ModalCancleButton onClick={onClose}>취소</ModalCancleButton>
+          <ModalCancleButton onClick={handleCancel}>취소</ModalCancleButton>
           <ModalCompleteButton type="submit">
             {fields.length}명 완료
           </ModalCompleteButton>
