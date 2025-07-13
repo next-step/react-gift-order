@@ -122,7 +122,7 @@ const Order: React.FC = () => {
       <div css={ReceiverSection}>
         <div css={ReceiverHeader}>
           <h2>받는 사람</h2>
-          <button onClick={() => setIsModalOpen(true)}>
+          <button css={AddButtonStyle} onClick={() => setIsModalOpen(true)}>
             {receivers.length === 0 ? "추가" : "수정"}
           </button>
         </div>
@@ -191,4 +191,24 @@ const SenderInputStyle = (theme: Theme) => css`
   font-size: ${theme.typography.body1Regular.size};
   border: 1px solid ${theme.colors.gray.gray500};
   border-radius: 6px;
+`;
+
+const AddButtonStyle = (theme: Theme) => css`
+  padding: ${theme.spacing.spacing3} ${theme.spacing.spacing4};
+  background-color: ${theme.colors.yellow.yellow500};
+  border: 1px solid ${theme.colors.yellow.yellow600};
+  border-radius: 6px;
+  font-size: ${theme.typography.body2Bold.size};
+  font-weight: ${theme.typography.body2Bold.weight};
+  color: ${theme.colors.gray.gray1000};
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: ${theme.colors.yellow.yellow600};
+  }
+
+  &:active {
+    background-color: ${theme.colors.yellow.yellow700};
+  }
 `;
