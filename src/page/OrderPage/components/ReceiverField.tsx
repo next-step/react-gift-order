@@ -1,4 +1,11 @@
 import styled from '@emotion/styled';
+import ReceiverModal from './ReceiverModal';
+import { useFieldArray, useFormContext } from 'react-hook-form';
+
+import { createPortal } from 'react-dom';
+import { useState } from 'react';
+import ReceiverInfoArray from './ReceiverInfoArray';
+import type { OrderInfoValues } from '..';
 
 const Container = styled.div`
   width: 100%;
@@ -52,25 +59,43 @@ const MainArea = styled.div`
 `;
 
 interface ReceiverFieldProps {
-  onClick: () => void; // 인자 없고, 반환값 없음
+  watchedData: OrderInfoValues['receiverInfos'];
 }
+const ReceiverField = ({ watchedData }: ReceiverFieldProps) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { control } = useFormContext<OrderInfoValues>();
+  const receiverFieldArray = useFieldArray({
+    control,
+    name: 'receiverInfos',
+  });
 
-const ReceiverField = ({ onClick }: ReceiverFieldProps) => {
   return (
     <>
       <Container>
         <ButtonArea>
           <P>받는사람</P>
-          <Button onClick={onClick}>추가</Button>
+          <Button onClick={() => setIsModalOpen(true)}>추가</Button>
         </ButtonArea>
         <MainArea>
-          <p>
-            받는 사람이 없습니다.
-            <br />
-            받을 사람을 추가해주세요.
-          </p>
+          {receiverFieldArray.fields.length ? (
+            <ReceiverInfoArray receiverFieldArray={receiverFieldArray} data={watchedData} />
+          ) : (
+            <p>
+              받는 사람이 없습니다.
+              <br />
+              받을 사람을 추가해주세요.
+            </p>
+          )}
         </MainArea>
       </Container>
+      {isModalOpen &&
+        createPortal(
+          <ReceiverModal
+            onClose={() => setIsModalOpen(false)}
+            receiverFieldArray={receiverFieldArray}
+          />,
+          document.body
+        )}
     </>
   );
 };

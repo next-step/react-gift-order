@@ -3,12 +3,9 @@ import MessageCardSection from './components/MessageCardSection';
 import MessageInput from './components/MessageInput';
 import SenderInfo from './components/SenderInfo';
 import ProductInfo from './components/ProductInfo';
-import OrderButton from './components/OrderButton';
-import useInput from './hooks/useInput';
-import { useParams } from 'react-router-dom';
 import ReceiverField from './components/ReceiverField';
-import ReceiverModal from './components/ReceiverModal';
-import { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { FormProvider, useForm } from 'react-hook-form';
 
 const Section = styled.section`
   width: 100%;
@@ -17,38 +14,59 @@ const Section = styled.section`
   background-color: ${({ theme }) => theme.colors.semantic.background.default};
 `;
 
+const OrderButton = styled.button`
+  width: 100%;
+  padding: ${({ theme }) => theme.spacing.spacing4};
+  background-color: ${({ theme }) => theme.colors.semantic.brand.kakaoYellow};
+  color: ${({ theme }) => theme.colors.semantic.text.default};
+  font-size: ${({ theme }) => theme.typography.subtitle1Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.subtitle1Regular.fontWeight};
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:disabled {
+    background-color: ${({ theme }) => theme.colors.semantic.brand.kakaoYellowPressed};
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+`;
+export interface OrderInfoValues {
+  message: string;
+  name: string;
+  receiverInfos: { name: string; phoneNumber: string; quantity: number }[];
+}
+
 const OrderPage = () => {
-  const [clicked, setClicked] = useState(false);
-
-  const handleClick = () => {
-    setClicked(!clicked);
-  };
-
   const { id } = useParams<{ id: string }>();
   const index = Number(id);
 
-  const messageInputText = useInput<HTMLTextAreaElement>('textarea', '축하해요.');
-  const senderName = useInput<HTMLInputElement>('text');
-
-  const handleOrderClick = () => {
-    const isTextAreaValid = messageInputText.validate();
-    const isSenderValid = senderName.validate();
-    if (isSenderValid && isTextAreaValid) {
-      alert('주문 성공!');
-    }
+  const onSubmit = () => {
+    alert('주문 성공!');
   };
+
+  const orderForm = useForm<OrderInfoValues>({
+    defaultValues: { message: '축하해요.', name: '', receiverInfos: [] },
+  });
+  const { watch } = orderForm;
+  const watchedReceiverInfos = watch('receiverInfos');
 
   return (
     <>
       <Section>
-        <MessageCardSection />
-        <MessageInput hook={messageInputText} />
-        <SenderInfo hook={senderName} />
-        <ReceiverField onClick={handleClick} />
-        <ProductInfo index={index} />
-        <OrderButton onClick={handleOrderClick} index={index} />
+        <FormProvider {...orderForm}>
+          <form onSubmit={orderForm.handleSubmit(onSubmit)}>
+            <MessageCardSection />
+            <MessageInput orderForm={orderForm} />
+            <SenderInfo orderForm={orderForm} />
+            <ReceiverField watchedData={watchedReceiverInfos} />
+            <ProductInfo index={index} />
+            <OrderButton type="submit">
+              {29000 * watchedReceiverInfos.length}원 주문하기
+            </OrderButton>
+          </form>
+        </FormProvider>
       </Section>
-      {clicked && <ReceiverModal onClick={handleClick} />}
     </>
   );
 };

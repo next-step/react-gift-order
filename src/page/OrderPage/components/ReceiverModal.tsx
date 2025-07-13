@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 
-import { useFieldArray, useForm } from 'react-hook-form';
+import { useFormContext, type UseFieldArrayReturn } from 'react-hook-form';
 import { phoneNumberRegex } from '@/utils/validate';
-// import ReceiverAdded from './ReceiverAdded';
+import type { OrderInfoValues } from '..';
 
 const ModalBackGround = styled.div`
   position: fixed;
@@ -135,136 +135,135 @@ const ButtonCancel = styled.button`
   flex: 1 1 0%;
 `;
 
-interface ReceiverModalProps {
-  onClick: () => void;
-}
-
-interface FormInputValues {
-  receiverInfos: { name: string; phoneNumber: string; quantity: number }[];
+interface ReceiverInfoProps {
+  onClose: () => void;
+  receiverFieldArray: UseFieldArrayReturn<OrderInfoValues, 'receiverInfos', 'id'>;
 }
 const MAX_LENGTH = 10;
 
-const ReceiverModal = ({ onClick }: ReceiverModalProps) => {
-  const onSubmit = () => {
-    alert('제출완료');
-  };
-
-  // ----------------------------
+const ReceiverModal = ({ onClose, receiverFieldArray }: ReceiverInfoProps) => {
   const {
-    register,
-    control,
-    handleSubmit,
     getValues,
+    register,
     formState: { errors },
-  } = useForm<FormInputValues>({ defaultValues: { receiverInfos: [] } });
+    trigger,
+  } = useFormContext<OrderInfoValues>();
 
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: 'receiverInfos',
-  });
+  const { fields, append, remove } = receiverFieldArray;
+
+  const onSubmit = async () => {
+    const isValid = await trigger('receiverInfos');
+
+    if (isValid) {
+      onClose();
+    }
+  };
 
   return (
     <ModalBackGround>
       <ModalWrapper>
         <ModalContainer>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <InfoArea>
-              <TitleText>받는사람</TitleText>
-              <DetailInfoText>
-                * 최대 10명까지 추가 할 수 있어요.
-                <br />* 받는 사람의 전화번호를 중복으로 입력할 수 없어요.
-              </DetailInfoText>
+          {/* <form onSubmit={handleSubmit(onSubmit)}> */}
+          <InfoArea>
+            <TitleText>받는사람</TitleText>
+            <DetailInfoText>
+              * 최대 10명까지 추가 할 수 있어요.
+              <br />* 받는 사람의 전화번호를 중복으로 입력할 수 없어요.
+            </DetailInfoText>
 
-              <ButtonAdd
-                type="button"
-                onClick={() => {
-                  append({ name: '', phoneNumber: '', quantity: 1 });
-                }}
-                disabled={fields.length >= MAX_LENGTH}
-              >
-                추가하기
-              </ButtonAdd>
-            </InfoArea>
+            <ButtonAdd
+              type="button"
+              onClick={() => {
+                append({ name: '', phoneNumber: '', quantity: 1 });
+              }}
+              disabled={fields.length >= MAX_LENGTH}
+            >
+              추가하기
+            </ButtonAdd>
+          </InfoArea>
 
-            <ReceiverAddedContainer>
-              {fields.map((item, index) => (
-                <ReceiverInfoContainer key={item.id}>
-                  <h3>받는 사람 {index + 1}</h3>
-                  <button type="button" onClick={() => remove(index)}>
-                    Delete
-                  </button>
-                  <InputContainer>
-                    <Text>이름</Text>
-                    <InputWrapper>
-                      <Input
-                        type="text"
-                        {...register(`receiverInfos.${index}.name`, {
-                          required: { value: true, message: '이름을 입력하세요.' },
-                          validate: value => (value.trim() === '' ? '이름을 입력해주세요.' : true),
-                        })}
-                        placeholder="이름을 입력하세요."
-                      />
-                      {errors.receiverInfos?.[index]?.name && (
-                        <ErrorMessage>{errors?.receiverInfos?.[index]?.name?.message}</ErrorMessage>
-                      )}
-                    </InputWrapper>
-                  </InputContainer>
-                  <InputContainer>
-                    <Text>전화번호</Text>
-                    <InputWrapper>
-                      <Input
-                        type="text"
-                        {...register(`receiverInfos.${index}.phoneNumber`, {
-                          required: { value: true, message: '전화번호를 입력하세요.' },
-                          pattern: {
-                            value: phoneNumberRegex,
-                            message: '전화번호를 입력하세요.',
-                          },
-                          validate: value => {
-                            const { receiverInfos } = getValues();
-                            const isDuplicated = receiverInfos
-                              .filter((_, i) => i !== index)
-                              .some(info => info.phoneNumber === value);
-                            return !isDuplicated || '중복된 전화번호가 있습니다.';
-                          },
-                        })}
-                        placeholder="전화번호를 입력하세요."
-                      />
+          <ReceiverAddedContainer>
+            {fields.map((item, index) => (
+              <ReceiverInfoContainer key={item.id}>
+                <h3>받는 사람 {index + 1}</h3>
+                <button type="button" onClick={() => remove(index)}>
+                  Delete
+                </button>
+                <InputContainer>
+                  <Text>이름</Text>
+                  <InputWrapper>
+                    <Input
+                      type="text"
+                      {...register(`receiverInfos.${index}.name`, {
+                        required: { value: true, message: '이름을 입력하세요.' },
+                        validate: value => (value.trim() === '' ? '이름을 입력해주세요.' : true),
+                      })}
+                      placeholder="이름을 입력하세요."
+                    />
+                    {errors.receiverInfos?.[index]?.name && (
+                      <ErrorMessage>{errors?.receiverInfos?.[index]?.name?.message}</ErrorMessage>
+                    )}
+                  </InputWrapper>
+                </InputContainer>
+                <InputContainer>
+                  <Text>전화번호</Text>
+                  <InputWrapper>
+                    <Input
+                      type="text"
+                      {...register(`receiverInfos.${index}.phoneNumber`, {
+                        required: { value: true, message: '전화번호를 입력하세요.' },
+                        pattern: {
+                          value: phoneNumberRegex,
+                          message: '전화번호를 입력하세요.',
+                        },
+                        validate: value => {
+                          const { receiverInfos } = getValues();
+                          const isDuplicated = receiverInfos
+                            .filter((_, i) => i !== index)
+                            .some(info => info.phoneNumber === value);
+                          return !isDuplicated || '중복된 전화번호가 있습니다.';
+                        },
+                      })}
+                      placeholder="전화번호를 입력하세요."
+                    />
 
-                      {errors.receiverInfos?.[index]?.phoneNumber && (
-                        <ErrorMessage>
-                          {errors.receiverInfos?.[index]?.phoneNumber?.message}
-                        </ErrorMessage>
-                      )}
-                    </InputWrapper>
-                  </InputContainer>
-                  <InputContainer>
-                    <Text>수량</Text>
-                    <InputWrapper>
-                      <Input
-                        type="number"
-                        {...register(`receiverInfos.${index}.quantity`, {
-                          required: { value: true, message: '수량을 입력하세요.' },
-                          validate: value => value >= 1 || '구매 수량은 1개 이상이어야 해요.',
-                          valueAsNumber: true,
-                        })}
-                      />
-                      {errors.receiverInfos?.[index]?.quantity && (
-                        <ErrorMessage>
-                          {errors?.receiverInfos?.[index]?.quantity?.message}
-                        </ErrorMessage>
-                      )}
-                    </InputWrapper>
-                  </InputContainer>
-                </ReceiverInfoContainer>
-              ))}
-            </ReceiverAddedContainer>
+                    {errors.receiverInfos?.[index]?.phoneNumber && (
+                      <ErrorMessage>
+                        {errors.receiverInfos?.[index]?.phoneNumber?.message}
+                      </ErrorMessage>
+                    )}
+                  </InputWrapper>
+                </InputContainer>
+                <InputContainer>
+                  <Text>수량</Text>
+                  <InputWrapper>
+                    <Input
+                      type="number"
+                      {...register(`receiverInfos.${index}.quantity`, {
+                        required: { value: true, message: '수량을 입력하세요.' },
+                        validate: value => value >= 1 || '구매 수량은 1개 이상이어야 해요.',
+                        valueAsNumber: true,
+                      })}
+                    />
+                    {errors.receiverInfos?.[index]?.quantity && (
+                      <ErrorMessage>
+                        {errors?.receiverInfos?.[index]?.quantity?.message}
+                      </ErrorMessage>
+                    )}
+                  </InputWrapper>
+                </InputContainer>
+              </ReceiverInfoContainer>
+            ))}
+          </ReceiverAddedContainer>
 
-            <ButtonArea>
-              <ButtonCancel onClick={onClick}>취소</ButtonCancel>
-              <ButtonAddDone type="submit">{fields.length}명 완료</ButtonAddDone>
-            </ButtonArea>
-          </form>
+          <ButtonArea>
+            {/* TODO: onClick 구현 */}
+            <ButtonCancel onClick={onClose}>취소</ButtonCancel>
+            <ButtonAddDone type="button" onClick={onSubmit}>
+              {fields.length}명 완료
+            </ButtonAddDone>
+          </ButtonArea>
+          {/* </form> */}
         </ModalContainer>
       </ModalWrapper>
     </ModalBackGround>
