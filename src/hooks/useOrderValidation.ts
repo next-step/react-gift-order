@@ -5,6 +5,7 @@ export interface OrderValidationParams {
   sender: string;
   recipientName: string;
   recipientPhone: string;
+  quantity: number;
 }
 
 export interface OrderValidationErrors {
@@ -12,6 +13,7 @@ export interface OrderValidationErrors {
   sender: boolean;
   recipientName: boolean;
   recipientPhone: boolean;
+  quantity: boolean;
 }
 
 export interface UseOrderValidationReturn {
@@ -20,13 +22,14 @@ export interface UseOrderValidationReturn {
 }
 
 export function useOrderValidation(params: OrderValidationParams): UseOrderValidationReturn {
-  const { message, sender, recipientName, recipientPhone } = params;
+  const { message, sender, recipientName, recipientPhone, quantity } = params;
 
   const [errors, setErrors] = useState<OrderValidationErrors>({
     message: false,
     sender: false,
     recipientName: false,
     recipientPhone: false,
+    quantity: false,
   });
 
   const validate = (): boolean => {
@@ -35,6 +38,7 @@ export function useOrderValidation(params: OrderValidationParams): UseOrderValid
       sender: sender.trim().length === 0,
       recipientName: recipientName.trim().length === 0,
       recipientPhone: recipientPhone.trim().length === 0,
+      quantity: quantity < 1,
     };
 
     setErrors(newErrors);

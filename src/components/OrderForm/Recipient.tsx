@@ -75,6 +75,9 @@ type RecipientProps = {
   onChangePhone: (newPhne: string) => void;
   errorName?: boolean;
   errorPhone?: boolean;
+  quantity: number;
+  onChangeQuantity: (newQty: number) => void;
+  errorQuantity?: boolean;
 };
 
 export const Recipinet = ({
@@ -84,6 +87,9 @@ export const Recipinet = ({
   onChangePhone,
   errorName,
   errorPhone,
+  quantity,
+  onChangeQuantity,
+  errorQuantity,
 }: RecipientProps) => {
   return (
     <Wrapper>
@@ -121,7 +127,14 @@ export const Recipinet = ({
       <InputBoxContainer>
         <InputBoxTitle>수량</InputBoxTitle>
         <InputBoxStyle>
-          <InputBox placeholder="수량을 입력하세요." type="number" value="1" />
+          <InputBox
+            type="number"
+            value={quantity}
+            onChange={(e) => onChangeQuantity(Number(e.target.value))}
+            hasError={errorQuantity}
+            placeholder="수량을 입력하세요."
+          />
+          {errorQuantity && <ErrorMessage>구매 수량은 1개 이상이어야 합니다.</ErrorMessage>}
         </InputBoxStyle>
       </InputBoxContainer>
       <Margin height="24px" />

@@ -28,12 +28,14 @@ const OrderForm = () => {
   const [senderValue, setSenderValue] = useState('');
   const [recipientName, setRecipientName] = useState('');
   const [recipientPhone, setRecipientPhone] = useState('');
+  const [quantity, setQuantity] = useState(1);
 
   const { errors, validate } = useOrderValidation({
     message,
     sender: senderValue,
     recipientName,
     recipientPhone,
+    quantity,
   });
 
   const handleOrder = (e: React.MouseEvent) => {
@@ -65,6 +67,9 @@ const OrderForm = () => {
         onChangePhone={setRecipientPhone}
         errorName={errors.recipientName}
         errorPhone={errors.recipientPhone}
+        quantity={quantity}
+        onChangeQuantity={setQuantity}
+        errorQuantity={errors.quantity}
       />
       <Margin height={'8px'} />
       <ProductInfo product={selectedProduct} />
