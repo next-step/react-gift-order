@@ -18,6 +18,38 @@ interface Props {
   onSave: () => void
 }
 
+const receiverInputs = [
+  {
+    name: 'name',
+    placeholder: '이름',
+    rules: {
+      required: '이름을 입력해주세요.',
+    },
+    type: 'text',
+  },
+  {
+    name: 'phone',
+    placeholder: '전화번호',
+    rules: {
+      required: '전화번호를 입력해주세요.',
+      pattern: {
+        value: /^010\d{8}$/,
+        message: '올바른 전화번호 형식이 아니에요.',
+      },
+    },
+    type: 'text',
+  },
+  {
+    name: 'quantity',
+    placeholder: '수량',
+    rules: {
+      required: '수량을 입력해주세요.',
+      min: { value: 1, message: '1개 이상이어야 해요.' },
+    },
+    type: 'number',
+  },
+] as const
+
 export function ReceiverModal({
   fields,
   register,
@@ -33,50 +65,20 @@ export function ReceiverModal({
         <Header>
           <strong>받는 사람</strong>
         </Header>
-
         {fields.map((field, index) => (
           <InputGroup key={field.id}>
-            <div>
-              <input
-                placeholder="이름"
-                {...register(`receivers.${index}.name`, {
-                  required: '이름을 입력해주세요.',
-                })}
-              />
-              {errors.receivers?.[index]?.name && (
-                <Error>{errors.receivers[index]?.name?.message}</Error>
-              )}
-            </div>
-
-            <div>
-              <input
-                placeholder="전화번호"
-                {...register(`receivers.${index}.phone`, {
-                  required: '전화번호를 입력해주세요.',
-                  pattern: {
-                    value: /^010\d{8}$/,
-                    message: '올바른 전화번호 형식이 아니에요.',
-                  },
-                })}
-              />
-              {errors.receivers?.[index]?.phone && (
-                <Error>{errors.receivers[index]?.phone?.message}</Error>
-              )}
-            </div>
-
-            <div>
-              <input
-                type="number"
-                placeholder="수량"
-                {...register(`receivers.${index}.quantity`, {
-                  required: '수량을 입력해주세요.',
-                  min: { value: 1, message: '1개 이상이어야 해요.' },
-                })}
-              />
-              {errors.receivers?.[index]?.quantity && (
-                <Error>{errors.receivers[index]?.quantity?.message}</Error>
-              )}
-            </div>
+            {receiverInputs.map(({ name, placeholder, rules, type }) => (
+              <div key={name}>
+                <input
+                  type={type}
+                  placeholder={placeholder}
+                  {...register(`receivers.${index}.${name}` as const, rules)}
+                />
+                {errors.receivers?.[index]?.[name] && (
+                  <Error>{errors.receivers[index]?.[name]?.message}</Error>
+                )}
+              </div>
+            ))}
 
             <button type="button" onClick={() => remove(index)}>
               삭제
