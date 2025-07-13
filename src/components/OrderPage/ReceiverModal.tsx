@@ -7,6 +7,7 @@ import type {
   FieldArrayWithId,
 } from 'react-hook-form'
 import type { FormValues } from './OrderForm'
+import { useReceiverInput } from '@/hooks/useReceiverInput'
 
 interface Props {
   fields: FieldArrayWithId<FormValues, 'receivers', 'id'>[]
@@ -18,37 +19,7 @@ interface Props {
   onSave: () => void
 }
 
-const receiverInputs = [
-  {
-    name: 'name',
-    placeholder: '이름',
-    rules: {
-      required: '이름을 입력해주세요.',
-    },
-    type: 'text',
-  },
-  {
-    name: 'phone',
-    placeholder: '전화번호',
-    rules: {
-      required: '전화번호를 입력해주세요.',
-      pattern: {
-        value: /^010\d{8}$/,
-        message: '올바른 전화번호 형식이 아니에요.',
-      },
-    },
-    type: 'text',
-  },
-  {
-    name: 'quantity',
-    placeholder: '수량',
-    rules: {
-      required: '수량을 입력해주세요.',
-      min: { value: 1, message: '1개 이상이어야 해요.' },
-    },
-    type: 'number',
-  },
-] as const
+const receiverInputs = useReceiverInput()
 
 export function ReceiverModal({
   fields,
