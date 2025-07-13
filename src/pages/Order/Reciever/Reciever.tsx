@@ -11,7 +11,7 @@ import {
   RecieverEmpty,
   RecieverEmptyText,
 } from '@/styles/Order/Reciever.styles';
-import RecieverModal from './RecieverModal';
+import RecieverModal from '@/pages/Order/Reciever/RecieverModal';
 import type { RecieverType } from '@/pages/Order/Order';
 
 type RecieverProps = {
