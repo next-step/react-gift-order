@@ -132,6 +132,7 @@ const Order: React.FC = () => {
               setReceivers((prev) => [...prev, ...formData.order]);
               setIsModalOpen(false);
             }}
+            savedReceiverInfo={receivers}
           />
         )}
 

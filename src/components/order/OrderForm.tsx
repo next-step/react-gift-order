@@ -1,7 +1,8 @@
 import { useForm, useFieldArray } from "react-hook-form";
 import { css } from "@emotion/react";
 import type { Theme } from "@emotion/react";
-
+import ReceiverInputSet from "@/components/order/ReceiverInputSet";
+import { useEffect } from "react";
 export type FormData = {
   order: {
     receiverName: string;
@@ -12,15 +13,21 @@ export type FormData = {
 
 type OrderFormProps = {
   onSubmitCallback?: (data: FormData) => void;
+  savedReceiverInfo: {
+    receiverName: string;
+    phoneNumber: string;
+    quantity: number;
+  }[];
 };
 
-const OrderForm = ({ onSubmitCallback }: OrderFormProps) => {
+const OrderForm = ({ onSubmitCallback, savedReceiverInfo }: OrderFormProps) => {
   const {
     register,
     handleSubmit,
     control,
     watch,
     formState: { errors },
+    reset,
   } = useForm<FormData>({
     defaultValues: {
       order: [
@@ -44,6 +51,12 @@ const OrderForm = ({ onSubmitCallback }: OrderFormProps) => {
     }
   };
 
+  useEffect(() => {
+    if (savedReceiverInfo && savedReceiverInfo.length > 0) {
+      reset({ order: savedReceiverInfo });
+    }
+  }, [savedReceiverInfo, reset]);
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} css={formStyle}>
       <button
@@ -57,66 +70,15 @@ const OrderForm = ({ onSubmitCallback }: OrderFormProps) => {
         추가하기
       </button>
       {fields.map((field, index) => (
-        <div key={field.id} css={WrapperStyle}>
-          {fields.length > 1 && (
-            <div css={headerStyle}>
-              <strong>받는 사람 {index + 1}</strong>
-              <button css={removeButtonStyle} onClick={() => remove(index)}>
-                ✕
-              </button>
-            </div>
-          )}
-          <input
-            css={inputStyle}
-            placeholder="이름"
-            {...register(`order.${index}.receiverName`, {
-              required: "받는 사람의 이름은 필수 입력값입니다.",
-            })}
-          />
-          {errors.order?.[index]?.receiverName && (
-            <p css={errorStyle}>{errors.order[index].receiverName?.message}</p>
-          )}
-          <input
-            css={inputStyle}
-            placeholder="전화번호"
-            {...register(`order.${index}.phoneNumber`, {
-              required: "전화번호는 필수 입력값입니다",
-              pattern: {
-                value: /^01[016789]-?\d{3,4}-?\d{4}$/,
-                message: "전화번호 형식을 다시 확인하세요",
-              },
-
-              validate: (inputPhoneNumber) => {
-                const isDuplicate = watch("order")
-                  .map((order) => order.phoneNumber)
-                  .filter(
-                    (savedPhoneNumber) => savedPhoneNumber === inputPhoneNumber
-                  );
-                return isDuplicate.length > 1
-                  ? "중복된 전화번호가 존재합니다."
-                  : true;
-              },
-            })}
-          />
-          {errors.order?.[index]?.phoneNumber && (
-            <p css={errorStyle}>{errors.order[index].phoneNumber?.message}</p>
-          )}
-          <input
-            css={inputStyle}
-            placeholder="수량"
-            type="number"
-            {...register(`order.${index}.quantity`, {
-              required: "수량은 필수 입력값입니다.",
-              min: {
-                value: 1,
-                message: "수량은 1 이상이어야 합니다.",
-              },
-            })}
-          />
-          {errors.order?.[index]?.quantity && (
-            <p css={errorStyle}>{errors.order[index].quantity?.message}</p>
-          )}
-        </div>
+        <ReceiverInputSet
+          key={field.id}
+          index={index}
+          fieldCount={fields.length}
+          remove={remove}
+          register={register}
+          errors={errors}
+          watch={watch}
+        />
       ))}
 
       <button type="submit">{fields.length}명 완료</button>
