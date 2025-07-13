@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { products } from '@/data/products';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
+import ReceiverModal from '@/components/ReceiverModal';
 
 const cards = orderCardTemplates;
 
@@ -104,12 +105,6 @@ const OrderButton = styled.button`
   z-index: 100;
 `;
 
-const Row = styled.div`
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: 18px;
-`;
-
 const ProductSection = styled.div`
   padding-bottom: 45px;
 `;
@@ -174,18 +169,21 @@ function OrderPage() {
   const [message, setMessage] = useState('축하해요.');
   const [sender, setSender] = useState('');
 
-  const [receiverName, setReceiverName] = useState('');
-  const [receiverPhone, setReceiverPhone] = useState('');
-  const [quantity, setQuantity] = useState(1);
+  type Receiver = {
+    name: string;
+    phone: string;
+    quantity: number;
+  };
+
+  const [receivers, setReceivers] = useState<Receiver[]>([]);
 
   const [messageError, setMessageError] = useState('');
   const [senderError, setSenderError] = useState('');
-  const [receiverNameError, setReceiverNameError] = useState('');
-  const [receiverPhoneError, setReceiverPhoneError] = useState('');
-  const [quantityError, setQuantityError] = useState('');
 
   const product = products.find((p) => p.id === Number(productId));
   const price = product ? product.price.sellingPrice : 0;
+
+  const [isReceiverModalOpen, setIsReceiverModalOpen] = useState(false);
 
   const validate = () => {
     let valid = true;
@@ -204,31 +202,6 @@ function OrderPage() {
       setSenderError('');
     }
 
-    if (!receiverName) {
-      setReceiverNameError('이름을 입력해주세요.');
-      valid = false;
-    } else {
-      setReceiverNameError('');
-    }
-
-    const phoneRegex = /^010\d{8}$/;
-    if (!receiverPhone) {
-      setReceiverPhoneError('전화번호를 입력해주세요.');
-      valid = false;
-    } else if (!phoneRegex.test(receiverPhone)) {
-      setReceiverPhoneError('올바른 전화번호 형식이 아닙니다.');
-      valid = false;
-    } else {
-      setReceiverPhoneError('');
-    }
-
-    if (quantity < 1) {
-      setQuantityError('수량은 1개 이상이어야 해요.');
-      valid = false;
-    } else {
-      setQuantityError('');
-    }
-
     return valid;
   };
 
@@ -239,17 +212,26 @@ function OrderPage() {
     if (validate()) {
       if (!product) return;
 
+      const totalQuantity = receivers.reduce(
+        (sum, receiver) => sum + Number(receiver.quantity),
+        0,
+      );
+
       alert(
         `주문이 완료되었습니다.
-  상품명: ${product.name}
-  구매 수량: ${quantity}
-  받는 사람 이름: ${receiverName}
-  메시지: ${message}`,
+상품명: ${product.name}
+구매 수량: ${totalQuantity}
+발신자 이름: ${sender}
+메시지: ${message}`,
       );
       navigate('/');
     }
   };
 
+  const totalQuantity = receivers.reduce(
+    (sum, r) => sum + Number(r.quantity),
+    0,
+  );
   return (
     <>
       <Header />
@@ -308,65 +290,162 @@ function OrderPage() {
       </Container>
       <Container>
         <Section>
-          <Label
+          <div
             style={{
-              fontSize: 17,
-              fontWeight: 'bold',
-              marginBottom: 18,
-              marginLeft: 15,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: 8,
             }}
           >
-            받는 사람
-          </Label>
-          <Row>
-            <Label style={{ marginTop: 15 }} htmlFor="receiverName">
-              이름
-            </Label>
-            <InputWrapper>
-              <Input
-                value={receiverName}
-                onChange={(e) => {
-                  setReceiverName(e.target.value);
-                  if (e.target.value) setReceiverNameError('');
+            <span
+              style={{
+                fontSize: 17,
+                fontWeight: 700,
+                marginLeft: 15,
+              }}
+            >
+              받는 사람
+            </span>
+            <button
+              style={{
+                background: '#f5f6fa',
+                borderRadius: 16,
+                border: 'none',
+                padding: '10px 20px',
+                fontSize: 15,
+                cursor: 'pointer',
+                marginRight: 15,
+                fontWeight: 500,
+              }}
+              onClick={() => setIsReceiverModalOpen(true)}
+            >
+              {receivers.length === 0 ? '추가' : '수정'}
+            </button>
+          </div>
+          <div
+            onClick={() => setIsReceiverModalOpen(true)}
+            style={{
+              minHeight: 120,
+              border: '1px solid #eee',
+              borderRadius: 16,
+              margin: 15,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#bbb',
+              fontSize: 15,
+              cursor: 'pointer',
+              background: '#fafbfc',
+            }}
+          >
+            {receivers.length === 0 ? (
+              <div>
+                받는 사람이 없습니다.
+                <br />
+                받는 사람을 추가해주세요.
+              </div>
+            ) : (
+              <table
+                style={{
+                  width: '100%',
+                  borderCollapse: 'separate',
+                  borderSpacing: 0,
+                  background: '#fff',
+                  borderRadius: 16,
+                  overflow: 'hidden',
+                  boxShadow: 'none',
                 }}
-                placeholder="이름을 입력하세요."
-                error={!!receiverNameError}
-              />
-              {receiverNameError && <ErrorMsg>{receiverNameError}</ErrorMsg>}
-            </InputWrapper>
-          </Row>
-          <Row>
-            <Label style={{ marginTop: 15 }} htmlFor="receiverPhone">
-              전화번호
-            </Label>
-            <InputWrapper>
-              <Input
-                value={receiverPhone}
-                onChange={(e) => {
-                  setReceiverPhone(e.target.value);
-                  if (!e.target.value)
-                    setReceiverPhoneError('전화번호를 입력해주세요.');
-                  else setReceiverPhoneError('');
-                }}
-                placeholder="전화번호를 입력하세요."
-                error={!!receiverPhoneError}
-              />
-              {receiverPhoneError && <ErrorMsg>{receiverPhoneError}</ErrorMsg>}
-            </InputWrapper>
-          </Row>
-          <Row>
-            <Label style={{ marginTop: 15 }} htmlFor="quantity">
-              수량
-            </Label>
-            <Input
-              type="number"
-              min={1}
-              value={quantity}
-              onChange={(e) => setQuantity(Number(e.target.value))}
-              error={!!quantityError}
-            />
-            {quantityError && <ErrorMsg>{quantityError}</ErrorMsg>}
-          </Row>
+              >
+                <thead>
+                  <tr style={{ background: '#f7f8fa' }}>
+                    <th
+                      style={{
+                        padding: '16px 0',
+                        fontWeight: 700,
+                        color: '#353c43',
+                        borderBottom: '1px solid #eee',
+                        textAlign: 'center',
+                        fontSize: 15,
+                      }}
+                    >
+                      이름
+                    </th>
+                    <th
+                      style={{
+                        padding: '16px 0',
+                        fontWeight: 700,
+                        color: '#353c43',
+                        borderBottom: '1px solid #eee',
+                        textAlign: 'center',
+                        fontSize: 15,
+                      }}
+                    >
+                      전화번호
+                    </th>
+                    <th
+                      style={{
+                        padding: '16px 0',
+                        fontWeight: 700,
+                        color: '#353c43',
+                        borderBottom: '1px solid #eee',
+                        textAlign: 'center',
+                        fontSize: 15,
+                      }}
+                    >
+                      수량
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {receivers.map((r, i) => (
+                    <tr key={i}>
+                      <td
+                        style={{
+                          textAlign: 'center',
+                          padding: '14px 0',
+                          fontWeight: 500,
+                          borderBottom:
+                            i === receivers.length - 1
+                              ? 'none'
+                              : '1px solid #f0f0f0',
+                          fontSize: 15,
+                        }}
+                      >
+                        {r.name}
+                      </td>
+                      <td
+                        style={{
+                          textAlign: 'center',
+                          padding: '14px 0',
+                          borderBottom:
+                            i === receivers.length - 1
+                              ? 'none'
+                              : '1px solid #f0f0f0',
+                          fontSize: 15,
+                        }}
+                      >
+                        {r.phone}
+                      </td>
+                      <td
+                        style={{
+                          textAlign: 'center',
+                          padding: '14px 0',
+                          borderBottom:
+                            i === receivers.length - 1
+                              ? 'none'
+                              : '1px solid #f0f0f0',
+                          fontSize: 15,
+                        }}
+                      >
+                        {r.quantity}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
         </Section>
       </Container>
       <Container>
@@ -397,8 +476,15 @@ function OrderPage() {
       </Container>
 
       <OrderButton onClick={handleOrder}>
-        {price.toLocaleString()}원 주문하기
+        {(price * totalQuantity).toLocaleString()}원 주문하기
       </OrderButton>
+      {isReceiverModalOpen && (
+        <ReceiverModal
+          receivers={receivers}
+          setReceivers={setReceivers}
+          onClose={() => setIsReceiverModalOpen(false)}
+        />
+      )}
     </>
   );
 }
