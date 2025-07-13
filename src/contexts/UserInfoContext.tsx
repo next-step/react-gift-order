@@ -1,4 +1,5 @@
-import { createContext, useState, useContext } from "react";
+import useSessionStorage from "@/hooks/useSessionStorage";
+import React, { createContext, useContext } from "react";
 
 type UserInfo = {
   email: string | null;
@@ -6,7 +7,8 @@ type UserInfo = {
 };
 
 type UserInfoContextType = UserInfo & {
-  setUserInfo: React.Dispatch<React.SetStateAction<UserInfo | null>>;
+  setUserInfo: (userInfo: UserInfo) => void;
+  removeUserInfo: () => void;
 };
 
 const UserInfoContext = createContext<UserInfoContextType | null>(null);
@@ -16,21 +18,18 @@ export const UserInfoProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(() => {
-    const sessionUserInfo = sessionStorage.getItem("kakaotech/userInfo");
-    if (!sessionUserInfo) return null;
-
-    const { email } = JSON.parse(sessionUserInfo);
-    const name = email.split("@")[0];
-    return { email, name };
+  const userInfo = useSessionStorage<UserInfo>("kakaotech/userInfo", {
+    email: null,
+    name: null,
   });
 
   return (
     <UserInfoContext.Provider
       value={{
-        email: userInfo?.email || null,
-        name: userInfo?.name || null,
-        setUserInfo,
+        email: userInfo.value.email,
+        name: userInfo.value.name,
+        setUserInfo: userInfo.updateValue,
+        removeUserInfo: userInfo.removeValue,
       }}
     >
       {children}

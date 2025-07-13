@@ -3,5 +3,5 @@ export const ROUTE_PATH = {
   LOGIN: "/login",
   MY_PAGE: "/my",
   ORDER: "/order/:id",
-  NOT_FOUND: "*",
+  NOT_FOUND: "/not-found",
 };

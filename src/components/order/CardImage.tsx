@@ -1,11 +1,11 @@
 import type { Card } from "@/types/card";
 import styled from "@emotion/styled";
 
-type CardGifProps = {
+type CardImageProps = {
   selectedCard: Card;
 };
 
-const CardGif = ({ selectedCard }: CardGifProps) => {
+const CardImage = ({ selectedCard }: CardImageProps) => {
   return (
     <CardDiv>
       <Img src={selectedCard.imageUrl} alt={selectedCard.defaultTextMessage} />
@@ -13,7 +13,7 @@ const CardGif = ({ selectedCard }: CardGifProps) => {
   );
 };
 
-export default CardGif;
+export default CardImage;
 
 const CardDiv = styled.div`
   height: 272px;

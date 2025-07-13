@@ -1,31 +1,28 @@
 import styled from "@emotion/styled";
 import { cards } from "@/data/card";
-import CardItem from "@/components/order/CardItem";
-import CardGif from "@/components/order/CardGif";
+import CardThumbnail from "@/components/order/CardThumbnail";
+import CardImage from "@/components/order/CardImage";
 import type { Card } from "@/types/card";
 import CardTextarea from "./CardTextarea";
+import { useFormContext } from "react-hook-form";
+import { checkMessageError } from "@/utils/validation";
 
 type CardSectionProps = {
   selectedCard: Card;
   setSelectedCard: (card: Card) => void;
-  messageInput: {
-    value: string;
-    setValue: (value: string) => void;
-    error: string;
-    onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  };
 };
 
-const CardSection = ({
-  selectedCard,
-  setSelectedCard,
-  messageInput,
-}: CardSectionProps) => {
+const CardSection = ({ selectedCard, setSelectedCard }: CardSectionProps) => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<{ message: string }>();
+
   return (
     <Section>
       <CardList>
         {cards.map(card => (
-          <CardItem
+          <CardThumbnail
             key={card.id}
             card={card}
             isSelected={card.id === selectedCard.id}
@@ -33,8 +30,13 @@ const CardSection = ({
           />
         ))}
       </CardList>
-      <CardGif selectedCard={selectedCard} />
-      <CardTextarea messageInput={messageInput} />
+      <CardImage selectedCard={selectedCard} />
+      <CardTextarea
+        {...register("message", {
+          validate: value => checkMessageError(value),
+        })}
+        error={errors.message?.message}
+      />
     </Section>
   );
 };

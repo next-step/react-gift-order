@@ -23,8 +23,7 @@ const MyPage = () => {
   const { name, email } = user || { name: "게스트", email: "" };
 
   const handleLogout = () => {
-    sessionStorage.removeItem("kakaotech/userInfo");
-    user?.setUserInfo(null);
+    user?.removeUserInfo();
   };
 
   return (

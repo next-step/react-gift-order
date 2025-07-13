@@ -2,24 +2,14 @@ import styled from "@emotion/styled";
 import ErrorMessage from "../common/ErrorMessage";
 
 type CardTextareaProps = {
-  messageInput: {
-    value: string;
-    setValue: (value: string) => void;
-    error: string;
-    onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  };
+  error?: string;
 };
 
-const CardTextarea = ({ messageInput }: CardTextareaProps) => {
+const CardTextarea = ({ error, ...rest }: CardTextareaProps) => {
   return (
     <TextareaDiv>
-      <Textarea
-        error={!!messageInput.error}
-        placeholder="카드 메시지를 입력해주세요."
-        value={messageInput.value}
-        onChange={messageInput.onChange}
-      />
-      {messageInput.error && <ErrorMessage message={messageInput.error} />}
+      <Textarea {...rest} error={!!error} />
+      {error && <ErrorMessage message={error} />}
     </TextareaDiv>
   );
 };
@@ -47,6 +37,8 @@ const Textarea = styled.textarea<{ error: boolean }>`
 
   &:focus {
     outline: none;
-    border: 1px solid ${({ theme }) => theme.colors.gray.gray900};
+    border: 1px solid
+      ${({ theme, error }) =>
+        error ? theme.colors.red.red500 : theme.colors.gray.gray900};
   }
 `;

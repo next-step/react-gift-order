@@ -1,29 +1,28 @@
 import ErrorMessage from "../common/ErrorMessage";
 import styled from "@emotion/styled";
 import DescriptionMessage from "../common/DescriptionMessage";
+import { useFormContext } from "react-hook-form";
+import { checkNameError } from "@/utils/validation";
 
-type SendSectionProps = {
-  senderInput: {
-    value: string;
-    error: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  };
-};
-
-const SendSection = ({ senderInput }: SendSectionProps) => {
+const SenderSection = () => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<{ sender: string }>();
   return (
     <Section>
       <Title>보내는 사람</Title>
       <Input
-        error={!!senderInput.error}
+        placeholder="이름을 입력하세요."
+        error={!!errors.sender?.message}
         type="text"
-        value={senderInput.value}
-        placeholder="이름을 입력해주세요."
-        onChange={senderInput.onChange}
+        {...register("sender", {
+          validate: value => checkNameError(value),
+        })}
       />
       <MessageDiv>
-        {senderInput.error ? (
-          <ErrorMessage message={senderInput.error} />
+        {errors.sender?.message ? (
+          <ErrorMessage message={errors.sender.message} />
         ) : (
           <DescriptionMessage message="* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다." />
         )}
@@ -32,7 +31,7 @@ const SendSection = ({ senderInput }: SendSectionProps) => {
   );
 };
 
-export default SendSection;
+export default SenderSection;
 
 const Section = styled.section`
   background-color: ${({ theme }) => theme.colors.semantic.background.default};
