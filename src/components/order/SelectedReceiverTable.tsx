@@ -65,8 +65,10 @@ export const SelectedReceiverTable = () => {
         </ReceiverTableRow>
       </ReceiverTableHeader>
       <ReceiverTableBody>
-        {receivers?.map((receiver, index) => (
-          <ReceiverTableRow key={index}>
+        {receivers?.map(receiver => (
+          <ReceiverTableRow
+            key={`${receiver.receiverName}-${receiver.receiverPhone}`}
+          >
             <ReceiverTableCell>{receiver.receiverName}</ReceiverTableCell>
             <ReceiverTableCell>{receiver.receiverPhone}</ReceiverTableCell>
             <ReceiverTableCell>{receiver.quantity}</ReceiverTableCell>
