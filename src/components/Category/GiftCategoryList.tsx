@@ -1,0 +1,21 @@
+import { DataCategory } from '@/mock-data/DataCategory';
+import { Grid, Item, ImageStyle } from '@/components/category/GiftCategoryGrid';
+import { Wrapper, Title } from '@/components/category/GiftCategory.style';
+
+const GiftCategoryList = () => {
+  return (
+    <Wrapper>
+      <Title>선물 테마</Title>
+      <Grid>
+        {DataCategory.map((itemData) => (
+          <Item key={itemData.themeId}>
+            <ImageStyle src={itemData.image} alt={itemData.name} />
+            <span>{itemData.name}</span>
+          </Item>
+        ))}
+      </Grid>
+    </Wrapper>
+  );
+};
+
+export default GiftCategoryList;
