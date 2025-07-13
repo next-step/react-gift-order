@@ -1,5 +1,9 @@
 import styled from '@emotion/styled';
 
+type OrderButtonProps = {
+  onClick: (e: React.MouseEvent) => void;
+};
+
 const OrderButtonUI = styled.button(({ theme }) => ({
   width: '100%',
   maxWidth: '720px',
@@ -22,6 +26,10 @@ const OrderButtonUI = styled.button(({ theme }) => ({
   lineHeight: '1.5rem',
 }));
 
-export const OrderButton = () => {
-  return <OrderButtonUI>29000원 주문하기</OrderButtonUI>;
+export const OrderButton = ({ onClick }: OrderButtonProps) => {
+  return (
+    <OrderButtonUI type="button" onClick={onClick}>
+      29000원 주문하기
+    </OrderButtonUI>
+  );
 };

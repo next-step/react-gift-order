@@ -1,3 +1,4 @@
+import { ErrorMessage } from '@components/common/ErrorMessage';
 import styled from '@emotion/styled';
 
 const Wrapper = styled.div`
@@ -9,7 +10,7 @@ const Container = styled.div`
   width: 100%;
 `;
 
-const TextArea = styled.textarea(({ theme }) => ({
+const TextArea = styled.textarea<{ hasError: boolean }>(({ theme, hasError }) => ({
   width: '100%',
   boxSizing: 'border-box',
   color: theme.semanticColors.text.default,
@@ -22,7 +23,7 @@ const TextArea = styled.textarea(({ theme }) => ({
   padding: '8px 12px',
   borderWidth: '1px',
   borderRadius: '8px',
-  borderColor: theme.semanticColors.border.default,
+  borderColor: hasError ? theme.semanticColors.state.critical : theme.semanticColors.border.default,
   '&:focus': {
     outline: 'none',
     borderColor: theme.colorScale.gray700,
@@ -34,14 +35,21 @@ const TextArea = styled.textarea(({ theme }) => ({
 
 type MessageProps = {
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onChange: (newMsg: string) => void;
+  error: boolean;
 };
 
-export const Message = ({ value, onChange }: MessageProps) => {
+export const Message = ({ value, onChange, error }: MessageProps) => {
   return (
     <Wrapper>
       <Container>
-        <TextArea value={value} onChange={onChange} placeholder="메세지를 입력해주세요." />
+        <TextArea
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="메세지를 입력해주세요."
+          hasError={error}
+        />
+        {error && <ErrorMessage>메세지를 입력해주세요.</ErrorMessage>}
       </Container>
     </Wrapper>
   );

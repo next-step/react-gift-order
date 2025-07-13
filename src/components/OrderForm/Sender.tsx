@@ -1,3 +1,4 @@
+import { ErrorMessage } from '@components/common/ErrorMessage';
 import styled from '@emotion/styled';
 
 const Wrapper = styled.div`
@@ -24,7 +25,7 @@ const Container = styled.div`
   width: 100%;
 `;
 
-const InputBox = styled.input(({ theme }) => ({
+const InputBox = styled.input<{ hasError?: boolean }>(({ theme, hasError }) => ({
   width: '100%',
   boxSizing: 'border-box',
   color: theme.semanticColors.text.default,
@@ -37,7 +38,7 @@ const InputBox = styled.input(({ theme }) => ({
   padding: '8px 12px',
   borderWidth: '1px',
   borderRadius: '8px',
-  borderColor: theme.semanticColors.border.disabled,
+  borderColor: hasError ? theme.semanticColors.state.critical : theme.semanticColors.border.default,
   '&:focus': {
     outline: 'none',
     borderColor: theme.colorScale.gray700,
@@ -57,14 +58,28 @@ const InputBoxNotice = styled.p(({ theme }) => ({
   textAlign: 'left',
 }));
 
-export const Sender = () => {
+type SenderProps = {
+  value: string;
+  onChange: (newSender: string) => void;
+  error?: boolean;
+};
+
+export const Sender = ({ value, onChange, error }: SenderProps) => {
   return (
     <Wrapper>
       <Margin height={'12px'} />
       <Text>보내는 사람</Text>
       <Margin height={'12px'} />
       <Container>
-        <InputBox placeholder="이름을 입력하세요." />
+        <InputBox
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          hasError={error}
+          placeholder="이름을 입력하세요."
+        />
+        {error && <ErrorMessage>이름을 입력해주세요.</ErrorMessage>}
+
         <Margin height={'4px'} />
         <InputBoxNotice>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</InputBoxNotice>
       </Container>

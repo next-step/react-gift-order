@@ -1,3 +1,4 @@
+import { ErrorMessage } from '@components/common/ErrorMessage';
 import styled from '@emotion/styled';
 
 const Wrapper = styled.div`
@@ -44,7 +45,7 @@ const InputBoxStyle = styled.div`
   width: 100%;
 `;
 
-const InputBox = styled.input(({ theme }) => ({
+const InputBox = styled.input<{ hasError?: boolean }>(({ theme, hasError }) => ({
   width: '100%',
   boxSizing: 'border-box',
   color: theme.semanticColors.text.default,
@@ -57,7 +58,7 @@ const InputBox = styled.input(({ theme }) => ({
   padding: '8px 12px',
   borderWidth: '1px',
   borderRadius: '8px',
-  borderColor: theme.semanticColors.border.disabled,
+  borderColor: hasError ? theme.semanticColors.state.critical : theme.semanticColors.border.default,
   '&:focus': {
     outline: 'none',
     borderColor: theme.colorScale.gray700,
@@ -67,7 +68,23 @@ const InputBox = styled.input(({ theme }) => ({
   },
 }));
 
-export const Recipinet = () => {
+type RecipientProps = {
+  name: string;
+  onChangeName: (newName: string) => void;
+  phone: string;
+  onChangePhone: (newPhne: string) => void;
+  errorName?: boolean;
+  errorPhone?: boolean;
+};
+
+export const Recipinet = ({
+  name,
+  onChangeName,
+  phone,
+  onChangePhone,
+  errorName,
+  errorPhone,
+}: RecipientProps) => {
   return (
     <Wrapper>
       <Margin height="12px" />
@@ -76,14 +93,28 @@ export const Recipinet = () => {
       <InputBoxContainer>
         <InputBoxTitle>이름</InputBoxTitle>
         <InputBoxStyle>
-          <InputBox placeholder="이름을 입력하세요." />
+          <InputBox
+            type="text"
+            value={name}
+            onChange={(e) => onChangeName(e.target.value)}
+            hasError={errorName}
+            placeholder="이름을 입력하세요."
+          />
+          {errorName && <ErrorMessage>이름을 입력해주세요.</ErrorMessage>}
         </InputBoxStyle>
       </InputBoxContainer>
       <Margin height="8px" />
       <InputBoxContainer>
         <InputBoxTitle>전화번호</InputBoxTitle>
         <InputBoxStyle>
-          <InputBox placeholder="전화번호를 입력하세요." />
+          <InputBox
+            type="tel"
+            value={phone}
+            onChange={(e) => onChangePhone(e.target.value)}
+            hasError={errorPhone}
+            placeholder="전화번호를 입력하세요."
+          />
+          {errorPhone && <ErrorMessage>전화번호를 입력해주세요.</ErrorMessage>}
         </InputBoxStyle>
       </InputBoxContainer>
       <Margin height="8px" />

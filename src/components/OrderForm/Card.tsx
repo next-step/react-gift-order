@@ -14,16 +14,21 @@ const Margin = styled.div<{ height: string }>`
   background-color: transparent;
 `;
 
-const Card = () => {
+type CardProps = {
+  message: string;
+  onMessageChange: (newMsg: string) => void;
+  messageError: boolean;
+};
+
+const Card = ({ message, onMessageChange, messageError }: CardProps) => {
   const defaultCard = MOCK_CARDFORM_LIST[0];
   const [selectedCardId, setSelectedCardId] = useState<number>(defaultCard.id);
-  const [message, setMessage] = useState(defaultCard.defaultTextMessage || '');
 
   const handleCardSelect = (id: number) => {
     setSelectedCardId(id);
     const selected = MOCK_CARDFORM_LIST.find((card) => card.id === id);
     if (selected) {
-      setMessage(selected.defaultTextMessage || '');
+      onMessageChange(selected.defaultTextMessage || '');
     }
   };
 
@@ -36,7 +41,7 @@ const Card = () => {
       <Margin height={'12px'} />
       {selectedCard && <CardImg selectedImgUrl={selectedCard.imageUrl} />}
       <Margin height={'40px'} />
-      <Message value={message} onChange={(e) => setMessage(e.target.value)} />
+      <Message value={message} onChange={onMessageChange} error={messageError} />
       <Margin height={'32px'} />
     </Wrapper>
   );
