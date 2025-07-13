@@ -216,3 +216,33 @@ export const OrderButton = styled.button`
 export const Div100p = styled.div`
   width: 100%;
 `
+
+export const ModalDiv = styled.div<{ isOpen?: boolean }>`
+    position: fixed;
+    inset: 0px;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex
+;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    z-index: 1000;
+    visibility: ${({isOpen}) => ( isOpen ? 'visible' : 'hidden')};
+    transition: opacity 300ms, visibility 300ms;
+    padding: 16px;
+    opacity: ${({isOpen}) => ( isOpen ? '1' : '0')}
+`
+
+export const ModalBox = styled.div`
+  background: rgb(255, 255, 255);
+    border-radius: 8px;
+    max-height: calc(-7.5rem + 100vh);
+    max-width: 37.5rem;
+    width: 100%;
+    height: 100%;
+    padding: 16px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+`
