@@ -22,6 +22,7 @@ import {
   DUPLICATE_PHONE_HINT,
   ADD_BUTTON_TEXT,
   RECEIVER_TITLE_PREFIX,
+  DEFAULT_RECEIVER,
 } from './constants';
 
 const ReceiverSchema = z.object({
@@ -79,7 +80,7 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
       receivers:
         initialReceivers.length > 0
           ? initialReceivers
-          : [{ name: '', phone: '', quantity: 1 }],
+          : [DEFAULT_RECEIVER],
     },
     mode: 'onChange',
   });
@@ -91,7 +92,7 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
 
   const handleAddReceiver = () => {
     if (fields.length < MAX_RECEIVERS) {
-      append({ name: '', phone: '', quantity: 1 });
+      append(DEFAULT_RECEIVER);
     }
   };
 

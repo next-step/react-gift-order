@@ -15,3 +15,8 @@ export const MAX_RECEIVERS_HINT_SUFFIX = '명까지 추가 할 수 있어요.';
 export const DUPLICATE_PHONE_HINT = '받는사람의 전화번호를 중복으로 입력할 수 없어요.';
 export const ADD_BUTTON_TEXT = '추가하기';
 export const RECEIVER_TITLE_PREFIX = '받는사람 ';
+export const DEFAULT_RECEIVER = {
+    name: '',
+    phone: '',
+    quantity: 1,
+};
