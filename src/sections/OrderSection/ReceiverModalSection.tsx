@@ -8,6 +8,7 @@ import {
     type UseFormRegister,
     type UseFormTrigger,
 } from "react-hook-form";
+import Modal from "@/components/Modal";
 
 export const Container = styled.section`
   width: 100%;
@@ -54,29 +55,6 @@ export const Td = styled.td`
   padding: ${({ theme }) => theme.spacing.spacing3};
   border: 1px solid ${({ theme }) => theme.color.semantic.borderDefault};
   ${({ theme }) => theme.typography.body.body2Regular};
-`;
-
-export const ModalOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 10;
-`;
-
-export const ModalContent = styled.div`
-  background: ${({ theme }) => theme.color.semantic.backgroundDefault};
-  padding: ${({ theme }) => theme.spacing.spacing6};
-  border-radius: 12px;
-  width: 100%;
-  max-width: 720px;
-  max-height: 90vh;
-  overflow-y: auto;
 `;
 
 export const ModalTitle = styled.h3`
@@ -231,94 +209,92 @@ export default function ReceiverModalSection({
             )}
 
             {isOpen && (
-                <ModalOverlay>
-                    <ModalContent>
-                        <ModalTitle>받는 사람 정보 입력</ModalTitle>
-                        <Description>
-                            최대 10명까지 추가할 수 있어요. <br />
-                            받는 사람의 전화번호는 중복으로 입력할 수 없어요.
-                        </Description>
+                <Modal onClose={handleClose}>
+                    <ModalTitle>받는 사람 정보 입력</ModalTitle>
+                    <Description>
+                        최대 10명까지 추가할 수 있어요. <br />
+                        받는 사람의 전화번호는 중복으로 입력할 수 없어요.
+                    </Description>
 
+                    <Button
+                        type="button"
+                        onClick={() =>
+                            append({ name: "", phone: "", quantity: 1 })
+                        }
+                        disabled={fields.length >= 10}
+                    >
+                        + 추가하기
+                    </Button>
+
+                    {fields.map((field, index) => (
+                        <ReceiverBlock key={field.id}>
+                            <ReceiverLabel>받는 사람 {index + 1}</ReceiverLabel>
+                            <RemoveButton type="button" onClick={() => remove(index)}>
+                                ✕
+                            </RemoveButton>
+
+                            <Field>
+                                <Label>이름</Label>
+                                <Input
+                                    type="text"
+                                    placeholder="이름을 입력하세요."
+                                    {...register(`receivers.${index}.name`)}
+                                />
+                                {receiverErrors?.[index]?.name && (
+                                    <ErrorText>
+                                        {receiverErrors?.[index]?.name?.message as string}
+                                    </ErrorText>
+                                )}
+                            </Field>
+
+                            <Field>
+                                <Label>전화번호</Label>
+                                <Input
+                                    type="tel"
+                                    placeholder="전화번호를 입력하세요."
+                                    {...register(`receivers.${index}.phone`)}
+                                />
+                                {receiverErrors?.[index]?.phone && (
+                                    <ErrorText>
+                                        {receiverErrors?.[index]?.phone?.message as string}
+                                    </ErrorText>
+                                )}
+                            </Field>
+
+                            <Field>
+                                <Label>수량</Label>
+                                <Input
+                                    type="number"
+                                    placeholder="1"
+                                    {...register(`receivers.${index}.quantity`, {
+                                        valueAsNumber: true,
+                                    })}
+                                />
+                                {receiverErrors?.[index]?.quantity && (
+                                    <ErrorText>
+                                        {receiverErrors?.[index]?.quantity?.message as string}
+                                    </ErrorText>
+                                )}
+                            </Field>
+                        </ReceiverBlock>
+                    ))}
+
+                    {typeof errors.receivers?.message === "string" && (
+                        <ErrorText>{errors.receivers.message}</ErrorText>
+                    )}
+
+                    <Footer>
+                        <Button onClick={handleClose}>취소</Button>
                         <Button
+                            primary
                             type="button"
-                            onClick={() =>
-                                append({ name: "", phone: "", quantity: 1 })
-                            }
-                            disabled={fields.length >= 10}
+                            onClick={handleComplete}
+                            disabled={fields.length === 0}
                         >
-                            + 추가하기
+                            {fields.length}명 완료
                         </Button>
-
-                        {fields.map((field, index) => (
-                            <ReceiverBlock key={field.id}>
-                                <ReceiverLabel>받는 사람 {index + 1}</ReceiverLabel>
-                                <RemoveButton type="button" onClick={() => remove(index)}>
-                                    ✕
-                                </RemoveButton>
-
-                                <Field>
-                                    <Label>이름</Label>
-                                    <Input
-                                        type="text"
-                                        placeholder="이름을 입력하세요."
-                                        {...register(`receivers.${index}.name`)}
-                                    />
-                                    {receiverErrors?.[index]?.name && (
-                                        <ErrorText>
-                                            {receiverErrors?.[index]?.name?.message as string}
-                                        </ErrorText>
-                                    )}
-                                </Field>
-
-                                <Field>
-                                    <Label>전화번호</Label>
-                                    <Input
-                                        type="tel"
-                                        placeholder="전화번호를 입력하세요."
-                                        {...register(`receivers.${index}.phone`)}
-                                    />
-                                    {receiverErrors?.[index]?.phone && (
-                                        <ErrorText>
-                                            {receiverErrors?.[index]?.phone?.message as string}
-                                        </ErrorText>
-                                    )}
-                                </Field>
-
-                                <Field>
-                                    <Label>수량</Label>
-                                    <Input
-                                        type="number"
-                                        placeholder="1"
-                                        {...register(`receivers.${index}.quantity`, {
-                                            valueAsNumber: true,
-                                        })}
-                                    />
-                                    {receiverErrors?.[index]?.quantity && (
-                                        <ErrorText>
-                                            {receiverErrors?.[index]?.quantity?.message as string}
-                                        </ErrorText>
-                                    )}
-                                </Field>
-                            </ReceiverBlock>
-                        ))}
-
-                        {typeof errors.receivers?.message === "string" && (
-                            <ErrorText>{errors.receivers.message}</ErrorText>
-                        )}
-
-                        <Footer>
-                            <Button onClick={handleClose}>취소</Button>
-                            <Button
-                                primary
-                                type="button"
-                                onClick={handleComplete}
-                                disabled={fields.length === 0}
-                            >
-                                {fields.length}명 완료
-                            </Button>
-                        </Footer>
-                    </ModalContent>
-                </ModalOverlay>
+                    </Footer>
+                </Modal>
             )}
         </Container>
     );
