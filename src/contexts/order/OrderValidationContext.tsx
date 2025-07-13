@@ -30,7 +30,10 @@ export const OrderValidationProvider = ({
     return Object.values(errors)
       .filter(Boolean)
       .map(error => error.message)
-      .filter(Boolean) as string[];
+      .filter(
+        (message): message is string =>
+          typeof message === "string" && message.length > 0,
+      );
   }, [errors]);
 
   const contextValue = useMemo(
