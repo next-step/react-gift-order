@@ -98,7 +98,11 @@ const Order: React.FC = () => {
         ></img>
       </div>
       <div css={MessageStyle(theme)}>
-        <textarea ref={GiftMessageRef} defaultValue="축하해요."></textarea>
+        <textarea
+          css={MessageTextAreaStyle}
+          ref={GiftMessageRef}
+          defaultValue="축하해요."
+        ></textarea>
         {messageError && <p css={ErrorMessageStyle}>{messageError}</p>}
       </div>
       <div css={FormSectionWrapperStyle(theme)}>
@@ -210,5 +214,24 @@ const AddButtonStyle = (theme: Theme) => css`
 
   &:active {
     background-color: ${theme.colors.yellow.yellow700};
+  }
+`;
+
+const MessageTextAreaStyle = (theme: Theme) => css`
+  width: 100%;
+  min-height: 120px;
+  padding: ${theme.spacing.spacing4};
+  font-size: ${theme.typography.body1Regular.size};
+  font-weight: ${theme.typography.body1Regular.weight};
+  line-height: ${theme.typography.body1Regular.lineHeight};
+  border: 1px solid ${theme.colors.gray.gray500};
+  border-radius: 8px;
+  resize: vertical;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: ${theme.colors.yellow.yellow500};
   }
 `;
