@@ -18,9 +18,14 @@ type OrderFormProps = {
     phoneNumber: string;
     quantity: number;
   }[];
+  onClose: () => void;
 };
 
-const OrderForm = ({ onSubmitCallback, savedReceiverInfo }: OrderFormProps) => {
+const OrderForm = ({
+  onSubmitCallback,
+  savedReceiverInfo,
+  onClose,
+}: OrderFormProps) => {
   const {
     register,
     handleSubmit,
@@ -81,6 +86,7 @@ const OrderForm = ({ onSubmitCallback, savedReceiverInfo }: OrderFormProps) => {
         />
       ))}
 
+      <button onClick={onClose}>취소</button>
       <button type="submit">{fields.length}명 완료</button>
     </form>
   );

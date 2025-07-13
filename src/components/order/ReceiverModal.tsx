@@ -29,8 +29,8 @@ const ReceiverModal = ({
             onSave(formData);
           }}
           savedReceiverInfo={savedReceiverInfo}
+          onClose={onClose}
         />
-        <button onClick={onClose}>취소</button>
       </div>
     </>
   );
