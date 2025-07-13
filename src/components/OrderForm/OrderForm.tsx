@@ -3,12 +3,13 @@ import Card from '@/components/OrderForm/Card';
 import { Sender } from '@/components/OrderForm/Sender';
 import { Recipinet } from '@components/OrderForm/Recipient';
 import { ProductInfo } from '@/components/OrderForm/ProductInfo';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { OrderButton } from '@/components/OrderForm/OrderButton';
 import productData from '@/data/productData';
 import { useState } from 'react';
 import { useOrderValidation } from '@/hooks/useOrderValidation';
 import { MOCK_CARDFORM_LIST } from './mock';
+import { ROUTE_PATH } from '@/routes/Routes';
 
 const Wrapper = styled.section(({ theme }) => ({
   width: '100%',
@@ -30,6 +31,8 @@ const OrderForm = () => {
   const [recipientPhone, setRecipientPhone] = useState('');
   const [quantity, setQuantity] = useState(1);
 
+  const navigate = useNavigate();
+
   const { errors, validate } = useOrderValidation({
     message,
     sender: senderValue,
@@ -49,6 +52,7 @@ const OrderForm = () => {
           `발신자 이름: ${senderValue}\n` +
           `메세지: ${message}`
       );
+      navigate(ROUTE_PATH.HOME);
     }
   };
   const [searchParams] = useSearchParams();
