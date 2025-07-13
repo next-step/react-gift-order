@@ -4,7 +4,6 @@ import {
   useState,
   useCallback,
   type ReactNode,
-  useMemo,
 } from "react";
 import type { Order } from "@/types";
 import { initialState } from "@/contexts/order";
@@ -34,7 +33,7 @@ export const OrderStateProvider = ({ children }: { children: ReactNode }) => {
     setOrderState(initialState.order);
   }, []);
 
-  const value = useMemo(() => ({ order, setOrder, resetOrder }), [order]);
+  const value = { order, setOrder, resetOrder };
 
   return (
     <OrderStateContext.Provider value={value}>
