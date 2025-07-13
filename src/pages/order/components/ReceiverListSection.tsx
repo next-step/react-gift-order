@@ -1,7 +1,7 @@
 import { useForm, useFieldArray, useWatch } from "react-hook-form";
 import styled from "@emotion/styled";
 import { useCallback, useEffect, useState } from "react";
-import ReceiverFormDialog from "./ReceiverFormDialog";
+import ReceiverFormDialog from "@/pages/order/components/ReceiverFormDialog";
 
 export type Receiver = {
   name: string;

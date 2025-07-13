@@ -2,7 +2,7 @@ import { type FieldErrors, type UseFormRegister } from "react-hook-form";
 import styled from "@emotion/styled";
 import { validateReceiverName, validateQuantity } from "@/utils/validators";
 import { ERROR_MESSAGES } from "@/constants/messages";
-import { type Receiver } from "./ReceiverListSection";
+import { type Receiver } from "@/pages/order/components/ReceiverListSection";
 
 interface ReceiverFieldItemProps {
   index: number;

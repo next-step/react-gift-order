@@ -3,7 +3,7 @@ import HomePage from "@/pages/home";
 import LoginPage from "@/pages/login";
 import NotFoundPage from "@/pages/404";
 import { NavigationBar } from "@/pages/home/components/NavigationBar";
-import AuthGuard from "./guards/AuthGuard";
+import AuthGuard from "@/routes/guards/AuthGuard";
 import MyPage from "@/pages/my";
 import OrderPage from "@/pages/order";
 import { ROUTES } from "@/constants/routes";

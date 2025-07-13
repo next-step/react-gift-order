@@ -9,9 +9,9 @@ import {
   useWatch,
 } from "react-hook-form";
 import styled from "@emotion/styled";
-import { type Receiver } from "./ReceiverListSection";
+import { type Receiver } from "@/pages/order/components/ReceiverListSection";
 import { createPhoneValidator } from "@/utils/validators";
-import ReceiverFieldItem from "./ReceiverFieldItem";
+import ReceiverFieldItem from "@/pages/order/components/ReceiverFieldItem";
 import {
   INITIAL_PRODUCT_QUANTITY,
   MAX_RECEIVER_COUNT,
@@ -47,13 +47,13 @@ export default function ReceiverFormDialog({
   remove,
   watch,
 }: ReceiverFormDialogProps) {
-  if (!open) return null;
-
   const receivers = useWatch({ control, name: "receivers" });
   const phoneValidator = useMemo(
     () => createPhoneValidator(() => receivers),
     [receivers],
   );
+
+  if (!open) return null;
 
   return (
     <Overlay>
