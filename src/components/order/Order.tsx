@@ -27,6 +27,7 @@ import {
 import type { FormData } from "@/components/order/OrderForm";
 import { css } from "@emotion/react";
 import ReceiverModal from "@/components/order/ReceiverModal";
+import type { Theme } from "@emotion/react";
 import ReceiverInfoTable from "@/components/order/ReceiverInfoTable";
 
 const Order: React.FC = () => {
@@ -34,7 +35,6 @@ const Order: React.FC = () => {
   const [selectedId, setSelectedId] = useState<number>();
   const { id } = useParams<{ id: string }>();
   const quantity = 1;
-  const [totalPrice, setTotalPrice] = useState(0);
   const SenderNameRef = useRef<HTMLInputElement>(null);
   const GiftMessageRef = useRef<HTMLTextAreaElement>(null);
   const [messageError, setMessageError] = useState("");
@@ -44,6 +44,10 @@ const Order: React.FC = () => {
     { receiverName: string; phoneNumber: string; quantity: number }[]
   >([]);
   const navigate = useNavigate();
+  const totalQuantity =
+    receivers.length === 0
+      ? 1
+      : receivers.reduce((sum, receiver) => sum + Number(receiver.quantity), 0);
 
   const handleSubmit = () => {
     const msg = GiftMessageRef.current?.value.trim() ?? "";
@@ -70,7 +74,7 @@ const Order: React.FC = () => {
         `보내는 사람: ${SenderNameRef.current?.value}\n` +
         `메시지: ${GiftMessageRef.current?.value}\n` +
         `받는 사람 수: ${receivers.length}명\n` +
-        `총 수량: ${receivers.length === 1 ? quantity : quantity * receivers.length}개`
+        `총 수량: ${totalQuantity}개`
     );
     navigate("/");
   };
@@ -164,10 +168,8 @@ const Order: React.FC = () => {
           css={totalPriceBoxStyle}
         >
           <p css={SubmitStyle(theme)}>
-            {receivers.length === 1
-              ? totalPrice
-              : totalPrice * receivers.length}
-            원 주문하기
+            {(selectedGift?.price?.sellingPrice || 0) * totalQuantity}원
+            주문하기
           </p>
         </div>
       </div>
@@ -188,7 +190,7 @@ const ReceiverHeader = css`
 
 const SenderInputStyle = (theme: Theme) => css`
   padding: ${theme.spacing.spacing2};
-  height: 32px; /* 원하는 높이 */
+  height: 32px;
   font-size: ${theme.typography.body1Regular.size};
   border: 1px solid ${theme.colors.gray.gray500};
   border-radius: 6px;
