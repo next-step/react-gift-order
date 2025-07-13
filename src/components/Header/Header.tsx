@@ -30,6 +30,7 @@ const Title = styled.h1`
   font-weight: ${typography.fontWeight.bold};
   color: ${colors.gray900};
   margin: 0;
+  cursor: pointer;
 `;
 
 const ProfileButton = styled.button`
@@ -59,10 +60,13 @@ export const Header = ({ title }: HeaderProps) => {
       navigate(ROUTE_PATH.LOGIN);
     }
   };
+  const handleHome = () => {
+    navigate(ROUTE_PATH.HOME);
+  };
   return (
     <HeaderContainer>
       <BackButton onClick={handleBack}>&#8249;</BackButton>
-      <Title>{title}</Title>
+      <Title onClick={handleHome}>{title}</Title>
       <ProfileButton onClick={handleLogin}>&#128100;</ProfileButton>
     </HeaderContainer>
   );

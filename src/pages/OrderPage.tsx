@@ -1,17 +1,26 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { cardData, products } from '@/mock/mockData';
 import { Header } from '@/components/Header/Header';
-import { useOrderForm } from '@/hooks/useOrderForm';
 import { SuccessModal } from '@/components/SuccessModal/SuccessModal';
 import { useModal } from '@/hooks/useModal';
+import { RecipientModal } from '@/components/RecipientInput/RecipientModal';
+import { RecipientList } from '@/components/RecipientInput/RecipientList';
+import { orderFormSchema, type OrderFormData, type RecipientData } from '@/schemas/orderSchema';
+import { colors } from '@/styles/tokens';
 
 const Container = styled.div`
   max-width: 720px;
   margin: 0 auto;
   background-color: white;
   min-height: 100vh;
+  background-color: ${colors.gray50};
+
+  display: flex;
+  flex-direction: column;
   position: relative;
 `;
 
@@ -86,6 +95,9 @@ const MainCharacter = styled.div`
 const FormSection = styled.div`
   padding: 20px;
   background-color: white;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 `;
 
 const FormGroup = styled.div`
@@ -106,6 +118,7 @@ const FormInput = styled.input<{ hasError?: boolean }>`
   border: 1px solid ${(props) => (props.hasError ? '#ff4444' : '#ddd')};
   border-radius: 8px;
   font-size: 16px;
+  box-sizing: border-box;
 
   &:focus {
     outline: none;
@@ -121,16 +134,12 @@ const FormTextarea = styled.textarea<{ hasError?: boolean }>`
   font-size: 16px;
   min-height: 80px;
   resize: vertical;
+  box-sizing: border-box;
 
   &:focus {
     outline: none;
     border-color: ${(props) => (props.hasError ? '#ff4444' : '#4A90E2')};
   }
-`;
-
-const QuantityInput = styled(FormInput)`
-  width: 80px;
-  text-align: center;
 `;
 
 const ErrorMessage = styled.div`
@@ -211,14 +220,13 @@ const OrderButton = styled.button`
   cursor: pointer;
   position: sticky;
   bottom: 0;
-  margin-top: 20px;
-
+  margin-top: auto;
   &:hover {
     background-color: #ffc107;
   }
 
   &:disabled {
-    background-color: #ccc;
+    background-color: #ffd700;
     cursor: not-allowed;
   }
 `;
@@ -230,36 +238,66 @@ export const OrderPage: React.FC = () => {
   const productId = productIdParam ? parseInt(productIdParam, 10) : null;
 
   const selectedProduct = products.find((p) => p.id === productId) || products[0];
+  const [selectedCard, setSelectedCard] = useState<number>(cardData[0].id);
+  const [recipients, setRecipients] = useState<RecipientData[]>([]);
+  const [isRecipientModalOpen, setIsRecipientModalOpen] = useState(false);
 
-  const [selectedCard, setSelectedCard] = useState<number>(cardData[0].id); // 첫 번째 카드 기본 선택
   const successModal = useModal();
-
-  // 선택된 카드의 기본 메시지로 초기화
   const selectedCardData = cardData.find((card) => card.id === selectedCard);
 
-  // useOrderForm 커스텀 훅 사용
-  const { formData, formErrors, validateForm, handleInputChange, setMessage } = useOrderForm(
-    selectedCardData?.defaultTextMessage || '축하해요.',
-  );
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm<OrderFormData>({
+    resolver: zodResolver(orderFormSchema),
+    defaultValues: {
+      message: selectedCardData?.defaultTextMessage || '축하해요.',
+      senderName: '',
+      recipients: [],
+    },
+  });
 
   // 카드 선택 시 기본 메시지 업데이트
   const handleCardSelect = (cardId: number) => {
     setSelectedCard(cardId);
     const card = cardData.find((c) => c.id === cardId);
     if (card && card.defaultTextMessage) {
-      setMessage(card.defaultTextMessage);
+      setValue('message', card.defaultTextMessage);
     }
   };
 
-  const handleOrder = () => {
-    if (validateForm()) {
-      successModal.openModal();
-    }
+  // 받는 사람 모달 열기
+  const handleOpenRecipientModal = () => {
+    setIsRecipientModalOpen(true);
+  };
+
+  // 받는 사람 모달 닫기
+  const handleCloseRecipientModal = () => {
+    setIsRecipientModalOpen(false);
+  };
+
+  // 받는 사람 저장
+  const handleSaveRecipients = (newRecipients: RecipientData[]) => {
+    setRecipients(newRecipients);
+    setValue('recipients', newRecipients);
+  };
+
+  // 폼 제출
+  const onSubmit = (data: OrderFormData) => {
+    const submitData = {
+      ...data,
+      recipients: recipients,
+    };
+    console.log('주문 데이터:', submitData);
+    successModal.openModal();
   };
 
   return (
     <Container>
       <Header title="선물하기" />
+
       <CharacterSection>
         <CharacterGrid>
           {cardData.map((card) => (
@@ -289,94 +327,73 @@ export const OrderPage: React.FC = () => {
         </MainCharacter>
       </CharacterSection>
 
-      <FormSection>
-        <FormGroup>
-          <FormLabel>메시지</FormLabel>
-          <FormTextarea
-            value={formData.message}
-            onChange={(e) => handleInputChange('message', e.target.value)}
-            placeholder="축하해요."
-            hasError={!!formErrors.message}
+      <form onSubmit={handleSubmit(onSubmit)} id="order-form">
+        <FormSection>
+          <FormGroup>
+            <FormLabel>메시지</FormLabel>
+            <FormTextarea
+              {...register('message')}
+              placeholder="축하해요."
+              hasError={!!errors.message}
+            />
+            {errors.message && <ErrorMessage>{errors.message.message}</ErrorMessage>}
+          </FormGroup>
+
+          <SectionTitle>보내는 사람</SectionTitle>
+          <FormGroup>
+            <FormInput
+              {...register('senderName')}
+              placeholder="이름을 입력하세요."
+              hasError={!!errors.senderName}
+            />
+            {errors.senderName && <ErrorMessage>{errors.senderName.message}</ErrorMessage>}
+            <HelperText>* 실제 선물 발송 시 발신자 이름으로 반영되는 정보입니다.</HelperText>
+          </FormGroup>
+
+          <RecipientList
+            recipients={recipients}
+            onAdd={handleOpenRecipientModal}
+            onEdit={handleOpenRecipientModal}
           />
-          {formErrors.message && <ErrorMessage>{formErrors.message}</ErrorMessage>}
-        </FormGroup>
 
-        <SectionTitle>보내는 사람</SectionTitle>
-        <FormGroup>
-          <FormInput
-            type="text"
-            value={formData.senderName}
-            onChange={(e) => handleInputChange('senderName', e.target.value)}
-            placeholder="이름을 입력하세요."
-            hasError={!!formErrors.senderName}
-          />
-          {formErrors.senderName && <ErrorMessage>{formErrors.senderName}</ErrorMessage>}
-          <HelperText>* 실제 선물 발송 시 발신자 이름으로 반영되는 정보입니다.</HelperText>
-        </FormGroup>
-
-        <SectionTitle>받는 사람</SectionTitle>
-        <FormGroup>
-          <FormLabel>이름</FormLabel>
-          <FormInput
-            type="text"
-            value={formData.receiverName}
-            onChange={(e) => handleInputChange('receiverName', e.target.value)}
-            placeholder="이름을 입력하세요."
-            hasError={!!formErrors.receiverName}
-          />
-          {formErrors.receiverName && <ErrorMessage>{formErrors.receiverName}</ErrorMessage>}
-        </FormGroup>
-
-        <FormGroup>
-          <FormLabel>전화번호</FormLabel>
-          <FormInput
-            type="tel"
-            value={formData.receiverPhone}
-            onChange={(e) => handleInputChange('receiverPhone', e.target.value)}
-            placeholder="전화번호를 입력하세요."
-            hasError={!!formErrors.receiverPhone}
-          />
-          {formErrors.receiverPhone && <ErrorMessage>{formErrors.receiverPhone}</ErrorMessage>}
-        </FormGroup>
-
-        <FormGroup>
-          <FormLabel>수량</FormLabel>
-          <QuantityInput
-            type="number"
-            value={formData.quantity}
-            onChange={(e) => handleInputChange('quantity', parseInt(e.target.value) || 1)}
-            min="1"
-            hasError={!!formErrors.quantity}
-          />
-          {formErrors.quantity && <ErrorMessage>{formErrors.quantity}</ErrorMessage>}
-        </FormGroup>
-
-        <SectionTitle>상품 정보</SectionTitle>
-        <ProductInfo>
-          <ProductItem>
-            <ProductImage>
-              <img
-                src={selectedProduct.imageURL}
-                alt={selectedProduct.name}
-                style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 8 }}
-              />
-            </ProductImage>
-            <ProductDetails>
-              <h3>{selectedProduct.name}</h3>
-              <ProductBrand>{selectedProduct.brandInfo.name}</ProductBrand>
-              <ProductPrice>
-                상품가 {selectedProduct.price.sellingPrice.toLocaleString()}원
-              </ProductPrice>
-            </ProductDetails>
-          </ProductItem>
-        </ProductInfo>
-
-        <OrderButton onClick={handleOrder}>
-          {selectedProduct.price.sellingPrice.toLocaleString()}원 주문하기
-        </OrderButton>
-      </FormSection>
+          <SectionTitle>상품 정보</SectionTitle>
+          <ProductInfo>
+            <ProductItem>
+              <ProductImage>
+                <img
+                  src={selectedProduct.imageURL}
+                  alt={selectedProduct.name}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 8 }}
+                />
+              </ProductImage>
+              <ProductDetails>
+                <h3>{selectedProduct.name}</h3>
+                <ProductBrand>{selectedProduct.brandInfo.name}</ProductBrand>
+                <ProductPrice>
+                  상품가 {selectedProduct.price.sellingPrice.toLocaleString()}원
+                </ProductPrice>
+              </ProductDetails>
+            </ProductItem>
+          </ProductInfo>
+        </FormSection>
+      </form>
+      {/* 받는 사람 추가/수정 모달 */}
+      <RecipientModal
+        isOpen={isRecipientModalOpen}
+        onClose={handleCloseRecipientModal}
+        onSave={handleSaveRecipients}
+        initialRecipients={recipients}
+        maxCount={10}
+      />
 
       <SuccessModal showSuccessModal={successModal.isOpen} onClose={successModal.closeModal} />
+
+      <OrderButton form="order-form" type="submit" disabled={recipients.length === 0}>
+        {(
+          selectedProduct.price.sellingPrice * recipients.reduce((sum, r) => sum + r.quantity, 0)
+        ).toLocaleString()}
+        원 주문하기
+      </OrderButton>
     </Container>
   );
 };
