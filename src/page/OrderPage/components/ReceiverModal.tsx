@@ -185,7 +185,6 @@ const ReceiverModal = ({ onClick }: ReceiverModalProps) => {
               </ButtonAdd>
             </InfoArea>
 
-            {/* -------------------------------- */}
             <ReceiverAddedContainer>
               {fields.map((item, index) => (
                 <ReceiverInfoContainer key={item.id}>
@@ -200,7 +199,7 @@ const ReceiverModal = ({ onClick }: ReceiverModalProps) => {
                         type="text"
                         {...register(`receiverInfos.${index}.name`, {
                           required: { value: true, message: '이름을 입력하세요.' },
-                          validate: value => value.trim() === '' || '이름을 입력해주세요.',
+                          validate: value => (value.trim() === '' ? '이름을 입력해주세요.' : true),
                         })}
                         placeholder="이름을 입력하세요."
                       />
@@ -252,7 +251,6 @@ const ReceiverModal = ({ onClick }: ReceiverModalProps) => {
                 </ReceiverInfoContainer>
               ))}
             </ReceiverAddedContainer>
-            {/* -------------------------------- */}
 
             <ButtonArea>
               <ButtonCancel onClick={onClick}>취소</ButtonCancel>

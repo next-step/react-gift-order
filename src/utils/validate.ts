@@ -22,14 +22,6 @@ const validateEmail = (value: string): string => {
   }
 };
 
-export const validateText = (value: string): string => {
-  if (value.trim() === '') {
-    return '이름을 입력해주세요.';
-  } else {
-    return '';
-  }
-};
-
 const validateTextArea = (value: string): string => {
   if (value.trim() === '') {
     return '메시지를 입력해주세요.';
@@ -38,31 +30,11 @@ const validateTextArea = (value: string): string => {
   }
 };
 
-const validatePhoneNumber = (value: string): string => {
-  if (value.trim() === '') {
-    return '전화번호를 입력해주세요.';
-  }
-  if (!phoneNumberRegex.test(value)) {
-    return '올바른 전화번호 형식이 아닙니다.';
-  }
-  return '';
-};
-
-export const validateAmount = (value: number): string => {
-  if (value < 1) {
-    return '구매 수량은 1개 이상이어야 합니다.';
-  }
-  return '';
-};
-
-type FieldType = 'email' | 'password' | 'text' | 'phoneNumber' | 'textarea';
+type FieldType = 'email' | 'password' | 'textarea';
 const validators = {
   textarea: validateTextArea,
   email: validateEmail,
   password: validatePassword,
-  text: validateText,
-  phoneNumber: validatePhoneNumber,
-  amount: validateAmount,
 } as const;
 
 export const getValidator = (type: FieldType) => {
