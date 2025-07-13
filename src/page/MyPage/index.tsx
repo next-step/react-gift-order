@@ -7,6 +7,7 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   background-color: ${({ theme }) => theme.colors.semantic.background.fill};
 `;
 
@@ -14,20 +15,17 @@ const MyPage = () => {
   const { userInfo, logout } = useUserInfo();
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onClick = () => {
     logout();
     navigate(ROUTES.LOGIN);
   };
 
   return (
     <Container>
-      <form onSubmit={handleSubmit}>
-        <h1>마이페이지</h1>
-        <p>안녕하세요!</p>
-        <p>이메일 주소는 {userInfo.email} 입니다.</p>
-        <button>로그아웃</button>
-      </form>
+      <h1>마이페이지</h1>
+      <p>안녕하세요!</p>
+      <p>이메일 주소는 {userInfo.email} 입니다.</p>
+      <button onClick={onClick}>로그아웃</button>
     </Container>
   );
 };
