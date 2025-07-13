@@ -1,9 +1,21 @@
 import styled from '@emotion/styled';
 
+const Wrapper = styled.div`
+  margin: ${({ theme }) => theme.spacing.spacing4} 0;
+  padding: 0 ${({ theme }) => theme.spacing.spacing4};
+`;
+
 const InfoWrapper = styled.div`
   display: flex;
-  gap: 12px;
-  margin: 16px 0;
+  gap: ${({ theme }) => theme.spacing.spacing3};
+  margin: ${({ theme }) => theme.spacing.spacing4} 0;
+  padding: 0 ${({ theme }) => theme.spacing.spacing4};
+`;
+
+const Label = styled.label`
+  font-weight: bold;
+  display: block;
+  margin-bottom: ${({ theme }) => theme.spacing.spacing1};
 `;
 
 const Img = styled.img`
@@ -22,13 +34,16 @@ interface Product {
 
 export default function ProductInfoSection({ product }: { product: Product }) {
     return (
-        <InfoWrapper>
-            <Img src={product.imageUrl} alt={product.name} />
-            <div>
-                <div>{product.name}</div>
-                <div>{product.brand}</div>
-                <div>상품가 {product.price.toLocaleString()}원</div>
-            </div>
-        </InfoWrapper>
+        <Wrapper>
+            <Label htmlFor="productInfo">상품 정보</Label>
+            <InfoWrapper>
+                <Img src={product.imageUrl} alt={product.name} />
+                <div>
+                    <div>{product.name}</div>
+                    <div>{product.brand}</div>
+                    <div>상품가 {product.price.toLocaleString()}원</div>
+                </div>
+            </InfoWrapper>
+        </Wrapper>
     );
 }

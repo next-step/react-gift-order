@@ -10,18 +10,21 @@ interface AuthContextType {
   setUser: (user: User) => void;
   isLoggedIn: boolean;
   logout: () => void;
+  isInitialized: boolean;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUserState] = useState<User | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
   
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
         setUserState(JSON.parse(storedUser));
     }
+    setIsInitialized(true);
   }, []);
 
   const setUser = (user: User) => {
@@ -35,7 +38,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, isLoggedIn: !!user, logout }}>
+    <AuthContext.Provider value={{ user, setUser, isLoggedIn: !!user, logout, isInitialized }}>
       {children}
     </AuthContext.Provider>
   );

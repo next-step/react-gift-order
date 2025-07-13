@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import type { UseFormRegister } from "react-hook-form";
 
 const Section = styled.section`
   width: 100%;
@@ -24,23 +25,16 @@ const ErrorText = styled.p`
 `;
 
 interface Props {
-  message: string;
-  setMessage: (value: string) => void;
-  touched: boolean;
-  error: string;
-  onBlur: () => void;
+  register: UseFormRegister<any>;
+  error?: string;
+  touched?: boolean;
 }
 
 
-export default function MessageInputSection({ message, setMessage, touched, error, onBlur, }: Props) {
+export default function MessageInputSection({ register, error, touched, }: Props) {
   return (
     <Section>
-      <TextArea
-        placeholder="메시지를 입력하세요"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        onBlur={onBlur}
-      />
+      <TextArea {...register("message")} placeholder="메시지를 입력하세요" />
       {touched && error && <ErrorText>{error}</ErrorText>}
     </Section>
   );
