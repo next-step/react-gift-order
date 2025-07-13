@@ -86,8 +86,14 @@ const OrderForm = ({
         />
       ))}
 
-      <button onClick={onClose}>취소</button>
-      <button type="submit">{fields.length}명 완료</button>
+      <div css={buttonContainerStyle}>
+        <button type="button" css={cancelButtonStyle} onClick={onClose}>
+          취소
+        </button>
+        <button type="submit" css={submitButtonStyle}>
+          {fields.length}명 완료
+        </button>
+      </div>
     </form>
   );
 };
@@ -105,4 +111,35 @@ const buttonStyle = (theme: Theme) => css`
 
 const formStyle = css`
   width: 100%;
+`;
+
+const buttonContainerStyle = css`
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+`;
+
+const cancelButtonStyle = (theme: Theme) => css`
+  flex: 1;
+  padding: 1rem;
+  background-color: ${theme.colors.gray.gray300};
+  color: ${theme.colors.gray.gray900};
+  font-size: ${theme.typography.body1Bold.size};
+  font-weight: ${theme.typography.body1Bold.weight};
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+`;
+
+const submitButtonStyle = (theme: Theme) => css`
+  flex: 1;
+  padding: 1rem;
+  background-color: ${theme.colors.semantic.kakaoYellow};
+  color: ${theme.colors.brown.brown900};
+  font-size: ${theme.typography.body1Bold.size};
+  font-weight: ${theme.typography.body1Bold.weight};
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
 `;

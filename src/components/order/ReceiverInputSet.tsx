@@ -100,12 +100,12 @@ const headerStyle = css`
   margin-bottom: 1rem;
 `;
 
-const removeButtonStyle = css`
+const removeButtonStyle = (theme: Theme) => css`
   background: none;
   border: none;
   font-size: 1.2rem;
   cursor: pointer;
-  color: #888;
+  color: ${theme.colors.semantic.text.sub};
 `;
 
 const inputStyle = (theme: Theme) => css`
@@ -121,14 +121,14 @@ const inputStyle = (theme: Theme) => css`
   }
 `;
 
-const errorStyle = css`
-  color: red;
-  margin-bottom: 0.5rem;
-  font-size: 10px;
+const errorStyle = (theme: Theme) => css`
+  color: ${theme.colors.semantic.status.critical};
+  margin-top: ${theme.spacing.spacing1};
+  font-size: ${theme.typography.label2Regular.size};
 `;
 
-const WrapperStyle = css`
-  margin-bottom: 1.5rem;
-  padding: 1rem;
-  border-bottom: solid 1px;
+const WrapperStyle = (theme: Theme) => css`
+  margin-bottom: ${theme.spacing.spacing5};
+  padding: ${theme.spacing.spacing4};
+  border-bottom: 1px solid ${theme.colors.semantic.border.default};
 `;

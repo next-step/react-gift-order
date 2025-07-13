@@ -1,6 +1,7 @@
 import { css } from "@emotion/react";
 import OrderForm from "@/components/order/OrderForm";
 import type { FormData } from "@/components/order/OrderForm";
+import type { Theme } from "@emotion/react";
 
 const ReceiverModal = ({
   onClose,
@@ -36,13 +37,13 @@ const ReceiverModal = ({
   );
 };
 
-const ModalStyle = css`
+const ModalStyle = (theme: Theme) => css`
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: white;
-  padding: 2rem;
+  background: ${theme.colors.semantic.background.default};
+  padding: ${theme.spacing.spacing8};
   border-radius: 12px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
   width: 600px;
@@ -62,10 +63,10 @@ const OverlayStyle = css`
   z-index: 10;
 `;
 
-const InfoTextStyle = css`
-  font-size: 0.85rem;
-  color: #666;
-  margin: 0.25rem 0;
+const InfoTextStyle = (theme: Theme) => css`
+  font-size: ${theme.typography.body2Regular.size};
+  color: ${theme.colors.semantic.text.sub};
+  margin: ${theme.spacing.spacing1} 0;
 `;
 
 export default ReceiverModal;
