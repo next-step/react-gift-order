@@ -228,11 +228,11 @@ function RealtimeGiftRank() {
     
     if (userId !== '') {
       const query = new URLSearchParams({
-        brandInfo,
-        id,
+        brandInfo: brandInfo.name,
+        id: id.toString(),
         imageURL,
         name,
-        price: price.toString(),
+        price: price.basicPrice,
       }).toString();
       // sessionStorage.setItem(
       //   'selectedItem',
