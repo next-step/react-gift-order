@@ -42,7 +42,13 @@ const OrderForm = () => {
     e.preventDefault();
     const ok = validate();
     if (ok) {
-      alert('주문이 완료되었습니다.');
+      alert(
+        `주문이 완료되었습니다.\n` +
+          `상품명: ${productData.name}\n` +
+          `구매 수량: ${quantity}\n` +
+          `발신자 이름: ${senderValue}\n` +
+          `메세지: ${message}`
+      );
     }
   };
   const [searchParams] = useSearchParams();
