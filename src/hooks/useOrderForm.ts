@@ -1,90 +1,73 @@
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
+import { useFieldArray } from 'react-hook-form'
+import type { UseFormReturn } from 'react-hook-form'
 import { cardMock } from '@/pages/OrderPage/cardMock'
+import type { FormValues, ReceiverInfo } from '@/components/OrderPage/OrderForm'
+import type { Product } from '@/types/product'
 
-export function useOrderForm() {
+export function useOrderForm(
+  form: UseFormReturn<FormValues>,
+  product: Product
+) {
+  const { control, setValue, getValues, trigger, reset } = form
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'receivers',
+  })
+
+  const [showReceiverModal, setShowReceiverModal] = useState(false)
   const [selectedCard, setSelectedCard] = useState(cardMock[0])
-  const [message, setMessage] = useState(selectedCard.defaultTextMessage)
-  const [sender, setSender] = useState('')
-  const [receiver, setReceiver] = useState('')
-  const [receiverPhone, setReceiverPhone] = useState('')
-  const [quantity, setQuantity] = useState(1)
-  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [finalReceivers, setFinalReceivers] = useState<ReceiverInfo[]>([])
 
-  const senderError = useMemo(() => {
-    if (!sender) return '보내는 사람 이름을 입력해주세요.'
-    return ''
-  }, [sender])
+  const totalQuantity = finalReceivers.reduce(
+    (acc, receiver) => acc + Number(receiver.quantity || 0),
+    0
+  )
+  const totalPrice = product.price.sellingPrice * totalQuantity
 
-  const receiverError = useMemo(() => {
-    if (!receiver) return '받는 사람 이름을 입력해주세요.'
-    return ''
-  }, [receiver])
+  const onSubmit = (data: FormValues) => {
+    alert(`주문이 완료되었습니다.
+          상품명: ${product.name}
+          구매 수량: ${totalQuantity}
+          발신자 이름: ${data.sender}
+          메시지: ${data.message}`)
+    reset()
+    setSelectedCard(cardMock[0])
+    setValue('message', cardMock[0].defaultTextMessage)
+    setFinalReceivers([])
+  }
 
-  const phoneRegex = /^010\d{8}$/
-  const receiverPhoneError = useMemo(() => {
-    if (!receiverPhone) return '받는 사람 전화번호를 입력해주세요.'
-    if (!phoneRegex.test(receiverPhone))
-      return '올바른 전화번호 형식이 아닙니다.'
-    return ''
-  }, [receiverPhone])
+  const validateAndSaveReceivers = async () => {
+    const isValid = await trigger('receivers')
+    if (!isValid) return
 
-  const messageError = useMemo(() => {
-    if (!message) return '메시지를 입력해주세요.'
-    return ''
-  }, [message])
+    const receivers = getValues('receivers')
+    const phones = receivers.map((r) => r.phone)
+    const hasDuplicatePhone = new Set(phones).size !== phones.length
 
-  const quantityError = useMemo(() => {
-    if (quantity < 1) return '수량은 1개 이상이어야 합니다.'
-    return ''
-  }, [quantity])
+    if (hasDuplicatePhone) {
+      alert('중복된 전화번호가 있습니다.')
+      return
+    }
 
-  const isFormValid =
-    !senderError &&
-    !receiverError &&
-    !receiverPhoneError &&
-    !messageError &&
-    !quantityError
-
-  const resetForm = () => {
-    setSender('')
-    setReceiver('')
-    setReceiverPhone('')
-    setMessage('')
-    setQuantity(1)
-    setIsSubmitted(false)
+    setFinalReceivers(receivers)
+    setShowReceiverModal(false)
   }
 
   return {
-    sender: {
-      value: sender,
-      set: setSender,
-      error: senderError,
-    },
-    receiver: {
-      value: receiver,
-      set: setReceiver,
-      error: receiverError,
-    },
-    receiverPhone: {
-      value: receiverPhone,
-      set: setReceiverPhone,
-      error: receiverPhoneError,
-    },
-    quantity: {
-      value: quantity,
-      set: setQuantity,
-      error: quantityError,
-    },
-    card: {
-      selectedCard,
-      setSelectedCard,
-      message,
-      setMessage,
-      error: messageError,
-    },
-    isSubmitted,
-    setIsSubmitted,
-    isFormValid,
-    resetForm,
+    fields,
+    append,
+    remove,
+    showReceiverModal,
+    setShowReceiverModal,
+    selectedCard,
+    setSelectedCard,
+    finalReceivers,
+    setFinalReceivers,
+    totalQuantity,
+    totalPrice,
+    onSubmit,
+    validateAndSaveReceivers,
   }
 }
