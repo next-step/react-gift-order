@@ -98,9 +98,7 @@ export const OverlayRenderer = ({
         <OverlayBackdrop
           dimmed={options?.dimmed ?? true}
           onClick={
-            options?.closeOnBackdropClick !== false
-              ? () => unmount(id)
-              : undefined
+            options?.closeOnBackdropClick ? () => unmount(id) : undefined
           }
         />
         <OverlayContent>{element}</OverlayContent>
