@@ -88,31 +88,6 @@ const OrderForm = ({ onSubmitCallback, savedReceiverInfo }: OrderFormProps) => {
 
 export default OrderForm;
 
-const inputStyle = (theme: Theme) => css`
-    display: block;
-  width: 100%;
-  padding: ${theme.spacing.spacing4};
-  font-size: ${theme.typography.body1Regular.size};
-  font-weight: ${theme.typography.body1Regular.weight};
-  line-height: ${theme.typography.body1Regular.lineHeight};
-  border: 1px solid ${theme.colors.gray.gray500};
-  border-radius: 8px;
-  box-sizing: border-box;
-  }
-`;
-
-const errorStyle = css`
-  color: red;
-  margin-bottom: 0.5rem;
-  font-size: 10px;
-`;
-
-const WrapperStyle = css`
-  margin-bottom: 1.5rem;
-  padding: 1rem;
-  border-bottom: solid 1px;
-`;
-
 const buttonStyle = (theme: Theme) => css`
   background-color: ${theme.colors.gray.gray200};
   padding: 0.75rem 1rem;
@@ -124,19 +99,4 @@ const buttonStyle = (theme: Theme) => css`
 
 const formStyle = css`
   width: 100%;
-`;
-
-const headerStyle = css`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-`;
-
-const removeButtonStyle = css`
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  cursor: pointer;
-  color: #888;
 `;
