@@ -51,7 +51,7 @@ function Order() {
     },
   });
 
-  const { fields, replace } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: 'reciever',
   });
@@ -60,7 +60,6 @@ function Order() {
     const totalCount = newList.reduce((sum, r) => sum + (r.count || 0), 0);
     setValue('count', totalCount);
     setValue('cost', totalCount * item.price.basicPrice);
-    replace(newList);
   };
 
   const currentCardId = watch('currentCardId');
@@ -90,7 +89,12 @@ function Order() {
         errors={errors}
       />
       <Sender register={register} errors={errors} />
-      <Reciever recievers={fields} onUpdate={handleRecieverUpdate} />
+      <Reciever
+        recievers={fields}
+        append={append}
+        remove={remove}
+        onUpdate={handleRecieverUpdate}
+      />
       <ItemInfo item={item} />
       <OrderBtn cost={cost} />
     </OrderContainer>

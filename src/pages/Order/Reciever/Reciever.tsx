@@ -13,13 +13,17 @@ import {
 } from '@/styles/Order/Reciever.styles';
 import RecieverModal from '@/pages/Order/Reciever/RecieverModal';
 import type { RecieverType } from '@/pages/Order/Order';
+import type { UseFieldArrayRemove, UseFieldArrayAppend } from 'react-hook-form';
+import type { FormValues } from '@/pages/Order/Order';
 
 type RecieverProps = {
   recievers: RecieverType[];
+  append: UseFieldArrayAppend<FormValues, 'reciever'>;
+  remove: UseFieldArrayRemove;
   onUpdate: (newList: RecieverType[]) => void;
 };
 
-function Reciever({ recievers, onUpdate }: RecieverProps) {
+function Reciever({ recievers, append, remove, onUpdate }: RecieverProps) {
   const [modalOpen, setModalOpen] = useState(false);
 
   return (
@@ -58,6 +62,8 @@ function Reciever({ recievers, onUpdate }: RecieverProps) {
       <RecieverModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
+        append={append}
+        remove={remove}
         onComplete={(list) => {
           onUpdate(list);
           setModalOpen(false);
