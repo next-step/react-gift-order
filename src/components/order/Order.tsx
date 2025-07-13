@@ -108,6 +108,7 @@ const Order: React.FC = () => {
         <div css={InputRowStyle(theme)}>
           <div css={InputWrapperStyle}>
             <input
+              css={SenderInputStyle}
               type="text"
               ref={SenderNameRef}
               placeholder="이름을 입력하세요."
@@ -183,4 +184,12 @@ const ReceiverSection = css`
 const ReceiverHeader = css`
   display: flex;
   justify-content: space-between;
+`;
+
+const SenderInputStyle = (theme: Theme) => css`
+  padding: ${theme.spacing.spacing2};
+  height: 32px; /* 원하는 높이 */
+  font-size: ${theme.typography.body1Regular.size};
+  border: 1px solid ${theme.colors.gray.gray500};
+  border-radius: 6px;
 `;

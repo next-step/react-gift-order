@@ -66,19 +66,6 @@ export const InputRowStyle = (theme: Theme) => css`
   flex-direction: row;
   align-items: flex-start;
   gap: ${theme.spacing.spacing4};
-
-  span {
-    width: 70px;
-    padding-top: 15px;
-  }
-
-  input {
-    flex: 1;
-    padding: ${theme.spacing.spacing8};
-    border: 1px solid;
-    border-radius: 8px;
-    height: 30px;
-  }
 `;
 
 export const TextStyle = (theme: Theme) => css`
