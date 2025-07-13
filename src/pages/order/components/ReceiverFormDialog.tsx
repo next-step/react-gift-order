@@ -11,6 +11,10 @@ import styled from "@emotion/styled";
 import { type Receiver } from "./ReceiverListSection";
 import { createPhoneValidator } from "@/utils/validators";
 import ReceiverFieldItem from "./ReceiverFieldItem";
+import {
+  INITIAL_PRODUCT_QUANTITY,
+  MAX_RECEIVER_COUNT,
+} from "@/constants/validation";
 
 interface FormValues {
   receivers: Receiver[];
@@ -56,9 +60,13 @@ export default function ReceiverFormDialog({
 
           <AddButton
             type="button"
+            disabled={fields.length >= MAX_RECEIVER_COUNT}
             onClick={() => {
-              if (fields.length >= 10) return;
-              append({ name: "", phone: "", quantity: 1 });
+              append({
+                name: "",
+                phone: "",
+                quantity: INITIAL_PRODUCT_QUANTITY,
+              });
             }}
           >
             추가하기
@@ -140,16 +148,6 @@ const ScrollArea = styled.div`
   max-height: 400px;
   overflow-y: auto;
   padding-right: ${({ theme }) => theme.spacing.spacing2};
-`;
-
-const FieldRow = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.spacing2};
-  margin-bottom: ${({ theme }) => theme.spacing.spacing5};
-  border-bottom: 1px solid
-    ${({ theme }) => theme.colors.semantic.border.default};
-  padding-bottom: ${({ theme }) => theme.spacing.spacing4};
 `;
 
 const Footer = styled.div`
