@@ -1,5 +1,10 @@
 import React from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
+import type {
+  UseFormSetError,
+  UseFormClearErrors,
+  FieldErrors,
+} from 'react-hook-form';
 import type { Receiver } from '@/types/receiver';
 
 const DEFAULT_RECEIVERS: Receiver[] = [{ name: '', phone: '', quantity: 1 }];
@@ -12,6 +17,28 @@ interface ReceiverModalProps {
   receivers: Receiver[];
   setReceivers: (receivers: Receiver[]) => void;
   onClose: () => void;
+}
+
+function checkDuplicatePhone(
+  receivers: Receiver[],
+  setError: UseFormSetError<FormValues>,
+  clearErrors: UseFormClearErrors<FormValues>,
+  errors: FieldErrors<FormValues>,
+) {
+  const phoneCount: Record<string, number> = {};
+  receivers.forEach((r: Receiver) => {
+    if (r.phone) phoneCount[r.phone] = (phoneCount[r.phone] || 0) + 1;
+  });
+  receivers.forEach((r: Receiver, idx: number) => {
+    if (r.phone && phoneCount[r.phone] > 1) {
+      setError(`receivers.${idx}.phone`, {
+        type: 'duplicate',
+        message: '중복된 전화번호가 있습니다.',
+      });
+    } else if (errors.receivers?.[idx]?.phone?.type === 'duplicate') {
+      clearErrors(`receivers.${idx}.phone`);
+    }
+  });
 }
 
 const ReceiverModal: React.FC<ReceiverModalProps> = ({
@@ -27,6 +54,7 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
     setError,
     clearErrors,
     register,
+    getValues,
   } = useForm<FormValues>({
     defaultValues: {
       receivers:
@@ -260,6 +288,14 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
                       padding: '0 12px',
                     }}
                     placeholder="전화번호를 입력하세요."
+                    onChange={(e) => {
+                      checkDuplicatePhone(
+                        getValues('receivers'),
+                        setError,
+                        clearErrors,
+                        errors,
+                      );
+                    }}
                   />
                   {errors.receivers?.[idx]?.phone && (
                     <div
