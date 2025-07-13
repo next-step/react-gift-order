@@ -45,18 +45,27 @@ const OrderForm = ({ onSubmitCallback }: OrderFormProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} style={{ width: "300px" }}>
+    <form onSubmit={handleSubmit(onSubmit)} css={formStyle}>
       <button
         type="button"
         onClick={() => {
           append({ receiverName: "", phoneNumber: "", quantity: 1 });
         }}
         disabled={fields.length >= 10}
+        css={buttonStyle}
       >
         추가하기
       </button>
       {fields.map((field, index) => (
-        <div key={field.id}>
+        <div key={field.id} css={WrapperStyle}>
+          {fields.length > 1 && (
+            <div css={headerStyle}>
+              <strong>받는 사람 {index + 1}</strong>
+              <button css={removeButtonStyle} onClick={() => remove(index)}>
+                ✕
+              </button>
+            </div>
+          )}
           <input
             css={inputStyle}
             placeholder="이름"
@@ -107,11 +116,6 @@ const OrderForm = ({ onSubmitCallback }: OrderFormProps) => {
           {errors.order?.[index]?.quantity && (
             <p css={errorStyle}>{errors.order[index].quantity?.message}</p>
           )}
-          {fields.length > 1 && (
-            <button type="button" onClick={() => remove(index)}>
-              X
-            </button>
-          )}
         </div>
       ))}
 
@@ -123,14 +127,54 @@ const OrderForm = ({ onSubmitCallback }: OrderFormProps) => {
 export default OrderForm;
 
 const inputStyle = (theme: Theme) => css`
-  display: block;
+    display: block;
   width: 100%;
   padding: ${theme.spacing.spacing4};
-  font-size: ${theme.typography.body1Bold.size};
+  font-size: ${theme.typography.body1Regular.size};
+  font-weight: ${theme.typography.body1Regular.weight};
+  line-height: ${theme.typography.body1Regular.lineHeight};
+  border: 1px solid ${theme.colors.gray.gray500};
+  border-radius: 8px;
+  box-sizing: border-box;
+  }
 `;
 
 const errorStyle = css`
   color: red;
   margin-bottom: 0.5rem;
   font-size: 10px;
+`;
+
+const WrapperStyle = css`
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border-bottom: solid 1px;
+`;
+
+const buttonStyle = (theme: Theme) => css`
+  background-color: ${theme.colors.gray.gray200};
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: ${theme.typography.body1Bold.size};
+`;
+
+const formStyle = css`
+  width: 100%;
+`;
+
+const headerStyle = css`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+`;
+
+const removeButtonStyle = css`
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #888;
 `;
