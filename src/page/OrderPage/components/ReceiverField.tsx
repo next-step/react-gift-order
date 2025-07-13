@@ -68,16 +68,17 @@ const ReceiverField = ({ watchedData }: ReceiverFieldProps) => {
     control,
     name: 'receiverInfos',
   });
+  const isEmpty = receiverFieldArray.fields.length ? false : true;
 
   return (
     <>
       <Container>
         <ButtonArea>
           <P>받는사람</P>
-          <Button onClick={() => setIsModalOpen(true)}>추가</Button>
+          <Button onClick={() => setIsModalOpen(true)}>{!isEmpty ? '수정' : '추가'}</Button>
         </ButtonArea>
         <MainArea>
-          {receiverFieldArray.fields.length ? (
+          {!isEmpty ? (
             <ReceiverInfoArray receiverFieldArray={receiverFieldArray} data={watchedData} />
           ) : (
             <p>
