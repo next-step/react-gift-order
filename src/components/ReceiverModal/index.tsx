@@ -1,19 +1,12 @@
 import React from 'react';
-import { useForm, useFieldArray } from 'react-hook-form';
 import Modal from '@/components/common/Modal';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import * as S from './styles';
 import { Input, InputRow, Label, ErrorMessage } from '@/components/SenderForm/styles';
 import {
-  RECEIVER_NAME_ERROR,
-  PHONE_REGEX_ERROR,
   NAME_LABEL,
   PHONE_LABEL,
   MAX_RECEIVERS,
-  QUANTITY_MIN_ERROR,
   QUANTITY_LABEL,
-  DUPLICATE_PHONE_ERROR,
   CANCEL_BUTTON_TEXT,
   COMPLETE_BUTTON_SUFFIX,
   MODAL_TITLE,
@@ -22,39 +15,9 @@ import {
   DUPLICATE_PHONE_HINT,
   ADD_BUTTON_TEXT,
   RECEIVER_TITLE_PREFIX,
-  DEFAULT_RECEIVER,
 } from './constants';
-
-const ReceiverSchema = z.object({
-  name: z.string().nonempty(RECEIVER_NAME_ERROR),
-  phone: z.string().regex(/^010\d{8}$/, PHONE_REGEX_ERROR),
-  quantity: z.number().min(1, QUANTITY_MIN_ERROR),
-});
-type Receiver = z.infer<typeof ReceiverSchema>;
-
-const FormSchema = z.object({
-  receivers: z
-    .array(ReceiverSchema)
-    .min(1)
-    .max(MAX_RECEIVERS, `${MAX_RECEIVERS_HINT_PREFIX}${MAX_RECEIVERS}${MAX_RECEIVERS_HINT_SUFFIX}`)
-    .superRefine((receivers: Receiver[], ctx: z.RefinementCtx) => {
-      const seen = new Set<string>();
-      receivers.forEach((r: Receiver, i: number) => {
-        if (seen.has(r.phone)) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: DUPLICATE_PHONE_ERROR,
-            path: ['receivers', i, 'phone'],
-          });
-        } else {
-          seen.add(r.phone);
-        }
-      });
-    }),
-});
-
-type FormValues = z.infer<typeof FormSchema>;
-type Receivers = FormValues['receivers'];
+import { useReceiverForm } from './useReceiverForm';
+import type { Receivers } from './schema';
 
 interface ReceiverModalProps {
   isOpen: boolean;
@@ -70,42 +33,18 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
   initialReceivers = [],
 }) => {
   const {
-    control,
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      receivers:
-        initialReceivers.length > 0
-          ? initialReceivers
-          : [DEFAULT_RECEIVER],
-    },
-    mode: 'onChange',
+    errors,
+    fields,
+    handleAddReceiver,
+    handleRemoveReceiver,
+    onSubmit,
+  } = useReceiverForm({
+    initialReceivers,
+    onComplete,
+    onClose,
   });
-
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: 'receivers',
-  });
-
-  const handleAddReceiver = () => {
-    if (fields.length < MAX_RECEIVERS) {
-      append(DEFAULT_RECEIVER);
-    }
-  };
-
-  const handleRemoveReceiver = (index: number) => {
-    if (fields.length > 1) {
-      remove(index);
-    }
-  };
-
-  const onSubmit = (data: FormValues) => {
-    onComplete(data.receivers);
-    onClose();
-  };
 
   const footerContent = (
     <>
