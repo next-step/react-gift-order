@@ -1,283 +1,319 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import itemList from '../mocks/iteml_list.mock';
+import itemList from '../mocks/item_list.mock';
+import useUser from '@/hooks/useUser';
 
 const RealtimeRankWrapper = styled.div`
-  width: 95%;
+  width: auto;
   height: auto;
-  margin: 0 20px;
-  margin-top: 40px;
+  padding: ${({ theme }) => theme.spacing.spacing2} ${({ theme }) => theme.spacing.spacing4};
 `;
 
 const RealtimeRankTitle = styled.h2`
-  font-size: ${({ theme }) => theme.typography['title1Bold'].fontSize};
-  font-weight: ${({ theme }) => theme.typography['title1Bold'].fontWeight};
-  line-height: ${({ theme }) => theme.typography['title1Bold'].lineHeight};
+  font-size: ${({ theme }) => theme.typography.title.title1Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.title.title1Bold.fontWeight};
+  line-height: ${({ theme }) => theme.typography.title.title1Bold.lineHeight};
 `;
 
-const RealtimeRankNavWrapper = styled.div`
-  width: 100%;
-  height: 100px;
+// 첫 번째 selector 시작
+const UserGroupSelectorWrapper = styled.div`
+  width: auto;
+  height: auto;
+  padding: ${({ theme }) => theme.spacing.spacing4} ${({ theme }) => theme.spacing.spacing2};
+
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  gap: 150px;
 `;
-const RealtimeRankNavBtnTitleWrapper = styled.div`
+
+const UserGroupSelectorItemWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
   cursor: pointer;
 `;
 
-const RealtimeRankNavBtnStyle = styled.div<{ isSelected?: boolean }>`
-  width: 50px;
-  height: 50px;
-  background-color: ${({ theme }) => theme.colors.blue[100]};
-  border-radius: 15px;
+const UserGroupSelectorBtn = styled.button<{ isSelected?: boolean }>`
+  width: ${({ theme }) => theme.spacing.spacing11};
+  height: ${({ theme }) => theme.spacing.spacing11};
+  border: none;
+  border-radius: 16px;
+  color: ${({ theme, isSelected }) => isSelected ? theme.colors.gray.gray00 : theme.colors.blue.blue400};
+  background-color: ${({ theme, isSelected }) => isSelected ? theme.colors.blue.blue700 : theme.colors.blue.blue100};
+  
   display: flex;
   justify-content: center;
   align-items: center;
-  color: ${({ theme }) => theme.colors.blue[400]};
-  font-size: ${({ theme }) => theme.typography['label1Bold'].fontSize};
-  font-weight: ${({ theme }) => theme.typography['label1Bold'].fontWeight};
-  line-height: ${({ theme }) => theme.typography['label1Bold'].lineHeight};
-  cursor: pointer;
 
-  background-color: ${({ theme, isSelected }) =>
-    isSelected ? theme.colors.blue[700] : theme.colors.blue[100]};
-  color: ${({ theme, isSelected }) =>
-    isSelected ? theme.colors.gray[0] : theme.colors.blue[400]};
+  font-size: ${({ theme }) => theme.typography.label.label1Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label.label1Bold.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label.label1Bold.lineHeight};
+  cursor: pointer;
 `;
 
-function RealtimeRankNavBtn({
-  children,
-  onClick,
-  isSelected,
-}: {
-  children: React.ReactNode;
-  onClick?: () => void;
-  isSelected?: boolean;
-}) {
-  return (
-    <>
-      <RealtimeRankNavBtnStyle onClick={onClick} isSelected={isSelected}>
-        {children}
-      </RealtimeRankNavBtnStyle>
-    </>
-  );
-}
-
-const RealtimeRankNavTitle = styled.p`
-  font-size: 12px;
+const UserGroupSelectorTxt = styled.p<{ isSelected?: boolean }>`
+  font-size: ${({ theme }) => theme.typography.label.label1Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label.label1Bold.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label.label1Bold.lineHeight};
+  color: ${({ theme, isSelected}) => isSelected ? theme.colors.blue.blue700 : theme.colors.gray.gray700};
   margin-top: 5px;
-  color: ${({ theme }) => theme.colors.gray[600]};
 `;
 
-const RealtimeRankNav2Wrapper = styled.div`
-  width: 100%;
-  height: 50px;
-  border: 1px solid ${({ theme }) => theme.colors.blue[300]};
-  background-color: ${({ theme }) => theme.colors.blue[100]};
-  border-radius: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 150px;
-`;
-
-const RealtimeRankNav2BtnStyle = styled.div<{ isSelected?: boolean }>`
-  font-size: ${({ theme }) => theme.typography.label1Bold.fontSize};
-  font-weight: ${({ theme }) => theme.typography.label1Bold.fontWeight};
-  line-height: ${({ theme }) => theme.typography.label1Bold.lineHeight};
-  color: ${({ theme }) => theme.colors.blue[500]};
-  cursor: pointer;
-
-  color: ${({ theme, isSelected }) =>
-    isSelected ? theme.colors.blue[700] : theme.colors.blue[500]};
-`;
-
-function RealtimeRankNav2Btn({
-  children,
-  onClick,
-  isSelected,
-}: {
-  children: React.ReactNode;
-  onClick?: () => void;
-  isSelected?: boolean;
-}) {
-  return (
-    <RealtimeRankNav2BtnStyle onClick={onClick} isSelected={isSelected}>
-      {children}
-    </RealtimeRankNav2BtnStyle>
-  );
-}
-
-const RealtimeRankItemWrapper = styled.div`
-  width: 100%;
+// 두 번째 selector 시작
+const RankingTypeSelectorWrapper = styled.div`
+  width: auto;
   height: auto;
-  margin-top: 20px;
+  padding: ${({ theme }) => theme.spacing.spacing3} ${({ theme }) => theme.spacing.spacing4};
+  border: 1px solid ${({ theme }) => theme.colors.blue.blue200};
+  background-color: ${({ theme }) => theme.colors.blue.blue100};
+  border-radius: 7px;
+
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+`;
+
+const RankingTypeSelectorBtn = styled.div<{ isSelected?: boolean }>`
+  font-size: ${({ theme }) => theme.typography.label.label1Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label.label1Bold.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label.label1Bold.lineHeight};
+  color: ${({ theme, isSelected }) => isSelected ? theme.colors.blue.blue700 : theme.colors.blue.blue500};
+  cursor: pointer;
+`;
+
+// Item 영역 시작
+const RealtimeRankItemWrapper = styled.div`
+  width: auto;
+  height: auto;
+  margin-top: ${({ theme }) => theme.spacing.spacing4};
+  margin-bottom: ${({ theme }) => theme.spacing.spacing5};
+
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  box-sizing: border-box;
+  row-gap: ${({ theme }) => theme.spacing.spacing5};
+  justify-items: center; 
 `;
 
-const RealtimeItem = styled.div`
-  width: 100%;
+const RealtimeRankItem = styled.div`
+  width: auto;
   height: auto;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+
+  cursor: pointer;
 `;
+
 const RealtimeItemImg = styled.img`
-  width: 100%;
+  width: 220px;
   height: auto;
-  max-width: 190px;
   border-radius: 5px;
+  position: relative;
 `;
 
-const RealtimeItemGrayTitle = styled.p`
-  font-size: ${({ theme }) => theme.typography['label1Bold'].fontSize};
+const RealtimeItemTxt = styled.p`
+  font-size: ${({ theme }) => theme.typography.label.label1Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label.label1Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label.label1Regular.lineHeight};
+  color: ${({ theme }) => theme.colors.gray.gray600};
 
-  color: gray;
+  padding-top: ${({ theme }) => theme.spacing.spacing2};
 `;
 
-const RealtimeItemTitle = styled.p`
-  font-size: ${({ theme }) => theme.typography['label1Bold'].fontSize};
+const RealtimeItemSubTxt = styled.p`
+  font-size: ${({ theme }) => theme.typography.label.label1Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label.label1Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label.label1Regular.lineHeight};
+  color: ${({ theme }) => theme.colors.gray.gray1000};
+
+  padding-bottom: ${({ theme }) => theme.spacing.spacing2};
 `;
 
-const RealtimeItemPriceTitle = styled.p`
-  font-size: ${({ theme }) => theme.typography['label1Bold'].fontSize};
-  font-weight: ${({ theme }) => theme.typography['label1Bold'].fontWeight};
-  line-height: ${({ theme }) => theme.typography['label1Bold'].lineHeight};
+const RealtimeItemPriceTxt = styled.p`
+  font-size: ${({ theme }) => theme.typography.body.body1Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.body.body1Bold.fontWeight};
+  line-height: ${({ theme }) => theme.typography.body.body1Bold.lineHeight};
+  color: ${({ theme }) => theme.colors.gray.gray1000};
 `;
 
-function RealtimeRankItemList({ collapsed }: { collapsed: boolean }) {
-  const visibleItems = collapsed ? itemList.slice(0, 6) : itemList;
-
-  return (
-    <>
-      {visibleItems.map((item) => (
-        <RealtimeItem key={item.id}>
-          <RealtimeItemImg
-            src={item.imageURL}
-            alt={item.name}
-          ></RealtimeItemImg>
-          <RealtimeItemGrayTitle>{item.brandInfo.name}</RealtimeItemGrayTitle>
-          <RealtimeItemTitle>{item.brandInfo.name}</RealtimeItemTitle>
-          <RealtimeItemPriceTitle>
-            {item.price.sellingPrice} 원
-          </RealtimeItemPriceTitle>
-        </RealtimeItem>
-      ))}
-    </>
-  );
-}
-
+// 더보기버튼 시작
 const ExtraBtnWrapper = styled.div`
+  width: auto;
+  height: auto;
+  padding-top: ${({ theme }) => theme.spacing.spacing8};
+
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 
 const ExtraBtn = styled.button`
-  width: 500px;
-  height: 40px;
-  margin-top: 10px;
+  width: 480px;
+  height: ${({ theme }) => theme.spacing.spacing11};
+  
   background-color: ${({ theme }) => theme.colors.background.default};
-  border: 1px solid ${({ theme }) => theme.colors.gray[300]};
+  border: 1px solid ${({ theme }) => theme.colors.gray.gray400};
   border-radius: 5px;
-  font-size: ${({ theme }) => theme.typography['label1Bold'].fontSize};
+
+  font-size: ${({ theme }) => theme.typography.label.label1Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label.label1Bold.fontSize};
+  line-height: ${({ theme }) => theme.typography.label.label1Bold.fontSize};
   cursor: pointer;
 `;
 
+// 메인 컴포넌트 시작
 function RealtimeGiftRank() {
-  const [selectedGroup, setSelectedGroup] = useState(''); // 전체, 여성이, 남성이, 청소년이중 하나를 선택했다는 것을 저장하기 위한 state
-  const [selectRankingType, setSelectRankingType] = useState(''); // 받고 싶어한, 많이 선물한, 위시로 받은중 하나를 선택했다는 것을 저장하기 위한 state
-  const [isCollapsed, setIsCollapsed] = useState(true); // 실시간 급상승 선물랭킹을 더보기 줄이기 할 수 있는 버튼의 상태를 저장하기 위한 state
+  const [selectedGroup, setSelectedGroup] = useState('');
+  const [selectedType, setSelectedType] = useState('');
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const {getId} = useUser();
 
-  const rankGroup = [
-    { group: 'ALL', label: 'ALL', text: '전체' },
-    { group: 'FEMALE', label: '👩🏻', text: '여성이' },
-    { group: 'MALE', label: '👨🏻', text: '남성이' },
-    { group: 'TEEN', label: '👦🏻', text: '청소년이' },
+  const navigate = useNavigate();
+
+  const userGroupMock = [
+    {key: 0, group: 'ALL', emoji: 'ALL', label: '전체'},
+    {key: 1, group: 'FEMALE', emoji: '👩🏻', label: '여성이'},
+    {key: 2, group: 'MALE', emoji: '👨🏻', label: '남성이'},
+    {key: 3, group: 'TEEN', emoji: '👦🏻', label: '청소년이'},
   ];
 
-  const rankTypes = [
-    { type: 'WANT', label: '받고 싶어한' },
-    { type: 'MANY', label: '많이 선물한' },
-    { type: 'WISH', label: '위시로 받은' },
+  const rankingTypeMock = [
+    {key: 0, type: 'WANT', label: '받고 싶어한'},
+    {key: 1, type: 'MANY', label: '많이 선물한'},
+    {key: 2, type: 'WISH', label: '위시로 받은'},
   ];
 
   useEffect(() => {
-    const savedGrop = localStorage.getItem('selectedGroup');
-    const savedType = localStorage.getItem('rankingType');
+    const savedGroup = sessionStorage.getItem('selectedGroup');
+    const savedType = sessionStorage.getItem('selectedType');
 
-    if (savedGrop) {
-      setSelectedGroup(savedGrop);
+    if (savedGroup) {
+      setSelectedGroup(savedGroup);
     }
 
     if (savedType) {
-      setSelectRankingType(savedType);
+      setSelectedType(savedType);
     }
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem('selectedGroup', selectedGroup);
-  }, [selectedGroup]);
+  // 이벤트 핸들러들
+  function handleGroupClick(group : string) {
+    setSelectedGroup(group);
+    sessionStorage.setItem('selectedGroup', group);
+  }
 
-  useEffect(() => {
-    localStorage.setItem('rankingType', selectRankingType);
-  }, [selectRankingType]);
+  function handleTypeClick(type : string) {
+    setSelectedType(type);
+    sessionStorage.setItem('selectedType', type);
+  }
+
+  function handleCollapsedClick() {
+    setIsCollapsed(!isCollapsed);
+  }
+
+  function handleItemClick(
+    brandInfo: any,
+    id: any,
+    imageURL: any,
+    name: any,
+    price: any,
+  ) {
+    const userId = getId();
+    
+    if (userId !== '') {
+      const query = new URLSearchParams({
+        brandInfo: brandInfo.name,
+        id: id.toString(),
+        imageURL,
+        name,
+        price: price.basicPrice,
+      }).toString();
+      // sessionStorage.setItem(
+      //   'selectedItem',
+      //   JSON.stringify({ brandInfo, id, imageURL, name, price }),
+      // );
+
+      navigate(`/order?${query}`);
+    } else {
+      navigate('/login');
+    }
+  }
 
   return (
-    <>
-      <RealtimeRankWrapper>
-        <RealtimeRankTitle>실시간 급상승 선물랭킹</RealtimeRankTitle>
-        <RealtimeRankNavWrapper>
-          {rankGroup.map(({ group, label, text }) => (
-            <RealtimeRankNavBtnTitleWrapper>
-              <RealtimeRankNavBtn
-                onClick={() => setSelectedGroup(group)}
-                isSelected={selectedGroup === group}
-              >
-                {label}
-              </RealtimeRankNavBtn>
-              <RealtimeRankNavTitle>{text}</RealtimeRankNavTitle>
-            </RealtimeRankNavBtnTitleWrapper>
-          ))}
-        </RealtimeRankNavWrapper>
-
-        <RealtimeRankNav2Wrapper>
-          {rankTypes.map(({ type, label }) => (
-            <RealtimeRankNav2Btn
-              key={type}
-              onClick={() => setSelectRankingType(type)}
-              isSelected={selectRankingType === type}
-            >
+    <RealtimeRankWrapper>
+      <RealtimeRankTitle>실시간 급상승 선물랭킹</RealtimeRankTitle>
+      {/* 첫 번째 selector */}
+      <UserGroupSelectorWrapper>
+        {userGroupMock.map(({ key, group, emoji, label}) => (
+          <UserGroupSelectorItemWrapper key={key} onClick={() => handleGroupClick(group)} >
+            <UserGroupSelectorBtn isSelected={selectedGroup === group}>
+              {emoji}
+            </UserGroupSelectorBtn>
+            <UserGroupSelectorTxt isSelected={selectedGroup === group}>
               {label}
-            </RealtimeRankNav2Btn>
-          ))}
-        </RealtimeRankNav2Wrapper>
-        <RealtimeRankItemWrapper>
-          <RealtimeRankItemList collapsed={isCollapsed}></RealtimeRankItemList>
-        </RealtimeRankItemWrapper>
-      </RealtimeRankWrapper>
+            </UserGroupSelectorTxt>
+          </UserGroupSelectorItemWrapper>
+        ))}
+      </UserGroupSelectorWrapper>
+
+      {/* 두 번째 selector */}
+      <RankingTypeSelectorWrapper>
+        {rankingTypeMock.map(({ key, type, label}) => (
+          <RankingTypeSelectorBtn
+            key={key}
+            onClick={() => handleTypeClick(type)}
+            isSelected={selectedType === type}>
+            {label}
+          </RankingTypeSelectorBtn>
+        ))}
+      </RankingTypeSelectorWrapper>
+
+      {/* 아이템 리스트 */}
+      <RealtimeRankItemWrapper>
+        {(isCollapsed ? itemList : itemList.slice(0, 6)).map((item) => (
+        <RealtimeRankItem
+          key={item.id}
+          onClick={() =>
+            handleItemClick(
+              item.brandInfo,
+              item.id,
+              item.imageURL,
+              item.name,
+              item.price,
+            )
+          }
+        >
+          <RealtimeItemImg
+            src={item.imageURL}
+            alt={item.name}
+          >
+          </RealtimeItemImg>
+          <RealtimeItemTxt>{item.brandInfo.name}</RealtimeItemTxt>
+          <RealtimeItemSubTxt>{item.brandInfo.name}</RealtimeItemSubTxt>
+          <RealtimeItemPriceTxt>
+            {item.price.sellingPrice} 원
+          </RealtimeItemPriceTxt>
+        </RealtimeRankItem>
+      ))}
+      </RealtimeRankItemWrapper>
+
+      {/* 더보기 접기 버튼 */}
       <ExtraBtnWrapper>
         <ExtraBtn
-          onClick={() => {
-            setIsCollapsed(!isCollapsed);
-          }}
+        onClick={() => {
+          handleCollapsedClick();
+        }}
         >
-          {isCollapsed ? '더보기' : '접기'}
+        {isCollapsed ? '접기' : '더보기'}
         </ExtraBtn>
       </ExtraBtnWrapper>
-    </>
+    </RealtimeRankWrapper>
   );
 }
 

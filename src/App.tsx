@@ -1,31 +1,38 @@
-import { useEffect, useState } from 'react';
-
-import GlobalStyle from './styles/GlobalStyle';
 import { ThemeProvider } from '@emotion/react';
 import theme from './styles/theme';
-import styled from '@emotion/styled';
+import GlobalStyle from './styles/GlobalStyle';
 
-import Layout from './components/Layout';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 
-import categories from './mocks/category.mock';
+import Home from './pages/Home.tsx';
+import Login from './pages/Login.tsx';
+import NotFound from './pages/NotFound.tsx';
+import My from './pages/My.tsx';
+import Order from './pages/Order.tsx';
 
-import NavBar from './components/NavBar';
-import FriendSelector from './components/FriendSelector';
-import GiftCategorySelector from './components/GiftCategorySelector';
-import PromoBanner from './components/PromoBanner';
-import RealtimeGiftRank from './components/RealtimeGiftRank';
+import useUser from './hooks/useUser.ts';
+import type { ReactNode } from 'react';
+
+const ProtectedRoute = ({children}: {children: ReactNode}) => {
+  const { getId } = useUser();
+
+  return getId() === '' ? <Navigate to='/login' replace /> : children;
+};
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
-      <Layout>
-        <NavBar />
-        <FriendSelector />
-        <GiftCategorySelector />
-        <PromoBanner />
-        <RealtimeGiftRank />
-      </Layout>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/notfound" element={<NotFound />} />
+          <Route path="/my" element={<ProtectedRoute><My /></ProtectedRoute>} />
+          <Route path="/order" element={<Order />} />
+          <Route path="*" element={<Navigate to="/notfound" replace />} />
+        </Routes>
+      </BrowserRouter>
     </ThemeProvider>
   );
 }
