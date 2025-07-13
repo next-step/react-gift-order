@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { ORDER_ERROR_MESSAGE, PHONE_REGEX } from "@/constants";
-import type { CardTemplateType, Order, ProductType } from "@/types";
+import type { CardTemplateType, ProductType } from "@/types";
 
 const productSchema = z.nullable(
   z.custom<ProductType>(val => val !== null, {
@@ -64,8 +64,6 @@ export const orderSchema = z.object({
   receivers: receiversSchema,
 });
 
-export type OrderFormData = Order;
-
 export const isOrderComplete = (order: Partial<OrderFormData>): boolean => {
   const hasBasicInfo = Boolean(
     order.product &&
@@ -87,3 +85,13 @@ export const isOrderComplete = (order: Partial<OrderFormData>): boolean => {
   );
   return hasBasicInfo && hasReceivers;
 };
+
+export const orderFormKeys = Object.keys(
+  orderSchema.shape,
+) as (keyof OrderFormData)[];
+export const isValidOrderKey = (key: string): key is keyof OrderFormData => {
+  return orderFormKeys.includes(key as keyof OrderFormData);
+};
+
+export type ReceiverKeys = keyof z.infer<typeof receiverSchema>;
+export type OrderFormData = z.infer<typeof orderSchema>;

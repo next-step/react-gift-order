@@ -6,20 +6,40 @@ import {
   useMemo,
   type ReactNode,
 } from "react";
-import { useForm, type UseFormSetValue } from "react-hook-form";
+import { useForm, type FieldPath, type UseFormSetValue } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useOrderState } from "@/contexts/order/OrderStateContext";
 import { orderSchema, type OrderFormData } from "@/contexts/order";
 import type { OrderFormContextType } from "@/contexts/order/types";
+import { isValidOrderKey } from "@/contexts/order/order-schema";
 
 const OrderFormContext = createContext<OrderFormContextType | undefined>(
   undefined,
 );
 
+const getFieldName = (
+  name: FieldPath<OrderFormData>,
+): keyof OrderFormData | null => {
+  const fieldName = name.split(".")[0];
+  if (isValidOrderKey(fieldName)) {
+    return fieldName;
+  }
+  return null;
+};
+
 export const OrderFormProvider = ({ children }: { children: ReactNode }) => {
   const { order, setOrder } = useOrderState();
 
-  const form = useForm<OrderFormData>({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    trigger,
+    control,
+    formState,
+    getFieldState,
+  } = useForm<OrderFormData>({
     resolver: zodResolver(orderSchema),
     mode: "onChange",
     reValidateMode: "onChange",
@@ -32,29 +52,19 @@ export const OrderFormProvider = ({ children }: { children: ReactNode }) => {
     },
   });
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    trigger,
-    control,
-    formState,
-    getFieldState,
-  } = form;
-
   const { errors, touchedFields, isValid } = formState;
 
   useEffect(() => {
     const subscription = watch((value, { name }) => {
       if (name) {
-        const fieldName = name.split(".")[0] as keyof OrderFormData;
-        const fieldValue = value[fieldName];
-
-        setOrder(prev => ({
-          ...prev,
-          [fieldName]: fieldValue,
-        }));
+        const fieldName = getFieldName(name);
+        if (fieldName) {
+          const fieldValue = value[fieldName];
+          setOrder(prev => ({
+            ...prev,
+            [fieldName]: fieldValue,
+          }));
+        }
       }
     });
     return () => subscription.unsubscribe();
@@ -63,8 +73,8 @@ export const OrderFormProvider = ({ children }: { children: ReactNode }) => {
   const setValueWithSync: UseFormSetValue<OrderFormData> = useCallback(
     (name, value, options) => {
       setValue(name, value, options);
-      const rootFieldName = name.split(".")[0] as keyof OrderFormData;
-      if (rootFieldName === name) {
+      const rootFieldName = getFieldName(name);
+      if (rootFieldName === name && rootFieldName === name) {
         setOrder(prev => ({ ...prev, [name]: value }));
       }
     },
