@@ -14,16 +14,14 @@ interface SenderFormProps {
 
 function SenderForm({ register, errors }: SenderFormProps) {
   return (
-    <>
-      <Container>
-        <Title>{SENDER_TITLE}</Title>
-        <Input
-          {...register('senderName')}
-        />
-        <Hint>{SENDER_HINT}</Hint>
-        {errors.senderName && <ErrorMessage>{errors.senderName.message}</ErrorMessage>}
-      </Container>
-    </>
+    <Container>
+      <Title>{SENDER_TITLE}</Title>
+      <Input
+        {...register('senderName')}
+      />
+      <Hint>{SENDER_HINT}</Hint>
+      {errors.senderName && <ErrorMessage>{errors.senderName.message}</ErrorMessage>}
+    </Container>
   );
 }
 
