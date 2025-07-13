@@ -8,4 +8,4 @@ export const OrderSchema = z.object({
   message: z.string().nonempty('메시지를 입력해주세요.'),
 });
 
-export type Order = z.infer<typeof OrderSchema>;
+export type OrderType = z.infer<typeof OrderSchema>;

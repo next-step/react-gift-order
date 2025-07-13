@@ -17,7 +17,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { OrderSchema } from '@/schema/order';
 import type { Receiver } from '@/schema/receiver';
-import type { Order } from '@/schema/order';
+import type { OrderType } from '@/schema/order';
 
 const Order = () => {
   const { itemId } = useParams<{ itemId: string }>();
@@ -31,7 +31,7 @@ const Order = () => {
     setValue,
     getValues,
     formState: { errors },
-  } = useForm<Order>({
+  } = useForm<OrderType>({
     resolver: zodResolver(OrderSchema),
     defaultValues: { senderName: '', message: '' },
     mode: 'onSubmit',
@@ -86,7 +86,7 @@ const Order = () => {
   );
   const totalPrice = totalCount * (item?.price.sellingPrice ?? 0);
 
-  const handleOrderSubmit = (data: Order) => {
+  const handleOrderSubmit = (data: OrderType) => {
     const hasNoReceivers = receivers.length < 1;
     setReceiverError(hasNoReceivers);
     if (hasNoReceivers) return;
