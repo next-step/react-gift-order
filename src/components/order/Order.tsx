@@ -26,7 +26,7 @@ import {
 } from "@/components/order/Order.style";
 import type { FormData } from "@/components/order/OrderForm";
 import { css } from "@emotion/react";
-import ReceiverModal from "@/components/order/ReceiveModal";
+import ReceiverModal from "@/components/order/ReceiverModal";
 import ReceiverInfoTable from "@/components/order/ReceiverInfoTable";
 
 const Order: React.FC = () => {
