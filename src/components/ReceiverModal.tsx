@@ -1,11 +1,6 @@
 import React from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
-
-type Receiver = {
-  name: string;
-  phone: string;
-  quantity: number;
-};
+import type { Receiver } from '@/types/receiver';
 
 type FormValues = {
   receivers: Receiver[];
