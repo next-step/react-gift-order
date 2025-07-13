@@ -1,17 +1,23 @@
 import { SenderContainer, SenderTitle, SenderInput } from '@/styles/Order/Sender.styles';
 import { ErrorContainer } from '@/styles/Login.styles';
-import type { ErrorType } from '@/hooks/useOrder';
+import type { UseFormRegister, FieldErrors } from 'react-hook-form';
+import type { FormValues } from '@/pages/Order/Order';
 
 type SenderProps = {
-  errors: ErrorType;
-  handleSenderChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  register: UseFormRegister<FormValues>;
+  errors: FieldErrors<FormValues>;
 };
-function Sender({ errors, handleSenderChange }: SenderProps) {
+function Sender({ register, errors }: SenderProps) {
   return (
     <SenderContainer>
       <SenderTitle>보내는 사람</SenderTitle>
-      <SenderInput placeholder="이름 입력" onChange={handleSenderChange} />
-      {errors.sender && <ErrorContainer>{errors.sender}</ErrorContainer>}
+      <SenderInput placeholder="이름 입력" {...register('sender', { 
+        validate: (value) => {
+          if (value.length < 1) return '이름을 입력해주세요.';
+          return true;
+        }
+      })} />
+      {errors.sender && <ErrorContainer>{errors.sender.message}</ErrorContainer>}
     </SenderContainer>
   );
 }

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-export const OrderContainer = styled.div`
+export const OrderContainer = styled.form`
   display: flex;
   max-width: 720px;
   width: 100%;
