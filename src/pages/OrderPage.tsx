@@ -39,15 +39,11 @@ const OrderPage = () => {
   });
 
   const { fields, append, remove } = useFieldArray({ control, name: 'recipients' });
-
-  // useWatch를 사용해 특정 필드의 값을 실시간으로 관찰합니다.
+  
   const recipients = useWatch({ control, name: 'recipients' });
   const messageValue = useWatch({ control, name: 'message' });
 
-  // 선택된 메시지 카드를 관리하기 위한 별도의 상태
   const [selectedCard, setSelectedCard] = useState<MessageCard>(messageCardTemplates[0]);
-
-  // 카드가 선택되면, react-hook-form의 message 필드 값을 업데이트합니다.
   useEffect(() => {
     setValue('message', selectedCard.defaultTextMessage);
   }, [selectedCard, setValue]);
