@@ -9,12 +9,8 @@ import {
 } from "react-hook-form";
 import styled from "@emotion/styled";
 import { type Receiver } from "./ReceiverListSection";
-import {
-  createPhoneValidator,
-  validateReceiverName,
-  validateQuantity,
-} from "@/utils/validators";
-import { ERROR_MESSAGES } from "@/constants/messages";
+import { createPhoneValidator } from "@/utils/validators";
+import ReceiverFieldItem from "./ReceiverFieldItem";
 
 interface FormValues {
   receivers: Receiver[];
@@ -70,71 +66,15 @@ export default function ReceiverFormDialog({
 
           <ScrollArea>
             {fields.map((field, index) => (
-              <FieldRow key={field.id}>
-                <FieldHeader>
-                  <Label>받는 사람 {index + 1}</Label>
-                  <RemoveButton type="button" onClick={() => remove(index)}>
-                    삭제
-                  </RemoveButton>
-                </FieldHeader>
-
-                <LabelInputWrapper>
-                  <InputLabel>이름</InputLabel>
-                  <div style={{ flex: 1 }}>
-                    <StyledInput
-                      {...register(`receivers.${index}.name`, {
-                        required: ERROR_MESSAGES.VALIDATE.NAME,
-                        validate: validateReceiverName,
-                      })}
-                      placeholder="이름을 입력하세요."
-                    />
-                    {errors.receivers?.[index]?.name && (
-                      <ErrorMessage>
-                        {errors.receivers[index].name?.message}
-                      </ErrorMessage>
-                    )}
-                  </div>
-                </LabelInputWrapper>
-
-                <LabelInputWrapper>
-                  <InputLabel>전화번호</InputLabel>
-                  <div style={{ flex: 1 }}>
-                    <StyledInput
-                      {...register(`receivers.${index}.phone`, {
-                        required: ERROR_MESSAGES.VALIDATE.PHONE,
-                        validate: phoneValidator,
-                      })}
-                      placeholder="01012341234"
-                    />
-                    {errors.receivers?.[index]?.phone && (
-                      <ErrorMessage>
-                        {errors.receivers[index].phone?.message}
-                      </ErrorMessage>
-                    )}
-                  </div>
-                </LabelInputWrapper>
-
-                <LabelInputWrapper>
-                  <InputLabel>수량</InputLabel>
-                  <div style={{ flex: 1 }}>
-                    <StyledInput
-                      type="number"
-                      min={1}
-                      {...register(`receivers.${index}.quantity`, {
-                        required: true,
-                        valueAsNumber: true,
-                        validate: validateQuantity,
-                      })}
-                      placeholder="1"
-                    />
-                    {errors.receivers?.[index]?.quantity && (
-                      <ErrorMessage>
-                        {errors.receivers[index].quantity?.message}
-                      </ErrorMessage>
-                    )}
-                  </div>
-                </LabelInputWrapper>
-              </FieldRow>
+              <ReceiverFieldItem
+                key={field.id}
+                index={index}
+                fieldId={field.id}
+                register={register}
+                errors={errors}
+                onRemove={() => remove(index)}
+                phoneValidator={phoneValidator}
+              />
             ))}
           </ScrollArea>
 
@@ -210,61 +150,6 @@ const FieldRow = styled.div`
   border-bottom: 1px solid
     ${({ theme }) => theme.colors.semantic.border.default};
   padding-bottom: ${({ theme }) => theme.spacing.spacing4};
-`;
-
-const FieldHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const Label = styled.h3`
-  ${({ theme }) => theme.typography.subtitle1Bold};
-  color: ${({ theme }) => theme.colors.semantic.text.default};
-`;
-
-const LabelInputWrapper = styled.div`
-  display: flex;
-  align-items: flex-start;
-  gap: ${({ theme }) => theme.spacing.spacing2};
-`;
-
-const InputLabel = styled.label`
-  min-width: 60px;
-  ${({ theme }) => theme.typography.body1Bold};
-  color: ${({ theme }) => theme.colors.semantic.text.sub};
-`;
-
-const StyledInput = styled.input`
-  flex: 1;
-  padding: ${({ theme }) => theme.spacing.spacing3};
-  border: 1px solid ${({ theme }) => theme.colors.semantic.border.default};
-  border-radius: 12px;
-  background-color: ${({ theme }) => theme.colors.semantic.background.default};
-  ${({ theme }) => theme.typography.body1Regular};
-  color: ${({ theme }) => theme.colors.semantic.text.default};
-
-  &::placeholder {
-    color: ${({ theme }) => theme.colors.semantic.text.placeholder};
-  }
-
-  &:focus {
-    outline: none;
-    border-color: ${({ theme }) => theme.colors.colorScale.gray.gray600};
-  }
-`;
-
-const ErrorMessage = styled.div`
-  color: ${({ theme }) => theme.colors.colorScale.red.red700};
-  ${({ theme }) => theme.typography.body1Bold};
-  margin-top: 4px;
-`;
-
-const RemoveButton = styled.button`
-  background: none;
-  border: none;
-  color: ${({ theme }) => theme.colors.colorScale.red.red700};
-  ${({ theme }) => theme.typography.body2Bold};
 `;
 
 const Footer = styled.div`
