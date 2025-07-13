@@ -6,6 +6,7 @@ import {
   type UseFieldArrayRemove,
   type FieldArrayWithId,
   type UseFormWatch,
+  useWatch,
 } from "react-hook-form";
 import styled from "@emotion/styled";
 import { type Receiver } from "./ReceiverListSection";
@@ -15,6 +16,7 @@ import {
   INITIAL_PRODUCT_QUANTITY,
   MAX_RECEIVER_COUNT,
 } from "@/constants/validation";
+import { useMemo } from "react";
 
 interface FormValues {
   receivers: Receiver[];
@@ -39,6 +41,7 @@ export default function ReceiverFormDialog({
   onSubmit,
   errors,
   register,
+  control,
   fields,
   append,
   remove,
@@ -46,7 +49,11 @@ export default function ReceiverFormDialog({
 }: ReceiverFormDialogProps) {
   if (!open) return null;
 
-  const phoneValidator = createPhoneValidator(() => watch("receivers"));
+  const receivers = useWatch({ control, name: "receivers" });
+  const phoneValidator = useMemo(
+    () => createPhoneValidator(() => receivers),
+    [receivers],
+  );
 
   return (
     <Overlay>
