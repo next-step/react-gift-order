@@ -1,1 +1,1 @@
-export type inputStyle = 'idle' | 'isClicked' | 'error';
+export type InputStyle = 'idle' | 'isClicked' | 'error';

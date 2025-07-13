@@ -5,6 +5,6 @@ export interface ProductInfo {
   setName: React.Dispatch<React.SetStateAction<string>>;
   price: number;
   setPrice: React.Dispatch<React.SetStateAction<number>>;
-  amount: string;
-  setAmount: React.Dispatch<React.SetStateAction<string>>;
+  brand: string;
+  setBrand: React.Dispatch<React.SetStateAction<string>>;
 }

@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import useValidateId from '@/hooks/useValidateId';
 import useValidatePassword from '@/hooks/useValidatePassword';
 import useUserInfo from '@/hooks/useUserInfo';
-import type { inputStyle } from '@/types/inputStyle';
+import type { InputStyle } from '@/types/inputStyle';
 
 const Container = styled.div`
   display: flex;
@@ -97,8 +97,8 @@ const Login = () => {
   const [email, setEmail, isFirstIdTry, setIsFirstIdTry, idError] = useValidateId();
   const [password, setPassword, isFirstPwdTry, setIsFirstPwdTry, passwordError] =
     useValidatePassword();
-  const [idInputFieldStyle, setIdInputFieldStyle] = useState<inputStyle>('idle');
-  const [pwdInputFieldStyle, setPwdInputFieldStyle] = useState<inputStyle>('idle');
+  const [idInputFieldStyle, setIdInputFieldStyle] = useState<InputStyle>('idle');
+  const [pwdInputFieldStyle, setPwdInputFieldStyle] = useState<InputStyle>('idle');
   const isFirstTry = isFirstIdTry || isFirstPwdTry;
   const isAllValid = !idError && !passwordError;
   const { setUser } = useUserInfo();
@@ -106,7 +106,7 @@ const Login = () => {
 
   const handleInputFieldStyle = useCallback(
     (type: string, isFirstTry: boolean, isClicked: boolean, error: string) => {
-      let inputStatus: inputStyle = 'idle';
+      let inputStatus: InputStyle = 'idle';
 
       if (isFirstTry) {
         if (isClicked) {

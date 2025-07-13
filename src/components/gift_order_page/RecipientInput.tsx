@@ -1,8 +1,27 @@
-import useOrderInfo from '@/hooks/useOrderInfo';
-import type { inputStyle } from '@/types/inputStyle';
-import type { inputType } from '@/types/inputType';
+import type { InputStyle } from '@/types/inputStyle';
+import type { InputType } from '@/types/inputType';
 import styled from '@emotion/styled';
 import { useCallback, useEffect, useState } from 'react';
+import Close from '@/assets/close.svg?react';
+import { useFormContext, type UseFieldArrayRemove } from 'react-hook-form';
+import { isMobilePhone } from 'validator';
+
+interface RecipientForm {
+  recipientName: string;
+  phoneNumber: string;
+  amount: number;
+}
+
+type FormValues = {
+  message: string;
+  senderName: string;
+  recipientInfo: RecipientForm[];
+};
+
+interface RecipientInputInModal {
+  index: number;
+  removeRecipient: UseFieldArrayRemove;
+}
 
 const Container = styled.div`
   display: flex;
@@ -14,11 +33,24 @@ const Container = styled.div`
   background-color: white;
 `;
 
-const Label = styled.div`
-  ${({ theme }) => theme.typography.title2Bold};
-  margin-left: 1rem;
+const Header = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: auto;
+  height: auto;
   margin-top: 0.7rem;
-  margin-bottom: 0.3rem;
+  margin-left: 1rem;
+  margin-bottom: 0.5rem;
+`;
+
+const Label = styled.div`
+  ${({ theme }) => theme.typography.label1Bold};
+`;
+
+const CloseButton = styled.button`
+  all: unset;
 `;
 
 const FormField = styled.div`
@@ -27,11 +59,11 @@ const FormField = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  margin-top: ${({ theme }) => theme.spacing.spacing2};
+  margin-bottom: ${({ theme }) => theme.spacing.spacing4};
 `;
 const FormHint = styled.div`
-  ${({ theme }) => theme.typography.title2Regular};
-  width: 5.2rem;
+  ${({ theme }) => theme.typography.label1Regular};
+  width: 5.4rem;
   margin-left: 1rem;
 `;
 
@@ -47,13 +79,13 @@ const InputContainer = styled.div`
 
 const InputField = styled.textarea<{ inputFieldStyle: string }>`
   all: unset;
+  ${({ theme }) => theme.typography.label1Regular};
   display: flex;
   width: 100%;
-  height: 2.8rem;
+  height: 2.3rem;
   box-sizing: border-box;
-  padding-top: 0.8rem;
+  align-content: center;
   padding-left: 0.76rem;
-  font-size: 1rem;
   white-space: pre;
   border-radius: 0.5rem;
   border-color: ${({ theme, inputFieldStyle }) => {
@@ -72,13 +104,14 @@ const InputField = styled.textarea<{ inputFieldStyle: string }>`
 
 const InputNumberField = styled.input<{ inputFieldStyle: string }>`
   all: unset;
+  ${({ theme }) => theme.typography.label1Regular};
   display: flex;
   width: 100%;
-  height: 2.8rem;
+  height: 2.3rem;
   box-sizing: border-box;
+  align-content: center;
   padding-left: 0.76rem;
   padding-right: 0.76rem;
-  font-size: 1rem;
   white-space: pre;
   border-radius: 0.5rem;
   border-color: ${({ theme, inputFieldStyle }) => {
@@ -95,6 +128,14 @@ const InputNumberField = styled.input<{ inputFieldStyle: string }>`
   transition: border-color 0.3s;
 `;
 
+const Line = styled.div`
+  align-self: center;
+  width: 95%;
+  border-top-width: 1px;
+  border-top-color: ${({ theme }) => theme.colors.gray400};
+  border-top-style: solid;
+`;
+
 const ErrorText = styled.div`
   ${({ theme }) => theme.typography.label2Regular}
   margin-top: 0.3rem;
@@ -102,16 +143,22 @@ const ErrorText = styled.div`
   color: ${({ theme }) => theme.colors.red700};
 `;
 
-export const RecipientInput = () => {
-  const { setIsFirstTry, recipient, product, error } = useOrderInfo();
-  const [selectedInput, setSelectedInput] = useState<inputType>('');
-  const [nameInputFieldStyle, setNameInputFieldStyle] = useState<inputStyle>('idle');
-  const [phoneNumberInputFieldStyle, setPhoneNumberInputFieldStyle] = useState<inputStyle>('idle');
-  const [amountInputFieldStyle, setAmountInputFieldStyle] = useState<inputStyle>('idle');
+const svgSize = 20;
+
+export const RecipientInput = ({ index, removeRecipient }: RecipientInputInModal) => {
+  const [selectedInput, setSelectedInput] = useState<InputType>('');
+  const [nameInputFieldStyle, setNameInputFieldStyle] = useState<InputStyle>('idle');
+  const [phoneNumberInputFieldStyle, setPhoneNumberInputFieldStyle] = useState<InputStyle>('idle');
+  const [amountInputFieldStyle, setAmountInputFieldStyle] = useState<InputStyle>('idle');
+  const {
+    register,
+    trigger,
+    formState: { errors },
+  } = useFormContext<FormValues>();
 
   const handleInputFieldStyle = useCallback(
-    (type: inputType, selectedInput: inputType, error: string) => {
-      let inputStatus: inputStyle = 'idle';
+    (type: InputType, selectedInput: InputType, error: string | undefined) => {
+      let inputStatus: InputStyle = 'idle';
 
       if (selectedInput === type) {
         inputStatus = 'isClicked';
@@ -135,39 +182,53 @@ export const RecipientInput = () => {
   );
 
   useEffect(() => {
-    handleInputFieldStyle('name', selectedInput, error.recipientNameError);
-  }, [handleInputFieldStyle, selectedInput, error.recipientNameError]);
+    handleInputFieldStyle(
+      'name',
+      selectedInput,
+      errors.recipientInfo?.[index]?.recipientName?.message
+    );
+  }, [handleInputFieldStyle, selectedInput, index, errors.recipientInfo]);
 
   useEffect(() => {
-    handleInputFieldStyle('phoneNumber', selectedInput, error.phoneNumberError);
-  }, [handleInputFieldStyle, selectedInput, error.phoneNumberError]);
+    handleInputFieldStyle(
+      'phoneNumber',
+      selectedInput,
+      errors.recipientInfo?.[index]?.phoneNumber?.message
+    );
+  }, [handleInputFieldStyle, selectedInput, index, errors.recipientInfo]);
 
   useEffect(() => {
-    handleInputFieldStyle('amount', selectedInput, error.amountError);
-  }, [handleInputFieldStyle, selectedInput, error.amountError]);
+    handleInputFieldStyle('amount', selectedInput, errors.recipientInfo?.[index]?.amount?.message);
+  }, [handleInputFieldStyle, selectedInput, index, errors.recipientInfo]);
 
   return (
     <Container>
-      <Label>받는 사람</Label>
+      <Header>
+        <Label>받는 사람 1</Label>
+        <CloseButton
+          onClick={() => {
+            removeRecipient(index);
+          }}
+        >
+          <Close width={svgSize} height={svgSize} fill="black" style={{ marginLeft: '5px' }} />
+        </CloseButton>
+      </Header>
       <FormField>
         <FormHint>이름</FormHint>
         <InputContainer>
           <InputField
             inputFieldStyle={nameInputFieldStyle}
-            value={recipient.name}
+            {...register(`recipientInfo.${index}.recipientName`, {
+              required: '이름을 입력해주세요.',
+              onChange: async () => await trigger(`recipientInfo.${index}.recipientName`),
+            })}
             placeholder={'이름을 입력하세요.'}
-            onChange={(e) => {
-              recipient.setName(e.target.value);
-              error.setTargetRecipientName('modifying..');
-            }}
-            onFocus={() => {
-              setSelectedInput('name');
-            }}
-            onBlur={() => {
-              setSelectedInput('');
-            }}
+            onFocus={() => setSelectedInput('name')}
+            onBlur={() => setSelectedInput('')}
           />
-          {error.recipientNameError && <ErrorText>{error.recipientNameError}</ErrorText>}
+          {errors.recipientInfo?.[index]?.recipientName?.message && (
+            <ErrorText>{errors.recipientInfo?.[index]?.recipientName?.message}</ErrorText>
+          )}
         </InputContainer>
       </FormField>
       <FormField>
@@ -175,49 +236,49 @@ export const RecipientInput = () => {
         <InputContainer>
           <InputField
             inputFieldStyle={phoneNumberInputFieldStyle}
-            value={recipient.phoneNumber}
+            {...register(`recipientInfo.${index}.phoneNumber`, {
+              required: '전화번호를 입력해주세요.',
+              onChange: async () => await trigger(`recipientInfo.${index}.phoneNumber`),
+              validate: (input) => {
+                const phoneNumber = input.replace(/-/g, '');
+
+                if (phoneNumber === '') return '전화번호를 입력해주세요.';
+                if (!isMobilePhone(phoneNumber, 'ko-KR')) return '올바른 전화번호 형식이 아닙니다.';
+
+                return true;
+              },
+            })}
             placeholder={'전화번호를 입력하세요.'}
-            onChange={(e) => {
-              recipient.setPhoneNumber(e.target.value);
-              error.setTargetPhoneNumber('modifying..');
-            }}
-            onFocus={() => {
-              setSelectedInput('phoneNumber');
-            }}
-            onBlur={() => {
-              setSelectedInput('');
-            }}
+            onFocus={() => setSelectedInput('phoneNumber')}
+            onBlur={() => setSelectedInput('')}
           />
-          {error.phoneNumberError && <ErrorText>{error.phoneNumberError}</ErrorText>}
+          {errors.recipientInfo?.[index]?.phoneNumber?.message && (
+            <ErrorText>{errors.recipientInfo?.[index]?.phoneNumber?.message}</ErrorText>
+          )}
         </InputContainer>
       </FormField>
-      <FormField style={{ marginBottom: '1.4rem' }}>
+      <FormField>
         <FormHint>수량</FormHint>
         <InputContainer>
           <InputNumberField
-            inputFieldStyle={amountInputFieldStyle}
             type="number"
-            value={product.amount}
-            onChange={(e) => {
-              if (parseInt(e.target.value)) {
-                product.setAmount(e.target.value);
-                setIsFirstTry(false);
-                error.setTargetAmount('1');
-              } else {
-                product.setAmount('0');
-                error.setTargetAmount('1');
-              }
-            }}
-            onFocus={() => {
-              setSelectedInput('amount');
-            }}
-            onBlur={() => {
-              setSelectedInput('');
-            }}
+            inputFieldStyle={amountInputFieldStyle}
+            {...register(`recipientInfo.${index}.amount`, {
+              onChange: async () => await trigger(`recipientInfo.${index}.amount`),
+              min: {
+                value: 1,
+                message: '구매 수량은 1개 이상이어야 합니다.',
+              },
+            })}
+            onFocus={() => setSelectedInput('amount')}
+            onBlur={() => setSelectedInput('')}
           />
-          {error.amountError && <ErrorText>{error.amountError}</ErrorText>}
+          {errors.recipientInfo?.[index]?.amount?.message && (
+            <ErrorText>{errors.recipientInfo?.[index]?.amount?.message}</ErrorText>
+          )}
         </InputContainer>
       </FormField>
+      <Line />
     </Container>
   );
 };
