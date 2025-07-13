@@ -1,10 +1,10 @@
 import { giftThemes } from './mockData';
 import {
-  Section, 
-  Title, 
-  Grid, 
-  Item, 
-  Image, 
+  Section,
+  Title,
+  Grid,
+  Item,
+  Image,
   Label
 } from './styles';
 const GiftThemeSection = () => {

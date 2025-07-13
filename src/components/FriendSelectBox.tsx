@@ -36,29 +36,29 @@ const Text = styled.p`
 `;
 
 interface FriendSelectBoxProps {
-  isLoggedIn: boolean;
-  userId: string | null;
+    isLoggedIn: boolean;
+    userId: string | null;
 }
 
 const FriendSelectBox: React.FC<FriendSelectBoxProps> = ({ isLoggedIn, userId }) => {
-  const nickname = userId ? userId.split('@')[0] : '';
+    const nickname = userId ? userId.split('@')[0] : '';
 
-  return (
-    <Frame>
-      <Box>
-        <IconWrap>
-          <IoAdd />
-        </IconWrap>
-        <Text>
-          {isLoggedIn && userId ? (
-            <>{nickname}님! 선물할 친구를 선택해 주세요!</>
-          ) : (
-            '선물할 친구를 선택해 주세요.'
-          )}
-        </Text>
-      </Box>
-    </Frame>
-  );
+    return (
+        <Frame>
+            <Box>
+                <IconWrap>
+                    <IoAdd />
+                </IconWrap>
+                <Text>
+                    {isLoggedIn && userId ? (
+                        <>{nickname}님! 선물할 친구를 선택해 주세요!</>
+                    ) : (
+                        '선물할 친구를 선택해 주세요.'
+                    )}
+                </Text>
+            </Box>
+        </Frame>
+    );
 };
 
 export default FriendSelectBox;

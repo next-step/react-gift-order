@@ -4,7 +4,7 @@ export type GiftTheme = {
   image: string;
 };
 
-export const giftThemes : GiftTheme[] = [
+export const giftThemes: GiftTheme[] = [
   {
     themeId: 3715,
     name: '생일',
