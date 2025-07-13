@@ -129,7 +129,7 @@ const Order: React.FC = () => {
           <ReceiverModal
             onClose={() => setIsModalOpen(false)}
             onSave={(formData: FormData) => {
-              setReceivers((prev) => [...prev, ...formData.order]);
+              setReceivers(formData.order);
               setIsModalOpen(false);
             }}
             savedReceiverInfo={receivers}
