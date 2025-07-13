@@ -67,7 +67,6 @@ function OrderPage() {
         data.message,
       ),
     );
-    console.log(FINAL_ORDER_DATA_LOG, { ...data, receivers });
   };
 
   const handleReceiverModalComplete = (selectedReceivers: ReceiverFormInput[]) => {
