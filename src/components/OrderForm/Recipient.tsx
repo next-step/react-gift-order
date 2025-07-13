@@ -1,3 +1,4 @@
+import type { PhoneError } from '@/hooks/useOrderValidation';
 import { ErrorMessage } from '@components/common/ErrorMessage';
 import styled from '@emotion/styled';
 
@@ -74,7 +75,7 @@ type RecipientProps = {
   phone: string;
   onChangePhone: (newPhne: string) => void;
   errorName?: boolean;
-  errorPhone?: boolean;
+  errorPhone?: PhoneError;
   quantity: number;
   onChangeQuantity: (newQty: number) => void;
   errorQuantity?: boolean;
@@ -117,10 +118,11 @@ export const Recipinet = ({
             type="tel"
             value={phone}
             onChange={(e) => onChangePhone(e.target.value)}
-            hasError={errorPhone}
+            hasError={errorPhone !== null}
             placeholder="전화번호를 입력하세요."
           />
-          {errorPhone && <ErrorMessage>전화번호를 입력해주세요.</ErrorMessage>}
+          {errorPhone === 'EMPTY' && <ErrorMessage>전화번호를 입력해주세요.</ErrorMessage>}
+          {errorPhone === 'FORMAT' && <ErrorMessage>올바른 전화번호 형식이 아닙니다.</ErrorMessage>}
         </InputBoxStyle>
       </InputBoxContainer>
       <Margin height="8px" />
