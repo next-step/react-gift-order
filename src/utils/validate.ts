@@ -1,8 +1,8 @@
 const NUM = 8;
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const phoneNumberRegex = /^010\d{8}$/;
+export const phoneNumberRegex = /^010\d{8}$/;
 
-const validatePassword = (value: string): string => {
+export const validatePassword = (value: string): string => {
   if (value.trim() === '') {
     return 'PW를 입력해주세요.';
   } else if (value.length < NUM) {
@@ -22,7 +22,7 @@ const validateEmail = (value: string): string => {
   }
 };
 
-const validateText = (value: string): string => {
+export const validateText = (value: string): string => {
   if (value.trim() === '') {
     return '이름을 입력해주세요.';
   } else {
