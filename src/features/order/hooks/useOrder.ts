@@ -18,8 +18,6 @@ export const useOrder = () => {
     const orderRefs = {
         message: useRef<HTMLTextAreaElement>(null),
         senderName: useRef<HTMLInputElement>(null),
-        receiverName: useRef<HTMLInputElement>(null),
-        receiverPhoneNumber: useRef<HTMLInputElement>(null),
         quantity: useRef<HTMLInputElement>(null),
     };
 
@@ -27,16 +25,12 @@ export const useOrder = () => {
         const formData = {
             message: orderRefs.message.current?.value || "",
             senderName: orderRefs.senderName.current?.value || "",
-            receiverName: orderRefs.receiverName.current?.value || "",
-            receiverPhoneNumber: orderRefs.receiverPhoneNumber.current?.value || "",
             quantity: parseInt(orderRefs.quantity.current?.value as string),
         };
 
         const orderFormModel = new OrderFormModel(
             formData.message,
             formData.senderName,
-            formData.receiverName,
-            formData.receiverPhoneNumber,
             formData.quantity,
         );
 
