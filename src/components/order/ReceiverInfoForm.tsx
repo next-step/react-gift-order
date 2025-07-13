@@ -4,6 +4,7 @@ import { ErrorPlaceholder } from "@/components/common/ErrorMessage";
 import { X } from "lucide-react";
 import { useFormContext, type FieldPath } from "react-hook-form";
 import type { OrderFormData } from "@/contexts/order";
+import type { ReceiverKeys } from "@/contexts/order/order-schema";
 
 const ReceiverInfoContainer = styled.div({
   display: "flex",
@@ -66,26 +67,24 @@ export const ReceiverInfoForm = ({ index, onClick }: ReceiverInfoFormProps) => {
   const { register, formState, watch } = useFormContext<OrderFormData>();
   const { errors } = formState;
 
-  const getFieldName = (
-    field: "receiverName" | "receiverPhone" | "quantity",
-  ): FieldPath<OrderFormData> => {
+  const getFieldName = (field: ReceiverKeys): FieldPath<OrderFormData> => {
     return `receivers.${index}.${field}` as FieldPath<OrderFormData>;
   };
 
-  const getError = (field: "receiverName" | "receiverPhone" | "quantity") => {
+  const getError = (field: ReceiverKeys) => {
     return errors?.receivers?.[index]?.[field];
   };
 
-  const getCurrentPhone = watch(getFieldName("receiverPhone"));
+  const currentPhone = watch(getFieldName("receiverPhone"));
   const allReceivers = watch("receivers") || [];
 
   const isDuplicatePhone =
-    !!getCurrentPhone &&
+    !!currentPhone &&
     allReceivers.filter(
       (receiver, idx) =>
         idx !== index &&
         receiver.receiverPhone &&
-        receiver.receiverPhone === getCurrentPhone,
+        receiver.receiverPhone === currentPhone,
     ).length > 0;
 
   const getPhoneError = () => {
