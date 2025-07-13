@@ -1,57 +1,20 @@
-import React from 'react';
 import styled from '@emotion/styled';
 
-type InputBoxProps = {
-  type?: string;
-  id: string;
-  placeholder?: string;
-  value: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  message?: string;
-  isError?: boolean;
-};
-
-const BorderInputBox = ({
-  id,
-  type = 'text',
-  placeholder,
-  value,
-  onChange,
-  message,
-  isError = false,
-}: InputBoxProps) => {
-  return (
-    <Wrapper>
-      <StyledInput
-        id={id}
-        type={type}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        hasError={isError}
-      />
-      {message && <CaptionText isError={isError}>{message}</CaptionText>}
-    </Wrapper>
-  );
-};
-
-export default BorderInputBox;
-
-const Wrapper = styled.div`
+export const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin-top: ${({ theme }) => theme.spacing.spacing4};
-  margin-bottom: ${({ theme }) => theme.spacing.spacing4};
 `;
 
-const StyledInput = styled.input<{ hasError: boolean }>`
+export const StyledInput = styled.input<{ hasError?: boolean }>`
   border: 1px solid
-    ${({ theme, hasError }) => (hasError ? theme.colors.critical : theme.colors.gray500)};
+    ${({ theme, hasError }) =>
+      hasError ? theme.colors.critical : theme.colors.borderDefault};
   padding: ${({ theme }) => theme.spacing.spacing3};
   font-size: ${({ theme }) => theme.font.body1Regular.size};
   background-color: ${({ theme }) => theme.colors.backgroundDefault};
   border-radius: 12px;
+  width: 100%;
   &:focus {
     outline: none;
     border-color: ${({ theme }) => theme.colors.gray700};
@@ -63,8 +26,9 @@ const StyledInput = styled.input<{ hasError: boolean }>`
   }
 `;
 
-const CaptionText = styled.span<{ isError: boolean }>`
-  color: ${({ isError, theme }) => (isError ? theme.colors.critical : theme.colors.gray600)};
+export const CaptionText = styled.span<{ isError?: boolean }>`
+  color: ${({ theme, isError }) =>
+    isError ? theme.colors.critical : theme.colors.textSub};
   font-size: ${({ theme }) => theme.font.label2Regular.size};
   margin-top: 4px;
 `;

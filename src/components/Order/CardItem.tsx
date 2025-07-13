@@ -23,6 +23,10 @@ const ItemWrapper = styled.div<{ isSelected: boolean }>`
   cursor: pointer;
   width: 120px;
   flex-shrink: 0;
+  border: ${({ isSelected, theme }) =>
+    isSelected
+      ? `2px solid ${theme.colors.kakaoBrown}`
+      : `2px solid transparent`};
 `;
 
 const CardImage = styled.img`
