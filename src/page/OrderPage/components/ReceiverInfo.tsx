@@ -72,6 +72,7 @@ const ReceiverInfo = ({ index, remove }: ReceiverInfoProps) => {
         <button type="button" onClick={() => remove(index)}>
           Delete
         </button>
+
         <InputContainer>
           <Text>이름</Text>
           <InputWrapper>
