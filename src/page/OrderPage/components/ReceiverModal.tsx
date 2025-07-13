@@ -154,6 +154,7 @@ const ReceiverModal = ({ onClick }: ReceiverModalProps) => {
     register,
     control,
     handleSubmit,
+    getValues,
     formState: { errors },
   } = useForm<FormInputValues>({ defaultValues: { receiverInfos: [] } });
 
@@ -218,6 +219,13 @@ const ReceiverModal = ({ onClick }: ReceiverModalProps) => {
                           pattern: {
                             value: phoneNumberRegex,
                             message: '전화번호를 입력하세요.',
+                          },
+                          validate: value => {
+                            const { receiverInfos } = getValues();
+                            const isDuplicated = receiverInfos
+                              .filter((_, i) => i !== index)
+                              .some(info => info.phoneNumber === value);
+                            return !isDuplicated || '중복된 전화번호가 있습니다.';
                           },
                         })}
                         placeholder="전화번호를 입력하세요."
