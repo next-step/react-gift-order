@@ -54,6 +54,10 @@ const OrderForm = () => {
     return <div>존재하지 않는 상품입니다.</div>;
   }
 
+  const productPrice = productData?.price.sellingPrice || 0;
+
+  const totalPrice = productPrice * quantity;
+
   return (
     <Wrapper>
       <Card message={message} onMessageChange={setMessage} messageError={errors.message} />
@@ -73,7 +77,7 @@ const OrderForm = () => {
       />
       <Margin height={'8px'} />
       <ProductInfo product={selectedProduct} />
-      <OrderButton onClick={handleOrder} />
+      <OrderButton onClick={handleOrder} totalPrice={totalPrice} />
     </Wrapper>
   );
 };
