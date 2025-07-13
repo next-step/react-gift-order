@@ -11,6 +11,15 @@
 - refactor: LoginContext storage key, 오류 메세지상수화
 - refactor: ReceiverModal 유효성 검사 Zod라이브러리 리팩터링
 - refactor: 보내는 사람 Zod 리팩터링
++
+- refactor: 사용하지 않는 훅 제거 및 정렬 수정
+- fix : eol 이슈 해결
+- refactor: defaultReceiver 선언 및 재사용
+- remove: SenderForm 쓸데없는 fragment 삭제
+- remove: 테스트 코드 삭제
+- refactor: useOrderForm 커스텀 훅을 통한 OrderPage 로직 파일 분리
+- refactor: ReceiverModal 커스텀 훅, 스키마 파일 분리
+- refactor: useModal 커스텀 훅 파일 구현 및 모달 관련 상태 관리 로직 수정 
 
 #todo
 - 이번미션 선택사항인 Zod 라이브러리로 유효성 검사를 하도록 리팩터링을 도전했으나, install 하는 과정을 시작해서 사용하기도 전에 오류가 너무 많이 발생해서 일단 그 전 마지막 커밋으로 롤백해서 제출하겠습니다. 제출 후 다시 도전하겠습니다.
@@ -27,3 +36,23 @@
 -현재 받는사람 모달 컴포넌트에서 여러명의 받는 사람 정보를 배열 형태로 관리하려고 useForm과 useFieldArray를 사용하고, OrderPage에서 모달에 배열과 onComplete 함수사용을 위해 useState로 배열을 선언하고 props로전달해주었는데 , 
 과제에 폼 데이터 관리시 useState를 직접 사용하지 말라고 되어 있는게 걸립니다. 
 OrderPage에서 state로 선언한 배열은 받는사람모달 내부의 진행중인 폼데이터가 아니고, 완료버튼을 눌러 확정된 결과 데이터여서 Controlled Component처럼 리렌더링 문제가 생기는 것 같지는 않다고 생각하긴 하는데, props로 전달해줄 배열을 state로 선언하는게 맞는건가 생각이 들기도 합니다..
+
+
+#멘토님 피드백(25/07/13)
+- eol 이슈 => 해결
+- 상수 관리 방식 소개
+  1. constants 폴더 하위에 관련된 상수 파일별로 분리
+  2. constants 객체로 관리
+- 기본값 defaultReceivers 선언 => 반영
+- 필요없는 fragment 삭제 => 반영
+- Modal 사용에 필수적인 부분 custom hook으로 (isOpen, onOpen , ...)
+  => 해결 :
+          - useModal 커 스텀 훅
+          - 어떤 컴포넌트든 모달이 필요하면 useModal 가져와서 사용
+          - 제어 상하 관계의 역전? : 기존에는 OrderPage가 ReceiverSelectBox의 onAddClick과 ReceiverModal의 onClose 등을 직접 연결해주었음. (OrderPage가 자식 컴포넌트 상호작용 제어)
+          - -> Trigger prop, React.cloneElement 사용하여
+          - 제어관계 역전 : 모달을 여는 onClick이벤트를 연결하는 제어권이 ReceiverModal로 이동
+          - 유연성? : Trigger가 뭐든 상관 없게 (ReceiverSelectBox이든, 다른 무엇이든) 어떤 컴포넌트는 Trigger로 전달받으면 React.cloneElement를 통해 onClick(onOpen)으로 렌더링
+- 테스트용 로그 삭제 => 반영
+- OrderPage 로직 분리 => 반영
+- ReceiverModal 로직, 스키마 분리 => 반영
