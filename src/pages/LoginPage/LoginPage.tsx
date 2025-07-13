@@ -17,31 +17,24 @@ export interface LoginFormProps {
   value: string;
   handleChange: (value: string) => void;
   validator: (value: string) => void;
-  errorMessage: string | null;
-  hasError: boolean;
+  errorMessage: string;
 }
 
 function LoginPage() {
   const { handleSubmit } = useLoginSubmit();
 
-  const {
-    email,
-    handleEmailValueChange,
-    validateEmail,
-    emailErrorMessage,
-    hasEmailError,
-  } = useEmailValidation();
+  const { email, handleEmailValueChange, validateEmail, emailErrorMessage } =
+    useEmailValidation();
 
   const {
     password,
     handlePasswordValueChange,
     validatePassword,
     passwordErrorMessage,
-    hasPasswordError,
   } = usePasswordValidation();
 
-  const isValidEmail = !hasEmailError && email.trim() !== "";
-  const isValidPassword = !hasPasswordError && password.trim() !== "";
+  const isValidEmail = !emailErrorMessage && email.trim() !== "";
+  const isValidPassword = !passwordErrorMessage && password.trim() !== "";
 
   const isFormValid = isValidEmail && isValidPassword;
 
@@ -56,14 +49,12 @@ function LoginPage() {
               handleChange={handleEmailValueChange}
               validator={validateEmail}
               errorMessage={emailErrorMessage}
-              hasError={hasEmailError}
             />
             <PasswordField
               value={password}
               handleChange={handlePasswordValueChange}
               validator={validatePassword}
               errorMessage={passwordErrorMessage}
-              hasError={hasPasswordError}
             />
           </InputFieldGroup>
           <LoginButton type="submit" disabled={!isFormValid}>

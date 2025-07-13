@@ -1,4 +1,4 @@
-import { PHONE_NUMBER_REGEX } from "../constants/phoneNumberRegex";
+import { PHONE_NUMBER_REGEX } from "../constants/phoneNumberRegEx";
 
 export const validatePhoneNumber = (phoneNumber: string) => {
   return PHONE_NUMBER_REGEX.KOREAN.test(phoneNumber);

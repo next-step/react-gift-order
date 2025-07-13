@@ -1,100 +1,61 @@
-import Input from "@/components/common/Input/Input";
-import RECEIVER_SECTION_CONSTANTS from "@/pages/OrderPage/constants/receiverSection";
 import {
-  FieldLabel,
+  RECEIVER_SECTION_CONSTANTS,
+  RECEIVER_MODIFIY_BUTTON,
+} from "@/pages/OrderPage/constants/receiverSection";
+import {
   FormContainer,
-  FormField,
   ReceiverSection,
   SectionTitle,
+  ShowModalButton,
+  ReceiverSectionHeader,
 } from "./ReceiverSection.styles";
+import { useState } from "react";
+import ReceiverModal from "./ReceiverModal/ReceiverModal";
+import ReceiverTable from "./ReceiverTable/ReceiverTable";
+import NoReceiver from "./NoReceiver/NoReceiver";
+import type { Receiver } from "../../hooks/useOrderForm";
 
-interface ReceiverSectionProps {
-  receiverName: string;
-  receiverPhone: string;
-  quantity: string;
-  handleReceiverNameChange: (value: string) => void;
-  handleReceiverPhoneChange: (value: string) => void;
-  handleQuantityChange: (value: string) => void;
-  validateReceiverName: (value: string) => void;
-  validateReceiverPhone: (value: string) => void;
-  validateQuantity: (value: string) => void;
-  receiverNameErrorMessage: string;
-  receiverPhoneErrorMessage: string;
-  quantityErrorMessage: string;
-  hasReceiverNameError: boolean;
-  hasReceiverPhoneError: boolean;
-  hasQuantityError: boolean;
+interface ReceiverSectionComponentProps {
+  receivers: Receiver[];
+  setReceivers: (receivers: Receiver[]) => void;
 }
 
 function ReceiverSectionComponent({
-  receiverName,
-  receiverPhone,
-  quantity,
-  handleReceiverNameChange,
-  handleReceiverPhoneChange,
-  handleQuantityChange,
-  validateReceiverName,
-  validateReceiverPhone,
-  validateQuantity,
-  receiverNameErrorMessage,
-  receiverPhoneErrorMessage,
-  quantityErrorMessage,
-  hasReceiverNameError,
-  hasReceiverPhoneError,
-  hasQuantityError,
-}: ReceiverSectionProps) {
+  receivers,
+  setReceivers,
+}: ReceiverSectionComponentProps) {
+  const [showModal, setShowModal] = useState(false);
+
+  const handleOpenModal = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
   return (
     <ReceiverSection>
-      <SectionTitle>{RECEIVER_SECTION_CONSTANTS.TITLE}</SectionTitle>
+      <ReceiverSectionHeader>
+        <SectionTitle>{RECEIVER_SECTION_CONSTANTS.TITLE}</SectionTitle>
+        <ShowModalButton onClick={handleOpenModal}>
+          {RECEIVER_MODIFIY_BUTTON}
+        </ShowModalButton>
+      </ReceiverSectionHeader>
       <FormContainer>
-        <FormField>
-          <FieldLabel>{RECEIVER_SECTION_CONSTANTS.NAME_LABEL}</FieldLabel>
-          <Input
-            type="text"
-            placeholder={RECEIVER_SECTION_CONSTANTS.NAME_PLACEHOLDER}
-            value={receiverName}
-            onChange={(e) => {
-              handleReceiverNameChange(e.target.value);
-              validateReceiverName(e.target.value);
-            }}
-            hasError={hasReceiverNameError}
-            errorMessage={
-              receiverNameErrorMessage || RECEIVER_SECTION_CONSTANTS.NAME_ERROR
-            }
-          />
-        </FormField>
-        <FormField>
-          <FieldLabel>{RECEIVER_SECTION_CONSTANTS.PHONE_LABEL}</FieldLabel>
-          <Input
-            type="tel"
-            placeholder={RECEIVER_SECTION_CONSTANTS.PHONE_PLACEHOLDER}
-            value={receiverPhone}
-            onChange={(e) => {
-              handleReceiverPhoneChange(e.target.value);
-              validateReceiverPhone(e.target.value);
-            }}
-            hasError={hasReceiverPhoneError}
-            errorMessage={receiverPhoneErrorMessage}
-          />
-        </FormField>
-        <FormField>
-          <FieldLabel>{RECEIVER_SECTION_CONSTANTS.QUANTITY_LABEL}</FieldLabel>
-          <Input
-            type="number"
-            min="1"
-            placeholder={RECEIVER_SECTION_CONSTANTS.QUANTITY_PLACEHOLDER}
-            value={quantity}
-            onChange={(e) => {
-              handleQuantityChange(e.target.value);
-              validateQuantity(e.target.value);
-            }}
-            hasError={hasQuantityError}
-            errorMessage={
-              quantityErrorMessage || RECEIVER_SECTION_CONSTANTS.QUANTITY_ERROR
-            }
-          />
-        </FormField>
+        {receivers.length === 0 ? (
+          <NoReceiver />
+        ) : (
+          <ReceiverTable receivers={receivers} />
+        )}
       </FormContainer>
+      {showModal && (
+        <ReceiverModal
+          handleCloseModal={handleCloseModal}
+          receivers={receivers}
+          setReceivers={setReceivers}
+        />
+      )}
     </ReceiverSection>
   );
 }

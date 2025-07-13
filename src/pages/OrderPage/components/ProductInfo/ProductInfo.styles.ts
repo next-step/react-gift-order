@@ -73,18 +73,20 @@ export const Price = styled.span`
 export const OrderButtonContainer = styled.div`
   position: fixed;
   bottom: 0;
-  left: 0;
-  right: 0;
+  width: 100%;
   height: 3.2rem;
   display: flex;
   justify-content: center;
+  align-items: center;
+
+  max-width: 720px;
   align-items: center;
   z-index: ${({ theme }) => theme.zIndex.fixed};
   background-color: transparent;
 `;
 
 export const OrderButton = styled.button`
-  width: 48.3%;
+  width: 100%;
   height: 100%;
   background-color: ${({ theme }) => theme.colors.brand.kakaoYellow};
   border: none;

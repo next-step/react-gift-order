@@ -2,15 +2,15 @@ import Layout from "@/layout";
 import { orderCardMockData } from "@/data/orderCardMockData";
 import styled from "@emotion/styled";
 import CardSelection from "./components/CardSelection/CardSelection";
-import { useCardSelection } from "./hooks/useCardSelection";
 import SenderSectionComponent from "./components/SenderSection/SenderSection";
-import { useSenderInput } from "./hooks/useSenderInput";
 import ReceiverSectionComponent from "./components/ReceiverSection/ReceiverSection";
-import { useReceiverInput } from "./hooks/useReceiverInput";
 import ProductInfo from "./components/ProductInfo/ProductInfo";
 import { useProductInfo } from "./hooks/useProductInfo";
 import { ROUTES } from "@/constants/routes";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useOrderForm } from "./hooks/useOrderForm";
+import { ORDER_MESSAGES } from "./constants/alert";
 
 const OrderPageContainer = styled.div`
   display: flex;
@@ -21,100 +21,82 @@ const OrderPageContainer = styled.div`
 
 function OrderPage() {
   const navigate = useNavigate();
+  const [isSubmittedOnce, setIsSubmittedOnce] = useState(false);
+  const product = useProductInfo();
 
   const {
-    selectedCard,
-    message,
-    handleCardSelect,
-    handleMessageChange,
-    validateMessage,
-    cardSelectionErrorMessage,
-    hasCardSelectionError,
-  } = useCardSelection(orderCardMockData);
+    messageCard,
+    setMessageCard,
+    cardSelectionControl,
+    cardSelectionErrors,
 
-  const {
-    senderName,
-    handleSenderNameChange,
-    validateSenderName,
-    senderNameErrorMessage,
-    hasSenderNameError,
-  } = useSenderInput();
+    senderControl,
+    senderErrors,
 
-  const {
-    receiverName,
-    receiverPhone,
-    quantity,
-    handleReceiverNameChange,
-    handleReceiverPhoneChange,
-    handleQuantityChange,
-    validateReceiverName,
-    validateReceiverPhone,
-    validateQuantity,
-    receiverNameErrorMessage,
-    receiverPhoneErrorMessage,
-    quantityErrorMessage,
-    hasReceiverNameError,
-    hasReceiverPhoneError,
-    hasQuantityError,
-  } = useReceiverInput();
+    receivers,
+    setReceivers,
 
-  const validateForms = (e: React.FormEvent<HTMLFormElement>) => {
+    validateAllForms,
+    getFormValues,
+  } = useOrderForm({ isSubmittedOnce });
+
+  const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    validateMessage(message);
-    validateSenderName(senderName);
-    validateReceiverName(receiverName);
-    validateReceiverPhone(receiverPhone);
-    validateQuantity(quantity);
-  };
+    const isValid = await validateAllForms();
 
-  const product = useProductInfo();
+    if (!isValid) {
+      setIsSubmittedOnce(true);
+    }
+
+    if (isValid) {
+      const formValues = getFormValues();
+      alert(
+        ORDER_MESSAGES.ORDER_COMPLETE_TEMPLATE({
+          productName: product?.name || "",
+          totalQuantity: formValues.totalQuantity,
+          senderName: formValues.senderName,
+          cardMessage: formValues.cardMessage,
+        })
+      );
+
+      navigate(ROUTES.HOME);
+      return;
+    }
+  };
 
   if (!product) {
     navigate(ROUTES.NOT_FOUND);
     return;
   }
 
+  const totalQuantity = receivers.reduce(
+    (acc, cur) => acc + Number(cur.quantity),
+    0
+  );
+
   return (
     <Layout>
-      <OrderPageContainer>
-        <form onSubmit={validateForms}>
+      <form onSubmit={onSubmitHandler}>
+        <OrderPageContainer>
           <CardSelection
             cards={orderCardMockData}
-            selectedCard={selectedCard}
-            message={message}
-            onSelect={handleCardSelect}
-            onMessageChange={handleMessageChange}
-            hasCardSelectionError={hasCardSelectionError}
-            cardSelectionErrorMessage={cardSelectionErrorMessage}
+            control={cardSelectionControl}
+            errors={cardSelectionErrors}
+            messageCard={messageCard}
+            setMessageCard={setMessageCard}
           />
           <SenderSectionComponent
-            senderName={senderName}
-            handleSenderNameChange={handleSenderNameChange}
-            validateSenderName={validateSenderName}
-            senderNameErrorMessage={senderNameErrorMessage}
-            hasSenderNameError={hasSenderNameError}
+            control={senderControl}
+            errors={senderErrors}
           />
           <ReceiverSectionComponent
-            receiverName={receiverName}
-            receiverPhone={receiverPhone}
-            quantity={quantity}
-            handleReceiverNameChange={handleReceiverNameChange}
-            handleReceiverPhoneChange={handleReceiverPhoneChange}
-            handleQuantityChange={handleQuantityChange}
-            validateReceiverName={validateReceiverName}
-            validateReceiverPhone={validateReceiverPhone}
-            validateQuantity={validateQuantity}
-            receiverNameErrorMessage={receiverNameErrorMessage}
-            receiverPhoneErrorMessage={receiverPhoneErrorMessage}
-            quantityErrorMessage={quantityErrorMessage}
-            hasReceiverNameError={hasReceiverNameError}
-            hasReceiverPhoneError={hasReceiverPhoneError}
-            hasQuantityError={hasQuantityError}
+            receivers={receivers}
+            setReceivers={setReceivers}
           />
-          <ProductInfo product={product} quantity={quantity} />
-        </form>
-      </OrderPageContainer>
+          <ProductInfo product={product} quantity={totalQuantity.toString()} />
+        </OrderPageContainer>
+      </form>
     </Layout>
   );
 }

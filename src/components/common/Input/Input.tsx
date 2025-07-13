@@ -2,7 +2,6 @@ import styled from "@emotion/styled";
 import FormErrorMessage from "@/pages/LoginPage/components/FormErrorMessage";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  hasError?: boolean;
   errorMessage?: string;
 }
 
@@ -46,13 +45,13 @@ const StyledInput = styled.input<{ hasError?: boolean }>`
   }
 `;
 
-const Input = ({ hasError, errorMessage, ...props }: InputProps) => {
-  const showErrorMessage = hasError && errorMessage;
+const Input = ({ errorMessage, ...props }: InputProps) => {
+  const hasError = !!errorMessage;
 
   return (
     <InputContainer>
       <StyledInput hasError={hasError} {...props} />
-      {showErrorMessage && <FormErrorMessage errorMessage={errorMessage} />}
+      {errorMessage && <FormErrorMessage errorMessage={errorMessage} />}
     </InputContainer>
   );
 };

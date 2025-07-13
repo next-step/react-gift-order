@@ -1,13 +1,13 @@
 import Input from "@/components/common/Input/Input";
 import styled from "@emotion/styled";
 import SENDER_SECTION_CONSTANTS from "@/pages/OrderPage/constants/senderSection";
+import { Controller, type Control, type FieldErrors } from "react-hook-form";
+import { FORM_FIELD } from "../../constants/formField";
+import type { SenderFormData } from "../../schemas";
 
-interface SenderSectionProps {
-  senderName: string;
-  handleSenderNameChange: (value: string) => void;
-  validateSenderName: (value: string) => void;
-  senderNameErrorMessage: string;
-  hasSenderNameError: boolean;
+interface SenderProps {
+  control: Control<SenderFormData>;
+  errors: FieldErrors<SenderFormData>;
 }
 
 const SendSection = styled.section`
@@ -30,39 +30,23 @@ const SendForm = styled.form`
   gap: ${({ theme }) => theme.spacing[2]};
 `;
 
-const InputLabel = styled.label`
-  font-size: ${({ theme }) => theme.typography.label.label2Regular.fontSize};
-  font-weight: ${({ theme }) =>
-    theme.typography.label.label2Regular.fontWeight};
-  color: ${({ theme }) => theme.colors.text.sub};
-  margin-left: ${({ theme }) => theme.spacing[2]};
-`;
-
-function SenderSectionComponent({
-  senderName,
-  handleSenderNameChange,
-  validateSenderName,
-  senderNameErrorMessage,
-  hasSenderNameError,
-}: SenderSectionProps) {
+function SenderSectionComponent({ control, errors }: SenderProps) {
   return (
     <SendSection>
       <SectionTitle>{SENDER_SECTION_CONSTANTS.TITLE}</SectionTitle>
       <SendForm>
-        <Input
-          hasError={hasSenderNameError}
-          errorMessage={senderNameErrorMessage}
-          type="text"
-          placeholder={SENDER_SECTION_CONSTANTS.NAME_PLACEHOLDER}
-          value={senderName}
-          onChange={(e) => {
-            handleSenderNameChange(e.target.value);
-            validateSenderName(e.target.value);
-          }}
+        <Controller
+          control={control}
+          name={FORM_FIELD.SENDER_NAME}
+          render={({ field }) => (
+            <Input
+              {...field}
+              errorMessage={errors.senderName?.message}
+              type="text"
+              placeholder={SENDER_SECTION_CONSTANTS.NAME_PLACEHOLDER}
+            />
+          )}
         />
-        {!hasSenderNameError && (
-          <InputLabel>{SENDER_SECTION_CONSTANTS.INFO_LABEL}</InputLabel>
-        )}
       </SendForm>
     </SendSection>
   );
