@@ -3,6 +3,8 @@ import { css, ThemeProvider } from '@emotion/react';
 import { theme } from '@/theme/theme';
 import productData from '../data/productData';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
 
 const Wrapper = styled.section`
   padding: 0px 16px;
@@ -146,6 +148,7 @@ const NumberLogo = styled.span`
 const ProductBox = styled.div`
   width: 100%;
   position: relative;
+  cursor: pointer;
 `;
 
 const ProductInfo = styled.div`
@@ -267,6 +270,26 @@ const PresentRanking: React.FC = () => {
 
   const presentTypes = ['받고 싶어한', '많이 선물한', '위시로 받은'];
 
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const goOrder = () => {
+    const to = `/Order?productId=${productData.id}`;
+
+    if (user) {
+      navigate(to);
+    } else {
+      navigate('/login', { state: { from: to } });
+    }
+  };
+
+  const [selectedProduct, setSelectedProduct] = useState<typeof productData | null>(null);
+
+  const handleProductClick = () => {
+    setSelectedProduct(productData);
+    goOrder();
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Wrapper>
@@ -298,7 +321,7 @@ const PresentRanking: React.FC = () => {
         <PresentDisplayContainer>
           <PresentDisplay>
             {Array.from({ length: productsToShow }, (_, index) => (
-              <ProductBox key={index}>
+              <ProductBox key={index} onClick={handleProductClick}>
                 <NumberLogo
                   css={css`
                     background-color: ${index <= 2 ? 'rgb(252, 106, 102)' : 'rgb(176, 179, 186)'};

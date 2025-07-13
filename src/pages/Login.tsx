@@ -4,6 +4,7 @@ import GlobalStyle from '@/styles/global';
 import NavigationBar from '@components/NavigationBar';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useLoginForm } from '@/hooks/useLoginForm';
+import { useAuth } from '@/hooks/useAuth';
 
 const Wrapper = styled.div(({ theme }) => ({
   width: '100%',
@@ -119,18 +120,13 @@ const HoriziontalSpacing2 = styled.div(({ theme }) => ({
   backgroundColor: 'transparent',
 }));
 
-interface LocationState {
-  from?: { pathname: string };
-}
+type LocationState = { from?: string };
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  let redirectTo = '/';
-  if (location.state && 'from' in location.state) {
-    redirectTo = (location.state as LocationState).from?.pathname ?? '/';
-  }
+  const redirectTo = (location.state as LocationState | null)?.from || '/';
 
   const {
     id,
@@ -144,9 +140,15 @@ const Login: React.FC = () => {
     isFormValid,
   } = useLoginForm();
 
+  // 로그인 함수
+  const { login } = useAuth();
+
   const handleClick = () => {
+    const mockToken = 'mock-jwt-token';
+    login({ email: id }, mockToken);
     navigate(redirectTo, { replace: true });
   };
+
   return (
     <>
       <GlobalStyle />
