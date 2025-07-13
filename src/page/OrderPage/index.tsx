@@ -4,7 +4,7 @@ import MessageInput from './components/MessageInput';
 import SenderInfo from './components/SenderInfo';
 import ProductInfo from './components/ProductInfo';
 import ReceiverField from './components/ReceiverField';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { FormProvider, useForm } from 'react-hook-form';
 
 const Section = styled.section`
@@ -40,9 +40,11 @@ export interface OrderInfoValues {
 const OrderPage = () => {
   const { id } = useParams<{ id: string }>();
   const index = Number(id);
+  const navigate = useNavigate();
 
   const onSubmit = () => {
     alert('주문 성공!');
+    navigate('/');
   };
 
   const orderForm = useForm<OrderInfoValues>({
