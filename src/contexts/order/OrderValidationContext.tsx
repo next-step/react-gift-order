@@ -1,8 +1,14 @@
-import { createContext, useContext, useCallback, type ReactNode } from "react";
-import { isOrderComplete, getValidationErrors } from "@/contexts/order";
-import { useOrderState } from "@/contexts/order";
-import { useOrderForm } from "@/contexts/order";
-import type { OrderValidationContextType } from "@/contexts/order";
+import {
+  createContext,
+  useContext,
+  useCallback,
+  useMemo,
+  type ReactNode,
+} from "react";
+import { isOrderComplete } from "@/contexts/order";
+import { useOrderState } from "@/contexts/order/OrderStateContext";
+import { useOrderForm } from "@/contexts/order/OrderFormContext";
+import type { OrderValidationContextType } from "@/contexts/order/types";
 
 const OrderValidationContext = createContext<
   OrderValidationContextType | undefined
@@ -14,23 +20,33 @@ export const OrderValidationProvider = ({
   children: ReactNode;
 }) => {
   const { order } = useOrderState();
-  const { errors } = useOrderForm();
+  const { errors, isValid } = useOrderForm();
 
   const checkIsOrderComplete = useCallback(() => {
     return isOrderComplete(order);
   }, [order]);
 
   const getOrderValidationErrors = useCallback(() => {
-    return getValidationErrors(errors);
+    return Object.values(errors)
+      .filter(Boolean)
+      .map(error => error.message)
+      .filter(
+        (message): message is string =>
+          typeof message === "string" && message.length > 0,
+      );
   }, [errors]);
 
+  const contextValue = useMemo(
+    () => ({
+      isOrderComplete: checkIsOrderComplete,
+      getValidationErrors: getOrderValidationErrors,
+      isFormValid: isValid,
+    }),
+    [checkIsOrderComplete, getOrderValidationErrors, isValid],
+  );
+
   return (
-    <OrderValidationContext.Provider
-      value={{
-        isOrderComplete: checkIsOrderComplete,
-        getValidationErrors: getOrderValidationErrors,
-      }}
-    >
+    <OrderValidationContext.Provider value={contextValue}>
       {children}
     </OrderValidationContext.Provider>
   );

@@ -8,6 +8,7 @@ import {
   SenderInfoSection,
 } from "@/components/order";
 import { OrderProviderWrapper } from "@/contexts/order";
+import { OverlayProvider } from "@/contexts/overlay/OverlayProvider";
 import { useOrderPageLogic } from "@/hooks/order/useOrderPageLogic";
 import styled from "@emotion/styled";
 
@@ -22,17 +23,19 @@ const OrderPageContent = () => {
   const { order, handleOrderSubmit } = useOrderPageLogic();
 
   return (
-    <OrderLayout>
-      <CardSelectorBar />
-      <SelectedCardView />
-      <BlankSpace />
-      <SenderInfoSection />
-      <BlankSpace />
-      <ReceiverInfoSection />
-      <BlankSpace />
-      <OrderProductInfoSection product={order.product} />
-      <OrderButton onClick={handleOrderSubmit} />
-    </OrderLayout>
+    <OverlayProvider>
+      <OrderLayout>
+        <CardSelectorBar />
+        <SelectedCardView />
+        <BlankSpace />
+        <SenderInfoSection />
+        <BlankSpace />
+        <ReceiverInfoSection />
+        <BlankSpace />
+        <OrderProductInfoSection product={order.product} />
+        <OrderButton onClick={handleOrderSubmit} />
+      </OrderLayout>
+    </OverlayProvider>
   );
 };
 

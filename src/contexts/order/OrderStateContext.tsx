@@ -33,8 +33,10 @@ export const OrderStateProvider = ({ children }: { children: ReactNode }) => {
     setOrderState(initialState.order);
   }, []);
 
+  const value = { order, setOrder, resetOrder };
+
   return (
-    <OrderStateContext.Provider value={{ order, setOrder, resetOrder }}>
+    <OrderStateContext.Provider value={value}>
       {children}
     </OrderStateContext.Provider>
   );

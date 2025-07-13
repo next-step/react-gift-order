@@ -1,7 +1,17 @@
 import type { Order } from "@/types";
-import type { Register } from "@/types/form-register-type";
-import type { ValidationErrors } from "@/utils/type";
-import type { ChangeEvent, FormEvent } from "react";
+import type {
+  FieldErrors,
+  FieldNamesMarkedBoolean,
+  UseFormRegister,
+  UseFormSetValue,
+  UseFormWatch,
+  UseFormHandleSubmit,
+  Control,
+  UseFormTrigger,
+  UseFormStateReturn,
+  UseFormGetFieldState,
+} from "react-hook-form";
+import type { OrderFormData } from "@/contexts/order";
 
 export interface OrderStateContextType {
   order: Order;
@@ -12,25 +22,29 @@ export interface OrderStateContextType {
 }
 
 export interface OrderFormContextType {
-  errors: ValidationErrors<Order>;
-  touched: Record<keyof Order, boolean>;
-  register: Register<Order>;
-  handleSubmit: (e: FormEvent<HTMLFormElement>) => void;
-  validateAllFields: () => boolean;
+  errors: FieldErrors<OrderFormData>;
+  touched: FieldNamesMarkedBoolean<OrderFormData>;
+  register: UseFormRegister<OrderFormData>;
+  handleSubmit: UseFormHandleSubmit<OrderFormData>;
+  validateAllFields: () => Promise<boolean>;
+  setValue: UseFormSetValue<OrderFormData>;
+  watch: UseFormWatch<OrderFormData>;
+  control: Control<OrderFormData>;
+  isValid: boolean;
+  trigger: UseFormTrigger<OrderFormData>;
+  formState: UseFormStateReturn<OrderFormData>;
+  getFieldState: UseFormGetFieldState<OrderFormData>;
 }
 
 export interface OrderCalculationContextType {
   totalPrice: number;
+  totalQuantity: number;
 }
 
 export interface OrderValidationContextType {
   isOrderComplete: () => boolean;
   getValidationErrors: () => string[];
 }
-
-export type OrderFormChangeEvent = ChangeEvent<
-  HTMLInputElement | HTMLTextAreaElement
->;
 
 export interface CardTemplateHookType {
   cardTemplate: Order["cardTemplate"];
