@@ -48,6 +48,7 @@ const OrderPage = () => {
   const orderForm = useForm<OrderInfoValues>({
     defaultValues: { message: '축하해요.', name: '', receiverInfos: [] },
   });
+
   const { watch } = orderForm;
   const watchedReceiverInfos = watch('receiverInfos');
 
@@ -57,8 +58,8 @@ const OrderPage = () => {
         <FormProvider {...orderForm}>
           <form onSubmit={orderForm.handleSubmit(onSubmit)}>
             <MessageCardSection />
-            <MessageInput orderForm={orderForm} />
-            <SenderInfo orderForm={orderForm} />
+            <MessageInput />
+            <SenderInfo />
             <ReceiverField watchedData={watchedReceiverInfos} />
             <ProductInfo index={index} />
             <OrderButton type="submit">

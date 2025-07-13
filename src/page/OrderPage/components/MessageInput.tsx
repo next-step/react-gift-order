@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import type { UseFormReturn } from 'react-hook-form';
 import type { OrderInfoValues } from '..';
+import { useFormContext } from 'react-hook-form';
 
 const MessageInputContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.semantic.background.default};
@@ -40,15 +40,11 @@ const ErrorMessage = styled.p`
   margin-top: ${({ theme }) => theme.spacing.spacing1};
 `;
 
-interface InfoProps {
-  orderForm: UseFormReturn<OrderInfoValues>;
-}
-
-const MessageInput = ({ orderForm }: InfoProps) => {
+const MessageInput = () => {
   const {
     register,
     formState: { errors },
-  } = orderForm;
+  } = useFormContext<OrderInfoValues>();
 
   return (
     <MessageInputContainer>
