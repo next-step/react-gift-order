@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { cardData } from "@/data/cardData";
 import { useTheme } from "@emotion/react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -34,7 +34,6 @@ const Order: React.FC = () => {
   const theme = useTheme();
   const [selectedId, setSelectedId] = useState<number>();
   const { id } = useParams<{ id: string }>();
-  const quantity = 1;
   const SenderNameRef = useRef<HTMLInputElement>(null);
   const GiftMessageRef = useRef<HTMLTextAreaElement>(null);
   const [messageError, setMessageError] = useState("");
@@ -81,11 +80,6 @@ const Order: React.FC = () => {
 
   const selectedGiftId = id ? parseInt(id, 10) : undefined;
   const selectedGift = giftData.find((gift) => gift.id === selectedGiftId);
-
-  useEffect(() => {
-    const price = Number(selectedGift?.price.sellingPrice || 0);
-    setTotalPrice(quantity * price);
-  }, [selectedGift?.price.sellingPrice, quantity]);
 
   return (
     <div css={WrapperStyle(theme)}>
