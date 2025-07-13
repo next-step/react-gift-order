@@ -1,6 +1,6 @@
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, useWatch } from "react-hook-form";
 import styled from "@emotion/styled";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import ReceiverFormDialog from "./ReceiverFormDialog";
 
 export type Receiver = {
@@ -34,17 +34,20 @@ export default function ReceiverListSection({ onChange }: Props) {
     name: "receivers",
   });
 
+  const receivers = useWatch({ control, name: "receivers" });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  useEffect(() => {
-    const subscription = watch((value) => {
-      const safeReceivers = (value.receivers ?? []).filter(
-        Boolean,
-      ) as Receiver[];
+  const handleChange = useCallback(
+    (safeReceivers: Receiver[]) => {
       onChange?.(safeReceivers);
-    });
-    return () => subscription.unsubscribe();
-  }, [watch, onChange]);
+    },
+    [onChange],
+  );
+
+  useEffect(() => {
+    const safeReceivers = (receivers ?? []).filter(Boolean);
+    handleChange(safeReceivers);
+  }, [receivers, handleChange]);
 
   const handleValid = (data: FormValues) => {
     replace(data.receivers);

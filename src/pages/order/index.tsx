@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import MessageCard, {
   type MessageCardHandle,
 } from "@/pages/order/components/MessageCard";
@@ -66,6 +66,10 @@ export default function OrderPage() {
     navigate("/");
   };
 
+  const handleReceiverChange = useCallback((newReceivers: Receiver[]) => {
+    setReceivers(newReceivers);
+  }, []);
+
   return (
     <>
       <MessageCard
@@ -78,9 +82,7 @@ export default function OrderPage() {
         onChange={(name) => setSenderName(name)}
       />
       <SectionDivider />
-      <ReceiverListSection
-        onChange={(newReceivers) => setReceivers(newReceivers)}
-      />
+      <ReceiverListSection onChange={handleReceiverChange} />
 
       <SectionDivider />
       <ProductInfo
