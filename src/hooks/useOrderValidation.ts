@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export interface OrderValidationParams {
   message: string;
@@ -43,14 +43,44 @@ export function useOrderValidation(params: OrderValidationParams): UseOrderValid
 
     setErrors(newErrors);
 
-    // 모든 필드가 false여야 true
     return !(
       newErrors.message ||
       newErrors.sender ||
       newErrors.recipientName ||
-      newErrors.recipientPhone
+      newErrors.recipientPhone ||
+      newErrors.quantity
     );
   };
+
+  useEffect(() => {
+    if (errors.message && message.trim().length > 0) {
+      setErrors((prev) => ({ ...prev, message: false }));
+    }
+  }, [message, errors.message]);
+
+  useEffect(() => {
+    if (errors.sender && sender.trim().length > 0) {
+      setErrors((prev) => ({ ...prev, sender: false }));
+    }
+  }, [sender, errors.sender]);
+
+  useEffect(() => {
+    if (errors.recipientName && recipientName.trim().length > 0) {
+      setErrors((prev) => ({ ...prev, recipientName: false }));
+    }
+  }, [recipientName, errors.recipientName]);
+
+  useEffect(() => {
+    if (errors.recipientPhone && recipientPhone.trim().length > 0) {
+      setErrors((prev) => ({ ...prev, recipientPhone: false }));
+    }
+  }, [recipientPhone, errors.recipientPhone]);
+
+  useEffect(() => {
+    if (errors.quantity && quantity >= 1) {
+      setErrors((prev) => ({ ...prev, quantity: false }));
+    }
+  }, [quantity, errors.quantity]);
 
   return { errors, validate };
 }
