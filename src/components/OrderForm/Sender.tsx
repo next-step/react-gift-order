@@ -78,10 +78,14 @@ export const Sender = ({ value, onChange, error }: SenderProps) => {
           hasError={error}
           placeholder="이름을 입력하세요."
         />
-        {error && <ErrorMessage>이름을 입력해주세요.</ErrorMessage>}
-
-        <Margin height={'4px'} />
-        <InputBoxNotice>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</InputBoxNotice>
+        {error ? (
+          <ErrorMessage>이름을 입력해주세요.</ErrorMessage>
+        ) : (
+          <>
+            <Margin height={'4px'} />
+            <InputBoxNotice>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</InputBoxNotice>
+          </>
+        )}
       </Container>
       <Margin height={'24px'} />
     </Wrapper>
