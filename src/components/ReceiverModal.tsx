@@ -2,6 +2,8 @@ import React from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import type { Receiver } from '@/types/receiver';
 
+const DEFAULT_RECEIVERS: Receiver[] = [{ name: '', phone: '', quantity: 1 }];
+
 type FormValues = {
   receivers: Receiver[];
 };
@@ -13,7 +15,7 @@ interface ReceiverModalProps {
 }
 
 const ReceiverModal: React.FC<ReceiverModalProps> = ({
-  receivers: defaultReceivers,
+  receivers: initialReceivers,
   setReceivers,
   onClose,
 }) => {
@@ -28,9 +30,9 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
   } = useForm<FormValues>({
     defaultValues: {
       receivers:
-        defaultReceivers.length > 0
-          ? defaultReceivers
-          : [{ name: '', phone: '', quantity: 1 }],
+        initialReceivers && initialReceivers.length > 0
+          ? initialReceivers
+          : DEFAULT_RECEIVERS,
     },
     mode: 'onChange',
   });
