@@ -1,4 +1,4 @@
-import { createContext, useContext, useCallback, type ReactNode } from "react";
+import { createContext, useContext, type ReactNode, useMemo } from "react";
 import { useOrderState } from "@/contexts/order/OrderStateContext";
 import type { OrderCalculationContextType } from "@/contexts/order/types";
 
@@ -13,7 +13,7 @@ export const OrderCalculationProvider = ({
 }) => {
   const { order } = useOrderState();
 
-  const calculateTotalPrice = useCallback(() => {
+  const totalPrice = useMemo(() => {
     if (!order.product || !order.receivers || order.receivers.length === 0) {
       return 0;
     }
@@ -27,7 +27,7 @@ export const OrderCalculationProvider = ({
     return productPrice * totalQuantity;
   }, [order.product, order.receivers]);
 
-  const calculateTotalQuantity = useCallback(() => {
+  const totalQuantity = useMemo(() => {
     if (!order.receivers || order.receivers.length === 0) {
       return 0;
     }
@@ -36,9 +36,6 @@ export const OrderCalculationProvider = ({
       return total + (receiver.quantity || 0);
     }, 0);
   }, [order.receivers]);
-
-  const totalPrice = calculateTotalPrice();
-  const totalQuantity = calculateTotalQuantity();
 
   return (
     <OrderCalculationContext.Provider
