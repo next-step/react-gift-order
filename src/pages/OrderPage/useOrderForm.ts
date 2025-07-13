@@ -21,7 +21,6 @@ type OrderFormValues = z.infer<typeof OrderFormSchema>;
 type Receivers = ReceiverFormInput[];
 
 export function useOrderForm(product: { name: string; price: number }) {
-  const [isReceiverModalOpen, setIsReceiverModalOpen] = useState(false);
   const [receivers, setReceivers] = useState<Receivers>([]);
 
   const {
@@ -65,8 +64,6 @@ export function useOrderForm(product: { name: string; price: number }) {
     setValue,
     errors,
     onSubmit,
-    isReceiverModalOpen,
-    setIsReceiverModalOpen,
     receivers,
     handleReceiverModalComplete,
     totalQuantity,

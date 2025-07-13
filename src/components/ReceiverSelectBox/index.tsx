@@ -18,16 +18,16 @@ interface Recipient {
 }
 
 interface ReceiverSelectBoxProps {
-  onAddClick: () => void;
+  onClick?: () => void;
   recipients: Recipient[];
 }
 
-const ReceiverSelectBox: React.FC<ReceiverSelectBoxProps> = ({ onAddClick, recipients = [] }) => {
+const ReceiverSelectBox: React.FC<ReceiverSelectBoxProps> = ({ onClick, recipients = [] }) => {
   return (
     <S.Frame>
       <S.Header>
         <S.Title>{RECEIVER_TITLE}</S.Title>
-        <S.Box onClick={onAddClick} style={{ cursor: 'pointer' }}>
+        <S.Box onClick={onClick} style={{ cursor: 'pointer' }}>
           <S.Text>{recipients.length > 0 ? EDIT_BUTTON_TEXT : ADD_BUTTON_TEXT}</S.Text>
         </S.Box>
       </S.Header>

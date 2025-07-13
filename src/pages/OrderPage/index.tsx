@@ -21,8 +21,6 @@ function OrderPage() {
     setValue,
     errors,
     onSubmit,
-    isReceiverModalOpen,
-    setIsReceiverModalOpen,
     receivers,
     handleReceiverModalComplete,
     totalQuantity,
@@ -32,12 +30,10 @@ function OrderPage() {
     <form onSubmit={handleSubmit(onSubmit)}>
       <MessageCard register={register} setValue={setValue} />
       <SenderForm register={register} errors={errors} productPrice={product.price} />
-      <ReceiverSelectBox onAddClick={() => setIsReceiverModalOpen(true)} recipients={receivers} />
       <ReceiverModal
-        isOpen={isReceiverModalOpen}
-        onClose={() => setIsReceiverModalOpen(false)}
         onComplete={handleReceiverModalComplete}
         initialReceivers={receivers}
+        Trigger={<ReceiverSelectBox recipients={receivers} />}
       />
       <Container>
         <Title>{ORDER_INFO_TITLE}</Title>
