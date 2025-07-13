@@ -334,9 +334,9 @@ const OrderBtnWrapper = styled.div`
   width: 100%;
   height: ${({ theme }) => theme.spacing.spacing12};
 
-  position: absolute;
+  position: sticky;
   bottom: 0;
-  left: 0;
+  /* left: 0; */
   
   display: flex;
   align-items: center;
