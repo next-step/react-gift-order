@@ -122,7 +122,9 @@ const Order: React.FC = () => {
       <div css={ReceiverSection}>
         <div css={ReceiverHeader}>
           <h2>받는 사람</h2>
-          <button onClick={() => setIsModalOpen(true)}>추가</button>
+          <button onClick={() => setIsModalOpen(true)}>
+            {receivers.length === 0 ? "추가" : "수정"}
+          </button>
         </div>
 
         {isModalOpen && (
