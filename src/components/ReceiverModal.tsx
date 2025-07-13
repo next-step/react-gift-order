@@ -6,6 +6,7 @@ import type {
   FieldErrors,
 } from 'react-hook-form';
 import type { Receiver } from '@/types/receiver';
+import styled from 'styled-components';
 
 const DEFAULT_RECEIVERS: Receiver[] = [{ name: '', phone: '', quantity: 1 }];
 
@@ -18,6 +19,162 @@ interface ReceiverModalProps {
   setReceivers: (receivers: Receiver[]) => void;
   onClose: () => void;
 }
+
+// Styled Components
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ModalForm = styled.form`
+  background: #fff;
+  border-radius: 16px;
+  width: 500px;
+  height: 700px;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-sizing: border-box;
+`;
+
+const ModalHeader = styled.div`
+  padding: 32px 32px 0 32px;
+  background: transparent;
+  flex-shrink: 0;
+`;
+
+const ModalTitle = styled.div`
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 8px;
+`;
+
+const ModalDescription = styled.div`
+  color: #535353;
+  font-size: 12px;
+  margin-bottom: 12px;
+`;
+
+const AddButton = styled.button`
+  margin-bottom: 16px;
+  border-radius: 8px;
+  padding: 8px 20px;
+  font-weight: 500;
+  font-size: 13px;
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
+  background: #eee;
+  border: none;
+`;
+
+const ModalContent = styled.div`
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 32px;
+  min-height: 0;
+`;
+
+const ReceiverCard = styled.div`
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+`;
+
+const CardHeader = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+`;
+
+const DeleteButton = styled.button`
+  margin-left: 8px;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 20px;
+  cursor: pointer;
+`;
+
+const FormRow = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+`;
+
+const FormLabel = styled.label`
+  min-width: 60px;
+  margin-right: 8px;
+`;
+
+const FormInput = styled.input<{ hasError?: boolean }>`
+  width: 100%;
+  height: 36px;
+  border: ${(props) =>
+    props.hasError ? '2px solid #f44336' : '1px solid #ccc'};
+  border-radius: 8px;
+  padding: 0 12px;
+`;
+
+const QuantityInput = styled.input<{ hasError?: boolean }>`
+  width: 100px;
+  height: 36px;
+  border: ${(props) =>
+    props.hasError ? '2px solid #f44336' : '1px solid #ccc'};
+  border-radius: 8px;
+  padding: 0 12px;
+`;
+
+const ErrorMessage = styled.div`
+  color: #f44336;
+  font-size: 13px;
+  margin-top: 4px;
+`;
+
+const ModalFooter = styled.div`
+  width: 100%;
+  background: #fff;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  display: flex;
+  justify-content: space-between;
+  padding: 24px 32px;
+  box-sizing: border-box;
+  border-top: 1px solid #eee;
+  flex-shrink: 0;
+`;
+
+const CancelButton = styled.button`
+  background: #eee;
+  width: 120px;
+  padding: 10px 30px;
+  border-radius: 8px;
+  font-size: 15px;
+  border: none;
+  cursor: pointer;
+`;
+
+const SubmitButton = styled.button`
+  background: #ffe812;
+  width: 300px;
+  padding: 10px 30px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 15px;
+  border: none;
+  cursor: pointer;
+`;
 
 function checkDuplicatePhone(
   receivers: Receiver[],
@@ -96,170 +253,56 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
   };
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100vw',
-        height: '100vh',
-        background: 'rgba(0,0,0,0.3)',
-        zIndex: 9999,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        style={{
-          background: '#fff',
-          borderRadius: 16,
-          width: 500,
-          height: 700,
-          maxWidth: '90vw',
-          maxHeight: '90vh',
-          display: 'flex',
-          flexDirection: 'column',
-          position: 'relative',
-          boxSizing: 'border-box',
-        }}
-      >
-        <div
-          style={{
-            padding: '32px 32px 0 32px',
-            background: 'transport',
-            flexShrink: 0,
-          }}
-        >
-          <div
-            style={{
-              fontWeight: 700,
-              fontSize: 18,
-              marginBottom: 8,
-            }}
-          >
-            받는 사람
-          </div>
-          <div
-            style={{
-              color: '#535353',
-              fontSize: 12,
-              marginBottom: 12,
-            }}
-          >
+    <ModalOverlay>
+      <ModalForm onSubmit={handleSubmit(onSubmit)}>
+        <ModalHeader>
+          <ModalTitle>받는 사람</ModalTitle>
+          <ModalDescription>
             * 최대 10명까지 추가할 수 있어요.
             <br />* 받는 사람의 전화번호를 중복으로 입력할 수 없어요.
-          </div>
-          <button
+          </ModalDescription>
+          <AddButton
             type="button"
             onClick={() => append({ name: '', phone: '', quantity: 1 })}
             disabled={fields.length >= 10}
-            style={{
-              marginBottom: 16,
-              borderRadius: 8,
-              padding: '8px 20px',
-              fontWeight: 500,
-              fontSize: 13,
-              cursor: fields.length >= 10 ? 'not-allowed' : 'pointer',
-              background: '#eee',
-              border: 'none',
-            }}
           >
             추가하기
-          </button>
-        </div>
-        <div
-          style={{
-            flex: 1,
-            overflowY: 'auto',
-            padding: '0 32px',
-            minHeight: 0,
-          }}
-        >
+          </AddButton>
+        </ModalHeader>
+        <ModalContent>
           {fields.map((field, idx) => (
-            <div
-              key={field.id}
-              style={{
-                border: '1px solid #eee',
-                borderRadius: 8,
-                padding: 16,
-                marginBottom: 12,
-              }}
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  marginBottom: 8,
-                }}
-              >
+            <ReceiverCard key={field.id}>
+              <CardHeader>
                 <b>받는 사람 {idx + 1}</b>
-                <button
+                <DeleteButton
                   type="button"
                   onClick={() => remove(idx)}
-                  style={{
-                    marginLeft: 8,
-                    background: 'transparent',
-                    border: 'none',
-                    borderRadius: '50%',
-                    width: 32,
-                    height: 32,
-                    fontSize: 20,
-                    cursor: 'pointer',
-                  }}
                   aria-label="삭제"
                 >
                   ✕
-                </button>
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  marginBottom: 8,
-                }}
-              >
-                <label style={{ minWidth: 60, marginRight: 8 }}>이름</label>
+                </DeleteButton>
+              </CardHeader>
+              <FormRow>
+                <FormLabel>이름</FormLabel>
                 <div style={{ flex: 1 }}>
-                  <input
+                  <FormInput
                     {...register(`receivers.${idx}.name`, {
                       required: '이름을 입력해 주세요.',
                     })}
-                    style={{
-                      width: '100%',
-                      height: 36,
-                      border: errors.receivers?.[idx]?.name
-                        ? '2px solid #f44336'
-                        : '1px solid #ccc',
-                      borderRadius: 8,
-                      padding: '0 12px',
-                    }}
+                    hasError={!!errors.receivers?.[idx]?.name}
                     placeholder="이름을 입력하세요."
                   />
                   {errors.receivers?.[idx]?.name && (
-                    <div
-                      style={{
-                        color: '#f44336',
-                        fontSize: 13,
-                        marginTop: 4,
-                      }}
-                    >
+                    <ErrorMessage>
                       {errors.receivers[idx].name.message}
-                    </div>
+                    </ErrorMessage>
                   )}
                 </div>
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  marginBottom: 8,
-                }}
-              >
-                <label style={{ minWidth: 60, marginRight: 8 }}>전화번호</label>
+              </FormRow>
+              <FormRow>
+                <FormLabel>전화번호</FormLabel>
                 <div style={{ flex: 1 }}>
-                  <input
+                  <FormInput
                     {...register(`receivers.${idx}.phone`, {
                       required: '전화번호를 입력해 주세요.',
                       pattern: {
@@ -278,15 +321,7 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
                         return true;
                       },
                     })}
-                    style={{
-                      width: '100%',
-                      height: 36,
-                      border: errors.receivers?.[idx]?.phone
-                        ? '2px solid #f44336'
-                        : '1px solid #ccc',
-                      borderRadius: 8,
-                      padding: '0 12px',
-                    }}
+                    hasError={!!errors.receivers?.[idx]?.phone}
                     placeholder="전화번호를 입력하세요."
                     onChange={(e) => {
                       checkDuplicatePhone(
@@ -298,27 +333,15 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
                     }}
                   />
                   {errors.receivers?.[idx]?.phone && (
-                    <div
-                      style={{
-                        color: '#f44336',
-                        fontSize: 13,
-                        marginTop: 4,
-                      }}
-                    >
+                    <ErrorMessage>
                       {errors.receivers[idx].phone.message}
-                    </div>
+                    </ErrorMessage>
                   )}
                 </div>
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  marginBottom: 8,
-                }}
-              >
-                <label style={{ minWidth: 60, marginRight: 8 }}>수량</label>
-                <input
+              </FormRow>
+              <FormRow>
+                <FormLabel>수량</FormLabel>
+                <QuantityInput
                   type="number"
                   {...register(`receivers.${idx}.quantity`, {
                     valueAsNumber: true,
@@ -328,78 +351,25 @@ const ReceiverModal: React.FC<ReceiverModalProps> = ({
                       message: '구매 수량은 1개 이상이어야 해요.',
                     },
                   })}
-                  style={{
-                    width: 100,
-                    height: 36,
-                    border: errors.receivers?.[idx]?.quantity
-                      ? '2px solid #f44336'
-                      : '1px solid #ccc',
-                    borderRadius: 8,
-                    padding: '0 12px',
-                  }}
+                  hasError={!!errors.receivers?.[idx]?.quantity}
                 />
                 {errors.receivers?.[idx]?.quantity && (
-                  <div
-                    style={{
-                      color: '#f44336',
-                      fontSize: 13,
-                      marginTop: 4,
-                    }}
-                  >
+                  <ErrorMessage>
                     {errors.receivers[idx].quantity.message}
-                  </div>
+                  </ErrorMessage>
                 )}
-              </div>
-            </div>
+              </FormRow>
+            </ReceiverCard>
           ))}
-        </div>
-        <div
-          style={{
-            width: '100%',
-            background: '#fff',
-            borderBottomLeftRadius: 16,
-            borderBottomRightRadius: 16,
-            display: 'flex',
-            justifyContent: 'space-between',
-            padding: '24px 32px',
-            boxSizing: 'border-box',
-            borderTop: '1px solid #eee',
-            flexShrink: 0,
-          }}
-        >
-          <button
-            type="button"
-            onClick={onClose}
-            style={{
-              background: '#eee',
-              width: '120px',
-              padding: '10px 30px',
-              borderRadius: 8,
-              fontSize: 15,
-              border: 'none',
-              cursor: 'pointer',
-            }}
-          >
+        </ModalContent>
+        <ModalFooter>
+          <CancelButton type="button" onClick={onClose}>
             취소
-          </button>
-          <button
-            type="submit"
-            style={{
-              background: '#ffe812',
-              width: '300px',
-              padding: '10px 30px',
-              borderRadius: 8,
-              fontWeight: 'bold',
-              fontSize: 15,
-              border: 'none',
-              cursor: 'pointer',
-            }}
-          >
-            {fields.length}명 완료
-          </button>
-        </div>
-      </form>
-    </div>
+          </CancelButton>
+          <SubmitButton type="submit">{fields.length}명 완료</SubmitButton>
+        </ModalFooter>
+      </ModalForm>
+    </ModalOverlay>
   );
 };
 
