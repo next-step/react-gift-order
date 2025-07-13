@@ -73,3 +73,27 @@ export const OrderButton = styled.button`
 
     background-color: ${({ theme }) => theme.colors.semantic.kakaoYellow};
 `;
+
+export const ReceiverLabel = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin: 4px 0px;
+`;
+
+export const ReceiverPlaceholder = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    height: 88px;
+
+    border: 1px solid ${({ theme }) => theme.colors.gray.gray300};
+    border-radius: 8px;
+
+    text-align: center;
+    font-size: ${({ theme }) => theme.typography.body.body2Regular.size};
+    color: ${({ theme }) => theme.colors.gray.gray600};
+`;
