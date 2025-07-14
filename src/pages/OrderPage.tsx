@@ -1,21 +1,20 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { useState } from 'react';
 import { productMockData } from '@/mocks/products';
 import { messageCardMockData } from '@/mocks/messageCards';
-import { useInput } from '@/hooks/useInput';
-import {
-  messageRequiredValidator,
-  nameRequiredValidator,
-  phoneValidator,
-  quantityValidator,
-} from '@/utils/validator';
-import { useNavigate } from 'react-router-dom';
+import { messageRequiredValidator, nameRequiredValidator } from '@/utils/validator';
 import OrderField from '@/components/OrderField';
 import { ROUTE } from '@/constants/routes';
+import { useForm } from 'react-hook-form';
+import RecipientModal, { type Recipient } from '@/components/RecipientModal';
+import { zIndex } from '@/constants/zIndex';
 
 const Wrapper = styled.div`
   padding: ${({ theme }) => theme.spacing.spacing4};
+  padding-bottom: 100px;
+  max-width: 720px;
+  margin: 0 auto;
 `;
 
 const CardSelector = styled.div`
@@ -46,7 +45,6 @@ const Section = styled.section`
 `;
 
 const Label = styled.label`
-  display: block;
   font-weight: bold;
   margin-bottom: ${({ theme }) => theme.spacing.spacing2};
   color: ${({ theme }) => theme.colors.semantic.textDefault};
@@ -55,6 +53,7 @@ const Label = styled.label`
 const Note = styled.p`
   font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
   color: ${({ theme }) => theme.colors.semantic.textSub};
+  margin-top: ${({ theme }) => theme.spacing.spacing1};
 `;
 
 const ProductInfo = styled.div`
@@ -64,7 +63,6 @@ const ProductInfo = styled.div`
   padding: ${({ theme }) => theme.spacing.spacing4};
   border: 1px solid ${({ theme }) => theme.colors.gray.gray300};
   border-radius: ${({ theme }) => theme.spacing.spacing2};
-  margin-bottom: ${({ theme }) => theme.spacing.spacing6};
   background-color: ${({ theme }) => theme.colors.semantic.backgroundFill};
 
   img {
@@ -81,51 +79,108 @@ const ProductInfo = styled.div`
 `;
 
 const OrderButton = styled.button`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: 690px;
+  margin: 0 auto;
   width: 100%;
   padding: ${({ theme }) => theme.spacing.spacing4};
   background-color: ${({ theme }) => theme.colors.semantic.kakaoYellow};
   font-weight: ${({ theme }) => theme.typography.body1Bold.fontWeight};
   font-size: ${({ theme }) => theme.typography.body1Bold.fontSize};
   color: ${({ theme }) => theme.colors.gray.gray1000};
-  border-radius: ${({ theme }) => theme.spacing.spacing2};
-  position: sticky;
-  bottom: 0;
   text-align: center;
-  box-sizing: border-box;
-  margin-top: ${({ theme }) => theme.spacing.spacing5};
+  border: none;
+  z-index: ${zIndex.base};
 `;
+
+const RecipientHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: ${({ theme }) => theme.spacing.spacing2};
+`;
+
+const EditButton = styled.button`
+  padding: ${({ theme }) => theme.spacing.spacing2};
+  background-color: ${({ theme }) => theme.colors.gray.gray100};
+  border-radius: ${({ theme }) => theme.spacing.spacing2};
+  font-size: ${({ theme }) => theme.typography.label1Bold.fontSize};
+  color: ${({ theme }) => theme.colors.semantic.textDefault};
+`;
+
+const EmptyRecipientBox = styled.div`
+  padding: ${({ theme }) => theme.spacing.spacing5};
+  border: 1px solid ${({ theme }) => theme.colors.gray.gray300};
+  border-radius: ${({ theme }) => theme.spacing.spacing2};
+  background-color: ${({ theme }) => theme.colors.semantic.backgroundDefault};
+  text-align: center;
+  color: ${({ theme }) => theme.colors.semantic.textSub};
+`;
+
+const RecipientTable = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: ${({ theme }) => theme.spacing.spacing2};
+
+  th,
+  td {
+    padding: ${({ theme }) => theme.spacing.spacing2};
+    text-align: left;
+    font-size: ${({ theme }) => theme.typography.body1Regular.fontSize};
+    border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray300};
+  }
+
+  th {
+    font-weight: ${({ theme }) => theme.typography.body1Bold.fontWeight};
+    color: ${({ theme }) => theme.colors.semantic.textDefault};
+  }
+`;
+
+type FormValues = {
+  message: string;
+  sender: string;
+};
 
 const OrderPage = () => {
   const { productId } = useParams();
   const product = productMockData.find((p) => p.id === Number(productId));
   const [selectedCardId, setSelectedCardId] = useState(messageCardMockData[0].id);
   const selectedCard = messageCardMockData.find((c) => c.id === selectedCardId);
-
-  const messageInput = useInput(selectedCard?.defaultTextMessage || '', messageRequiredValidator);
-  const senderInput = useInput('', nameRequiredValidator);
-  const receiverNameInput = useInput('', nameRequiredValidator);
-  const receiverPhoneInput = useInput('', phoneValidator);
-  const quantityInput = useInput('1', quantityValidator);
-  const forms = [messageInput, senderInput, receiverNameInput, receiverPhoneInput, quantityInput];
+  const [recipients, setRecipients] = useState<Recipient[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
-  if (!product) return <div>상품을 찾을 수 없습니다.</div>;
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<FormValues>({
+    defaultValues: {
+      message: selectedCard?.defaultTextMessage || '',
+      sender: '',
+    },
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
+  });
 
-  const handleSubmit = () => {
-    const allValid = forms.every((f) => f.validate());
-
-    if (!allValid || !product) return;
+  const onSubmit = (data: FormValues) => {
+    if (!product) return;
 
     alert(
       `주문이 완료되었습니다.\n` +
         `상품명: ${product.name}\n` +
-        `구매 수량: ${quantityInput.value}\n` +
-        `발신자 이름: ${senderInput.value}\n` +
-        `메시지: ${messageInput.value}`
+        `구매 수량: ${recipients.reduce((sum, r) => sum + r.quantity, 0)}\n` +
+        `발신자 이름: ${data.sender}\n` +
+        `메시지: ${data.message}`
     );
-
     navigate(ROUTE.MAIN);
   };
+
+  if (!product) return <div>상품을 찾을 수 없습니다.</div>;
 
   return (
     <Wrapper>
@@ -136,7 +191,7 @@ const OrderPage = () => {
             src={card.thumbUrl}
             onClick={() => {
               setSelectedCardId(card.id);
-              messageInput.onChange({ target: { value: card.defaultTextMessage } } as any);
+              setValue('message', card.defaultTextMessage);
             }}
             isSelected={selectedCardId === card.id}
           />
@@ -145,44 +200,96 @@ const OrderPage = () => {
 
       <MainImage src={selectedCard?.imageUrl} alt="선택된 메시지 카드" />
 
-      <OrderField
-        label="메시지"
-        as="textarea"
-        placeholder="축하 메시지를 입력하세요."
-        {...messageInput}
-      />
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <OrderField
+          label="메시지"
+          as="textarea"
+          placeholder="축하 메시지를 입력하세요."
+          {...register('message', {
+            validate: messageRequiredValidator,
+          })}
+          error={errors.message?.message}
+        />
 
-      <Section>
-        <OrderField label="보내는 사람" placeholder="이름을 입력하세요." {...senderInput} />
-        {!senderInput.error && (
-          <Note>* 실제 선물 발송 시 발신자 이름으로 반영되는 정보입니다.</Note>
-        )}
-      </Section>
+        <Section>
+          <OrderField
+            label="보내는 사람"
+            placeholder="이름을 입력하세요."
+            {...register('sender', {
+              validate: nameRequiredValidator,
+            })}
+            error={errors.sender?.message}
+          />
+          {!errors.sender && <Note>* 실제 선물 발송 시 발신자 이름으로 반영되는 정보입니다.</Note>}
+        </Section>
 
-      <Section>
-        <Label>받는 사람</Label>
-        <OrderField label="이름" placeholder="이름을 입력하세요." {...receiverNameInput} />
-        <OrderField label="전화번호" placeholder="전화번호를 입력하세요." {...receiverPhoneInput} />
-        <OrderField label="수량" type="number" min={1} placeholder="수량" {...quantityInput} />
-      </Section>
+        <Section>
+          <RecipientHeader>
+            <Label>받는 사람</Label>
+            <EditButton type="button" onClick={() => setIsModalOpen(true)}>
+              {recipients.length === 0 ? '+ 추가' : '수정'}
+            </EditButton>
+          </RecipientHeader>
 
-      <Section>
-        <Label>상품 정보</Label>
-        <ProductInfo>
-          <img src={product.imageURL} alt={product.name} />
-          <div>
-            <div>{product.name}</div>
-            <div>{product.brandInfo.name}</div>
+          {recipients.length === 0 ? (
+            <EmptyRecipientBox>
+              <p>받는 사람이 없습니다.</p>
+              <p>받는 사람을 추가해주세요.</p>
+            </EmptyRecipientBox>
+          ) : (
+            <RecipientTable>
+              <thead>
+                <tr>
+                  <th>이름</th>
+                  <th>전화번호</th>
+                  <th>수량</th>
+                </tr>
+              </thead>
+              <tbody>
+                {recipients.map((r) => (
+                  <tr key={`${r.phone}-${r.name}`}>
+                    <td>{r.name}</td>
+                    <td>{r.phone}</td>
+                    <td>{r.quantity}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </RecipientTable>
+          )}
+        </Section>
+
+        <Section>
+          <Label>상품 정보</Label>
+          <ProductInfo>
+            <img src={product.imageURL} alt={product.name} />
             <div>
-              <strong>{product.price.sellingPrice.toLocaleString()}원</strong>
+              <div>{product.name}</div>
+              <div>{product.brandInfo.name}</div>
+              <div>
+                <strong>{product.price.sellingPrice.toLocaleString()}원</strong>
+              </div>
             </div>
-          </div>
-        </ProductInfo>
-      </Section>
+          </ProductInfo>
+        </Section>
 
-      <OrderButton onClick={handleSubmit}>
-        {(product.price.sellingPrice * Number(quantityInput.value)).toLocaleString()}원 주문하기
-      </OrderButton>
+        <OrderButton type="submit">
+          {(
+            product.price.sellingPrice * recipients.reduce((sum, r) => sum + r.quantity, 0)
+          ).toLocaleString()}
+          원 주문하기
+        </OrderButton>
+      </form>
+
+      {isModalOpen && (
+        <RecipientModal
+          initialRecipients={recipients}
+          onCancel={() => setIsModalOpen(false)}
+          onConfirm={(newList) => {
+            setRecipients(newList);
+            setIsModalOpen(false);
+          }}
+        />
+      )}
     </Wrapper>
   );
 };

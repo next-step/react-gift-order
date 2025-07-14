@@ -1,3 +1,4 @@
+/*
 import { useState } from 'react';
 
 export const useInput = (initialValue: string, validateFn: (value: string) => string) => {
@@ -25,3 +26,4 @@ export const useInput = (initialValue: string, validateFn: (value: string) => st
 
   return { value, error, onChange, onBlur, isValid, validate };
 };
+*/

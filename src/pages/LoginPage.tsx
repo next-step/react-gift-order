@@ -1,10 +1,10 @@
 import styled from '@emotion/styled';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useInput } from '@/hooks/useInput';
 import { emailValidator, passwordValidator } from '@/utils/validator';
 import { useUser } from '@/contexts/UserContext';
 import ErrorMessage from '@/components/ErrorMessage';
 import { ROUTE } from '@/constants/routes';
+import { useForm } from 'react-hook-form';
 
 const Wrapper = styled.section`
   display: flex;
@@ -58,47 +58,63 @@ const Button = styled.button`
   opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
 `;
 
+const Form = styled.form`
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+type FormValues = {
+  email: string;
+  password: string;
+};
+
 const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const emailInput = useInput('', emailValidator);
-  const passwordInput = useInput('', passwordValidator);
-  const isFormValid = emailInput.isValid && passwordInput.isValid;
   const { login } = useUser();
 
-  const handleLogin = () => {
-    if (isFormValid) {
-      login({ email: emailInput.value });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<FormValues>({
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
+  });
 
-      const from = location.state?.from?.pathname || ROUTE.MAIN;
-      navigate(from, { replace: true });
-    }
+  const onSubmit = ({ email }: FormValues) => {
+    login({ email });
+
+    const from = location.state?.from?.pathname || ROUTE.MAIN;
+    navigate(from, { replace: true });
   };
 
   return (
     <Wrapper>
       <Title>kakao</Title>
 
-      <Input
-        name="email"
-        placeholder="이메일"
-        value={emailInput.value}
-        onChange={emailInput.onChange}
-        onBlur={emailInput.onBlur}
-      />
-      <ErrorMessage message={emailInput.error} />
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        <Input
+          type="email"
+          placeholder="이메일"
+          {...register('email', { validate: emailValidator })}
+        />
+        <ErrorMessage message={errors.email?.message} />
 
-      <Input
-        name="password"
-        placeholder="비밀번호"
-        value={passwordInput.value}
-        onChange={passwordInput.onChange}
-        onBlur={passwordInput.onBlur}
-      />
-      <ErrorMessage message={passwordInput.error} />
-      <Button onClick={handleLogin} disabled={!isFormValid}>
-        로그인
-      </Button>
+        <Input
+          type="password"
+          placeholder="비밀번호"
+          {...register('password', { validate: passwordValidator })}
+        />
+        <ErrorMessage message={errors.password?.message} />
+
+        <Button type="submit" disabled={!isValid}>
+          로그인
+        </Button>
+      </Form>
     </Wrapper>
   );
 };

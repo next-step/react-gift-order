@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import ErrorMessage from './ErrorMessage';
+import type { InputHTMLAttributes, TextareaHTMLAttributes } from 'react';
 
 const ReceiverTab = styled.div`
   display: flex;
@@ -43,51 +44,36 @@ const Textarea = styled.textarea`
   min-height: 100px;
 `;
 
-type BaseProps = {
+type CommonProps = {
   label: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  onBlur?: () => void;
   placeholder?: string;
   error?: string;
 };
 
-type InputProps = BaseProps & {
-  as?: 'input';
-  type?: React.HTMLInputTypeAttribute;
-  min?: number;
-};
+type InputProps = CommonProps &
+  InputHTMLAttributes<HTMLInputElement> & {
+    as?: 'input';
+  };
 
-type TextAreaProps = BaseProps & {
-  as: 'textarea';
-};
+type TextAreaProps = CommonProps &
+  TextareaHTMLAttributes<HTMLTextAreaElement> & {
+    as: 'textarea';
+  };
 
 type OrderFieldProps = InputProps | TextAreaProps;
 
-const OrderField = ({
-  label,
-  value,
-  onChange,
-  onBlur,
-  placeholder,
-  error,
-  as = 'input',
-  ...rest
-}: OrderFieldProps) => {
+const OrderField = ({ label, placeholder, error, as = 'input', ...rest }: OrderFieldProps) => {
   return (
     <ReceiverTab>
       <FieldLabel>{label}</FieldLabel>
       <FieldInputWrapper>
         {as === 'textarea' ? (
-          <Textarea value={value} onChange={onChange} onBlur={onBlur} placeholder={placeholder} />
-        ) : (
-          <Input
-            value={value}
-            onChange={onChange}
-            onBlur={onBlur}
+          <Textarea
             placeholder={placeholder}
-            {...rest}
+            {...(rest as TextareaHTMLAttributes<HTMLTextAreaElement>)}
           />
+        ) : (
+          <Input placeholder={placeholder} {...(rest as InputHTMLAttributes<HTMLInputElement>)} />
         )}
         <ErrorMessage message={error} />
       </FieldInputWrapper>
