@@ -16,11 +16,10 @@ const Label = styled.div(({ theme }) => ({
 }));
 
 const Input = styled.input(({ theme }) => ({
-  width: '100%',
+  width: '95%',
   padding: theme.spacing.spacing3,
   border: `1px solid ${theme.colors.semantic.borderDefault}`,
   borderRadius: theme.spacing.spacing2,
-
   outline: 'none',
   '&:focus': {
     borderColor: theme.colors.semantic.textDefault,

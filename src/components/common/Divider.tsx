@@ -4,7 +4,7 @@ const Line = styled.div(({ theme }) => ({
   width: '100%',
   height: theme.spacing.spacing2,
   backgroundColor: theme.colors.semantic.backgroundDisabled,
-  margin: theme.spacing.spacing3,
+  margin: `${theme.spacing.spacing3} auto`,
 }));
 
 const Divider = () => {
