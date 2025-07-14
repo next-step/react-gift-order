@@ -230,7 +230,7 @@ export const ModalDiv = styled.div<{ isOpen?: boolean }>`
     z-index: 1000;
     visibility: ${({isOpen}) => ( isOpen ? 'visible' : 'hidden')};
     transition: opacity 300ms, visibility 300ms;
-    padding: 16px;
+    padding: 2px;
     opacity: ${({isOpen}) => ( isOpen ? '1' : '0')}
 `
 
@@ -245,4 +245,27 @@ export const ModalBox = styled.div`
     display: flex;
     flex-direction: column;
     gap: 16px;
+`
+
+export const SimpleButton = styled.button`
+font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.1875rem;
+    padding: 8px 16px;
+    border-radius: 8px;
+    background-color: rgb(238, 239, 241);
+    border: none;
+    cursor: pointer;
+    transition: background-color 200ms, opacity 200ms;
+`
+
+export const ScrollBox = styled.div`
+    flex: 1 1 0%;
+    overflow: auto;
+
+`
+
+export const SimpleForm = styled.form`
+  min-height: 0;
+  width: 100%;
 `
