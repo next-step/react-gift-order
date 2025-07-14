@@ -19,6 +19,8 @@ interface RecipientModalProps {
   existingRecipients?: Recipient[];
 }
 
+const EMPTY_RECIPIENTS: Recipient[] = [];
+
 const ModalContent = styled.div`
   max-height: 60vh;
   overflow-y: auto;
@@ -157,8 +159,8 @@ const RecipientModal = ({
   isOpen,
   onClose,
   onSave,
-  initialRecipients = [],
-  existingRecipients = [],
+  initialRecipients = EMPTY_RECIPIENTS,
+  existingRecipients = EMPTY_RECIPIENTS,
 }: RecipientModalProps) => {
   const [tempRecipients, setTempRecipients] = useState<
     Array<{ id: string; data: Omit<Recipient, 'id'> }>
