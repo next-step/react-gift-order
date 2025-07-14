@@ -9,7 +9,7 @@ import { PHONE_NUM_REGEX } from '@/utils/regex';
 import useOrderForm from '@/hooks/useOrderForm';
 import { useState } from 'react';
 
-
+import { useFieldArray, useForm } from 'react-hook-form';
 
 // 슬라이딩 카드 시작
 const SlidingCardSelectorWrapper = styled.div`
@@ -139,134 +139,7 @@ const SenderInputErrorTxt = styled.p`
   width: 95%;
 `;
 
-
-
-// 받는사람 시작
-// const ReceiverInputWrapper = styled.div`
-//   padding: ${({ theme }) => theme.spacing.spacing3} ${({ theme }) => theme.spacing.spacing4};
-//   padding-bottom: ${({ theme }) => theme.spacing.spacing4};
-//   border-bottom: ${({ theme }) => theme.spacing.spacing2} solid ${({ theme }) => theme.colors.gray.gray200}; 
-// `;
-
-// const ReceiverInputTitle = styled.h2`
-//   font-size: ${({ theme }) => theme.typography.title.title2Bold.fontSize};
-//   font-weight: ${({ theme }) => theme.typography.title.title2Bold.fontWeight};
-//   line-height: ${({ theme }) => theme.typography.title.title2Bold.lineHeight};
-//   margin-bottom: 10px;
-// `;
-
-// const ReceiverInputNameWrapper = styled.div`
-//   display: flex;
-//   justify-content: space-between;
-//   align-items: center;
-//   margin-bottom: ${({ theme }) => theme.spacing.spacing2};
-// `;
-
-// const ReceiverInputNameLabel = styled.label`
-//   font-size: ${({ theme }) => theme.typography.body.body1Regular.fontSize};
-//   font-weight: ${({ theme }) => theme.typography.body.body1Regular.fontWeight};
-//   line-height: ${({ theme }) => theme.typography.body.body1Regular.lineHeight};
-//   color: ${({ theme }) => theme.colors.gray.gray900};
-// `;
-
-// const ReceiverInputName = styled.input`
-//   width: 85%;
-//   height: ${({ theme }) => theme.spacing.spacing8};
-//   padding: ${({ theme }) => theme.spacing.spacing1} ${({ theme }) => theme.spacing.spacing3};
-
-//   border-radius: 8px;
-//   border: 1px solid ${({ theme }) => theme.colors.gray.gray400};
-//   &:focus {
-//     outline: none;
-//     border: 1px solid ${({ theme }) => theme.colors.gray.gray700};
-//   }
-
-//   &::placeholder {
-//     font-size: ${({ theme }) => theme.typography.body.body1Regular.fontSize};
-//     font-weight: ${({ theme }) => theme.typography.body.body1Regular.fontWeight};
-//     line-height: ${({ theme }) => theme.typography.body.body1Regular.lineHeight};
-//     color: ${({ theme }) => theme.colors.gray.gray600};
-//   }
-// `;
-
-// const ReceiverInputPhoneNumberWrapper = styled.div`
-//   display: flex;
-//   justify-content: space-between;
-//   align-items: center;
-//   margin-bottom: ${({ theme }) => theme.spacing.spacing2};
-// `;
-
-// const ReceiverInputPhoneNumberLabel = styled.label`
-//   font-size: ${({ theme }) => theme.typography.body.body1Regular.fontSize};
-//   font-weight: ${({ theme }) => theme.typography.body.body1Regular.fontWeight};
-//   line-height: ${({ theme }) => theme.typography.body.body1Regular.lineHeight};
-//   color: ${({ theme }) => theme.colors.gray.gray900};
-// `;
-
-// const ReceiverInputPhoneNumber = styled.input`
-//   width:85%;
-//   height: ${({ theme }) => theme.spacing.spacing9};
-//   padding: ${({ theme }) => theme.spacing.spacing1} ${({ theme }) => theme.spacing.spacing3};
-
-//   border-radius: 8px;
-//   border: 1px solid ${({ theme }) => theme.colors.gray.gray400};
-//   &:focus {
-//     outline: none;
-//     border: 1px solid ${({ theme }) => theme.colors.gray.gray700};
-//   }
-
-//   &::placeholder {
-//     font-size: ${({ theme }) => theme.typography.body.body1Regular.fontSize};
-//     font-weight: ${({ theme }) => theme.typography.body.body1Regular.fontWeight};
-//     line-height: ${({ theme }) => theme.typography.body.body1Regular.lineHeight};
-//     color: ${({ theme }) => theme.colors.gray.gray600};
-//   }
-// `;
-
-// const ReceiverItemNumWrapper = styled.div`
-//   display: flex;
-//   justify-content: space-between;
-//   align-items: center;
-//   margin-bottom: ${({ theme }) => theme.spacing.spacing2};
-// `;
-
-// const ReceiverItemNumInputLabel = styled.label`
-//   font-size: ${({ theme }) => theme.typography.body.body1Regular.fontSize};
-//   font-weight: ${({ theme }) => theme.typography.body.body1Regular.fontWeight};
-//   line-height: ${({ theme }) => theme.typography.body.body1Regular.lineHeight};
-//   color: ${({ theme }) => theme.colors.gray.gray900};
-// `;
-
-// const ReceiverItemNumInput = styled.input`
-//   width:85%;
-//   height: ${({ theme }) => theme.spacing.spacing9};
-//   padding: ${({ theme }) => theme.spacing.spacing1} ${({ theme }) => theme.spacing.spacing3};
-
-//   border-radius: 8px;
-//   border: 1px solid ${({ theme }) => theme.colors.gray.gray400};
-//   &:focus {
-//     outline: none;
-//     border: 1px solid ${({ theme }) => theme.colors.gray.gray700};
-//   }
-
-//   &::placeholder {
-//     font-size: ${({ theme }) => theme.typography.body.body1Regular.fontSize};
-//     font-weight: ${({ theme }) => theme.typography.body.body1Regular.fontWeight};
-//     line-height: ${({ theme }) => theme.typography.body.body1Regular.lineHeight};
-//     color: ${({ theme }) => theme.colors.gray.gray600};
-//   }
-// `;
-
-//  const ReceiverInputErrorTxt = styled.p`
-//   font-size: ${({ theme }) => theme.typography.label.label2Regular.fontSize};
-//   font-weight: ${({ theme }) => theme.typography.label.label2Regular.fontWeight};
-//   line-height: ${({ theme }) => theme.typography.label.label2Regular.lineHeight};
-//   padding-left: 80px;
-//   color: ${({ theme }) => theme.colors.red.red700};
-//   width: 95%;
-//  `
-
-// 받는 사람 VER2 시작
+// 받는 사람 시작
 const ReceiverInputWrapper = styled.div`
   padding: ${({ theme }) => theme.spacing.spacing3} ${({ theme }) => theme.spacing.spacing4};
   padding-bottom: ${({ theme }) => theme.spacing.spacing4};
@@ -414,6 +287,8 @@ const OrderButton = styled.button`
   font-weight: ${({ theme }) => theme.typography.body.body1Bold.fontWeight};
   line-height: ${({ theme }) => theme.typography.body.body1Bold.lineHeight};
   cursor: pointer;
+
+  
 `;
 
 const ModalOverlay = styled.div`
@@ -439,6 +314,8 @@ const ModalContent = styled.div`
 
   display: flex;
   flex-direction: column;
+
+  overflow-y: auto;
 `
 
 const ModalInfoWrapper = styled.div`
@@ -469,7 +346,148 @@ const ModalInfoAddBtn = styled.button`
   border: none;
   border-radius: 8px;
 `
+// 모달 리시버 box 시작
+const ModalReceiverInputBox = styled.div`
+    padding: ${({ theme }) => theme.spacing.spacing3} ${({ theme }) => theme.spacing.spacing4};
+    padding-bottom: ${({ theme }) => theme.spacing.spacing4};
+    border-bottom: ${({ theme }) => theme.spacing.spacing1} solid ${({ theme }) => theme.colors.gray.gray200}; 
+`
 
+const ModalReceiverInputTitleBtnWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`
+
+const ModalReceiverInputTitle = styled.h2`
+  font-size: ${({ theme }) => theme.typography.subtitle.subtitle2Bold.fontSize};
+  font-weight: ${({ theme }) => theme.typography.subtitle.subtitle2Bold.fontWeight};
+  line-height: ${({ theme }) => theme.typography.subtitle.subtitle2Bold.lineHeight};
+  margin-bottom: 10px;
+
+`
+
+const ModalReceiverInputDelBtn = styled.button`
+  border: none;
+  background: none;
+`
+
+// 이름 입력 폼
+const ReceiverInputNameWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: ${({ theme }) => theme.spacing.spacing2};
+`;
+
+const ReceiverInputNameLabel = styled.label`
+  font-size: ${({ theme }) => theme.typography.body.body1Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.body.body1Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.body.body1Regular.lineHeight};
+  color: ${({ theme }) => theme.colors.gray.gray900};
+`;
+
+const ReceiverInputName = styled.input`
+  width: 85%;
+  height: ${({ theme }) => theme.spacing.spacing8};
+  padding: ${({ theme }) => theme.spacing.spacing1} ${({ theme }) => theme.spacing.spacing3};
+
+  border-radius: 8px;
+  border: 1px solid ${({ theme }) => theme.colors.gray.gray400};
+  &:focus {
+    outline: none;
+    border: 1px solid ${({ theme }) => theme.colors.gray.gray700};
+  }
+
+  &::placeholder {
+    font-size: ${({ theme }) => theme.typography.body.body1Regular.fontSize};
+    font-weight: ${({ theme }) => theme.typography.body.body1Regular.fontWeight};
+    line-height: ${({ theme }) => theme.typography.body.body1Regular.lineHeight};
+    color: ${({ theme }) => theme.colors.gray.gray600};
+  }
+`;
+
+// 전화번호  입력 폼
+const ReceiverInputPhoneNumberWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: ${({ theme }) => theme.spacing.spacing2};
+`;
+
+const ReceiverInputPhoneNumberLabel = styled.label`
+  font-size: ${({ theme }) => theme.typography.body.body1Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.body.body1Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.body.body1Regular.lineHeight};
+  color: ${({ theme }) => theme.colors.gray.gray900};
+`;
+
+const ReceiverInputPhoneNumber = styled.input`
+  width:85%;
+  height: ${({ theme }) => theme.spacing.spacing9};
+  padding: ${({ theme }) => theme.spacing.spacing1} ${({ theme }) => theme.spacing.spacing3};
+
+  border-radius: 8px;
+  border: 1px solid ${({ theme }) => theme.colors.gray.gray400};
+  &:focus {
+    outline: none;
+    border: 1px solid ${({ theme }) => theme.colors.gray.gray700};
+  }
+
+  &::placeholder {
+    font-size: ${({ theme }) => theme.typography.body.body1Regular.fontSize};
+    font-weight: ${({ theme }) => theme.typography.body.body1Regular.fontWeight};
+    line-height: ${({ theme }) => theme.typography.body.body1Regular.lineHeight};
+    color: ${({ theme }) => theme.colors.gray.gray600};
+  }
+`;
+
+// 아이템 갯수 폼
+const ReceiverItemNumWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: ${({ theme }) => theme.spacing.spacing2};
+`;
+
+const ReceiverItemNumInputLabel = styled.label`
+  font-size: ${({ theme }) => theme.typography.body.body1Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.body.body1Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.body.body1Regular.lineHeight};
+  color: ${({ theme }) => theme.colors.gray.gray900};
+`;
+
+const ReceiverItemNumInput = styled.input`
+  width:85%;
+  height: ${({ theme }) => theme.spacing.spacing9};
+  padding: ${({ theme }) => theme.spacing.spacing1} ${({ theme }) => theme.spacing.spacing3};
+
+  border-radius: 8px;
+  border: 1px solid ${({ theme }) => theme.colors.gray.gray400};
+  &:focus {
+    outline: none;
+    border: 1px solid ${({ theme }) => theme.colors.gray.gray700};
+  }
+
+  &::placeholder {
+    font-size: ${({ theme }) => theme.typography.body.body1Regular.fontSize};
+    font-weight: ${({ theme }) => theme.typography.body.body1Regular.fontWeight};
+    line-height: ${({ theme }) => theme.typography.body.body1Regular.lineHeight};
+    color: ${({ theme }) => theme.colors.gray.gray600};
+  }
+`;
+
+// 리시버 인풋 에러 텍스트
+const ReceiverInputErrorTxt = styled.p`
+  font-size: ${({ theme }) => theme.typography.label.label2Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.label.label2Regular.fontWeight};
+  line-height: ${({ theme }) => theme.typography.label.label2Regular.lineHeight};
+  padding-left: 80px;
+  color: ${({ theme }) => theme.colors.red.red700};
+  width: 95%;
+ `
+
+
+// 모달 취소하기 컨펌 버튼들
 const ModalUnderBtnWrapper = styled.div`
   margin-top: auto;
   display: flex;
@@ -500,7 +518,124 @@ const ModalConfirmBtn = styled.button`
   cursor: pointer;
 `
 
+// 모달 리시버 박스 분리
+interface ModalReceiverInputBoxWrapperProps {
+  manCount: number;
+  handleManDel: () => void;
+  receiverName: string;
+  receiverNameError: boolean;
+  receiverPhoneNum: string;
+  receiverPhoneNumError: boolean;
+  itemCount: number;
+  itemCountError: boolean;
+  handleChangeReceiverName: (value: string) => void;
+  handleChangeReceiverPhoneNum: (value: string) => void;
+  handleChangeItemCount: (value: number) => void;
+}
+
+function ModalReceiverInputBoxWrapper({
+  manCount,
+  handleManDel,
+  receiverName,
+  receiverNameError,
+  receiverPhoneNum,
+  receiverPhoneNumError,
+  itemCount,
+  itemCountError,
+  handleChangeReceiverName,
+  handleChangeReceiverPhoneNum,
+  handleChangeItemCount,
+}: ModalReceiverInputBoxWrapperProps) {
+  if (manCount < 1) return null;
+
+  return (
+    <ModalReceiverInputBox>
+      <ModalReceiverInputTitleBtnWrapper>
+        <ModalReceiverInputTitle>받는 사람 {manCount}</ModalReceiverInputTitle>
+        <ModalReceiverInputDelBtn onClick={handleManDel}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"
+            strokeLinejoin="round" className="lucide lucide-x" aria-hidden="true">
+            <path d="M18 6 6 18"></path>
+            <path d="m6 6 12 12"></path>
+          </svg>
+        </ModalReceiverInputDelBtn>
+      </ModalReceiverInputTitleBtnWrapper>
+
+      <ReceiverInputNameWrapper>
+        <ReceiverInputNameLabel htmlFor="ReceiverInputName">이름</ReceiverInputNameLabel>
+        <ReceiverInputName
+          placeholder="이름을 입력하세요."
+          value={receiverName}
+          onChange={(e) => handleChangeReceiverName(e.target.value)}
+        />
+      </ReceiverInputNameWrapper>
+      {receiverNameError && <ReceiverInputErrorTxt>이름을 입력해 주세요.</ReceiverInputErrorTxt>}
+
+      <ReceiverInputPhoneNumberWrapper>
+        <ReceiverInputPhoneNumberLabel htmlFor="ReceiverInputPhoneNumber">전화번호</ReceiverInputPhoneNumberLabel>
+        <ReceiverInputPhoneNumber
+          placeholder="전화번호를 입력하세요"
+          value={receiverPhoneNum}
+          onChange={(e) => handleChangeReceiverPhoneNum(e.target.value)}
+        />
+      </ReceiverInputPhoneNumberWrapper>
+      {receiverPhoneNumError && <ReceiverInputErrorTxt>전화번호를 입력해 주세요.</ReceiverInputErrorTxt>}
+
+      <ReceiverItemNumWrapper>
+        <ReceiverItemNumInputLabel htmlFor="ReceiverItemNum">수량</ReceiverItemNumInputLabel>
+        <ReceiverItemNumInput
+          type='number'
+          min='0'
+          step='1'
+          placeholder='수량'
+          value={itemCount}
+          onChange={(e) => handleChangeItemCount(parseInt(e.target.value))}
+        />
+      </ReceiverItemNumWrapper>
+      {itemCountError && <ReceiverInputErrorTxt>구매 수량은 1개 이상이어야 합니다.</ReceiverInputErrorTxt>}
+    </ModalReceiverInputBox>
+  );
+}
+
+
 function Order() {
+  // type Receiver = {
+  //   name: string;
+  //   phone: string;
+  //   count: number;
+  // };
+
+  // type FormValues = {
+  //   senderName: string;
+  //   message: string;
+  //   receivers: Receiver[];
+  // };
+
+  // // register는 각 input 요소와 react hook form을 연결하는 함수
+  // // control은 배열 필드나 커스텀 컴포넌트에 사용 useFieldArray에 사용
+  // // handleSubmit submit 버튼을 눌렀을때 실행되는 함수
+  // // formState.errors 각 필드의 에러 메시지 확인 가능
+  // // watch 현재 입력값 실시간 확인 가능한 함수
+  // const {
+  //   register,
+  //   control,
+  //   handleSubmit,
+  //   formState: { errors },
+  //   watch,
+  // } = useForm<FormValues>({
+  //   defaultValues: {
+  //     senderName: '',
+  //     message: '',
+  //     receivers: [],
+  //   },
+  // });
+
+  // const { fields, append, remove } = useFieldArray({
+  //   control,
+  //   name: 'receivers',
+  // });
+
   const {
     selectedId,
     senderName,
@@ -522,11 +657,13 @@ function Order() {
     setReceiverNameError,
     setReceiverPhoneNumError,
     setItemCountError
-  } = useOrderForm();
-  const [selectedIdTxt, setSelectedIdTxt] = useState(orderCard.find(c => c.id === selectedId)?.defaultTextMessage);
-  const [modalToggle, setModalToggle] = useState(false);
+  } = useOrderForm(); 
 
+  const [selectedIdTxt, setSelectedIdTxt] = useState(orderCard.find(c => c.id === selectedId)?.defaultTextMessage); // 선택된 id의 텍스트 저장하는 state
+  const [modalToggle, setModalToggle] = useState(false); // 모달 열고닫는 state를 저장함
+  const [manCount, setManCount] = useState(0);
 
+  // 이전 페이지에서 상품정보 받아오는 코드
   const [searchParams] = useSearchParams();
   const brandInfo = searchParams.get('brandInfo');
   const id = searchParams.get('id');
@@ -542,6 +679,44 @@ function Order() {
     setSelectedIdTxt(String(orderCard.find(c => c.id === selectedId)?.defaultTextMessage));
   }
 
+  function handleConfirm() {
+    let blocking = 0;
+
+    if (selectedIdTxt === '') {
+      blocking++;
+      setSelectedIdTxtError(true);
+    } else {
+      setSelectedIdTxtError(false);
+    }
+    if (senderName === '') {
+      blocking++;
+      setSenderNameError(true);
+    } else {
+      setSenderNameError(false);
+    }
+    if (receiverName === '') {
+      blocking++;
+      setReceiverNameError(true)
+    } else {
+      setReceiverNameError(false);
+    }
+    if (!PHONE_NUM_REGEX.test(receiverPhoneNum)) {
+      blocking++;
+      setReceiverPhoneNumError(true);
+    } else {
+      setReceiverPhoneNumError(false);
+    }
+    if (itemCount < 1) {
+      blocking++;
+      setItemCountError(true);
+    } else {
+      setItemCountError(false);
+    }
+
+    if (blocking > 0) {
+      return 0;
+    }
+  }
 
   function onClickHandler() {
     let blocking = 0;
@@ -594,6 +769,19 @@ function Order() {
     setModalToggle(false);
   }
 
+  function handleManAdd() {
+    if (manCount < 10) {
+      setManCount(prev => prev + 1);
+    }
+
+  }
+
+  function handleManDel() {
+    if (manCount > 0) {
+      setManCount(prev => prev - 1);
+    }
+  }
+
   return (
     <Layout>
       <NavBar></NavBar>
@@ -641,44 +829,6 @@ function Order() {
         <ReceiverInputBox>
           {true && <ReceiverInputBoxInfo>받는 사람이 없습니다<br></br>받는 사람을 추가해주세요.</ReceiverInputBoxInfo>}
         </ReceiverInputBox>
-        {/* <ReceiverInputNameWrapper>
-          <ReceiverInputNameLabel htmlFor="ReceiverInputName">
-            이름
-          </ReceiverInputNameLabel>
-            <ReceiverInputName
-              placeholder="이름을 입력하세요."
-              value={receiverName}
-              onChange={(e) => { handleChangeReceiverName(e.target.value) }}
-            ></ReceiverInputName>
-        </ReceiverInputNameWrapper>
-        {receiverNameError && <ReceiverInputErrorTxt>이름을 입력해 주세요.</ReceiverInputErrorTxt>}
-
-        <ReceiverInputPhoneNumberWrapper>
-          <ReceiverInputPhoneNumberLabel htmlFor="ReceiverInputName">
-            전화번호
-          </ReceiverInputPhoneNumberLabel>
-          <ReceiverInputPhoneNumber
-            placeholder="전화번호를 입력하세요"
-            value={receiverPhoneNum}
-            onChange={(e) => handleChangeReceiverPhoneNum(e.target.value)}
-          ></ReceiverInputPhoneNumber>
-        </ReceiverInputPhoneNumberWrapper>
-        {receiverPhoneNumError && <ReceiverInputErrorTxt>전화번호를 입력해 주세요.</ReceiverInputErrorTxt>}
-
-        <ReceiverItemNumWrapper>
-          <ReceiverItemNumInputLabel htmlFor="ReceiverInputName">
-            수량
-          </ReceiverItemNumInputLabel>
-          <ReceiverItemNumInput
-            type='number'
-            min='0'
-            step='1'
-            placeholder='수량'
-            value={itemCount}
-            onChange={(e) => handleChangeItemCount(parseInt(e.target.value))}
-          ></ReceiverItemNumInput>
-        </ReceiverItemNumWrapper>
-        {itemCountError && <ReceiverInputErrorTxt>구매 수량은 1개 이상이어야 합니다.</ReceiverInputErrorTxt>} */}
       </ReceiverInputWrapper>
 
       {/* 상품 정보 */}
@@ -702,7 +852,6 @@ function Order() {
       </OrderBtnWrapper>
 
       {/* 모달 */}
-
       {modalToggle && <ModalOverlay>
         <ModalContent>
           <ModalInfoWrapper>
@@ -710,10 +859,154 @@ function Order() {
             <ModalInfoTxt>* 최대 10명까지 추가 할 수 있어요.</ModalInfoTxt>
             <ModalInfoTxt>* 받는 사람의 전화번호를 중복으로 입력할 수 없어요.</ModalInfoTxt>
           </ModalInfoWrapper>
-          <ModalInfoAddBtn>추가하기</ModalInfoAddBtn>
+          <ModalInfoAddBtn onClick={handleManAdd} disabled={manCount >= 10}>추가하기</ModalInfoAddBtn>
+
+          {/* 모달 리시버 박스들 */}
+          {manCount >= 1 && <ModalReceiverInputBoxWrapper
+            manCount={manCount}
+            handleManDel={handleManDel}
+            receiverName={receiverName}
+            receiverNameError={receiverNameError}
+            receiverPhoneNum={receiverPhoneNum}
+            receiverPhoneNumError={receiverPhoneNumError}
+            itemCount={itemCount}
+            itemCountError={itemCountError}
+            handleChangeReceiverName={handleChangeReceiverName}
+            handleChangeReceiverPhoneNum={handleChangeReceiverPhoneNum}
+            handleChangeItemCount={handleChangeItemCount}
+          />}
+
+          {manCount >= 2 && <ModalReceiverInputBoxWrapper
+            manCount={manCount}
+            handleManDel={handleManDel}
+            receiverName={receiverName}
+            receiverNameError={receiverNameError}
+            receiverPhoneNum={receiverPhoneNum}
+            receiverPhoneNumError={receiverPhoneNumError}
+            itemCount={itemCount}
+            itemCountError={itemCountError}
+            handleChangeReceiverName={handleChangeReceiverName}
+            handleChangeReceiverPhoneNum={handleChangeReceiverPhoneNum}
+            handleChangeItemCount={handleChangeItemCount}
+          />}
+
+          {manCount >= 3 && <ModalReceiverInputBoxWrapper
+            manCount={manCount}
+            handleManDel={handleManDel}
+            receiverName={receiverName}
+            receiverNameError={receiverNameError}
+            receiverPhoneNum={receiverPhoneNum}
+            receiverPhoneNumError={receiverPhoneNumError}
+            itemCount={itemCount}
+            itemCountError={itemCountError}
+            handleChangeReceiverName={handleChangeReceiverName}
+            handleChangeReceiverPhoneNum={handleChangeReceiverPhoneNum}
+            handleChangeItemCount={handleChangeItemCount}
+          />}
+
+          {manCount >= 4 && <ModalReceiverInputBoxWrapper
+            manCount={manCount}
+            handleManDel={handleManDel}
+            receiverName={receiverName}
+            receiverNameError={receiverNameError}
+            receiverPhoneNum={receiverPhoneNum}
+            receiverPhoneNumError={receiverPhoneNumError}
+            itemCount={itemCount}
+            itemCountError={itemCountError}
+            handleChangeReceiverName={handleChangeReceiverName}
+            handleChangeReceiverPhoneNum={handleChangeReceiverPhoneNum}
+            handleChangeItemCount={handleChangeItemCount}
+          />}
+
+          {manCount >= 5 && <ModalReceiverInputBoxWrapper
+            manCount={manCount}
+            handleManDel={handleManDel}
+            receiverName={receiverName}
+            receiverNameError={receiverNameError}
+            receiverPhoneNum={receiverPhoneNum}
+            receiverPhoneNumError={receiverPhoneNumError}
+            itemCount={itemCount}
+            itemCountError={itemCountError}
+            handleChangeReceiverName={handleChangeReceiverName}
+            handleChangeReceiverPhoneNum={handleChangeReceiverPhoneNum}
+            handleChangeItemCount={handleChangeItemCount}
+          />}
+
+          {manCount >= 6 && <ModalReceiverInputBoxWrapper
+            manCount={manCount}
+            handleManDel={handleManDel}
+            receiverName={receiverName}
+            receiverNameError={receiverNameError}
+            receiverPhoneNum={receiverPhoneNum}
+            receiverPhoneNumError={receiverPhoneNumError}
+            itemCount={itemCount}
+            itemCountError={itemCountError}
+            handleChangeReceiverName={handleChangeReceiverName}
+            handleChangeReceiverPhoneNum={handleChangeReceiverPhoneNum}
+            handleChangeItemCount={handleChangeItemCount}
+          />}
+
+          {manCount >= 7 && <ModalReceiverInputBoxWrapper
+            manCount={manCount}
+            handleManDel={handleManDel}
+            receiverName={receiverName}
+            receiverNameError={receiverNameError}
+            receiverPhoneNum={receiverPhoneNum}
+            receiverPhoneNumError={receiverPhoneNumError}
+            itemCount={itemCount}
+            itemCountError={itemCountError}
+            handleChangeReceiverName={handleChangeReceiverName}
+            handleChangeReceiverPhoneNum={handleChangeReceiverPhoneNum}
+            handleChangeItemCount={handleChangeItemCount}
+          />}
+
+          {manCount >= 8 && <ModalReceiverInputBoxWrapper
+            manCount={manCount}
+            handleManDel={handleManDel}
+            receiverName={receiverName}
+            receiverNameError={receiverNameError}
+            receiverPhoneNum={receiverPhoneNum}
+            receiverPhoneNumError={receiverPhoneNumError}
+            itemCount={itemCount}
+            itemCountError={itemCountError}
+            handleChangeReceiverName={handleChangeReceiverName}
+            handleChangeReceiverPhoneNum={handleChangeReceiverPhoneNum}
+            handleChangeItemCount={handleChangeItemCount}
+          />}
+
+          {manCount >= 9 && <ModalReceiverInputBoxWrapper
+            manCount={manCount}
+            handleManDel={handleManDel}
+            receiverName={receiverName}
+            receiverNameError={receiverNameError}
+            receiverPhoneNum={receiverPhoneNum}
+            receiverPhoneNumError={receiverPhoneNumError}
+            itemCount={itemCount}
+            itemCountError={itemCountError}
+            handleChangeReceiverName={handleChangeReceiverName}
+            handleChangeReceiverPhoneNum={handleChangeReceiverPhoneNum}
+            handleChangeItemCount={handleChangeItemCount}
+          />}
+
+          {manCount >= 10 && <ModalReceiverInputBoxWrapper
+            manCount={manCount}
+            handleManDel={handleManDel}
+            receiverName={receiverName}
+            receiverNameError={receiverNameError}
+            receiverPhoneNum={receiverPhoneNum}
+            receiverPhoneNumError={receiverPhoneNumError}
+            itemCount={itemCount}
+            itemCountError={itemCountError}
+            handleChangeReceiverName={handleChangeReceiverName}
+            handleChangeReceiverPhoneNum={handleChangeReceiverPhoneNum}
+            handleChangeItemCount={handleChangeItemCount}
+          />}
+
+
+          {/* 모달 취소하기 컨펌하기 버튼 */}
           <ModalUnderBtnWrapper>
             <ModalExitBtn onClick={handleModalClose}>취소</ModalExitBtn>
-            <ModalConfirmBtn>{0}명 완료</ModalConfirmBtn>
+            <ModalConfirmBtn onClick={handleConfirm}>{manCount}명 완료</ModalConfirmBtn>
           </ModalUnderBtnWrapper>
         </ModalContent>
       </ModalOverlay>}
@@ -722,3 +1015,6 @@ function Order() {
 }
 
 export default Order;
+
+
+
