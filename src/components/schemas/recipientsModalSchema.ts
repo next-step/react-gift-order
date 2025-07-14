@@ -4,7 +4,7 @@ export const recipientsModalSchema = z.object({
   newRecipients: z
     .array(
       z.object({
-        id: z.string().optional(), // 필요 시
+        id: z.string(),
         receiveName: z.string().min(1, '이름은 필수입니다.'),
         receiveTel: z
           .string()

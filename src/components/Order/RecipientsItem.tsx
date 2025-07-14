@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from 'react';
+
 import styled from '@emotion/styled';
-import { type UseFormRegister, type FieldErrors } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import type { RecipientsModalFormData } from '@/types/RecipientsModalFormData'; // 타입 임포트 (RecipientsModal에서 정의한 폼 데이터 타입)
 import type { Recipient } from '@/types/Recipient';
 
@@ -9,8 +9,8 @@ import type { Recipient } from '@/types/Recipient';
 interface RecipientsItemProps {
   index: number; // 배열 인덱스
   id: string;
-  register: UseFormRegister<RecipientsModalFormData>; // 모달 내부 폼의 register 타입
-  errors: FieldErrors<RecipientsModalFormData>; // 모달 내부 폼의 errors 타입
+  // register: UseFormRegister<RecipientsModalFormData>; // 모달 내부 폼의 register 타입
+  // errors: FieldErrors<RecipientsModalFormData>; // 모달 내부 폼의 errors 타입
   onRemove: (id: string) => void;
   getValues: () => RecipientsModalFormData;
   allRecipientsInModal: (Recipient & { id?: string })[];
@@ -49,16 +49,14 @@ const StyledInputErrorMsgContainer = styled.div`
     }
   }
 `;
-const RecipientsItem: React.FC<RecipientsItemProps> = ({
-  index,
-  register,
-  errors,
-  onRemove,
-  id,
-  allRecipientsInModal,
-}) => {
+const RecipientsItem = ({ index, onRemove, id, allRecipientsInModal }: RecipientsItemProps) => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<RecipientsModalFormData>();
+
   return (
-    <div>
+    <>
       <StyledRecipientsItemContainerHeader>
         <p className='body1Bold'>받는 사람 {index + 1}</p>
         {allRecipientsInModal.length >= 1 && (
@@ -75,9 +73,7 @@ const RecipientsItem: React.FC<RecipientsItemProps> = ({
           <input
             id={`newRecipients[${index}].name`}
             type='text'
-            {...register(`newRecipients.${index}.receiveName`, {
-              required: `받는 사람 ${index + 1}의 이름은 필수입니다.`,
-            })}
+            {...register(`newRecipients.${index}.receiveName`)}
             className={errors.newRecipients?.[index]?.receiveName ? 'input-error' : ''}
           />
           {errors.newRecipients?.[index]?.receiveName && (
@@ -96,15 +92,8 @@ const RecipientsItem: React.FC<RecipientsItemProps> = ({
             id={`newRecipients[${index}].receiveTel`}
             type='text'
             {...register(`newRecipients.${index}.receiveTel`, {
-              required: `받는 사람 ${index + 1}의 연락처는 필수입니다.`,
               validate: (value: string) => {
                 const currentTel = value.trim();
-                const isValidedTel = /^010\d{8}$/.test(currentTel);
-
-                if (!isValidedTel) {
-                  return '전화번호 형식이 올바르지 않습니다. (예: 01012345678)';
-                }
-
                 // 현재 모달 내의 다른 필드들과 중복 검사
                 const duplicateInModal = allRecipientsInModal.some(
                   (rec, i) => i !== index && rec.receiveTel === currentTel
@@ -134,14 +123,7 @@ const RecipientsItem: React.FC<RecipientsItemProps> = ({
             id={`newRecipients[${index}].count`}
             type='number'
             {...register(`newRecipients.${index}.count`, {
-              required: `받는 사람 ${index + 1}의 수량은 필수입니다.`,
               valueAsNumber: true, // 숫자로 변환하여 저장
-              validate: (value: number) => {
-                if (value <= 0) {
-                  return '1개 이상 수량을 선택해주세요';
-                }
-                return true;
-              },
             })}
             className={errors.newRecipients?.[index]?.count ? 'input-error' : ''}
           />
@@ -150,7 +132,7 @@ const RecipientsItem: React.FC<RecipientsItemProps> = ({
           )}
         </StyledInputErrorMsgContainer>
       </StyledRecipientsItem>
-    </div>
+    </>
   );
 };
 

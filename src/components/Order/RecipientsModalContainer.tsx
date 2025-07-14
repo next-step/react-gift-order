@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { useFieldArray, type Control, type FieldErrors } from 'react-hook-form';
 import type { OrderFormValue } from '@/types/OrderFormValues';
 import type { Recipient } from '@/types/Recipient';
-import { useState, type FC } from 'react';
+import { useState } from 'react';
 import RecipientsModal from './RecipientsModal';
 
 const StyledRecipientsModalContainer = styled.div`
@@ -73,10 +73,10 @@ interface RecipientsModalContainerProps {
   currentRecipients: Recipient[];
 }
 
-const RecipientsModalContainer: FC<RecipientsModalContainerProps> = ({
+const RecipientsModalContainer = ({
   control,
   currentRecipients,
-}) => {
+}: RecipientsModalContainerProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { fields, replace } = useFieldArray({
     control,
