@@ -1,64 +1,70 @@
 import * as S from './ReceiverInput.styles'
+import { type FieldError, useFormContext } from 'react-hook-form'
+import type { Order } from '@/features/Order/schema/orderSchema'
+import MyButton from '@/component/Button/Button'
 
 interface ReceiverInputProps {
-  receiver: string
-  setReceiver: (name: string) => void
-  phoneNumber: string
-  setPhoneNumber: (phone: string) => void
-  quantity: number
-  setQuantity: (quantity: number) => void
-  errors: {
-    receiver: string
-    phoneNumber: string
-    quantity: string
-  }
+  index: number
+  onRemove: () => void
 }
 
-const ReceiverInput = ({
-  receiver,
-  setReceiver,
-  phoneNumber,
-  setPhoneNumber,
-  quantity,
-  setQuantity,
-  errors,
-}: ReceiverInputProps) => {
+const ReceiverInput = ({ index, onRemove }: ReceiverInputProps) => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<Order>()
+
+  const fieldErrors = (errors.receivers?.[index] ?? {}) as {
+    receiver?: FieldError
+    phone?: FieldError
+    quantity?: FieldError
+  }
+
   return (
     <S.Container>
-      <S.Title>받는 사람</S.Title>
+      <S.TitleContainer>
+        <S.Title>받는 사람 {index + 1}</S.Title>
+        <MyButton onClick={onRemove} size="verySmall" variant="outlined">
+          삭제
+        </MyButton>
+      </S.TitleContainer>
+
       <S.InputContainer>
         <S.InputLabel>이름</S.InputLabel>
         <S.InputText
-          value={receiver}
-          onChange={(e) => setReceiver(e.target.value)}
-          placeholder="이름을 입력하세요."
-          isError={!!errors.receiver}
+          placeholder="이름"
+          {...register(`receivers.${index}.receiver`)}
+          isError={!!fieldErrors.receiver}
         />
-        {errors.receiver && <S.ErrorText>{errors.receiver}</S.ErrorText>}
+        {fieldErrors.receiver && (
+          <S.ErrorText>{fieldErrors.receiver.message}</S.ErrorText>
+        )}
       </S.InputContainer>
-
       <S.InputContainer>
         <S.InputLabel>전화번호</S.InputLabel>
         <S.InputText
-          value={phoneNumber}
-          onChange={(e) => setPhoneNumber(e.target.value)}
-          placeholder="전화번호를 입력하세요."
-          isError={!!errors.phoneNumber}
+          placeholder="전화번호"
+          {...register(`receivers.${index}.phone`)}
+          isError={!!fieldErrors.phone}
         />
-        {errors.phoneNumber && <S.ErrorText>{errors.phoneNumber}</S.ErrorText>}
+        {fieldErrors.phone && (
+          <S.ErrorText>{fieldErrors.phone.message}</S.ErrorText>
+        )}
       </S.InputContainer>
+
       <S.InputContainer>
         <S.InputLabel>수량</S.InputLabel>
         <S.InputText
           type="number"
-          value={quantity}
-          min={1}
-          onChange={(e) => setQuantity(Number(e.target.value))}
-          placeholder="구매 수량"
-          isError={!!errors.quantity}
+          placeholder="수량"
+          {...register(`receivers.${index}.quantity`, { valueAsNumber: true })}
+          isError={!!fieldErrors.quantity}
         />
-        {errors.quantity && <S.ErrorText>{errors.quantity}</S.ErrorText>}
+        {fieldErrors.quantity && (
+          <S.ErrorText>{fieldErrors.quantity.message}</S.ErrorText>
+        )}
       </S.InputContainer>
+      <S.Divider />
     </S.Container>
   )
 }

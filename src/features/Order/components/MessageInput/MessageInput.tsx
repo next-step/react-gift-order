@@ -1,21 +1,23 @@
+import type { Order } from '@/features/Order/schema/orderSchema'
 import * as S from './MessageInput.styles'
+import { useFormContext } from 'react-hook-form'
 
-interface Props {
-  message: string
-  setMessage: (msg: string) => void
-  error?: string
-}
+const MessageInput = () => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<Order>()
 
-const MessageInput: React.FC<Props> = ({ message, setMessage, error }) => {
+  const error = errors.message
+
   return (
     <S.Container>
       <S.TextArea
         placeholder="메시지를 입력해주세요."
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
+        {...register('message')}
         isError={!!error}
       />
-      {error && <S.ErrorText>{error}</S.ErrorText>}
+      {error && <S.ErrorText>{error.message}</S.ErrorText>}
     </S.Container>
   )
 }

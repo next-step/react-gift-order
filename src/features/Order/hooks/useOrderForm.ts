@@ -1,53 +1,86 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
+import { orderSchema } from '../schema/orderSchema'
+import type { Order } from '../schema/orderSchema'
+import { zodResolver } from '@hookform/resolvers/zod'
 
-interface Order {
-  message: string
-  sender: string
-  receiver: string
-  phone: string
-  quantity: number
+interface UseOrderFormParams {
+  defaultMessage: string
+  productName: string
+  sellingPrice: number
+  selectedCardId: number
+  selectedCardMessage: string
 }
 
-interface OrderError {
-  message?: string
-  sender?: string
-  receiver?: string
-  phone?: string
-  quantity?: string
-}
+export const useOrderForm = ({
+  defaultMessage,
+  productName,
+  sellingPrice,
+  selectedCardId,
+  selectedCardMessage,
+}: UseOrderFormParams) => {
+  const navigate = useNavigate()
 
-export const useOrderForm = (defaultMessage: string) => {
-  const [order, setOrderState] = useState<Order>({
-    message: defaultMessage,
-    sender: '',
-    receiver: '',
-    phone: '',
-    quantity: 1,
+  const methods = useForm<Order>({
+    resolver: zodResolver(orderSchema),
+    defaultValues: {
+      message: defaultMessage,
+      sender: '',
+      receivers: [],
+    },
+    mode: 'onChange',
   })
 
-  const [errors, setErrors] = useState<OrderError>({})
+  const {
+    control,
+    register,
+    handleSubmit,
+    setValue,
+    trigger,
+    getValues,
+    formState: { errors },
+  } = methods
 
-  const setOrder = (newData: Partial<Order>) => {
-    setOrderState((prev) => ({ ...prev, ...newData }))
+  const [totalPrice, setTotalPrice] = useState(0)
+
+  const confirmReceivers = () => {
+    const confirmed = getValues('receivers') || []
+    const price = confirmed.reduce(
+      (sum, r) => sum + r.quantity * sellingPrice,
+      0
+    )
+    setTotalPrice(price)
   }
 
-  const validate = (): boolean => {
-    const newErrors: OrderError = {}
-    const phoneRegex = /^010\d{8}$/
+  useEffect(() => {
+    setValue('message', selectedCardMessage || '')
+  }, [selectedCardId, selectedCardMessage, setValue])
 
-    if (!order.message) newErrors.message = '메세지를 입력해주세요.'
-    if (!order.sender) newErrors.sender = '이름을 입력해주세요.'
-    if (!order.receiver) newErrors.receiver = '이름을 입력해주세요.'
-    if (!order.phone) newErrors.phone = '전화번호를 입력해주세요.'
-    else if (!phoneRegex.test(order.phone))
-      newErrors.phone = '올바른 전화번호 형식이 아닙니다.'
-    if (order.quantity < 1)
-      newErrors.quantity = '구매 수량은 1개 이상이어야 합니다.'
+  const onSubmit = handleSubmit((data) => {
+    const totalQuantity = data.receivers.reduce(
+      (sum, r) => sum + Number(r.quantity),
+      0
+    )
 
-    setErrors(newErrors)
+    alert(`주문이 완료되었습니다.
+상품명: ${productName}
+총 수량: ${totalQuantity}
+발신자 이름: ${data.sender}
+메시지: ${data.message}`)
 
-    return Object.keys(newErrors).length === 0
+    navigate('/')
+  })
+
+  return {
+    methods,
+    register,
+    onSubmit,
+    errors,
+    confirmReceivers,
+    totalPrice,
+    control,
+    getValues,
+    trigger,
   }
-
-  return { order, errors, setOrder, validate }
 }
