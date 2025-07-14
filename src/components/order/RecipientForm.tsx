@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import styled from '@emotion/styled';
 import {
   validateRecipientForm,
@@ -139,32 +139,12 @@ const RecipientForm = ({
     () => initialData || createEmptyRecipientForm()
   );
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
 
-  // 폼 데이터 유효성 검사 및 상위 컴포넌트로 전달
+  // 폼 데이터가 변경되면 상위 컴포넌트로 전달
   useEffect(() => {
-    const validation = validateRecipientForm(formData);
-    let newErrors = { ...validation.errors };
-
-    // 전화번호 중복 검사 (기존 받는사람 목록과 비교)
-    const normalizedCurrentPhone = normalizePhoneNumber(formData.phone);
-    if (
-      normalizedCurrentPhone &&
-      existingRecipients.some(
-        (r) => normalizePhoneNumber(r.phone) === normalizedCurrentPhone
-      )
-    ) {
-      newErrors.phone = '이미 등록된 전화번호입니다.';
-    }
-
-    setErrors(newErrors);
-
-    // 저장할 때는 정규화된 전화번호로 저장
-    const dataToSave = {
-      ...formData,
-      phone: normalizedCurrentPhone,
-    };
-    onDataChange(index, dataToSave);
-  }, [formData, index, onDataChange, existingRecipients]);
+    onDataChange(index, formData);
+  }, [formData, index, onDataChange]);
 
   const handleInputChange = (
     field: keyof typeof formData,
@@ -174,6 +154,40 @@ const RecipientForm = ({
       ...prev,
       [field]: value,
     }));
+  };
+
+  const validateField = useCallback(
+    (field: keyof typeof formData, value: any) => {
+      const validation = validateRecipientForm({ ...formData, [field]: value });
+      let newErrors = { ...errors };
+
+      if (validation.errors[field]) {
+        newErrors[field] = validation.errors[field];
+      } else {
+        delete newErrors[field];
+      }
+
+      // 전화번호 중복 검사
+      if (field === 'phone') {
+        const normalizedCurrentPhone = normalizePhoneNumber(value);
+        if (
+          normalizedCurrentPhone &&
+          existingRecipients.some(
+            (r) => normalizePhoneNumber(r.phone) === normalizedCurrentPhone
+          )
+        ) {
+          newErrors.phone = '이미 등록된 전화번호입니다.';
+        }
+      }
+
+      setErrors(newErrors);
+    },
+    [formData, errors, existingRecipients]
+  );
+
+  const handleBlur = (field: keyof typeof formData) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+    validateField(field, formData[field]);
   };
 
   const handleRemove = () => {
@@ -201,11 +215,12 @@ const RecipientForm = ({
             type="text"
             value={formData.name}
             onChange={(e) => handleInputChange('name', e.target.value)}
+            onBlur={() => handleBlur('name')}
             placeholder="이름을 입력하세요"
-            hasError={!!errors.name}
+            hasError={!!(touched.name && errors.name)}
             disabled={disabled}
           />
-          <ErrorText>{errors.name || ''}</ErrorText>
+          <ErrorText>{touched.name && (errors.name || '')}</ErrorText>
         </FormField>
 
         <FormField>
@@ -215,12 +230,13 @@ const RecipientForm = ({
             type="tel"
             value={formData.phone}
             onChange={(e) => handleInputChange('phone', e.target.value)}
+            onBlur={() => handleBlur('phone')}
             placeholder="01012341234"
             maxLength={11}
-            hasError={!!errors.phone}
+            hasError={!!(touched.phone && errors.phone)}
             disabled={disabled}
           />
-          <ErrorText>{errors.phone || ''}</ErrorText>
+          <ErrorText>{touched.phone && (errors.phone || '')}</ErrorText>
         </FormField>
 
         <FormField>
@@ -233,10 +249,11 @@ const RecipientForm = ({
             onChange={(e) =>
               handleInputChange('quantity', parseInt(e.target.value) || 1)
             }
-            hasError={!!errors.quantity}
+            onBlur={() => handleBlur('quantity')}
+            hasError={!!(touched.quantity && errors.quantity)}
             disabled={disabled}
           />
-          <ErrorText>{errors.quantity || ''}</ErrorText>
+          <ErrorText>{touched.quantity && (errors.quantity || '')}</ErrorText>
         </FormField>
       </FormGrid>
     </FormContainer>
