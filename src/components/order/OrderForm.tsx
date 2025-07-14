@@ -3,6 +3,7 @@ import { css } from "@emotion/react";
 import type { Theme } from "@emotion/react";
 import ReceiverInputSet from "@/components/order/ReceiverInputSet";
 import { useEffect } from "react";
+
 export type FormData = {
   order: {
     receiverName: string;
@@ -10,6 +11,8 @@ export type FormData = {
     quantity: number;
   }[];
 };
+
+export type ReceiverForm = FormData["order"][0];
 
 type OrderFormProps = {
   onSubmitCallback?: (data: FormData) => void;

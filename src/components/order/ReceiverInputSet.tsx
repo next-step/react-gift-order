@@ -5,7 +5,7 @@ import {
 } from "react-hook-form";
 import { css } from "@emotion/react";
 import type { Theme } from "@emotion/react";
-import type { FormData } from "@/components/order/OrderForm";
+import type { FormData, ReceiverForm } from "@/components/order/OrderForm";
 
 interface ReceiverInputSetProps {
   index: number;
@@ -24,6 +24,9 @@ const ReceiverInputSet = ({
   errors,
   watch,
 }: ReceiverInputSetProps) => {
+  const getError = (field: keyof ReceiverForm) =>
+    errors.order?.[index] ? errors.order[index][field]?.message : null;
+
   return (
     <div css={WrapperStyle}>
       {fieldCount > 1 && (
@@ -45,8 +48,8 @@ const ReceiverInputSet = ({
           required: "받는 사람의 이름은 필수 입력값입니다.",
         })}
       />
-      {Array.isArray(errors.order) && errors.order[index]?.receiverName && (
-        <p css={errorStyle}>{errors.order[index].receiverName?.message}</p>
+      {getError("receiverName") && (
+        <p css={errorStyle}>{getError("receiverName")}</p>
       )}
       <input
         css={inputStyle}
@@ -69,8 +72,8 @@ const ReceiverInputSet = ({
           },
         })}
       />
-      {Array.isArray(errors.order) && errors.order[index]?.phoneNumber && (
-        <p css={errorStyle}>{errors.order[index].phoneNumber?.message}</p>
+      {getError("phoneNumber") && (
+        <p css={errorStyle}>{getError("phoneNumber")}</p>
       )}
       <input
         css={inputStyle}
