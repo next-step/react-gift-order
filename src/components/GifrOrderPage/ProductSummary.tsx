@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 const Wrapper = styled.div(({ theme }) => ({
   marginTop: theme.spacing.spacing5,
   padding: `0 ${theme.spacing.spacing7}`,
+  paddingBottom: '100px',
 }));
 const SectionTitle = styled.div(({ theme }) => ({
   ...theme.typography.label1Bold,

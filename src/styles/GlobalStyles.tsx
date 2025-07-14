@@ -126,6 +126,7 @@ const GlobalStyle = () => (
         max-width: 720px;
         width: 100%;
         margin: 0 auto;
+        background-color: #f0f0f0;
       }
 
       ol,

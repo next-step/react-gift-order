@@ -8,6 +8,10 @@ import { useState } from 'react';
 
 const GiftOrderPage = () => {
   const [sender, setSender] = useState('');
+  const [price, setPrice] = useState(0);
+  const handlePriceButton = () => {
+    console.log('주문하기');
+  };
   return (
     <>
       <CardSelector />
@@ -17,7 +21,7 @@ const GiftOrderPage = () => {
       <ReceiveForm />
       <Divider />
       <ProductSummary />
-      <OrderButton />
+      <OrderButton price={price} onClick={handlePriceButton} />
     </>
   );
 };
