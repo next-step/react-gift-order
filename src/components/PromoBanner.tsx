@@ -4,7 +4,7 @@ const Wrapper = styled.div(({ theme }) => ({
   backgroundColor: theme.colors.semantic.kakaoYellow,
   borderRadius: '12px',
   padding: theme.spacing.spacing4,
-  margin: `${theme.spacing.spacing4} 0`,
+  margin: theme.spacing.spacing4,
 }));
 
 const SubText = styled.p(({ theme }) => ({

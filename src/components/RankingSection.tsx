@@ -117,6 +117,7 @@ const ImageWrapper = styled.div`
   position: relative;
   width: 100%;
   aspect-ratio: 1/1;
+  cursor: pointer;
 `;
 
 const ProductImage = styled.img`
@@ -233,7 +234,6 @@ const RankingSection = () => {
       <Grid>
         {visibleItems.map((item: RankedProduct) => (
           <Card key={item.ranking}>
-            {' '}
             {/* 임시로 ranking으로 해두었지만 추후 id값으로 바꿀 계획 */}
             <ImageWrapper onClick={() => handleClick(item)}>
               <ProductImage src={item.imageURL} alt={item.name} />
