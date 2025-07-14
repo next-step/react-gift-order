@@ -1,28 +1,45 @@
-import { Title, SendeInfo, SenderName, SenderWrapper } from '@/components/Order/Sender/Sender.style.ts';
-import LabeledInput from '@/components/Common/LabeledInput/LabeledInput.tsx';
-import { JSX } from 'react';
+import {
+  Title,
+  SenderWrapper,
+} from '@/components/Order/Sender/Sender.style.ts';
+import SenderForm from '@/components/Order/Sender/SenderForm.tsx';
+import { Controller, useFormContext } from 'react-hook-form';
 
-export default function Sender({ sender, setSender }) {
+export default function Sender() {
+  const {
+    control,
+    setValue,
+    trigger,
+    formState: { errors },
+  } = useFormContext();
+
   return (
     <SenderWrapper>
       <Title>보내는 사람</Title>
 
-      <LabeledInput
-        showError={sender.check}
-        errorMessage='이름을 입력해주세요.'
-        comment= {<SendeInfo>* 실제 선물 발송 시 발신자 이름으로 반영되는 정보입니다.</SendeInfo>}
-      >
-        <SenderName
-          isActive={ sender.check }
-          type='text'
-          placeholder='이름을 입력하세요.'
-          onChange={e =>
-            setSender({
-              text: e.target.value,
-              check: false, }
-            )}
-        />
-      </LabeledInput>
+      <Controller
+        name="senderName"
+        control={control}
+        rules={{ required: '메시지를 입력해주세요.' }}
+        render={({ field }) => (
+          <SenderForm
+            value={field.value}
+            onChange={field.onChange}
+            error={errors.senderName}
+          />
+        )}
+      />
+      {/*<SenderForm*/}
+      {/*  handleSubmit={handleSubmit}*/}
+      {/*  onSubmit={onSubmit}*/}
+      {/*  register={register}*/}
+      {/*  text={text}*/}
+      {/*  setValue={setValue}*/}
+      {/*  watchValidation={watchValidation}*/}
+      {/*  trigger={trigger}*/}
+      {/*  error={errors.sender}*/}
+      {/*/>*/}
     </SenderWrapper>
   )
 }
+

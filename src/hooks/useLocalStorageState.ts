@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-export default function useSelectedState<T>(key: string, initialValue: T) {
+export default function useLocalStorageState<T>(key: string, initialValue: T) {
     const [state, setState] = useState<T>(() => {
       try {
         const stored = localStorage.getItem(key);

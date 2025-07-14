@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Header from '@/components/Header/Header';
 import { Alert, Container, InputWrapper, LoginButton, LogoImg, StyledInput } from '@/pages/Login/Login.styles';
 import { KAKAO_LOGO_SVG } from "@/assets/svg/kakaoLogo";
-import { useLoginForm } from '@/hooks/useLoginForm';
+import { useLoginForm } from '@/hooks/useLoginForm.ts';
 import { PASSWORD_LENGTH } from '@/constants/password.ts';
 
 const Login = () => {

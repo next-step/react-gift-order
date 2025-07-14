@@ -1,69 +1,67 @@
-import {
-  ReceiverInput,
-  ReceiverNameInput, ReceiverPhoneInput,
-  ReceiverWrapper,
-  RecevierTitle,
-} from '@/components/Order/Receiver/Receiver.style.ts';
-import LabeledInput from '@/components/Common/LabeledInput/LabeledInput.tsx';
-import { JSX } from 'react';
+import { useEffect } from 'react';
+import ReceiverCurrentState from '@/components/Order/Receiver/ReceiverCurrentState.tsx';
+import ReceiverModal from '@/components/Order/Receiver/ReceiverModal.tsx';
+import { addHandler, cancleHandler, openModalHandler, submitHandler } from '@/hooks/order/receiver/useReceiverHandlers.ts';
+import useReceiverModalControl from '@/hooks/order/receiver/useReceiverModalControl.ts';
+import useReceiverValidation from '@/hooks/order/receiver/useReceiverValidation.ts';
 
-export default function Receiver({ setCount, receiverName, setReceiverName, receiverPhone, setReceiverPhone }) {
+export default function Receiver({ setCount, receiverForm }) {
+  // 모달 상태 제어
+  const { modal, setModal } = useReceiverModalControl();
+
+  // form 상태 제어
+  const {
+    register,
+    reset,
+    getValues,
+    handleSubmit,
+    errors,
+    fields,
+    append,
+    remove,
+    submittedRef,
+    beforeRef,
+    values,
+  } = receiverForm;
+
+  // 번호 타당성 검사
+  const { isSamePhoneNumber } = useReceiverValidation(values);
+
+  // 각종 Handle
+  const handleAdd = addHandler(fields.length, append);
+  const handleCancle = cancleHandler(beforeRef, reset, setModal);
+  const handleOpenModal = openModalHandler(beforeRef, getValues, setModal);
+  const onSubmit = submitHandler(submittedRef, setModal);
+
+  // count 세기
+  useEffect(() => {
+    if (submittedRef.current) {
+      const total = submittedRef.current.reduce((acc, cur) => acc + Number(cur.count), 0);
+      setCount(total);
+    }
+  }, [submittedRef.current]);
 
   return (
-    <ReceiverWrapper>
-      <RecevierTitle>받는 사람</RecevierTitle>
+    <>
+      <ReceiverCurrentState
+        openModal={handleOpenModal}
+        submittedRef={submittedRef.current}
+      />
 
-      <LabeledInput
-        label="이름"
-        showError={receiverName.check}
-        errorMessage="이름을 입력해주세요."
-      >
-        <ReceiverNameInput
-          isNameActive={receiverName.check}
-          type="text"
-          value={receiverName.text}
-          placeholder='이름을 입력하세요.'
-          onChange={e =>
-            setReceiverName({ text: e.target.value, check: false })
-          }
+      {modal && (
+        <ReceiverModal
+          setModal={setModal}
+          fields={fields}
+          register={register}
+          handleAdd={handleAdd}
+          handleSubmit={handleSubmit}
+          onSubmit={onSubmit}
+          remove={remove}
+          errors={errors}
+          handleCancle={handleCancle}
+          isSamePhoneNumber={isSamePhoneNumber}
         />
-      </LabeledInput>
-
-      <LabeledInput
-        label='전화번호'
-        showError={receiverPhone.check || receiverPhone.checkPhoneForm}
-        errorMessage={
-          receiverPhone.checkPhoneForm
-            ? '전화번호 형식이 올바르지 않습니다.'
-            : '전화번호를 입력해주세요.'
-        }
-      >
-        <ReceiverPhoneInput
-          isPhoneActive={receiverPhone.check}
-          isFormActive={receiverPhone.checkPhoneForm}
-          type="text"
-          value={receiverPhone.text}
-          placeholder='전화번호를 입력하세요.'
-          onChange={e =>
-            setReceiverPhone({
-              text: e.target.value,
-              check: false ,
-              checkPhoneForm: false,
-            })
-          }
-        />
-      </LabeledInput>
-
-      <LabeledInput
-        label='수량'
-      >
-        <ReceiverInput
-          type='number'
-          defaultValue='1'
-          min='1'
-          onChange={e => setCount(e.target.value)}
-        />
-      </LabeledInput>
-    </ReceiverWrapper>
+      )}
+    </>
   )
 }

@@ -2,7 +2,7 @@ import {
   ItemTitle,
   ItemWrapper,
 } from '@/components/Order/ItemInfo/ItemInfo.style.ts';
-import Item from "@/components/Common/OrderProductImage/OrerProductImage.tsx"
+import Item from "@/components/Common/OrderProductImage/OrderProductImage.tsx"
 import { EXPANDED_LIST_STORAGE_ID } from '@/constants/storage.ts';
 
 export default function ItemInfo({ id }) {

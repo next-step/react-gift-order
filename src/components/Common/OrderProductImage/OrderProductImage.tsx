@@ -6,11 +6,11 @@ import {
   ItemPrice,
 } from '@/components/Common/OrderProductImage/OrderProductImage.style.ts';
 
-export default function OrerProductImage({ image, name, brand, price }) {
+export default function OrderProductImage({ image, name, brand, price }) {
   return (
     <ItemImageWrapper>
       <ItemImage>
-        <img src={image} alt='사진' />
+        <img src={image} alt={image.name} />
       </ItemImage>
 
       <div>

@@ -1,44 +1,56 @@
 import { orderMessage } from '@/data/orderMessage.ts';
-import { useState } from 'react';
 import {
   GifImage,
   GifWrapper,
   ImageWrapper,
   Wrapper,
+  MessageImage,
 } from '@/components/Order/Message/Message.style.ts';
-import MessageImage from "@/components/Common/MessageImage/MessageImage.tsx"
-import TextAreaWrapper from "@/components/Common/ValidTextarea/TextAreaWrapper.tsx"
+import MessageInput from '@/components/Order/Message/MessageInput.tsx';
+import { useEffect, useState } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 
-
-export default function Message({ message, setMessage }) {
+export default function Message() {
+  const { control, setValue, trigger, formState: { errors } } = useFormContext();
   const [image, setImage] = useState(orderMessage[0].imageUrl);
+
+  useEffect(() => {
+    setValue('textMessage', orderMessage[0].defaultTextMessage)
+  }, [setValue]);
 
   return (
     <Wrapper>
       <ImageWrapper>
-        {orderMessage.map(item => (
+        {orderMessage.map((item) => (
           <MessageImage
             key={item.id}
             src={item.thumbUrl}
             alt={item.defaultTextMessage}
-            onClick={()=>{
+            onClick={() => {
               setImage(item.imageUrl);
-              setMessage(prev => ({ ...prev, text: item.defaultTextMessage}));
+              setValue('textMessage', item.defaultTextMessage);
+              trigger('textMessage');
             }}
           />
         ))}
       </ImageWrapper>
 
       <GifWrapper>
-        <GifImage src={image} alt={image} />
+        <GifImage src={image} alt="선택된 메시지 이미지" />
       </GifWrapper>
 
-      <TextAreaWrapper
-        value={message.text}
-        onChange={e => setMessage({ text: e.target.value, check: false })}
-        isError={message.check}
-        errorMessage="메시지를 입력해주세요."
+      <Controller
+        name="textMessage"
+        control={control}
+        rules={{ required: '메시지를 입력해주세요.' }}
+        render={({ field }) => (
+          <MessageInput
+            value={field.value}
+            onChange={field.onChange}
+            error={errors.textMessage}
+          />
+        )}
       />
     </Wrapper>
-  )
+  );
 }

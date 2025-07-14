@@ -9,7 +9,7 @@ import { categories, sorts, INITIAL_VISIBLE_GIFT_COUNT, TOTAL_GIFT_COUNT } from 
 import FilterButton from '@/components/Common/FilterButton/FilterButton';
 import SortSpan from "@/components/Common/SortOption/SortOption"
 import RankingCard from '@/components/Common/RankingCard/RankingCard';
-import useSelectedState from '@/hooks/useSelectedState.tsx';
+import useSelectedState from '@/hooks/useLocalStorageState.ts';
 import { useNavigate } from 'react-router-dom';
 import { EXPANDED_LIST_STORAGE_ID } from '@/constants/storage.ts';
 
