@@ -1,7 +1,7 @@
 import StyledTopestDiv from '@styles/StyledTopesDiv';
 import OrderCardTemplateContainer from '@components/Order/OrderCardTemplateContainer';
 import { useSearchParams } from 'react-router-dom';
-import { useEffect, useState, type FC } from 'react';
+import { useEffect, useState } from 'react';
 import { GOODS_DATA, type Goods } from '@assets/goodsData';
 import { Spacer } from '@styles/Spacer';
 import { StyledItemInfoContainer } from '@styles/Order/OrderContainer/StyledItemInfoContainer';
@@ -11,11 +11,9 @@ import SenderContainer from './SenderContainer';
 import type { OrderFormValue } from '@/types/OrderFormValues';
 import RecipientsModalContainer from './RecipientsModalContainer';
 
-const OrderContainer: FC = () => {
+const OrderContainer = () => {
   const [searchParams] = useSearchParams();
   const [selectedProduct, setSelectedProduct] = useState<Goods | null>(null);
-
-  // const totalPrice = selectedProduct ? selectedProduct.price.sellingPrice * count : 0;
 
   //url를 통해 받은 상품 id를 가지고 상품 container를 생성해 렌더링
   useEffect(() => {
@@ -28,14 +26,6 @@ const OrderContainer: FC = () => {
     }
   }, [searchParams]);
 
-  const methods = useForm<OrderFormValue>({
-    defaultValues: {
-      msg: '',
-      sendName: '',
-      recipients: [],
-      total_count: 0,
-    },
-  });
   const {
     handleSubmit,
     register,
@@ -43,7 +33,14 @@ const OrderContainer: FC = () => {
     watch,
     setValue,
     formState: { errors },
-  } = methods;
+  } = useForm<OrderFormValue>({
+    defaultValues: {
+      msg: '',
+      sendName: '',
+      recipients: [],
+      total_count: 0,
+    },
+  });
 
   const onSubmit: SubmitHandler<OrderFormValue> = (data) => {
     alert(`Name: ${data.sendName}, Message: ${data.msg}`);
