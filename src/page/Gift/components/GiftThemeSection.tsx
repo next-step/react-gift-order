@@ -1,16 +1,32 @@
 import styled from '@emotion/styled';
 import { giftDatas } from '@/data/giftDatas';
 
-const Section = styled.section`
-  padding: ${({ theme }) => theme.spacing.spacing4};
-  background-color: ${({ theme }) => theme.colors.semantic.background.default};
-`;
+const GiftThemeSection = () => {
+  return (
+    <section>
+      <TitleContainer>
+        <Title>선물 테마</Title>
+      </TitleContainer>
+      <Container>
+        {giftDatas.map(theme => (
+          <Theme key={theme.themeId}>
+            <Image alt={theme.name} src={theme.image} />
+            <Text>{theme.name}</Text>
+          </Theme>
+        ))}
+      </Container>
+    </section>
+  );
+};
+
+export default GiftThemeSection;
 
 const Container = styled.div`
   width: 100%;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: ${({ theme }) => theme.spacing.spacing4};
+  padding: ${({ theme }) => theme.spacing.spacing4};
 `;
 
 const Theme = styled.div`
@@ -22,7 +38,6 @@ const Theme = styled.div`
   justify-content: center;
   gap: ${({ theme }) => theme.spacing.spacing2};
   cursor: pointer;
-  background-color: ${({ theme }) => theme.colors.semantic.background.fill};
 `;
 
 const Image = styled.img`
@@ -53,20 +68,6 @@ const Title = styled.h3`
   text-align: left;
 `;
 
-const GiftTheme = () => {
-  return (
-    <Section>
-      <Title>선물 테마</Title>
-      <Container>
-        {giftDatas.map(theme => (
-          <Theme key={theme.themeId}>
-            <Image alt={theme.name} src={theme.image} />
-            <Text>{theme.name}</Text>
-          </Theme>
-        ))}
-      </Container>
-    </Section>
-  );
-};
-
-export default GiftTheme;
+const TitleContainer = styled.div`
+  padding: 20px 20px;
+`;

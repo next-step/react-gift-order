@@ -1,8 +1,20 @@
 import styled from '@emotion/styled';
 
+const CommentBoxSection = () => {
+  return (
+    <Section>
+      <Container>
+        <SubText>카카오테크 캠퍼스 3기여러분</SubText>
+        <MainText>프론트엔드 2단계 과제 화이팅! 🎉</MainText>
+      </Container>
+    </Section>
+  );
+};
+
+export default CommentBoxSection;
+
 const Section = styled.section`
   padding: ${({ theme }) => theme.spacing.spacing3} ${({ theme }) => theme.spacing.spacing4};
-  background-color: ${({ theme }) => theme.colors.semantic.background.default};
 `;
 
 const Container = styled.div`
@@ -31,16 +43,3 @@ const MainText = styled.p`
   margin: 0px;
   text-align: left;
 `;
-
-const Comment = () => {
-  return (
-    <Section>
-      <Container>
-        <SubText>카카오테크 캠퍼스 3기여러분</SubText>
-        <MainText>프론트엔드 2단계 과제 화이팅! 🎉</MainText>
-      </Container>
-    </Section>
-  );
-};
-
-export default Comment;

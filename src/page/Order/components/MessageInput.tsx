@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
-import type { UseInputReturn } from '../hooks/useInput';
+import type { OrderInfoValues } from '..';
+import { useFormContext } from 'react-hook-form';
 
 const MessageInputContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.semantic.background.default};
@@ -39,13 +40,22 @@ const ErrorMessage = styled.p`
   margin-top: ${({ theme }) => theme.spacing.spacing1};
 `;
 
-const MessageInput = ({ hook }: { hook: UseInputReturn<HTMLTextAreaElement> }) => {
-  const { onChange, value, error } = hook;
+const MessageInput = () => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<OrderInfoValues>();
+
   return (
     <MessageInputContainer>
       <Title>메시지 입력</Title>
-      <Textarea placeholder="메시지를 입력해주세요." value={value} onChange={onChange}></Textarea>
-      {error && <ErrorMessage>메시지를 입력해주세요.</ErrorMessage>}
+      <Textarea
+        placeholder="메시지를 입력해주세요."
+        {...register(`message`, {
+          required: { value: true, message: '메시지를 입력해주세요.' },
+        })}
+      ></Textarea>
+      {errors.message && <ErrorMessage>{errors.message.message}</ErrorMessage>}
     </MessageInputContainer>
   );
 };

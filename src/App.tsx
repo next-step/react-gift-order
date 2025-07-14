@@ -8,13 +8,9 @@ import { UserInfoProvider } from './contexts/UserInfoContext';
 
 const AppContainer = styled.div`
   width: 100%;
-  height: 100%;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  background-color: ${({ theme }) => theme.colors.semantic.background.fill};
+  max-width: 720px;
+  margin: 0 auto;
+  background-color: ${({ theme }) => theme.colors.semantic.background.default};
   padding-top: 2.75rem;
 `;
 

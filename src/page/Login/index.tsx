@@ -67,9 +67,7 @@ const LoginPage = () => {
     login(username.value, token);
     navigate(ROUTES.MY, { replace: true });
   };
-  // const token = await fakeAuthApi(username.value, password.value);
-  
-
+ 
   return (
     <Container>
       <Img

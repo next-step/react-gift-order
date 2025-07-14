@@ -11,6 +11,79 @@ interface ButtonProps {
   isActive: boolean;
 }
 
+const GiftRankingSection = () => {
+  const {
+    handleGenerationGroupClick,
+    handleFilterGroupClick,
+    activeGenerationButton,
+    activeFilterButton,
+  } = useSearchParamState();
+
+  const { isCollapsed, visibleItemsCount, toggleCollapse } = useToggleCollapse(rankingDatas.length);
+  const { isLoggedIn } = useUserInfo();
+
+  const navigate = useNavigate();
+  const handleItemClick = (id: number) => {
+    if (isLoggedIn) {
+      navigate(`/order/${id}`);
+    } else {
+      navigate(ROUTES.LOGIN);
+    }
+  };
+
+  return (
+    <Section>
+      <Title>실시간 급상승 선물랭킹</Title>
+
+      <CatContainer>
+        <GenerationGroup>
+          {generations.map(({ id, emoji, label }) => (
+            <Button
+              key={id}
+              isActive={activeGenerationButton === id}
+              onClick={() => handleGenerationGroupClick(id)}
+            >
+              <div>{emoji}</div>
+              <p>{label}</p>
+            </Button>
+          ))}
+        </GenerationGroup>
+
+        <FilterGroup>
+          {filters.map(({ id, label }) => (
+            <Button
+              key={id}
+              isActive={activeFilterButton === id}
+              onClick={() => handleFilterGroupClick(id)}
+            >
+              <p>{label}</p>
+            </Button>
+          ))}
+        </FilterGroup>
+      </CatContainer>
+
+      <RankContainer>
+        {rankingDatas.slice(0, visibleItemsCount).map(rank => (
+          <RankItem key={rank.id} onClick={() => handleItemClick(rank.id)}>
+            <RankNumber>{rank.id}</RankNumber>
+
+            <ItemContainer>
+              <Image src={rank.image} alt={rank.name} />
+              <ItemName>{rank.name}</ItemName>
+              <ItemSubName>{rank.subName}</ItemSubName>
+              <ItemPrice>{rank.price} 원</ItemPrice>
+            </ItemContainer>
+          </RankItem>
+        ))}
+      </RankContainer>
+
+      <ToggleButton onClick={toggleCollapse}>{isCollapsed ? '펼치기' : '접기'}</ToggleButton>
+    </Section>
+  );
+};
+
+export default GiftRankingSection;
+
 const Section = styled.section`
   padding: ${({ theme }) => theme.spacing.spacing4} ${({ theme }) => theme.spacing.spacing3};
   width: 100%;
@@ -29,7 +102,6 @@ const Title = styled.h3`
 
 const CatContainer = styled.div`
   border-radius: ${({ theme }) => theme.spacing.spacing2};
-  background-color: ${({ theme }) => theme.colors.semantic.background.fill};
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -147,76 +219,3 @@ const ToggleButton = styled.button`
   border-radius: 4px;
   border: 1px solid ${({ theme }) => theme.colors.colorScale.gray[300]};
 `;
-
-const GiftRanking = () => {
-  const {
-    handleGenerationGroupClick,
-    handleFilterGroupClick,
-    activeGenerationButton,
-    activeFilterButton,
-  } = useSearchParamState();
-
-  const { isCollapsed, visibleItemsCount, toggleCollapse } = useToggleCollapse(rankingDatas.length);
-  const { isLoggedIn } = useUserInfo();
-
-  const navigate = useNavigate();
-  const handleItemClick = (id: number) => {
-    if (isLoggedIn) {
-      navigate(`/order/${id}`);
-    } else {
-      navigate(ROUTES.LOGIN);
-    }
-  };
-
-  return (
-    <Section>
-      <Title>실시간 급상승 선물랭킹</Title>
-
-      <CatContainer>
-        <GenerationGroup>
-          {generations.map(({ id, emoji, label }) => (
-            <Button
-              key={id}
-              isActive={activeGenerationButton === id}
-              onClick={() => handleGenerationGroupClick(id)}
-            >
-              <div>{emoji}</div>
-              <p>{label}</p>
-            </Button>
-          ))}
-        </GenerationGroup>
-
-        <FilterGroup>
-          {filters.map(({ id, label }) => (
-            <Button
-              key={id}
-              isActive={activeFilterButton === id}
-              onClick={() => handleFilterGroupClick(id)}
-            >
-              <p>{label}</p>
-            </Button>
-          ))}
-        </FilterGroup>
-      </CatContainer>
-
-      <RankContainer>
-        {rankingDatas.slice(0, visibleItemsCount).map(rank => (
-          <RankItem key={rank.id} onClick={() => handleItemClick(rank.id)}>
-            <RankNumber>{rank.id}</RankNumber>
-
-            <ItemContainer>
-              <Image src={rank.image} alt={rank.name} />
-              <ItemName>{rank.name}</ItemName>
-              <ItemSubName>{rank.subName}</ItemSubName>
-              <ItemPrice>{rank.price} 원</ItemPrice>
-            </ItemContainer>
-          </RankItem>
-        ))}
-      </RankContainer>
-
-      <ToggleButton onClick={toggleCollapse}>{isCollapsed ? '펼치기' : '접기'}</ToggleButton>
-    </Section>
-  );
-};
-
-export default GiftRanking;
