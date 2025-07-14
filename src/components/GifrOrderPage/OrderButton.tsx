@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 
 interface Props {
   price: number;
-  onClick: () => void;
 }
 
 const FixedContainer = styled.div(({ theme }) => ({
@@ -36,10 +35,10 @@ const InnerButton = styled.button(({ theme }) => ({
   },
 }));
 
-const OrderButton = ({ price, onClick }: Props) => {
+const OrderButton = ({ price }: Props) => {
   return (
     <FixedContainer>
-      <InnerButton onClick={onClick}>
+      <InnerButton type="submit">
         {price.toLocaleString()}원 주문하기
       </InnerButton>
     </FixedContainer>

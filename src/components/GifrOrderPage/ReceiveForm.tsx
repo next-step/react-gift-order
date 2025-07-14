@@ -1,4 +1,6 @@
+import ErrorText from '@components/common/ErrorText';
 import styled from '@emotion/styled';
+import type { FormSectionProps } from '@pages/GiftOrderPage';
 
 const Wrapper = styled.div(({ theme }) => ({
   marginTop: theme.spacing.spacing5,
@@ -36,24 +38,40 @@ const FieldRow = styled.div(({ theme }) => ({
   marginBottom: theme.spacing.spacing3,
 }));
 
-const ReceiveForm = () => {
+const ReceiveForm = ({ register, errors }: FormSectionProps) => {
   return (
     <Wrapper>
       <SectionTitle>받는사람</SectionTitle>
       <FieldRow>
         <Label htmlFor="receiverName">이름</Label>
-        <Input id="receiverName" placeholder="이름을 입력하세요." />
+        <Input
+          id="receiverName"
+          placeholder="이름을 입력하세요."
+          {...register('receiver')}
+        />
       </FieldRow>
+      {errors.receiver && <ErrorText>{errors.receiver.message}</ErrorText>}
 
       <FieldRow>
         <Label htmlFor="receiverPhone">전환번호</Label>
-        <Input id="receiverPhone" placeholder="전화번호를 입력하세요." />
+        <Input
+          id="receiverPhone"
+          placeholder="전화번호를 입력하세요."
+          {...register('phone')}
+        />
       </FieldRow>
+      {errors.phone && <ErrorText>{errors.phone.message}</ErrorText>}
 
       <FieldRow>
         <Label htmlFor="quantity">수량</Label>
-        <Input id="quantity" type="number" defaultValue={1} />
+        <Input
+          id="quantity"
+          type="number"
+          defaultValue={1}
+          {...register('quantity', { valueAsNumber: true })}
+        />
       </FieldRow>
+      {errors.quantity && <ErrorText>{errors.quantity.message}</ErrorText>}
     </Wrapper>
   );
 };

@@ -2,6 +2,8 @@ import cardTemplate from '@data/cardTemplate.json';
 import styled from '@emotion/styled';
 import { useState } from 'react';
 import MessageInput from './MessageInput';
+import type { FormSectionProps } from '@pages/GiftOrderPage';
+import ErrorText from '@components/common/ErrorText';
 
 interface CardTemplate {
   id: number;
@@ -41,14 +43,13 @@ const SelectedImage = styled.img(({ theme }) => ({
   boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)',
 }));
 
-const CardSelector = () => {
+const CardSelector = ({ register, errors, setValue }: FormSectionProps) => {
   const defaultCard = cardTemplate[0];
   const [selectedCard, setSelectedCard] = useState(defaultCard.imageUrl);
-  const [message, setMessage] = useState(defaultCard.defaultTextMessage);
 
   const handleCardSelect = (card: CardTemplate) => {
     setSelectedCard(card.imageUrl);
-    setMessage(card.defaultTextMessage);
+    setValue?.('message', card.defaultTextMessage);
   };
 
   return (
@@ -65,10 +66,8 @@ const CardSelector = () => {
         ))}
       </ThumbnailList>
       <SelectedImage src={selectedCard} alt="선택된 카드" />
-      <MessageInput
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-      />
+      <MessageInput register={register} />
+      {errors.message && <ErrorText>{errors.message.message}</ErrorText>}
     </Wrapper>
   );
 };

@@ -1,4 +1,6 @@
 import styled from '@emotion/styled';
+import type { OrderFormData } from '@schemas/orderSchema';
+import type { UseFormRegister } from 'react-hook-form';
 
 const TextArea = styled.textarea(({ theme }) => ({
   width: '100%',
@@ -13,12 +15,11 @@ const TextArea = styled.textarea(({ theme }) => ({
 }));
 
 type Props = {
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  register: UseFormRegister<OrderFormData>;
 };
 
-const MessageInput = ({ value, onChange }: Props) => {
-  return <TextArea value={value} onChange={onChange} />;
+const MessageInput = ({ register }: Props) => {
+  return <TextArea {...register('message')} />;
 };
 
 export default MessageInput;

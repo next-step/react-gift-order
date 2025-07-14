@@ -1,9 +1,6 @@
+import ErrorText from '@components/common/ErrorText';
 import styled from '@emotion/styled';
-
-interface Props {
-  value: string;
-  onChange: (value: string) => void;
-}
+import type { FormSectionProps } from '@pages/GiftOrderPage';
 
 const Wrapper = styled.div(({ theme }) => ({
   marginTop: theme.spacing.spacing5,
@@ -32,17 +29,17 @@ const Notice = styled.div(({ theme }) => ({
   color: theme.colors.semantic.textSub,
 }));
 
-const SenderForm = ({ value, onChange }: Props) => {
+const SenderForm = ({ register, errors }: FormSectionProps) => {
   return (
     <Wrapper>
       <Label>보내는 사람</Label>
       <Input
         type="text"
         placeholder="이름을 입력하세요"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
+        {...register('sender')}
       />
       <Notice>* 실제 선물 발송 시 발신자 이름으로 발송됩니다.</Notice>
+      {errors.sender && <ErrorText>{errors.sender.message}</ErrorText>}
     </Wrapper>
   );
 };
