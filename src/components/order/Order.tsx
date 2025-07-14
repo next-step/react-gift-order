@@ -44,7 +44,7 @@ const Order: React.FC = () => {
   const navigate = useNavigate();
   const totalQuantity =
     receivers.length === 0
-      ? 1
+      ? 0
       : receivers.reduce((sum, receiver) => sum + Number(receiver.quantity), 0);
 
   const handleSubmit = () => {
