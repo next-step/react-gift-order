@@ -1,43 +1,23 @@
 import * as S from './ReceiverModal.styles'
 import ReceiverInputList from '../ReceiverInputList/ReceiverInputList'
 import MyButton from '@/component/Button/Button'
-import type { Order } from '@/features/Order/hooks/useOrderForm'
-import type {
-  FieldArrayWithId,
-  FieldErrors,
-  UseFieldArrayAppend,
-  UseFieldArrayRemove,
-  UseFormRegister,
-  UseFormTrigger,
-  UseFormGetValues,
-} from 'react-hook-form'
+import type { Order } from '@/features/Order/schema/orderSchema'
+import { useFormContext, useFieldArray } from 'react-hook-form'
 
 interface ReceiverModalProps {
   isOpen: boolean
   onClose: () => void
-  fields: FieldArrayWithId<Order, 'receivers', 'id'>[]
-  register: UseFormRegister<Order>
-  trigger: UseFormTrigger<Order>
-  errors: FieldErrors<Order>
-  append: UseFieldArrayAppend<Order, 'receivers'>
-  remove: UseFieldArrayRemove
   onComplete: () => void
-  getValues: UseFormGetValues<Order>
 }
 
-const ReceiverModal = ({
-  isOpen,
-  onClose,
-  fields,
-  register,
-  trigger,
-  errors,
-  append,
-  remove,
-  onComplete,
-  getValues,
-}: ReceiverModalProps) => {
+const ReceiverModal = ({ isOpen, onClose, onComplete }: ReceiverModalProps) => {
   if (!isOpen) return null
+
+  const { control, trigger } = useFormContext<Order>()
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'receivers',
+  })
 
   const handleComplete = async () => {
     const isValid = await trigger('receivers')
@@ -73,14 +53,7 @@ const ReceiverModal = ({
           </MyButton>
         </S.Wrapper>
 
-        <ReceiverInputList
-          fields={fields}
-          register={register}
-          errors={errors}
-          append={append}
-          remove={remove}
-          getValues={getValues}
-        />
+        <ReceiverInputList fields={fields} remove={remove} />
 
         <S.ButtonConatiner>
           <MyButton onClick={onClose} variant="secondory" size="medium">

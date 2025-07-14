@@ -1,40 +1,24 @@
 import { useState } from 'react'
-import type {
-  UseFormRegister,
-  FieldErrors,
-  FieldArrayWithId,
-  UseFieldArrayAppend,
-  UseFieldArrayRemove,
-  UseFormTrigger,
-  UseFormGetValues,
-} from 'react-hook-form'
-
+import { useFormContext } from 'react-hook-form'
 import MyButton from '@/component/Button/Button'
 import ReceiverModal from '../ReceiverModal/ReceiverModal'
-import type { Receiver, Order } from '@/features/Order/hooks/useOrderForm'
+import type { Order, Receiver } from '@/features/Order/schema/orderSchema'
 import * as S from './ReceiverSection.styles'
 
 interface ReceiverSectionProps {
-  fields: FieldArrayWithId<Order, 'receivers', 'id'>[]
-  register: UseFormRegister<Order>
-  errors: FieldErrors<Order>
-  append: UseFieldArrayAppend<Order, 'receivers'>
-  remove: UseFieldArrayRemove
-  getValues: UseFormGetValues<Order>
-  trigger: UseFormTrigger<Order>
+  onConfirm: () => void
 }
 
-const ReceiverSection = ({
-  fields,
-  register,
-  errors,
-  append,
-  remove,
-  getValues,
-  trigger,
-}: ReceiverSectionProps) => {
+const ReceiverSection = ({ onConfirm }: ReceiverSectionProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [receivers, setReceivers] = useState<Receiver[]>([])
+  const {
+    getValues,
+    trigger,
+    formState: { errors },
+  } = useFormContext<Order>()
+
+  const error = errors.receivers
 
   return (
     <S.Container>
@@ -51,10 +35,16 @@ const ReceiverSection = ({
       </S.TitleContainer>
 
       {receivers.length === 0 ? (
-        <S.EmptyMessage>
-          받는 사람이 없습니다. <br />
-          받는 사람을 추가해주세요.
-        </S.EmptyMessage>
+        <>
+          <S.EmptyMessage>
+            받는 사람이 없습니다. <br />
+            받는 사람을 추가해주세요.
+          </S.EmptyMessage>
+
+          {typeof error?.message === 'string' && (
+            <S.ErrorText>{error.message}</S.ErrorText>
+          )}
+        </>
       ) : (
         <S.List>
           <S.ListHeader>
@@ -76,20 +66,14 @@ const ReceiverSection = ({
       <ReceiverModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        fields={fields}
-        register={register}
-        trigger={trigger}
-        errors={errors}
-        append={append}
-        remove={remove}
         onComplete={async () => {
           const isValid = await trigger('receivers')
           if (!isValid) return
           const updatedReceivers = getValues('receivers')
           setReceivers(updatedReceivers)
+          onConfirm()
           setIsModalOpen(false)
         }}
-        getValues={getValues}
       />
     </S.Container>
   )

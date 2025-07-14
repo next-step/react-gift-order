@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useOrderForm } from '../hooks/useOrderForm'
+import { FormProvider } from 'react-hook-form'
 
 import CardSelect from '../components/CardSelect/CardSelect'
 import CardPreview from '../components/CardPreview/CardPreview'
@@ -24,17 +25,7 @@ const OrderPage = () => {
   const selectedCard = cards.find((card) => card.id === selectedCardId)!
   const defaultMessage = selectedCard.defaultTextMessage
 
-  const {
-    register,
-    onSubmit,
-    errors,
-    totalPrice,
-    fields,
-    append,
-    remove,
-    getValues,
-    trigger,
-  } = useOrderForm({
+  const { methods, onSubmit, totalPrice, confirmReceivers } = useOrderForm({
     defaultMessage,
     productName: product.name,
     sellingPrice: product.price.sellingPrice,
@@ -43,38 +34,20 @@ const OrderPage = () => {
   })
 
   return (
-    <form onSubmit={onSubmit}>
-      <CardSelect
-        selectedCardId={selectedCardId}
-        setSelectedCardId={setSelectedCardId}
-      />
-      <CardPreview selectedCardId={selectedCardId} />
-
-      <MessageInput
-        register={register('message', { required: '메시지를 입력해주세요.' })}
-        error={errors.message?.message}
-      />
-
-      <SenderInput
-        register={register('sender', {
-          required: '보내는 사람 이름을 입력해주세요.',
-        })}
-        error={errors.sender?.message}
-      />
-
-      <ReceiverSection
-        fields={fields}
-        register={register}
-        errors={errors}
-        append={append}
-        remove={remove}
-        getValues={getValues}
-        trigger={trigger}
-      />
-
-      <ProductInfo product={product} />
-      <BottomPurchaseBar handlePurchase={onSubmit} totalPrice={totalPrice} />
-    </form>
+    <FormProvider {...methods}>
+      <form onSubmit={onSubmit}>
+        <CardSelect
+          selectedCardId={selectedCardId}
+          setSelectedCardId={setSelectedCardId}
+        />
+        <CardPreview selectedCardId={selectedCardId} />
+        <MessageInput />
+        <SenderInput />
+        <ReceiverSection onConfirm={confirmReceivers} />
+        <ProductInfo product={product} />
+        <BottomPurchaseBar handlePurchase={onSubmit} totalPrice={totalPrice} />
+      </form>
+    </FormProvider>
   )
 }
 

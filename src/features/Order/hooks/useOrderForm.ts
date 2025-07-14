@@ -1,18 +1,9 @@
-import { useEffect } from 'react'
-import { useForm, useFieldArray } from 'react-hook-form'
+import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-
-export interface Receiver {
-  receiver: string
-  phone: string
-  quantity: number
-}
-
-export interface Order {
-  message: string
-  sender: string
-  receivers: Receiver[]
-}
+import { orderSchema } from '../schema/orderSchema'
+import type { Order } from '../schema/orderSchema'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 interface UseOrderFormParams {
   defaultMessage: string
@@ -31,16 +22,8 @@ export const useOrderForm = ({
 }: UseOrderFormParams) => {
   const navigate = useNavigate()
 
-  const {
-    control,
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    trigger,
-    getValues,
-    formState: { errors },
-  } = useForm<Order>({
+  const methods = useForm<Order>({
+    resolver: zodResolver(orderSchema),
     defaultValues: {
       message: defaultMessage,
       sender: '',
@@ -49,16 +32,26 @@ export const useOrderForm = ({
     mode: 'onChange',
   })
 
-  const { fields, append, remove } = useFieldArray({
+  const {
     control,
-    name: 'receivers',
-  })
+    register,
+    handleSubmit,
+    setValue,
+    trigger,
+    getValues,
+    formState: { errors },
+  } = methods
 
-  const order = watch()
-  const totalPrice = order.receivers.reduce(
-    (sum: number, r) => sum + r.quantity * sellingPrice,
-    0
-  )
+  const [totalPrice, setTotalPrice] = useState(0)
+
+  const confirmReceivers = () => {
+    const confirmed = getValues('receivers') || []
+    const price = confirmed.reduce(
+      (sum, r) => sum + r.quantity * sellingPrice,
+      0
+    )
+    setTotalPrice(price)
+  }
 
   useEffect(() => {
     setValue('message', selectedCardMessage || '')
@@ -80,14 +73,12 @@ export const useOrderForm = ({
   })
 
   return {
+    methods,
     register,
     onSubmit,
     errors,
-    order,
+    confirmReceivers,
     totalPrice,
-    fields,
-    append,
-    remove,
     control,
     getValues,
     trigger,

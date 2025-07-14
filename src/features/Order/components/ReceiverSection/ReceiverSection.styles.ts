@@ -61,3 +61,11 @@ export const ListItem = styled.li`
     border-bottom: none;
   }
 `
+
+export const ErrorText = styled.p`
+  text-align: left;
+  color: ${theme.colors.semanticColor.stateColor.critical};
+  ${theme.typography.label2Regular};
+  margin-top: ${theme.spacing[1]};
+  margin-bottom: ${theme.spacing[2]};
+`
