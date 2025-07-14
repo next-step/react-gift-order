@@ -26,9 +26,7 @@ const ReceiverModal = ({
           * 받는 사람의 전화번호를 중복으로 입력할 수 없어요.
         </p>
         <OrderForm
-          onSubmitCallback={(formData) => {
-            onSave(formData);
-          }}
+          onSubmitCallback={onSave}
           savedReceiverInfo={savedReceiverInfo}
           onClose={onClose}
         />
