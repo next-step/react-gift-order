@@ -39,9 +39,7 @@ const Order: React.FC = () => {
   const [messageError, setMessageError] = useState("");
   const [senderError, setSenderError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [receivers, setReceivers] = useState<
-    { receiverName: string; phoneNumber: string; quantity: number }[]
-  >([]);
+  const [receivers, setReceivers] = useState<FormData["order"]>([]);
   const navigate = useNavigate();
   const totalQuantity =
     receivers.length === 0
