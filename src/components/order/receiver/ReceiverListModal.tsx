@@ -1,36 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useForm, useFieldArray, FormProvider } from 'react-hook-form';
 import styled from '@emotion/styled';
+import Modal from '@/components/common/Modal';
 import { LuX } from 'react-icons/lu';
 import { isBlank, isPhone } from '@/utils/validation';
-
-const Overlay = styled.div`
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 16px;
-`;
-
-const Modal = styled.div`
-  background: #fff;
-  width: 100%;
-  max-width: 600px;
-  height: 100%;
-  max-height: 590px;
-  display: flex;
-  flex-direction: column;
-  border-radius: 8px;
-  padding: 16px 24px;
-`;
+import { getDuplicatePhoneIndexes } from '@/utils/receiver';
+import type { Receiver } from '@/types/order';
 
 const FormStyle = styled.form`
   display: flex;
   flex-direction: column;
-  flex: 1; // 중요!
+  flex: 1;
   overflow: hidden;
 `;
 
@@ -152,12 +132,6 @@ const SaveBtn = styled.button`
   cursor: pointer;
 `;
 
-interface Receiver {
-  name: string;
-  phone: string;
-  qty: number;
-}
-
 interface FormValues {
   receivers: Receiver[];
 }
@@ -190,19 +164,7 @@ export default function ReceiverListModal({ onClose, onSave, initialReceivers = 
   const watchReceivers = watch('receivers');
 
   useEffect(() => {
-    const phoneMap: Record<string, number[]> = {};
-
-    watchReceivers.forEach((receiver, idx) => {
-      const phone = receiver.phone;
-      if (!phone) return;
-      if (!phoneMap[phone]) phoneMap[phone] = [];
-      phoneMap[phone].push(idx);
-    });
-
-    const duplicates = Object.values(phoneMap)
-      .filter((arr) => arr.length > 1)
-      .flat();
-
+    const duplicates = getDuplicatePhoneIndexes(watchReceivers);
     setDuplicateIndexes(duplicates);
   }, [watchReceivers]);
 
@@ -213,21 +175,9 @@ export default function ReceiverListModal({ onClose, onSave, initialReceivers = 
 
   const onSubmit = () => {
     const values = getValues('receivers');
-    const phones = values.map((v) => v.phone);
+    const duplicates = getDuplicatePhoneIndexes(values);
 
-    const duplicates = phones.reduce<Record<string, number[]>>((acc, phone, i) => {
-      if (!acc[phone]) acc[phone] = [];
-      acc[phone].push(i);
-      return acc;
-    }, {});
-
-    const duplicatesList = Object.values(duplicates)
-      .filter((arr) => arr.length > 1)
-      .flat();
-
-    setDuplicateIndexes(duplicatesList);
-
-    if (duplicatesList.length > 0) {
+    if (duplicates.length > 0) {
       return;
     }
 
@@ -237,102 +187,100 @@ export default function ReceiverListModal({ onClose, onSave, initialReceivers = 
 
   return (
     <FormProvider {...methods}>
-      <Overlay>
-        <Modal>
-          <FormStyle onSubmit={handleSubmit(onSubmit)}>
-            <Title>받는 사람</Title>
-            <Label>
-              <p>* 최대 10명까지 추가 할 수 있어요.</p>
-              <p>* 받는 사람의 전화번호를 중복으로 입력할 수 없어요.</p>
-            </Label>
+      <Modal onClose={onClose}>
+        <FormStyle onSubmit={handleSubmit(onSubmit)}>
+          <Title>받는 사람</Title>
+          <Label>
+            <p>* 최대 10명까지 추가 할 수 있어요.</p>
+            <p>* 받는 사람의 전화번호를 중복으로 입력할 수 없어요.</p>
+          </Label>
 
-            <AddButton
-              type="button"
-              onClick={() => append({ name: '', phone: '', qty: 1 })}
-              disabled={fields.length >= 10}
-            >
-              추가하기
-            </AddButton>
+          <AddButton
+            type="button"
+            onClick={() => append({ name: '', phone: '', qty: 1 })}
+            disabled={fields.length >= 10}
+          >
+            추가하기
+          </AddButton>
 
-            <Content>
-              {fields.map((field, index) => (
-                <Field key={field.id}>
-                  <LabelTag>
-                    <LabelNum>받는 사람 {index + 1}</LabelNum>
-                    <LuX size={20} css={{ cursor: 'pointer' }} onClick={() => remove(index)} />
-                  </LabelTag>
+          <Content>
+            {fields.map((field, index) => (
+              <Field key={field.id}>
+                <LabelTag>
+                  <LabelNum>받는 사람 {index + 1}</LabelNum>
+                  <LuX size={20} css={{ cursor: 'pointer' }} onClick={() => remove(index)} />
+                </LabelTag>
 
-                  <LabelRow>
-                    <LabelTitle htmlFor={`name-${index}`}>이름</LabelTitle>
-                    <Input
-                      id={`name-${index}`}
-                      placeholder="이름을 입력하세요."
-                      {...register(`receivers.${index}.name`, {
-                        validate: (v) => !isBlank(v) || '이름을 입력해주세요.',
-                      })}
-                      error={!!errors.receivers?.[index]?.name}
-                    />
-                  </LabelRow>
-                  {errors.receivers?.[index]?.name && (
-                    <ErrorMessage>{errors.receivers[index].name?.message}</ErrorMessage>
-                  )}
+                <LabelRow>
+                  <LabelTitle htmlFor={`name-${index}`}>이름</LabelTitle>
+                  <Input
+                    id={`name-${index}`}
+                    placeholder="이름을 입력하세요."
+                    {...register(`receivers.${index}.name`, {
+                      validate: (v) => !isBlank(v) || '이름을 입력해주세요.',
+                    })}
+                    error={!!errors.receivers?.[index]?.name}
+                  />
+                </LabelRow>
+                {errors.receivers?.[index]?.name && (
+                  <ErrorMessage>{errors.receivers[index].name?.message}</ErrorMessage>
+                )}
 
-                  <LabelRow>
-                    <LabelTitle htmlFor={`phone-${index}`}>전화번호</LabelTitle>
-                    <Input
-                      id={`phone-${index}`}
-                      placeholder="전화번호를 입력하세요."
-                      {...register(`receivers.${index}.phone`, {
-                        validate: (v) => {
-                          if (isBlank(v)) return '전화번호를 입력해주세요.';
-                          if (!isPhone(v)) return '올바른 전화번호 형식이 아닙니다.';
+                <LabelRow>
+                  <LabelTitle htmlFor={`phone-${index}`}>전화번호</LabelTitle>
+                  <Input
+                    id={`phone-${index}`}
+                    placeholder="전화번호를 입력하세요."
+                    {...register(`receivers.${index}.phone`, {
+                      validate: (v) => {
+                        if (isBlank(v)) return '전화번호를 입력해주세요.';
+                        if (!isPhone(v)) return '올바른 전화번호 형식이 아닙니다.';
 
-                          const phones = getValues('receivers').map((r) => r.phone);
-                          const isDuplicate = phones.filter((p) => p === v).length > 1;
-                          if (isDuplicate) return '중복된 전화번호가 있습니다.';
+                        const phones = getValues('receivers').map((r) => r.phone);
+                        const isDuplicate = phones.filter((p) => p === v).length > 1;
+                        if (isDuplicate) return '중복된 전화번호가 있습니다.';
 
-                          return true;
-                        },
-                      })}
-                      error={!!errors.receivers?.[index]?.phone || duplicateIndexes.includes(index)}
-                    />
-                  </LabelRow>
-                  {errors.receivers?.[index]?.phone && (
-                    <ErrorMessage>{errors.receivers[index].phone?.message}</ErrorMessage>
-                  )}
-                  {duplicateIndexes.includes(index) && (
-                    <ErrorMessage>중복된 전화번호가 있습니다.</ErrorMessage>
-                  )}
+                        return true;
+                      },
+                    })}
+                    error={!!errors.receivers?.[index]?.phone || duplicateIndexes.includes(index)}
+                  />
+                </LabelRow>
+                {errors.receivers?.[index]?.phone && (
+                  <ErrorMessage>{errors.receivers[index].phone?.message}</ErrorMessage>
+                )}
+                {duplicateIndexes.includes(index) && (
+                  <ErrorMessage>중복된 전화번호가 있습니다.</ErrorMessage>
+                )}
 
-                  <LabelRow>
-                    <LabelTitle htmlFor={`qty-${index}`}>수량</LabelTitle>
-                    <Input
-                      id={`qty-${index}`}
-                      type="number"
-                      min={1}
-                      {...register(`receivers.${index}.qty`, {
-                        valueAsNumber: true,
-                        validate: (v) => v >= 1 || '수량은 1개 이상이어야 합니다.',
-                      })}
-                      error={!!errors.receivers?.[index]?.qty}
-                    />
-                  </LabelRow>
-                  {errors.receivers?.[index]?.qty && (
-                    <ErrorMessage>{errors.receivers[index].qty?.message}</ErrorMessage>
-                  )}
-                </Field>
-              ))}
-            </Content>
+                <LabelRow>
+                  <LabelTitle htmlFor={`qty-${index}`}>수량</LabelTitle>
+                  <Input
+                    id={`qty-${index}`}
+                    type="number"
+                    min={1}
+                    {...register(`receivers.${index}.qty`, {
+                      valueAsNumber: true,
+                      validate: (v) => v >= 1 || '수량은 1개 이상이어야 합니다.',
+                    })}
+                    error={!!errors.receivers?.[index]?.qty}
+                  />
+                </LabelRow>
+                {errors.receivers?.[index]?.qty && (
+                  <ErrorMessage>{errors.receivers[index].qty?.message}</ErrorMessage>
+                )}
+              </Field>
+            ))}
+          </Content>
 
-            <BottomBtn>
-              <CancelBtn type="button" onClick={onClose}>
-                취소
-              </CancelBtn>
-              <SaveBtn type="submit">{fields.length}명 완료</SaveBtn>
-            </BottomBtn>
-          </FormStyle>
-        </Modal>
-      </Overlay>
+          <BottomBtn>
+            <CancelBtn type="button" onClick={onClose}>
+              취소
+            </CancelBtn>
+            <SaveBtn type="submit">{fields.length}명 완료</SaveBtn>
+          </BottomBtn>
+        </FormStyle>
+      </Modal>
     </FormProvider>
   );
 }

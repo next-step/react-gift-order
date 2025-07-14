@@ -15,6 +15,7 @@ import OrderButton from '@/components/order/OrderButton';
 import { isBlank } from '@/utils/validation';
 import { products } from '@/mock/productsData';
 import { cardTemplates } from '@/mock/cardTemplates';
+import type { Receiver } from '@/types/order';
 
 const Wrapper = styled.div`
   display: flex;
@@ -26,12 +27,6 @@ const Wrapper = styled.div`
 interface FormValues {
   message: string;
   sender: string;
-  name: string;
-  phone: string;
-  qty: number;
-}
-
-interface Receiver {
   name: string;
   phone: string;
   qty: number;
@@ -104,7 +99,7 @@ export default function OrderPage() {
         />
 
         {/* 받는 사람 */}
-        <ReceiverInfo onReceiverChange={(data) => setReceivers(data)} />
+        <ReceiverInfo receivers={receivers} setReceivers={setReceivers} />
 
         {/* 상품 정보 */}
         <ProductInfo product={product} />

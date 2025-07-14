@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import ReceiverListModal from './receiver/ReceiverListModal';
+import type { Receiver } from '@/types/order';
 
 const Content = styled.section`
   padding: 0 16px 24px;
@@ -64,23 +65,13 @@ const EmptyBox = styled.div`
   ${({ theme }) => theme.typography.body2Regular};
 `;
 
-interface Receiver {
-  name: string;
-  phone: string;
-  qty: number;
-}
-
 interface ReceiverInfoProps {
-  onReceiverChange: (receivers: Receiver[]) => void;
+  receivers: Receiver[];
+  setReceivers: (data: Receiver[]) => void;
 }
 
-export default function ReceiverInfo({ onReceiverChange }: ReceiverInfoProps) {
+export default function ReceiverInfo({ receivers, setReceivers }: ReceiverInfoProps) {
   const [open, setOpen] = useState(false);
-  const [receivers, setReceivers] = useState<Receiver[]>([]);
-
-  useEffect(() => {
-    onReceiverChange(receivers);
-  }, [receivers, onReceiverChange]);
 
   return (
     <>
