@@ -1,23 +1,14 @@
 import { z } from "zod";
-
-export const recipientSchema = z.object({
-    name: z.string().min(1, "이름을 입력해주세요."),
-    phone: z
-        .string()
-        .regex(/^010\d{8}$/, "전화번호는 01012341234 형식이어야 합니다."),
-    quantity: z
-        .string()
-        .min(1, "수량은 1개 이상이어야 합니다.")
-        .transform((val) => Number(val))
-        .refine((val) => val >= 1, "수량은 1개 이상이어야 합니다.")
-});
+import { recipientSchema } from "./recipientSchema";
 
 export const orderSchema = z.object({
     sender: z.string().min(1, "보내는 사람 이름을 입력해주세요."),
     recipients: z
         .array(recipientSchema)
         .min(1, "최소 1명 이상 입력해야 합니다.")
-        .max(10, "최대 10명까지 입력할 수 있습니다.")
+        .max(10, "최대 10명까지 입력할 수 있습니다."),
+    cardId: z.number(),
+    message: z.string().min(1, "메시지를 입력해주세요."),
 }).refine(
     (data) => {
         const phones = data.recipients.map(r => r.phone);
@@ -26,5 +17,4 @@ export const orderSchema = z.object({
     { message: "받는 사람의 전화번호가 중복되었습니다.", path: ["recipients"] }
 );
 
-export type OrderFormValues = z.infer<typeof orderSchema>;
-export type RecipientFormValues = z.infer<typeof recipientSchema>; 
+export type OrderFormValues = z.infer<typeof orderSchema>; 

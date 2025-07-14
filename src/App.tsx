@@ -1,6 +1,5 @@
 import GlobalStyle from '@/styles/GlobalStyle';
 import Header from '@/components/Header';
-import Hero from '@/components/Hero';
 import CategoryList from '@/components/CategoryList';
 import FeaturedGifts from '@/components/FeaturedGifts';
 import SupportBanner from '@/components/SupportBanner';
@@ -14,6 +13,7 @@ import MyPage from '@/pages/MyPage';
 import OrderPage from '@/pages/OrderPage';
 import ProtectedRoute from '@/hoc/ProtectedRoute';
 import { AuthProvider } from '@/contexts/AuthProvider';
+import HomePage from '@/pages/HomePage';
 
 function App() {
   return (
@@ -22,19 +22,7 @@ function App() {
         <GlobalStyle />
         <Header />
         <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                <Hero />
-                <CategoryList />
-                <FeaturedGifts />
-                <SupportBanner />
-                <LiveRanking />
-                <Footer />
-              </>
-            }
-          />
+          <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
           <Route
             path="/my"
