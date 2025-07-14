@@ -208,7 +208,9 @@ export const Modal = ({ open, onClose, onConfirm }: ModalProps) => {
               <br />* 받는 사람의 전화번호를 중복으로 입력할 수 없어요.
             </Notice>
             <Margin height="8px" />
-            <AddButton onClick={handleAdd}>추가하기</AddButton>
+            <AddButton type="button" onClick={handleAdd}>
+              추가하기
+            </AddButton>
           </div>
           <RecipientSection>
             {fields.map((index) => (
