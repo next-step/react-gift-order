@@ -1,5 +1,12 @@
+import ErrorText from '@components/common/ErrorText';
 import styled from '@emotion/styled';
+import { useLoginForm } from '@hooks/useLoginForm';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+interface LoginButtonProps {
+  disabled: boolean;
+}
 
 const Container = styled.div(({ theme }) => ({
   display: 'flex',
@@ -19,13 +26,17 @@ const Title = styled.h1(({ theme }) => ({
   color: theme.colors.semantic.textDefault,
 }));
 
-const Input = styled.input(({ theme }) => ({
+const Input = styled.input<{ hasError?: boolean }>(({ theme, hasError }) => ({
   width: '100%',
   maxWidth: '320px',
   padding: `${theme.spacing.spacing3} 0`,
-  marginBottom: theme.spacing.spacing5,
+  marginBottom: theme.spacing.spacing2,
   border: 'none',
-  borderBottom: `1px solid ${theme.colors.semantic.borderDefault}`,
+  borderBottom: `1px solid ${
+    hasError
+      ? theme.colors.semantic.critical
+      : theme.colors.semantic.borderDefault
+  }`,
   fontSize: theme.typography.body1Regular.fontSize,
   fontWeight: theme.typography.body1Regular.fontWeight,
   color: theme.colors.semantic.textDefault,
@@ -37,46 +48,101 @@ const Input = styled.input(({ theme }) => ({
   },
 }));
 
-const Button = styled.button(({ theme }) => ({
+const loginButtonYellowDisabled = '#fff584';
+
+const Button = styled.button<LoginButtonProps>(({ theme, disabled }) => ({
   width: '100%',
   maxWidth: '320px',
   padding: `${theme.spacing.spacing3} 0`,
   marginTop: theme.spacing.spacing3,
-  backgroundColor: theme.colors.semantic.kakaoYellow,
-  color: theme.colors.semantic.kakaoBrown,
+  backgroundColor: disabled
+    ? loginButtonYellowDisabled
+    : theme.colors.semantic.kakaoYellow,
+  color: disabled
+    ? theme.colors.gray.gray600
+    : theme.colors.semantic.textDefault,
   fontWeight: theme.typography.body1Bold.fontWeight,
   fontSize: theme.typography.body1Bold.fontSize,
   lineHeight: theme.typography.body1Bold.lineHeight,
   border: 'none',
   borderRadius: '6px',
-  cursor: 'pointer',
+  cursor: disabled ? 'not-allowed' : 'pointer',
 
   '&:hover': {
-    backgroundColor: theme.colors.semantic.kakaoYellowHover,
+    backgroundColor: disabled
+      ? loginButtonYellowDisabled
+      : theme.colors.semantic.kakaoYellowHover,
   },
 
   '&:active': {
-    backgroundColor: theme.colors.semantic.kakaoYellowActive,
+    backgroundColor: disabled
+      ? loginButtonYellowDisabled
+      : theme.colors.semantic.kakaoYellowActive,
   },
 }));
 
 const Login = () => {
   const navigate = useNavigate();
+  const {
+    email,
+    setEmail,
+    emailError,
+    validateEmail,
+    password,
+    setPassword,
+    passwordError,
+    validatePassword,
+    isValid,
+  } = useLoginForm();
 
-  const loginButtunHandler = () => {
-    if (window.history.length > 2) {
-      navigate(-1);
-    } else {
-      navigate('/');
+  const [emailTouched, setEmailTouched] = useState(false);
+  const [passwordTouched, setPasswordTouched] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const isEmailOk = validateEmail();
+    const isPWOk = validatePassword();
+    if (isEmailOk && isPWOk) {
+      if (window.history.length > 2) {
+        navigate(-1);
+      } else {
+        navigate('/');
+      }
     }
   };
 
   return (
-    <Container>
+    <Container as="form" onSubmit={handleSubmit}>
       <Title>kakao</Title>
-      <Input type="email" placeholder="이메일" />
-      <Input type="password" placeholder="비밀번호" />
-      <Button onClick={loginButtunHandler}>로그인</Button>
+      <Input
+        type="email"
+        placeholder="이메일"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        onBlur={() => {
+          setEmailTouched(true);
+          validateEmail();
+        }}
+        hasError={emailTouched && !!emailError}
+      />
+      {emailTouched && emailError && <ErrorText>{emailError}</ErrorText>}
+      <Input
+        type="password"
+        placeholder="비밀번호"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        onBlur={() => {
+          setPasswordTouched(true);
+          validatePassword();
+        }}
+        hasError={passwordTouched && !!passwordError}
+      />
+      {passwordTouched && passwordError && (
+        <ErrorText>{passwordError}</ErrorText>
+      )}
+      <Button type="submit" disabled={!isValid}>
+        로그인
+      </Button>
     </Container>
   );
 };
