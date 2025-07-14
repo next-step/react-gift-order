@@ -75,7 +75,9 @@ const ReceiverField = ({ watchedData }: ReceiverFieldProps) => {
       <Container>
         <ButtonArea>
           <P>받는사람</P>
-          <Button onClick={() => setIsModalOpen(true)}>{!isEmpty ? '수정' : '추가'}</Button>
+          <Button type="button" onClick={() => setIsModalOpen(true)}>
+            {!isEmpty ? '수정' : '추가'}
+          </Button>
         </ButtonArea>
         <MainArea>
           {!isEmpty ? (

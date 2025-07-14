@@ -6,6 +6,7 @@ import ProductInfo from './components/ProductInfo';
 import ReceiverField from './components/ReceiverField';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FormProvider, useForm } from 'react-hook-form';
+import { ROUTES } from '@/routes/routes';
 
 const Section = styled.section`
   width: 100%;
@@ -44,7 +45,7 @@ const OrderPage = () => {
 
   const onSubmit = () => {
     alert('주문 성공!');
-    navigate('/');
+    navigate(ROUTES.HOME);
   };
 
   const orderForm = useForm<OrderInfoValues>({
@@ -54,6 +55,7 @@ const OrderPage = () => {
   const { watch } = orderForm;
   const watchedReceiverInfos = watch('receiverInfos');
 
+  // 총 수량
   return (
     <>
       <Section>
