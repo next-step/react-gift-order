@@ -152,7 +152,7 @@ const OrderPage = () => {
   const navigate = useNavigate();
   const product = products.find((p) => String(p.id) === String(productId));
 
-  const { formData, errors, recipientActions, handlers, register } =
+  const { formData, errors, recipientActions, handlers, register, formState } =
     useMultipleRecipientsForm();
 
   const { selectedCardId, selectedCard, recipients, totalQuantity } = formData;
@@ -185,14 +185,9 @@ const OrderPage = () => {
     setIsModalOpen(false);
   };
 
-  // 주문 가능 여부 확인 (강화)
+  // 주문 가능 여부 확인
   const canOrder =
-    recipients.length > 0 &&
-    totalQuantity > 0 &&
-    !messageError &&
-    !senderError &&
-    !recipientsError &&
-    recipients.every((r) => r.name.trim() && r.phone.trim() && r.quantity >= 1);
+    recipients.length > 0 && totalQuantity > 0 && formState.isValid;
 
   if (!product) {
     return (

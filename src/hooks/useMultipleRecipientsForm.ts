@@ -18,7 +18,7 @@ export const useMultipleRecipientsForm = () => {
     handleSubmit,
     watch,
     setValue,
-    formState: { errors },
+    formState: { errors, isValid },
     trigger,
     setError,
     clearErrors,
@@ -177,5 +177,6 @@ export const useMultipleRecipientsForm = () => {
     control,
     handleSubmit,
     setValue,
+    formState: { errors, isValid },
   };
 };
