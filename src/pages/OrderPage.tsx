@@ -282,6 +282,7 @@ const OrderPage = () => {
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         onSave={handleSaveRecipients}
+        existingRecipients={recipients}
       />
     </Section>
   );

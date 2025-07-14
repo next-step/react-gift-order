@@ -1,102 +1,58 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import styled from '@emotion/styled';
+import { Modal } from '@/components/common';
+import RecipientForm from './RecipientForm';
+import {
+  createNewRecipient,
+  createEmptyRecipientForm,
+  validateRecipients,
+  checkDuplicatePhone,
+  normalizePhoneNumber,
+} from '@/utils';
+import type { Recipient } from '@/types';
 
 interface RecipientModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (recipients: any[]) => void;
+  onSave: (recipients: Recipient[]) => void;
+  initialRecipients?: Recipient[];
+  existingRecipients?: Recipient[];
 }
 
-const ModalOverlay = styled.div<{ isOpen: boolean }>`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: ${(props) => (props.isOpen ? 'flex' : 'none')};
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: 16px;
-  box-sizing: border-box;
-`;
-
-const ModalContainer = styled.div`
-  background: white;
-  border-radius: 16px;
-  width: 100%;
-  max-width: 500px;
-  position: relative;
-`;
-
-const ModalHeader = styled.div`
-  padding: 20px 24px 16px;
-  border-bottom: 1px solid #e5e7eb;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const ModalTitle = styled.h2`
-  margin: 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: #111827;
-`;
-
-const CloseButton = styled.button`
-  background: none;
-  border: none;
-  color: #6b7280;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 8px;
-  width: 32px;
-  height: 32px;
-
-  &:hover {
-    background: #f3f4f6;
-    color: #374151;
-  }
-`;
-
 const ModalContent = styled.div`
-  padding: 24px;
+  max-height: 60vh;
+  overflow-y: auto;
+  margin-bottom: 20px;
 `;
 
-const FormContainer = styled.div`
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 16px;
-`;
-
-const FormField = styled.div`
-  margin-bottom: 12px;
-`;
-
-const Label = styled.label`
-  display: block;
-  font-size: 12px;
-  font-weight: 500;
-  color: #64748b;
-  margin-bottom: 4px;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
+const AddButton = styled.button<{ disabled?: boolean }>`
+  background: ${(props) => (props.disabled ? '#f3f4f6' : '#fee500')};
+  color: ${(props) => (props.disabled ? '#9ca3af' : '#1f2937')};
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
   font-size: 14px;
-  background: white;
-  box-sizing: border-box;
+  font-weight: 600;
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+  width: fit-content;
 
-  &:focus {
-    outline: none;
-    border-color: #3b82f6;
+  &:hover:not(:disabled) {
+    background: #fde047;
+    transform: translateY(-1px);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
   }
 `;
 
@@ -115,6 +71,7 @@ const Button = styled.button<{ variant?: 'primary' | 'secondary' }>`
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
+  transition: all 0.2s ease;
   border: none;
   min-width: 80px;
 
@@ -124,8 +81,14 @@ const Button = styled.button<{ variant?: 'primary' | 'secondary' }>`
     background: #fee500;
     color: #1f2937;
     
-    &:hover {
+    &:hover:not(:disabled) {
       background: #fde047;
+    }
+    
+    &:disabled {
+      background: #f3f4f6;
+      color: #9ca3af;
+      cursor: not-allowed;
     }
   `
       : `
@@ -135,92 +98,248 @@ const Button = styled.button<{ variant?: 'primary' | 'secondary' }>`
     
     &:hover {
       background: #f1f5f9;
+      color: #475569;
     }
   `}
 `;
 
-const RecipientModal = ({ isOpen, onClose, onSave }: RecipientModalProps) => {
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [quantity, setQuantity] = useState(1);
+const ErrorMessage = styled.div`
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 16px;
+  color: #dc2626;
+  font-size: 14px;
+  line-height: 1.4;
+`;
 
-  const handleSave = () => {
-    if (name.trim() && phone.trim()) {
-      onSave([
-        {
-          id: Date.now().toString(),
-          name: name.trim(),
-          phone: phone.trim(),
-          quantity,
-        },
-      ]);
-      setName('');
-      setPhone('');
-      setQuantity(1);
+const EmptyState = styled.div`
+  background: #f9fafb;
+  border: 2px dashed #d1d5db;
+  border-radius: 12px;
+  padding: 32px 16px;
+  text-align: center;
+  color: #6b7280;
+  margin-bottom: 16px;
+`;
+
+const EmptyStateTitle = styled.div`
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 4px;
+  color: #374151;
+`;
+
+const EmptyStateDescription = styled.div`
+  font-size: 14px;
+  line-height: 1.5;
+`;
+
+const MaxReachedText = styled.div`
+  color: #dc2626;
+  font-size: 12px;
+  font-weight: 500;
+  margin-left: 8px;
+`;
+
+const PlusIcon = () => (
+  <svg viewBox="0 0 20 20" fill="currentColor">
+    <path
+      fillRule="evenodd"
+      d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+      clipRule="evenodd"
+    />
+  </svg>
+);
+
+const RecipientModal = ({
+  isOpen,
+  onClose,
+  onSave,
+  initialRecipients = [],
+  existingRecipients = [],
+}: RecipientModalProps) => {
+  const [tempRecipients, setTempRecipients] = useState<
+    Array<{ id: string; data: Omit<Recipient, 'id'> }>
+  >([]);
+  const [errors, setErrors] = useState<string[]>([]);
+
+  // 모달이 열릴 때 초기 데이터 설정
+  useEffect(() => {
+    if (isOpen) {
+      if (initialRecipients.length > 0) {
+        // 편집 모드: 기존 받는사람 데이터로 초기화
+        setTempRecipients(
+          initialRecipients.map((recipient) => ({
+            id: recipient.id,
+            data: {
+              name: recipient.name,
+              phone: recipient.phone,
+              quantity: recipient.quantity,
+            },
+          }))
+        );
+      } else {
+        // 추가 모드: 빈 받는사람 하나로 시작
+        const newRecipient = createNewRecipient();
+        setTempRecipients([
+          {
+            id: newRecipient.id,
+            data: createEmptyRecipientForm(),
+          },
+        ]);
+      }
+      setErrors([]);
     }
+  }, [isOpen, initialRecipients]);
+
+  // 새 받는사람 추가
+  const handleAddRecipient = () => {
+    if (tempRecipients.length >= 10) return;
+
+    const newRecipient = createNewRecipient();
+    setTempRecipients((prev) => [
+      ...prev,
+      {
+        id: newRecipient.id,
+        data: createEmptyRecipientForm(),
+      },
+    ]);
   };
 
+  // 받는사람 제거
+  const handleRemoveRecipient = useCallback((index: number) => {
+    setTempRecipients((prev) => prev.filter((_, i) => i !== index));
+  }, []);
+
+  // 받는사람 데이터 변경
+  const handleDataChange = useCallback(
+    (index: number, data: Omit<Recipient, 'id'>) => {
+      setTempRecipients((prev) =>
+        prev.map((item, i) => (i === index ? { ...item, data } : item))
+      );
+    },
+    []
+  );
+
+  // 저장 처리
+  const handleSave = () => {
+    // 받는사람 목록 생성
+    const recipients: Recipient[] = tempRecipients.map((item) => ({
+      id: item.id,
+      ...item.data,
+    }));
+
+    // 유효성 검사
+    const validation = validateRecipients(recipients);
+    if (!validation.isValid) {
+      setErrors(validation.errors);
+      return;
+    }
+
+    // 기존 받는사람과의 중복 검사 (정규화된 전화번호로 비교)
+    const normalizedExistingPhones = existingRecipients.map((r) =>
+      normalizePhoneNumber(r.phone)
+    );
+    const normalizedNewPhones = recipients.map((r) =>
+      normalizePhoneNumber(r.phone)
+    );
+
+    // 기존 받는사람과 새 받는사람 간 중복 검사
+    const duplicatesWithExisting = normalizedNewPhones.filter(
+      (phone) => phone && normalizedExistingPhones.includes(phone)
+    );
+
+    if (duplicatesWithExisting.length > 0) {
+      setErrors(['이미 등록된 전화번호가 있습니다.']);
+      return;
+    }
+
+    // 새 받는사람들 간의 중복 검사
+    const allRecipients = [...existingRecipients, ...recipients];
+    const duplicatePhones = checkDuplicatePhone(allRecipients);
+    if (duplicatePhones.length > 0) {
+      setErrors([`중복된 전화번호가 있습니다.`]);
+      return;
+    }
+
+    // 성공
+    setErrors([]);
+    onSave(recipients);
+  };
+
+  // 취소 처리
   const handleCancel = () => {
-    setName('');
-    setPhone('');
-    setQuantity(1);
+    setErrors([]);
     onClose();
   };
 
-  if (!isOpen) return null;
+  const canAddMore = tempRecipients.length < 10;
+  const hasValidData =
+    tempRecipients.length > 0 &&
+    tempRecipients.some(
+      (item) => item.data.name.trim() || item.data.phone.trim()
+    );
 
   return (
-    <ModalOverlay isOpen={isOpen}>
-      <ModalContainer>
-        <ModalHeader>
-          <ModalTitle>받는 사람 추가</ModalTitle>
-          <CloseButton onClick={handleCancel}>×</CloseButton>
-        </ModalHeader>
+    <Modal
+      isOpen={isOpen}
+      onClose={handleCancel}
+      title="받는 사람"
+      size="large"
+    >
+      <div>
+        <AddButton onClick={handleAddRecipient} disabled={!canAddMore}>
+          <PlusIcon />
+          추가하기
+          {!canAddMore && <MaxReachedText>(최대 10명)</MaxReachedText>}
+        </AddButton>
+
+        {errors.length > 0 && (
+          <ErrorMessage>
+            {errors.map((error, index) => (
+              <div key={index}>{error}</div>
+            ))}
+          </ErrorMessage>
+        )}
 
         <ModalContent>
-          <FormContainer>
-            <FormField>
-              <Label>이름</Label>
-              <Input
-                type="text"
-                placeholder="홍길동"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+          {tempRecipients.length === 0 ? (
+            <EmptyState>
+              <EmptyStateTitle>받는사람을 추가해주세요</EmptyStateTitle>
+              <EmptyStateDescription>
+                "추가하기" 버튼을 눌러서 받는사람을 등록하세요.
+              </EmptyStateDescription>
+            </EmptyState>
+          ) : (
+            tempRecipients.map((item, index) => (
+              <RecipientForm
+                key={item.id}
+                index={index}
+                initialData={item.data}
+                onDataChange={handleDataChange}
+                onRemove={handleRemoveRecipient}
+                existingRecipients={existingRecipients}
               />
-            </FormField>
-
-            <FormField>
-              <Label>전화번호</Label>
-              <Input
-                type="tel"
-                placeholder="01012341234"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-              />
-            </FormField>
-
-            <FormField>
-              <Label>수량</Label>
-              <Input
-                type="number"
-                min="1"
-                value={quantity}
-                onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
-              />
-            </FormField>
-          </FormContainer>
-
-          <ButtonContainer>
-            <Button variant="secondary" onClick={handleCancel}>
-              취소
-            </Button>
-            <Button variant="primary" onClick={handleSave}>
-              완료
-            </Button>
-          </ButtonContainer>
+            ))
+          )}
         </ModalContent>
-      </ModalContainer>
-    </ModalOverlay>
+
+        <ButtonContainer>
+          <Button variant="secondary" onClick={handleCancel}>
+            취소
+          </Button>
+          <Button
+            variant="primary"
+            onClick={handleSave}
+            disabled={!hasValidData}
+          >
+            {tempRecipients.length}명 완료
+          </Button>
+        </ButtonContainer>
+      </div>
+    </Modal>
   );
 };
 
