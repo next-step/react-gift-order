@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import styled from '@emotion/styled';
 import { createOutsideClickHandler } from '@/utils';
+import { useBodyScrollLock } from '@/hooks';
 
 interface ModalProps {
   isOpen: boolean;
@@ -138,17 +139,7 @@ const Modal = ({
   }, [isOpen, onClose]);
 
   // 스크롤 방지
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen]);
+  useBodyScrollLock(isOpen);
 
   if (!isOpen) return null;
 

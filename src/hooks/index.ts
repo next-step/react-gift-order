@@ -5,3 +5,4 @@ export { useMultipleRecipientsForm } from './useMultipleRecipientsForm';
 export { useRecipientModal } from './useRecipientModal';
 export { useForm } from './useForm';
 export { useLocalStorageState } from './useLocalStorageState';
+export { useBodyScrollLock } from './useBodyScrollLock';
