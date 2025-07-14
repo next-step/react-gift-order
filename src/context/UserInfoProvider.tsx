@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
+import { createContext, useState, type ReactNode } from "react";
 
 type User = {
   email: string;
@@ -9,7 +9,7 @@ type UserInfoContextType = {
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
 };
 
-const UserInfoContext = createContext<UserInfoContextType | undefined>(
+export const UserInfoContext = createContext<UserInfoContextType | undefined>(
   undefined
 );
 
@@ -24,11 +24,3 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
     </UserInfoContext.Provider>
   );
 }
-
-export const useUserInfo = () => {
-  const context = useContext(UserInfoContext);
-  if (!context) {
-    throw new Error("provider 범위 안에서만 useUserInfo를 사용하세요.");
-  }
-  return context;
-};

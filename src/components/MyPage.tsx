@@ -1,4 +1,4 @@
-import { useUserInfo } from "@/context/UserInfoProvider";
+import { useUserInfo } from "@/hooks/useUserInfo";
 import { useNavigate } from "react-router-dom";
 import type { Theme } from "@emotion/react";
 import { useTheme } from "@emotion/react";
