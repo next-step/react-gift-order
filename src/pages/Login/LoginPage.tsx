@@ -1,4 +1,3 @@
-// src/pages/Login/LoginPage.tsx
 import React from 'react'
 import styled from '@emotion/styled'
 import logo from '@/resources/images/kakao_logo.svg'
@@ -14,6 +13,7 @@ const LoginPage: React.FC = () => {
 }
 
 export default LoginPage
+
 
 const Wrapper = styled.main`
   width: 100%;

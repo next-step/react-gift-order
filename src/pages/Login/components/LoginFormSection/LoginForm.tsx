@@ -7,6 +7,7 @@ import { AuthContext } from '@/context/AuthContext';
 export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PASSWORD_MIN_LENGTH = 8;
 
+
 export const LoginForm: React.FC = () => {
   const [searchParams] = useSearchParams();
   const redirect = searchParams.get('redirect');
@@ -17,16 +18,9 @@ export const LoginForm: React.FC = () => {
   const [emailError, setEmailError] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
 
+
   // 이메일 유효성 검사
-  useEffect(() => {
-    if (!email.trim()) {
-      setEmailError('이메일을 입력해주세요.');
-    } else if (!EMAIL_REGEX.test(email)) {
-      setEmailError('올바른 이메일 형식이 아닙니다.');
-    } else {
-      setEmailError(null);
-    }
-  }, [email]);
+
 
   // 비밀번호 유효성 검사
   useEffect(() => {
@@ -34,6 +28,7 @@ export const LoginForm: React.FC = () => {
       setPasswordError('비밀번호를 입력해주세요.');
     } else if (password.length < PASSWORD_MIN_LENGTH) {
       setPasswordError(`비밀번호는 최소 ${PASSWORD_MIN_LENGTH}자 이상이어야 합니다.`);
+
     } else {
       setPasswordError(null);
     }
@@ -55,6 +50,7 @@ export const LoginForm: React.FC = () => {
     // 리다이렉트
     const target = redirect ? decodeURIComponent(redirect) : ROUTE_PATH.HOME;
     navigate(target, { replace: true });
+
   };
 
   return (
@@ -71,4 +67,9 @@ export const LoginForm: React.FC = () => {
   );
 };
 
+
 export default LoginForm;
+
+
+
+
