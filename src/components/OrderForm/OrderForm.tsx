@@ -1,15 +1,14 @@
 import styled from '@emotion/styled';
 import Card from '@/components/OrderForm/Card';
 import { Sender } from '@/components/OrderForm/Sender';
-import { Recipinet } from '@components/OrderForm/Recipient';
+import { Recipient } from '@/components/OrderForm/Recipient';
 import { ProductInfo } from '@/components/OrderForm/ProductInfo';
-import { useNavigate, useSearchParams } from 'react-router-dom';
 import { OrderButton } from '@/components/OrderForm/OrderButton';
 import productData from '@/data/productData';
-import { useState } from 'react';
-import { useOrderValidation } from '@/hooks/useOrderValidation';
-import { MOCK_CARDFORM_LIST } from './mock';
+import { MOCK_CARDFORM_LIST } from '@/components/OrderForm/mock';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ROUTE_PATH } from '@/routes/Routes';
+import { useForm, FormProvider, useFieldArray, Controller } from 'react-hook-form';
 
 const Wrapper = styled.section(({ theme }) => ({
   width: '100%',
@@ -17,78 +16,139 @@ const Wrapper = styled.section(({ theme }) => ({
   backgroundColor: theme.semanticColors.background.default,
 }));
 
-const Margin = styled.div<{ height: string }>`
-  width: 100%;
-  height: ${({ height }) => height};
-  background-color: transparent;
-`;
+const Margin = styled.div<{ height: string }>(({ theme, height }) => ({
+  width: '100%',
+  height: height,
+  backgroundColor: theme.semanticColors.background.fill,
+}));
+
+// 폼 전체 값 타입
+interface RecipientItem {
+  name: string;
+  phone: string;
+  quantity: number;
+}
+export interface OrderFormValues {
+  message: string;
+  sender: string;
+  recipients: RecipientItem[];
+}
 
 const OrderForm = () => {
-  const defaultCard = MOCK_CARDFORM_LIST[0];
-  const [message, setMessage] = useState(defaultCard.defaultTextMessage || '');
-  const [senderValue, setSenderValue] = useState('');
-  const [recipientName, setRecipientName] = useState('');
-  const [recipientPhone, setRecipientPhone] = useState('');
-  const [quantity, setQuantity] = useState(1);
-
   const navigate = useNavigate();
-
-  const { errors, validate } = useOrderValidation({
-    message,
-    sender: senderValue,
-    recipientName,
-    recipientPhone,
-    quantity,
-  });
-
-  const handleOrder = (e: React.MouseEvent) => {
-    e.preventDefault();
-    const ok = validate();
-    if (ok) {
-      alert(
-        `주문이 완료되었습니다.\n` +
-          `상품명: ${productData.name}\n` +
-          `구매 수량: ${quantity}\n` +
-          `발신자 이름: ${senderValue}\n` +
-          `메세지: ${message}`
-      );
-      navigate(ROUTE_PATH.HOME);
-    }
-  };
   const [searchParams] = useSearchParams();
   const productId = Number(searchParams.get('productId'));
-
   const selectedProduct = productId === productData.id ? productData : null;
+  if (!selectedProduct) return <div>존재하지 않는 상품입니다.</div>;
 
-  if (!selectedProduct) {
-    return <div>존재하지 않는 상품입니다.</div>;
-  }
+  const methods = useForm<OrderFormValues>({
+    defaultValues: {
+      message: MOCK_CARDFORM_LIST[0].defaultTextMessage || '',
+      sender: '',
+      recipients: [{ name: '', phone: '', quantity: 1 }],
+    },
+    mode: 'onBlur',
+  });
 
-  const productPrice = productData?.price.sellingPrice || 0;
+  const {
+    handleSubmit,
+    control,
+    register,
+    getValues,
+    clearErrors,
+    formState: { errors },
+  } = methods;
 
-  const totalPrice = productPrice * quantity;
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'recipients',
+  });
+
+  const onSubmit = (data: OrderFormValues) => {
+    alert(
+      `주문 완료!\n` +
+        `상품명: ${selectedProduct.name}\n` +
+        `총 수량: ${data.recipients.reduce((s, r) => s + r.quantity, 0)}\n` +
+        data.recipients.map((r, i) => `[${i + 1}] ${r.name} (${r.phone}) x${r.quantity}\n`).join('')
+    );
+    navigate(ROUTE_PATH.HOME);
+  };
+
+  const totalPrice = selectedProduct.price.sellingPrice * getValues('recipients')[0].quantity;
 
   return (
-    <Wrapper>
-      <Card message={message} onMessageChange={setMessage} messageError={errors.message} />
-      <Margin height={'8px'} />
-      <Sender value={senderValue} onChange={setSenderValue} error={errors.sender} />
-      <Margin height={'8px'} />
-      <Recipinet
-        name={recipientName}
-        onChangeName={setRecipientName}
-        phone={recipientPhone}
-        onChangePhone={setRecipientPhone}
-        errorName={errors.recipientName}
-        errorPhone={errors.recipientPhone}
-        quantity={quantity}
-        onChangeQuantity={setQuantity}
-        errorQuantity={errors.quantity}
-      />
-      <Margin height={'8px'} />
-      <ProductInfo product={selectedProduct} />
-      <OrderButton onClick={handleOrder} totalPrice={totalPrice} />
-    </Wrapper>
+    <FormProvider {...methods}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Wrapper>
+          {/* 메시지 카드 */}
+          <Controller
+            name="message"
+            control={control}
+            rules={{ required: '메시지를 입력해주세요' }}
+            render={({ field }) => (
+              <Card
+                message={field.value}
+                onMessageChange={field.onChange}
+                messageError={errors.message?.message}
+              />
+            )}
+          />
+
+          <Margin height="8px" />
+
+          {/* 발신자 입력 */}
+          <Controller
+            name="sender"
+            control={control}
+            rules={{ required: '발신자 이름을 입력해주세요' }}
+            render={({ field }) => (
+              <Sender
+                value={field.value}
+                onChange={field.onChange}
+                error={errors.sender?.message}
+              />
+            )}
+          />
+
+          <Margin height="8px" />
+
+          {/* 받는 사람 리스트 */}
+          {fields.map((f, idx) => (
+            <div key={f.id}>
+              <Recipient
+                index={idx}
+                register={register}
+                getValues={getValues}
+                errors={errors.recipients?.[idx]}
+              />
+              <button type="button" onClick={() => remove(idx)} disabled={fields.length <= 1}>
+                삭제
+              </button>
+              <Margin height="8px" />
+            </div>
+          ))}
+
+          {/* 받는 사람 추가 */}
+          <button
+            type="button"
+            onClick={() => {
+              clearErrors('recipients');
+              append({ name: '', phone: '', quantity: 1 });
+            }}
+            disabled={fields.length >= 10}
+          >
+            받는 사람 추가
+          </button>
+          {fields.length >= 10 && <p>최대 10명까지 등록 가능합니다.</p>}
+
+          <Margin height="8px" />
+
+          <ProductInfo product={selectedProduct} />
+
+          <OrderButton type="submit" totalPrice={totalPrice} />
+        </Wrapper>
+      </form>
+    </FormProvider>
   );
 };
 

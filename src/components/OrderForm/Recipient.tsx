@@ -1,6 +1,7 @@
-import type { PhoneError } from '@/hooks/useOrderValidation';
 import { ErrorMessage } from '@components/common/ErrorMessage';
 import styled from '@emotion/styled';
+import type { UseFormRegister, UseFormGetValues, FieldError } from 'react-hook-form';
+import type { OrderFormValues } from '@/components/OrderForm/OrderForm';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -24,9 +25,7 @@ const Title = styled.p(({ theme }) => ({
 
 const InputBoxContainer = styled.div`
   display: flex;
-  -webkit-box-pack: start;
   justify-content: flex-start;
-  -webkit-box-align: center;
   align-items: center;
   gap: 12px;
   width: 100%;
@@ -69,76 +68,88 @@ const InputBox = styled.input<{ hasError?: boolean }>(({ theme, hasError }) => (
   },
 }));
 
-type RecipientProps = {
-  name: string;
-  onChangeName: (newName: string) => void;
-  phone: string;
-  onChangePhone: (newPhne: string) => void;
-  errorName?: boolean;
-  errorPhone?: PhoneError;
-  quantity: number;
-  onChangeQuantity: (newQty: number) => void;
-  errorQuantity?: boolean;
-};
+interface RecipientProps {
+  index: number;
+  register: UseFormRegister<OrderFormValues>;
+  getValues: UseFormGetValues<OrderFormValues>;
+  errors?: {
+    name?: FieldError;
+    phone?: FieldError;
+    quantity?: FieldError;
+  };
+}
 
-export const Recipinet = ({
-  name,
-  onChangeName,
-  phone,
-  onChangePhone,
-  errorName,
-  errorPhone,
-  quantity,
-  onChangeQuantity,
-  errorQuantity,
-}: RecipientProps) => {
+export const Recipient = ({ index, register, getValues, errors }: RecipientProps) => {
+  const nameError = errors?.name?.message;
+  const phoneError = errors?.phone?.message;
+  const qtyError = errors?.quantity?.message;
+
   return (
     <Wrapper>
       <Margin height="12px" />
-      <Title>받는 사람</Title>
+      <Title>받는 사람 {index + 1}</Title>
       <Margin height="12px" />
+
+      {/* 이름 */}
       <InputBoxContainer>
         <InputBoxTitle>이름</InputBoxTitle>
         <InputBoxStyle>
           <InputBox
-            type="text"
-            value={name}
-            onChange={(e) => onChangeName(e.target.value)}
-            hasError={errorName}
             placeholder="이름을 입력하세요."
+            hasError={!!nameError}
+            {...register(`recipients.${index}.name`, {
+              required: '이름을 입력해주세요',
+            })}
           />
-          {errorName && <ErrorMessage>이름을 입력해주세요.</ErrorMessage>}
+          {nameError && <ErrorMessage>{nameError}</ErrorMessage>}
         </InputBoxStyle>
       </InputBoxContainer>
+
       <Margin height="8px" />
+
+      {/* 전화번호 */}
       <InputBoxContainer>
         <InputBoxTitle>전화번호</InputBoxTitle>
         <InputBoxStyle>
           <InputBox
             type="tel"
-            value={phone}
-            onChange={(e) => onChangePhone(e.target.value)}
-            hasError={errorPhone !== null}
-            placeholder="전화번호를 입력하세요."
+            placeholder="01012341234"
+            hasError={!!phoneError}
+            {...register(`recipients.${index}.phone`, {
+              required: '전화번호를 입력해주세요',
+              pattern: {
+                value: /^010\d{8}$/,
+                message: '01012341234 형태로 입력하세요',
+              },
+              validate: (val: string) => {
+                const phones = getValues('recipients').map((r) => r.phone);
+                return phones.filter((p) => p === val).length === 1 || '중복된 번호가 있습니다';
+              },
+            })}
           />
-          {errorPhone === 'EMPTY' && <ErrorMessage>전화번호를 입력해주세요.</ErrorMessage>}
-          {errorPhone === 'FORMAT' && <ErrorMessage>올바른 전화번호 형식이 아닙니다.</ErrorMessage>}
+          {phoneError && <ErrorMessage>{phoneError}</ErrorMessage>}
         </InputBoxStyle>
       </InputBoxContainer>
+
       <Margin height="8px" />
+
+      {/* 수량 */}
       <InputBoxContainer>
         <InputBoxTitle>수량</InputBoxTitle>
         <InputBoxStyle>
           <InputBox
             type="number"
-            value={quantity}
-            onChange={(e) => onChangeQuantity(Number(e.target.value))}
-            hasError={errorQuantity}
             placeholder="수량을 입력하세요."
+            hasError={!!qtyError}
+            {...register(`recipients.${index}.quantity`, {
+              required: '수량을 입력해주세요',
+              min: { value: 1, message: '최소 1개 이상이어야 합니다' },
+            })}
           />
-          {errorQuantity && <ErrorMessage>구매 수량은 1개 이상이어야 합니다.</ErrorMessage>}
+          {qtyError && <ErrorMessage>{qtyError}</ErrorMessage>}
         </InputBoxStyle>
       </InputBoxContainer>
+
       <Margin height="24px" />
     </Wrapper>
   );
