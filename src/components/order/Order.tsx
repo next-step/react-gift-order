@@ -38,6 +38,7 @@ const Order: React.FC = () => {
   const GiftMessageRef = useRef<HTMLTextAreaElement>(null);
   const [messageError, setMessageError] = useState("");
   const [senderError, setSenderError] = useState("");
+  const [receiverError, setReceiverError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [receivers, setReceivers] = useState<FormData["order"]>([]);
   const navigate = useNavigate();
@@ -49,6 +50,7 @@ const Order: React.FC = () => {
   const handleSubmit = () => {
     const msg = GiftMessageRef.current?.value.trim() ?? "";
     const sender = SenderNameRef.current?.value.trim() ?? "";
+    const isReceiverExists = receivers.length > 0;
 
     let isValid = true;
 
@@ -65,6 +67,16 @@ const Order: React.FC = () => {
     } else {
       setMessageError("");
     }
+
+    if (!isReceiverExists) {
+      setReceiverError(
+        "받는 사람이 등록되지 않았습니다. 최소 1명을 선택해주세요."
+      );
+      isValid = false;
+    } else {
+      setReceiverError("");
+    }
+
     if (!isValid) return;
     alert(
       `주문 상품명: ${selectedGift?.name}\n` +
@@ -124,6 +136,7 @@ const Order: React.FC = () => {
       <div css={ReceiverSection}>
         <div css={ReceiverHeader}>
           <h2>받는 사람</h2>
+          {receiverError && <p css={ErrorMessageStyle}>{receiverError}</p>}
           <button css={AddButtonStyle} onClick={() => setIsModalOpen(true)}>
             {receivers.length === 0 ? "추가" : "수정"}
           </button>
