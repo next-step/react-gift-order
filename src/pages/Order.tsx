@@ -545,7 +545,6 @@ function Order() {
   const navigate = useNavigate();
   const [selectedId, setSelectedId] = useState(904); // 선택된 이미지 ID를 저장하는 state
   const [modalToggle, setModalToggle] = useState(false); // 모달의 상태를 나타내는 state
-  const [totalPrice, setTotalPrice] = useState(0);
 
   type Receiver = {
     name: string;
@@ -750,16 +749,25 @@ function Order() {
               <ReceiverInputPhoneNumber
                 placeholder="전화번호를 입력하세요"
                 {...register(`receivers.${index}.phone`, {
-                  required: true,
+                  required: '전화번호를 입력해 주세요.',
                   pattern: {
                     value: PHONE_NUM_REGEX,
                     message: '전화번호 형식이 맞지 않습니다.'
-                  }
+                  },
+                  validate: (value) => {
+                    const phones = watch('receivers').map((r) => r.phone);
+                    const occurrences = phones.filter((p) => p === value).length;
+                    if(occurrences > 1) {
+                      return '이미 등록된 전화번호입니다.';
+                    }
+                    
+                    return true;
+                  },
                 })}
       
               />
             </ReceiverInputPhoneNumberWrapper>
-            {errors.receivers?.[index]?.phone && <ReceiverInputErrorTxt>전화번호를 입력해 주세요.</ReceiverInputErrorTxt>}
+            {errors.receivers?.[index]?.phone?.message && (<ReceiverInputErrorTxt>{errors.receivers[index].phone?.message}</ReceiverInputErrorTxt>)}
       
             <ReceiverItemNumWrapper>
               <ReceiverItemNumInputLabel htmlFor={`receivers.${index}.count`}>수량</ReceiverItemNumInputLabel>
