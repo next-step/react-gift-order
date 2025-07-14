@@ -9,12 +9,13 @@ import GlobalStyle from '@styles/GlobalStyles';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user } = useAuth();
+  const { user, isInitialized } = useAuth();
+  if (!isInitialized) return null;
   return user ? children : <Navigate to="/login" replace />;
 };
 
 const Router = () => {
-  const { user } = useAuth();
+  const { user, isInitialized } = useAuth();
   return (
     <>
       <GlobalStyle />
@@ -24,7 +25,13 @@ const Router = () => {
             <Route path="/" element={<Home />} />
             <Route
               path="/login"
-              element={user ? <Navigate to="/my" replace /> : <Login />}
+              element={
+                !isInitialized ? null : user ? (
+                  <Navigate to="/my" replace />
+                ) : (
+                  <Login />
+                )
+              }
             />
             <Route
               path="/my"

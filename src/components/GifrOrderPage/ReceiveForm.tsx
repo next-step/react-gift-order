@@ -53,7 +53,7 @@ const ReceiveForm = ({ register, errors }: FormSectionProps) => {
       {errors.receiver && <ErrorText>{errors.receiver.message}</ErrorText>}
 
       <FieldRow>
-        <Label htmlFor="receiverPhone">전환번호</Label>
+        <Label htmlFor="receiverPhone">전화번호</Label>
         <Input
           id="receiverPhone"
           placeholder="전화번호를 입력하세요."

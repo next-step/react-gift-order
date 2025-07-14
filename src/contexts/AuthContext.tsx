@@ -14,16 +14,19 @@ interface AuthContextType {
   user: User | null;
   login: (loginInfo: LoginCredentials) => boolean;
   logout: () => void;
+  isInitialized: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
     if (savedUser) setUser(JSON.parse(savedUser));
+    setIsInitialized(true);
   }, []);
 
   const login = ({ email, password }: LoginCredentials): boolean => {
@@ -46,7 +49,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, isInitialized }}>
       {children}
     </AuthContext.Provider>
   );
