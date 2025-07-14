@@ -34,7 +34,14 @@ const Router = () => {
                 </PrivateRoute>
               }
             />
-            <Route path="/order/:id" element={<GiftOrderPage />} />
+            <Route
+              path="/order/:id"
+              element={
+                <PrivateRoute>
+                  <GiftOrderPage />
+                </PrivateRoute>
+              }
+            />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
