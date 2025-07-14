@@ -15,7 +15,7 @@ type ReceiverContextType = {
 
 const ReceiverContext= createContext<ReceiverContextType | undefined>(undefined);
 
-export const useReceiverContext = () => {
+export const useReceiver = () => {
     const context = useContext(ReceiverContext);
     if(!context) throw new Error ('useReceiverContext 는 ReceiverProiver 에서만 사용되어야 합니다');
     return context;

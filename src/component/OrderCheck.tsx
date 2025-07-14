@@ -37,15 +37,10 @@ const OrderCheck = () => {
 
   const handleOrder = () => {
     senderNameInput.validate();
-    recipientNameInput.validate();
-    recipientPhoneInput.validate();
-    quantityInput.validate();
 
     const isValid =
-      !senderNameInput.error &&
-      !recipientNameInput.error &&
-      !recipientPhoneInput.error &&
-      !quantityInput.error;
+      !senderNameInput.error
+
 
     if (isValid) {
       alert(`주문이 완료되었습니다. 
