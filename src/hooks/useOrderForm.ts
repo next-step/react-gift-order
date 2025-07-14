@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 function useOrderForm() {
-    const [selectedId, setSelectedId] = useState(904);
+    // const [selectedId, setSelectedId] = useState(904);
     const [senderName, setSenderName] = useState('');
     const [receiverName, setReceiverName] = useState('');
     const [receiverPhoneNum, setReceiverPhoneNum] = useState('');
@@ -14,7 +14,7 @@ function useOrderForm() {
     const [itemCountError, setItemCountError] = useState(false);
 
     const handleChangeSelectedId = (id:number) => {
-        setSelectedId(id);
+        // setSelectedId(id);
     }
 
     const handleChangeSenderName = (sn:string) => {
@@ -33,7 +33,7 @@ function useOrderForm() {
         setItemCount(count);
     }
 
-    return {selectedId, senderName, receiverName, receiverPhoneNum, itemCount, handleChangeSelectedId, handleChangeSenderName, handleChangeReceiverName, handleChangeReceiverPhoneNum, handleChangeItemCount, selectedIdTxtError, setSelectedIdTxtError, senderNameError, setSenderNameError, receiverNameError, setReceiverNameError, receiverPhoneNumError, setReceiverPhoneNumError, itemCountError, setItemCountError}
+    return { senderName, receiverName, receiverPhoneNum, itemCount, handleChangeSelectedId, handleChangeSenderName, handleChangeReceiverName, handleChangeReceiverPhoneNum, handleChangeItemCount, selectedIdTxtError, setSelectedIdTxtError, senderNameError, setSenderNameError, receiverNameError, setReceiverNameError, receiverPhoneNumError, setReceiverPhoneNumError, itemCountError, setItemCountError}
 }
 
 export default useOrderForm;

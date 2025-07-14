@@ -518,126 +518,9 @@ const ModalConfirmBtn = styled.button`
   cursor: pointer;
 `
 
-// 모달 리시버 박스 분리
-interface ModalReceiverInputBoxWrapperProps {
-  manCount: number;
-  handleManDel: () => void;
-  receiverName: string;
-  receiverNameError: boolean;
-  receiverPhoneNum: string;
-  receiverPhoneNumError: boolean;
-  itemCount: number;
-  itemCountError: boolean;
-  handleChangeReceiverName: (value: string) => void;
-  handleChangeReceiverPhoneNum: (value: string) => void;
-  handleChangeItemCount: (value: number) => void;
-}
-
-function ModalReceiverInputBoxWrapper({
-  manCount,
-  handleManDel,
-  receiverName,
-  receiverNameError,
-  receiverPhoneNum,
-  receiverPhoneNumError,
-  itemCount,
-  itemCountError,
-  handleChangeReceiverName,
-  handleChangeReceiverPhoneNum,
-  handleChangeItemCount,
-}: ModalReceiverInputBoxWrapperProps) {
-  if (manCount < 1) return null;
-
-  return (
-    <ModalReceiverInputBox>
-      <ModalReceiverInputTitleBtnWrapper>
-        <ModalReceiverInputTitle>받는 사람 {manCount}</ModalReceiverInputTitle>
-        <ModalReceiverInputDelBtn onClick={handleManDel}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-            fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"
-            strokeLinejoin="round" className="lucide lucide-x" aria-hidden="true">
-            <path d="M18 6 6 18"></path>
-            <path d="m6 6 12 12"></path>
-          </svg>
-        </ModalReceiverInputDelBtn>
-      </ModalReceiverInputTitleBtnWrapper>
-
-      <ReceiverInputNameWrapper>
-        <ReceiverInputNameLabel htmlFor="ReceiverInputName">이름</ReceiverInputNameLabel>
-        <ReceiverInputName
-          placeholder="이름을 입력하세요."
-          value={receiverName}
-          onChange={(e) => handleChangeReceiverName(e.target.value)}
-        />
-      </ReceiverInputNameWrapper>
-      {receiverNameError && <ReceiverInputErrorTxt>이름을 입력해 주세요.</ReceiverInputErrorTxt>}
-
-      <ReceiverInputPhoneNumberWrapper>
-        <ReceiverInputPhoneNumberLabel htmlFor="ReceiverInputPhoneNumber">전화번호</ReceiverInputPhoneNumberLabel>
-        <ReceiverInputPhoneNumber
-          placeholder="전화번호를 입력하세요"
-          value={receiverPhoneNum}
-          onChange={(e) => handleChangeReceiverPhoneNum(e.target.value)}
-        />
-      </ReceiverInputPhoneNumberWrapper>
-      {receiverPhoneNumError && <ReceiverInputErrorTxt>전화번호를 입력해 주세요.</ReceiverInputErrorTxt>}
-
-      <ReceiverItemNumWrapper>
-        <ReceiverItemNumInputLabel htmlFor="ReceiverItemNum">수량</ReceiverItemNumInputLabel>
-        <ReceiverItemNumInput
-          type='number'
-          min='0'
-          step='1'
-          placeholder='수량'
-          value={itemCount}
-          onChange={(e) => handleChangeItemCount(parseInt(e.target.value))}
-        />
-      </ReceiverItemNumWrapper>
-      {itemCountError && <ReceiverInputErrorTxt>구매 수량은 1개 이상이어야 합니다.</ReceiverInputErrorTxt>}
-    </ModalReceiverInputBox>
-  );
-}
-
-
 function Order() {
-  // type Receiver = {
-  //   name: string;
-  //   phone: string;
-  //   count: number;
-  // };
-
-  // type FormValues = {
-  //   senderName: string;
-  //   message: string;
-  //   receivers: Receiver[];
-  // };
-
-  // // register는 각 input 요소와 react hook form을 연결하는 함수
-  // // control은 배열 필드나 커스텀 컴포넌트에 사용 useFieldArray에 사용
-  // // handleSubmit submit 버튼을 눌렀을때 실행되는 함수
-  // // formState.errors 각 필드의 에러 메시지 확인 가능
-  // // watch 현재 입력값 실시간 확인 가능한 함수
-  // const {
-  //   register,
-  //   control,
-  //   handleSubmit,
-  //   formState: { errors },
-  //   watch,
-  // } = useForm<FormValues>({
-  //   defaultValues: {
-  //     senderName: '',
-  //     message: '',
-  //     receivers: [],
-  //   },
-  // });
-
-  // const { fields, append, remove } = useFieldArray({
-  //   control,
-  //   name: 'receivers',
-  // });
-
+  // 암덩어리들
   const {
-    selectedId,
     senderName,
     receiverName,
     receiverPhoneNum,
@@ -647,7 +530,7 @@ function Order() {
     receiverNameError,
     receiverPhoneNumError,
     itemCountError,
-    handleChangeSelectedId,
+    
     handleChangeSenderName,
     handleChangeReceiverName,
     handleChangeReceiverPhoneNum,
@@ -657,11 +540,52 @@ function Order() {
     setReceiverNameError,
     setReceiverPhoneNumError,
     setItemCountError
-  } = useOrderForm(); 
+  } = useOrderForm();
 
-  const [selectedIdTxt, setSelectedIdTxt] = useState(orderCard.find(c => c.id === selectedId)?.defaultTextMessage); // 선택된 id의 텍스트 저장하는 state
-  const [modalToggle, setModalToggle] = useState(false); // 모달 열고닫는 state를 저장함
-  const [manCount, setManCount] = useState(0);
+  const navigate = useNavigate();
+  const [selectedId, setSelectedId] = useState(904); // 선택된 이미지 ID를 저장하는 state
+  const [modalToggle, setModalToggle] = useState(false); // 모달의 상태를 나타내는 state
+  const [totalPrice, setTotalPrice] = useState(0);
+
+  type Receiver = {
+    name: string;
+    phone: string;
+    count: number;
+  };
+
+  type OrderFormValues = {
+    senderName: string;
+    message: string;
+    receivers: Receiver[];
+  };
+
+  // register는 필드를 useForm에 등록할때 사용
+  // control은 useFieldArray 랑 연결할때 
+  // handleSubmit은 폼 제출 처리할때(최종 전송할때 감싸서 사용
+  // erros는 formState안에 있는 객체로 각 필드들의 에러 상태를 가지고있음
+  // watch는 특정 필드의 현재 값을 구독해서 상태를 실시간으로 확인 가능
+  // setValue 특정 필드의 값을 설정할때 사용
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+    watch,
+    setValue,
+  } = useForm<OrderFormValues>({
+    defaultValues: {
+      senderName: '',
+      message: '',
+      receivers: [],
+    },
+  });
+
+  // useForm에서 가져온 control객체를 넘겨야 리액트 훅 폼과 연결됨
+  // useForm의 defaultValues에 선언한 필드 이름과 맞춰줌
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'receivers'
+  });
 
   // 이전 페이지에서 상품정보 받아오는 코드
   const [searchParams] = useSearchParams();
@@ -671,115 +595,51 @@ function Order() {
   const name = searchParams.get('name');
   const price = parseInt(String(searchParams.get('price')));
 
-  const navigate = useNavigate();
-
-  // 이벤트 핸들러
-  function onCardClick(id: number) {
-    handleChangeSelectedId(id);
-    setSelectedIdTxt(String(orderCard.find(c => c.id === selectedId)?.defaultTextMessage));
-  }
-
-  function handleConfirm() {
-    let blocking = 0;
-
-    if (selectedIdTxt === '') {
-      blocking++;
-      setSelectedIdTxtError(true);
-    } else {
-      setSelectedIdTxtError(false);
-    }
-    if (senderName === '') {
-      blocking++;
-      setSenderNameError(true);
-    } else {
-      setSenderNameError(false);
-    }
-    if (receiverName === '') {
-      blocking++;
-      setReceiverNameError(true)
-    } else {
-      setReceiverNameError(false);
-    }
-    if (!PHONE_NUM_REGEX.test(receiverPhoneNum)) {
-      blocking++;
-      setReceiverPhoneNumError(true);
-    } else {
-      setReceiverPhoneNumError(false);
-    }
-    if (itemCount < 1) {
-      blocking++;
-      setItemCountError(true);
-    } else {
-      setItemCountError(false);
-    }
-
-    if (blocking > 0) {
-      return 0;
+  // 슬라이드 카드에서 카드 선택하면 실행되는 이벤트 핸들러
+  function handleCardClick(id: number) {
+    setSelectedId(id);
+    const selectedCard = orderCard.find((c) => c.id === id);
+    if(selectedCard) {
+      setValue('message',selectedCard?.defaultTextMessage);
     }
   }
 
-  function onClickHandler() {
-    let blocking = 0;
+  // 모달 오픈 핸들러
+  function handleModalOpen() {
+    setModalToggle(true);
+  }
 
-    if (selectedIdTxt === '') {
-      blocking++;
-      setSelectedIdTxtError(true);
-    } else {
-      setSelectedIdTxtError(false);
-    }
-    if (senderName === '') {
-      blocking++;
-      setSenderNameError(true);
-    } else {
-      setSenderNameError(false);
-    }
-    if (receiverName === '') {
-      blocking++;
-      setReceiverNameError(true)
-    } else {
-      setReceiverNameError(false);
-    }
-    if (!PHONE_NUM_REGEX.test(receiverPhoneNum)) {
-      blocking++;
-      setReceiverPhoneNumError(true);
-    } else {
-      setReceiverPhoneNumError(false);
-    }
-    if (itemCount < 1) {
-      blocking++;
-      setItemCountError(true);
-    } else {
-      setItemCountError(false);
-    }
-
-    if (blocking > 0) {
-      return 0;
-    }
-
+  // 최종 주문 핸들러
+  function handleOrderClick() {
     alert(`주문이 완료되었습니다.\n상품명: ${name}\n구매 수량: ${itemCount}\n발신자 이름: ${senderName}\n메시지: ${orderCard.find(c => c.id === selectedId)?.defaultTextMessage}
       `);
     navigate('/');
   }
 
-  function handleModalOpen() {
-    setModalToggle(true);
+  // 모달안에 아이템들 추가하는 핸들러
+  function handleReceiverAdd() {
+    if (fields.length < 10) {
+      append({ name: '', phone: '', count: 1});
+    }
   }
 
-  function handleModalClose() {
+  // 모달안에 아이템들 지우는 핸들러
+  function handleReceiverDel(index: number) {
+    if (fields.length > 0) {
+      remove(index);
+    }
+  }
+
+   // 모달 닫는 핸들러
+   function handleModalClose() {
+    
     setModalToggle(false);
   }
 
-  function handleManAdd() {
-    if (manCount < 10) {
-      setManCount(prev => prev + 1);
-    }
-
-  }
-
-  function handleManDel() {
-    if (manCount > 0) {
-      setManCount(prev => prev - 1);
-    }
+  // 모달안에 컨펌하는 핸들러
+  function handleConfirm() {
+  
+    setModalToggle(false);
   }
 
   return (
@@ -792,18 +652,19 @@ function Order() {
             key={item.id}
             src={item.thumbUrl}
             alt={item.defaultTextMessage}
-            onClick={() => onCardClick(item.id)}
+            onClick={() => handleCardClick(item.id)}
             isActive={selectedId === item.id}
           ></SlidingCard>
         ))}
       </SlidingCardSelectorWrapper>
-
       {/* 카드뷰  */}
       <CardViewWrapper>
         <CardViewImg src={orderCard.find(c => c.id === selectedId)?.imageUrl} alt={orderCard.find(c => c.id === selectedId)?.defaultTextMessage}></CardViewImg>
-        <CardViewTxt value={selectedIdTxt} onChange={(e) => { setSelectedIdTxt(e.target.value) }}>
+        <CardViewTxt
+        {...register('message',{ required: true })}
+         >
         </CardViewTxt>
-        {selectedIdTxtError && <CardViewTxtErrorTxt>메시지를 입력 해주세요.</CardViewTxtErrorTxt>}
+        {errors.message && <CardViewTxtErrorTxt>메시지를 입력 해주세요.</CardViewTxtErrorTxt>}
 
       </CardViewWrapper>
 
@@ -812,10 +673,9 @@ function Order() {
         <SenderInputTitle>보내는 사람</SenderInputTitle>
         <SenderInput
           placeholder="이름을 입력하세요."
-          onChange={((e) => handleChangeSenderName(e.target.value))}
-          value={senderName}
+          {...register('senderName', { required: true })}
         ></SenderInput>
-        {senderNameError ? <SenderInputErrorTxt>이름을 입력해주세요.</SenderInputErrorTxt> : <SenderInputInfoTxt>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</SenderInputInfoTxt>}
+        {errors.senderName ? <SenderInputErrorTxt>이름을 입력해주세요.</SenderInputErrorTxt> : <SenderInputInfoTxt>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</SenderInputInfoTxt>}
 
       </SenderInputWrapper>
 
@@ -827,7 +687,7 @@ function Order() {
         </ReceiverInputTitleBtnWrapper>
 
         <ReceiverInputBox>
-          {true && <ReceiverInputBoxInfo>받는 사람이 없습니다<br></br>받는 사람을 추가해주세요.</ReceiverInputBoxInfo>}
+          {fields.length === 0 && <ReceiverInputBoxInfo>받는 사람이 없습니다<br></br>받는 사람을 추가해주세요.</ReceiverInputBoxInfo>}
         </ReceiverInputBox>
       </ReceiverInputWrapper>
 
@@ -846,12 +706,12 @@ function Order() {
 
       {/* 주문 버튼 */}
       <OrderBtnWrapper>
-        <OrderButton onClick={() => onClickHandler()}>
+        <OrderButton onClick={handleSubmit(handleOrderClick)}>
           {price * itemCount}원 주문하기
         </OrderButton>
       </OrderBtnWrapper>
 
-      {/* 모달 */}
+      {/* --------------모달-------------- */}
       {modalToggle && <ModalOverlay>
         <ModalContent>
           <ModalInfoWrapper>
@@ -859,154 +719,69 @@ function Order() {
             <ModalInfoTxt>* 최대 10명까지 추가 할 수 있어요.</ModalInfoTxt>
             <ModalInfoTxt>* 받는 사람의 전화번호를 중복으로 입력할 수 없어요.</ModalInfoTxt>
           </ModalInfoWrapper>
-          <ModalInfoAddBtn onClick={handleManAdd} disabled={manCount >= 10}>추가하기</ModalInfoAddBtn>
+          <ModalInfoAddBtn onClick={handleReceiverAdd} disabled={fields.length >= 10}>추가하기</ModalInfoAddBtn>
 
           {/* 모달 리시버 박스들 */}
-          {manCount >= 1 && <ModalReceiverInputBoxWrapper
-            manCount={manCount}
-            handleManDel={handleManDel}
-            receiverName={receiverName}
-            receiverNameError={receiverNameError}
-            receiverPhoneNum={receiverPhoneNum}
-            receiverPhoneNumError={receiverPhoneNumError}
-            itemCount={itemCount}
-            itemCountError={itemCountError}
-            handleChangeReceiverName={handleChangeReceiverName}
-            handleChangeReceiverPhoneNum={handleChangeReceiverPhoneNum}
-            handleChangeItemCount={handleChangeItemCount}
-          />}
-
-          {manCount >= 2 && <ModalReceiverInputBoxWrapper
-            manCount={manCount}
-            handleManDel={handleManDel}
-            receiverName={receiverName}
-            receiverNameError={receiverNameError}
-            receiverPhoneNum={receiverPhoneNum}
-            receiverPhoneNumError={receiverPhoneNumError}
-            itemCount={itemCount}
-            itemCountError={itemCountError}
-            handleChangeReceiverName={handleChangeReceiverName}
-            handleChangeReceiverPhoneNum={handleChangeReceiverPhoneNum}
-            handleChangeItemCount={handleChangeItemCount}
-          />}
-
-          {manCount >= 3 && <ModalReceiverInputBoxWrapper
-            manCount={manCount}
-            handleManDel={handleManDel}
-            receiverName={receiverName}
-            receiverNameError={receiverNameError}
-            receiverPhoneNum={receiverPhoneNum}
-            receiverPhoneNumError={receiverPhoneNumError}
-            itemCount={itemCount}
-            itemCountError={itemCountError}
-            handleChangeReceiverName={handleChangeReceiverName}
-            handleChangeReceiverPhoneNum={handleChangeReceiverPhoneNum}
-            handleChangeItemCount={handleChangeItemCount}
-          />}
-
-          {manCount >= 4 && <ModalReceiverInputBoxWrapper
-            manCount={manCount}
-            handleManDel={handleManDel}
-            receiverName={receiverName}
-            receiverNameError={receiverNameError}
-            receiverPhoneNum={receiverPhoneNum}
-            receiverPhoneNumError={receiverPhoneNumError}
-            itemCount={itemCount}
-            itemCountError={itemCountError}
-            handleChangeReceiverName={handleChangeReceiverName}
-            handleChangeReceiverPhoneNum={handleChangeReceiverPhoneNum}
-            handleChangeItemCount={handleChangeItemCount}
-          />}
-
-          {manCount >= 5 && <ModalReceiverInputBoxWrapper
-            manCount={manCount}
-            handleManDel={handleManDel}
-            receiverName={receiverName}
-            receiverNameError={receiverNameError}
-            receiverPhoneNum={receiverPhoneNum}
-            receiverPhoneNumError={receiverPhoneNumError}
-            itemCount={itemCount}
-            itemCountError={itemCountError}
-            handleChangeReceiverName={handleChangeReceiverName}
-            handleChangeReceiverPhoneNum={handleChangeReceiverPhoneNum}
-            handleChangeItemCount={handleChangeItemCount}
-          />}
-
-          {manCount >= 6 && <ModalReceiverInputBoxWrapper
-            manCount={manCount}
-            handleManDel={handleManDel}
-            receiverName={receiverName}
-            receiverNameError={receiverNameError}
-            receiverPhoneNum={receiverPhoneNum}
-            receiverPhoneNumError={receiverPhoneNumError}
-            itemCount={itemCount}
-            itemCountError={itemCountError}
-            handleChangeReceiverName={handleChangeReceiverName}
-            handleChangeReceiverPhoneNum={handleChangeReceiverPhoneNum}
-            handleChangeItemCount={handleChangeItemCount}
-          />}
-
-          {manCount >= 7 && <ModalReceiverInputBoxWrapper
-            manCount={manCount}
-            handleManDel={handleManDel}
-            receiverName={receiverName}
-            receiverNameError={receiverNameError}
-            receiverPhoneNum={receiverPhoneNum}
-            receiverPhoneNumError={receiverPhoneNumError}
-            itemCount={itemCount}
-            itemCountError={itemCountError}
-            handleChangeReceiverName={handleChangeReceiverName}
-            handleChangeReceiverPhoneNum={handleChangeReceiverPhoneNum}
-            handleChangeItemCount={handleChangeItemCount}
-          />}
-
-          {manCount >= 8 && <ModalReceiverInputBoxWrapper
-            manCount={manCount}
-            handleManDel={handleManDel}
-            receiverName={receiverName}
-            receiverNameError={receiverNameError}
-            receiverPhoneNum={receiverPhoneNum}
-            receiverPhoneNumError={receiverPhoneNumError}
-            itemCount={itemCount}
-            itemCountError={itemCountError}
-            handleChangeReceiverName={handleChangeReceiverName}
-            handleChangeReceiverPhoneNum={handleChangeReceiverPhoneNum}
-            handleChangeItemCount={handleChangeItemCount}
-          />}
-
-          {manCount >= 9 && <ModalReceiverInputBoxWrapper
-            manCount={manCount}
-            handleManDel={handleManDel}
-            receiverName={receiverName}
-            receiverNameError={receiverNameError}
-            receiverPhoneNum={receiverPhoneNum}
-            receiverPhoneNumError={receiverPhoneNumError}
-            itemCount={itemCount}
-            itemCountError={itemCountError}
-            handleChangeReceiverName={handleChangeReceiverName}
-            handleChangeReceiverPhoneNum={handleChangeReceiverPhoneNum}
-            handleChangeItemCount={handleChangeItemCount}
-          />}
-
-          {manCount >= 10 && <ModalReceiverInputBoxWrapper
-            manCount={manCount}
-            handleManDel={handleManDel}
-            receiverName={receiverName}
-            receiverNameError={receiverNameError}
-            receiverPhoneNum={receiverPhoneNum}
-            receiverPhoneNumError={receiverPhoneNumError}
-            itemCount={itemCount}
-            itemCountError={itemCountError}
-            handleChangeReceiverName={handleChangeReceiverName}
-            handleChangeReceiverPhoneNum={handleChangeReceiverPhoneNum}
-            handleChangeItemCount={handleChangeItemCount}
-          />}
-
+          {fields.map((field, index) => (
+            <ModalReceiverInputBox key={field.id}>
+            <ModalReceiverInputTitleBtnWrapper>
+              <ModalReceiverInputTitle>받는 사람 {index + 1}</ModalReceiverInputTitle>
+              <ModalReceiverInputDelBtn onClick={() => handleReceiverDel(index)}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"
+                  strokeLinejoin="round" className="lucide lucide-x" aria-hidden="true">
+                  <path d="M18 6 6 18"></path>
+                  <path d="m6 6 12 12"></path>
+                </svg>
+              </ModalReceiverInputDelBtn>
+            </ModalReceiverInputTitleBtnWrapper>
+      
+            <ReceiverInputNameWrapper>
+              <ReceiverInputNameLabel htmlFor={`receivers.${index}.name`}>이름</ReceiverInputNameLabel>
+              <ReceiverInputName
+                placeholder="이름을 입력하세요."
+                {...register(`receivers.${index}.name`, { required: true})}
+              />
+            </ReceiverInputNameWrapper>
+            {errors.receivers?.[index]?.name && <ReceiverInputErrorTxt>이름을 입력해 주세요.</ReceiverInputErrorTxt>}
+      
+            <ReceiverInputPhoneNumberWrapper>
+              <ReceiverInputPhoneNumberLabel htmlFor={`receivers.${index}.phone`}>전화번호</ReceiverInputPhoneNumberLabel>
+              <ReceiverInputPhoneNumber
+                placeholder="전화번호를 입력하세요"
+                {...register(`receivers.${index}.phone`, {
+                  required: true,
+                  pattern: {
+                    value: PHONE_NUM_REGEX,
+                    message: '전화번호 형식이 맞지 않습니다.'
+                  }
+                })}
+      
+              />
+            </ReceiverInputPhoneNumberWrapper>
+            {errors.receivers?.[index]?.phone && <ReceiverInputErrorTxt>전화번호를 입력해 주세요.</ReceiverInputErrorTxt>}
+      
+            <ReceiverItemNumWrapper>
+              <ReceiverItemNumInputLabel htmlFor={`receivers.${index}.count`}>수량</ReceiverItemNumInputLabel>
+              <ReceiverItemNumInput
+                type='number'
+                min='0'
+                step='1'
+                {...register(`receivers.${index}.count`, {
+                  required: true,
+                  min: 1,
+                })}
+            
+              />
+            </ReceiverItemNumWrapper>
+            {errors.receivers?.[index]?.count && <ReceiverInputErrorTxt>구매 수량은 1개 이상이어야 합니다.</ReceiverInputErrorTxt>}
+          </ModalReceiverInputBox>
+          ))}
 
           {/* 모달 취소하기 컨펌하기 버튼 */}
           <ModalUnderBtnWrapper>
             <ModalExitBtn onClick={handleModalClose}>취소</ModalExitBtn>
-            <ModalConfirmBtn onClick={handleConfirm}>{manCount}명 완료</ModalConfirmBtn>
+            <ModalConfirmBtn onClick={handleSubmit(handleConfirm)}>{fields.length}명 완료</ModalConfirmBtn>
           </ModalUnderBtnWrapper>
         </ModalContent>
       </ModalOverlay>}
