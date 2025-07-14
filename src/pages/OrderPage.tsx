@@ -123,7 +123,7 @@ const OrderButtonBar = styled.div`
   z-index: 100;
   padding: 0 0 12px 0;
 `;
-const OrderButton = styled.div<{ disabled?: boolean }>`
+const OrderButton = styled.button<{ disabled?: boolean }>`
   background: ${(props) => (props.disabled ? '#f3f4f6' : '#fee500')};
   color: ${(props) => (props.disabled ? '#9ca3af' : '#222')};
   font-weight: 700;
@@ -134,9 +134,16 @@ const OrderButton = styled.div<{ disabled?: boolean }>`
   box-shadow: 0 -2px 8px #0001;
   cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   transition: all 0.2s ease;
+  border: none;
+  width: 100%;
 
   &:hover:not([disabled]) {
     background: ${(props) => (props.disabled ? '#f3f4f6' : '#fde047')};
+  }
+
+  &:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
   }
 `;
 
