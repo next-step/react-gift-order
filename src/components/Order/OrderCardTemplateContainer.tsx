@@ -1,14 +1,14 @@
 import { ORDER_TEMPLATE_DATA, type OrderTemplate } from '@assets/orderTemplateData';
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
-import type { FieldErrors, UseFormRegister, UseFormSetValue } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import type { OrderFormValue } from '@/types/OrderFormValues';
 
-interface OrderCardTemplateContainerProps {
-  register: UseFormRegister<OrderFormValue>;
-  errors: FieldErrors<OrderFormValue>;
-  setValue: UseFormSetValue<OrderFormValue>;
-}
+// interface OrderCardTemplateContainerProps {
+//   register: UseFormRegister<OrderFormValue>;
+//   errors: FieldErrors<OrderFormValue>;
+//   setValue: UseFormSetValue<OrderFormValue>;
+// }
 
 const StyledOrderCardSideScrollConntainer = styled.div`
   display: flex;
@@ -67,13 +67,14 @@ const StyledOrderTemplateContainer = styled.div`
   width: 100%;
 `;
 
-const OrderCardTemplateContainer = ({
-  register,
-  errors,
-  setValue,
-}: OrderCardTemplateContainerProps) => {
+const OrderCardTemplateContainer = () => {
   // 목 데이터 템플릿에서 선택된 템플릿을 저장하기 위한 state 값
   const [selectedTemplate, setSelectedTemplate] = useState<OrderTemplate>(ORDER_TEMPLATE_DATA[0]);
+  const {
+    register,
+    formState: { errors },
+    setValue,
+  } = useFormContext<OrderFormValue>();
 
   //템플릿을 선택했을때 기본 messgae를 만들어 리렌더링하기 위한 useEffect()
   useEffect(() => {
@@ -104,7 +105,7 @@ const OrderCardTemplateContainer = ({
         </div>
         <div>
           <textarea
-            {...register('msg', { required: '메시지는 필수입니다.' })}
+            {...register('msg')}
             className={`body2Regular ${errors.msg ? 'border-red' : ''}`}
             placeholder='메시지를 입력해주세요'
           />

@@ -70,7 +70,6 @@ const StyledRecipientsModalContianerRowItem = styled.div`
 interface RecipientsModalContainerProps {
   control: Control<OrderFormValue>; // OrderFormValue 전체에 대한 control 타입
   errors: FieldErrors<OrderFormValue>; // OrderFormValue 전체에 대한 errors 타입
-  // watch('recipients') 값을 직접 받는 경우
   currentRecipients: Recipient[];
 }
 
