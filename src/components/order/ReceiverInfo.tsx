@@ -1,10 +1,18 @@
 import styled from '@emotion/styled';
-import type { ChangeEvent } from 'react';
+import { useState } from 'react';
+import ReceiverListModal from './receiver/ReceiverListModal';
+import type { Receiver } from '@/types/order';
 
 const Content = styled.section`
-  padding: 0 16px 16px;
+  padding: 0 16px 24px;
   background: #fff;
   margin-bottom: 8px;
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const Title = styled.h3`
@@ -13,118 +21,106 @@ const Title = styled.h3`
   padding: 12px 0;
 `;
 
-const Field = styled.div`
-  margin-bottom: 8px;
-`;
-
-const LabelRow = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 6px;
-`;
-
-const Label = styled.label`
-  width: 80px;
-  ${({ theme }) => theme.typography.body1Regular};
-`;
-
-const Input = styled.input<{ error?: boolean }>`
-  width: 100%;
-  height: 44px;
-  padding: 8px 12px;
-  box-sizing: border-box;
-  ${({ theme }) => theme.typography.body1Regular};
-  border: 1px solid
-    ${({ theme, error }) => (error ? theme.colors.red[600] : theme.colors.gray[400])};
+const AddButton = styled.button`
+  padding: 8px 16px;
+  margin: 12px 0;
+  border: none;
   border-radius: 8px;
-
-  &::placeholder {
-    color: ${({ theme }) => theme.colors.gray[600]};
-  }
-  &:focus {
-    outline: none;
-    border-color: ${({ theme }) => theme.colors.gray[700]};
-  }
+  background: ${({ theme }) => theme.colors.gray[300]};
+  ${({ theme }) => theme.typography.label1Regular};
+  cursor: pointer;
 `;
 
-const Error = styled.p`
-  ${({ theme }) => theme.typography.label2Regular};
-  color: ${({ theme }) => theme.colors.red[600]};
-  margin-top: 4px;
-  margin-left: 80px;
+const TableWrapper = styled.div`
+  border: 1px solid rgb(238, 239, 241);
+  border-radius: 8px;
+  overflow: hidden;
 `;
 
-interface Value {
-  name: string;
-  phone: string;
-  qty: number;
+const Table = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+`;
+
+const Th = styled.th`
+  text-align: left;
+  padding: 12px;
+  background: ${({ theme }) => theme.colors.gray[100]};
+  ${({ theme }) => theme.typography.label1Bold};
+  width: 33.33%;
+`;
+
+const Td = styled.td`
+  padding: 12px;
+  ${({ theme }) => theme.typography.label1Regular};
+  border-top: 1px solid ${({ theme }) => theme.colors.gray[300]};
+`;
+
+const EmptyBox = styled.div`
+  padding: 24px;
+  border: 1px solid rgb(238, 239, 241);
+  border-radius: 8px;
+  text-align: center;
+  color: ${({ theme }) => theme.colors.gray[600]};
+  ${({ theme }) => theme.typography.body2Regular};
+`;
+
+interface ReceiverInfoProps {
+  receivers: Receiver[];
+  setReceivers: (data: Receiver[]) => void;
 }
 
-interface FieldErrors {
-  name?: string;
-  phone?: string;
-  qty?: string;
-}
-
-interface Props {
-  value: Value;
-  onChange: (v: Value) => void;
-  errors?: FieldErrors;
-}
-
-export default function ReceiverInfo({ value, onChange, errors = {} }: Props) {
-  const update = (field: keyof Value) => (e: ChangeEvent<HTMLInputElement>) =>
-    onChange({ ...value, [field]: field === 'qty' ? Number(e.target.value) : e.target.value });
+export default function ReceiverInfo({ receivers, setReceivers }: ReceiverInfoProps) {
+  const [open, setOpen] = useState(false);
 
   return (
-    <Content>
-      <Title>받는 사람</Title>
+    <>
+      <Content>
+        <Wrapper>
+          <Title>받는 사람</Title>
+          <AddButton type="button" onClick={() => setOpen(true)}>
+            {receivers.length > 0 ? '수정' : '추가'}
+          </AddButton>
+        </Wrapper>
 
-      {/* 이름 필드 */}
-      <Field>
-        <LabelRow>
-          <Label htmlFor="recvName">이름</Label>
-          <Input
-            id="recvName"
-            placeholder="이름을 입력하세요."
-            value={value.name}
-            onChange={update('name')}
-            error={!!errors.name}
-          />
-        </LabelRow>
-        {errors.name && <Error>{errors.name}</Error>}
-      </Field>
-
-      {/* 전화번호 필드 */}
-      <Field>
-        <LabelRow>
-          <Label htmlFor="recvPhone">전화번호</Label>
-          <Input
-            id="recvPhone"
-            placeholder="전화번호를 입력하세요."
-            value={value.phone}
-            onChange={update('phone')}
-            error={!!errors.phone}
-          />
-        </LabelRow>
-        {errors.phone && <Error>{errors.phone}</Error>}
-      </Field>
-
-      {/* 수량 필드 */}
-      <Field>
-        <LabelRow>
-          <Label htmlFor="recvQty">수량</Label>
-          <Input
-            id="recvQty"
-            type="number"
-            min={1}
-            value={value.qty}
-            onChange={update('qty')}
-            error={!!errors.qty}
-          />
-        </LabelRow>
-        {errors.qty && <Error>{errors.qty}</Error>}
-      </Field>
-    </Content>
+        {receivers.length === 0 ? (
+          <EmptyBox>
+            받는 사람이 없습니다. <br />
+            받는 사람을 추가해주세요.
+          </EmptyBox>
+        ) : (
+          <TableWrapper>
+            <Table>
+              <thead>
+                <tr>
+                  <Th>이름</Th>
+                  <Th>전화번호</Th>
+                  <Th>수량</Th>
+                </tr>
+              </thead>
+              <tbody>
+                {receivers.map((receiver, index) => (
+                  <tr key={index}>
+                    <Td>{receiver.name}</Td>
+                    <Td>{receiver.phone}</Td>
+                    <Td>{receiver.qty}</Td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </TableWrapper>
+        )}
+      </Content>
+      {open && (
+        <ReceiverListModal
+          onClose={() => setOpen(false)}
+          onSave={(data: Receiver[]) => {
+            setReceivers(data);
+            setOpen(false);
+          }}
+          initialReceivers={receivers}
+        />
+      )}
+    </>
   );
 }

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import type { ChangeEvent } from 'react';
+import type { UseFormRegisterReturn } from 'react-hook-form';
 
 const Content = styled.section`
   padding: 0 16px 24px;
@@ -47,21 +47,15 @@ const LabelText = styled.p`
 `;
 
 interface Props {
-  sender: string;
-  onChange: (v: string) => void;
+  register: UseFormRegisterReturn;
   error?: string;
 }
 
-export default function SenderInfo({ sender, onChange, error }: Props) {
+export default function SenderInfo({ register, error }: Props) {
   return (
     <Content>
       <Title>보내는 사람</Title>
-      <Input
-        placeholder="이름을 입력하세요."
-        value={sender}
-        onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
-        error={!!error}
-      />
+      <Input placeholder="이름을 입력하세요." {...register} error={!!error} />
       {error ? (
         <Error>{error}</Error>
       ) : (
