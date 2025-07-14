@@ -17,12 +17,26 @@ import {
   rankingMale,
   rankingTeen,
 } from '@/data/rankings';
+import type { GiftItem } from '@/types'; 
+import { useAuth } from '@/contexts/AuthContext'; 
+import { useNavigate } from 'react-router-dom'; 
 
 type RankingItem = (typeof rankingAll)[number];
 
 export const GiftPage = () => {
   const [gender, setGender] = useState<GenderFilter>('ALL');
   const [sort, setSort] = useState<SortFilter>('GIVE');
+  const { isLoggedIn } = useAuth();
+  const navigate = useNavigate();
+
+  const handleCardClick = (item: GiftItem) => {
+    if (!isLoggedIn) {
+      alert('로그인이 필요해요.');
+      navigate('/login');
+    } else {
+      navigate(`/order/${item.id}`);
+    }
+  };
 
   const handleTab = (g: GenderFilter, s: SortFilter) => {
     setGender(g);
@@ -60,7 +74,7 @@ export const GiftPage = () => {
       <CategoryGrid />
       <Banner />
       <RankingTabs gender={gender} sort={sort} onChange={handleTab}/>
-      <RankingGrid items={list} />
+      <RankingGrid items={rankingAll} onCardClick={handleCardClick} />
     </Layout>
   );
 };

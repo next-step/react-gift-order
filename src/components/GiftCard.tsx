@@ -1,7 +1,7 @@
-/** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import type { GiftItem } from '@/types';
 import { palette } from '@/styles/theme';
+import { Link } from 'react-router-dom';
 
 const card = css`
   position: relative;
@@ -9,6 +9,7 @@ const card = css`
   border-radius: 8px;
   overflow: hidden;
   background: ${palette.white};
+  display: block;
 `;
 const imgBox = css`
   width: 100%;
@@ -27,10 +28,11 @@ const info = css`
 interface Props {
   item: GiftItem;
   rank: number;
+  onCardClick: (item: GiftItem) => void; 
 }
 
-export const GiftCard = ({ item, rank }: Props) => (
-  <div css={card}>
+export const GiftCard = ({ item, rank, onCardClick }: Props) => (
+  <div css={card} onClick={() => onCardClick(item)}>
     <div css={imgBox}>
       <img src={item.imageURL} alt={item.name} />
     </div>

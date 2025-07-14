@@ -11,12 +11,13 @@ const grid = css`
 
 interface Props {
   items: GiftItem[];
+  onCardClick: (item: GiftItem) => void;
 }
 
-export const RankingGrid = ({ items }: Props) => (
+export const RankingGrid = ({ items, onCardClick }: Props) => (
   <div css={grid}>
     {items.map((item, i) => (
-      <GiftCard key={item.id} item={item} rank={i + 1} />
+      <GiftCard key={item.id} item={item} rank={i + 1} onCardClick={onCardClick}/>
     ))}
   </div>
 );

@@ -31,3 +31,10 @@ export interface RankingItem extends GiftItem {
 }
 
 export type RankField = 'give' | 'want' | 'receive';
+
+export interface MessageCard {
+  id: number;
+  thumbUrl: string;
+  imageUrl: string;
+  defaultTextMessage: string;
+}
