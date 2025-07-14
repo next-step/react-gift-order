@@ -1,15 +1,13 @@
 import styled from '@emotion/styled';
 import logo from '@/resources/images/kakao_logo.svg';
-import { LoginFormSection } from './components/LoginFormSection';
+import { LoginForm } from "./components/LoginFormSection";
 
-const LoginPage = () => {
-  return (
-    <Wrapper>
-      <Logo src={logo} alt='카카오 공식 로고' />
-      <LoginFormSection />
-    </Wrapper>
-  );
-};
+const LoginPage = () => (
+  <Wrapper>
+    <Logo src={logo} alt="카카오 공식 로고" />
+    <LoginForm />
+  </Wrapper>
+);
 
 export default LoginPage;
 
@@ -24,5 +22,5 @@ const Wrapper = styled.main`
 
 const Logo = styled.img(({ theme }) => ({
   width: '5.5rem',
-  color: theme.colors.semantic.text.default,
+  color: theme.colors.scale.gray900, // 여기도 scale 사용
 }));
