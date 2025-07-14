@@ -51,28 +51,28 @@ const LogoutButton = styled.button`
 `;
 
 export default function MyPage() {
-    const { user, logout } = useAuth();
-    const navigate = useNavigate();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
-    const handleLogout = () => {
-        logout();
-        navigate('/login');
-    };
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
-    if (!user) {
-        return null;
-    }
+  if (!user) {
+    return null;
+  }
 
-    return (
-        <Wrap>
-            <Title>마이페이지</Title>
-            <UserInfo>
-                <UserName>{user.name}님 안녕하세요!</UserName>
-                <UserEmail>{user.email}</UserEmail>
-                <LogoutButton onClick={handleLogout}>
-                    로그아웃
-                </LogoutButton>
-            </UserInfo>
-        </Wrap>
-    );
+  return (
+    <Wrap>
+      <Title>마이페이지</Title>
+      <UserInfo>
+        <UserName>{user.name}님 안녕하세요!</UserName>
+        <UserEmail>{user.email}</UserEmail>
+        <LogoutButton onClick={handleLogout}>
+          로그아웃
+        </LogoutButton>
+      </UserInfo>
+    </Wrap>
+  );
 } 

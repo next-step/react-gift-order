@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { colors, fontSizes, spaces, } from '@/tokens/designTokens';
 import useAuth from '@/contexts/useAuth';
 
+
 const HeroWrap = styled.section`
   background: ${colors.accent};
   padding: ${spaces.lg} ${spaces.md};
