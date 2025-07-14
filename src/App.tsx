@@ -10,6 +10,7 @@ import My from './page/My';
 import Order from './page/Order';
 import ProtectedRoute from './component/ProtectedRoute';
 import { OrderContextProvider } from './context/OrderContext';
+import { ReceiverProvider } from './context/ReceiverContext';
 
 function App() {
   return (
@@ -23,7 +24,9 @@ function App() {
           <Route path="/My" element={<ProtectedRoute><My /></ProtectedRoute>} />
           <Route path="/Order" element={
             <OrderContextProvider>
+              <ReceiverProvider>
               <Order />
+              </ReceiverProvider>
             </OrderContextProvider>
           } />
           <Route path="*" element={<Notfound />} />

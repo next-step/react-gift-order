@@ -6,7 +6,6 @@ import {
   FlatLowField,
   ListBody,
   ListTop,
-  LowField,
   ReceiverEmpty,
   ReceiverList,
   SideBlankDiv,

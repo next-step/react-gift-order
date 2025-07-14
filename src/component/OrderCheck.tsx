@@ -1,7 +1,7 @@
 import { useOrder } from '@/context/OrderContext';
+import { useReceiver } from '@/context/ReceiverContext';
 import { DefaultComponentDiv, EmptyDiv8h, OrderButton, Price, ProductBox, ProductImage, ProductInfo, ProductName, SideBlankDiv, SubText, SubTitle } from '@/styles/Common.styled'
 
-import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 
@@ -10,12 +10,11 @@ const OrderCheck = () => {
   const navigate = useNavigate();
   const {
     senderNameInput,
-    recipientNameInput,
-    recipientPhoneInput,
-    quantityInput,
     cardMessage,
   } = useOrder()
 
+  const { receivers } = useReceiver();
+  const totalCount = receivers.reduce((i, receiver) => i + receiver.count, 0);
 
   const location = useLocation();
 
@@ -45,7 +44,7 @@ const OrderCheck = () => {
     if (isValid) {
       alert(`주문이 완료되었습니다. 
         상품명:${item.name} 
-        구매수량: ${quantityInput.value}
+        구매수량: ${totalCount}
         발신자 이름: ${senderNameInput.value}
         메세지: ${cardMessage}
         `
@@ -98,8 +97,8 @@ const OrderCheck = () => {
         </ProductBox>
 
       </SideBlankDiv>
-
-      <OrderButton onClick={handleOrder}> {Number(quantityInput.value) * price} 원 주문하기</OrderButton>
+      
+      <OrderButton onClick={handleOrder}> {Number(totalCount) * price} 원 주문하기</OrderButton>
     </DefaultComponentDiv>
   );
 };

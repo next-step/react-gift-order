@@ -2,24 +2,19 @@ import { useReceiver } from '@/context/ReceiverContext';
 import {
   Div100p,
   EmptyDiv12h,
-  EmptyDiv16h,
-  EmptyDiv24h,
-  EmptyDiv8h,
   ErrorText,
   LowField,
   MiniText,
   ModalBox,
   ModalDiv,
   ScrollBox,
-  SideBlankDiv,
   SimpleButton,
-  SimpleForm,
   SimpleInput,
   SubText,
   SubTitle,
 } from '@/styles/Common.styled';
-import { useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
+import { ButtonSpace, CancleButton, Hr1Gray, ReceiverOne, ReceiverTitle, SubmitButton, XButton } from './ReceiverModal.styled';
 
 type Props = {
   isOpen: boolean;
@@ -34,6 +29,7 @@ const ReceiverModal = ({ isOpen, onClose }: Props) => {
     register,
     handleSubmit,
     formState: { errors },
+    getValues
   } = useForm({
     defaultValues: {
       receiver: [{ name: '', phone: '', count: 1 }],
@@ -45,9 +41,9 @@ const ReceiverModal = ({ isOpen, onClose }: Props) => {
     name: 'receiver',
   });
 
-  const onSubmit = (data: any) => {
-    setReceivers(data.receiver)
-    onClose(); // 완료 후 모달 닫기
+  const onSubmit = async(data: any) => {
+    setReceivers(data.receiver);
+    onClose();
   };
 
   return (
@@ -62,24 +58,28 @@ const ReceiverModal = ({ isOpen, onClose }: Props) => {
             </SubText>
             <EmptyDiv12h />
 
-            <SimpleButton
+            <SimpleButton 
+              disabled = {fields.length >= 10}
               type="button"
               onClick={() => append({ name: '', phone: '', count: 1 })}
             >
               추가하기
             </SimpleButton>
           </div>
-          <EmptyDiv16h />
           <ScrollBox>
             {fields.map((field, i) => (
               <div key={i}>
-                {i >= 1 && <hr />}
-                <LowField>
-                  <SubTitle>받는사람{i + 1}</SubTitle>
-                  <button type="button" onClick={() => remove(i)}>
+                {i >= 1 && <Hr1Gray />}
+                <ReceiverOne>
+                  <SubTitle>
+                    <ReceiverTitle>
+                      받는사람 {i + 1} 
+                    </ReceiverTitle>
+                  </SubTitle>
+                  <XButton type="button" onClick={() => remove(i)}>
                     X
-                  </button>
-                </LowField>
+                  </XButton>
+                </ReceiverOne>
                 <LowField>
                   <MiniText>이름</MiniText>
                   <Div100p>
@@ -95,9 +95,6 @@ const ReceiverModal = ({ isOpen, onClose }: Props) => {
                     )}
                   </Div100p>
                 </LowField>
-
-                <EmptyDiv8h />
-
                 <LowField>
                   <MiniText>전화번호</MiniText>
                   <Div100p>
@@ -107,8 +104,16 @@ const ReceiverModal = ({ isOpen, onClose }: Props) => {
                       {...register(`receiver.${i}.phone`, {
                         required: '전화번호를 입력하세요',
                         pattern: {
-                          value: /^[0-9]{10,11}$/,
-                          message: '전화번호는 숫자 10~11자리여야 합니다.',
+                          value: /^010[0-9]{8}$/,
+                          message: '올바른 전화번호 형식이 아니에요.',
+                        },
+                        validate: (value) => {
+                          const phones = getValues('receiver').map((r: any) => r.phone);
+                          const duplicates = phones.filter((phone: string) => phone === value);
+                          if (duplicates.length > 1) {
+                            return '중복된 전화번호가 있습니다';
+                          }
+                          return true;
                         },
                       })}
                     />
@@ -117,7 +122,6 @@ const ReceiverModal = ({ isOpen, onClose }: Props) => {
                     )}
                   </Div100p>
                 </LowField>
-                <EmptyDiv8h />
 
                 <LowField>
                   <MiniText>수량</MiniText>
@@ -128,7 +132,7 @@ const ReceiverModal = ({ isOpen, onClose }: Props) => {
                       {...register(`receiver.${i}.count`, {
                         required: '',
                         min: {
-                          value: 0,
+                          value: 1,
                           message: '수량은 1개 이상이어야 합니다',
                         },
                       })}
@@ -137,18 +141,16 @@ const ReceiverModal = ({ isOpen, onClose }: Props) => {
                       <ErrorText>{errors.receiver[i].count?.message}</ErrorText>
                     )}
                   </Div100p>
-                  '
                 </LowField>
               </div>
             ))}
           </ScrollBox>
-          <button type="button" onClick={onClose}>
+          <ButtonSpace>
+          <CancleButton type="button" onClick={onClose}>
             취소
-          </button>
-          <button type="submit">{fields.length}명 완료</button>
-
-          <EmptyDiv8h />
-          <EmptyDiv24h />
+          </CancleButton>
+          <SubmitButton type="submit">{fields.length}명 완료</SubmitButton>
+          </ButtonSpace>
         </ModalBox>
       </ModalDiv>
     </form>
