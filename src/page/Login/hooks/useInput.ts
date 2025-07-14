@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { getValidator } from '@/utils/validate';
+import { getValidator } from '@/page/Login/utils/validateLogin';
 
 type FieldType = 'email' | 'password';
 

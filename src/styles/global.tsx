@@ -15,10 +15,12 @@ const reset = css`
   body {
     height: 100%;
     font-family: 'Pretendard', sans-serif;
-    background-color: #fff;
-    color: #000;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    background-color: #f2f2f2;
   }
 
   a {
@@ -41,3 +43,4 @@ const reset = css`
 const GlobalStyle = () => <Global styles={reset} />;
 
 export default GlobalStyle;
+

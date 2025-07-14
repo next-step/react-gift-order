@@ -22,17 +22,8 @@ const validateEmail = (value: string): string => {
   }
 };
 
-const validateTextArea = (value: string): string => {
-  if (value.trim() === '') {
-    return '메시지를 입력해주세요.';
-  } else {
-    return '';
-  }
-};
-
-type FieldType = 'email' | 'password' | 'textarea';
+type FieldType = 'email' | 'password';
 const validators = {
-  textarea: validateTextArea,
   email: validateEmail,
   password: validatePassword,
 } as const;

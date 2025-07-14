@@ -1,4 +1,4 @@
-import { phoneNumberRegex } from '@/utils/validate';
+import { phoneNumberRegex } from '@/page/Login/utils/validateLogin';
 import styled from '@emotion/styled';
 import { useFormContext, type UseFieldArrayReturn } from 'react-hook-form';
 import type { OrderInfoValues } from '..';
