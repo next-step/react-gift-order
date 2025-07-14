@@ -315,3 +315,7 @@ export const recipientFormHeader = css`
   h4 { font-size: 16px; font-weight: bold; }
   button { color: ${palette.gray600}; }
 `;
+
+export const inputError = css`
+  border-color: ${palette.red600} !important;
+`;

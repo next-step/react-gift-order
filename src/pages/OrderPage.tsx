@@ -48,8 +48,8 @@ const OrderPage = () => {
     setValue('message', selectedCard.defaultTextMessage);
   }, [selectedCard, setValue]);
 
-  const handleAddRecipient = (data: { name: string; phone: string; quantity: number }) => {
-    append(data);
+  const handleRecipientsUpdate = (updatedRecipients: OrderFormValues['recipients']) => {
+    setValue('recipients', updatedRecipients, { shouldValidate: true });
     setIsModalOpen(false);
   };
 
@@ -110,9 +110,8 @@ const OrderPage = () => {
       {isModalOpen && (
         <AddRecipientModal
           onClose={() => setIsModalOpen(false)}
-          onAdd={handleAddRecipient}
+          onComplete={handleRecipientsUpdate} 
           initialRecipients={recipients}
-          existingPhones={(recipients || []).map(r => r.phone)}
         />
       )}
     </Layout>
