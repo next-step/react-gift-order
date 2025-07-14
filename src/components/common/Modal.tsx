@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
-
-// ModalProps 정의
+import { ErrorMessage } from '@components/common/ErrorMessage';
+import { X } from 'lucide-react';
 export interface ModalProps {
   open: boolean;
   initialValue?: { name: string; phone: string; quantity: number };
@@ -46,7 +46,7 @@ const ModalSection = styled('div')({
   gap: 16,
 });
 
-const Empty = styled('div')({
+const RecipientSection = styled('div')({
   flex: '1 1 0%',
   overflow: 'auto',
 });
@@ -64,7 +64,7 @@ const Notice = styled('p')(({ theme }) => ({
   fontSize: '0.75rem',
   fontWeight: 400,
   lineHeight: '1rem',
-  color: theme.semanticColors.text.sub,
+  color: theme.colorScale.gray800,
   margin: 0,
   textAlign: 'left',
 }));
@@ -112,13 +112,90 @@ const SubmitButton = styled('button')(({ theme }) => ({
   flex: '3 1 0%',
 }));
 
-const Margin = styled.div<{ height: string }>`
+// Margin 스타일 유지
+const Margin = styled('div')<{ height: string }>`
   width: 100%;
   height: ${({ height }) => height};
   background-color: transparent;
 `;
 
-export const Modal = ({ open, initialValue, onClose, onConfirm }: ModalProps) => {
+const InputWrapper = styled('div')({
+  flex: '1 1 0%',
+  overflow: 'auto',
+});
+
+const InputBoxContainer = styled.div`
+  display: flex;
+  -webkit-box-pack: start;
+  justify-content: flex-start;
+  -webkit-box-align: center;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 8px 0px;
+`;
+
+const RecipientNumberContainer = styled.div`
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+`;
+
+const RecipientNumber = styled.p(({ theme }) => ({
+  fontSize: '0.875rem',
+  fontWeight: 700,
+  lineHeight: '1.1875rem',
+  color: theme.semanticColors.text.default,
+  margin: 0,
+  textAlign: 'left',
+}));
+
+const InputBoxTitle = styled('p')(({ theme }) => ({
+  fontSize: '0.875rem',
+  fontWeight: 400,
+  lineHeight: '1.1875rem',
+  color: theme.semanticColors.text.default,
+  margin: 0,
+  textAlign: 'left',
+  minWidth: '3.75rem',
+}));
+
+const InputBoxStyle = styled('div')({ flex: 1, width: '100%' });
+
+const InputBox = styled('input')<{ hasError?: boolean }>(({ theme, hasError }) => ({
+  boxSizing: 'border-box',
+  width: '100%',
+  padding: '8px 12px',
+  fontSize: '0.875rem',
+  fontWeight: 400,
+  lineHeight: '1.1875rem',
+  color: 'rgb(42, 48, 56)',
+  borderStyle: 'solid',
+  borderWidth: '1px',
+  borderRadius: '8px',
+  borderColor: hasError ? theme.semanticColors.state.critical : theme.semanticColors.border.default,
+  transition: 'border-color 200ms',
+  '::placeholder': {
+    color: theme.semanticColors.text.placeholder,
+  },
+}));
+
+// 구분선
+const Divider = styled('hr')(({ theme }) => ({
+  width: '100%',
+  height: 1,
+  backgroundColor: theme.semanticColors.border.default,
+  border: 'none',
+  margin: '8px 0px 16px',
+}));
+
+export const Modal = ({ open, onClose, onConfirm }: ModalProps) => {
+  const [fields, setFields] = useState<number[]>([]);
+
+  const handleAdd = () => {
+    setFields((prev) => [...prev, prev.length]);
+  };
+
   return (
     <Wrapper open={open}>
       <Container>
@@ -131,12 +208,45 @@ export const Modal = ({ open, initialValue, onClose, onConfirm }: ModalProps) =>
               <br />* 받는 사람의 전화번호를 중복으로 입력할 수 없어요.
             </Notice>
             <Margin height="8px" />
-            <AddButton onClick={onConfirm}>추가하기</AddButton>
+            <AddButton onClick={handleAdd}>추가하기</AddButton>
           </div>
-          <Empty />
+          <RecipientSection>
+            {fields.map((index) => (
+              <InputWrapper key={index}>
+                {index > 0 && <Divider />}
+                <RecipientNumberContainer>
+                  <RecipientNumber>받는 사람 {index + 1}</RecipientNumber>
+                  <X size={20} strokeWidth={1.5} style={{ marginLeft: '0.25rem' }} />
+                </RecipientNumberContainer>
+                {/* 이름 */}
+                <InputBoxContainer>
+                  <InputBoxTitle>이름</InputBoxTitle>
+                  <InputBoxStyle>
+                    <InputBox placeholder="이름을 입력하세요." />
+                  </InputBoxStyle>
+                </InputBoxContainer>
+
+                {/* 전화번호 */}
+                <InputBoxContainer>
+                  <InputBoxTitle>전화번호</InputBoxTitle>
+                  <InputBoxStyle>
+                    <InputBox type="tel" placeholder="전화번호를 입력하세요." />
+                  </InputBoxStyle>
+                </InputBoxContainer>
+
+                {/* 수량 */}
+                <InputBoxContainer>
+                  <InputBoxTitle>수량</InputBoxTitle>
+                  <InputBoxStyle>
+                    <InputBox type="number" placeholder="수량을 입력하세요." />
+                  </InputBoxStyle>
+                </InputBoxContainer>
+              </InputWrapper>
+            ))}
+          </RecipientSection>
           <SubmitButtonSection>
             <CancelButton onClick={onClose}>취소</CancelButton>
-            <SubmitButton onClick={onConfirm}>0명 완료</SubmitButton>
+            <SubmitButton onClick={onConfirm}>완료</SubmitButton>
           </SubmitButtonSection>
         </ModalSection>
       </Container>
