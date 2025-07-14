@@ -53,6 +53,13 @@ const ErrorMessage = styled.p`
   margin-top: ${({ theme }) => theme.spacing.spacing1};
 `;
 
+const DeleteIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" stroke="black">
+    <path d="M18 6 6 18" />
+    <path d="M6 6 18 18" />
+  </svg>
+);
+
 interface ReceiverInfoProps {
   index: number;
   remove: UseFieldArrayReturn<OrderInfoValues, 'receiverInfos', 'id'>['remove'];
@@ -70,7 +77,7 @@ const ReceiverInfo = ({ index, remove }: ReceiverInfoProps) => {
       <ReceiverInfoContainer>
         <h3>받는 사람 {index + 1}</h3>
         <button type="button" onClick={() => remove(index)}>
-          Delete
+          <DeleteIcon />
         </button>
 
         <InputContainer>
