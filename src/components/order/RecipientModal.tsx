@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useEffect } from 'react';
+import { useForm, useFieldArray } from 'react-hook-form';
 import styled from '@emotion/styled';
 import { Modal } from '@/components/common';
 import RecipientForm from './RecipientForm';
@@ -14,9 +15,13 @@ import type { Recipient } from '@/types';
 interface RecipientModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (recipients: Recipient[]) => void;
+  onSubmit: (recipients: Recipient[]) => void;
   initialRecipients?: Recipient[];
   existingRecipients?: Recipient[];
+}
+
+interface RecipientFormData {
+  recipients: Omit<Recipient, 'id'>[];
 }
 
 const EMPTY_RECIPIENTS: Recipient[] = [];
@@ -158,89 +163,73 @@ const PlusIcon = () => (
 const RecipientModal = ({
   isOpen,
   onClose,
-  onSave,
+  onSubmit,
   initialRecipients = EMPTY_RECIPIENTS,
   existingRecipients = EMPTY_RECIPIENTS,
 }: RecipientModalProps) => {
-  const [tempRecipients, setTempRecipients] = useState<
-    Array<{ id: string; data: Omit<Recipient, 'id'> }>
-  >([]);
-  const [errors, setErrors] = useState<string[]>([]);
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors, isValid },
+    setError,
+    clearErrors,
+  } = useForm<RecipientFormData>({
+    defaultValues: {
+      recipients:
+        initialRecipients.length > 0
+          ? initialRecipients.map(({ id, ...rest }) => rest)
+          : [createEmptyRecipientForm()],
+    },
+    mode: 'onChange',
+  });
 
-  // 모달이 열릴 때 초기 데이터 설정
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'recipients',
+  });
+
+  // 모달이 열릴 때 폼 초기화
   useEffect(() => {
     if (isOpen) {
-      if (initialRecipients.length > 0) {
-        // 편집 모드: 기존 받는사람 데이터로 초기화
-        setTempRecipients(
-          initialRecipients.map((recipient) => ({
-            id: recipient.id,
-            data: {
-              name: recipient.name,
-              phone: recipient.phone,
-              quantity: recipient.quantity,
-            },
-          }))
-        );
-      } else {
-        // 추가 모드: 빈 받는사람 하나로 시작
-        const newRecipient = createNewRecipient();
-        setTempRecipients([
-          {
-            id: newRecipient.id,
-            data: createEmptyRecipientForm(),
-          },
-        ]);
-      }
-      setErrors([]);
+      const initialData =
+        initialRecipients.length > 0
+          ? initialRecipients.map(({ id, ...rest }) => rest)
+          : [createEmptyRecipientForm()];
+
+      reset({ recipients: initialData });
+      clearErrors();
     }
-  }, [isOpen, initialRecipients]);
+  }, [isOpen, initialRecipients, reset, clearErrors]);
 
   // 새 받는사람 추가
   const handleAddRecipient = () => {
-    if (tempRecipients.length >= 10) return;
-
-    const newRecipient = createNewRecipient();
-    setTempRecipients((prev) => [
-      ...prev,
-      {
-        id: newRecipient.id,
-        data: createEmptyRecipientForm(),
-      },
-    ]);
+    if (fields.length >= 10) return;
+    append(createEmptyRecipientForm());
   };
 
   // 받는사람 제거
-  const handleRemoveRecipient = useCallback((index: number) => {
-    setTempRecipients((prev) => prev.filter((_, i) => i !== index));
-  }, []);
+  const handleRemoveRecipient = (index: number) => {
+    remove(index);
+  };
 
-  // 받는사람 데이터 변경
-  const handleDataChange = useCallback(
-    (index: number, data: Omit<Recipient, 'id'>) => {
-      setTempRecipients((prev) =>
-        prev.map((item, i) => (i === index ? { ...item, data } : item))
-      );
-    },
-    []
-  );
-
-  // 저장 처리
-  const handleSave = () => {
-    // 받는사람 목록 생성
-    const recipients: Recipient[] = tempRecipients.map((item) => ({
-      id: item.id,
-      ...item.data,
+  // 폼 제출 처리
+  const handleFormSubmit = handleSubmit((data) => {
+    // 받는사람 목록 생성 (id 추가)
+    const recipients: Recipient[] = data.recipients.map((recipientData) => ({
+      id: createNewRecipient().id,
+      ...recipientData,
+      phone: normalizePhoneNumber(recipientData.phone), // 전화번호 정규화
     }));
 
     // 유효성 검사
     const validation = validateRecipients(recipients);
     if (!validation.isValid) {
-      setErrors(validation.errors);
+      setError('root', { message: validation.errors.join('\n') });
       return;
     }
 
-    // 기존 받는사람과의 중복 검사 (정규화된 전화번호로 비교)
+    // 기존 받는사람과의 중복 검사
     const normalizedExistingPhones = existingRecipients.map((r) =>
       normalizePhoneNumber(r.phone)
     );
@@ -248,13 +237,12 @@ const RecipientModal = ({
       normalizePhoneNumber(r.phone)
     );
 
-    // 기존 받는사람과 새 받는사람 간 중복 검사
     const duplicatesWithExisting = normalizedNewPhones.filter(
       (phone) => phone && normalizedExistingPhones.includes(phone)
     );
 
     if (duplicatesWithExisting.length > 0) {
-      setErrors(['이미 등록된 전화번호가 있습니다.']);
+      setError('root', { message: '이미 등록된 전화번호가 있습니다.' });
       return;
     }
 
@@ -262,27 +250,23 @@ const RecipientModal = ({
     const allRecipients = [...existingRecipients, ...recipients];
     const duplicatePhones = checkDuplicatePhone(allRecipients);
     if (duplicatePhones.length > 0) {
-      setErrors([`중복된 전화번호가 있습니다.`]);
+      setError('root', { message: '중복된 전화번호가 있습니다.' });
       return;
     }
 
-    // 성공
-    setErrors([]);
-    onSave(recipients);
-  };
+    // 성공 - 상위 컴포넌트로 데이터 전달
+    clearErrors();
+    onSubmit(recipients);
+  });
 
   // 취소 처리
   const handleCancel = () => {
-    setErrors([]);
+    clearErrors();
     onClose();
   };
 
-  const canAddMore = tempRecipients.length < 10;
-  const hasValidData =
-    tempRecipients.length > 0 &&
-    tempRecipients.some(
-      (item) => item.data.name.trim() || item.data.phone.trim()
-    );
+  const canAddMore = fields.length < 10;
+  const hasValidData = fields.length > 0 && isValid;
 
   return (
     <Modal
@@ -291,23 +275,25 @@ const RecipientModal = ({
       title="받는 사람"
       size="large"
     >
-      <div>
-        <AddButton onClick={handleAddRecipient} disabled={!canAddMore}>
+      <form onSubmit={handleFormSubmit}>
+        <AddButton
+          type="button"
+          onClick={handleAddRecipient}
+          disabled={!canAddMore}
+        >
           <PlusIcon />
           추가하기
           {!canAddMore && <MaxReachedText>(최대 10명)</MaxReachedText>}
         </AddButton>
 
-        {errors.length > 0 && (
+        {errors.root && (
           <ErrorMessage>
-            {errors.map((error, index) => (
-              <div key={index}>{error}</div>
-            ))}
+            <div>{errors.root.message}</div>
           </ErrorMessage>
         )}
 
         <ModalContent>
-          {tempRecipients.length === 0 ? (
+          {fields.length === 0 ? (
             <EmptyState>
               <EmptyStateTitle>받는사람을 추가해주세요</EmptyStateTitle>
               <EmptyStateDescription>
@@ -315,12 +301,11 @@ const RecipientModal = ({
               </EmptyStateDescription>
             </EmptyState>
           ) : (
-            tempRecipients.map((item, index) => (
+            fields.map((field, index) => (
               <RecipientForm
-                key={item.id}
+                key={field.id}
+                control={control}
                 index={index}
-                initialData={item.data}
-                onDataChange={handleDataChange}
                 onRemove={handleRemoveRecipient}
                 existingRecipients={existingRecipients}
               />
@@ -329,18 +314,14 @@ const RecipientModal = ({
         </ModalContent>
 
         <ButtonContainer>
-          <Button variant="secondary" onClick={handleCancel}>
+          <Button type="button" variant="secondary" onClick={handleCancel}>
             취소
           </Button>
-          <Button
-            variant="primary"
-            onClick={handleSave}
-            disabled={!hasValidData}
-          >
-            {tempRecipients.length}명 완료
+          <Button type="submit" variant="primary" disabled={!hasValidData}>
+            {fields.length}명 완료
           </Button>
         </ButtonContainer>
-      </div>
+      </form>
     </Modal>
   );
 };

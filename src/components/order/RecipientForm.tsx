@@ -1,16 +1,16 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useController } from 'react-hook-form';
+import type { Control } from 'react-hook-form';
 import styled from '@emotion/styled';
-import {
-  validateRecipientForm,
-  createEmptyRecipientForm,
-  normalizePhoneNumber,
-} from '@/utils';
+import { normalizePhoneNumber } from '@/utils';
 import type { Recipient } from '@/types';
 
+interface RecipientFormData {
+  recipients: Omit<Recipient, 'id'>[];
+}
+
 interface RecipientFormProps {
+  control: Control<RecipientFormData>;
   index: number;
-  initialData?: Omit<Recipient, 'id'>;
-  onDataChange: (index: number, data: Omit<Recipient, 'id'>) => void;
   onRemove: (index: number) => void;
   existingRecipients?: Recipient[];
   disabled?: boolean;
@@ -128,67 +128,56 @@ const CloseIcon = () => (
 );
 
 const RecipientForm = ({
+  control,
   index,
-  initialData,
-  onDataChange,
   onRemove,
   existingRecipients = [],
   disabled = false,
 }: RecipientFormProps) => {
-  const [formData, setFormData] = useState(
-    () => initialData || createEmptyRecipientForm()
-  );
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
+  // React Hook Form controllers for each field
+  const { field: nameField, fieldState: nameFieldState } = useController({
+    name: `recipients.${index}.name`,
+    control,
+    rules: {
+      required: '이름을 입력해주세요.',
+      validate: (value) => value.trim().length > 0 || '이름을 입력해주세요.',
+    },
+  });
 
-  // 폼 데이터가 변경되면 상위 컴포넌트로 전달
-  useEffect(() => {
-    onDataChange(index, formData);
-  }, [formData, index, onDataChange]);
+  const { field: phoneField, fieldState: phoneFieldState } = useController({
+    name: `recipients.${index}.phone`,
+    control,
+    rules: {
+      required: '전화번호를 입력해주세요.',
+      validate: (value) => {
+        if (!value.trim()) return '전화번호를 입력해주세요.';
 
-  const handleInputChange = (
-    field: keyof typeof formData,
-    value: string | number
-  ) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
+        const normalized = normalizePhoneNumber(value);
+        if (!normalized) return '전화번호는 01012341234 형태로 입력해주세요.';
 
-  const validateField = useCallback(
-    (field: keyof typeof formData, value: any) => {
-      const validation = validateRecipientForm({ ...formData, [field]: value });
-      let newErrors = { ...errors };
-
-      if (validation.errors[field]) {
-        newErrors[field] = validation.errors[field];
-      } else {
-        delete newErrors[field];
-      }
-
-      // 전화번호 중복 검사
-      if (field === 'phone') {
-        const normalizedCurrentPhone = normalizePhoneNumber(value);
+        // 기존 받는사람과 중복 검사
         if (
-          normalizedCurrentPhone &&
           existingRecipients.some(
-            (r) => normalizePhoneNumber(r.phone) === normalizedCurrentPhone
+            (r) => normalizePhoneNumber(r.phone) === normalized
           )
         ) {
-          newErrors.phone = '이미 등록된 전화번호입니다.';
+          return '이미 등록된 전화번호입니다.';
         }
-      }
 
-      setErrors(newErrors);
+        return true;
+      },
     },
-    [formData, errors, existingRecipients]
-  );
+  });
 
-  const handleBlur = (field: keyof typeof formData) => {
-    setTouched((prev) => ({ ...prev, [field]: true }));
-    validateField(field, formData[field]);
-  };
+  const { field: quantityField, fieldState: quantityFieldState } =
+    useController({
+      name: `recipients.${index}.quantity`,
+      control,
+      rules: {
+        required: '수량을 입력해주세요.',
+        min: { value: 1, message: '수량은 1개 이상이어야 합니다.' },
+      },
+    });
 
   const handleRemove = () => {
     onRemove(index);
@@ -199,6 +188,7 @@ const RecipientForm = ({
       <FormHeader>
         <FormTitle>받는사람 {index + 1}</FormTitle>
         <RemoveButton
+          type="button"
           onClick={handleRemove}
           disabled={disabled}
           title="받는사람 삭제"
@@ -213,14 +203,12 @@ const RecipientForm = ({
           <Input
             id={`name-${index}`}
             type="text"
-            value={formData.name}
-            onChange={(e) => handleInputChange('name', e.target.value)}
-            onBlur={() => handleBlur('name')}
+            {...nameField}
             placeholder="이름을 입력하세요"
-            hasError={!!(touched.name && errors.name)}
+            hasError={!!nameFieldState.error}
             disabled={disabled}
           />
-          <ErrorText>{touched.name && (errors.name || '')}</ErrorText>
+          <ErrorText>{nameFieldState.error?.message || ''}</ErrorText>
         </FormField>
 
         <FormField>
@@ -228,15 +216,13 @@ const RecipientForm = ({
           <Input
             id={`phone-${index}`}
             type="tel"
-            value={formData.phone}
-            onChange={(e) => handleInputChange('phone', e.target.value)}
-            onBlur={() => handleBlur('phone')}
+            {...phoneField}
             placeholder="01012341234"
             maxLength={11}
-            hasError={!!(touched.phone && errors.phone)}
+            hasError={!!phoneFieldState.error}
             disabled={disabled}
           />
-          <ErrorText>{touched.phone && (errors.phone || '')}</ErrorText>
+          <ErrorText>{phoneFieldState.error?.message || ''}</ErrorText>
         </FormField>
 
         <FormField>
@@ -245,15 +231,15 @@ const RecipientForm = ({
             id={`quantity-${index}`}
             type="number"
             min={1}
-            value={formData.quantity}
+            {...quantityField}
+            value={quantityField.value || 1}
             onChange={(e) =>
-              handleInputChange('quantity', parseInt(e.target.value) || 1)
+              quantityField.onChange(parseInt(e.target.value) || 1)
             }
-            onBlur={() => handleBlur('quantity')}
-            hasError={!!(touched.quantity && errors.quantity)}
+            hasError={!!quantityFieldState.error}
             disabled={disabled}
           />
-          <ErrorText>{touched.quantity && (errors.quantity || '')}</ErrorText>
+          <ErrorText>{quantityFieldState.error?.message || ''}</ErrorText>
         </FormField>
       </FormGrid>
     </FormContainer>

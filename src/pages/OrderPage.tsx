@@ -1,13 +1,20 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 import styled from '@emotion/styled';
 import { Section } from '@/components/layout';
 import Container from '@/components/layout/Container';
 import { RecipientList, RecipientModal } from '@/components/order';
 import { products } from '@/data/products';
 import { cardTemplates } from '@/data/cardTemplates';
-import { useMultipleRecipientsForm } from '@/hooks';
 import type { Recipient } from '@/types';
+
+interface OrderFormData {
+  selectedCardId: number;
+  message: string;
+  sender: string;
+  recipients: Recipient[];
+}
 
 const CardSlider = styled.div`
   overflow-x: auto;
@@ -152,17 +159,41 @@ const OrderPage = () => {
   const navigate = useNavigate();
   const product = products.find((p) => String(p.id) === String(productId));
 
-  const { formData, errors, recipientActions, handlers, register, formState } =
-    useMultipleRecipientsForm();
+  // 주문 정보만 관리하는 폼
+  const {
+    register,
+    watch,
+    setValue,
+    formState: { errors, isValid },
+    handleSubmit,
+  } = useForm<OrderFormData>({
+    defaultValues: {
+      selectedCardId: cardTemplates[0].id,
+      message: cardTemplates[0].defaultTextMessage || '',
+      sender: '',
+      recipients: [],
+    },
+    mode: 'onChange',
+  });
 
-  const { selectedCardId, selectedCard, recipients, totalQuantity } = formData;
-  const { messageError, senderError, recipientsError } = errors;
-  const { removeRecipient, setRecipients, canAddMore, maxReached } =
-    recipientActions;
-  const { handleSelectCard, handleOrder } = handlers;
+  // 폼 값들 watch
+  const selectedCardId = watch('selectedCardId');
+  const recipients = watch('recipients');
+
+  // 선택된 카드 정보
+  const selectedCard =
+    cardTemplates.find((card) => card.id === selectedCardId) ||
+    cardTemplates[0];
 
   // 모달 상태
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // 카드 선택 핸들러
+  const handleSelectCard = (cardId: number) => {
+    setValue('selectedCardId', cardId);
+    const card = cardTemplates.find((c) => c.id === cardId);
+    setValue('message', card?.defaultTextMessage || '');
+  };
 
   // 받는사람 추가 (모달 열기)
   const handleAddRecipient = () => {
@@ -171,12 +202,14 @@ const OrderPage = () => {
 
   // 받는사람 제거
   const handleRemoveRecipient = (index: number) => {
-    removeRecipient(index);
+    const updatedRecipients = recipients.filter((_, i) => i !== index);
+    setValue('recipients', updatedRecipients);
   };
 
-  // 모달에서 받는사람 저장
-  const handleSaveRecipients = (newRecipients: Recipient[]) => {
-    setRecipients([...recipients, ...newRecipients]);
+  // 모달에서 받는사람 저장 - setValue로 업데이트
+  const handleRecipientsSubmit = (newRecipients: Recipient[]) => {
+    const updatedRecipients = [...recipients, ...newRecipients];
+    setValue('recipients', updatedRecipients);
     setIsModalOpen(false);
   };
 
@@ -185,9 +218,36 @@ const OrderPage = () => {
     setIsModalOpen(false);
   };
 
+  // 주문 제출 핸들러
+  const handleOrderSubmit = handleSubmit(async (data) => {
+    if (!product) return;
+
+    // 총 수량 계산
+    const totalQuantity = data.recipients.reduce(
+      (sum, recipient) => sum + recipient.quantity,
+      0
+    );
+    const totalPrice = product.price.sellingPrice * totalQuantity;
+
+    // 안내 메시지 구성
+    const recipientList = data.recipients
+      .map((r, i) => `${i + 1}. ${r.name} (${r.phone}) - ${r.quantity}개`)
+      .join('\n');
+
+    const msg = `주문이 완료되었습니다.\n상품명: ${product.name}\n보내는 사람: ${data.sender}\n받는사람 목록:\n${recipientList}\n총 수량: ${totalQuantity}개\n총 가격: ${totalPrice.toLocaleString()}원\n메시지: ${data.message}`;
+    alert(msg);
+    navigate('/');
+  });
+
+  // 총 수량 계산
+  const totalQuantity = recipients.reduce((sum, r) => sum + r.quantity, 0);
+
   // 주문 가능 여부 확인
-  const canOrder =
-    recipients.length > 0 && totalQuantity > 0 && formState.isValid;
+  const canOrder = recipients.length > 0 && totalQuantity > 0 && isValid;
+
+  // 에러 메시지들
+  const messageError = errors.message?.message || '';
+  const senderError = errors.sender?.message || '';
 
   if (!product) {
     return (
@@ -252,10 +312,9 @@ const OrderPage = () => {
           recipients={recipients}
           onRemoveRecipient={handleRemoveRecipient}
           onAddRecipient={handleAddRecipient}
-          canAddMore={canAddMore}
-          maxReached={maxReached}
+          canAddMore={recipients.length < 10}
+          maxReached={recipients.length >= 10}
         />
-        {recipientsError && <ErrorText>{recipientsError}</ErrorText>}
         <ProductInfo>
           <ProductImg src={product.imageURL} alt={product.name} />
           <ProductInfoText>
@@ -271,7 +330,7 @@ const OrderPage = () => {
         <Container>
           <OrderButton
             disabled={!canOrder}
-            onClick={() => canOrder && handleOrder(product)}
+            onClick={() => canOrder && handleOrderSubmit()}
           >
             {totalQuantity > 0
               ? `${(product.price.sellingPrice * totalQuantity).toLocaleString()}원 주문하기 (${totalQuantity}개)`
@@ -283,7 +342,7 @@ const OrderPage = () => {
       <RecipientModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        onSave={handleSaveRecipients}
+        onSubmit={handleRecipientsSubmit}
         existingRecipients={recipients}
       />
     </Section>
