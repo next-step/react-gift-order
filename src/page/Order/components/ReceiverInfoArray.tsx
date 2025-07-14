@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import type { UseFieldArrayReturn } from 'react-hook-form';
 import type { OrderInfoValues } from '..';
 
 const Container = styled.div`
@@ -46,12 +45,10 @@ const DetailText = styled.p`
 `;
 
 interface ReceiverInfoArrayProps {
-  receiverFieldArray: UseFieldArrayReturn<OrderInfoValues, 'receiverInfos', 'id'>;
-  data: OrderInfoValues['receiverInfos'];
+  receiverInfos: OrderInfoValues['receiverInfos'];
 }
 
-const ReceiverInfoArray = ({ receiverFieldArray, data }: ReceiverInfoArrayProps) => {
-  const { fields } = receiverFieldArray;
+const ReceiverInfoArray = ({ receiverInfos }: ReceiverInfoArrayProps) => {
   return (
     <Container>
       <Category>
@@ -60,11 +57,11 @@ const ReceiverInfoArray = ({ receiverFieldArray, data }: ReceiverInfoArrayProps)
         <TitleText>수량</TitleText>
       </Category>
 
-      {fields.map((item, index) => (
-        <Details key={item.id}>
-          <DetailText>{data?.[index]?.name}</DetailText>
-          <DetailText>{data?.[index]?.phoneNumber}</DetailText>
-          <DetailText>{data?.[index]?.quantity}</DetailText>
+      {receiverInfos.map((receiver, index) => (
+        <Details key={index}>
+          <DetailText>{receiver.name}</DetailText>
+          <DetailText>{receiver.phoneNumber}</DetailText>
+          <DetailText>{receiver.quantity}</DetailText>
         </Details>
       ))}
     </Container>

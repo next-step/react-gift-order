@@ -1,12 +1,13 @@
 import { phoneNumberRegex } from '@/page/Login/utils/validateLogin';
 import styled from '@emotion/styled';
-import { useFormContext, type UseFieldArrayReturn } from 'react-hook-form';
+import { type UseFieldArrayReturn, type UseFormReturn } from 'react-hook-form';
 import type { OrderInfoValues } from '..';
 
 const ReceiverInfoContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.semantic.background.fill};
   padding: ${({ theme }) => theme.spacing.spacing4} ${({ theme }) => theme.spacing.spacing3};
   margin-bottom: ${({ theme }) => theme.spacing.spacing4};
+  min-height: 0;
 `;
 
 const InputContainer = styled.div`
@@ -63,14 +64,15 @@ const DeleteIcon = () => (
 interface ReceiverInfoProps {
   index: number;
   remove: UseFieldArrayReturn<OrderInfoValues, 'receiverInfos', 'id'>['remove'];
+  receiverInfosForm: UseFormReturn<OrderInfoValues>;
 }
 
-const ReceiverInfo = ({ index, remove }: ReceiverInfoProps) => {
+const ReceiverInfo = ({ index, remove, receiverInfosForm }: ReceiverInfoProps) => {
   const {
     register,
-    formState: { errors },
     getValues,
-  } = useFormContext<OrderInfoValues>();
+    formState: { errors },
+  } = receiverInfosForm;
 
   return (
     <>

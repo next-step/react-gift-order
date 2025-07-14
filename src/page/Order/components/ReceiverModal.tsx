@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-import { useFormContext, type UseFieldArrayReturn } from 'react-hook-form';
+import { useFieldArray, useForm } from 'react-hook-form';
 import type { OrderInfoValues } from '..';
 import ReceiverInfo from './ReceiverInfo';
 
@@ -40,9 +40,6 @@ const ModalContainer = styled.div`
   width: 100%;
   height: 100%;
   padding: 16px 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
 `;
 
 const InfoArea = styled.div`
@@ -138,60 +135,78 @@ const ButtonCancel = styled.button`
 const ReceiverAddedContainer = styled.div`
   flex: 1 1 0%;
   overflow: auto;
+  min-height: 0;
 `;
 
 interface ReceiverInfoProps {
   onClose: () => void;
-  receiverFieldArray: UseFieldArrayReturn<OrderInfoValues, 'receiverInfos', 'id'>;
+  handleChange: (value: OrderInfoValues['receiverInfos']) => void;
+  receiverInfos: OrderInfoValues['receiverInfos'];
 }
 const MAX_LENGTH = 10;
 
-const ReceiverModal = ({ onClose, receiverFieldArray }: ReceiverInfoProps) => {
-  const formContext = useFormContext<OrderInfoValues>();
-  const { fields, append, remove } = receiverFieldArray;
+const ReceiverModal = ({ onClose, handleChange, receiverInfos }: ReceiverInfoProps) => {
+  const receiverInfosForm = useForm<OrderInfoValues>({
+    defaultValues: {
+      receiverInfos: receiverInfos,
+    },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control: receiverInfosForm.control,
+    name: 'receiverInfos',
+  });
 
   const onSubmit = async () => {
-    const isValid = await formContext.trigger('receiverInfos');
-
-    if (isValid) {
-      onClose();
-    }
+    const receiverInfos = receiverInfosForm.getValues('receiverInfos');
+    handleChange(receiverInfos);
+    onClose();
   };
 
   return (
     <ModalBackGround>
       <ModalWrapper>
         <ModalContainer>
-          <InfoArea>
-            <TitleText>받는사람</TitleText>
-            <DetailInfoText>
-              * 최대 10명까지 추가 할 수 있어요.
-              <br />* 받는 사람의 전화번호를 중복으로 입력할 수 없어요.
-            </DetailInfoText>
+          <form
+            onSubmit={receiverInfosForm.handleSubmit(onSubmit)}
+            style={{ display: 'flex', flexDirection: 'column', gap: '16px', height: '100%' }}
+          >
+            <InfoArea>
+              <TitleText>받는사람</TitleText>
+              <DetailInfoText>
+                * 최대 10명까지 추가 할 수 있어요.
+                <br />* 받는 사람의 전화번호를 중복으로 입력할 수 없어요.
+              </DetailInfoText>
 
-            <ButtonAdd
-              type="button"
-              onClick={() => {
-                append({ name: '', phoneNumber: '', quantity: 1 });
-              }}
-              disabled={fields.length >= MAX_LENGTH}
-            >
-              추가하기
-            </ButtonAdd>
-          </InfoArea>
+              <ButtonAdd
+                type="button"
+                onClick={() => {
+                  append({ name: '', phoneNumber: '', quantity: 1 });
+                }}
+                disabled={fields.length >= MAX_LENGTH}
+              >
+                추가하기
+              </ButtonAdd>
+            </InfoArea>
 
-          <ReceiverAddedContainer>
-            {fields.map((item, index) => (
-              <ReceiverInfo key={item.id} index={index} remove={remove} />
-            ))}
-          </ReceiverAddedContainer>
+            <ReceiverAddedContainer>
+              {fields.map((item, index) => (
+                <ReceiverInfo
+                  key={item.id}
+                  index={index}
+                  remove={remove}
+                  receiverInfosForm={receiverInfosForm}
+                />
+              ))}
+            </ReceiverAddedContainer>
 
-          <ButtonArea>
-            <ButtonCancel onClick={onClose}>취소</ButtonCancel>
-            <ButtonAddDone type="button" onClick={onSubmit}>
-              {fields.length}명 완료
-            </ButtonAddDone>
-          </ButtonArea>
+            <ButtonArea>
+              <ButtonCancel type="button" onClick={onClose}>
+                취소
+              </ButtonCancel>
+              <ButtonAddDone type="submit">{fields.length}명 완료</ButtonAddDone>
+            </ButtonArea>
+          </form>
         </ModalContainer>
       </ModalWrapper>
     </ModalBackGround>

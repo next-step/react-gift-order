@@ -51,11 +51,12 @@ const OrderPage = () => {
   const orderForm = useForm<OrderInfoValues>({
     defaultValues: { message: '축하해요.', name: '', receiverInfos: [] },
   });
+  // const orderForm = useForm<OrderInfoValues>({
+  //   defaultValues: { message: '축하해요.', name: '' },
+  // });
 
-  const { watch } = orderForm;
-  const watchedReceiverInfos = watch('receiverInfos');
+ 
 
-  // 총 수량
   return (
     <>
       <Section>
@@ -64,10 +65,10 @@ const OrderPage = () => {
             <MessageCardSection />
             <MessageInput />
             <SenderInfo />
-            <ReceiverField watchedData={watchedReceiverInfos} />
+            <ReceiverField />
             <ProductInfo index={index} />
             <OrderButton type="submit">
-              {29000 * watchedReceiverInfos.length}원 주문하기
+              {29000}원 주문하기
             </OrderButton>
           </form>
         </FormProvider>

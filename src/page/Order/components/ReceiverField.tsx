@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import ReceiverModal from './ReceiverModal';
-import { useFieldArray, useFormContext } from 'react-hook-form';
-
+import { useFormContext } from 'react-hook-form';
 import { createPortal } from 'react-dom';
 import { useState } from 'react';
 import ReceiverInfoArray from './ReceiverInfoArray';
@@ -58,17 +57,21 @@ const MainArea = styled.div`
   }
 `;
 
-interface ReceiverFieldProps {
-  watchedData: OrderInfoValues['receiverInfos'];
-}
-const ReceiverField = ({ watchedData }: ReceiverFieldProps) => {
+// interface FormInputValues {
+//   receiverInfos: { name: string; phoneNumber: string; quantity: number }[];
+// }
+
+const ReceiverField = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { control } = useFormContext<OrderInfoValues>();
-  const receiverFieldArray = useFieldArray({
-    control,
-    name: 'receiverInfos',
-  });
-  const isEmpty = receiverFieldArray.fields.length ? false : true;
+
+  const { watch, setValue } = useFormContext<OrderInfoValues>();
+
+  const receiverInfos = watch('receiverInfos');
+  const isEmpty = receiverInfos.length ? false : true;
+
+  const handleChange = (value: OrderInfoValues['receiverInfos']) => {
+    setValue('receiverInfos', value);
+  };
 
   return (
     <>
@@ -81,7 +84,7 @@ const ReceiverField = ({ watchedData }: ReceiverFieldProps) => {
         </ButtonArea>
         <MainArea>
           {!isEmpty ? (
-            <ReceiverInfoArray receiverFieldArray={receiverFieldArray} data={watchedData} />
+            <ReceiverInfoArray receiverInfos={receiverInfos} />
           ) : (
             <p>
               받는 사람이 없습니다.
@@ -95,7 +98,8 @@ const ReceiverField = ({ watchedData }: ReceiverFieldProps) => {
         createPortal(
           <ReceiverModal
             onClose={() => setIsModalOpen(false)}
-            receiverFieldArray={receiverFieldArray}
+            handleChange={handleChange}
+            receiverInfos={receiverInfos}
           />,
           document.body
         )}
