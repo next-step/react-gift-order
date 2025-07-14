@@ -1,14 +1,14 @@
 import { ORDER_TEMPLATE_DATA, type OrderTemplate } from '@assets/orderTemplateData';
-import type { HasErrorProp } from '@src_types/hasError';
 import styled from '@emotion/styled';
-import { useEffect, useState, type ChangeEvent } from 'react';
+import { useEffect, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
+import type { OrderFormValue } from '@/types/OrderFormValues';
 
-interface OrderCardTemplateContainerProps {
-  msg: string; // msg 필드의 현재 값
-  onMsgChange: (e: ChangeEvent<HTMLTextAreaElement>) => void; // msg 입력 변경 핸들러
-  msgError?: string; // msg 필드의 에러 메시지
-  setMsg: (value: string) => void; // useMsgForm에서 받아올 setMsg 함수 추가
-}
+// interface OrderCardTemplateContainerProps {
+//   register: UseFormRegister<OrderFormValue>;
+//   errors: FieldErrors<OrderFormValue>;
+//   setValue: UseFormSetValue<OrderFormValue>;
+// }
 
 const StyledOrderCardSideScrollConntainer = styled.div`
   display: flex;
@@ -31,7 +31,7 @@ const StyledOrderCardSideScrollConntainer = styled.div`
     margin-left: 4px;
   }
 `;
-const StyledOrderCardContainer = styled.div<HasErrorProp>`
+const StyledOrderCardContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -42,15 +42,23 @@ const StyledOrderCardContainer = styled.div<HasErrorProp>`
     width: 400px;
     height: 230px;
   }
+  div {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 20px;
+  }
+  p {
+    margin-top: 6px;
+    width: 95%;
+  }
   textarea {
-    width: 90%;
+    width: 95%;
     padding: 4px 12px;
-    margin-bottom: 20px;
     border-radius: 5px;
-    border: 1px solid ${({ theme, hasError }) => (hasError ? theme.palette.red600 : theme.palette.gray300)}; // 에러 스타일 추가
     &:focus {
       outline: none;
-      border-color: ${({ theme, hasError }) => (hasError ? theme.palette.red600 : theme.palette.blue500)};
     }
   }
 `;
@@ -59,24 +67,22 @@ const StyledOrderTemplateContainer = styled.div`
   width: 100%;
 `;
 
-const ErrorMessage = styled.p`
-  color: ${({ theme }) => theme.palette.red600};
-  font-size: 12px;
-  margin: -15px 10px 20px 10px; // textarea와 간격 조정
-`;
-
-const OrderCardTemplateContainer = ({ msg, onMsgChange, msgError, setMsg }: OrderCardTemplateContainerProps) => {
+const OrderCardTemplateContainer = () => {
   // 목 데이터 템플릿에서 선택된 템플릿을 저장하기 위한 state 값
   const [selectedTemplate, setSelectedTemplate] = useState<OrderTemplate>(ORDER_TEMPLATE_DATA[0]);
+  const {
+    register,
+    formState: { errors },
+    setValue,
+  } = useFormContext<OrderFormValue>();
 
-  // selectedTemplate
+  //템플릿을 선택했을때 기본 messgae를 만들어 리렌더링하기 위한 useEffect()
   useEffect(() => {
-    //버그 해결 -> 템플릿을 사용자가 선택하는 경우에만 setMsg를 통해 템플릿의 기본 메시지로 리렌더링
-    setMsg(selectedTemplate.defaultTextMessage);
-  }, [selectedTemplate, setMsg]);
+    setValue('msg', selectedTemplate.defaultTextMessage, { shouldValidate: true });
+  }, [selectedTemplate, setValue]);
 
   return (
-    <StyledOrderTemplateContainer className='background-default'>
+    <StyledOrderTemplateContainer className='background-default margin-bottom-10'>
       <StyledOrderCardSideScrollConntainer>
         {ORDER_TEMPLATE_DATA.map((template: OrderTemplate, index: number) => (
           <img
@@ -89,17 +95,26 @@ const OrderCardTemplateContainer = ({ msg, onMsgChange, msgError, setMsg }: Orde
         ))}
       </StyledOrderCardSideScrollConntainer>
 
-      <StyledOrderCardContainer className='order-template-card' hasError={!!msgError}>
+      <StyledOrderCardContainer className='order-template-card'>
         <div className='card-image'>
-          <img src={selectedTemplate.imageUrl} alt={`메시지 카드 ${selectedTemplate.id}`} loading='lazy' />
+          <img
+            src={selectedTemplate.imageUrl}
+            alt={`메시지 카드 ${selectedTemplate.id}`}
+            loading='lazy'
+          />
         </div>
-        <textarea
-          name='msg'
-          className='body2Regular'
-          value={msg}
-          onChange={onMsgChange} // 이제 handleMsgChange가 textarea 이벤트만 받도록 명확히 함
-        />
-        {msgError && <ErrorMessage>{msgError}</ErrorMessage>}
+        <div>
+          <textarea
+            {...register('msg')}
+            className={`body2Regular ${errors.msg ? 'border-red' : ''}`}
+            placeholder='메시지를 입력해주세요'
+          />
+          {errors.msg && (
+            <p className='label2Regular font-red margin-left-20'>
+              {errors.msg.message?.toString()}
+            </p>
+          )}
+        </div>
       </StyledOrderCardContainer>
     </StyledOrderTemplateContainer>
   );

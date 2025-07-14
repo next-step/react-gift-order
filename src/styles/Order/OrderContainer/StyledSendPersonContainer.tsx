@@ -12,10 +12,23 @@ export const StyledSendPersonContainer = styled.div`
     margin: 5px 10px;
     height: 30px;
   }
-  p {
-    margin: 5px 10px;
+  div {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 20px;
   }
-  .margin-left-20 {
-    margin-left: 20px;
+  textarea {
+    width: 95%;
+    padding: 4px 12px;
+    border-radius: 5px;
+    &:focus {
+      outline: none;
+    }
+  }
+  p {
+    margin-top: 6px;
+    width: 95%;
   }
 `;

@@ -3,9 +3,6 @@ import { useState, useCallback, type ChangeEvent } from 'react';
 
 interface BaiscOrderForm {
   sendName: string;
-  receiveName: string;
-  receiveTel: string;
-  count: number;
 }
 type CommonErrorMsgs = {
   [K in keyof BaiscOrderForm]?: string; // 모든 필드를 optional로 하여 에러가 없으면 빈 문자열이나 undefined가 되도록 합니다.
@@ -22,18 +19,10 @@ interface BaiscOrderFormHook {
 export const useCommonOrderForm = (): BaiscOrderFormHook => {
   const [commonFormValues, setCommonFormValues] = useState<BaiscOrderForm>({
     sendName: '',
-    receiveName: '',
-    receiveTel: '',
-    count: 1,
   });
 
   // 에러 메시지 배열 인덱스: 0: sendName, 1: receiveName, 2: receiveTel, 3: count
   const [commonErrorMsgs, setCommonErrorMsgs] = useState<CommonErrorMsgs>({});
-
-  const isValidTel = (tel: string): boolean => {
-    const phoneRegex = /^010\d{8}$/;
-    return phoneRegex.test(tel);
-  };
 
   const handleCommonChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -64,24 +53,6 @@ export const useCommonOrderForm = (): BaiscOrderFormHook => {
       isValid = false;
     }
 
-    if (commonFormValues.receiveName.trim() === '') {
-      localErrorMsgs.receiveName = '받는 사람 이름을 입력해주세요.';
-      isValid = false;
-    }
-
-    if (commonFormValues.receiveTel.trim() === '') {
-      localErrorMsgs.receiveTel = '전화번호를 입력해주세요.';
-      isValid = false;
-    } else if (!isValidTel(commonFormValues.receiveTel)) {
-      localErrorMsgs.receiveTel = '정확한 전화번호를 입력해주세요. (예: 01012341234)';
-      isValid = false;
-    }
-
-    if (commonFormValues.count < 1 || isNaN(commonFormValues.count)) {
-      localErrorMsgs.count = '수량은 1개 이상이어야 합니다.';
-      isValid = false;
-    }
-
     setCommonErrorMsgs(localErrorMsgs);
     return isValid;
   }, [commonFormValues]);
@@ -89,9 +60,6 @@ export const useCommonOrderForm = (): BaiscOrderFormHook => {
   const resetCommonForm = useCallback(() => {
     setCommonFormValues({
       sendName: '',
-      receiveName: '',
-      receiveTel: '',
-      count: 1,
     });
     setCommonErrorMsgs({});
   }, []);

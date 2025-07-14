@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 
 const StyledTopestDiv = styled.div`
-  background-color: ${({ theme }) => theme.palette.gray200};
+  background-color: ${({ theme }) => theme.palette.gray500};
   width: 720px;
 
   .title1Bold {
@@ -54,6 +54,39 @@ const StyledTopestDiv = styled.div`
   }
   .background-default {
     background-color: ${({ theme }) => theme.sementicPalette.backgroundDefault};
+  }
+  .font-red {
+    color: ${({ theme }) => theme.palette.red800};
+  }
+  .border-red {
+    border: 1px ${({ theme }) => theme.palette.red800} solid;
+  }
+  .padding-6-12 {
+    padding: 6px 12px;
+  }
+  .margin-left-20 {
+    margin-left: 20px;
+  }
+  .error-message {
+    color: ${({ theme }) => theme.palette.red600};
+    margin-top: 10px;
+    ${({ theme }) => theme.typography.label2Regular}
+  }
+  .input-error {
+    border-color: red;
+    box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.25);
+  }
+  .background-gray300 {
+    background-color: ${({ theme }) => theme.palette.gray300};
+  }
+  .margin-bottom-10 {
+    margin-bottom: 10px;
+  }
+  .border-1px-black {
+    border: 1px solid black;
+  }
+  .background-kakaoyellow {
+    background-color: ${({ theme }) => theme.sementicPalette.kakaoYellow};
   }
 `;
 
