@@ -1,4 +1,4 @@
-import Layout from '@components/Layout';
+import Layout from '@components/Layout/Layout';
 import { useAuth } from '@contexts/AuthContext';
 import GiftOrderPage from '@pages/GiftOrderPage';
 import Home from '@pages/Home';

@@ -1,7 +1,7 @@
-import CategorySection from '@components/CategorySection';
-import PromoBanner from '@components/PromoBanner';
-import RankingSection from '@components/RankingSection';
-import FreiendSelector from '@components/FriendSelector';
+import CategorySection from '@components/HomePage/CategorySection';
+import PromoBanner from '@components/HomePage/PromoBanner';
+import RankingSection from '@components/HomePage/RankingSection';
+import FreiendSelector from '@components/HomePage/FriendSelector';
 
 const Home = () => {
   return (
