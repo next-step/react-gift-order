@@ -8,7 +8,7 @@ import productData from '@/data/productData';
 import { MOCK_CARDFORM_LIST } from '@/components/OrderForm/mock';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ROUTE_PATH } from '@/routes/Routes';
-import { useForm, FormProvider, useFieldArray, Controller } from 'react-hook-form';
+import { useForm, FormProvider, Controller } from 'react-hook-form';
 
 const Wrapper = styled.section(({ theme }) => ({
   width: '100%',
@@ -45,7 +45,7 @@ const OrderForm = () => {
     defaultValues: {
       message: MOCK_CARDFORM_LIST[0].defaultTextMessage || '',
       sender: '',
-      recipients: [{ name: '', phone: '', quantity: 1 }],
+      recipients: [],
     },
     mode: 'onBlur',
   });
@@ -53,16 +53,8 @@ const OrderForm = () => {
   const {
     handleSubmit,
     control,
-    register,
-    getValues,
-    clearErrors,
     formState: { errors },
   } = methods;
-
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: 'recipients',
-  });
 
   const onSubmit = (data: OrderFormValues) => {
     alert(
@@ -74,7 +66,9 @@ const OrderForm = () => {
     navigate(ROUTE_PATH.HOME);
   };
 
-  const totalPrice = selectedProduct.price.sellingPrice * getValues('recipients')[0].quantity;
+  const recipients = methods.getValues('recipients');
+  const totalQuantity = recipients.reduce((sum, r) => sum + (r.quantity || 0), 0);
+  const totalPrice = selectedProduct.price.sellingPrice * totalQuantity;
 
   return (
     <FormProvider {...methods}>
@@ -93,7 +87,6 @@ const OrderForm = () => {
               />
             )}
           />
-
           <Margin height="8px" />
 
           {/* 발신자 입력 */}
@@ -109,42 +102,13 @@ const OrderForm = () => {
               />
             )}
           />
-
           <Margin height="8px" />
 
-          {/* 받는 사람 리스트 */}
-          {fields.map((f, idx) => (
-            <div key={f.id}>
-              <Recipient
-                index={idx}
-                register={register}
-                getValues={getValues}
-                errors={errors.recipients?.[idx]}
-              />
-              <button type="button" onClick={() => remove(idx)} disabled={fields.length <= 1}>
-                삭제
-              </button>
-              <Margin height="8px" />
-            </div>
-          ))}
-
-          {/* 받는 사람 추가 */}
-          <button
-            type="button"
-            onClick={() => {
-              clearErrors('recipients');
-              append({ name: '', phone: '', quantity: 1 });
-            }}
-            disabled={fields.length >= 10}
-          >
-            받는 사람 추가
-          </button>
-          {fields.length >= 10 && <p>최대 10명까지 등록 가능합니다.</p>}
+          {/* 받는 사람 (모달) */}
+          <Recipient />
 
           <Margin height="8px" />
-
           <ProductInfo product={selectedProduct} />
-
           <OrderButton type="submit" totalPrice={totalPrice} />
         </Wrapper>
       </form>

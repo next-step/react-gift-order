@@ -1,6 +1,7 @@
-import { ErrorMessage } from '@components/common/ErrorMessage';
+import { useState } from 'react';
+import { useFormContext, useFieldArray } from 'react-hook-form';
+import { Modal as RecipientModal } from '@/components/common/Modal'; // 사용자 정의 Modal 컴포넌트
 import styled from '@emotion/styled';
-import type { UseFormRegister, UseFormGetValues, FieldError } from 'react-hook-form';
 import type { OrderFormValues } from '@/components/OrderForm/OrderForm';
 
 const Wrapper = styled.div`
@@ -14,6 +15,14 @@ const Margin = styled.div<{ height: string }>`
   background-color: transparent;
 `;
 
+const TitleContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+`;
+
 const Title = styled.p(({ theme }) => ({
   fontSize: '1rem',
   fontWeight: 700,
@@ -23,132 +32,100 @@ const Title = styled.p(({ theme }) => ({
   textAlign: 'left',
 }));
 
-const InputBoxContainer = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-`;
-
-const InputBoxTitle = styled.p(({ theme }) => ({
-  fontSize: '1rem',
+const AddButton = styled.button(({ theme }) => ({
+  fontSize: '0.875rem',
   fontWeight: 400,
-  lineHeight: '1.375rem',
-  color: theme.semanticColors.text.default,
-  margin: '0px',
-  textAlign: 'left',
-  minWidth: '3.75rem',
-}));
-
-const InputBoxStyle = styled.div`
-  width: 100%;
-`;
-
-const InputBox = styled.input<{ hasError?: boolean }>(({ theme, hasError }) => ({
-  width: '100%',
-  boxSizing: 'border-box',
-  color: theme.semanticColors.text.default,
-  transition: 'border-color 200ms',
-  borderStyle: 'solid',
-  minHeight: '2.75rem',
-  fontSize: '1rem',
-  fontWeight: 400,
-  lineHeight: '1.375rem',
-  padding: '8px 12px',
-  borderWidth: '1px',
+  lineHeight: '1.1875rem',
+  padding: '8px 16px',
   borderRadius: '8px',
-  borderColor: hasError ? theme.semanticColors.state.critical : theme.semanticColors.border.default,
-  '&:focus': {
-    outline: 'none',
-    borderColor: theme.colorScale.gray700,
+  backgroundColor: theme.colorScale.gray300,
+  border: 'none',
+  cursor: 'pointer',
+  transition: 'background-color 200ms, opacity 200ms',
+  '&:hover': {
+    backgroundColor: theme.colorScale.gray400,
   },
-  '&::placeholder': {
-    color: theme.semanticColors.text.placeholder,
+  '&:active': {
+    backgroundColor: theme.colorScale.gray500,
   },
 }));
 
-interface RecipientProps {
-  index: number;
-  register: UseFormRegister<OrderFormValues>;
-  getValues: UseFormGetValues<OrderFormValues>;
-  errors?: {
-    name?: FieldError;
-    phone?: FieldError;
-    quantity?: FieldError;
-  };
-}
+const RecipientInfo = styled.div(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  padding: '24px',
+  border: '1px solid ',
+  borderColor: theme.semanticColors.border.disabled,
+  borderRadius: '8px',
+}));
 
-export const Recipient = ({ index, register, getValues, errors }: RecipientProps) => {
-  const nameError = errors?.name?.message;
-  const phoneError = errors?.phone?.message;
-  const qtyError = errors?.quantity?.message;
+const NoRecipientNotice = styled.p(({ theme }) => ({
+  fontSize: '0.875rem',
+  fontWeight: 400,
+  lineHeight: '1.1875rem',
+  color: theme.semanticColors.text.sub,
+  margin: 0,
+  textAlign: 'center',
+}));
+
+export const Recipient = () => {
+  const { control, clearErrors } = useFormContext<OrderFormValues>();
+  const { fields, append, remove } = useFieldArray({ control, name: 'recipients' });
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const handleAddClick = () => {
+    clearErrors('recipients');
+    setModalOpen(true);
+  };
+
+  const handleConfirm = (item: { name: string; phone: string; quantity: number }) => {
+    append(item);
+    setModalOpen(false);
+  };
 
   return (
     <Wrapper>
       <Margin height="12px" />
-      <Title>받는 사람 {index + 1}</Title>
+      <TitleContainer>
+        <Title>받는 사람</Title>
+        <AddButton type="button" onClick={handleAddClick} disabled={fields.length >= 10}>
+          추가
+        </AddButton>
+      </TitleContainer>
       <Margin height="12px" />
 
-      {/* 이름 */}
-      <InputBoxContainer>
-        <InputBoxTitle>이름</InputBoxTitle>
-        <InputBoxStyle>
-          <InputBox
-            placeholder="이름을 입력하세요."
-            hasError={!!nameError}
-            {...register(`recipients.${index}.name`, {
-              required: '이름을 입력해주세요',
-            })}
-          />
-          {nameError && <ErrorMessage>{nameError}</ErrorMessage>}
-        </InputBoxStyle>
-      </InputBoxContainer>
+      <RecipientInfo>
+        {fields.length === 0 ? (
+          <NoRecipientNotice>
+            받는 사람이 없습니다.
+            <br />
+            받는 사람을 추가해주세요.
+          </NoRecipientNotice>
+        ) : (
+          fields.map((f, idx) => (
+            <div key={f.id}>
+              {idx + 1}. {f.name || '(이름 없음)'} / {f.phone || '(전화없음)'} / {f.quantity}개
+              <button
+                type="button"
+                onClick={() => remove(idx)}
+                disabled={fields.length <= 1}
+                style={{ marginLeft: '8px' }}
+              >
+                삭제
+              </button>
+            </div>
+          ))
+        )}
+      </RecipientInfo>
 
-      <Margin height="8px" />
-
-      {/* 전화번호 */}
-      <InputBoxContainer>
-        <InputBoxTitle>전화번호</InputBoxTitle>
-        <InputBoxStyle>
-          <InputBox
-            type="tel"
-            placeholder="01012341234"
-            hasError={!!phoneError}
-            {...register(`recipients.${index}.phone`, {
-              required: '전화번호를 입력해주세요',
-              pattern: {
-                value: /^010\d{8}$/,
-                message: '01012341234 형태로 입력하세요',
-              },
-              validate: (val: string) => {
-                const phones = getValues('recipients').map((r) => r.phone);
-                return phones.filter((p) => p === val).length === 1 || '중복된 번호가 있습니다';
-              },
-            })}
-          />
-          {phoneError && <ErrorMessage>{phoneError}</ErrorMessage>}
-        </InputBoxStyle>
-      </InputBoxContainer>
-
-      <Margin height="8px" />
-
-      {/* 수량 */}
-      <InputBoxContainer>
-        <InputBoxTitle>수량</InputBoxTitle>
-        <InputBoxStyle>
-          <InputBox
-            type="number"
-            placeholder="수량을 입력하세요."
-            hasError={!!qtyError}
-            {...register(`recipients.${index}.quantity`, {
-              required: '수량을 입력해주세요',
-              min: { value: 1, message: '최소 1개 이상이어야 합니다' },
-            })}
-          />
-          {qtyError && <ErrorMessage>{qtyError}</ErrorMessage>}
-        </InputBoxStyle>
-      </InputBoxContainer>
+      {/* 사용자 정의 Modal 호출 */}
+      <RecipientModal
+        open={isModalOpen}
+        initialValue={fields.length < 10 ? { name: '', phone: '', quantity: 1 } : undefined}
+        onClose={() => setModalOpen(false)}
+        onConfirm={handleConfirm}
+      />
 
       <Margin height="24px" />
     </Wrapper>
