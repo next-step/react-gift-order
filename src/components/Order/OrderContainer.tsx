@@ -66,10 +66,7 @@ const OrderContainer = () => {
       <StyledTopestDiv>
         <form onSubmit={handleSubmit(onSubmit)}>
           <OrderCardTemplateContainer />
-          <SenderContainer
-            register={register} // senderName, senderContact 필드 등록을 위해 register 전달
-            errors={errors} // 해당 필드들의 오류 정보 전달
-          />
+          <SenderContainer />
           <RecipientsModalContainer
             control={control}
             errors={errors}

@@ -1,14 +1,19 @@
 import { StyledSendPersonContainer } from '@/styles/Order/OrderContainer/StyledSendPersonContainer';
 import { SyltedOrderInput } from '@/styles/Order/OrderContainer/SyltedOrderInput';
 import type { OrderFormValue } from '@/types/OrderFormValues';
-import type { FieldErrors, UseFormRegister } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 
-interface SenderContainerProps {
-  register: UseFormRegister<OrderFormValue>;
-  errors: FieldErrors<OrderFormValue>;
-}
+// interface SenderContainerProps {
+//   register: UseFormRegister<OrderFormValue>;
+//   errors: FieldErrors<OrderFormValue>;
+// }
 
-const SenderContainer = ({ register, errors }: SenderContainerProps) => {
+const SenderContainer = () => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<OrderFormValue>();
+
   return (
     <StyledSendPersonContainer className='send-person background-default margin-bottom-10'>
       <div>
@@ -18,7 +23,7 @@ const SenderContainer = ({ register, errors }: SenderContainerProps) => {
         <SyltedOrderInput
           id='sendName'
           type='text'
-          {...register('sendName', { required: '발신자 이름은 필수입니다.' })}
+          {...register('sendName')}
           className={errors.sendName ? 'border-red' : ''}
           placeholder='이름을 입력하세요'
         />
