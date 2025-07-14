@@ -91,20 +91,7 @@ const RecipientsItem = ({ index, onRemove, id, allRecipientsInModal }: Recipient
           <input
             id={`newRecipients[${index}].receiveTel`}
             type='text'
-            {...register(`newRecipients.${index}.receiveTel`, {
-              validate: (value: string) => {
-                const currentTel = value.trim();
-                // 현재 모달 내의 다른 필드들과 중복 검사
-                const duplicateInModal = allRecipientsInModal.some(
-                  (rec, i) => i !== index && rec.receiveTel === currentTel
-                );
-
-                if (duplicateInModal) {
-                  return '이미 추가된 연락처입니다.';
-                }
-                return true;
-              },
-            })}
+            {...register(`newRecipients.${index}.receiveTel`)}
             className={errors.newRecipients?.[index]?.receiveTel ? 'input-error' : ''}
           />
           {errors.newRecipients?.[index]?.receiveTel && (
