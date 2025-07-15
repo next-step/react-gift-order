@@ -3,7 +3,7 @@ import { useTheme } from "@emotion/react";
 import { css } from "@emotion/react";
 import { useNavigate } from "react-router";
 import Input from "@/components/login/Input";
-import { useUserInfo } from "@/context/UserInfoProvider";
+import { useUserInfo } from "@/hooks/useUserInfo";
 import { useValidate } from "@/components/login/useValidate";
 
 const Login = () => {
