@@ -1,6 +1,6 @@
 import "@/pages/Modal.css"
 import { useFormContext, useFieldArray } from "react-hook-form"
-import type { Receiver } from "@/pages/OrderPage"
+import type { FormData } from "@/pages/OrderPage" // FormData 타입 import 추가
 import Text from "@/components/Text"
 import Blank from "@/components/Blank"
 
@@ -13,11 +13,9 @@ const ReceiverModal = ({ close }: Props) => {
     control,
     register,
     formState: { errors },
-  } = useFormContext()
+  } = useFormContext<FormData>()
 
-  const { fields, append, remove } = useFieldArray<{
-    receivers: Receiver[]
-  }>({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "receivers",
   })
@@ -43,7 +41,6 @@ const ReceiverModal = ({ close }: Props) => {
           추가하기
         </button>
 
-        {/* 입력 폼 목록 */}
         {fields.map((field, index) => (
           <div key={field.id} style={{ marginTop: "16px" }}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -60,7 +57,9 @@ const ReceiverModal = ({ close }: Props) => {
             </div>
 
             <input
-              {...register(`receivers.${index}.name`, { required: true })}
+              {...register(`receivers.${index}.name` as const, {
+                required: true,
+              })}
               placeholder="이름을 입력하세요."
             />
             {errors?.receivers?.[index]?.name && (
@@ -68,7 +67,9 @@ const ReceiverModal = ({ close }: Props) => {
             )}
 
             <input
-              {...register(`receivers.${index}.phone`, { required: true })}
+              {...register(`receivers.${index}.phone` as const, {
+                required: true,
+              })}
               placeholder="전화번호를 입력하세요."
             />
             {errors?.receivers?.[index]?.phone && (
@@ -76,7 +77,7 @@ const ReceiverModal = ({ close }: Props) => {
             )}
 
             <input
-              {...register(`receivers.${index}.quantity`, {
+              {...register(`receivers.${index}.quantity` as const, {
                 required: true,
                 min: 1,
               })}

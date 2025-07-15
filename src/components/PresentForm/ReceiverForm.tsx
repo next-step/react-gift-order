@@ -6,11 +6,13 @@ import Blank from "@/components/Blank"
 import Text from "@/components/Text"
 import ReceiverList from "@/components/PresentForm/ReceiverList"
 import ReceiverModal from "@/components/PresentForm/ReceiverModal"
+import AddPlusButton from "@/components/PresentForm/AddPlusButton"
 
 const ReceiverForm = () => {
   const [openModal, setOpenModal] = useState(false)
   const { watch } = useFormContext()
   const receivers = watch("receivers")
+  const hasReceivers = receivers.length > 0
 
   return (
     <>
@@ -27,9 +29,15 @@ const ReceiverForm = () => {
           <Text variant="title2Bold" margin="spacing0" padding="spacing0">
             받는 사람
           </Text>
-          <button type="button" onClick={() => setOpenModal(true)}>
-            추가
-          </button>
+          <AddPlusButton
+            type="button"
+            borderRadius="spacing2"
+            paddingLeft="spacing3"
+            paddingRight="spacing3"
+            onClick={() => setOpenModal(true)}
+          >
+            {hasReceivers ? "수정" : "추가"}
+          </AddPlusButton>
         </div>
 
         <Blank height="12px" />

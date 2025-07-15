@@ -81,7 +81,9 @@ const OrderPage = () => {
           background="kakaoYellow"
           borderRadius="spacing0"
         >
-          {totalPrice.toLocaleString()}원 주문하기
+          {totalQuantity
+            ? `${totalPrice.toLocaleString()}원 주문하기`
+            : "0원 주문하기"}
         </MoreButton>
       </OrderLayout>
     </FormProvider>
