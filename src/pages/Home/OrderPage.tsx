@@ -49,7 +49,7 @@ export default function OrderPage() {
   const [sender, setSender] = useState("");
   const [receiver, setReceiver] = useState("");
   const [phone, setPhone] = useState("");
-  const [qty, setQty] = useState(1);
+  const [quantity, setquantity] = useState(1);
   const [errors, setErrors] = useState<{ [k: string]: string }>({});    
 
   // 1) 상품 찾기
@@ -69,7 +69,7 @@ export default function OrderPage() {
 if (!EMAIL_REGEX.test(phone)) {
     e.phone = "올바른 전화번호(010-1234-5678) 형식으로 입력하세요.";
   }
-    if (qty < magicNumber) e.qty = "수량은 1개 이상이어야 합니다.";
+    if (quantity < magicNumber) e.quantity = "수량은 1개 이상이어야 합니다.";
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -197,13 +197,13 @@ if (!EMAIL_REGEX.test(phone)) {
           수량
           <input
             type="number"
-            value={qty}
-            onChange={(e) => setQty(Number(e.target.value))}
+            value={quantity}
+            onChange={(e) => setquantity(Number(e.target.value))}
             min={1}
             className="w-full p-2 border rounded"
           />
-          {errors.qty && (
-            <p className="text-red-500">{errors.qty}</p>
+          {errors.quantity && (
+            <p className="text-red-500">{errors.quantity}</p>
           )}
         </div>
         <button
