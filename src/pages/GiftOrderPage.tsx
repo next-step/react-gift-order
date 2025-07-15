@@ -15,6 +15,9 @@ import {
   type UseFormRegister,
   type UseFormSetValue,
 } from 'react-hook-form';
+import ReceiveList from '@components/GifrOrderPage/ReceiveList';
+import ReceiveModal from '@components/GifrOrderPage/ReceiveModal';
+import { useModal } from '@contexts/ModalContext';
 
 export interface FormSectionProps {
   register: UseFormRegister<OrderFormData>;
@@ -59,17 +62,25 @@ const GiftOrderPage = () => {
   const quantity = watch('quantity') ?? 1;
   const totalPrice = mockItems.price.basicPrice * quantity;
 
+  const { isReceiveModalOpen, openReceiveModal, closeReceiveModal } =
+    useModal();
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <CardSelector register={register} errors={errors} setValue={setValue} />
-      <Divider />
-      <SenderForm register={register} errors={errors} />
-      <Divider />
-      <ReceiveForm register={register} errors={errors} />
-      <Divider />
-      <ProductSummary />
-      <OrderButton price={totalPrice} />
-    </form>
+    <>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <CardSelector register={register} errors={errors} setValue={setValue} />
+        <Divider />
+        <SenderForm register={register} errors={errors} />
+        <Divider />
+        <ReceiveForm register={register} errors={errors} />
+        <Divider />
+        <ReceiveList onOpen={openReceiveModal} />
+        <Divider />
+        <ProductSummary />
+        <OrderButton price={totalPrice} />
+      </form>
+      {isReceiveModalOpen && <ReceiveModal onClose={closeReceiveModal} />}
+    </>
   );
 };
 

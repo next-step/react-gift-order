@@ -1,4 +1,3 @@
-import ReceiveModal from '@components/GifrOrderPage/ReceiveModal';
 import { useAuth } from '@contexts/AuthContext';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
@@ -60,7 +59,6 @@ const MyPage = () => {
         <Explanation>이메일 주소는 {user?.email}입니다.</Explanation>
       </div>
       <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
-      <ReceiveModal onClose={() => {}} />
     </Container>
   );
 };
