@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 
 export interface ButtonProps extends BoxSizing, React.ComponentProps<"button"> {
-    variant: "primary" | "disabled";
+    variant: "primary" | "secondary" | "disabled" | "ghost";
     rounded?: "full" | boolean;
 }
 
@@ -34,6 +34,10 @@ export const Button = styled.button<ButtonProps>`
         switch (variant) {
             case "primary":
                 return theme.colors.yellow.yellow600;
+            case "secondary":
+                return theme.colors.gray.gray300;
+            case "ghost":
+                return "transparent";
             default:
                 return theme.colors.yellow.yellow600;
         }

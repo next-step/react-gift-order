@@ -3,13 +3,23 @@ import { createPortal } from "react-dom";
 import { useParams } from "react-router-dom";
 
 import { cardTemplates } from "@/features/order/constants/cardTemplate";
+import {
+    ReceiverContextProvider,
+    useReceiverContext,
+} from "@/features/order/contexts/ReceiverContext";
 import { useOrder } from "@/features/order/hooks/useOrder";
 import { LetterCard } from "@/features/order/ui/LetterCard";
 import { ProductInfo } from "@/features/order/ui/ProductInfo";
+import { ReceiverList } from "@/features/order/ui/ReceiverList";
+import { ReceiverModal } from "@/features/order/ui/ReceiverModal";
 
 import NotFoundPage from "@/pages/NotFoundPage";
 
-import { Input, InputFieldGroup } from "@/shared/ui/Input";
+import { ModalProvider } from "@/shared/context/ModalContext";
+import withProviders from "@/shared/helpers/withProviders";
+import { useModal } from "@/shared/hooks/useModal";
+import { Button } from "@/shared/ui";
+import { Input } from "@/shared/ui/Input";
 import { TextArea } from "@/shared/ui/TextArea";
 
 import { VerticalSpacing } from "@/widgets/layouts/Spacing.styled";
@@ -44,7 +54,10 @@ const product = {
  * <ReceiverFieldGroup/>
  * <ProductInfoSection/>
  */
-export default function OrderPage() {
+function OrderPage() {
+    const modal = useModal();
+    const { state } = useReceiverContext();
+
     const { id } = useParams();
 
     const [selectedLetterCardId, setSelectedLetterCardId] = useState<number>(cardTemplates[0].id);
@@ -54,7 +67,15 @@ export default function OrderPage() {
         [selectedLetterCardId],
     );
 
-    const { orderRefs, submit, validationErrors, quantity, onQuantityChange } = useOrder();
+    const totalQuantity = useMemo(() => {
+        return state.receivers.reduce((total, receiver) => total + receiver.quantity, 0);
+    }, [state.receivers]);
+
+    const totalPrice = useMemo(() => {
+        return product.price.sellingPrice * (totalQuantity || 0);
+    }, [totalQuantity]);
+
+    const { orderRefs, submit, validationErrors } = useOrder();
 
     const onSubmitButtonClick = () => {
         console.log(submit());
@@ -111,41 +132,19 @@ export default function OrderPage() {
             <VerticalSpacing size="8px" backgroundColor="#f3f4f5" />
 
             <Styles.FieldSet>
-                <Styles.Legend>받는 사람</Styles.Legend>
+                <Styles.ReceiverLabel>
+                    <Styles.Legend>받는 사람</Styles.Legend>
+                    <Button
+                        variant="secondary"
+                        width="56px"
+                        height="35px"
+                        onClick={() => modal.open(<ReceiverModal />)}
+                    >
+                        {state.receivers.length !== 0 ? "수정" : "추가"}
+                    </Button>
+                </Styles.ReceiverLabel>
 
-                <InputFieldGroup
-                    ref={orderRefs.receiverName}
-                    id="receiver_name"
-                    align="horizontal"
-                    label="이름"
-                    placeholder="이름을 입력하세요."
-                    error={validationErrors.receiverName}
-                />
-
-                <VerticalSpacing size="12px" />
-
-                <InputFieldGroup
-                    ref={orderRefs.receiverPhoneNumber}
-                    id="phone_number"
-                    align="horizontal"
-                    label="전화번호"
-                    placeholder="전화번호를 입력하세요."
-                    error={validationErrors.receiverPhoneNumber}
-                />
-
-                <VerticalSpacing size="12px" />
-
-                <InputFieldGroup
-                    ref={orderRefs.quantity}
-                    id="quantity"
-                    type="number"
-                    align="horizontal"
-                    label="수량"
-                    placeholder="수량을 입력하세요."
-                    value={quantity}
-                    onChange={onQuantityChange}
-                    error={validationErrors.quantity}
-                />
+                <ReceiverList />
 
                 <VerticalSpacing size="24px" />
             </Styles.FieldSet>
@@ -166,10 +165,12 @@ export default function OrderPage() {
 
             {createPortal(
                 <Styles.OrderButton onClick={() => onSubmitButtonClick()}>
-                    {product.price.sellingPrice * quantity}원 주문하기
+                    {totalPrice.toLocaleString()}원 주문하기
                 </Styles.OrderButton>,
                 document.body as HTMLElement,
             )}
         </Styles.Container>
     );
 }
+
+export default withProviders([<ReceiverContextProvider />, <ModalProvider />], OrderPage);
