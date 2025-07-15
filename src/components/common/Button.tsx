@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { ButtonHTMLAttributes, ReactNode } from 'react';
+import type { ButtonHTMLAttributes, ReactNode } from 'react';
 
 type ButtonVariant = 'primary' | 'secondary';
 
@@ -24,14 +24,16 @@ const StyledButton = styled.button<{ variant: ButtonVariant }>`
   cursor: pointer;
   transition: background-color 0.2s;
 
-  ${({ theme, variant }) => {
+  ${({ theme, variant, disabled }) => {
     if (variant === 'primary') {
       return `
         background-color: ${theme.semanticColors.brand.kakaoYellow};
         color: ${theme.semanticColors.text.default};
+        cursor: ${disabled ? 'not-allowed' : 'pointer'};
+        opacity: ${disabled ? 0.5 : 1};
 
         &:hover {
-          background-color: ${theme.semanticColors.brand.kakaoYellowHover};
+          background-color: ${disabled ? theme.semanticColors.brand.kakaoYellow : theme.semanticColors.brand.kakaoYellowHover};
         }
       `;
     }
