@@ -11,6 +11,7 @@ import Layout from "@/styles/Layout.tsx";
 import MyPage from "@/components/MyPage.tsx";
 import { UserInfoProvider } from "@/context/UserInfoProvider";
 import Order from "@/components/order/Order";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 function App() {
   return (
@@ -21,8 +22,23 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Main />} />
-            <Route path="/my" element={<MyPage />} />
-            <Route path="/order/:id" element={<Order />} />
+            <Route
+              path="/my"
+              element={
+                <ProtectedRoute>
+                  <MyPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/order/:id"
+              element={
+                <ProtectedRoute>
+                  <Order />
+                </ProtectedRoute>
+              }
+            />
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </UserInfoProvider>
