@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { products } from '@/data/product';
 import type { Product } from '@/data/product';
-import * as S from '@/components/trendRankingStyle';
-import { FilterGender, FilterType } from '@/components/trendRankingFilter';
+import * as S from '@components/TrendRankingStyle';
+import { FilterGender, FilterType } from '@components/TrendRankingFilter';
 
 const genderList = [
   { label: 'All', icon: 'ALL' },
@@ -36,9 +36,8 @@ const TrendRanking = () => {
     return '받고 싶어한';
   };
 
-  const [selectedGender, setSelectedGender] = useState<GenderLabel>(
-    getInitialGender
-  );
+  const [selectedGender, setSelectedGender] =
+    useState<GenderLabel>(getInitialGender);
   const [selectedType, setSelectedType] = useState<TypeLabel>(getInitialType);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [visibleCount, setVisibleCount] = useState(6);

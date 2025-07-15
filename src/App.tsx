@@ -6,10 +6,10 @@ import { PATHS } from '@/constants/paths';
 
 import reset from '@/styles/reset';
 import Layout from '@/components/Layout';
-import CategorySection from '@/components/categorySection';
-import MessageSection from '@/components/messageSection';
-import GiftRecipientList from '@/components/giftRecipientList';
-import TrendRanking from '@/components/trendRanking';
+import CategorySection from '@components/CategorySection';
+import MessageSection from '@components/MessageSection';
+import GiftRecipientList from '@components/GiftRecipientList';
+import TrendRanking from '@components/TrendRanking';
 import LoginForm from '@/Login/components/LoginForm';
 import NotFound from '@/pages/notFound';
 

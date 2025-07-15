@@ -1,9 +1,5 @@
 import { useState, useEffect } from 'react';
-
-const PASSWORD_MIN_LENGTH = 8;
-
-const emailRegEx =
-  /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i;
+import { emailRegEx, PASSWORD_MIN_LENGTH } from '@/constants/validation';
 
 export const useLoginForm = () => {
   const [values, setValues] = useState({

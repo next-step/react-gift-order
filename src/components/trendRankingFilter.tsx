@@ -1,4 +1,4 @@
-import * as S from '@/components/trendRankingStyle';
+import * as S from '@components/TrendRankingStyle';
 
 type FilterGenderProps = {
   icon: string;
