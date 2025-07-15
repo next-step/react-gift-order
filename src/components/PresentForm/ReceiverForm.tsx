@@ -1,4 +1,3 @@
-// src/components/PresentForm/ReceiverForm.tsx
 import { useState } from "react"
 import { useFormContext } from "react-hook-form"
 import Layout from "@/components/Layout"
@@ -7,7 +6,7 @@ import Text from "@/components/Text"
 import ReceiverList from "@/components/PresentForm/ReceiverList"
 import ReceiverModal from "@/components/PresentForm/ReceiverModal"
 import AddPlusButton from "@/components/PresentForm/AddPlusButton"
-
+import MakeRow from "./components/MakeRow"
 const ReceiverForm = () => {
   const [openModal, setOpenModal] = useState(false)
   const { watch } = useFormContext()
@@ -25,11 +24,12 @@ const ReceiverForm = () => {
         color="gray00"
         height="100%"
       >
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <MakeRow>
           <Text variant="title2Bold" margin="spacing0" padding="spacing0">
             받는 사람
           </Text>
           <AddPlusButton
+            height="30px"
             type="button"
             borderRadius="spacing2"
             paddingLeft="spacing3"
@@ -38,13 +38,15 @@ const ReceiverForm = () => {
           >
             {hasReceivers ? "수정" : "추가"}
           </AddPlusButton>
-        </div>
+        </MakeRow>
 
         <Blank height="12px" />
         <ReceiverList receivers={receivers} />
       </Layout>
 
-      {openModal && <ReceiverModal close={() => setOpenModal(false)} />}
+      {openModal && (
+        <ReceiverModal isOpen={openModal} close={() => setOpenModal(false)} />
+      )}
     </>
   )
 }

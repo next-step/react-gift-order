@@ -20,7 +20,7 @@ export interface FormData {
   receivers: Receiver[]
   message?: string
 }
-
+export type FormField = keyof FormData
 const OrderPage = () => {
   const [message, setMessage] = useState("")
   const { id } = useParams<{ id: string }>()
