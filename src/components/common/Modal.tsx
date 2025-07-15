@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styled from '@emotion/styled';
-import { ErrorMessage } from '@components/common/ErrorMessage';
 import { X } from 'lucide-react';
 export interface ModalProps {
   open: boolean;
@@ -193,7 +192,11 @@ export const Modal = ({ open, onClose, onConfirm }: ModalProps) => {
   const [fields, setFields] = useState<number[]>([]);
 
   const handleAdd = () => {
-    setFields((prev) => [...prev, prev.length]);
+    setFields((prev) => [...prev, Date.now()]);
+  };
+
+  const handleRemove = (removeIdx: number) => {
+    setFields((prev) => prev.filter((_, idx) => idx !== removeIdx));
   };
 
   return (
@@ -213,12 +216,17 @@ export const Modal = ({ open, onClose, onConfirm }: ModalProps) => {
             </AddButton>
           </div>
           <RecipientSection>
-            {fields.map((index) => (
-              <InputWrapper key={index}>
-                {index > 0 && <Divider />}
+            {fields.map((id, idx) => (
+              <InputWrapper key={id}>
+                {idx > 0 && <Divider />}
                 <RecipientNumberContainer>
-                  <RecipientNumber>받는 사람 {index + 1}</RecipientNumber>
-                  <X size={20} strokeWidth={1.5} style={{ marginLeft: '0.25rem' }} />
+                  <RecipientNumber>받는 사람 {idx + 1}</RecipientNumber>
+                  <X
+                    size={20}
+                    strokeWidth={1.5}
+                    style={{ marginLeft: '0.25rem' }}
+                    onClick={() => handleRemove(idx)}
+                  />
                 </RecipientNumberContainer>
                 {/* 이름 */}
                 <InputBoxContainer>
