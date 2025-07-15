@@ -9,7 +9,7 @@ export interface CardListProps {
     name: string;
     price: number;
   }[];
-  onCardClick?: (cardId: number) => void;
+  onCardClick: (cardId: number) => void;
 }
 
 export default function CardList({ cards, onCardClick }: CardListProps) {
