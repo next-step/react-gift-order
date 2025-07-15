@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import styled from '@emotion/styled';
 import { X } from 'lucide-react';
+import { useFormContext } from 'react-hook-form';
+import type { OrderFormValues } from '@components/OrderForm/OrderForm';
 export interface ModalProps {
   open: boolean;
   initialValue?: { name: string; phone: string; quantity: number };
@@ -190,6 +192,12 @@ const Divider = styled('hr')(({ theme }) => ({
 
 export const Modal = ({ open, onClose, onConfirm }: ModalProps) => {
   const [fields, setFields] = useState<number[]>([]);
+  const {
+    register,
+    trigger,
+    getValues,
+    formState: { errors },
+  } = useFormContext<OrderFormValues>();
 
   const handleAdd = () => {
     setFields((prev) => [...prev, Date.now()]);
@@ -197,6 +205,11 @@ export const Modal = ({ open, onClose, onConfirm }: ModalProps) => {
 
   const handleRemove = (removeIdx: number) => {
     setFields((prev) => prev.filter((_, idx) => idx !== removeIdx));
+  };
+
+  const handleSubmit = async () => {
+    const valid = await trigger();
+    if (valid) onConfirm();
   };
 
   return (
@@ -211,52 +224,102 @@ export const Modal = ({ open, onClose, onConfirm }: ModalProps) => {
               <br />* 받는 사람의 전화번호를 중복으로 입력할 수 없어요.
             </Notice>
             <Margin height="8px" />
-            <AddButton type="button" onClick={handleAdd}>
+            <AddButton type="button" onClick={handleAdd} disabled={fields.length >= 10}>
               추가하기
             </AddButton>
           </div>
           <RecipientSection>
-            {fields.map((id, idx) => (
-              <InputWrapper key={id}>
-                {idx > 0 && <Divider />}
-                <RecipientNumberContainer>
-                  <RecipientNumber>받는 사람 {idx + 1}</RecipientNumber>
-                  <X
-                    size={20}
-                    strokeWidth={1.5}
-                    style={{ marginLeft: '0.25rem' }}
-                    onClick={() => handleRemove(idx)}
-                  />
-                </RecipientNumberContainer>
-                {/* 이름 */}
-                <InputBoxContainer>
-                  <InputBoxTitle>이름</InputBoxTitle>
-                  <InputBoxStyle>
-                    <InputBox placeholder="이름을 입력하세요." />
-                  </InputBoxStyle>
-                </InputBoxContainer>
+            {fields.map((id, idx) => {
+              const nameError = errors.recipients?.[idx]?.name?.message;
+              const phoneError = errors.recipients?.[idx]?.phone?.message;
+              const qtyError = errors.recipients?.[idx]?.quantity?.message;
 
-                {/* 전화번호 */}
-                <InputBoxContainer>
-                  <InputBoxTitle>전화번호</InputBoxTitle>
-                  <InputBoxStyle>
-                    <InputBox type="tel" placeholder="전화번호를 입력하세요." />
-                  </InputBoxStyle>
-                </InputBoxContainer>
+              return (
+                <InputWrapper key={id}>
+                  {idx > 0 && <Divider />}
+                  <RecipientNumberContainer>
+                    <RecipientNumber>받는 사람 {idx + 1}</RecipientNumber>
+                    <X
+                      size={20}
+                      strokeWidth={1.5}
+                      style={{ marginLeft: '0.25rem', cursor: 'pointer' }}
+                      onClick={() => handleRemove(idx)}
+                    />
+                  </RecipientNumberContainer>
 
-                {/* 수량 */}
-                <InputBoxContainer>
-                  <InputBoxTitle>수량</InputBoxTitle>
-                  <InputBoxStyle>
-                    <InputBox type="number" placeholder="수량을 입력하세요." />
-                  </InputBoxStyle>
-                </InputBoxContainer>
-              </InputWrapper>
-            ))}
+                  {/* 이름 */}
+                  <InputBoxContainer>
+                    <InputBoxTitle>이름</InputBoxTitle>
+                    <InputBoxStyle>
+                      <InputBox
+                        placeholder="이름을 입력하세요."
+                        hasError={!!nameError}
+                        {...register(`recipients.${idx}.name`, { required: '이름을 입력해주세요' })}
+                      />
+                      {nameError && (
+                        <p style={{ color: '#D92C2C', fontSize: '0.75rem' }}>{nameError}</p>
+                      )}
+                    </InputBoxStyle>
+                  </InputBoxContainer>
+
+                  {/* 전화번호 */}
+                  <InputBoxContainer>
+                    <InputBoxTitle>전화번호</InputBoxTitle>
+                    <InputBoxStyle>
+                      <InputBox
+                        type="tel"
+                        placeholder="전화번호를 입력하세요."
+                        hasError={!!phoneError}
+                        {...register(`recipients.${idx}.phone`, {
+                          required: '전화번호를 입력해주세요',
+                          pattern: {
+                            value: /^010\d{8}$/,
+                            message: '01012341234 형태로 입력하세요',
+                          },
+                          validate: (val: string) => {
+                            const phones = getValues('recipients').map((r) => r.phone);
+                            return (
+                              phones.filter((p) => p === val).length === 1 ||
+                              '중복된 번호가 있습니다'
+                            );
+                          },
+                        })}
+                      />
+                      {phoneError && (
+                        <p style={{ color: '#D92C2C', fontSize: '0.75rem' }}>{phoneError}</p>
+                      )}
+                    </InputBoxStyle>
+                  </InputBoxContainer>
+
+                  {/* 수량 */}
+                  <InputBoxContainer>
+                    <InputBoxTitle>수량</InputBoxTitle>
+                    <InputBoxStyle>
+                      <InputBox
+                        type="number"
+                        placeholder="수량을 입력하세요."
+                        hasError={!!qtyError}
+                        {...register(`recipients.${idx}.quantity`, {
+                          required: '수량을 입력해주세요',
+                          min: { value: 1, message: '최소 1개 이상이어야 합니다' },
+                        })}
+                      />
+                      {qtyError && (
+                        <p style={{ color: '#D92C2C', fontSize: '0.75rem' }}>{qtyError}</p>
+                      )}
+                    </InputBoxStyle>
+                  </InputBoxContainer>
+                </InputWrapper>
+              );
+            })}
           </RecipientSection>
           <SubmitButtonSection>
-            <CancelButton onClick={onClose}>취소</CancelButton>
-            <SubmitButton onClick={onConfirm}>완료</SubmitButton>
+            <CancelButton type="button" onClick={onClose}>
+              취소
+            </CancelButton>
+            <SubmitButton type="button" onClick={handleSubmit}>
+              완료
+            </SubmitButton>
           </SubmitButtonSection>
         </ModalSection>
       </Container>
