@@ -15,6 +15,7 @@ const Order = () => {
       <EmptyDivGray8h />
         <Receiver />
 
+
       <EmptyDivGray8h />
       <OrderCheck/>
     </DefaultDiv>

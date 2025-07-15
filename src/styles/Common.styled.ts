@@ -1,5 +1,7 @@
+
 import styled from '@emotion/styled';
 import theme from './theme';
+
 
 export const DefaultDiv = styled.div`
   max-width: 720px;
@@ -8,7 +10,9 @@ export const DefaultDiv = styled.div`
   height: 100%;
   background-color: rgb(255, 255, 255);
   padding-top: 2.75rem;
+
 `;
+
 
 export const DefaultComponentDiv = styled.div`
   max-width: 720px;
@@ -20,6 +24,7 @@ export const DefaultComponentDiv = styled.div`
 export const SimplePadding20 = styled.div`
   padding: 20px 20px 20px 20px;
 `;
+
 
 export const EmptyDiv4h = styled.div`
   width: 100%;
@@ -82,12 +87,14 @@ export const LowSlideDiv = styled.div`
   gap: 4px;
 `;
 
+
 export const CentorAlignDiv = styled.div`
   width: 100%;
   padding: 0px 1rem;
   display: flex;
   -webkit-box-pack: center;
   justify-content: center;
+
 `;
 export const SideBlankDiv = styled.div`
   width: 100%;
@@ -96,10 +103,12 @@ export const SideBlankDiv = styled.div`
 
 export const SimpleInput = styled.input`
   width: 100%;
+
     box-sizing: border-box;
     color: rgb(42, 48, 56);
     transition: border-color 200ms;
     border-style: solid;
+
     border-width: 1px;
     border-radius: 8px;
     border-color: rgb(220, 222, 227);
@@ -138,6 +147,7 @@ export const LowField = styled.div`
     width: 100%;
     padding: 8px 0px;
 `;
+
 export const SubTitle = styled.p`
   font-size: 1rem;
   font-weight: 700;
@@ -145,6 +155,7 @@ export const SubTitle = styled.p`
   color: rgb(42, 48, 56);
   margin: 0px;
   text-align: left;
+
 `;
 
 export const MiniText = styled.p`
@@ -176,6 +187,7 @@ export const ProductImage = styled.img`
   aspect-ratio: 1 / 1;
 `;
 
+
 export const ProductInfo = styled.div`
   flex: 1;
 `;
@@ -188,6 +200,7 @@ export const ProductName = styled.p`
   margin: 0px;
   text-align: left;
 `;
+
 
 export const Price = styled.p`
   font-size: 14px;
@@ -316,4 +329,5 @@ export const ListBody = styled.div`
   gap: 12px;
   padding: 12px;
 `;
+
 
