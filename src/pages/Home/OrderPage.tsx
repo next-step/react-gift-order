@@ -17,6 +17,12 @@ export default function OrderPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { token } = useContext(AuthContext)!;
+    // 2) 템플릿 초기 설정
+  const initialTemplateId =
+    Number(searchParams.get("template")) || templates[0].id;
+  const [selectedTemplateId, setSelectedTemplateId] = useState<number>(
+    initialTemplateId
+  )    
   // 1) 페이지 진입 시 한 번만 로그인 체크
   useEffect(() => {
     if (!token) {
@@ -25,24 +31,8 @@ export default function OrderPage() {
       navigate(`/login?redirect=${encodeURIComponent(redirectTo)}`, { replace: true });
     }
   }, [token, navigate, location]);
-    if (!token) return null;
+    if (!token) return null;;
 
-  // 1) 상품 찾기
-  const id = params.id;
-  if (!id) return <div>잘못된 주문 경로입니다.</div>;
-  const productId = Number(id);
-  const product = MOCK_RANKING_PRODUCT_DATA_LIST.find(
-    (p) => p.id === productId
-  );
-  if (!product)
-    return <div>해당 상품을 찾을 수 없습니다. (ID: {id})</div>;
-
-  // 2) 템플릿 초기 설정
-  const initialTemplateId =
-    Number(searchParams.get("template")) || templates[0].id;
-  const [selectedTemplateId, setSelectedTemplateId] = useState<number>(
-    initialTemplateId
-  );
   const selectedTemplate =
     templates.find((t) => t.id === selectedTemplateId) ||
     templates[0];
@@ -60,7 +50,17 @@ export default function OrderPage() {
   const [receiver, setReceiver] = useState("");
   const [phone, setPhone] = useState("");
   const [qty, setQty] = useState(1);
-  const [errors, setErrors] = useState<{ [k: string]: string }>({});
+  const [errors, setErrors] = useState<{ [k: string]: string }>({});    
+
+  // 1) 상품 찾기
+  const id = params.id;
+  if (!id) return <div>잘못된 주문 경로입니다.</div>;
+  const productId = Number(id);
+  const product = MOCK_RANKING_PRODUCT_DATA_LIST.find(
+    (p) => p.id === productId
+  );
+  if (!product)
+    return <div>해당 상품을 찾을 수 없습니다. (ID: {id})</div>;
 
   const validate = () => {
     const e: any = {};
