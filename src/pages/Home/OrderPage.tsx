@@ -10,6 +10,7 @@ import {
 } from "@/pages/Home/components/ProductRankingListSection/mock";
 import { templates } from "@/resources/mock/templates";
 export const EMAIL_REGEX = /^01[016789]-?\d{3,4}-?\d{4}$/;
+const magicNumber = 1; 
 
 export default function OrderPage() {
   const params = useParams<{ id: string }>();
@@ -68,7 +69,7 @@ export default function OrderPage() {
 if (!EMAIL_REGEX.test(phone)) {
     e.phone = "올바른 전화번호(010-1234-5678) 형식으로 입력하세요.";
   }
-    if (qty < 1) e.qty = "수량은 1개 이상이어야 합니다.";
+    if (qty < magicNumber) e.qty = "수량은 1개 이상이어야 합니다.";
     setErrors(e);
     return Object.keys(e).length === 0;
   };
