@@ -8,12 +8,9 @@ interface PreviewCardStyle {
   marginTop: keyof typeof theme.space
 }
 const PreviewCardLayout = styled.div<PreviewCardStyle>`
-  ${({ theme, margin, marginTop, borderRadius }) => {
+  ${({ theme, marginTop, borderRadius }) => {
     return `
       margin-top: ${theme.space[marginTop]};
-      margin-left: ${theme.space[margin]};
-      margin-right: ${theme.space[margin]};
-
       border-radius: ${theme.space[borderRadius]};
       overflow: hidden;
 
