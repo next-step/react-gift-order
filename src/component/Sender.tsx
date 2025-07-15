@@ -5,7 +5,9 @@ import { DefaultComponentDiv, EmptyDiv12h, EmptyDiv24h, EmptyDiv4h, EmptyDiv8h, 
 
 const Sender = () => {
     const { senderNameInput } = useOrder();
-    const { value, onChange, onBlur, error, isValid } = senderNameInput
+
+    const { value, onChange, error } = senderNameInput
+
     return (
         <DefaultComponentDiv>
             <SideBlankDiv>
@@ -17,9 +19,10 @@ const Sender = () => {
                     placeholder="이름을 입력하세요."
                     value={value}
                     onChange={onChange}
-                    onBlur={onBlur}
+
                 />
-                {isValid ? (
+                {!error ? (
+
                     <>
                         <EmptyDiv4h />
                         <SubText>* 실제 선물 발송 시 발신자 이름으로 반영되는 정보입니다.</SubText>

@@ -13,7 +13,8 @@ const Order = () => {
       <Sender/>
 
       <EmptyDivGray8h />
-      <Receiver />
+        <Receiver />
+
 
       <EmptyDivGray8h />
       <OrderCheck/>
