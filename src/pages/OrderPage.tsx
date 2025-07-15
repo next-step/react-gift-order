@@ -1,6 +1,6 @@
 import { FormProvider, useForm } from "react-hook-form"
 import { useParams } from "react-router-dom"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import PresentGiverForm from "@/components/PresentForm/PresentGiverForm"
 import CardThumbnail from "./CardThumbnail"
 import OrderLayout from "@/components/OrderLayout"
@@ -28,6 +28,7 @@ const OrderPage = () => {
     mock_present.find((item) => item.id === Number(id)) || mock_present[0]
 
   const methods = useForm<FormData>({
+    mode: "onChange",
     defaultValues: {
       senderName: "",
       receivers: [],
@@ -35,7 +36,10 @@ const OrderPage = () => {
     },
   })
 
-  const { handleSubmit, reset, watch: watchReceivers } = methods
+  const { handleSubmit, reset, watch: watchReceivers, clearErrors } = methods
+  useEffect(() => {
+    clearErrors()
+  }, [id, clearErrors])
 
   const receivers = watchReceivers("receivers")
   const totalQuantity = receivers.reduce(
@@ -46,13 +50,11 @@ const OrderPage = () => {
 
   const onSubmit = (data: FormData) => {
     alert(
-      `주문 완료\n` +
-        data.receivers
-          .map(
-            (r, i) =>
-              `받는 사람 ${i + 1}: ${r.name} (${r.phone}) / 수량 ${r.quantity}`
-          )
-          .join("\n")
+      `주문이 완료되었습니다.\n` +
+        `상품명: ${product.name}\n` +
+        `구매 수량: ${totalQuantity}\n` +
+        `발신자 이름: ${data.senderName}\n` +
+        `메시지: ${data.message || "축하해요."}`
     )
     reset()
   }

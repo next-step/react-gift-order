@@ -1,7 +1,6 @@
-import "@/pages/Modal.css"
 import { useEffect } from "react"
 import { useFormContext, useFieldArray } from "react-hook-form"
-import type { FormData } from "@/pages/OrderPage" // FormData 타입 import 추가
+import type { FormData } from "@/pages/OrderPage"
 import Text from "@/components/Text"
 import Blank from "@/components/Blank"
 import Overlay from "./components/Overlay"
@@ -13,6 +12,7 @@ import theme from "@/styles/theme"
 import RowForm from "../RowForm"
 import InputForm from "./InputForm"
 import CardSection from "../CardSection"
+
 interface Props {
   close: () => void
   isOpen: boolean
@@ -22,17 +22,21 @@ const ReceiverModal = ({ close, isOpen }: Props) => {
   useEffect(() => {
     if (isOpen) {
       const original = document.body.style.overflow
-      document.body.style.overflow = "hidden" // 잠금
+      document.body.style.overflow = "hidden"
       return () => {
-        document.body.style.overflow = original // 해제
+        document.body.style.overflow = original
       }
     }
   }, [isOpen])
+
   if (!isOpen) return null
+
   const {
     control,
     register,
     formState: { errors },
+    trigger,
+    getValues,
   } = useFormContext<FormData>()
 
   const { fields, append, remove } = useFieldArray({
@@ -44,6 +48,41 @@ const ReceiverModal = ({ close, isOpen }: Props) => {
     if (fields.length >= 10)
       return alert("받는 사람은 최대 10명까지 입력 가능합니다.")
     append({ name: "", phone: "", quantity: "1" })
+  }
+
+  const handleComplete = async () => {
+    const isValid = await trigger("receivers")
+
+    if (!isValid) {
+      return
+    }
+
+    close()
+  }
+
+  const validatePhone = (phone: string, index: number) => {
+    if (!phone.trim()) {
+      return "전화번호를 입력해 주세요."
+    }
+
+    const phoneRegex = /^010[0-9]{8}$/
+    if (!phoneRegex.test(phone)) {
+      return "올바른 전화번호 형식이 아닙니다."
+    }
+
+    const receivers = getValues("receivers")
+    const duplicateIndex = receivers.findIndex(
+      (receiver, i) =>
+        i !== index &&
+        receiver.phone.trim() === phone.trim() &&
+        phone.trim() !== ""
+    )
+
+    if (duplicateIndex !== -1) {
+      return "중복된 전화번호가 있습니다."
+    }
+
+    return true
   }
 
   return (
@@ -73,6 +112,7 @@ const ReceiverModal = ({ close, isOpen }: Props) => {
         >
           추가하기
         </AddPlusButton>
+
         <CardSection>
           {fields.map((field, index) => (
             <ReceiverCard key={field.id}>
@@ -93,6 +133,7 @@ const ReceiverModal = ({ close, isOpen }: Props) => {
                   ✕
                 </AddPlusButton>
               </div>
+
               <RowForm>
                 <Text
                   variant="body1Regular"
@@ -105,15 +146,29 @@ const ReceiverModal = ({ close, isOpen }: Props) => {
                 <div style={{ flex: 1 }}>
                   <InputForm
                     {...register(`receivers.${index}.name` as const, {
-                      required: true,
+                      required: "이름을 입력해 주세요.",
+                      validate: (value) => {
+                        if (!value.trim()) {
+                          return "이름을 입력해 주세요."
+                        }
+                        return true
+                      },
                     })}
                     placeholder="이름을 입력하세요."
                   />
                   {errors?.receivers?.[index]?.name && (
-                    <span className="err">이름을 입력해 주세요.</span>
+                    <Text
+                      variant="label2Regular"
+                      margin="spacing0"
+                      padding="spacing0"
+                      color="red700"
+                    >
+                      {errors.receivers[index]?.name?.message}
+                    </Text>
                   )}
                 </div>
               </RowForm>
+
               <RowForm>
                 <Text
                   variant="body1Regular"
@@ -125,15 +180,24 @@ const ReceiverModal = ({ close, isOpen }: Props) => {
                 <div style={{ flex: 1 }}>
                   <InputForm
                     {...register(`receivers.${index}.phone` as const, {
-                      required: true,
+                      required: "전화번호를 입력해 주세요.",
+                      validate: (value) => validatePhone(value, index),
                     })}
                     placeholder="전화번호를 입력하세요."
                   />
                   {errors?.receivers?.[index]?.phone && (
-                    <span className="err">전화번호를 입력해 주세요.</span>
+                    <Text
+                      variant="label2Regular"
+                      margin="spacing0"
+                      padding="spacing0"
+                      color="red700"
+                    >
+                      {errors.receivers[index]?.phone?.message}
+                    </Text>
                   )}
                 </div>
               </RowForm>
+
               <RowForm>
                 <Text
                   variant="body1Regular"
@@ -146,17 +210,38 @@ const ReceiverModal = ({ close, isOpen }: Props) => {
                 <div style={{ flex: 1 }}>
                   <InputForm
                     {...register(`receivers.${index}.quantity` as const, {
-                      required: true,
-                      min: 1,
+                      required: "수량을 입력해 주세요.",
+                      min: {
+                        value: 1,
+                        message: "수량은 1개 이상이어야 합니다.",
+                      },
+                      validate: (value) => {
+                        const num = Number(value)
+                        if (isNaN(num) || num < 1) {
+                          return "올바른 수량을 입력해 주세요."
+                        }
+                        return true
+                      },
                     })}
                     placeholder="수량"
                     type="number"
                   />
+                  {errors?.receivers?.[index]?.quantity && (
+                    <Text
+                      variant="label2Regular"
+                      margin="spacing0"
+                      padding="spacing0"
+                      color="red700"
+                    >
+                      {errors.receivers[index]?.quantity?.message}
+                    </Text>
+                  )}
                 </div>
               </RowForm>
             </ReceiverCard>
           ))}
         </CardSection>
+
         <MakeRowUnder>
           <AddPlusButton
             flex="1 1 0"
@@ -175,7 +260,7 @@ const ReceiverModal = ({ close, isOpen }: Props) => {
             flex="3 1 0"
             height="auto"
             type="button"
-            onClick={close}
+            onClick={handleComplete}
             borderRadius="spacing2"
             padding="spacing3"
             paddingLeft="spacing6"

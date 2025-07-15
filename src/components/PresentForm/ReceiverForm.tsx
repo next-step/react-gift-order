@@ -42,6 +42,7 @@ const ReceiverForm = () => {
 
         <Blank height="12px" />
         <ReceiverList receivers={receivers} />
+        <Blank height="12px" />
       </Layout>
 
       {openModal && (

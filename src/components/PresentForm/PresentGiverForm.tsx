@@ -1,4 +1,3 @@
-import React from "react"
 import Text from "../Text"
 import Layout from "../Layout"
 import type { FormData } from "@/pages/OrderPage"
@@ -6,11 +5,14 @@ import InputForm from "@/components/PresentForm/InputForm"
 import Blank from "../Blank"
 import { useFormContext } from "react-hook-form"
 
-const PresentGiverForm: React.FC = () => {
+const PresentGiverForm = () => {
   const {
     register,
-    formState: { errors },
+    formState: { errors, isSubmitted },
   } = useFormContext<FormData>()
+
+  const shouldShowError = isSubmitted && errors.senderName?.message
+
   return (
     <Layout
       marginTop="spacing2"
@@ -32,7 +34,7 @@ const PresentGiverForm: React.FC = () => {
         {...register("senderName", {
           required: "이름을 입력해주세요.",
         })}
-        message={errors.senderName?.message}
+        message={shouldShowError ? errors.senderName?.message : undefined}
       />
     </Layout>
   )
