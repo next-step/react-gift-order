@@ -9,6 +9,7 @@ import {
   MOCK_RANKING_PRODUCT_DATA_LIST,
 } from "@/pages/Home/components/ProductRankingListSection/mock";
 import { templates } from "@/resources/mock/templates";
+export const EMAIL_REGEX = /^01[016789]-?\d{3,4}-?\d{4}$/;
 
 export default function OrderPage() {
   const params = useParams<{ id: string }>();
@@ -64,7 +65,7 @@ export default function OrderPage() {
     const e: any = {};
     if (!sender) e.sender = "보내는 사람 이름을 입력하세요.";
     if (!receiver) e.receiver = "받는 사람 이름을 입력하세요.";
-if (!/^01[016789]-?\d{3,4}-?\d{4}$/.test(phone)) {
+if (!EMAIL_REGEX.test(phone)) {
     e.phone = "올바른 전화번호(010-1234-5678) 형식으로 입력하세요.";
   }
     if (qty < 1) e.qty = "수량은 1개 이상이어야 합니다.";
