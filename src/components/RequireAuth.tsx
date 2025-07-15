@@ -16,3 +16,4 @@ export function RequireAuth({ children }: RequireAuthProps) {
 
   return children
 }
+
