@@ -14,86 +14,80 @@ export interface Product {
 export const products: Product[] = [
   {
     id: 1,
-    name: '상품 1',
-    imageURL: 'https://via.placeholder.com/150',
+    name: 'BBQ 양념치킨+크림치즈볼+콜라 1.25L',
+    imageURL:
+      'https://st.kakaocdn.net/product/gift/product/20231030175450_53e90ee9708f45ffa45b3f7b4bc01c7c.jpg',
     price: {
-      sellingPrice: 10000,
+      sellingPrice: 29000,
     },
     brandInfo: {
-      name: '브랜드 1',
-      id: 1,
+      id: 2088,
+      name: 'BBQ',
     },
   },
   {
     id: 2,
-    name: '상품 2',
-    imageURL: 'https://via.placeholder.com/150',
+    name: 'BBQ 양념치킨+크림치즈볼+콜라 1.25L',
+    imageURL:
+      'https://st.kakaocdn.net/product/gift/product/20231030175450_53e90ee9708f45ffa45b3f7b4bc01c7c.jpg',
     price: {
-      sellingPrice: 20000,
+      sellingPrice: 29000,
     },
     brandInfo: {
-      name: '브랜드 2',
-      id: 2,
+      id: 2088,
+      name: 'BBQ',
     },
   },
   {
     id: 3,
-    name: '상품 3',
-    imageURL: 'https://via.placeholder.com/150',
+    name: 'BBQ 양념치킨+크림치즈볼+콜라 1.25L',
+    imageURL:
+      'https://st.kakaocdn.net/product/gift/product/20231030175450_53e90ee9708f45ffa45b3f7b4bc01c7c.jpg',
     price: {
-      sellingPrice: 30000,
+      sellingPrice: 29000,
     },
     brandInfo: {
-      name: '브랜드 3',
-      id: 3,
+      id: 2088,
+      name: 'BBQ',
     },
   },
   {
     id: 4,
-    name: '상품 4',
-    imageURL: 'https://via.placeholder.com/150',
+    name: 'BBQ 양념치킨+크림치즈볼+콜라 1.25L',
+    imageURL:
+      'https://st.kakaocdn.net/product/gift/product/20231030175450_53e90ee9708f45ffa45b3f7b4bc01c7c.jpg',
     price: {
-      sellingPrice: 40000,
+      sellingPrice: 29000,
     },
     brandInfo: {
-      name: '브랜드 4',
-      id: 4,
+      id: 2088,
+      name: 'BBQ',
     },
   },
   {
     id: 5,
-    name: '상품 5',
-    imageURL: 'https://via.placeholder.com/150',
+    name: 'BBQ 양념치킨+크림치즈볼+콜라 1.25L',
+    imageURL:
+      'https://st.kakaocdn.net/product/gift/product/20231030175450_53e90ee9708f45ffa45b3f7b4bc01c7c.jpg',
     price: {
-      sellingPrice: 50000,
+      sellingPrice: 29000,
     },
     brandInfo: {
-      name: '브랜드 5',
-      id: 5,
+      id: 2088,
+      name: 'BBQ',
     },
   },
   {
     id: 6,
-    name: '상품 6',
-    imageURL: 'https://via.placeholder.com/150',
+    name: 'BBQ 양념치킨+크림치즈볼+콜라 1.25L',
+    imageURL:
+      'https://st.kakaocdn.net/product/gift/product/20231030175450_53e90ee9708f45ffa45b3f7b4bc01c7c.jpg',
     price: {
-      sellingPrice: 60000,
+      sellingPrice: 29000,
     },
     brandInfo: {
-      name: '브랜드 6',
-      id: 6,
-    },
-  },
-  {
-    id: 7,
-    name: '상품 7',
-    imageURL: 'https://via.placeholder.com/150',
-    price: {
-      sellingPrice: 70000,
-    },
-    brandInfo: {
-      name: '브랜드 7',
-      id: 7,
+      id: 2088,
+      name: 'BBQ',
     },
   },
 ];
