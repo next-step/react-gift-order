@@ -87,9 +87,7 @@ const ReceiverInputSet = ({
           },
         })}
       />
-      {Array.isArray(errors.order) && errors.order[index]?.quantity && (
-        <p css={errorStyle}>{errors.order[index].quantity?.message}</p>
-      )}
+      {getError("quantity") && <p css={errorStyle}>{getError("quantity")}</p>}
     </div>
   );
 };
