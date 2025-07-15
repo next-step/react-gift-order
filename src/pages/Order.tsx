@@ -5,9 +5,7 @@ import styled from '@emotion/styled';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { PHONE_NUM_REGEX } from '@/utils/regex';
-
-import useOrderForm from '@/hooks/useOrderForm';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
 import { useFieldArray, useForm } from 'react-hook-form';
 
@@ -195,6 +193,25 @@ const ReceiverInputBoxInfo = styled.p`
   color: ${({ theme }) => theme.colors.gray.gray600};
 `
 
+const ReceiverInputBoxFields = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+const ReceiverInputBoxField = styled.div`
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray700};
+`
+
+const ReceiverInputBoxFieldItem = styled.p`
+  font-size: ${({ theme }) => theme.typography.body.body2Regular.fontSize};
+  font-weight: ${({ theme }) => theme.typography.body.body2Regular.fontSize};
+  line-height: ${({ theme }) => theme.typography.body.body2Regular.lineHeight};
+  color: ${({ theme }) => theme.colors.gray.gray700};
+
+  padding: 0 4px;
+`
+
 // 상품정보 시작
 const ItemInfoWrapper = styled.div`
   width: auto;
@@ -268,7 +285,6 @@ const OrderBtnWrapper = styled.div`
 
   position: sticky;
   bottom: 0;
-  /* left: 0; */
   
   display: flex;
   align-items: center;
@@ -519,31 +535,7 @@ const ModalConfirmBtn = styled.button`
 `
 
 function Order() {
-  // 암덩어리들
-  const {
-    senderName,
-    receiverName,
-    receiverPhoneNum,
-    itemCount,
-    selectedIdTxtError,
-    senderNameError,
-    receiverNameError,
-    receiverPhoneNumError,
-    itemCountError,
-    
-    handleChangeSenderName,
-    handleChangeReceiverName,
-    handleChangeReceiverPhoneNum,
-    handleChangeItemCount,
-    setSelectedIdTxtError,
-    setSenderNameError,
-    setReceiverNameError,
-    setReceiverPhoneNumError,
-    setItemCountError
-  } = useOrderForm();
-
   const navigate = useNavigate();
-  const [selectedId, setSelectedId] = useState(904); // 선택된 이미지 ID를 저장하는 state
   const [modalToggle, setModalToggle] = useState(false); // 모달의 상태를 나타내는 state
 
   type Receiver = {
@@ -551,13 +543,20 @@ function Order() {
     phone: string;
     count: number;
   };
+  // 이 receiver객체들의 count를 다 합쳐서 쓸까?
 
   type OrderFormValues = {
-    senderName: string;
+    selectedId: number;
     message: string;
+    senderName: string;
     receivers: Receiver[];
+    allPrice: number;
   };
 
+  const DEFAULT_CARD_ID = 904;
+  const defaultMessage = useMemo(() => {
+    return orderCard.find((c) => c.id === DEFAULT_CARD_ID)?.defaultTextMessage || '';
+  }, []);
   // register는 필드를 useForm에 등록할때 사용
   // control은 useFieldArray 랑 연결할때 
   // handleSubmit은 폼 제출 처리할때(최종 전송할때 감싸서 사용
@@ -571,11 +570,14 @@ function Order() {
     formState: { errors },
     watch,
     setValue,
+    clearErrors,
   } = useForm<OrderFormValues>({
     defaultValues: {
+      selectedId: DEFAULT_CARD_ID,
+      message: defaultMessage,
       senderName: '',
-      message: '',
       receivers: [],
+      allPrice: 0,
     },
   });
 
@@ -589,17 +591,18 @@ function Order() {
   // 이전 페이지에서 상품정보 받아오는 코드
   const [searchParams] = useSearchParams();
   const brandInfo = searchParams.get('brandInfo');
-  const id = searchParams.get('id');
+  // const id = searchParams.get('id');
   const imageURL = searchParams.get('imageURL');
   const name = searchParams.get('name');
   const price = parseInt(String(searchParams.get('price')));
 
   // 슬라이드 카드에서 카드 선택하면 실행되는 이벤트 핸들러
   function handleCardClick(id: number) {
-    setSelectedId(id);
+    setValue('selectedId', id);
     const selectedCard = orderCard.find((c) => c.id === id);
-    if(selectedCard) {
-      setValue('message',selectedCard?.defaultTextMessage);
+    if (selectedCard) {
+      setValue('message', selectedCard?.defaultTextMessage);
+      clearErrors('message');
     }
   }
 
@@ -610,7 +613,9 @@ function Order() {
 
   // 최종 주문 핸들러
   function handleOrderClick() {
-    alert(`주문이 완료되었습니다.\n상품명: ${name}\n구매 수량: ${itemCount}\n발신자 이름: ${senderName}\n메시지: ${orderCard.find(c => c.id === selectedId)?.defaultTextMessage}
+    const receivers = watch('receivers');
+    const totalCount = receivers.reduce((sum, receivers) => sum + Number(receivers.count || 0), 0);
+    alert(`주문이 완료되었습니다.\n상품명: ${name}\n구매 수량: ${totalCount}\n발신자 이름: ${watch('senderName')}\n메시지: ${watch('message')}
       `);
     navigate('/');
   }
@@ -618,7 +623,7 @@ function Order() {
   // 모달안에 아이템들 추가하는 핸들러
   function handleReceiverAdd() {
     if (fields.length < 10) {
-      append({ name: '', phone: '', count: 1});
+      append({ name: '', phone: '', count: 1 });
     }
   }
 
@@ -629,15 +634,18 @@ function Order() {
     }
   }
 
-   // 모달 닫는 핸들러
-   function handleModalClose() {
-    
+  // 모달 닫는 핸들러
+  function handleModalClose() {
     setModalToggle(false);
   }
 
   // 모달안에 컨펌하는 핸들러
   function handleConfirm() {
-  
+    // 이때 전체 금액도 계산되어야함
+    const receivers = watch('receivers');
+    const totalCount = receivers.reduce((sum, receivers) => sum + Number(receivers.count || 0), 0);
+
+    setValue('allPrice', totalCount * price);
     setModalToggle(false);
   }
 
@@ -652,16 +660,16 @@ function Order() {
             src={item.thumbUrl}
             alt={item.defaultTextMessage}
             onClick={() => handleCardClick(item.id)}
-            isActive={selectedId === item.id}
+            isActive={watch('selectedId') === item.id}
           ></SlidingCard>
         ))}
       </SlidingCardSelectorWrapper>
       {/* 카드뷰  */}
       <CardViewWrapper>
-        <CardViewImg src={orderCard.find(c => c.id === selectedId)?.imageUrl} alt={orderCard.find(c => c.id === selectedId)?.defaultTextMessage}></CardViewImg>
+        <CardViewImg src={orderCard.find(c => c.id === watch('selectedId'))?.imageUrl} alt={orderCard.find(c => c.id === watch('selectedId'))?.defaultTextMessage}></CardViewImg>
         <CardViewTxt
-        {...register('message',{ required: true })}
-         >
+          {...register('message', { required: true })}
+        >
         </CardViewTxt>
         {errors.message && <CardViewTxtErrorTxt>메시지를 입력 해주세요.</CardViewTxtErrorTxt>}
 
@@ -675,18 +683,37 @@ function Order() {
           {...register('senderName', { required: true })}
         ></SenderInput>
         {errors.senderName ? <SenderInputErrorTxt>이름을 입력해주세요.</SenderInputErrorTxt> : <SenderInputInfoTxt>* 실제 선물 발송 시 발신자이름으로 반영되는 정보입니다.</SenderInputInfoTxt>}
-
       </SenderInputWrapper>
 
       {/* 받는사람 */}
       <ReceiverInputWrapper>
         <ReceiverInputTitleBtnWrapper>
           <ReceiverInputTitle>받는 사람</ReceiverInputTitle>
-          <ReceiverInputAddBtn onClick={handleModalOpen}>추가</ReceiverInputAddBtn>
+          <ReceiverInputAddBtn onClick={handleModalOpen}>{fields.length === 0 ? '추가' : '수정'}</ReceiverInputAddBtn>
         </ReceiverInputTitleBtnWrapper>
-
         <ReceiverInputBox>
-          {fields.length === 0 && <ReceiverInputBoxInfo>받는 사람이 없습니다<br></br>받는 사람을 추가해주세요.</ReceiverInputBoxInfo>}
+          {fields.length === 0 ? (
+            <ReceiverInputBoxInfo>
+              받는 사람이 없습니다<br />
+              받는 사람을 추가해주세요.
+            </ReceiverInputBoxInfo>
+          ) : (
+            <ReceiverInputBoxFields>
+              {fields.map((field, index) => (
+                <ReceiverInputBoxField key={field.id}>
+                  <ReceiverInputBoxFieldItem>
+                    {watch(`receivers.${index}.name`)}
+                  </ReceiverInputBoxFieldItem>
+                  <ReceiverInputBoxFieldItem>
+                    {watch(`receivers.${index}.phone`)}
+                  </ReceiverInputBoxFieldItem>
+                  <ReceiverInputBoxFieldItem>
+                    {watch(`receivers.${index}.count`)}
+                  </ReceiverInputBoxFieldItem>
+                </ReceiverInputBoxField>
+              ))}
+            </ReceiverInputBoxFields>
+          )}
         </ReceiverInputBox>
       </ReceiverInputWrapper>
 
@@ -706,7 +733,7 @@ function Order() {
       {/* 주문 버튼 */}
       <OrderBtnWrapper>
         <OrderButton onClick={handleSubmit(handleOrderClick)}>
-          {price * itemCount}원 주문하기
+          {watch('allPrice')}원 주문하기
         </OrderButton>
       </OrderBtnWrapper>
 
@@ -723,67 +750,67 @@ function Order() {
           {/* 모달 리시버 박스들 */}
           {fields.map((field, index) => (
             <ModalReceiverInputBox key={field.id}>
-            <ModalReceiverInputTitleBtnWrapper>
-              <ModalReceiverInputTitle>받는 사람 {index + 1}</ModalReceiverInputTitle>
-              <ModalReceiverInputDelBtn onClick={() => handleReceiverDel(index)}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                  fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"
-                  strokeLinejoin="round" className="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              </ModalReceiverInputDelBtn>
-            </ModalReceiverInputTitleBtnWrapper>
-      
-            <ReceiverInputNameWrapper>
-              <ReceiverInputNameLabel htmlFor={`receivers.${index}.name`}>이름</ReceiverInputNameLabel>
-              <ReceiverInputName
-                placeholder="이름을 입력하세요."
-                {...register(`receivers.${index}.name`, { required: true})}
-              />
-            </ReceiverInputNameWrapper>
-            {errors.receivers?.[index]?.name && <ReceiverInputErrorTxt>이름을 입력해 주세요.</ReceiverInputErrorTxt>}
-      
-            <ReceiverInputPhoneNumberWrapper>
-              <ReceiverInputPhoneNumberLabel htmlFor={`receivers.${index}.phone`}>전화번호</ReceiverInputPhoneNumberLabel>
-              <ReceiverInputPhoneNumber
-                placeholder="전화번호를 입력하세요"
-                {...register(`receivers.${index}.phone`, {
-                  required: '전화번호를 입력해 주세요.',
-                  pattern: {
-                    value: PHONE_NUM_REGEX,
-                    message: '전화번호 형식이 맞지 않습니다.'
-                  },
-                  validate: (value) => {
-                    const phones = watch('receivers').map((r) => r.phone);
-                    const occurrences = phones.filter((p) => p === value).length;
-                    if(occurrences > 1) {
-                      return '이미 등록된 전화번호입니다.';
-                    }
-                    
-                    return true;
-                  },
-                })}
-      
-              />
-            </ReceiverInputPhoneNumberWrapper>
-            {errors.receivers?.[index]?.phone?.message && (<ReceiverInputErrorTxt>{errors.receivers[index].phone?.message}</ReceiverInputErrorTxt>)}
-      
-            <ReceiverItemNumWrapper>
-              <ReceiverItemNumInputLabel htmlFor={`receivers.${index}.count`}>수량</ReceiverItemNumInputLabel>
-              <ReceiverItemNumInput
-                type='number'
-                min='0'
-                step='1'
-                {...register(`receivers.${index}.count`, {
-                  required: true,
-                  min: 1,
-                })}
-            
-              />
-            </ReceiverItemNumWrapper>
-            {errors.receivers?.[index]?.count && <ReceiverInputErrorTxt>구매 수량은 1개 이상이어야 합니다.</ReceiverInputErrorTxt>}
-          </ModalReceiverInputBox>
+              <ModalReceiverInputTitleBtnWrapper>
+                <ModalReceiverInputTitle>받는 사람 {index + 1}</ModalReceiverInputTitle>
+                <ModalReceiverInputDelBtn onClick={() => handleReceiverDel(index)}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"
+                    strokeLinejoin="round" className="lucide lucide-x" aria-hidden="true">
+                    <path d="M18 6 6 18"></path>
+                    <path d="m6 6 12 12"></path>
+                  </svg>
+                </ModalReceiverInputDelBtn>
+              </ModalReceiverInputTitleBtnWrapper>
+
+              <ReceiverInputNameWrapper>
+                <ReceiverInputNameLabel htmlFor={`receivers.${index}.name`}>이름</ReceiverInputNameLabel>
+                <ReceiverInputName
+                  placeholder="이름을 입력하세요."
+                  {...register(`receivers.${index}.name`, { required: true })}
+                />
+              </ReceiverInputNameWrapper>
+              {errors.receivers?.[index]?.name && <ReceiverInputErrorTxt>이름을 입력해 주세요.</ReceiverInputErrorTxt>}
+
+              <ReceiverInputPhoneNumberWrapper>
+                <ReceiverInputPhoneNumberLabel htmlFor={`receivers.${index}.phone`}>전화번호</ReceiverInputPhoneNumberLabel>
+                <ReceiverInputPhoneNumber
+                  placeholder="전화번호를 입력하세요"
+                  {...register(`receivers.${index}.phone`, {
+                    required: '전화번호를 입력해 주세요.',
+                    pattern: {
+                      value: PHONE_NUM_REGEX,
+                      message: '전화번호 형식이 맞지 않습니다.'
+                    },
+                    validate: (value) => {
+                      const phones = watch('receivers').map((r) => r.phone);
+                      const occurrences = phones.filter((p) => p === value).length;
+                      if (occurrences > 1) {
+                        return '이미 등록된 전화번호입니다.';
+                      }
+
+                      return true;
+                    },
+                  })}
+
+                />
+              </ReceiverInputPhoneNumberWrapper>
+              {errors.receivers?.[index]?.phone?.message && (<ReceiverInputErrorTxt>{errors.receivers[index].phone?.message}</ReceiverInputErrorTxt>)}
+
+              <ReceiverItemNumWrapper>
+                <ReceiverItemNumInputLabel htmlFor={`receivers.${index}.count`}>수량</ReceiverItemNumInputLabel>
+                <ReceiverItemNumInput
+                  type='number'
+                  min='0'
+                  step='1'
+                  {...register(`receivers.${index}.count`, {
+                    required: true,
+                    min: 1,
+                  })}
+
+                />
+              </ReceiverItemNumWrapper>
+              {errors.receivers?.[index]?.count && <ReceiverInputErrorTxt>구매 수량은 1개 이상이어야 합니다.</ReceiverInputErrorTxt>}
+            </ModalReceiverInputBox>
           ))}
 
           {/* 모달 취소하기 컨펌하기 버튼 */}
