@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 type FilterType = '전체' | '여성이' | '남성이' | '청소년이';
 type TabType = '받고 싶어한' | '많이 선물한' | '위시로 받은';
@@ -7,8 +7,25 @@ type TabType = '받고 싶어한' | '많이 선물한' | '위시로 받은';
 const FILTERS: FilterType[] = ['전체', '여성이', '남성이', '청소년이'];
 const TABS: TabType[] = ['받고 싶어한', '많이 선물한', '위시로 받은'];
 
-const mockItems = Array.from({ length: 12 }, (_, i) => ({
-  id: i + 1,
+type RankedProduct = {
+  ranking: number;
+  id: number;
+  name: string;
+  imageURL: string;
+  price: {
+    basicPrice: number;
+    discountRate: number;
+    sellingPrice: number;
+  };
+  brandInfo: {
+    id: number;
+    name: string;
+    imageURL: string;
+  };
+};
+
+const mockProduct = {
+  id: 123,
   name: 'BBQ 양념치킨+크림치즈볼+콜라1.25L',
   imageURL:
     'https://st.kakaocdn.net/product/gift/product/20231030175450_53e90ee9708f45ffa45b3f7b4bc01c7c.jpg',
@@ -23,6 +40,11 @@ const mockItems = Array.from({ length: 12 }, (_, i) => ({
     imageURL:
       'https://st.kakaocdn.net/product/gift/gift_brand/20220216170226_38ba26d8eedf450683200d6730757204.png',
   },
+};
+
+const mockItems = Array.from({ length: 12 }, (_, i) => ({
+  ranking: i + 1,
+  ...mockProduct,
 }));
 
 const Section = styled.section(({ theme }) => ({
@@ -95,6 +117,7 @@ const ImageWrapper = styled.div`
   position: relative;
   width: 100%;
   aspect-ratio: 1/1;
+  cursor: pointer;
 `;
 
 const ProductImage = styled.img`
@@ -173,6 +196,10 @@ const RankingSection = () => {
 
   const visibleItems = isExpanded ? mockItems : mockItems.slice(0, 6);
 
+  const navigate = useNavigate();
+  const handleClick = (item: RankedProduct) => {
+    navigate(`/order/${item.id}`);
+  };
   return (
     <Section>
       <Title>실시간 급상승 선물랭킹</Title>
@@ -205,11 +232,12 @@ const RankingSection = () => {
 
       {/* 상품 카드 */}
       <Grid>
-        {visibleItems.map((item) => (
-          <Card key={item.id}>
-            <ImageWrapper>
+        {visibleItems.map((item: RankedProduct) => (
+          <Card key={item.ranking}>
+            {/* 임시로 ranking으로 해두었지만 추후 id값으로 바꿀 계획 */}
+            <ImageWrapper onClick={() => handleClick(item)}>
               <ProductImage src={item.imageURL} alt={item.name} />
-              <RankBadge>{item.id}</RankBadge>
+              <RankBadge>{item.ranking}</RankBadge>
             </ImageWrapper>
             <Brand>{item.brandInfo.name}</Brand>
             <ProductName>{item.name}</ProductName>

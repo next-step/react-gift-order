@@ -1,11 +1,21 @@
-import Layout from '@components/Layout';
+import Layout from '@components/Layout/Layout';
+import { useAuth } from '@contexts/AuthContext';
+import GiftOrderPage from '@pages/GiftOrderPage';
 import Home from '@pages/Home';
 import Login from '@pages/Login';
+import MyPage from '@pages/MyPage';
 import NotFound from '@pages/NotFound';
 import GlobalStyle from '@styles/GlobalStyles';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+
+const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
+  const { user, isInitialized } = useAuth();
+  if (!isInitialized) return null;
+  return user ? children : <Navigate to="/login" replace />;
+};
 
 const Router = () => {
+  const { user, isInitialized } = useAuth();
   return (
     <>
       <GlobalStyle />
@@ -13,7 +23,32 @@ const Router = () => {
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
+            <Route
+              path="/login"
+              element={
+                !isInitialized ? null : user ? (
+                  <Navigate to="/my" replace />
+                ) : (
+                  <Login />
+                )
+              }
+            />
+            <Route
+              path="/my"
+              element={
+                <PrivateRoute>
+                  <MyPage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/order/:id"
+              element={
+                <PrivateRoute>
+                  <GiftOrderPage />
+                </PrivateRoute>
+              }
+            />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

@@ -28,11 +28,15 @@ const Label = styled.p`
   font-size: ${({ theme }) => theme.typography.label2Regular.fontSize};
   color: ${({ theme }) => theme.colors.gray.gray800};
 `;
+const SectionTitle = styled.div(({ theme }) => ({
+  ...theme.typography.label1Bold,
+  marginBottom: theme.spacing.spacing3,
+}));
 
 const CategorySection = () => {
   return (
     <Section>
-      <h2>선물 테마</h2>
+      <SectionTitle>선물 테마</SectionTitle>
       <Grid>
         {giftThemes.map((theme: GiftTheme) => (
           <Item key={theme.themeId}>
