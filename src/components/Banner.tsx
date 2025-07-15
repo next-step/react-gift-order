@@ -19,13 +19,13 @@ const Sub = styled.p`
 `;
 
 const Banner = () => {
-    return (
-        <Frame>
-            <Box>
-                <Sub>카카오테크 캠퍼스 3기 여러분</Sub>
-                <Strong>프론트엔드 2단계 과제 화이팅! 🎉</Strong>
-            </Box>
-        </Frame>
-    );
+  return (
+    <Frame>
+      <Box>
+        <Sub>카카오테크 캠퍼스 3기 여러분</Sub>
+        <Strong>프론트엔드 2단계 과제 화이팅! 🎉</Strong>
+      </Box>
+    </Frame>
+  );
 };
 export default Banner;

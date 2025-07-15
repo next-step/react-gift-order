@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import type { UseFormRegister, UseFormSetValue } from 'react-hook-form';
 import {
   Container,
   CardContainer,
@@ -9,30 +10,23 @@ import {
   MessageTextarea,
 } from './styles';
 import { messageCards } from './mockData';
+import type { IFormData } from '@/types/order.d';
 
 interface MessageCardProps {
-  onMessageChange: (message: string) => void;
+  register: UseFormRegister<IFormData>;
+  setValue: UseFormSetValue<IFormData>;
 }
 
-function MessageCard({ onMessageChange }: MessageCardProps) {
+function MessageCard({ register, setValue }: MessageCardProps) {
   const [selectedCardId, setSelectedCardId] = useState<number>(messageCards[0].id);
-  const [message, setMessage] = useState('');
-
   const selectedCardData = messageCards.find((card) => card.id === selectedCardId);
 
   useEffect(() => {
     if (selectedCardData) {
       const defaultMessage = selectedCardData.defaultTextMessage;
-      setMessage(defaultMessage);
-      onMessageChange(defaultMessage);
+      setValue('message', defaultMessage, { shouldDirty: true, shouldValidate: true });
     }
-  }, [selectedCardData, onMessageChange]);
-
-  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newMessage = e.target.value;
-    setMessage(newMessage);
-    onMessageChange(newMessage);
-  };
+  }, [selectedCardData, setValue]);
 
   return (
     <Container>
@@ -53,10 +47,7 @@ function MessageCard({ onMessageChange }: MessageCardProps) {
             src={selectedCardData.imageUrl}
             alt={`enlarged-card-${selectedCardData.id}`}
           />
-          <MessageTextarea
-            value={message}
-            onChange={handleMessageChange}
-          />
+          <MessageTextarea {...register('message')} />
         </EnlargedImageContainer>
       )}
     </Container>

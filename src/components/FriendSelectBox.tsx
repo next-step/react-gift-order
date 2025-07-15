@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { IoAdd } from 'react-icons/io5';
+
 const Frame = styled.div`
   display: flex;
   align-items: center;
@@ -34,16 +35,30 @@ const Text = styled.p`
     color: ${({ theme }) => theme.colors.semantic.textDeafult};
 `;
 
-const ReceiverSelectBox = () => {
-  return (
-    <Frame>
-      <Box>
-        <IconWrap>
-          <IoAdd />
-        </IconWrap>
-        <Text>선물할 친구를 선택해 주세요.</Text>
-      </Box>
-    </Frame>
-  );
+interface FriendSelectBoxProps {
+    isLoggedIn: boolean;
+    userId: string | null;
+}
+
+const FriendSelectBox: React.FC<FriendSelectBoxProps> = ({ isLoggedIn, userId }) => {
+    const nickname = userId ? userId.split('@')[0] : '';
+
+    return (
+        <Frame>
+            <Box>
+                <IconWrap>
+                    <IoAdd />
+                </IconWrap>
+                <Text>
+                    {isLoggedIn && userId ? (
+                        <>{nickname}님! 선물할 친구를 선택해 주세요!</>
+                    ) : (
+                        '선물할 친구를 선택해 주세요.'
+                    )}
+                </Text>
+            </Box>
+        </Frame>
+    );
 };
-export default ReceiverSelectBox;
+
+export default FriendSelectBox;
