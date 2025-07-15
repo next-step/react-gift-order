@@ -24,7 +24,7 @@ const GiftRankingHeader = () => {
     params.set("target", initTarget);
     params.set("rankType", initRank);
     navigate(`${location.pathname}?${params.toString()}`);
-  }, []);
+  }, [location.pathname, location.search, navigate]);
 
   const handleTargetClick = (newTarget: string) => {
     setTarget(newTarget);
