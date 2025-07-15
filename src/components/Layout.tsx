@@ -2,6 +2,7 @@ import type theme from "@/styles/theme"
 import styled from "@emotion/styled"
 interface LayoutStyle {
   marginTop?: keyof typeof theme.space
+  marginBottom?: keyof typeof theme.space
   paddingUp?: keyof typeof theme.space
   paddingLeft?: keyof typeof theme.space
   paddingRight?: keyof typeof theme.space
@@ -11,6 +12,7 @@ interface LayoutStyle {
 const Layout = styled.div<LayoutStyle>`
   ${({
     marginTop,
+    marginBottom,
     paddingUp,
     paddingLeft,
     paddingRight,
@@ -23,8 +25,8 @@ const Layout = styled.div<LayoutStyle>`
   margin: 0 auto;
   background-color: ${theme.colors.gray00};
 
-
   ${marginTop ? `margin-top:  ${theme.space[marginTop]};` : ""}
+  ${marginBottom ? `margin-bottom:  ${theme.space[marginBottom]};` : ""}
   ${paddingUp ? `padding-top:  ${theme.space[paddingUp]};` : ""}
   ${paddingLeft ? `padding-left:  ${theme.space[paddingLeft]};` : ""}
   ${paddingRight ? `padding-right:  ${theme.space[paddingRight]};` : ""}
