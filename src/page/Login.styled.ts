@@ -65,17 +65,6 @@ export const LoginButton = styled.button<{ notVaild?: boolean }>`
   transition: background-color 200ms;
 `;
 
-export const EmptyDiv16h= styled.div`
-  width: 100%;
-  height: 16px;
-  background-color: transparent;
-`;
-
-export const EmptyDiv48h = styled.div`
-  width: 100%;
-  height: 48px;
-  background-color: transparent;
-`;
 
 export const ErrorMessage = styled.div`
   color: red;

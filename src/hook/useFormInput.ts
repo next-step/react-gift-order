@@ -2,26 +2,22 @@ import { useState } from 'react';
 
 type ValidatorFn = (value: string) => string | null;
 
-function useInput(validator: ValidatorFn, initialValue ='') {
+function useFormInput(validator: ValidatorFn, initialValue ='') {
   const [value, setValue] = useState(initialValue);
   const [error, setError] = useState<string | null>(' ');
-  const [touched, setTouched] = useState(false);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
-    const errorMsg = validator(e.target.value);
-    setError(errorMsg);
+    setError('')
   };
 
-  const onBlur = () => {
-    if(!touched) setTouched(true);
+  const validate = () => {
     const errorMsg = validator(value);
     setError(errorMsg);
+    return !errorMsg;
   };
 
-  const isValid = touched ? !error : true
-
-  return { value, onChange, onBlur, error, isValid };
+  return { value, onChange, validate, error };
 }
 
-export default useInput;
+export default useFormInput;
