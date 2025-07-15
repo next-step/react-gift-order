@@ -52,18 +52,14 @@ const Order: React.FC = () => {
     const sender = SenderNameRef.current?.value.trim() ?? "";
     const isReceiverExists = receivers.length > 0;
 
-    let isValid = true;
-
     if (sender === "") {
       setSenderError("보내는 사람 이름을 입력해주세요.");
-      isValid = false;
     } else {
       setSenderError("");
     }
 
     if (msg === "") {
       setMessageError("메시지를 입력해주세요.");
-      isValid = false;
     } else {
       setMessageError("");
     }
@@ -72,12 +68,14 @@ const Order: React.FC = () => {
       setReceiverError(
         "받는 사람이 등록되지 않았습니다. 최소 1명을 선택해주세요."
       );
-      isValid = false;
     } else {
       setReceiverError("");
     }
 
-    if (!isValid) return;
+    const hasError = sender === "" || msg === "" || !isReceiverExists;
+
+    if (hasError) return;
+
     alert(
       `주문 상품명: ${selectedGift?.name}\n` +
         `보내는 사람: ${SenderNameRef.current?.value}\n` +
