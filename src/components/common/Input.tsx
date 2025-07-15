@@ -1,11 +1,23 @@
 import styled from '@emotion/styled';
 import { InputHTMLAttributes } from 'react';
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {}
-
-export function Input(props: InputProps) {
-  return <StyledInput {...props} />;
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  error?: string | null;
 }
+
+export function Input({ error, ...props }: InputProps) {
+  return (
+    <InputWrapper>
+      <StyledInput {...props} />
+      {error && <ErrorMessage>{error}</ErrorMessage>}
+    </InputWrapper>
+  );
+}
+
+const InputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 const StyledInput = styled.input`
   padding: 10px 0;
@@ -18,4 +30,10 @@ const StyledInput = styled.input`
     border-bottom: 1px solid ${({ theme }) => theme.colors.gray.gray800};
     outline: none;
   }
+`;
+
+const ErrorMessage = styled.span`
+  color: ${({ theme }) => theme.colors.red.red600};
+  font-size: 12px;
+  margin-top: 4px;
 `;
