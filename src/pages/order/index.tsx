@@ -1,19 +1,20 @@
 import styled from "@emotion/styled";
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import MessageCard, {
   type MessageCardHandle,
 } from "@/pages/order/components/MessageCard";
 import SenderInfo, {
   type SenderInfoHandle,
 } from "@/pages/order/components/SenderInfo";
-import ReceiverInfo, {
-  type ReceiverInfoHandle,
-} from "@/pages/order/components/ReceiverInfo";
+import ReceiverListSection, {
+  type Receiver,
+} from "@/pages/order/components/ReceiverListSection";
 import ProductInfo from "@/pages/order/components/ProductInfo";
 import OrderFooter from "@/pages/order/components/OrderFooter";
 
 import { useNavigate, useParams } from "react-router-dom";
 import { mockRankingData } from "@/mock/mockData";
+import { validateReceiverCount } from "@/utils/validators";
 
 export default function OrderPage() {
   const { productId } = useParams();
@@ -26,31 +27,36 @@ export default function OrderPage() {
 
   const messageCardRef = useRef<MessageCardHandle>(null);
   const senderInfoRef = useRef<SenderInfoHandle>(null);
-  const receiverInfoRef = useRef<ReceiverInfoHandle>(null);
+
+  const [receivers, setReceivers] = useState<Receiver[]>([]);
 
   const [message, setMessage] = useState("");
   const [senderName, setSenderName] = useState("");
-  const [receiverInfo, setReceiverInfo] = useState({
-    name: "",
-    phone: "",
-    quantity: 1,
-  });
 
-  const totalPrice = product.price.sellingPrice * receiverInfo.quantity;
+  const totalQuantity = receivers.reduce(
+    (sum, receiver) => sum + receiver.quantity,
+    0,
+  );
+  const totalPrice = product.price.sellingPrice * totalQuantity;
 
   const handleOrderClick = () => {
     const isMessageValid = messageCardRef.current?.validate() ?? false;
     const isSenderValid = senderInfoRef.current?.validate() ?? false;
-    const isReceiverValid = receiverInfoRef.current?.validate() ?? false;
 
-    if (!isMessageValid || !isSenderValid || !isReceiverValid) {
+    if (!isMessageValid || !isSenderValid) {
+      return;
+    }
+
+    const receiverError = validateReceiverCount(receivers.length);
+    if (receiverError) {
+      alert(receiverError);
       return;
     }
 
     const alertMessage = [
       `주문이 완료되었습니다.`,
       `상품명: ${product.name}`,
-      `구매 수량: ${receiverInfo.quantity}`,
+      `구매 수량: ${receivers.length}`,
       `발신자 이름: ${senderName}`,
       `메시지: ${message}`,
     ].join("\n");
@@ -59,6 +65,10 @@ export default function OrderPage() {
 
     navigate("/");
   };
+
+  const handleReceiverChange = useCallback((newReceivers: Receiver[]) => {
+    setReceivers(newReceivers);
+  }, []);
 
   return (
     <>
@@ -72,10 +82,8 @@ export default function OrderPage() {
         onChange={(name) => setSenderName(name)}
       />
       <SectionDivider />
-      <ReceiverInfo
-        ref={receiverInfoRef}
-        onChange={(info) => setReceiverInfo(info)}
-      />
+      <ReceiverListSection onChange={handleReceiverChange} />
+
       <SectionDivider />
       <ProductInfo
         name={product.name}

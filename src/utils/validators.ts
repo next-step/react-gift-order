@@ -1,10 +1,14 @@
-import { MIN_PASSWORD_LENGTH, MIN_PRODUCT_COUNT } from "@/constants/validation";
+import {
+  MIN_PASSWORD_LENGTH,
+  MIN_PRODUCT_COUNT,
+  MIN_RECEIVER_COUNT,
+} from "@/constants/validation";
 import { ERROR_MESSAGES } from "@/constants/messages";
 
 export const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^010\d{8}$/;
 
-export function validateEmail(email: string): string {
+export function validateEmail(email: string) {
   if (!email) {
     return ERROR_MESSAGES.LOGIN.ID_EMPTY;
   }
@@ -14,7 +18,7 @@ export function validateEmail(email: string): string {
   return "";
 }
 
-export function validatePassword(pw: string): string {
+export function validatePassword(pw: string) {
   if (!pw) {
     return ERROR_MESSAGES.LOGIN.PW_EMPTY;
   }
@@ -24,21 +28,28 @@ export function validatePassword(pw: string): string {
   return "";
 }
 
-export function validateName(name: string): string {
+export function validateSenderName(name: string) {
   if (!name.trim()) {
     return ERROR_MESSAGES.VALIDATE.NAME;
   }
   return "";
 }
 
-export function validateMessage(message: string): string {
+export function validateReceiverName(name: string) {
+  if (!name.trim()) {
+    return ERROR_MESSAGES.VALIDATE.NAME;
+  }
+  return true;
+}
+
+export function validateMessage(message: string) {
   if (!message.trim()) {
     return ERROR_MESSAGES.VALIDATE.MESSGE;
   }
   return "";
 }
 
-export function validatePhone(phone: string): string {
+export function validatePhone(phone: string) {
   if (!phone) {
     return ERROR_MESSAGES.VALIDATE.PHONE;
   }
@@ -48,9 +59,32 @@ export function validatePhone(phone: string): string {
   return "";
 }
 
-export function validateQuantity(quantity: number): string {
+export function validateQuantity(quantity: number) {
   if (quantity < MIN_PRODUCT_COUNT) {
     return ERROR_MESSAGES.VALIDATE.QUANTITY;
   }
+  return true;
+}
+
+export function validateReceiverCount(receiverCount: number) {
+  if (receiverCount < MIN_RECEIVER_COUNT) {
+    return ERROR_MESSAGES.VALIDATE.SELECT_RECEIVER;
+  }
   return "";
+}
+
+export function createPhoneValidator(getReceivers: () => { phone: string }[]) {
+  return (value: string) => {
+    const formatError = validatePhone(value);
+    if (formatError) return formatError;
+
+    const receivers = getReceivers() ?? [];
+    const sameCount = receivers.filter((r) => r.phone === value).length;
+
+    if (sameCount > 1) {
+      return ERROR_MESSAGES.VALIDATE.DUPLICATE_PHONE;
+    }
+
+    return true;
+  };
 }

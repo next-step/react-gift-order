@@ -1,4 +1,4 @@
-import { validateName } from "@/utils/validators";
+import { validateSenderName } from "@/utils/validators";
 import styled from "@emotion/styled";
 import { useState, forwardRef, useImperativeHandle } from "react";
 
@@ -22,7 +22,7 @@ const SenderInfo = forwardRef<SenderInfoHandle, Props>(({ onChange }, ref) => {
 
   useImperativeHandle(ref, () => ({
     validate: () => {
-      const msg = validateName(sender);
+      const msg = validateSenderName(sender);
       setError(msg);
       return msg === "";
     },

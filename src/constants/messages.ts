@@ -17,5 +17,8 @@ export const ERROR_MESSAGES = {
     PHONE: "전화번호를 입력해주세요.",
     PHONE_TYPE: "올바른 전화번호 형식이 아닙니다. (예: 01012341234)",
     QUANTITY: "수량은 최소 1개 이상이어야 합니다.",
+    SELECT_RECEIVER: "받는 사람을 선택해주세요.",
+    DUPLICATE_PHONE: "중복된 전화번호입니다.",
+    MAX_RECEIVER_NUMBER: "최대 10명까지 등록할 수 있습니다.",
   },
 };
