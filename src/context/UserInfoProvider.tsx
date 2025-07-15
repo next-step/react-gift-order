@@ -1,17 +1,5 @@
-import { createContext, useState, type ReactNode } from "react";
-
-type User = {
-  email: string;
-};
-
-type UserInfoContextType = {
-  user: User | null;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>;
-};
-
-export const UserInfoContext = createContext<UserInfoContextType | undefined>(
-  undefined
-);
+import { useState, type ReactNode } from "react";
+import { UserInfoContext } from "@/context/UserInfoContext";
 
 export function UserInfoProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState(() => {
