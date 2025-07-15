@@ -1,4 +1,5 @@
 import { AuthProvider } from '@contexts/AuthContext';
+import { ModalProvider } from '@contexts/ModalContext';
 import styled from '@emotion/styled';
 import Router from '@shared/Router';
 
@@ -9,11 +10,13 @@ const Container = styled.div(({ theme }) => ({
 
 const App = () => {
   return (
-    <AuthProvider>
-      <Container>
-        <Router />
-      </Container>
-    </AuthProvider>
+    <ModalProvider>
+      <AuthProvider>
+        <Container>
+          <Router />
+        </Container>
+      </AuthProvider>
+    </ModalProvider>
   );
 };
 
