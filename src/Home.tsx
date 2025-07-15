@@ -52,7 +52,12 @@ const Home = () => {
             />
           </Box>
         </NaviBar>
-        <main style={{ paddingTop: "44px" }}>
+        <main
+          style={{
+            paddingTop: "44px",
+            boxSizing: "border-box",
+          }}
+        >
           <Outlet />
         </main>
       </Layout>

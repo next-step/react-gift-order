@@ -1,33 +1,40 @@
-import React, { useState } from "react"
+import { useState, useCallback } from "react"
 import PresentGiverForm from "@/components/PresentForm/PresentGiverForm"
 import CardThumbnail from "./CardThumbnail"
 import OrderLayout from "@/components/OrderLayout"
-import PresentReciverForm from "@/components/PresentForm/PresentReciverForm"
+
+import ReceiverList from "@/components/PresentForm/ReceiverList"
 import MoreButton from "@/components/MoreButton"
 import ProductInfoBar from "./ProductInfo"
 import { useParams } from "react-router-dom"
 import mock_present from "@/mock_present"
 import { useForm, FormProvider } from "react-hook-form"
+import OrderForm from "@/components/PresentForm/OrderForm"
+import styled from "@emotion/styled"
+import Modal from "@/pages/Modal"
+import ReceiverForm from "@/components/PresentForm/ReceiverForm"
+
+export interface Receiver {
+  name: string
+  phone: string
+  quantity: string
+}
 
 export interface FormData {
   senderName: string
-  receiverName: string
-  receiverPhone: string
-  quantity: string
+  receivers: Receiver[]
   message?: string
 }
 
 export type FormField = keyof FormData
 
-const OrderPage: React.FC = () => {
+const OrderPage = () => {
   const [message, setMessage] = useState<string>("")
 
   const methods = useForm<FormData>({
     defaultValues: {
       senderName: "",
-      receiverName: "",
-      receiverPhone: "",
-      quantity: "1",
+      receivers: [],
       message: "",
     },
   })
@@ -38,9 +45,14 @@ const OrderPage: React.FC = () => {
     alert(
       `주문이 완료되었습니다.\n` +
         `상품명: ${product.name}\n` +
-        `구매 수량: ${data.quantity}\n` +
-        `받는사람 이름: ${data.receiverName}\n` +
-        `메시지: ${message}`
+        `받는사람 수: ${data.receivers.length}\n` +
+        data.receivers
+          .map(
+            (r, i) =>
+              `받는사람${i + 1}: ${r.name} (${r.phone}, 수량: ${r.quantity})`
+          )
+          .join("\n") +
+        `\n메시지: ${data.message ?? ""}`
     )
     reset()
   }
@@ -49,19 +61,21 @@ const OrderPage: React.FC = () => {
   const product =
     mock_present.find((item) => item.id === Number(id)) || mock_present[0]
 
-  const quantity = Number(watch("quantity")) > 0 ? Number(watch("quantity")) : 1
-  const totalPrice = product.price.sellingPrice * quantity
+  const receivers = watch("receivers") || []
+  const totalQuantity = receivers.reduce(
+    (sum, r) => sum + Number(r.quantity || 0),
+    0
+  )
+  const totalPrice = product.price.sellingPrice * (totalQuantity || 1)
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <OrderForm onSubmit={handleSubmit(onSubmit)}>
         <OrderLayout color="gray100" minHeight="100vh">
           <CardThumbnail message={message} setMessage={setMessage} />
 
           <PresentGiverForm />
-
-          <PresentReciverForm />
-
+          <ReceiverForm />
           <ProductInfoBar
             image={product.imageURL}
             name={product.name}
@@ -77,7 +91,7 @@ const OrderPage: React.FC = () => {
             {totalPrice.toLocaleString()}원 주문하기
           </MoreButton>
         </OrderLayout>
-      </form>
+      </OrderForm>
     </FormProvider>
   )
 }

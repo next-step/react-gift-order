@@ -19,10 +19,11 @@ const OrderLayout = styled.div<LayoutStyle>`
     theme,
   }) => {
     return `
-  max-width: 720px;
-  margin: 0 auto;
+  
+  width: 100%;
+  
   background-color: ${theme.colors.gray00};
-
+  
 
   ${marginTop ? `margin-top:  ${theme.space[marginTop]};` : ""}
   ${paddingUp ? `padding-top:  ${theme.space[paddingUp]};` : ""}
