@@ -5,12 +5,17 @@ import {
   InputForm,
   ErrorMessage,
 } from './LoginForm.styles';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import KakaoLogo from '@/assets/Kakao_logo.png';
 import MyButton from '@/components/button/button';
 import { useLoginForm } from '../hooks/useLoginForm';
+import { useUserContext } from '@/contexts/UserContext';
 
-const LoginForm: React.FC = () => {
+interface LoginFormProps {
+  redirectPath: string;
+}
+
+const LoginForm: React.FC<LoginFormProps> = ({ redirectPath }) => {
   const {
     values,
     errors,
@@ -20,24 +25,18 @@ const LoginForm: React.FC = () => {
     isLoginValid,
   } = useLoginForm();
 
+  const { login } = useUserContext();
   const navigate = useNavigate();
-  const location = useLocation();
-  const hasPreviousPage = location.key !== 'default';
 
   const handleLoginClick = async () => {
     const valid = validateForm();
     if (!valid) return;
 
-    try {
-      console.log('로그인 요청:', values);
-      if (hasPreviousPage) {
-        navigate(-1);
-      } else {
-        navigate('/');
-      }
-    } catch (error) {
-      console.error('로그인 실패', error);
-    }
+    const email = values.email;
+    const nickname = email.split('@')[0];
+    login({ email, nickname });
+
+    navigate(redirectPath, { replace: true });
   };
 
   return (
