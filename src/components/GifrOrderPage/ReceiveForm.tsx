@@ -20,9 +20,9 @@ const ReceiveForm = ({ index, register, errors, remove }: ReceiveFormProps) => {
         </DeleteButton>
       </HeaderRow>
       <FieldRow>
-        <Label htmlFor="receiverName">이름</Label>
+        <Label htmlFor={`receiverName-${index}`}>이름</Label>
         <Input
-          id="receiverName"
+          id={`receiverName-${index}`}
           placeholder="이름을 입력하세요."
           {...register(`recipients.${index}.receiver` as const)}
         />
@@ -32,9 +32,9 @@ const ReceiveForm = ({ index, register, errors, remove }: ReceiveFormProps) => {
       )}
 
       <FieldRow>
-        <Label htmlFor="receiverPhone">전화번호</Label>
+        <Label htmlFor={`receiverPhone-${index}`}>전화번호</Label>
         <Input
-          id="receiverPhone"
+          id={`receiverPhone-${index}`}
           placeholder="전화번호를 입력하세요."
           {...register(`recipients.${index}.phone` as const)}
         />
@@ -44,9 +44,9 @@ const ReceiveForm = ({ index, register, errors, remove }: ReceiveFormProps) => {
       )}
 
       <FieldRow>
-        <Label htmlFor="quantity">수량</Label>
+        <Label htmlFor={`quantity-${index}`}>수량</Label>
         <Input
-          id="quantity"
+          id={`quantity-${index}`}
           type="number"
           defaultValue={1}
           {...register(`recipients.${index}.quantity` as const, {
