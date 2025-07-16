@@ -1,8 +1,9 @@
-import { useState } from 'react';
 import styled from '@emotion/styled';
 import { X } from 'lucide-react';
-import { useFormContext } from 'react-hook-form';
-import type { OrderFormValues } from '@components/OrderForm/OrderForm';
+import { useFormContext, useFieldArray } from 'react-hook-form';
+import type { OrderFormValues } from '@/components/OrderForm/OrderForm';
+import { ErrorMessage } from './ErrorMessage';
+
 export interface ModalProps {
   open: boolean;
   initialValue?: { name: string; phone: string; quantity: number };
@@ -33,7 +34,6 @@ const Container = styled('div')({
   justifyContent: 'center',
 });
 
-// 모달 크기를 원래대로: full width & height 내부 영역
 const ModalSection = styled('div')({
   background: '#fff',
   borderRadius: 8,
@@ -47,11 +47,7 @@ const ModalSection = styled('div')({
   gap: 16,
 });
 
-const RecipientSection = styled('div')({
-  flex: '1 1 0%',
-  overflow: 'auto',
-});
-
+const RecipientSection = styled('div')({ flex: '1 1 0%', overflow: 'auto' });
 const Title = styled('p')(({ theme }) => ({
   fontSize: '1.25rem',
   fontWeight: 700,
@@ -60,7 +56,6 @@ const Title = styled('p')(({ theme }) => ({
   margin: 0,
   textAlign: 'left',
 }));
-
 const Notice = styled('p')(({ theme }) => ({
   fontSize: '0.75rem',
   fontWeight: 400,
@@ -69,7 +64,6 @@ const Notice = styled('p')(({ theme }) => ({
   margin: 0,
   textAlign: 'left',
 }));
-
 const AddButton = styled('button')(({ theme }) => ({
   fontSize: '0.75rem',
   fontWeight: 400,
@@ -83,12 +77,7 @@ const AddButton = styled('button')(({ theme }) => ({
   ':hover': { backgroundColor: theme.colorScale.gray400 },
   ':active': { backgroundColor: theme.colorScale.gray500 },
 }));
-
-const SubmitButtonSection = styled('div')({
-  display: 'flex',
-  gap: 12,
-});
-
+const SubmitButtonSection = styled('div')({ display: 'flex', gap: 12 });
 const CancelButton = styled('button')(({ theme }) => ({
   fontSize: '0.875rem',
   fontWeight: 400,
@@ -100,7 +89,6 @@ const CancelButton = styled('button')(({ theme }) => ({
   cursor: 'pointer',
   flex: '1 1 0%',
 }));
-
 const SubmitButton = styled('button')(({ theme }) => ({
   fontSize: '0.875rem',
   fontWeight: 400,
@@ -112,36 +100,24 @@ const SubmitButton = styled('button')(({ theme }) => ({
   cursor: 'pointer',
   flex: '3 1 0%',
 }));
-
-// Margin 스타일 유지
 const Margin = styled('div')<{ height: string }>`
   width: 100%;
   height: ${({ height }) => height};
   background-color: transparent;
 `;
-
-const InputWrapper = styled('div')({
-  flex: '1 1 0%',
-  overflow: 'auto',
-});
-
+const InputWrapper = styled('div')({ flex: '1 1 0%', overflow: 'auto' });
 const InputBoxContainer = styled.div`
   display: flex;
-  -webkit-box-pack: start;
   justify-content: flex-start;
-  -webkit-box-align: center;
   align-items: center;
   gap: 12px;
   width: 100%;
   padding: 8px 0px;
 `;
-
 const RecipientNumberContainer = styled.div`
   display: flex;
-  -webkit-box-align: center;
   align-items: center;
 `;
-
 const RecipientNumber = styled.p(({ theme }) => ({
   fontSize: '0.875rem',
   fontWeight: 700,
@@ -150,7 +126,6 @@ const RecipientNumber = styled.p(({ theme }) => ({
   margin: 0,
   textAlign: 'left',
 }));
-
 const InputBoxTitle = styled('p')(({ theme }) => ({
   fontSize: '0.875rem',
   fontWeight: 400,
@@ -160,9 +135,7 @@ const InputBoxTitle = styled('p')(({ theme }) => ({
   textAlign: 'left',
   minWidth: '3.75rem',
 }));
-
 const InputBoxStyle = styled('div')({ flex: 1, width: '100%' });
-
 const InputBox = styled('input')<{ hasError?: boolean }>(({ theme, hasError }) => ({
   boxSizing: 'border-box',
   width: '100%',
@@ -176,12 +149,12 @@ const InputBox = styled('input')<{ hasError?: boolean }>(({ theme, hasError }) =
   borderRadius: '8px',
   borderColor: hasError ? theme.semanticColors.state.critical : theme.semanticColors.border.default,
   transition: 'border-color 200ms',
-  '::placeholder': {
-    color: theme.semanticColors.text.placeholder,
+  '::placeholder': { color: theme.semanticColors.text.placeholder },
+  '&:focus': {
+    outline: 'none',
+    borderColor: theme.colorScale.gray700,
   },
 }));
-
-// 구분선
 const Divider = styled('hr')(({ theme }) => ({
   width: '100%',
   height: 1,
@@ -191,23 +164,19 @@ const Divider = styled('hr')(({ theme }) => ({
 }));
 
 export const Modal = ({ open, onClose, onConfirm }: ModalProps) => {
-  const [fields, setFields] = useState<number[]>([]);
   const {
     register,
     trigger,
     getValues,
-    formState: { errors },
+    handleSubmit,
+    formState: { errors, isSubmitted },
   } = useFormContext<OrderFormValues>();
+  const { fields, append, remove } = useFieldArray({
+    control: useFormContext().control,
+    name: 'recipients',
+  });
 
-  const handleAdd = () => {
-    setFields((prev) => [...prev, Date.now()]);
-  };
-
-  const handleRemove = (removeIdx: number) => {
-    setFields((prev) => prev.filter((_, idx) => idx !== removeIdx));
-  };
-
-  const handleSubmit = async () => {
+  const onSubmit = async () => {
     const valid = await trigger();
     if (valid) onConfirm();
   };
@@ -224,18 +193,25 @@ export const Modal = ({ open, onClose, onConfirm }: ModalProps) => {
               <br />* 받는 사람의 전화번호를 중복으로 입력할 수 없어요.
             </Notice>
             <Margin height="8px" />
-            <AddButton type="button" onClick={handleAdd} disabled={fields.length >= 10}>
+            <AddButton
+              type="button"
+              onClick={() => append({ name: '', phone: '', quantity: 1 })}
+              disabled={fields.length >= 10}
+            >
               추가하기
             </AddButton>
           </div>
           <RecipientSection>
-            {fields.map((id, idx) => {
+            {fields.map((field, idx) => {
               const nameError = errors.recipients?.[idx]?.name?.message;
               const phoneError = errors.recipients?.[idx]?.phone?.message;
               const qtyError = errors.recipients?.[idx]?.quantity?.message;
+              const pathName = `recipients.${idx}.name` as const;
+              const pathPhone = `recipients.${idx}.phone` as const;
+              const pathQty = `recipients.${idx}.quantity` as const;
 
               return (
-                <InputWrapper key={id}>
+                <InputWrapper key={field.id}>
                   {idx > 0 && <Divider />}
                   <RecipientNumberContainer>
                     <RecipientNumber>받는 사람 {idx + 1}</RecipientNumber>
@@ -243,7 +219,7 @@ export const Modal = ({ open, onClose, onConfirm }: ModalProps) => {
                       size={20}
                       strokeWidth={1.5}
                       style={{ marginLeft: '0.25rem', cursor: 'pointer' }}
-                      onClick={() => handleRemove(idx)}
+                      onClick={() => remove(idx)}
                     />
                   </RecipientNumberContainer>
 
@@ -253,12 +229,16 @@ export const Modal = ({ open, onClose, onConfirm }: ModalProps) => {
                     <InputBoxStyle>
                       <InputBox
                         placeholder="이름을 입력하세요."
-                        hasError={!!nameError}
-                        {...register(`recipients.${idx}.name`, { required: '이름을 입력해주세요' })}
+                        hasError={isSubmitted && !!nameError}
+                        {...register(pathName, {
+                          required: '이름을 입력해주세요.',
+                          onBlur: () => {},
+                          onChange: () => {
+                            if (isSubmitted) trigger(pathName);
+                          },
+                        })}
                       />
-                      {nameError && (
-                        <p style={{ color: '#D92C2C', fontSize: '0.75rem' }}>{nameError}</p>
-                      )}
+                      {isSubmitted && nameError && <ErrorMessage>{nameError}</ErrorMessage>}
                     </InputBoxStyle>
                   </InputBoxContainer>
 
@@ -269,12 +249,12 @@ export const Modal = ({ open, onClose, onConfirm }: ModalProps) => {
                       <InputBox
                         type="tel"
                         placeholder="전화번호를 입력하세요."
-                        hasError={!!phoneError}
-                        {...register(`recipients.${idx}.phone`, {
-                          required: '전화번호를 입력해주세요',
+                        hasError={isSubmitted && !!phoneError}
+                        {...register(pathPhone, {
+                          required: '전화번호를 입력해주세요.',
                           pattern: {
-                            value: /^010\d{8}$/,
-                            message: '01012341234 형태로 입력하세요',
+                            value: /^0\d{1,2}-\d{3,4}-\d{4}$/,
+                            message: '올바른 전화번호 형식이 아니에요.',
                           },
                           validate: (val: string) => {
                             const phones = getValues('recipients').map((r) => r.phone);
@@ -283,11 +263,13 @@ export const Modal = ({ open, onClose, onConfirm }: ModalProps) => {
                               '중복된 번호가 있습니다'
                             );
                           },
+                          onBlur: () => {},
+                          onChange: () => {
+                            if (isSubmitted) trigger(pathPhone);
+                          },
                         })}
                       />
-                      {phoneError && (
-                        <p style={{ color: '#D92C2C', fontSize: '0.75rem' }}>{phoneError}</p>
-                      )}
+                      {isSubmitted && phoneError && <ErrorMessage>{phoneError}</ErrorMessage>}
                     </InputBoxStyle>
                   </InputBoxContainer>
 
@@ -298,15 +280,17 @@ export const Modal = ({ open, onClose, onConfirm }: ModalProps) => {
                       <InputBox
                         type="number"
                         placeholder="수량을 입력하세요."
-                        hasError={!!qtyError}
-                        {...register(`recipients.${idx}.quantity`, {
-                          required: '수량을 입력해주세요',
-                          min: { value: 1, message: '최소 1개 이상이어야 합니다' },
+                        hasError={isSubmitted && !!qtyError}
+                        {...register(pathQty, {
+                          required: '수량을 입력해주세요.',
+                          min: { value: 1, message: '구매 수량은 1개 이상이어야 해요.' },
+                          onBlur: () => {},
+                          onChange: () => {
+                            if (isSubmitted) trigger(pathQty);
+                          },
                         })}
                       />
-                      {qtyError && (
-                        <p style={{ color: '#D92C2C', fontSize: '0.75rem' }}>{qtyError}</p>
-                      )}
+                      {isSubmitted && qtyError && <ErrorMessage>{qtyError}</ErrorMessage>}
                     </InputBoxStyle>
                   </InputBoxContainer>
                 </InputWrapper>
@@ -317,7 +301,7 @@ export const Modal = ({ open, onClose, onConfirm }: ModalProps) => {
             <CancelButton type="button" onClick={onClose}>
               취소
             </CancelButton>
-            <SubmitButton type="button" onClick={handleSubmit}>
+            <SubmitButton type="button" onClick={onSubmit}>
               완료
             </SubmitButton>
           </SubmitButtonSection>

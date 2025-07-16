@@ -93,7 +93,7 @@ const OrderForm = () => {
           <Controller
             name="sender"
             control={control}
-            rules={{ required: '발신자 이름을 입력해주세요' }}
+            rules={{ required: '이름을 입력해주세요' }}
             render={({ field }) => (
               <Sender
                 value={field.value}
