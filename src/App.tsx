@@ -10,7 +10,7 @@ import CategorySection from '@components/CategorySection';
 import MessageSection from '@components/MessageSection';
 import GiftRecipientList from '@components/GiftRecipientList';
 import TrendRanking from '@components/TrendRanking';
-import LoginForm from '@/Login/components/LoginForm';
+import LoginPage from '@/Login/pages/LoginPage';
 import NotFound from '@/pages/NotFound';
 
 const MainPage = () => (
@@ -35,7 +35,7 @@ function App() {
       />
       <Routes>
         <Route element={<Layout />}>
-          <Route path={PATHS.LOGIN} element={<LoginForm />} />
+          <Route path={PATHS.LOGIN} element={<LoginPage />} />
           <Route path={PATHS.ROOT} element={<MainPage />} />
           <Route path={PATHS.NOT_FOUND} element={<NotFound />} />
         </Route>
