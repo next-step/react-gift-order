@@ -183,6 +183,9 @@ export const typography = {
 };
 
 export const spacing = {
+  //spacing3: '0.75rem',
+  //spacing6: '1.5rem',
+  //spacing8: '2rem',
   spacing0: '0px',
   spacing1: '4px',
   spacing2: '8px',

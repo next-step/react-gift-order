@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { BaseNavigation } from './BaseNavigation';
 import logo from '@/resources/images/navigation_logo.webp';
-import { Link, useNavigate, useLocation } from 'react-router';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ChevronLeft, UserRound } from 'lucide-react';
 import { ROUTE_PATH } from '@/pages/Routes';
 
