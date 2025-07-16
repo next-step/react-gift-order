@@ -2,17 +2,6 @@ import styled from '@emotion/styled';
 import type { MultiOrderFormData } from '@schemas/orderSchema';
 import type { FieldArrayWithId } from 'react-hook-form';
 
-interface Recipient {
-  receiver: string;
-  phone: string;
-  quantity: number;
-}
-
-const mockData: Recipient[] = [
-  { receiver: '홍길동', phone: '010-1234-5678', quantity: 2 },
-  { receiver: '김철수', phone: '010-8765-4321', quantity: 1 },
-];
-
 interface ReceiveListProps {
   onOpen: () => void;
   fields: FieldArrayWithId<MultiOrderFormData, 'recipients', 'id'>[];

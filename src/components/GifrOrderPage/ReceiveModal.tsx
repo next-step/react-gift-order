@@ -55,7 +55,7 @@ const ReceiveModal = ({
         <ButtonGroup>
           <CancelButton onClick={onClose}>취소</CancelButton>
           <CompleteButton type="button" onClick={onClose}>
-            n명 완료
+            {fields.length} 명 완료
           </CompleteButton>
         </ButtonGroup>
       </ModalWrapper>

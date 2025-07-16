@@ -21,6 +21,7 @@ import {
 import ReceiveList from '@components/GifrOrderPage/ReceiveList';
 import ReceiveModal from '@components/GifrOrderPage/ReceiveModal';
 import { useModal } from '@contexts/ModalContext';
+import { useState } from 'react';
 
 export interface FormSectionProps {
   register: UseFormRegister<MultiOrderFormData>;
@@ -79,8 +80,24 @@ const GiftOrderPage = () => {
   );
   const totalPrice = mockItems.price.basicPrice * totalQuantity;
 
-  const { isReceiveModalOpen, openReceiveModal, closeReceiveModal } =
-    useModal();
+  const [prevRecipients, setPrevRecipients] = useState<
+    MultiOrderFormData['recipients']
+  >([]);
+  const {
+    isReceiveModalOpen,
+    openReceiveModal: openModal,
+    closeReceiveModal: closeModal,
+  } = useModal();
+
+  const openReceiveModal = () => {
+    setPrevRecipients(watch('recipients') ?? []);
+    openModal();
+  };
+
+  const closeReceiveModal = () => {
+    setValue('recipients', prevRecipients);
+    closeModal();
+  };
 
   return (
     <>
