@@ -89,7 +89,7 @@ const GiftOrderPage = () => {
         <Divider />
         <SenderForm register={register} errors={errors} />
         <Divider />
-        <ReceiveList onOpen={openReceiveModal} />
+        <ReceiveList onOpen={openReceiveModal} fields={fields} />
         <Divider />
         <ProductSummary />
         <OrderButton price={totalPrice} />

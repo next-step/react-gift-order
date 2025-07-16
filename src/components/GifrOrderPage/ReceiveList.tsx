@@ -1,4 +1,6 @@
 import styled from '@emotion/styled';
+import type { MultiOrderFormData } from '@schemas/orderSchema';
+import type { FieldArrayWithId } from 'react-hook-form';
 
 interface Recipient {
   receiver: string;
@@ -13,34 +15,43 @@ const mockData: Recipient[] = [
 
 interface ReceiveListProps {
   onOpen: () => void;
+  fields: FieldArrayWithId<MultiOrderFormData, 'recipients', 'id'>[];
 }
 
-const ReceiveList = ({ onOpen }: ReceiveListProps) => {
+const ReceiveList = ({ onOpen, fields }: ReceiveListProps) => {
   return (
     <Wrapper>
       <Header>
         <Title>받는사람</Title>
-        <AddEditButton onClick={onOpen}>추가</AddEditButton>
+        <AddEditButton onClick={onOpen}>
+          {fields.length === 0 ? '추가' : '수정'}
+        </AddEditButton>
       </Header>
-
-      <Table>
-        <TableHead>
-          <tr>
-            <TableCell>이름</TableCell>
-            <TableCell>전화번호</TableCell>
-            <TableCell>수량</TableCell>
-          </tr>
-        </TableHead>
-        <TableBody>
-          {mockData.map((item, index) => (
-            <TalbleRow key={index}>
-              <TableCell>{item.receiver}</TableCell>
-              <TableCell>{item.phone}</TableCell>
-              <TableCell>{item.quantity}</TableCell>
-            </TalbleRow>
-          ))}
-        </TableBody>
-      </Table>
+      {fields.length === 0 ? (
+        <EmptyBox>
+          <EmptyText>받는 사람이 없습니다 </EmptyText>
+          <EmptyText>받는 사람을 추가해주세요.</EmptyText>
+        </EmptyBox>
+      ) : (
+        <Table>
+          <TableHead>
+            <tr>
+              <TableCell>이름</TableCell>
+              <TableCell>전화번호</TableCell>
+              <TableCell>수량</TableCell>
+            </tr>
+          </TableHead>
+          <TableBody>
+            {fields.map((item, index) => (
+              <TalbleRow key={index}>
+                <TableCell>{item.receiver}</TableCell>
+                <TableCell>{item.phone}</TableCell>
+                <TableCell>{item.quantity}</TableCell>
+              </TalbleRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
     </Wrapper>
   );
 };
@@ -75,6 +86,19 @@ const AddEditButton = styled.button(({ theme }) => ({
   '&:active': {
     backgroundColor: theme.colors.gray.gray400,
   },
+}));
+
+const EmptyBox = styled.div(({ theme }) => ({
+  padding: theme.spacing.spacing7,
+  backgroundColor: theme.colors.semantic.backgroundDefault,
+  border: `1px solid ${theme.colors.semantic.borderDefault}`,
+  borderRadius: theme.spacing.spacing2,
+  textAlign: 'center',
+}));
+
+const EmptyText = styled.p(({ theme }) => ({
+  ...theme.typography.body1Regular,
+  color: theme.colors.semantic.textSub,
 }));
 
 const Table = styled.table(({ theme }) => ({
