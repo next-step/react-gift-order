@@ -39,6 +39,7 @@ const ReceiveModal = ({
           </Subtitle>
           <AddButton
             onClick={() => append({ receiver: '', phone: '', quantity: 1 })}
+            disabled={fields.length >= 10}
           >
             추가하기
           </AddButton>
@@ -104,16 +105,18 @@ const Subtitle = styled.h2(({ theme }) => ({
   color: theme.colors.semantic.textSub,
 }));
 
-const AddButton = styled.button(({ theme }) => ({
+const AddButton = styled.button(({ theme, disabled }) => ({
   backgroundColor: theme.colors.gray.gray300,
   border: 'none',
   borderRadius: theme.spacing.spacing2,
   padding: `${theme.spacing.spacing2} ${theme.spacing.spacing3}`,
   margin: `${theme.spacing.spacing3} 0`,
-  cursor: 'pointer',
+  cursor: disabled ? 'not-allowed' : 'pointer',
 
   '&:active': {
-    backgroundColor: theme.colors.gray.gray400,
+    backgroundColor: disabled
+      ? theme.colors.gray.gray300
+      : theme.colors.gray.gray400,
   },
 }));
 
