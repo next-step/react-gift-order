@@ -13,7 +13,7 @@ const ReceiveList = ({ onOpen, control }: ReceiveListProps) => {
     <Wrapper>
       <Header>
         <Title>받는사람</Title>
-        <AddEditButton onClick={onOpen}>
+        <AddEditButton type="button" onClick={onOpen}>
           {recipients?.length === 0 ? '추가' : '수정'}
         </AddEditButton>
       </Header>
