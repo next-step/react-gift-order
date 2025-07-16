@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import type { MultiOrderFormData } from '@schemas/orderSchema';
 import {
-  useFormContext,
   type FieldArrayWithId,
   type FieldErrors,
   type UseFieldArrayAppend,
@@ -29,24 +28,6 @@ const ReceiveModal = ({
   onClose,
   onComplete,
 }: ReceiveModalProps) => {
-  const { getValues, trigger } = useFormContext<MultiOrderFormData>();
-
-  const handleComplete = async () => {
-    const valid = (await trigger('recipients')) || true; //검증이 일어나지 않은 필드도 검사하기 위해 사용
-    if (!valid) {
-      alert('받는 사람 정보를 정확히 입력해주세요.');
-      return;
-    }
-
-    const recipents = getValues('recipients') ?? [];
-    const phones = recipents.map((recipent) => recipent.phone);
-    const phoneSet = new Set(phones);
-    if (phoneSet.size !== phones.length) {
-      alert('전화번호가 중복된 사람이 있습니다.');
-      return;
-    }
-    onComplete();
-  };
   return (
     <Overlay>
       <ModalWrapper>
@@ -75,7 +56,7 @@ const ReceiveModal = ({
         </FormScrollArea>
         <ButtonGroup>
           <CancelButton onClick={onClose}>취소</CancelButton>
-          <CompleteButton type="button" onClick={handleComplete}>
+          <CompleteButton type="button" onClick={onComplete}>
             {fields.length} 명 완료
           </CompleteButton>
         </ButtonGroup>
