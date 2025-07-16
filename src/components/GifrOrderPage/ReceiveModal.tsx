@@ -1,10 +1,31 @@
 import styled from '@emotion/styled';
+import type { MultiOrderFormData } from '@schemas/orderSchema';
+import type {
+  FieldArrayWithId,
+  FieldErrors,
+  UseFieldArrayAppend,
+  UseFieldArrayRemove,
+  UseFormRegister,
+} from 'react-hook-form';
+import ReceiveForm from './ReceiveForm';
 
 interface ReceiveModalProps {
+  register: UseFormRegister<MultiOrderFormData>;
+  errors: FieldErrors<MultiOrderFormData>;
+  fields: FieldArrayWithId<MultiOrderFormData, 'recipients', 'id'>[];
+  append: UseFieldArrayAppend<MultiOrderFormData, 'recipients'>;
+  remove: UseFieldArrayRemove;
   onClose: () => void;
 }
 
-const ReceiveModal = ({ onClose }: ReceiveModalProps) => {
+const ReceiveModal = ({
+  register,
+  errors,
+  fields,
+  append,
+  remove,
+  onClose,
+}: ReceiveModalProps) => {
   return (
     <Overlay>
       <ModalWrapper>
@@ -14,12 +35,28 @@ const ReceiveModal = ({ onClose }: ReceiveModalProps) => {
           <Subtitle>
             * 받는 사람의 전화번호를 중복으로 입력할 수 없어요.
           </Subtitle>
-          <AddButton onClick={() => {}}>추가하기</AddButton>
+          <AddButton
+            onClick={() => append({ receiver: '', phone: '', quantity: 1 })}
+          >
+            추가하기
+          </AddButton>
         </ModalHeader>
-        <FormScrollArea>{/*form 내용*/}</FormScrollArea>
+        <FormScrollArea>
+          {fields.map((field, index) => (
+            <ReceiveForm
+              key={field.id}
+              index={index}
+              register={register}
+              errors={errors}
+              remove={remove}
+            />
+          ))}
+        </FormScrollArea>
         <ButtonGroup>
           <CancelButton onClick={onClose}>취소</CancelButton>
-          <CompleteButton>n명 완료</CompleteButton>
+          <CompleteButton type="button" onClick={onClose}>
+            n명 완료
+          </CompleteButton>
         </ButtonGroup>
       </ModalWrapper>
     </Overlay>

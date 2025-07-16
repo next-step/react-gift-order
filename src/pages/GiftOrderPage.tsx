@@ -2,13 +2,16 @@ import Divider from '@components/common/Divider';
 import CardSelector from '@components/GifrOrderPage/CardSelector';
 import OrderButton from '@components/GifrOrderPage/OrderButton';
 import ProductSummary from '@components/GifrOrderPage/ProductSummary';
-import ReceiveForm from '@components/GifrOrderPage/ReceiveForm';
 import SenderForm from '@components/GifrOrderPage/SenderForm';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type OrderFormData, orderSchema } from '@schemas/orderSchema';
+import {
+  type MultiOrderFormData,
+  multiOrderSchema,
+} from '@schemas/orderSchema';
 import cardTemplate from '@data/cardTemplate.json';
 
 import {
+  useFieldArray,
   useForm,
   type FieldErrors,
   type SubmitHandler,
@@ -20,9 +23,9 @@ import ReceiveModal from '@components/GifrOrderPage/ReceiveModal';
 import { useModal } from '@contexts/ModalContext';
 
 export interface FormSectionProps {
-  register: UseFormRegister<OrderFormData>;
-  errors: FieldErrors<OrderFormData>;
-  setValue?: UseFormSetValue<OrderFormData>;
+  register: UseFormRegister<MultiOrderFormData>;
+  errors: FieldErrors<MultiOrderFormData>;
+  setValue?: UseFormSetValue<MultiOrderFormData>;
 }
 const defaultCard = cardTemplate[0];
 
@@ -50,17 +53,31 @@ const GiftOrderPage = () => {
     handleSubmit,
     setValue,
     watch,
+    control,
     formState: { errors },
-  } = useForm<OrderFormData>({
-    resolver: zodResolver(orderSchema),
-    defaultValues: { message: defaultCard.defaultTextMessage, quantity: 1 },
+  } = useForm<MultiOrderFormData>({
+    resolver: zodResolver(multiOrderSchema),
+    defaultValues: {
+      message: defaultCard.defaultTextMessage,
+      sender: '',
+      recipients: [],
+    },
   });
 
-  const onSubmit: SubmitHandler<OrderFormData> = (data) => {
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'recipients',
+  });
+
+  const onSubmit: SubmitHandler<MultiOrderFormData> = (data) => {
     console.log(data);
   };
-  const quantity = watch('quantity') ?? 1;
-  const totalPrice = mockItems.price.basicPrice * quantity;
+  const recipients = watch('recipients') ?? [];
+  const totalQuantity = recipients.reduce(
+    (acc, curr) => acc + curr.quantity,
+    0
+  );
+  const totalPrice = mockItems.price.basicPrice * totalQuantity;
 
   const { isReceiveModalOpen, openReceiveModal, closeReceiveModal } =
     useModal();
@@ -72,14 +89,21 @@ const GiftOrderPage = () => {
         <Divider />
         <SenderForm register={register} errors={errors} />
         <Divider />
-        <ReceiveForm register={register} errors={errors} />
-        <Divider />
         <ReceiveList onOpen={openReceiveModal} />
         <Divider />
         <ProductSummary />
         <OrderButton price={totalPrice} />
       </form>
-      {isReceiveModalOpen && <ReceiveModal onClose={closeReceiveModal} />}
+      {isReceiveModalOpen && (
+        <ReceiveModal
+          register={register}
+          errors={errors}
+          fields={fields}
+          append={append}
+          remove={remove}
+          onClose={closeReceiveModal}
+        />
+      )}
     </>
   );
 };

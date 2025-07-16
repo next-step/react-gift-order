@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import type { OrderFormData } from '@schemas/orderSchema';
+import type { MultiOrderFormData } from '@schemas/orderSchema';
 import type { UseFormRegister } from 'react-hook-form';
 
 const TextArea = styled.textarea(({ theme }) => ({
@@ -15,7 +15,7 @@ const TextArea = styled.textarea(({ theme }) => ({
 }));
 
 type Props = {
-  register: UseFormRegister<OrderFormData>;
+  register: UseFormRegister<MultiOrderFormData>;
 };
 
 const MessageInput = ({ register }: Props) => {
