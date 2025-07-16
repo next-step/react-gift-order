@@ -1,24 +1,20 @@
 import SectionTitle from '@/components/SectionTitle';
 import TextInputBox from '@/components/TextInputBox';
+import { useFormContext } from 'react-hook-form';
 
-interface SenderInfoProps {
-  senderName: string;
-  onChangeSenderName: (value: string) => void;
-  isSubmitted: boolean;
-}
-
-const SenderInfo = ({ senderName, onChangeSenderName, isSubmitted }: SenderInfoProps) => {
-  const errorMessage =
-    isSubmitted && senderName.trim() === '' ? '보내는 사람 이름이 반드시 입력 되어야 해요.' : '';
+const SenderInfo = () => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
 
   return (
     <div>
       <SectionTitle title="보내는 사람" />
       <TextInputBox
         placeholder="이름을 입력하세요"
-        value={senderName}
-        onChange={onChangeSenderName}
-        errorMessage={errorMessage}
+        {...register('senderName')}
+        errorMessage={errors.senderName?.message as string | undefined}
       />
     </div>
   );

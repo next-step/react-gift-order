@@ -8,8 +8,18 @@ const LoginForm = () => {
   const location = useLocation();
   const { login } = useAuth();
 
+  const {
+    email: { value: email, change: changeEmail, error: emailError, validate: validateEmail },
+    password: {
+      value: password,
+      change: changePassword,
+      error: passwordError,
+      validate: validatePassword,
+    },
+    isValid,
+  } = useLoginForm();
+
   const handleLogin = () => {
-    // 로그인 정보 저장
     login({
       email,
       pw: password,
@@ -18,21 +28,6 @@ const LoginForm = () => {
     const redirectTo = location.state?.from?.pathname || '/';
     navigate(redirectTo, { replace: true });
   };
-
-  //커스텀훅
-  const {
-    email,
-    password,
-    emailError,
-    passwordError,
-    changeEmail,
-    changePassword,
-    validateEmail,
-    validatePassword,
-    isValid,
-  } = useLoginForm();
-
-  //인풋관리
 
   return (
     <S.Form>
@@ -43,21 +38,23 @@ const LoginForm = () => {
       <S.Input
         type="email"
         placeholder="이메일"
-        value={email}
+        value={email ?? ''}
         onChange={(e) => changeEmail(e.target.value)}
         onBlur={validateEmail}
         hasError={!!emailError}
       />
       {emailError && <S.ErrorMessage>{emailError}</S.ErrorMessage>}
+
       <S.Input
         type="password"
         placeholder="비밀번호"
-        value={password}
+        value={password ?? ''}
         onChange={(e) => changePassword(e.target.value)}
         onBlur={validatePassword}
         hasError={!!passwordError}
       />
       {passwordError && <S.ErrorMessage>{passwordError}</S.ErrorMessage>}
+
       <S.LoginButton type="button" onClick={handleLogin} disabled={!isValid}>
         로그인
       </S.LoginButton>

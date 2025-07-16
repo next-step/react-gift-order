@@ -7,83 +7,65 @@ import Layout from '@/components/Layout';
 import SectionTitle from '@/components/SectionTitle';
 import SectionDivider from '@/components/SectionDivider';
 import SenderInfo from './SenderInfo/SenderInfo';
-import ReceiverInfo from './ReceiverInfo/ReceiverInfo';
 import ProductSummary from './ProductSummary/ProductSummary';
 import BottomButton from '@/components/BottomButton';
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { OrderFormSchema } from './schemas/orderSchema';
+import type { z } from 'zod';
+import ReceiverSection from './ReceiverInfo/ReceiverSection';
 
 const OrderPage = () => {
+  type OrderFormType = z.infer<typeof OrderFormSchema>;
+
+  const methods = useForm<OrderFormType>({
+    resolver: zodResolver(OrderFormSchema),
+    defaultValues: {
+      senderName: '',
+      receivers: [],
+      message: '',
+    },
+  });
+
+  const { handleSubmit, setValue, watch } = methods;
+
   const [selectedCard, setSelectedCard] = useState<MessageCard | null>(null);
-  const [message, setMessage] = useState('');
 
   const handleSelectCard = (card: MessageCard) => {
     setSelectedCard(card);
-    setMessage(card.defaultTextMessage);
+    setValue('message', card.defaultTextMessage, { shouldValidate: true });
   };
 
-  const [senderName, setSenderName] = useState('');
-  const [receiverName, setReceiverName] = useState('');
-  const [receiverPhone, setReceiverPhone] = useState('');
-  const [quantity, setQuantity] = useState('1');
-
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const handleSubmit = () => {
-    setIsSubmitted(true);
-
-    const isValid =
-      senderName.trim() !== '' &&
-      receiverName.trim() !== '' &&
-      /^010\d{8}$/.test(receiverPhone) &&
-      parseInt(quantity, 10) >= 1 &&
-      message.trim() !== '';
-
-    if (!isValid) {
-      return;
-    }
-
-    console.log('폼 제출 완료!', {
-      senderName,
-      receiverName,
-      receiverPhone,
-      quantity,
-      message,
-    });
+  const onSubmit = (data: OrderFormType) => {
+    console.log('폼 제출 완료!', data);
   };
 
   return (
     <Layout>
       <NavigationBar />
-      <MessageCardSelector
-        cards={messageCards}
-        selectedId={selectedCard?.id ?? null}
-        onSelect={handleSelectCard}
-      />
-      <SelectedCardPreview
-        card={selectedCard ?? messageCards[0]}
-        message={message || messageCards[0].defaultTextMessage}
-        onChange={setMessage}
-      />
-      <SectionDivider />
-      <SenderInfo
-        senderName={senderName}
-        onChangeSenderName={setSenderName}
-        isSubmitted={isSubmitted}
-      />
-      <SectionDivider />
-      <ReceiverInfo
-        receiverName={receiverName}
-        onChangeReceiverName={setReceiverName}
-        receiverPhone={receiverPhone}
-        onChangeReceiverPhone={setReceiverPhone}
-        quantity={quantity}
-        onChangeQuantity={setQuantity}
-        isSubmitted={isSubmitted}
-      />
-      <SectionDivider />
-      <SectionTitle title="상품 정보" />
-      <ProductSummary />
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <MessageCardSelector
+            cards={messageCards}
+            selectedId={selectedCard?.id ?? null}
+            onSelect={handleSelectCard}
+          />
+          <SelectedCardPreview
+            card={selectedCard ?? messageCards[0]}
+            message={watch('message') ?? ''}
+            onChange={(val) => setValue('message', val, { shouldValidate: true })}
+          />
+          <SectionDivider />
+          <SenderInfo />
+          <SectionDivider />
+          <ReceiverSection />
+          <SectionDivider />
+          <SectionTitle title="상품 정보" />
+          <ProductSummary />
 
-      <BottomButton onClick={handleSubmit}>주문하기</BottomButton>
+          <BottomButton type="submit">주문하기</BottomButton>
+        </form>
+      </FormProvider>
     </Layout>
   );
 };

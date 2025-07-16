@@ -1,37 +1,25 @@
 import styled from '@emotion/styled';
+import { forwardRef } from 'react';
 
-interface TextInputBoxProps {
+interface TextInputBoxProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   title?: string;
-  placeholder: string;
-  value: string;
-  onChange: (value: string) => void;
   marginBottom?: string;
   errorMessage?: string;
 }
 
-const TextInputBox = ({
-  title,
-  placeholder,
-  value,
-  onChange,
-  marginBottom = '16px',
-  errorMessage,
-}: TextInputBoxProps) => {
-  return (
-    <Wrapper marginBottom={marginBottom}>
-      {title && <Title>{title}</Title>}
-      <InputWrapper>
-        <Textarea
-          placeholder={placeholder}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          hasError={!!errorMessage}
-        />
-        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-      </InputWrapper>
-    </Wrapper>
-  );
-};
+const TextInputBox = forwardRef<HTMLTextAreaElement, TextInputBoxProps>(
+  ({ title, placeholder, errorMessage, marginBottom = '16px', ...rest }, ref) => {
+    return (
+      <Wrapper marginBottom={marginBottom}>
+        {title && <Title>{title}</Title>}
+        <InputWrapper>
+          <Textarea ref={ref} placeholder={placeholder} hasError={!!errorMessage} {...rest} />
+          {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+        </InputWrapper>
+      </Wrapper>
+    );
+  }
+);
 
 export default TextInputBox;
 

@@ -7,7 +7,7 @@ const NavigationBar = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  const handleBack = () => {
+  const goToBack = () => {
     navigate(-1);
   };
 
@@ -21,7 +21,7 @@ const NavigationBar = () => {
 
   return (
     <S.Wrapper>
-      <ChevronLeft size={28} onClick={handleBack} style={{ cursor: 'pointer' }} />
+      <ChevronLeft size={28} onClick={goToBack} style={{ cursor: 'pointer' }} />
       <S.Title>선물하기</S.Title>
       <UserRound size={25} onClick={goToLogin} style={{ cursor: 'pointer' }} />
     </S.Wrapper>
