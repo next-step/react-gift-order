@@ -1,28 +1,34 @@
+import React, { useContext } from 'react';
 import { Typography } from '@/components/common/Typography';
 import { theme } from '@/styles/theme';
 import styled from '@emotion/styled';
 import { Plus } from 'lucide-react';
+import { AuthContext } from '@/context/AuthContext';
 
 export const SelectFriendSection = () => {
+  const { user } = useContext(AuthContext)   // AuthContext 에서 user 꺼내기 :contentReference[oaicite:0]{index=0}
+  const userName = user?.name ?? ''
   return (
     <Section>
       <Button>
         <IconWrapper>
           <Plus size={24} color={theme.colors.semantic.text.default} />
         </IconWrapper>
-        <Typography as='p' variant='body1Bold' color='default' width='100%'>
-          선물할 친구를 선택해 주세요.
+        <Typography as='p' variant='body1Bold' color='default'>
+          {userName
+            ? `${userName}님! 선물할 친구를 선택해 주세요.`
+            : '선물할 친구를 선택해 주세요.'}       
         </Typography>
       </Button>
     </Section>
-  );
-};
+  )
+}
 
 const Section = styled.section(({ theme }) => ({
   width: '100%',
-  padding: `${theme.spacing.spacing4} ${theme.spacing.spacing3} `,
+  padding: `${theme.spacing.spacing4} ${theme.spacing.spacing3}`,
   backgroundColor: theme.colors.scale.gray200,
-}));
+}))
 
 const Button = styled.button(({ theme }) => ({
   width: '100%',
@@ -34,7 +40,8 @@ const Button = styled.button(({ theme }) => ({
   padding: theme.spacing.spacing4,
   borderRadius: '18px',
   cursor: 'pointer',
-}));
+  border: `1px solid ${theme.colors.scale.gray300}`,
+}))
 
 const IconWrapper = styled.div(({ theme }) => ({
   width: '2.625rem',
@@ -45,4 +52,4 @@ const IconWrapper = styled.div(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   flexShrink: 0,
-}));
+}))

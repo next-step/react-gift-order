@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { ProductRankingFilter } from './RankingFilter';
 import { HorizontalSpacing } from '@/components/common/Spacing/HorizontalSpacing';
 import { ProductRankingList } from './ProductRankingList';
-import { useSearchParams } from 'react-router';
+import { useSearchParams } from 'react-router-dom';
 
 export const ProductRankingListSection = () => {
   const [searchParams, setSearchParams] = useSearchParams();

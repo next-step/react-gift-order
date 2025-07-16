@@ -17,6 +17,9 @@ export const RankingFilterRankTypeButton = ({ label, value, selected, onClick }:
 };
 
 const Wrapper = styled.button<Pick<Props, 'selected'>>(({ theme, selected }) => ({
+  all: 'unset',              // margin, padding, border, background 등 모두 초기화
+  boxSizing: 'border-box',
+  cursor: 'pointer',
   width: '100%',
   flex: 1,
   display: 'flex',
