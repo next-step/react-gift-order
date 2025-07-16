@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from 'react';
 import type { ReactNode } from 'react';
-import { useLocalStorageState } from '@/hooks/useLocalStorageState'; // 커스텀 훅 import
+import { useLocalStorageState } from '@/hooks/useLocalStorageState';
 
 type User = {
   id: string;

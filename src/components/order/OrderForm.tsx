@@ -1,50 +1,50 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
-import { giftItems } from '@/mock/giftItems';
-import { PHONE_REGEX } from '@/constants/regex'; 
+import RecipientsList from './RecipientsList';
+import type { giftItems } from '@/mock/giftItems';
 
-type Props = {
-  onSubmit: (data: OrderFormData) => void;
-  product: typeof giftItems[number]; 
+
+export type Recipient = {
+  name: string;
+  phone: string;     
+  quantity: number;  
 };
 
 export type OrderFormData = {
   message: string;
   sender: string;
-  receiver: string;
-  phone: string;
-  quantity: number;
+  recipients: Recipient[];
 };
 
-const OrderForm = ({ onSubmit}: Props) => {
+
+type Props = {
+  onSubmit: (data: OrderFormData) => void;
+  product: (typeof giftItems)[number];
+  defaultMessage: string;
+};
+
+const OrderForm = ({ onSubmit, product, defaultMessage }: Props) => {
   const [form, setForm] = useState<OrderFormData>({
-    message: '',
+    message: defaultMessage,
     sender: '',
-    receiver: '',
-    phone: '',
-    quantity: 1,
+    recipients: [],
   });
-
   const [errors, setErrors] = useState<Partial<Record<keyof OrderFormData, string>>>({});
+  const [recipientsEditable, setRecipientsEditable] = useState(false);
 
-  const validate = () => {
+  useEffect(() => {
+    setForm((f) => ({ ...f, message: defaultMessage }));
+    setRecipientsEditable(false);
+  }, [defaultMessage]);
+
+  const validate = (): boolean => {
     const newErrors: typeof errors = {};
-    if (!form.message) newErrors.message = '메시지는 반드시 입력 되어야 해요.';
-    if (!form.sender) newErrors.sender = '보내는 사람 이름이 반드시 입력 되어야 해요.';
-    if (!form.receiver) newErrors.receiver = '받는 사람 이름이 반드시 입력 되어야 해요.';
-    if (!PHONE_REGEX.test(form.phone)) {
-      newErrors.phone = '받는사람 전화번호가 반드시 입력되고 전화번호 규칙에 맞아야 해요. (01012341234)';
-    }
-
-    if (form.quantity < 1) newErrors.quantity = '수량은 1개 이상이어야 해요.';
+    if (!form.message.trim()) newErrors.message = '메시지는 반드시 입력 되어야 해요.';
+    if (!form.sender.trim())  newErrors.sender  = '보내는 사람 이름이 반드시 입력 되어야 해요.';
+    if (form.recipients.length < 1)
+      newErrors.recipients = '최소 1명 이상의 받는 사람을 등록해야 해요.';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  };
-
-  const handleChange = (field: keyof OrderFormData) => (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setForm({ ...form, [field]: field === 'quantity' ? Number(e.target.value) : e.target.value });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -55,54 +55,55 @@ const OrderForm = ({ onSubmit}: Props) => {
   return (
     <Form onSubmit={handleSubmit}>
       <FieldGroup>
-        <Label>보내는 사람</Label>
-        <Input
-          placeholder="이름을 입력하세요."
-          value={form.sender}
-          onChange={handleChange('sender')}
-        />
-        {errors.sender && <ErrorText>{errors.sender}</ErrorText>}
-      </FieldGroup>
-
-      <FieldGroup>
-        <Label>받는 사람</Label>
-        <Input
-          placeholder="이름을 입력하세요."
-          value={form.receiver}
-          onChange={handleChange('receiver')}
-        />
-        {errors.receiver && <ErrorText>{errors.receiver}</ErrorText>}
-      </FieldGroup>
-
-      <FieldGroup>
-        <Label>전화번호</Label>
-        <Input
-          placeholder="01012341234"
-          value={form.phone}
-          onChange={handleChange('phone')}
-        />
-        {errors.phone && <ErrorText>{errors.phone}</ErrorText>}
-      </FieldGroup>
-
-      <FieldGroup>
         <Label>메시지</Label>
-        <Input
-          placeholder="축하 메시지를 입력하세요."
+        <Textarea
           value={form.message}
-          onChange={handleChange('message')}
+          onChange={(e) => setForm({ ...form, message: e.target.value })}
         />
         {errors.message && <ErrorText>{errors.message}</ErrorText>}
       </FieldGroup>
 
       <FieldGroup>
-        <Label>수량</Label>
+        <Label>보내는 사람</Label>
         <Input
-          type="number"
-          min={1}
-          value={form.quantity}
-          onChange={handleChange('quantity')}
+          placeholder="이름을 입력하세요."
+          value={form.sender}
+          onChange={(e) => setForm({ ...form, sender: e.target.value })}
         />
-        {errors.quantity && <ErrorText>{errors.quantity}</ErrorText>}
+        {errors.sender && <ErrorText>{errors.sender}</ErrorText>}
+      </FieldGroup>
+
+      <FieldGroup>
+        <SectionHeader>
+          <Label>받는 사람</Label>
+          {form.recipients.length > 0 && (
+            <EditButton
+              type="button"
+              onClick={() => setRecipientsEditable((v) => !v)}
+            >
+              {recipientsEditable ? '완료' : '수정'}
+            </EditButton>
+          )}
+        </SectionHeader>
+
+        <RecipientsList
+          recipients={form.recipients}
+          setRecipients={(r) => setForm({ ...form, recipients: r })}
+          editable={recipientsEditable}
+        />
+        {errors.recipients && <ErrorText>{errors.recipients}</ErrorText>}
+      </FieldGroup>
+
+      <FieldGroup>
+        <Label>상품 정보</Label>
+        <ProductSection>
+          <ProductThumb src={product.imageURL} alt={product.name} />
+          <ProductInfo>
+            <ProductName>{product.name}</ProductName>
+            <Brand>{product.brandInfo.name}</Brand>
+            <Price>{product.price.sellingPrice.toLocaleString()}원</Price>
+          </ProductInfo>
+        </ProductSection>
       </FieldGroup>
 
       <SubmitButton type="submit">주문하기</SubmitButton>
@@ -115,45 +116,102 @@ export default OrderForm;
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: ${({ theme }) => theme.spacing.spacing4};
 `;
 
 const FieldGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: ${({ theme }) => theme.spacing.spacing2};
+`;
+
+const SectionHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const Label = styled.label`
-  font-size: 13px;
-  font-weight: bold;
+  font: ${({ theme }) => theme.typography.subtitle2Bold};
   color: ${({ theme }) => theme.textColors.default};
 `;
 
+const EditButton = styled.button`
+  padding: ${({ theme }) => theme.spacing.spacing1}
+    ${({ theme }) => theme.spacing.spacing2};
+  font: ${({ theme }) => theme.typography.body2Bold};
+  background-color: ${({ theme }) => theme.backgroundColors.fill};
+  border: 1px solid ${({ theme }) => theme.borderColors.default};
+  border-radius: ${({ theme }) => theme.spacing.spacing2};
+  cursor: pointer;
+  &:hover {
+    background-color: ${({ theme }) => theme.sementicColors.kakaoYellowHover};
+  }
+`;
+
 const Input = styled.input`
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 14px;
+  padding: ${({ theme }) => theme.spacing.spacing2};
+  border: 1px solid ${({ theme }) => theme.borderColors.default};
+  border-radius: ${({ theme }) => theme.spacing.spacing2};
+  font: ${({ theme }) => theme.typography.body2Regular};
+`;
+
+const Textarea = styled.textarea`
+  padding: ${({ theme }) => theme.spacing.spacing2};
+  height: 80px;
+  resize: vertical;
+  border: 1px solid ${({ theme }) => theme.borderColors.default};
+  border-radius: ${({ theme }) => theme.spacing.spacing2};
+  font: ${({ theme }) => theme.typography.body2Regular};
 `;
 
 const ErrorText = styled.span`
-  font-size: 12px;
-  color: red;
+  font: ${({ theme }) => theme.typography.label2Regular};
+  color: ${({ theme }) => theme.stateColors.critical};
+`;
+
+const ProductSection = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing.spacing3};
+  padding: ${({ theme }) => theme.spacing.spacing2};
+  border: 1px solid ${({ theme }) => theme.borderColors.default};
+  border-radius: ${({ theme }) => theme.spacing.spacing2};
+`;
+
+const ProductThumb = styled.img`
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: ${({ theme }) => theme.spacing.spacing2};
+`;
+
+const ProductInfo = styled.div``;
+
+const ProductName = styled.div`
+  font: ${({ theme }) => theme.typography.body1Bold};
+`;
+
+const Brand = styled.div`
+  font: ${({ theme }) => theme.typography.body2Regular};
+  color: ${({ theme }) => theme.textColors.sub};
+`;
+
+const Price = styled.div`
+  font: ${({ theme }) => theme.typography.body1Bold};
+  color: ${({ theme }) => theme.textColors.default};
 `;
 
 const SubmitButton = styled.button`
+  margin-top: ${({ theme }) => theme.spacing.spacing4};
   background-color: ${({ theme }) => theme.sementicColors.kakaoYellow};
-  color: black;
-  font-weight: bold;
-  font-size: 16px;
-  padding: 14px;
+  color: ${({ theme }) => theme.textColors.default};
+  font: ${({ theme }) => theme.typography.body1Bold};
+  padding: ${({ theme }) => theme.spacing.spacing3};
   border: none;
-  border-radius: 8px;
+  border-radius: ${({ theme }) => theme.spacing.spacing2};
   cursor: pointer;
-
-  &:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
+  &:hover {
+    background-color: ${({ theme }) => theme.sementicColors.kakaoYellowHover};
   }
 `;

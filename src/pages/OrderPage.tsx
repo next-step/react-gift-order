@@ -11,21 +11,30 @@ const OrderPage = () => {
   const product = giftItems.find((item) => item.id === Number(id));
   const navigate = useNavigate();
 
-  const [selectedCardId, setSelectedCardId] = useState<number>(messageCards[0].id);
-  const selectedCard = messageCards.find((c) => c.id === selectedCardId);
+  const [selectedCardId, setSelectedCardId] = useState<number>(
+    messageCards[0].id
+  );
+  const selectedCard = messageCards.find(
+    (c) => c.id === selectedCardId
+  )!;
 
   const handleOrderSubmit = (form: OrderFormData) => {
     alert(
       `주문이 완료되었습니다.\n` +
         `상품명: ${product!.name}\n` +
-        `구매 수량: ${form.quantity}\n` +
         `발신자 이름: ${form.sender}\n` +
-        `메시지: ${form.message}`
+        `메시지: ${form.message}\n\n` +
+        `[받는 사람 목록]\n` +
+        form.recipients
+          .map(
+            (r, i) => `${i + 1}. ${r.name} / ${r.phone} / 수량 ${r.quantity}개`
+          )
+          .join('\n')
     );
     navigate('/');
   };
 
-  if (!product || !selectedCard) return <div>상품을 찾을 수 없습니다.</div>;
+  if (!product) return <div>상품을 찾을 수 없습니다.</div>;
 
   return (
     <Container>
@@ -35,8 +44,8 @@ const OrderPage = () => {
           {messageCards.map((card) => (
             <MessageCardThumb
               key={card.id}
-              src={card.thumbUrl} // ✅ thumbUrl 사용
-              alt={card.defaultTextMessage} // ✅ label → defaultTextMessage
+              src={card.thumbUrl}
+              alt={card.defaultTextMessage}
               isSelected={card.id === selectedCardId}
               onClick={() => setSelectedCardId(card.id)}
             />
@@ -46,26 +55,20 @@ const OrderPage = () => {
 
       <Section>
         <SelectedCardSection>
-          <SelectedImage src={selectedCard.imageUrl} alt={selectedCard.defaultTextMessage} />
-          <CardLabel>{selectedCard.defaultTextMessage}</CardLabel>
+          <SelectedImage
+            src={selectedCard.imageUrl}
+            alt={selectedCard.defaultTextMessage}
+          />
         </SelectedCardSection>
       </Section>
 
       <Section>
-        <SectionTitle>상품 정보</SectionTitle>
-        <ProductSection>
-          <ProductThumb src={product.imageURL} alt={product.name} />
-          <ProductInfo>
-            <ProductName>{product.name}</ProductName>
-            <Brand>{product.brandInfo.name}</Brand>
-            <Price>{product.price.sellingPrice.toLocaleString()}원</Price>
-          </ProductInfo>
-        </ProductSection>
-      </Section>
-
-      <Section>
         <FormSection>
-          <OrderForm onSubmit={handleOrderSubmit} product={product} />
+          <OrderForm
+            onSubmit={handleOrderSubmit}
+            product={product}
+            defaultMessage={selectedCard.defaultTextMessage}
+          />
         </FormSection>
       </Section>
     </Container>
@@ -73,6 +76,8 @@ const OrderPage = () => {
 };
 
 export default OrderPage;
+
+
 const Container = styled.div`
   padding-bottom: 100px;
 `;
@@ -117,44 +122,6 @@ const SelectedImage = styled.img`
   border-radius: 16px;
 `;
 
-const CardLabel = styled.div`
-  margin-top: 8px;
-  font-weight: 500;
-  font-size: 16px;
-`;
-
-const ProductSection = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 0;
-  border-top: 1px solid #eee;
-`;
-
-const ProductThumb = styled.img`
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  border-radius: 8px;
-`;
-
-const ProductInfo = styled.div``;
-
-const ProductName = styled.div`
-  font-weight: bold;
-  font-size: 14px;
-`;
-
-const Brand = styled.div`
-  font-size: 12px;
-  color: gray;
-`;
-
-const Price = styled.div`
-  font-size: 14px;
-  font-weight: bold;
-  color: ${({ theme }) => theme.textColors.default};
-`;
 
 const FormSection = styled.div`
   display: flex;
