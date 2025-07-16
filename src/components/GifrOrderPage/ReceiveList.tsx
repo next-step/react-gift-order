@@ -1,22 +1,23 @@
 import styled from '@emotion/styled';
 import type { MultiOrderFormData } from '@schemas/orderSchema';
-import type { FieldArrayWithId } from 'react-hook-form';
+import { useWatch, type Control } from 'react-hook-form';
 
 interface ReceiveListProps {
   onOpen: () => void;
-  fields: FieldArrayWithId<MultiOrderFormData, 'recipients', 'id'>[];
+  control: Control<MultiOrderFormData>;
 }
 
-const ReceiveList = ({ onOpen, fields }: ReceiveListProps) => {
+const ReceiveList = ({ onOpen, control }: ReceiveListProps) => {
+  const recipients = useWatch({ control, name: 'recipients' });
   return (
     <Wrapper>
       <Header>
         <Title>받는사람</Title>
         <AddEditButton onClick={onOpen}>
-          {fields.length === 0 ? '추가' : '수정'}
+          {recipients?.length === 0 ? '추가' : '수정'}
         </AddEditButton>
       </Header>
-      {fields.length === 0 ? (
+      {recipients?.length === 0 ? (
         <EmptyBox>
           <EmptyText>받는 사람이 없습니다 </EmptyText>
           <EmptyText>받는 사람을 추가해주세요.</EmptyText>
@@ -31,7 +32,7 @@ const ReceiveList = ({ onOpen, fields }: ReceiveListProps) => {
             </tr>
           </TableHead>
           <TableBody>
-            {fields.map((item, index) => (
+            {recipients.map((item, index) => (
               <TalbleRow key={index}>
                 <TableCell>{item.receiver}</TableCell>
                 <TableCell>{item.phone}</TableCell>

@@ -11,6 +11,7 @@ import {
 import cardTemplate from '@data/cardTemplate.json';
 
 import {
+  FormProvider,
   useFieldArray,
   useForm,
   type FieldErrors,
@@ -49,14 +50,7 @@ const mockItems = {
 };
 
 const GiftOrderPage = () => {
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    control,
-    formState: { errors },
-  } = useForm<MultiOrderFormData>({
+  const methods = useForm<MultiOrderFormData>({
     resolver: zodResolver(multiOrderSchema),
     defaultValues: {
       message: defaultCard.defaultTextMessage,
@@ -65,6 +59,14 @@ const GiftOrderPage = () => {
     },
   });
 
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    control,
+    formState: { errors },
+  } = methods;
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'recipients',
@@ -98,6 +100,9 @@ const GiftOrderPage = () => {
     setValue('recipients', prevRecipients);
     closeModal();
   };
+  const onComplete = () => {
+    closeModal();
+  };
 
   return (
     <>
@@ -106,20 +111,23 @@ const GiftOrderPage = () => {
         <Divider />
         <SenderForm register={register} errors={errors} />
         <Divider />
-        <ReceiveList onOpen={openReceiveModal} fields={fields} />
+        <ReceiveList onOpen={openReceiveModal} control={control} />
         <Divider />
         <ProductSummary />
         <OrderButton price={totalPrice} />
       </form>
       {isReceiveModalOpen && (
-        <ReceiveModal
-          register={register}
-          errors={errors}
-          fields={fields}
-          append={append}
-          remove={remove}
-          onClose={closeReceiveModal}
-        />
+        <FormProvider {...methods}>
+          <ReceiveModal
+            register={register}
+            errors={errors}
+            fields={fields}
+            append={append}
+            remove={remove}
+            onClose={closeReceiveModal}
+            onComplete={onComplete}
+          />
+        </FormProvider>
       )}
     </>
   );
