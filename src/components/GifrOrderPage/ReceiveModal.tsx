@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import type { MultiOrderFormData } from '@schemas/orderSchema';
 import {
+  useFormContext,
   type FieldArrayWithId,
   type FieldErrors,
   type UseFieldArrayAppend,
@@ -8,6 +9,7 @@ import {
   type UseFormRegister,
 } from 'react-hook-form';
 import ReceiveForm from './ReceiveForm';
+import { useEffect } from 'react';
 
 interface ReceiveModalProps {
   register: UseFormRegister<MultiOrderFormData>;
@@ -28,6 +30,10 @@ const ReceiveModal = ({
   onClose,
   onComplete,
 }: ReceiveModalProps) => {
+  const { clearErrors } = useFormContext<MultiOrderFormData>();
+  useEffect(() => {
+    clearErrors('recipients');
+  }, []);
   return (
     <Overlay>
       <ModalWrapper>
@@ -57,7 +63,7 @@ const ReceiveModal = ({
         </FormScrollArea>
         <ButtonGroup>
           <CancelButton onClick={onClose}>취소</CancelButton>
-          <CompleteButton type="button" onClick={onComplete}>
+          <CompleteButton type="submit" onClick={onComplete}>
             {fields.length} 명 완료
           </CompleteButton>
         </ButtonGroup>
