@@ -52,6 +52,7 @@ const mockItems = {
 const GiftOrderPage = () => {
   const methods = useForm<MultiOrderFormData>({
     resolver: zodResolver(multiOrderSchema),
+    mode: 'onChange',
     defaultValues: {
       message: defaultCard.defaultTextMessage,
       sender: '',

@@ -32,6 +32,13 @@ const ReceiveModal = ({
 }: ReceiveModalProps) => {
   const { clearErrors } = useFormContext<MultiOrderFormData>();
   useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
+  useEffect(() => {
     clearErrors('recipients');
   }, []);
   return (
@@ -88,7 +95,7 @@ const ModalWrapper = styled.div(({ theme }) => ({
   backgroundColor: theme.colors.semantic.backgroundDefault,
   width: '90%',
   maxWidth: '35rem',
-  maxHeight: '80vh',
+  height: '80vh',
   padding: theme.spacing.spacing4,
   borderRadius: theme.spacing.spacing3,
   boxShadow: `0 4px 20px rgba(0, 0, 0, 0.1)`,
@@ -131,7 +138,7 @@ const FormScrollArea = styled.div(({ theme }) => ({
   flex: '1',
   overflowY: 'auto',
   padding: theme.spacing.spacing3,
-  maxHeight: '40vh',
+  height: '40vh',
 }));
 
 const ButtonGroup = styled.div(({ theme }) => ({
