@@ -1,21 +1,15 @@
 import Layout from '@components/Layout/Layout';
-import { useAuth } from '@contexts/AuthContext';
 import GiftOrderPage from '@pages/GiftOrderPage';
 import Home from '@pages/Home';
 import Login from '@pages/Login';
 import MyPage from '@pages/MyPage';
 import NotFound from '@pages/NotFound';
 import GlobalStyle from '@styles/GlobalStyles';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-
-const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, isInitialized } = useAuth();
-  if (!isInitialized) return null;
-  return user ? children : <Navigate to="/login" replace />;
-};
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import PrivateRoute from './PrivateRoute';
+import LoginGuard from './LoginGuard';
 
 const Router = () => {
-  const { user, isInitialized } = useAuth();
   return (
     <>
       <GlobalStyle />
@@ -26,11 +20,9 @@ const Router = () => {
             <Route
               path="/login"
               element={
-                !isInitialized ? null : user ? (
-                  <Navigate to="/my" replace />
-                ) : (
+                <LoginGuard redirectTo="/my">
                   <Login />
-                )
+                </LoginGuard>
               }
             />
             <Route
