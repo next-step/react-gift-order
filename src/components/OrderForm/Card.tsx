@@ -14,11 +14,11 @@ const Margin = styled.div<{ height: string }>`
   background-color: transparent;
 `;
 
-type CardProps = {
+interface CardProps {
   message: string;
   onMessageChange: (newMsg: string) => void;
-  messageError: boolean;
-};
+  messageError?: string;
+}
 
 const Card = ({ message, onMessageChange, messageError }: CardProps) => {
   const defaultCard = MOCK_CARDFORM_LIST[0];

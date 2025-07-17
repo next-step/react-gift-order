@@ -58,13 +58,15 @@ const InputBoxNotice = styled.p(({ theme }) => ({
   textAlign: 'left',
 }));
 
-type SenderProps = {
+interface SenderProps {
   value: string;
   onChange: (newSender: string) => void;
-  error?: boolean;
-};
+  error?: string;
+}
 
 export const Sender = ({ value, onChange, error }: SenderProps) => {
+  const hasError = Boolean(error);
+
   return (
     <Wrapper>
       <Margin height={'12px'} />
@@ -75,11 +77,11 @@ export const Sender = ({ value, onChange, error }: SenderProps) => {
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          hasError={error}
+          hasError={hasError}
           placeholder="이름을 입력하세요."
         />
-        {error ? (
-          <ErrorMessage>이름을 입력해주세요.</ErrorMessage>
+        {hasError ? (
+          <ErrorMessage>{error}</ErrorMessage>
         ) : (
           <>
             <Margin height={'4px'} />

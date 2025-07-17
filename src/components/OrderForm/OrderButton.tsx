@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
 
-type OrderButtonProps = {
-  onClick: (e: React.MouseEvent) => void;
+interface OrderButtonProps {
+  type?: 'button' | 'submit';
   totalPrice: number;
-};
+}
 
 const OrderButtonUI = styled.button(({ theme }) => ({
   width: '100%',
@@ -27,10 +27,6 @@ const OrderButtonUI = styled.button(({ theme }) => ({
   lineHeight: '1.5rem',
 }));
 
-export const OrderButton = ({ onClick, totalPrice }: OrderButtonProps) => {
-  return (
-    <OrderButtonUI type="button" onClick={onClick}>
-      {totalPrice.toLocaleString()}원 주문하기
-    </OrderButtonUI>
-  );
+export const OrderButton = ({ type = 'button', totalPrice }: OrderButtonProps) => {
+  return <OrderButtonUI type={type}>{totalPrice.toLocaleString()}원 주문하기</OrderButtonUI>;
 };

@@ -36,10 +36,12 @@ const TextArea = styled.textarea<{ hasError: boolean }>(({ theme, hasError }) =>
 type MessageProps = {
   value: string;
   onChange: (newMsg: string) => void;
-  error: boolean;
+  error?: string;
 };
 
 export const Message = ({ value, onChange, error }: MessageProps) => {
+  const hasError = Boolean(error);
+
   return (
     <Wrapper>
       <Container>
@@ -47,9 +49,9 @@ export const Message = ({ value, onChange, error }: MessageProps) => {
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder="메세지를 입력해주세요."
-          hasError={error}
+          hasError={hasError}
         />
-        {error && <ErrorMessage>메세지를 입력해주세요.</ErrorMessage>}
+        {hasError && <ErrorMessage>{error}</ErrorMessage>}
       </Container>
     </Wrapper>
   );
