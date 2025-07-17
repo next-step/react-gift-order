@@ -188,6 +188,7 @@ export const Modal = ({ open, onClose, onConfirm, recipients }: ModalProps) => {
     trigger,
     getValues,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitted },
   } = methods;
 
@@ -200,6 +201,10 @@ export const Modal = ({ open, onClose, onConfirm, recipients }: ModalProps) => {
   /* ③ 완료 시 → 검증 통과한 배열을 부모에 전달 */
   const onSubmit = handleSubmit((data) => onConfirm(data.recipients));
 
+  const handleCancel = () => {
+    reset({ recipients });
+    onClose();
+  };
   return (
     <Wrapper open={open}>
       <Container>
@@ -317,7 +322,7 @@ export const Modal = ({ open, onClose, onConfirm, recipients }: ModalProps) => {
             })}
           </RecipientSection>
           <SubmitButtonSection>
-            <CancelButton type="button" onClick={onClose}>
+            <CancelButton type="button" onClick={handleCancel}>
               취소
             </CancelButton>
             <SubmitButton type="button" onClick={onSubmit}>
