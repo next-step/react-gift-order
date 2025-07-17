@@ -1,5 +1,4 @@
-
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 
 interface UseInputOptions {
   initialValue?: string;
@@ -10,32 +9,24 @@ export function useInput({ initialValue = '', validator }: UseInputOptions) {
   const [value, setValue] = useState(initialValue);
   const [error, setError] = useState<string | null>(null);
 
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newValue = e.target.value;
-      setValue(newValue);
-      if (validator) {
-        setError(validator(newValue));
-      }
-    },
-    [validator],
-  );
-
-  const handleBlur = useCallback(() => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setValue(newValue);
     if (validator) {
-      setError(validator(value));
+      const newError = validator(newValue);
+      if (newError !== error) {
+        setError(newError);
+      }
     }
-  }, [validator, value]);
+  };
 
   return {
     value,
     error,
-    setValue,
-    setError,
+    onChange: handleChange,
     bind: {
       value,
       onChange: handleChange,
-      onBlur: handleBlur,
     },
   };
 }
