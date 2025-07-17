@@ -205,6 +205,8 @@ export const Modal = ({ open, onClose, onConfirm, recipients }: ModalProps) => {
     reset({ recipients });
     onClose();
   };
+
+  const addedCount = fields.length;
   return (
     <Wrapper open={open}>
       <Container>
@@ -306,6 +308,7 @@ export const Modal = ({ open, onClose, onConfirm, recipients }: ModalProps) => {
                         placeholder="수량을 입력하세요."
                         hasError={isSubmitted && !!qtyError}
                         {...register(pathQty, {
+                          valueAsNumber: true,
                           required: '수량을 입력해주세요.',
                           min: { value: 1, message: '구매 수량은 1개 이상이어야 해요.' },
                           onBlur: () => {},
@@ -326,7 +329,7 @@ export const Modal = ({ open, onClose, onConfirm, recipients }: ModalProps) => {
               취소
             </CancelButton>
             <SubmitButton type="button" onClick={onSubmit}>
-              완료
+              {addedCount}명 완료
             </SubmitButton>
           </SubmitButtonSection>
         </ModalSection>

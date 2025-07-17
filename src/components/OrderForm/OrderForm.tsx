@@ -8,7 +8,7 @@ import productData from '@/data/productData';
 import { MOCK_CARDFORM_LIST } from '@/components/OrderForm/mock';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ROUTE_PATH } from '@/routes/Routes';
-import { useForm, FormProvider, Controller } from 'react-hook-form';
+import { useForm, FormProvider, Controller, useWatch } from 'react-hook-form';
 
 const Wrapper = styled.section(({ theme }) => ({
   width: '100%',
@@ -66,8 +66,8 @@ const OrderForm = () => {
     navigate(ROUTE_PATH.HOME);
   };
 
-  const recipients = methods.getValues('recipients');
-  const totalQuantity = recipients.reduce((sum, r) => sum + (r.quantity || 0), 0);
+  const recipients = useWatch({ control: methods.control, name: 'recipients' });
+  const totalQuantity = recipients.reduce((sum, r) => sum + (r.quantity ?? 0), 0);
   const totalPrice = selectedProduct.price.sellingPrice * totalQuantity;
 
   return (

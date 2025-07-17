@@ -131,13 +131,15 @@ export const Recipient = () => {
     setModalOpen(false);
   };
 
+  const addLabel = recipients.length === 0 ? '추가' : '수정';
+
   return (
     <Wrapper>
       <Margin height="12px" />
       <TitleContainer>
         <Title>받는 사람</Title>
         <AddButton type="button" onClick={handleAddClick} disabled={fields.length >= 10}>
-          추가
+          {addLabel}
         </AddButton>
       </TitleContainer>
       <Margin height="12px" />
