@@ -1,7 +1,7 @@
 import { HorizontalSpacing } from '@/components/common/Spacing/HorizontalSpacing';
 import { Typography } from '@/components/common/Typography';
 import styled from '@emotion/styled';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { ROUTE_PATH } from '../Routes';
 
 const NotFoundPage = () => {
