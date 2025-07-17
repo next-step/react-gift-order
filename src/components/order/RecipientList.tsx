@@ -7,15 +7,15 @@ interface Props {
   remove: UseFieldArrayRemove;
 }
 
-export const RecipientList = ({ control, remove}: Props) => {
+export const RecipientList = ({ control, remove }: Props) => {
   const { fields } = useFieldArray({
     control,
     name: 'recipients',
   });
 
   if (fields.length === 0) {
-    return <div css={S.emptyRecipient}>받는 사람이 없습니다. 
-    <br/> 받는 사람을 추가해주세요.</div>;
+    return <div css={S.emptyRecipient}>받는 사람이 없습니다.
+      <br /> 받는 사람을 추가해주세요.</div>;
   }
 
   return (

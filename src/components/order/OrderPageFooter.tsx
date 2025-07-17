@@ -2,12 +2,11 @@ import * as S from '@/styles/OrderPage.styles';
 
 interface Props {
   totalPrice: number;
-  onSubmit: () => void;
 }
 
-export const OrderPageFooter = ({ totalPrice, onSubmit }: Props) => (
+export const OrderPageFooter = ({ totalPrice }: Props) => (
   <footer css={S.footer}>
-    <button type="button" css={S.submitButton} onClick={onSubmit}>
+    <button type="submit" css={S.submitButton}>
       {totalPrice.toLocaleString()}원 주문하기
     </button>
   </footer>
