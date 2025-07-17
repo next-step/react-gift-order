@@ -176,10 +176,14 @@ export const Modal = ({ open, onClose, onConfirm }: ModalProps) => {
     name: 'recipients',
   });
 
-  const onSubmit = async () => {
-    const valid = await trigger();
-    if (valid) onConfirm();
-  };
+  const validateAndConfirm = handleSubmit(() => {
+    onConfirm();
+  });
+
+  // const onSubmit = async () => {
+  //   const valid = await trigger();
+  //   if (valid) onConfirm();
+  // };
 
   return (
     <Wrapper open={open}>
@@ -301,7 +305,7 @@ export const Modal = ({ open, onClose, onConfirm }: ModalProps) => {
             <CancelButton type="button" onClick={onClose}>
               취소
             </CancelButton>
-            <SubmitButton type="button" onClick={onSubmit}>
+            <SubmitButton type="button" onClick={validateAndConfirm}>
               완료
             </SubmitButton>
           </SubmitButtonSection>

@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { useFormContext, useFieldArray } from 'react-hook-form';
+import { useFormContext, useFieldArray, useWatch } from 'react-hook-form';
 import { Modal as RecipientModal } from '@/components/common/Modal'; // 사용자 정의 Modal 컴포넌트
 import styled from '@emotion/styled';
 import type { OrderFormValues } from '@/components/OrderForm/OrderForm';
+import shouldForwardProp from '@emotion/is-prop-valid';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -49,15 +50,31 @@ const AddButton = styled.button(({ theme }) => ({
     backgroundColor: theme.colorScale.gray500,
   },
 }));
+interface InfoProps {
+  isEmpty: boolean;
+}
 
-const RecipientInfo = styled.div(({ theme }) => ({
+const RecipientInfo = styled('div', {
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'isEmpty',
+})<InfoProps>(({ theme, isEmpty }) => ({
   display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  padding: '24px',
-  border: '1px solid ',
-  borderColor: theme.semanticColors.border.disabled,
   borderRadius: '8px',
+
+  /* 빈 목록일 때 */
+  ...(isEmpty && {
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: '24px',
+    border: '1px solid rgb(238, 239, 241)',
+  }),
+
+  /* 값이 있을 때 */
+  ...(!isEmpty && {
+    flexDirection: 'column',
+    border: '1px solid',
+    borderColor: theme.semanticColors.border.disabled,
+    overflow: 'hidden',
+  }),
 }));
 
 const NoRecipientNotice = styled.p(({ theme }) => ({
@@ -69,18 +86,47 @@ const NoRecipientNotice = styled.p(({ theme }) => ({
   textAlign: 'center',
 }));
 
+// 받는 사람 리스트
+const RecipientTableTitleContainer = styled.div(({ theme }) => ({
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr 1fr',
+  gap: '12px',
+  padding: '12px',
+  backgroundColor: theme.semanticColors.background.fill,
+  borderBottom: '1px solid ',
+  borderColor: theme.semanticColors.border.disabled,
+}));
+
+const RecipientTableText = styled.p<{ fontWeight: number }>(({ theme, fontWeight }) => ({
+  fontSize: '0.875rem',
+  fontWeight: fontWeight,
+  lineHeight: '1.1875rem',
+  color: theme.semanticColors.text.default,
+  margin: '0px',
+  textAlign: 'left',
+}));
+
+const RecipientTable = styled.div(({ theme }) => ({
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr 1fr',
+  gap: '12px',
+  padding: '12px',
+  borderBottom: '1px solid ',
+  borderColor: theme.semanticColors.border.disabled,
+}));
+
 export const Recipient = () => {
   const { control, clearErrors } = useFormContext<OrderFormValues>();
-  const { fields, append, remove } = useFieldArray({ control, name: 'recipients' });
+  const { fields, remove } = useFieldArray({ control, name: 'recipients' });
   const [isModalOpen, setModalOpen] = useState(false);
 
+  const recipients = useWatch({ control, name: 'recipients' });
   const handleAddClick = () => {
     clearErrors('recipients');
     setModalOpen(true);
   };
 
-  const handleConfirm = (item: { name: string; phone: string; quantity: number }) => {
-    append(item);
+  const handleConfirm = () => {
     setModalOpen(false);
   };
 
@@ -95,34 +141,35 @@ export const Recipient = () => {
       </TitleContainer>
       <Margin height="12px" />
 
-      <RecipientInfo>
-        {fields.length === 0 ? (
+      <RecipientInfo isEmpty={recipients.length === 0}>
+        {recipients.length === 0 ? (
           <NoRecipientNotice>
             받는 사람이 없습니다.
             <br />
             받는 사람을 추가해주세요.
           </NoRecipientNotice>
         ) : (
-          fields.map((f, idx) => (
-            <div key={f.id}>
-              {idx + 1}. {f.name || '(이름 없음)'} / {f.phone || '(전화없음)'} / {f.quantity}개
-              <button
-                type="button"
-                onClick={() => remove(idx)}
-                disabled={fields.length <= 1}
-                style={{ marginLeft: '8px' }}
-              >
-                삭제
-              </button>
-            </div>
-          ))
+          <>
+            <RecipientTableTitleContainer>
+              <RecipientTableText fontWeight={700}>이름</RecipientTableText>
+              <RecipientTableText fontWeight={700}>전화번호</RecipientTableText>
+              <RecipientTableText fontWeight={700}>수량</RecipientTableText>
+            </RecipientTableTitleContainer>
+            {recipients.map((f, idx) => (
+              <RecipientTable key={idx}>
+                <RecipientTableText fontWeight={400}>{f.name}</RecipientTableText>
+                <RecipientTableText fontWeight={400}>{f.phone}</RecipientTableText>
+                <RecipientTableText fontWeight={400}>{f.quantity}</RecipientTableText>
+              </RecipientTable>
+            ))}
+          </>
         )}
       </RecipientInfo>
 
       {/* 사용자 정의 Modal 호출 */}
       <RecipientModal
         open={isModalOpen}
-        initialValue={fields.length < 10 ? { name: '', phone: '', quantity: 1 } : undefined}
+        // initialValue={fields.length < 10 ? { name: '', phone: '', quantity: 1 } : undefined}
         onClose={() => setModalOpen(false)}
         onConfirm={handleConfirm}
       />
