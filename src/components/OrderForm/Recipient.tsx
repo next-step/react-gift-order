@@ -117,16 +117,17 @@ const RecipientTable = styled.div(({ theme }) => ({
 
 export const Recipient = () => {
   const { control, clearErrors } = useFormContext<OrderFormValues>();
-  const { fields, remove } = useFieldArray({ control, name: 'recipients' });
+  const { fields, remove, replace } = useFieldArray({ control, name: 'recipients' });
   const [isModalOpen, setModalOpen] = useState(false);
 
-  const recipients = useWatch({ control, name: 'recipients' });
+  const recipients = useWatch({ control, name: 'recipients' }) ?? [];
   const handleAddClick = () => {
     clearErrors('recipients');
     setModalOpen(true);
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = (items: { name: string; phone: string; quantity: number }[]) => {
+    replace(items);
     setModalOpen(false);
   };
 
@@ -169,7 +170,7 @@ export const Recipient = () => {
       {/* 사용자 정의 Modal 호출 */}
       <RecipientModal
         open={isModalOpen}
-        // initialValue={fields.length < 10 ? { name: '', phone: '', quantity: 1 } : undefined}
+        recipients={recipients}
         onClose={() => setModalOpen(false)}
         onConfirm={handleConfirm}
       />

@@ -1,14 +1,14 @@
 import styled from '@emotion/styled';
 import { X } from 'lucide-react';
-import { useFormContext, useFieldArray } from 'react-hook-form';
+import { useFormContext, useFieldArray, useForm } from 'react-hook-form';
 import type { OrderFormValues } from '@/components/OrderForm/OrderForm';
 import { ErrorMessage } from './ErrorMessage';
 
 export interface ModalProps {
   open: boolean;
-  initialValue?: { name: string; phone: string; quantity: number };
+  recipients: { name: string; phone: string; quantity: number }[];
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm: (items: { name: string; phone: string; quantity: number }[]) => void;
 }
 
 // Wrapper에 open prop을 받아 부드러운 페이드 인/아웃 처리
@@ -163,27 +163,42 @@ const Divider = styled('hr')(({ theme }) => ({
   margin: '8px 0px 16px',
 }));
 
-export const Modal = ({ open, onClose, onConfirm }: ModalProps) => {
+export const Modal = ({ open, onClose, onConfirm, recipients }: ModalProps) => {
+  // const {
+  //   register,
+  //   trigger,
+  //   getValues,
+  //   handleSubmit,
+  //   formState: { errors, isSubmitted },
+  // } = useFormContext<OrderFormValues>();
+  // const { fields, append, remove } = useFieldArray({
+  //   control: useFormContext().control,
+  //   name: 'recipients',
+  // });
+
+  // const onSubmit = handleSubmit(() => onConfirm());
+
+  /* ① 모달 내부 전용 폼 컨텍스트 */
+  const methods = useForm<OrderFormValues>({
+    mode: 'onChange',
+    defaultValues: { recipients }, // ← 복사본
+  });
   const {
     register,
     trigger,
     getValues,
     handleSubmit,
     formState: { errors, isSubmitted },
-  } = useFormContext<OrderFormValues>();
+  } = methods;
+
+  /* ② 배열 조작도 로컬 컨트롤 사용 */
   const { fields, append, remove } = useFieldArray({
-    control: useFormContext().control,
+    control: methods.control,
     name: 'recipients',
   });
 
-  const validateAndConfirm = handleSubmit(() => {
-    onConfirm();
-  });
-
-  // const onSubmit = async () => {
-  //   const valid = await trigger();
-  //   if (valid) onConfirm();
-  // };
+  /* ③ 완료 시 → 검증 통과한 배열을 부모에 전달 */
+  const onSubmit = handleSubmit((data) => onConfirm(data.recipients));
 
   return (
     <Wrapper open={open}>
@@ -305,7 +320,7 @@ export const Modal = ({ open, onClose, onConfirm }: ModalProps) => {
             <CancelButton type="button" onClick={onClose}>
               취소
             </CancelButton>
-            <SubmitButton type="button" onClick={validateAndConfirm}>
+            <SubmitButton type="button" onClick={onSubmit}>
               완료
             </SubmitButton>
           </SubmitButtonSection>
