@@ -34,6 +34,7 @@ const OrderPage = () => {
     defaultValues: {
       senderName: '내 이름',
       message: messageCardTemplates[0].defaultTextMessage,
+      selectedCardId: messageCardTemplates[0].id,
       recipients: [],
     },
   });
@@ -42,11 +43,13 @@ const OrderPage = () => {
   
   const recipients = useWatch({ control, name: 'recipients' });
   const messageValue = useWatch({ control, name: 'message' });
+  const selectedCardId = useWatch({ control, name: 'selectedCardId' });
 
-  const [selectedCard, setSelectedCard] = useState<MessageCard>(messageCardTemplates[0]);
-  useEffect(() => {
-    setValue('message', selectedCard.defaultTextMessage);
-  }, [selectedCard, setValue]);
+  const handleCardSelect = (card: MessageCard) => {
+    setValue('selectedCardId', card.id);
+    setValue('message', card.defaultTextMessage);
+  };
+  const selectedCard = messageCardTemplates.find(card => card.id === selectedCardId) || messageCardTemplates[0];
 
   const handleRecipientsUpdate = (updatedRecipients: OrderFormValues['recipients']) => {
     setValue('recipients', updatedRecipients, { shouldValidate: true });
@@ -77,14 +80,9 @@ const OrderPage = () => {
         <div css={S.pageWrapper}>
           <MessageCardSection
             selectedCard={selectedCard}
-            onCardSelect={setSelectedCard}
+            onCardSelect={handleCardSelect}
             message={messageValue || ''}
             onMessageChange={(e) => setValue('message', e.target.value, { shouldValidate: true })}
-          />
-          <hr css={S.divider} />
-          <GiftingForm
-            register={register}
-            errors={errors}
           />
           <hr css={S.divider} />
           <div css={{ padding: `0 16px` }}>
@@ -104,7 +102,7 @@ const OrderPage = () => {
           <hr css={S.divider} />
           <ProductInfoSection item={item} />
         </div>
-        <OrderPageFooter totalPrice={totalPrice} onSubmit={handleSubmit(onSubmit)}/>
+        <OrderPageFooter totalPrice={totalPrice}/>
 
       </form>
       {isModalOpen && (
