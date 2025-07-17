@@ -117,7 +117,7 @@ const RecipientTable = styled.div(({ theme }) => ({
 
 export const Recipient = () => {
   const { control, clearErrors } = useFormContext<OrderFormValues>();
-  const { fields, remove, replace } = useFieldArray({ control, name: 'recipients' });
+  const { fields, replace } = useFieldArray({ control, name: 'recipients' });
   const [isModalOpen, setModalOpen] = useState(false);
 
   const recipients = useWatch({ control, name: 'recipients' }) ?? [];

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { X } from 'lucide-react';
-import { useFormContext, useFieldArray, useForm } from 'react-hook-form';
+import { useFieldArray, useForm } from 'react-hook-form';
 import type { OrderFormValues } from '@/components/OrderForm/OrderForm';
 import { ErrorMessage } from './ErrorMessage';
 
