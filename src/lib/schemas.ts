@@ -10,6 +10,7 @@ const recipientSchema = z.object({
 export const orderFormSchema = z.object({
   senderName: z.string().min(1, '보내는 사람 이름은 필수예요.'),
   message: z.string().optional(),
+  selectedCardId: z.number(),
   recipients: z.array(recipientSchema)
     .min(1, '받는 사람을 최소 1명 이상 추가해주세요.') 
     .max(10, '받는 사람은 최대 10명까지 추가할 수 있습니다.'), 
