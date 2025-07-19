@@ -5,8 +5,8 @@ export function useLoginForm() {
   const emailInput = useInput({ validator: validateEmail });
   const passwordInput = useInput({ validator: validatePassword });
 
-  const isEmailValid = validateEmail(emailInput.value) === null;
-  const isPasswordValid = validatePassword(passwordInput.value) === null;
+  const isEmailValid = emailInput.error === null;
+  const isPasswordValid = passwordInput.error === null;
   const isFormValid = isEmailValid && isPasswordValid;
 
   return {

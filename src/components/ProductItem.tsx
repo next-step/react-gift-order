@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
-import type { Product } from '@/data/productListMock';
+import { Link } from 'react-router-dom';
+import type { Product } from '@/types/product';
 
 interface Props {
   product: Product;
@@ -8,21 +9,23 @@ interface Props {
 
 export function ProductItem({ product, rank }: Props) {
   return (
-    <Card>
-      <ThumbWrapper>
-        <RankBadge rank={rank}>{rank}</RankBadge>
-        <Thumb src={product.imageURL} alt={product.name} loading="lazy" />
-      </ThumbWrapper>
+    <Link to={`/order/${product.id}`}>
+      <Card>
+        <ThumbWrapper>
+          <RankBadge rank={rank}>{rank}</RankBadge>
+          <Thumb src={product.imageURL} alt={product.name} loading="lazy" />
+        </ThumbWrapper>
 
-      {/* 브랜드명 */}
-      <Brand>{product.brandInfo.name}</Brand>
+        {/* 브랜드명 */}
+        <Brand>{product.brandInfo.name}</Brand>
 
-      {/* 상품명(두 줄 까지만 표시) */}
-      <Name title={product.name}>{product.name}</Name>
+        {/* 상품명(두 줄 까지만 표시) */}
+        <Name title={product.name}>{product.name}</Name>
 
-      {/* 가격 */}
-      <Price>{product.price.sellingPrice.toLocaleString()}원</Price>
-    </Card>
+        {/* 가격 */}
+        <Price>{product.price.sellingPrice.toLocaleString()}원</Price>
+      </Card>
+    </Link>
   );
 }
 

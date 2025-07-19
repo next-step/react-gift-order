@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { LiHTMLAttributes, ReactNode } from 'react';
+import type { LiHTMLAttributes, ReactNode } from 'react';
 
 interface TabProps extends LiHTMLAttributes<HTMLLIElement> {
   children: ReactNode;
