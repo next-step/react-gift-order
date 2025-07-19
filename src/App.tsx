@@ -5,6 +5,9 @@ import { ProductListSection } from '@/components/ProductListSection';
 import { LoginPage } from '@/pages/LoginPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 import RootLayout from '@/layout/RootLayout';
+import MyPage from '@/pages/MyPage';
+import PrivateRoute from '@/components/PrivateRoute';
+import OrderPage from '@/pages/OrderPage';
 
 function App() {
   return (
@@ -22,6 +25,12 @@ function App() {
         }
       />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/my" element={<PrivateRoute />}>
+        <Route path="/my" element={<MyPage />} />
+      </Route>
+      <Route path="/order/:productId" element={<PrivateRoute />}>
+        <Route path="/order/:productId" element={<OrderPage />} />
+      </Route>
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

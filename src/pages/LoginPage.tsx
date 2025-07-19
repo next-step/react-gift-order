@@ -4,23 +4,22 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Input';
 import { useLoginForm } from '@/hooks/useLoginForm';
-import { useEffect } from 'react';
+import useAuthStore from '@/stores/authStore';
 
 export function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/';
+  const { login } = useAuthStore();
 
-  const { emailInput, passwordInput, isFormValid, validateForm } = useLoginForm();
-
-  // 컴포넌트가 렌더링될 때마다 폼 유효성 검사
-  useEffect(() => {
-    validateForm();
-  }, [emailInput.value, passwordInput.value, validateForm]);
+  const { emailInput, passwordInput, isFormValid } = useLoginForm();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (isFormValid) {
+      // TODO: 실제 API 연동 시에는 응답으로 받은 토큰과 사용자 정보를 저장해야 함
+      const mockUser = { nickname: '김대영', email: emailInput.bind.value };
+      login('mock_access_token', mockUser);
       navigate(from, { replace: true });
     }
   };
@@ -43,9 +42,9 @@ export function LoginPage() {
             {...passwordInput.bind}
             error={passwordInput.error}
           />
-          <Button type="submit" disabled={!isFormValid} style={{ marginTop: '33px' }}>
+          <LoginButton type="submit" disabled={!isFormValid}>
             로그인
-          </Button>
+          </LoginButton>
         </Form>
       </Container>
     </>
@@ -58,17 +57,21 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   height: calc(100vh - 56px);
-`
+`;
 
 const Logo = styled.h1`
   font-size: 34px;
   font-family: 'Kakao', sans-serif;
   margin-bottom: 33px;
-`
+`;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
   width: 400px;
   gap: 13px;
-`
+`;
+
+const LoginButton = styled(Button)`
+  margin-top: 33px;
+`;
