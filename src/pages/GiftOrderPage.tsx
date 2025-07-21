@@ -91,8 +91,15 @@ const GiftOrderPage = () => {
   };
 
   const onInvalid = (errors: FieldErrors<MultiOrderFormData>) => {
-    if (errors.recipients?.message) {
-      alert(errors.recipients.message);
+    if (errors.recipients) {
+      if ('message' in errors.recipients) {
+        alert(errors.recipients.message);
+      } else if (
+        'root' in errors.recipients &&
+        errors.recipients.root?.message
+      ) {
+        alert(errors.recipients.root.message);
+      }
     }
   };
 
