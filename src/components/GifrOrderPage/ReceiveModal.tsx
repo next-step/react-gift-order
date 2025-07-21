@@ -3,17 +3,13 @@ import type { MultiOrderFormData } from '@schemas/orderSchema';
 import {
   useFormContext,
   type FieldArrayWithId,
-  type FieldErrors,
   type UseFieldArrayAppend,
   type UseFieldArrayRemove,
-  type UseFormRegister,
 } from 'react-hook-form';
 import ReceiveForm from './ReceiveForm';
 import { useEffect } from 'react';
 
 interface ReceiveModalProps {
-  register: UseFormRegister<MultiOrderFormData>;
-  errors: FieldErrors<MultiOrderFormData>;
   fields: FieldArrayWithId<MultiOrderFormData, 'recipients', 'id'>[];
   append: UseFieldArrayAppend<MultiOrderFormData, 'recipients'>;
   remove: UseFieldArrayRemove;
@@ -22,15 +18,17 @@ interface ReceiveModalProps {
 }
 
 const ReceiveModal = ({
-  register,
-  errors,
   fields,
   append,
   remove,
   onClose,
   onComplete,
 }: ReceiveModalProps) => {
-  const { clearErrors } = useFormContext<MultiOrderFormData>();
+  const {
+    clearErrors,
+    register,
+    formState: { errors },
+  } = useFormContext<MultiOrderFormData>();
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => {

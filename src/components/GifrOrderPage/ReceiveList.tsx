@@ -1,14 +1,15 @@
 import styled from '@emotion/styled';
 import type { MultiOrderFormData } from '@schemas/orderSchema';
-import { useWatch, type Control } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 interface ReceiveListProps {
   onOpen: () => void;
-  control: Control<MultiOrderFormData>;
 }
 
-const ReceiveList = ({ onOpen, control }: ReceiveListProps) => {
+const ReceiveList = ({ onOpen }: ReceiveListProps) => {
+  const { control } = useFormContext<MultiOrderFormData>();
   const recipients = useWatch({ control, name: 'recipients' });
+
   return (
     <Wrapper>
       <Header>

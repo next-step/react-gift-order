@@ -1,6 +1,7 @@
 import ErrorText from '@components/common/ErrorText';
 import styled from '@emotion/styled';
-import type { FormSectionProps } from '@pages/GiftOrderPage';
+import type { MultiOrderFormData } from '@schemas/orderSchema';
+import { useFormContext } from 'react-hook-form';
 
 const Wrapper = styled.div(({ theme }) => ({
   marginTop: theme.spacing.spacing5,
@@ -29,7 +30,11 @@ const Notice = styled.div(({ theme }) => ({
   color: theme.colors.semantic.textSub,
 }));
 
-const SenderForm = ({ register, errors }: FormSectionProps) => {
+const SenderForm = () => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<MultiOrderFormData>();
   return (
     <Wrapper>
       <Label>보내는 사람</Label>

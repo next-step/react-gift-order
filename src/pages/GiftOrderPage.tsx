@@ -60,16 +60,8 @@ const GiftOrderPage = () => {
     },
   });
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    control,
-    formState: { errors },
-    trigger,
-    getValues,
-  } = methods;
+  const { handleSubmit, setValue, watch, control, trigger, getValues } =
+    methods;
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'recipients',
@@ -128,29 +120,27 @@ const GiftOrderPage = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <CardSelector register={register} errors={errors} setValue={setValue} />
-        <Divider />
-        <SenderForm register={register} errors={errors} />
-        <Divider />
-        <ReceiveList onOpen={openReceiveModal} control={control} />
-        <Divider />
-        <ProductSummary />
-        <OrderButton price={totalPrice} />
-      </form>
-      {isReceiveModalOpen && (
-        <FormProvider {...methods}>
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <CardSelector />
+          <Divider />
+          <SenderForm />
+          <Divider />
+          <ReceiveList onOpen={openReceiveModal} />
+          <Divider />
+          <ProductSummary />
+          <OrderButton price={totalPrice} />
+        </form>
+        {isReceiveModalOpen && (
           <ReceiveModal
-            register={register}
-            errors={errors}
             fields={fields}
             append={append}
             remove={remove}
             onClose={closeReceiveModal}
             onComplete={handleComplete}
           />
-        </FormProvider>
-      )}
+        )}
+      </FormProvider>
     </>
   );
 };
