@@ -7,15 +7,20 @@ interface ReceiveFormProps {
   index: number;
   register: UseFormRegister<MultiOrderFormData>;
   errors: FieldErrors<MultiOrderFormData>;
-  remove: (index: number) => void;
+  handleRemove: (index: number) => void;
 }
 
-const ReceiveForm = ({ index, register, errors, remove }: ReceiveFormProps) => {
+const ReceiveForm = ({
+  index,
+  register,
+  errors,
+  handleRemove,
+}: ReceiveFormProps) => {
   return (
     <Wrapper>
       <HeaderRow>
         <SectionTitle>받는사람 {index + 1}</SectionTitle>
-        <DeleteButton type="button" onClick={() => remove(index)}>
+        <DeleteButton type="button" onClick={() => handleRemove(index)}>
           X
         </DeleteButton>
       </HeaderRow>

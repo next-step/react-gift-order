@@ -1,26 +1,21 @@
 import styled from '@emotion/styled';
 import type { MultiOrderFormData } from '@schemas/orderSchema';
-import {
-  useFormContext,
-  type FieldArrayWithId,
-  type UseFieldArrayAppend,
-  type UseFieldArrayRemove,
-} from 'react-hook-form';
+import { useFormContext, type FieldArrayWithId } from 'react-hook-form';
 import ReceiveForm from './ReceiveForm';
 import { useEffect } from 'react';
 
 interface ReceiveModalProps {
   fields: FieldArrayWithId<MultiOrderFormData, 'recipients', 'id'>[];
-  append: UseFieldArrayAppend<MultiOrderFormData, 'recipients'>;
-  remove: UseFieldArrayRemove;
+  handleAdd: () => void;
+  handleRemove: (index: number) => void;
   onClose: () => void;
   onComplete: () => void;
 }
 
 const ReceiveModal = ({
   fields,
-  append,
-  remove,
+  handleAdd,
+  handleRemove,
   onClose,
   onComplete,
 }: ReceiveModalProps) => {
@@ -48,10 +43,7 @@ const ReceiveModal = ({
           <Subtitle>
             * 받는 사람의 전화번호를 중복으로 입력할 수 없어요.
           </Subtitle>
-          <AddButton
-            onClick={() => append({ receiver: '', phone: '', quantity: 1 })}
-            disabled={fields.length >= 10}
-          >
+          <AddButton onClick={handleAdd} disabled={fields.length >= 10}>
             추가하기
           </AddButton>
         </ModalHeader>
@@ -62,7 +54,7 @@ const ReceiveModal = ({
               index={index}
               register={register}
               errors={errors}
-              remove={remove}
+              handleRemove={handleRemove}
             />
           ))}
         </FormScrollArea>

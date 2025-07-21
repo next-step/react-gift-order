@@ -124,6 +124,13 @@ const GiftOrderPage = () => {
     }
   };
 
+  const handleAdd = () => {
+    append({ receiver: '', phone: '', quantity: 1 });
+  };
+
+  const handleRemove = (index: number) => {
+    remove(index);
+  };
   return (
     <>
       <FormProvider {...methods}>
@@ -140,8 +147,8 @@ const GiftOrderPage = () => {
         {isReceiveModalOpen && (
           <ReceiveModal
             fields={fields}
-            append={append}
-            remove={remove}
+            handleAdd={handleAdd}
+            handleRemove={handleRemove}
             onClose={closeReceiveModal}
             onComplete={handleComplete}
           />
