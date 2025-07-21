@@ -25,10 +25,8 @@ function App() {
         }
       />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/my" element={<PrivateRoute />}>
+      <Route element={<PrivateRoute />}>
         <Route path="/my" element={<MyPage />} />
-      </Route>
-      <Route path="/order/:productId" element={<PrivateRoute />}>
         <Route path="/order/:productId" element={<OrderPage />} />
       </Route>
       <Route path="*" element={<NotFoundPage />} />

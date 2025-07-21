@@ -19,13 +19,23 @@ export function OrderForm({
   handleSubmit,
   totalPrice,
 }: OrderFormProps) {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    if (name === 'quantity') {
+      updateForm(name, Math.max(1, parseInt(value, 10) || 1));
+    } else {
+      updateForm(name as keyof OrderFormType, value);
+    }
+  };
+
   return (
     <Form onSubmit={handleSubmit}>
       <FieldSet>
         <TextArea
           placeholder="메시지를 입력해주세요."
           value={form.message}
-          onChange={e => updateForm('message', e.target.value)}
+          name="message"
+          onChange={handleChange}
           error={errors.message}
         />
       </FieldSet>
@@ -37,7 +47,8 @@ export function OrderForm({
         <Input
           placeholder="이름을 입력하세요."
           value={form.senderName}
-          onChange={e => updateForm('senderName', e.target.value)}
+          name="senderName"
+          onChange={handleChange}
           error={errors.senderName}
         />
       </FieldSet>
@@ -49,13 +60,15 @@ export function OrderForm({
         <Input
           placeholder="이름을 입력하세요."
           value={form.receiverName}
-          onChange={e => updateForm('receiverName', e.target.value)}
+          name="receiverName"
+          onChange={handleChange}
           error={errors.receiverName}
         />
         <Input
           placeholder="전화번호를 입력하세요."
           value={form.receiverPhoneNumber}
-          onChange={e => updateForm('receiverPhoneNumber', e.target.value)}
+          name="receiverPhoneNumber"
+          onChange={handleChange}
           error={errors.receiverPhoneNumber}
         />
       </FieldSet>
@@ -67,7 +80,8 @@ export function OrderForm({
         <Input
           type="number"
           value={form.quantity}
-          onChange={e => updateForm('quantity', Math.max(1, parseInt(e.target.value, 10) || 1))}
+          name="quantity"
+          onChange={handleChange}
           error={errors.quantity}
         />
       </FieldSet>

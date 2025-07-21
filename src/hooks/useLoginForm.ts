@@ -1,17 +1,25 @@
-import { useInput } from './useInput';
-import { validateEmail, validatePassword } from '@/utils/validation';
+import { useState, useMemo } from 'react';
+import { LoginFormModel } from '@/models/LoginFormModel';
 
-export function useLoginForm() {
-  const emailInput = useInput({ validator: validateEmail });
-  const passwordInput = useInput({ validator: validatePassword });
+export function useLoginForm(initialValues?: Partial<LoginFormModel>) {
+  const [form, setForm] = useState(() => new LoginFormModel(initialValues));
+  const [errors, setErrors] = useState<Partial<Record<keyof LoginFormModel, string>>>({});
 
-  const isEmailValid = emailInput.error === null;
-  const isPasswordValid = passwordInput.error === null;
-  const isFormValid = isEmailValid && isPasswordValid;
+  const loginFormModel = useMemo(() => new LoginFormModel(form), [form]);
 
-  return {
-    emailInput,
-    passwordInput,
-    isFormValid,
+  const updateForm = <K extends keyof LoginFormModel>(key: K, value: LoginFormModel[K]) => {
+    setForm(prev => new LoginFormModel({ ...prev.toPlainObject(), [key]: value }));
   };
+
+  const handleSubmit = (e: React.FormEvent, onSubmit: (form: LoginFormModel) => void) => {
+    e.preventDefault();
+    const validationErrors = loginFormModel.validate();
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length === 0) {
+      onSubmit(form);
+    }
+  };
+
+  return { form, errors, updateForm, handleSubmit };
 }
