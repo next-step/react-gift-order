@@ -1,21 +1,22 @@
 import ErrorText from '@components/common/ErrorText';
 import styled from '@emotion/styled';
 import type { MultiOrderFormData } from '@schemas/orderSchema';
-import type { FieldErrors, UseFormRegister } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 
 interface ReceiveFormProps {
   index: number;
-  register: UseFormRegister<MultiOrderFormData>;
-  errors: FieldErrors<MultiOrderFormData>;
   handleRemove: (index: number) => void;
 }
 
 const ReceiveForm = ({
   index,
-  register,
-  errors,
+
   handleRemove,
 }: ReceiveFormProps) => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<MultiOrderFormData>();
   return (
     <Wrapper>
       <HeaderRow>

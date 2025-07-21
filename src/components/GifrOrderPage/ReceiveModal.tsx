@@ -19,11 +19,7 @@ const ReceiveModal = ({
   onClose,
   onComplete,
 }: ReceiveModalProps) => {
-  const {
-    clearErrors,
-    register,
-    formState: { errors },
-  } = useFormContext<MultiOrderFormData>();
+  const { clearErrors } = useFormContext<MultiOrderFormData>();
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => {
@@ -52,8 +48,6 @@ const ReceiveModal = ({
             <ReceiveForm
               key={field.id}
               index={index}
-              register={register}
-              errors={errors}
               handleRemove={handleRemove}
             />
           ))}
