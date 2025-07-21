@@ -1,25 +1,23 @@
 import styled from '@emotion/styled';
 import type { MultiOrderFormData } from '@schemas/orderSchema';
-import { useFormContext, type FieldArrayWithId } from 'react-hook-form';
+import { useFieldArray, useFormContext } from 'react-hook-form';
 import ReceiveForm from './ReceiveForm';
 import { useEffect } from 'react';
+import { useModal } from '@contexts/ModalContext';
 
 interface ReceiveModalProps {
-  fields: FieldArrayWithId<MultiOrderFormData, 'recipients', 'id'>[];
-  handleAdd: () => void;
-  handleRemove: (index: number) => void;
   onClose: () => void;
-  onComplete: () => void;
 }
 
-const ReceiveModal = ({
-  fields,
-  handleAdd,
-  handleRemove,
-  onClose,
-  onComplete,
-}: ReceiveModalProps) => {
-  const { clearErrors } = useFormContext<MultiOrderFormData>();
+const ReceiveModal = ({ onClose }: ReceiveModalProps) => {
+  const { clearErrors, control, getValues, trigger } =
+    useFormContext<MultiOrderFormData>();
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'recipients',
+  });
+
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => {
@@ -30,6 +28,38 @@ const ReceiveModal = ({
   useEffect(() => {
     clearErrors('recipients');
   }, []);
+
+  const handleAdd = () => {
+    append({ receiver: '', phone: '', quantity: 1 });
+  };
+
+  const handleRemove = (index: number) => {
+    remove(index);
+  };
+
+  const { closeReceiveModal } = useModal();
+  const handleComplete = async () => {
+    const recipents = getValues('recipients') ?? [];
+    if (recipents.length === 0) {
+      closeReceiveModal();
+      return;
+    }
+
+    const valid = await trigger('recipients'); //검증이 일어나지 않은 필드도 검사하기 위해 사용
+    if (!valid) {
+      alert('받는 사람 정보를 정확히 입력해주세요.');
+      return;
+    }
+
+    const phones = recipents.map((recipent) => recipent.phone);
+    const phoneSet = new Set(phones);
+    if (phoneSet.size !== phones.length) {
+      alert('전화번호가 중복된 사람이 있습니다.');
+      return;
+    }
+    closeReceiveModal();
+  };
+
   return (
     <Overlay>
       <ModalWrapper>
@@ -54,7 +84,7 @@ const ReceiveModal = ({
         </FormScrollArea>
         <ButtonGroup>
           <CancelButton onClick={onClose}>취소</CancelButton>
-          <CompleteButton type="submit" onClick={onComplete}>
+          <CompleteButton type="submit" onClick={handleComplete}>
             {fields.length} 명 완료
           </CompleteButton>
         </ButtonGroup>

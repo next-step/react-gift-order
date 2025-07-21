@@ -12,7 +12,6 @@ import cardTemplate from '@data/cardTemplate.json';
 
 import {
   FormProvider,
-  useFieldArray,
   useForm,
   type FieldErrors,
   type SubmitHandler,
@@ -60,12 +59,7 @@ const GiftOrderPage = () => {
     },
   });
 
-  const { handleSubmit, setValue, watch, control, trigger, getValues } =
-    methods;
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: 'recipients',
-  });
+  const { handleSubmit, setValue, watch } = methods;
 
   const onSubmit: SubmitHandler<MultiOrderFormData> = (data) => {
     console.log(data);
@@ -96,41 +90,12 @@ const GiftOrderPage = () => {
     closeModal();
   };
 
-  const handleComplete = async () => {
-    const recipents = getValues('recipients') ?? [];
-    if (recipents.length === 0) {
-      closeModal();
-      return;
-    }
-
-    const valid = await trigger('recipients'); //검증이 일어나지 않은 필드도 검사하기 위해 사용
-    if (!valid) {
-      alert('받는 사람 정보를 정확히 입력해주세요.');
-      return;
-    }
-
-    const phones = recipents.map((recipent) => recipent.phone);
-    const phoneSet = new Set(phones);
-    if (phoneSet.size !== phones.length) {
-      alert('전화번호가 중복된 사람이 있습니다.');
-      return;
-    }
-    closeModal();
-  };
-
   const onInvalid = (errors: FieldErrors<MultiOrderFormData>) => {
     if (errors.recipients?.message) {
       alert(errors.recipients.message);
     }
   };
 
-  const handleAdd = () => {
-    append({ receiver: '', phone: '', quantity: 1 });
-  };
-
-  const handleRemove = (index: number) => {
-    remove(index);
-  };
   return (
     <>
       <FormProvider {...methods}>
@@ -144,15 +109,7 @@ const GiftOrderPage = () => {
           <ProductSummary />
           <OrderButton price={totalPrice} />
         </form>
-        {isReceiveModalOpen && (
-          <ReceiveModal
-            fields={fields}
-            handleAdd={handleAdd}
-            handleRemove={handleRemove}
-            onClose={closeReceiveModal}
-            onComplete={handleComplete}
-          />
-        )}
+        {isReceiveModalOpen && <ReceiveModal onClose={closeReceiveModal} />}
       </FormProvider>
     </>
   );
