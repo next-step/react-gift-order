@@ -2,8 +2,9 @@ import cardTemplate from '@data/cardTemplate.json';
 import styled from '@emotion/styled';
 import { useState } from 'react';
 import MessageInput from './MessageInput';
-import type { FormSectionProps } from '@pages/GiftOrderPage';
 import ErrorText from '@components/common/ErrorText';
+import { useFormContext } from 'react-hook-form';
+import type { MultiOrderFormData } from '@schemas/orderSchema';
 
 interface CardTemplate {
   id: number;
@@ -43,9 +44,15 @@ const SelectedImage = styled.img(({ theme }) => ({
   boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)',
 }));
 
-const CardSelector = ({ register, errors, setValue }: FormSectionProps) => {
+const CardSelector = () => {
   const defaultCard = cardTemplate[0];
   const [selectedCard, setSelectedCard] = useState(defaultCard.imageUrl);
+
+  const {
+    register,
+    formState: { errors },
+    setValue,
+  } = useFormContext<MultiOrderFormData>();
 
   const handleCardSelect = (card: CardTemplate) => {
     setSelectedCard(card.imageUrl);

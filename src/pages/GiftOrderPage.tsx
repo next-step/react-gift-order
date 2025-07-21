@@ -2,24 +2,31 @@ import Divider from '@components/common/Divider';
 import CardSelector from '@components/GifrOrderPage/CardSelector';
 import OrderButton from '@components/GifrOrderPage/OrderButton';
 import ProductSummary from '@components/GifrOrderPage/ProductSummary';
-import ReceiveForm from '@components/GifrOrderPage/ReceiveForm';
 import SenderForm from '@components/GifrOrderPage/SenderForm';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type OrderFormData, orderSchema } from '@schemas/orderSchema';
+import {
+  type MultiOrderFormData,
+  multiOrderSchema,
+} from '@schemas/orderSchema';
 import cardTemplate from '@data/cardTemplate.json';
 
 import {
+  FormProvider,
   useForm,
   type FieldErrors,
   type SubmitHandler,
   type UseFormRegister,
   type UseFormSetValue,
 } from 'react-hook-form';
+import ReceiveList from '@components/GifrOrderPage/ReceiveList';
+import ReceiveModal from '@components/GifrOrderPage/ReceiveModal';
+import { useModal } from '@contexts/ModalContext';
+import { useState } from 'react';
 
 export interface FormSectionProps {
-  register: UseFormRegister<OrderFormData>;
-  errors: FieldErrors<OrderFormData>;
-  setValue?: UseFormSetValue<OrderFormData>;
+  register: UseFormRegister<MultiOrderFormData>;
+  errors: FieldErrors<MultiOrderFormData>;
+  setValue?: UseFormSetValue<MultiOrderFormData>;
 }
 const defaultCard = cardTemplate[0];
 
@@ -42,34 +49,78 @@ const mockItems = {
 };
 
 const GiftOrderPage = () => {
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    formState: { errors },
-  } = useForm<OrderFormData>({
-    resolver: zodResolver(orderSchema),
-    defaultValues: { message: defaultCard.defaultTextMessage, quantity: 1 },
+  const methods = useForm<MultiOrderFormData>({
+    resolver: zodResolver(multiOrderSchema),
+    mode: 'onChange',
+    defaultValues: {
+      message: defaultCard.defaultTextMessage,
+      sender: '',
+      recipients: [],
+    },
   });
 
-  const onSubmit: SubmitHandler<OrderFormData> = (data) => {
+  const { handleSubmit, setValue, watch } = methods;
+
+  const onSubmit: SubmitHandler<MultiOrderFormData> = (data) => {
     console.log(data);
   };
-  const quantity = watch('quantity') ?? 1;
-  const totalPrice = mockItems.price.basicPrice * quantity;
+  const recipients = watch('recipients') ?? [];
+  const totalQuantity = recipients.reduce(
+    (acc, curr) => acc + curr.quantity,
+    0
+  );
+  const totalPrice = mockItems.price.basicPrice * totalQuantity;
+
+  const [prevRecipients, setPrevRecipients] = useState<
+    MultiOrderFormData['recipients']
+  >([]);
+  const {
+    isReceiveModalOpen,
+    openReceiveModal: openModal,
+    closeReceiveModal: closeModal,
+  } = useModal();
+
+  const openReceiveModal = () => {
+    const currentRecipients = watch('recipients') ?? [];
+    const deepCopied = JSON.parse(JSON.stringify(currentRecipients));
+    setPrevRecipients(deepCopied);
+    openModal();
+  };
+
+  const closeReceiveModal = () => {
+    setValue('recipients', prevRecipients);
+    closeModal();
+  };
+
+  const onInvalid = (errors: FieldErrors<MultiOrderFormData>) => {
+    if (errors.recipients) {
+      if ('message' in errors.recipients) {
+        alert(errors.recipients.message);
+      } else if (
+        'root' in errors.recipients &&
+        errors.recipients.root?.message
+      ) {
+        alert(errors.recipients.root.message);
+      }
+    }
+  };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <CardSelector register={register} errors={errors} setValue={setValue} />
-      <Divider />
-      <SenderForm register={register} errors={errors} />
-      <Divider />
-      <ReceiveForm register={register} errors={errors} />
-      <Divider />
-      <ProductSummary />
-      <OrderButton price={totalPrice} />
-    </form>
+    <>
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
+          <CardSelector />
+          <Divider />
+          <SenderForm />
+          <Divider />
+          <ReceiveList onOpen={openReceiveModal} />
+          <Divider />
+          <ProductSummary />
+          <OrderButton price={totalPrice} />
+        </form>
+        {isReceiveModalOpen && <ReceiveModal onClose={closeReceiveModal} />}
+      </FormProvider>
+    </>
   );
 };
 

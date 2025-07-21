@@ -1,6 +1,73 @@
 import ErrorText from '@components/common/ErrorText';
 import styled from '@emotion/styled';
-import type { FormSectionProps } from '@pages/GiftOrderPage';
+import type { MultiOrderFormData } from '@schemas/orderSchema';
+import { useFormContext } from 'react-hook-form';
+
+interface ReceiveFormProps {
+  index: number;
+  handleRemove: (index: number) => void;
+}
+
+const ReceiveForm = ({
+  index,
+
+  handleRemove,
+}: ReceiveFormProps) => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<MultiOrderFormData>();
+  return (
+    <Wrapper>
+      <HeaderRow>
+        <SectionTitle>받는사람 {index + 1}</SectionTitle>
+        <DeleteButton type="button" onClick={() => handleRemove(index)}>
+          X
+        </DeleteButton>
+      </HeaderRow>
+      <FieldRow>
+        <Label htmlFor={`receiverName-${index}`}>이름</Label>
+        <Input
+          id={`receiverName-${index}`}
+          placeholder="이름을 입력하세요."
+          {...register(`recipients.${index}.receiver` as const)}
+        />
+      </FieldRow>
+      {errors.recipients?.[index]?.receiver && (
+        <ErrorText>{errors.recipients[index]?.receiver.message}</ErrorText>
+      )}
+
+      <FieldRow>
+        <Label htmlFor={`receiverPhone-${index}`}>전화번호</Label>
+        <Input
+          id={`receiverPhone-${index}`}
+          placeholder="전화번호를 입력하세요."
+          {...register(`recipients.${index}.phone` as const)}
+        />
+      </FieldRow>
+      {errors.recipients?.[index]?.phone && (
+        <ErrorText>{errors.recipients[index]?.phone.message}</ErrorText>
+      )}
+
+      <FieldRow>
+        <Label htmlFor={`quantity-${index}`}>수량</Label>
+        <Input
+          id={`quantity-${index}`}
+          type="number"
+          defaultValue={1}
+          {...register(`recipients.${index}.quantity` as const, {
+            valueAsNumber: true,
+          })}
+        />
+      </FieldRow>
+      {errors.recipients?.[index]?.quantity && (
+        <ErrorText>{errors.recipients[index]?.quantity.message}</ErrorText>
+      )}
+    </Wrapper>
+  );
+};
+
+export default ReceiveForm;
 
 const Wrapper = styled.div(({ theme }) => ({
   marginTop: theme.spacing.spacing5,
@@ -38,42 +105,18 @@ const FieldRow = styled.div(({ theme }) => ({
   marginBottom: theme.spacing.spacing3,
 }));
 
-const ReceiveForm = ({ register, errors }: FormSectionProps) => {
-  return (
-    <Wrapper>
-      <SectionTitle>받는사람</SectionTitle>
-      <FieldRow>
-        <Label htmlFor="receiverName">이름</Label>
-        <Input
-          id="receiverName"
-          placeholder="이름을 입력하세요."
-          {...register('receiver')}
-        />
-      </FieldRow>
-      {errors.receiver && <ErrorText>{errors.receiver.message}</ErrorText>}
+const HeaderRow = styled.div(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'baseline',
+  marginBottom: theme.spacing.spacing3,
+}));
 
-      <FieldRow>
-        <Label htmlFor="receiverPhone">전화번호</Label>
-        <Input
-          id="receiverPhone"
-          placeholder="전화번호를 입력하세요."
-          {...register('phone')}
-        />
-      </FieldRow>
-      {errors.phone && <ErrorText>{errors.phone.message}</ErrorText>}
-
-      <FieldRow>
-        <Label htmlFor="quantity">수량</Label>
-        <Input
-          id="quantity"
-          type="number"
-          defaultValue={1}
-          {...register('quantity', { valueAsNumber: true })}
-        />
-      </FieldRow>
-      {errors.quantity && <ErrorText>{errors.quantity.message}</ErrorText>}
-    </Wrapper>
-  );
-};
-
-export default ReceiveForm;
+const DeleteButton = styled.button(({ theme }) => ({
+  background: 'none',
+  border: 'none',
+  ...theme.typography.label1Regular,
+  marginLeft: theme.spacing.spacing2,
+  cursor: 'pointer',
+  padding: 0,
+  color: theme.colors.semantic.textDefault,
+}));
