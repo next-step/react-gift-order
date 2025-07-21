@@ -118,10 +118,16 @@ const GiftOrderPage = () => {
     closeModal();
   };
 
+  const onInvalid = (errors: FieldErrors<MultiOrderFormData>) => {
+    if (errors.recipients?.message) {
+      alert(errors.recipients.message);
+    }
+  };
+
   return (
     <>
       <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
           <CardSelector />
           <Divider />
           <SenderForm />
