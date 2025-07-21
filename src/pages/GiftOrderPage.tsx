@@ -81,7 +81,9 @@ const GiftOrderPage = () => {
   } = useModal();
 
   const openReceiveModal = () => {
-    setPrevRecipients(watch('recipients') ?? []);
+    const currentRecipients = watch('recipients') ?? [];
+    const deepCopied = JSON.parse(JSON.stringify(currentRecipients));
+    setPrevRecipients(deepCopied);
     openModal();
   };
 
