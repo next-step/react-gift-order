@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, type ReactNode } from 'react';
 
 interface ModalContextType {
   isReceiveModalOpen: boolean;
@@ -8,7 +8,7 @@ interface ModalContextType {
 
 const ModalContext = createContext<ModalContextType | undefined>(undefined);
 
-export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
+export const ModalProvider = ({ children }: { children: ReactNode }) => {
   const [isReceiveModalOpen, setIsReceiveModalOpen] = useState(false);
 
   const openReceiveModal = () => setIsReceiveModalOpen(true);
