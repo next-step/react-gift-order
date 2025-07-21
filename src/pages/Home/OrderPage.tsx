@@ -5,6 +5,7 @@ import { AuthContext } from "@/context/AuthContext";
 import { MOCK_RANKING_PRODUCT_DATA_LIST } from "@/pages/Home/components/ProductRankingListSection/mock";
 import { templates } from "@/resources/mock/templates";
 
+
 type Receiver = {
   name: string;
   phone: string;
@@ -22,7 +23,6 @@ export default function OrderPage() {
   const navigate = useNavigate();
   const { token } = useContext(AuthContext)!;
 
-  //템플릿 & 메시지
   const initialTemplateId = Number(searchParams.get("template")) || templates[0].id;
   const [selectedTemplateId, setSelectedTemplateId] = useState<number>(initialTemplateId);
   const selectedTemplate = templates.find((t) => t.id === selectedTemplateId) || templates[0];
@@ -31,7 +31,6 @@ export default function OrderPage() {
     setMessageText(selectedTemplate.defaultTextMessage);
   }, [selectedTemplateId]);
 
-  //로그인 체크
   useEffect(() => {
     if (!token) {
       const redirectTo = `${location.pathname}${location.search}`;
@@ -40,13 +39,11 @@ export default function OrderPage() {
   }, [token, navigate]);
   if (!token) return null;
 
-  //상품 조회
   const id = params.id;
   if (!id) return <div>잘못된 주문 경로입니다.</div>;
   const product = MOCK_RANKING_PRODUCT_DATA_LIST.find((p) => p.id === Number(id));
   if (!product) return <div>해당 상품을 찾을 수 없습니다. (ID: {id})</div>;
 
-  //React Hook Form 세팅
   const {
     control,
     register,
@@ -105,9 +102,8 @@ export default function OrderPage() {
         style={{ width: "100%", padding: 8, border: "1px solid #ccc", borderRadius: 4 }}
       />
 
-     //주문 폼
       <form onSubmit={handleSubmit(onSubmit)} style={{ marginTop: 24 }}>
-        //보내는 사람
+        
         <div style={{ marginBottom: 16 }}>
           <label>보내는 사람</label>
           <input
@@ -117,7 +113,6 @@ export default function OrderPage() {
           {errors.sender && <p className="text-red-500 text-sm">{errors.sender.message}</p>}
         </div>
 
-        //받는 사람 리스트
         <h2>받는 사람</h2>
         <p>* 최대 10명까지 추가할 수 있어요.</p>
         <p>* 전화번호 중복 입력 불가.</p>
@@ -189,8 +184,6 @@ export default function OrderPage() {
           {fields.length}명 완료
         </button>
       </form>
-
-      //상품 정보
       <div style={{ marginTop: 32 }}>
         <img src={product.imageURL} alt={product.name} style={{ width: 80, borderRadius: 8 }} />
         <div>{product.name}</div>
