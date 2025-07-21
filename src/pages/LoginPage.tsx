@@ -1,65 +1,51 @@
-import React, { useEffect } from "react";
-import useLoginForm from "../hooks/useLoginForm";
-import { useAuth } from "../context/AuthContext";
-import { useNavigate, useLocation } from "react-router-dom";
-import { PATHS } from "../constants/paths";
+import { useState, useEffect } from "react";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { useAuth } from "../contexts/useAuth";
+import { useNavigate } from "react-router-dom";
+
+interface LoginFormInputs {
+  email: string;
+  password: string;
+}
 
 const LoginPage = () => {
   const { login, isLoggedIn } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const {
-    email,
-    password,
-    emailError,
-    passwordError,
-    handleEmailChange,
-    handleEmailBlur,
-    handlePasswordChange,
-    handlePasswordBlur,
-    isFormValid,
-  } = useLoginForm();
+    register,
+    handleSubmit,
+    formState: { errors, isValid, isSubmitting },
+  } = useForm<LoginFormInputs>({
+    mode: "onChange",
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const [loginError, setLoginError] = useState<string | null>(null);
 
   useEffect(() => {
     if (isLoggedIn) {
-      const from = location.state?.from?.pathname || PATHS.MY_GIFTS;
-      navigate(from, { replace: true });
+      navigate("/");
     }
-  }, [isLoggedIn, navigate, location.state]);
+  }, [isLoggedIn, navigate]);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
+    setLoginError(null);
 
-    handleEmailBlur();
-    handlePasswordBlur();
-
-    if (isFormValid) {
-      const isEmailFormatValid = !emailError;
-      const isPasswordLengthValid = password.length >= 8;
-
-      const simulateLoginSuccess = isEmailFormatValid && isPasswordLengthValid;
-
-      if (simulateLoginSuccess) {
-        alert(`로그인 성공! 이메일: ${email}`);
-        console.log("로그인 성공!");
-        login(email ?? "");
+    try {
+      await login(data.email, data.password);
+      navigate("/");
+    } catch (err) {
+      if (err instanceof Error) {
+        setLoginError(err.message);
       } else {
-        alert(
-          "로그인 실패: 이메일 형식을 확인하거나 비밀번호를 8자리 이상 입력해주세요."
-        );
-        console.log("로그인 실패: 테스트 조건 불충족.");
+        setLoginError("로그인 중 알 수 없는 오류가 발생했습니다.");
       }
-    } else {
-      console.log("유효성 검사 실패. 모든 필드를 올바르게 입력해주세요.");
-
-      alert("입력 양식을 올바르게 작성해주세요.");
     }
   };
-
-  if (isLoggedIn) {
-    return null;
-  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white">
@@ -67,50 +53,72 @@ const LoginPage = () => {
         kakao
       </h1>
 
-      <form onSubmit={handleSubmit} className="w-full max-w-sm px-6">
-        <div className="mb-8">
+      <form onSubmit={handleSubmit(onSubmit)} className="w-80">
+        <div className="mb-4">
           <input
             type="email"
-            id="inputEmail"
-            value={email === null ? "" : email}
-            onChange={handleEmailChange}
-            onBlur={handleEmailBlur}
             placeholder="이메일"
-            className={`w-full py-3 border-b ${
-              emailError ? "border-red-500" : "border-gray-300"
-            } focus:outline-none focus:border-yellow-400 text-lg placeholder-gray-500 text-gray-800 transition duration-200`}
+            className={`
+              w-full p-3 border rounded-lg text-lg
+              ${errors.email ? "border-red-500" : "border-gray-300"}
+              focus:outline-none focus:ring-2 focus:ring-yellow-400
+            `}
+            {...register("email", {
+              required: "이메일을 입력해주세요.",
+              pattern: {
+                value: /^[a-zA-Z0-9._%+-]+@kakao\.com$/,
+                message: "@kakao.com 형식의 이메일만 입력 가능합니다.",
+              },
+            })}
           />
-          {emailError && (
-            <p className="text-red-500 text-sm mt-2">{emailError}</p>
+          {errors.email && (
+            <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
           )}
         </div>
 
-        <div className="mb-12">
+        <div className="mb-6">
           <input
             type="password"
-            id="inputPassword"
-            value={password === null ? "" : password}
-            onChange={handlePasswordChange}
-            onBlur={handlePasswordBlur}
             placeholder="비밀번호"
-            className={`w-full py-3 border-b ${
-              passwordError ? "border-red-500" : "border-gray-300"
-            } focus:outline-none focus:border-yellow-400 text-lg placeholder-gray-500 text-gray-800 transition duration-200`}
+            className={`
+              w-full p-3 border rounded-lg text-lg
+              ${errors.password ? "border-red-500" : "border-gray-300"}
+              focus:outline-none focus:ring-2 focus:ring-yellow-400
+            `}
+            {...register("password", {
+              required: "비밀번호를 입력해주세요.",
+              minLength: {
+                value: 8,
+                message: "비밀번호는 8자 이상이어야 합니다.",
+              },
+            })}
           />
-          {passwordError && (
-            <p className="text-red-500 text-sm mt-2">{passwordError}</p>
+
+          {errors.password && (
+            <p className="text-red-500 text-xs mt-1">
+              {errors.password.message}
+            </p>
           )}
         </div>
+
+        {loginError && (
+          <p className="text-red-500 text-sm mb-4 text-center">{loginError}</p>
+        )}
+
         <button
           type="submit"
-          disabled={!isFormValid}
-          className={`w-full py-4 ${
-            isFormValid
-              ? "bg-yellow-400 hover:bg-yellow-500"
-              : "bg-gray-300 cursor-not-allowed"
-          } text-black text-l rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-opacity-50 transition duration-200`}
+          className={`
+            w-full py-3 rounded-lg text-white font-bold text-lg
+            transition duration-300
+            ${
+              isValid && !isSubmitting
+                ? "bg-yellow-400 hover:bg-yellow-500"
+                : "bg-gray-300 cursor-not-allowed"
+            }
+          `}
+          disabled={!isValid || isSubmitting}
         >
-          로그인
+          {isSubmitting ? "로그인 중..." : "로그인"}
         </button>
       </form>
     </div>

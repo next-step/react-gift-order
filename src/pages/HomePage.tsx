@@ -1,19 +1,16 @@
-import GiftThemes from "../components/GiftThemes";
-import RealtimeRanking from "../components/RealtimeRanking";
-import SelectFriends from "../components/SelectFriends";
-import Entertainment from "../components/EnterTainment";
+import Entertainment from "../components/HomeComponent/EntertainmentSection";
+import FriendSelectSection from "../components/HomeComponent/FriendSelectSection";
+import { SortOptionSection } from "../components/HomeComponent/SortOptionSection";
+import { ThemeSection } from "../components/HomeComponent/ThemeSection";
+
 const HomePage = () => {
   return (
-    <div className="container mx-auto px-4 py-6">
-      <SelectFriends />
-
-      <GiftThemes />
-
+    <div>
+      <FriendSelectSection />
+      <ThemeSection />
       <Entertainment />
-
-      <RealtimeRanking />
+      <SortOptionSection />
     </div>
   );
 };
-
 export default HomePage;

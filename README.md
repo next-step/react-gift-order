@@ -1,29 +1,15 @@
-## 핵심 기능 요구사항
+## 프로젝트 컴포넌트 분류 철학
 
-### [v] 주문하기 페이지의 폼을 React Hook Form을 사용해서 리팩터링해요. (form 데이터를 useState로 다루는 경우는 없게 해요.)
+1. Page는 Section으로 이루어져있다.
+2. Section은 Component로 이루어져있다.
+3. 각 Component는 Header, Action, Field, Table, Cards로 구성한다.
+4. 각 Component 중 Cards형태는 재사용성을 위해서 따로 Cards로 분류해놓는다.
+5. 각 Page에서 사용할 수 있는 공통적으로 사용가능한(추상화된) 컴포넌트는 common에 분류한다.
 
-- **구현 내용:** `useForm`, `useFieldArray`, `handleSubmit` 등 React Hook Form의 API를 사용하여 폼 상태 관리 및 제출 로직을 구현했습니다. `useState`는 `isEditing`과 `savedReceivers` 등 UI 상태 관리에만 사용되고, 폼 데이터 자체는 React Hook Form에 의해 관리됩니다.
+## 왜 이런식으로 분류했는가?
 
-### [v] 받는 사람을 최대 10명까지 등록 가능하게 해요.
+재사용성을 극대화하고 차후 유지보수를 하기위해서 한눈에 알아보는 구조가 필요했다. 전체적인 로직에 대한 이해도가 필요하긴하지만 유지보수성이 극대화될것이라고 예상한다. (각 컴포넌트별로 하나의 기능만을 분류)
 
-- **구현 내용:** `handleAddReceiverField` 함수에서 `fields.length < 10` 조건을 통해 추가 가능한 받는 사람 수를 10명으로 제한하고, 초과 시 알림 메시지를 표시합니다.
+## 예상되는 문제점
 
-### [v] 10명의 정보가 정확하게 입력되지 않으면 정보가 반영되지 않아요.
-
-- **구현 내용:** `zodResolver(receiversFormSchema)`를 통해 Zod 스키마를 기반으로 폼 전체의 유효성을 검사합니다. `handleSubmit`은 모든 필드가 유효성 검사를 통과했을 때만 `handleFormSubmit`을 호출하므로, 불완전한 정보는 저장되지 않습니다.
-
-### [v] 받는 사람의 전화번호가 중복되면 안 돼요.
-
-- **구현 내용:** `receiversFormSchema` (코드 외부에 정의된 Zod 스키마)에서 전화번호 필드의 유효성 검사 시 `refine` 메서드를 사용하여 전화번호 중복 여부를 검증하도록 구현되어 있습니다.
-
-### [v] 최소 선택 수량은 1개 이상이어야 해요.
-
-- **구현 내용:** 각 받는 사람의 `quantity` 필드에 대해 `min="1"` 속성을 부여하고, Zod 스키마(`receiversFormSchema`)에서 해당 필드의 최소값을 1로 설정하여 유효성을 검사합니다.
-
-### [v] 전화번호는 01012341234 형태로만 받을 수 있어요.
-
-- **구현 내용:** `receiversFormSchema` (Zod 스키마)에서 전화번호 필드에 대해 정규식 패턴 검사를 포함한 유효성 규칙을 적용하여 '01012341234'와 같은 10~11자리 숫자 형식만 허용하도록 정의되어 있습니다.
-
-### [v] (선택) 유효성 검사를 Zod 라이브러리를 사용해서 처리해요.
-
-- **구현 내용:** `zodResolver`를 `useForm`에 적용하고, `receiversFormSchema`라는 Zod 스키마를 임포트하여 전체 폼의 유효성 검사를 Zod로 처리하고 있습니다.
+Cards하나만 return하는 Section으로 인해 Props Drilling이 발생할것이라고 예상된다.

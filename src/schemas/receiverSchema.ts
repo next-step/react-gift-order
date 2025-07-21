@@ -2,16 +2,11 @@ import { z } from "zod";
 
 export const receiverSchema = z.object({
   name: z.string().trim().min(1, { message: "이름을 입력해주세요." }),
-
   phone: z
     .string()
     .trim()
     .regex(/^\d{10,11}$/, { message: "올바른 전화번호 형식이 아니에요." }),
-
-  quantity: z.preprocess(
-    (val) => Number(val),
-    z.number().min(1, { message: "수량은 1개 이상이어야 합니다." })
-  ),
+  quantity: z.number().min(1).int().nonnegative(),
 });
 
 export const receiversFormSchema = z.object({

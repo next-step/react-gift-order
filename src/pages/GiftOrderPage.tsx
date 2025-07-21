@@ -1,48 +1,107 @@
-import { useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
 
-import ThanksCardSlide from "../components/ThanksCardSlide";
-import Sender from "../components/Sender";
-import Receiver from "../components/Receiver";
-import Order from "../components/Order";
-import ProductDetail from "../components/ProductDetail";
+import Order from "../components/OrderComponent/OrderConfirmSection";
+import Receiver from "../components/OrderComponent/ReceiverSection";
+import Sender from "../components/OrderComponent/SenderSection";
+import ThanksCardSlide from "../components/OrderComponent/ThanksCardSlideSection";
+
+import ProductDetailComponent from "../components/OrderComponent/Cards/ProductDetailCard";
+
+import {
+  getProductDetail,
+  getProductInfo,
+  type Product,
+  type ProductDetail as ProductDetailType,
+} from "../api/product";
 
 import type { ReceiverField } from "../schemas/receiverSchema";
 
 const GiftOrderPage = () => {
+  const { productId } = useParams<{ productId: string }>();
+
+  const [productInfo, setProductInfo] = useState<Product | null>(null);
+  const [, setProductDetailsFull] = useState<ProductDetailType | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
   const [finalReceivers, setFinalReceivers] = useState<ReceiverField[]>([]);
 
-  const location = useLocation();
-  const productDetailData = location.state as
-    | {
-        imageUrl: string;
-        productName: string;
-        brand: string;
-        price: number;
+  const [senderName, setSenderName] = useState<string>("");
+
+  const [messageContent, setMessageContent] = useState<string>("");
+
+  useEffect(() => {
+    if (!productId) {
+      setError("상품 ID가 제공되지 않았습니다.");
+      setLoading(false);
+      return;
+    }
+
+    const fetchProductData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const id = parseInt(productId, 10);
+
+        const [info, detail] = await Promise.all([
+          getProductInfo(id),
+          getProductDetail(id),
+        ]);
+
+        setProductInfo(info);
+        setProductDetailsFull(detail);
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("상품 정보를 불러오는 중 알 수 없는 오류가 발생했습니다.");
+        }
+      } finally {
+        setLoading(false);
       }
-    | undefined;
+    };
+
+    fetchProductData();
+  }, [productId]);
 
   const totalQuantity = useMemo(() => {
     return finalReceivers.reduce((sum, receiver) => sum + receiver.quantity, 0);
   }, [finalReceivers]);
 
   const totalPrice = useMemo(() => {
-    if (!productDetailData) return 0;
-    const unitPrice = productDetailData.price;
+    if (!productInfo) return 0;
+    const unitPrice = productInfo.price.sellingPrice;
     return totalQuantity * unitPrice;
-  }, [totalQuantity, productDetailData]);
+  }, [totalQuantity, productInfo]);
 
-  if (!productDetailData) {
+  if (loading) {
     return (
       <div className="container mx-auto py-10 text-center text-xl font-bold text-gray-700">
-        상품 정보를 불러올 수 없습니다.
+        상품 정보를 불러오는 중...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto py-10 text-center text-xl font-bold text-red-700">
+        오류: {error}
+      </div>
+    );
+  }
+
+  if (!productInfo) {
+    return (
+      <div className="container mx-auto py-10 text-center text-xl font-bold text-gray-700">
+        상품 정보를 찾을 수 없습니다.
       </div>
     );
   }
 
   const handleReceiversUpdate = (receivers: ReceiverField[]) => {
     setFinalReceivers(receivers);
-
     console.log("최종 받는 사람 목록 업데이트됨:", receivers);
   };
 
@@ -52,21 +111,28 @@ const GiftOrderPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 px-4 pt-4 pb-[80px]">
-      <ThanksCardSlide />
-      <Sender />
+      <ThanksCardSlide onMessageChange={setMessageContent} />
+      <Sender onSenderNameChange={setSenderName} />
       <Receiver
         onReceiversUpdate={handleReceiversUpdate}
         onCancel={handleReceiverCancel}
       />
-      <ProductDetail
-        imageUrl={productDetailData.imageUrl}
-        productName={productDetailData.productName}
-        brand={productDetailData.brand}
-        price={productDetailData.price}
+      <ProductDetailComponent
+        imageUrl={productInfo.imageURL}
+        productName={productInfo.name}
+        brand={productInfo.brandInfo.name}
+        price={productInfo.price.sellingPrice}
       />
-      {/* Order 컴포넌트에 계산된 totalPrice와 totalQuantity 전달 */}
-      <Order totalPrice={totalPrice} quantity={totalQuantity.toString()} />
+
+      <Order
+        totalPrice={totalPrice}
+        quantity={totalQuantity.toString()}
+        productName={productInfo.name}
+        sender={senderName}
+        message={messageContent}
+      />
     </div>
   );
 };
+
 export default GiftOrderPage;
