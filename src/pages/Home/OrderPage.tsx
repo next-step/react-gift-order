@@ -74,6 +74,7 @@ export default function OrderPage() {
   return (
     <div style={{ padding: 20 }}>
       <div style={{ display: "flex", overflowX: "auto", gap: 8, padding: "8px 0" }}>
+
         {templates.map((t) => (
           <img
             key={t.id}
