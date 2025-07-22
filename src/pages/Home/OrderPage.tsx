@@ -63,7 +63,6 @@ export default function OrderPage() {
   const { fields, append, remove } = useFieldArray({ control, name: "receivers" });
 
   const onSubmit = (data: FormValues) => {
-    console.log("제출 데이터:", data);
     alert("주문이 완료되었습니다!");
     navigate("/", { replace: true });
   };
