@@ -6,9 +6,8 @@ import { productListMock } from '@/data/productListMock';
 import { LetterCardSelector } from '@/components/LetterCardSelector';
 import { OrderForm } from '@/components/OrderForm';
 import { ProductInfo } from '@/components/ProductInfo';
-import { useOrderForm } from '@/hooks/useOrderForm';
 import { NotFoundPage } from '@/pages/NotFoundPage';
-import type { OrderForm as OrderFormType } from '@/types/order';
+import { useOrderStore } from '@/stores/orderStore';
 
 export default function OrderPage() {
   const { productId } = useParams();
@@ -20,26 +19,17 @@ export default function OrderPage() {
     [selectedCardId]
   );
 
-  const initialOrderFormValues = useMemo(() => ({
-    message: selectedCard?.defaultTextMessage || '',
-    quantity: 1,
-  }), [selectedCard]);
+  const { receivers } = useOrderStore();
 
-  const { form, errors, updateForm, handleSubmit } = useOrderForm(initialOrderFormValues);
-
-  
-
-  const handleOrderSubmit = (submittedForm: OrderFormType) => {
-    // TODO: API 연동
-    console.log('Form submitted successfully:', submittedForm);
-    alert('주문이 완료되었습니다! (콘솔 확인)');
-  };
+  const totalQuantity = useMemo(() => {
+    return receivers.reduce((total, receiver) => total + receiver.quantity, 0);
+  }, [receivers]);
 
   if (!product) {
     return <NotFoundPage />;
   }
 
-  const totalPrice = product.price.sellingPrice * form.quantity;
+  const totalPrice = product.price.sellingPrice * totalQuantity;
 
   return (
     <Container>
@@ -52,13 +42,7 @@ export default function OrderPage() {
       {selectedCard && (
         <Preview src={selectedCard.imageUrl} alt={`${selectedCard.id} preview`} />
       )}
-      <OrderForm
-        form={form}
-        errors={errors}
-        updateForm={updateForm}
-        handleSubmit={e => handleSubmit(e, handleOrderSubmit)}
-        totalPrice={totalPrice}
-      />
+      <OrderForm totalPrice={totalPrice} />
     </Container>
   );
 }

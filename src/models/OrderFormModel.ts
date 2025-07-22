@@ -1,51 +1,44 @@
-import { validatePhoneNumber, validateRequired } from '@/utils/validation';
+import { z } from 'zod';
 
-export class OrderFormModel {
-  message: string;
-  senderName: string;
-  receiverName: string;
-  receiverPhoneNumber: string;
-  quantity: number;
+export const ReceiverModel = z.object({
+  receiverName: z.string().min(1, '이름을 입력해주세요.'),
+  phoneNumber: z
+    .string()
+    .min(1, '전화번호를 입력해주세요.')
+    .regex(/^01[0-9]{8,9}$/, '올바른 전화번호 형식이 아니에요.'),
+  quantity: z
+    .number({ message: '수량을 입력해주세요.' })
+    .min(1, '수량은 1개 이상이어야 합니다.')
+    .max(999, '수량은 999개 이하로 입력해주세요.'),
+});
 
-  constructor(data: Partial<OrderFormModel> = {}) {
-    this.message = data.message || '';
-    this.senderName = data.senderName || '';
-    this.receiverName = data.receiverName || '';
-    this.receiverPhoneNumber = data.receiverPhoneNumber || '';
-    this.quantity = data.quantity || 1;
-  }
-
-  toPlainObject() {
-    return {
-      message: this.message,
-      senderName: this.senderName,
-      receiverName: this.receiverName,
-      receiverPhoneNumber: this.receiverPhoneNumber,
-      quantity: this.quantity,
-    };
-  }
-
-  validate(form: OrderFormModel) {
-    const errors: Partial<Record<keyof OrderFormModel, string>> = {};
-
-    if (!validateRequired(form.message)) {
-      errors.message = '메시지를 입력해주세요.';
+export const ReceiversModel = z
+  .object({
+    receivers: z.array(ReceiverModel).max(10, '최대 10명까지 추가할 수 있어요.'),
+  })
+  .refine(
+    (data) => {
+      const phoneNumbers = new Set<string>();
+      for (const receiver of data.receivers) {
+        if (phoneNumbers.has(receiver.phoneNumber)) {
+          return false;
+        }
+        phoneNumbers.add(receiver.phoneNumber);
+      }
+      return true;
+    },
+    {
+      message: '이미 사용중인 전화번호입니다.',
+      path: ['receivers'],
     }
-    if (!validateRequired(form.senderName)) {
-      errors.senderName = '보내는 사람 이름을 입력해주세요.';
-    }
-    if (!validateRequired(form.receiverName)) {
-      errors.receiverName = '받는 사람 이름을 입력해주세요.';
-    }
-    if (!validateRequired(form.receiverPhoneNumber)) {
-      errors.receiverPhoneNumber = '전화번호를 입력해주세요.';
-    } else if (!validatePhoneNumber(form.receiverPhoneNumber)) {
-      errors.receiverPhoneNumber = '올바른 전화번호 형식이 아닙니다. (01012341234)';
-    }
-    if (form.quantity < 1) {
-      errors.quantity = '수량은 1개 이상이어야 합니다.';
-    }
+  );
 
-    return errors;
-  }
-}
+export const OrderFormModel = z.object({
+  message: z.string().min(1, '메시지를 입력해주세요.'),
+  senderName: z.string().min(1, '보내는 사람 이름을 입력해주세요.'),
+  receivers: ReceiversModel,
+});
+
+export type ReceiverModelType = z.infer<typeof ReceiverModel>;
+export type ReceiversModelType = z.infer<typeof ReceiversModel>;
+export type OrderFormModelType = z.infer<typeof OrderFormModel>;
