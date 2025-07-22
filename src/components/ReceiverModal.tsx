@@ -16,6 +16,8 @@ export function ReceiverModal() {
     defaultValues: {
       receivers,
     },
+    mode: 'onSubmit',
+    reValidateMode: 'onSubmit',
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -41,6 +43,8 @@ export function ReceiverModal() {
             <Button
               type="button"
               variant="secondary"
+              width="74px"
+              height="32px"
               onClick={() => append({ receiverName: '', phoneNumber: '', quantity: 1 })}
               disabled={fields.length >= 10}
             >
@@ -58,10 +62,10 @@ export function ReceiverModal() {
           </Container>
 
           <Footer>
-            <Button type="button" variant="secondary" onClick={close}>
+            <Button type="button" variant="secondary" width="100%" height="44px" onClick={close}>
               취소
             </Button>
-            <Button type="submit" variant="primary">
+            <Button type="submit" variant="primary" width="100%" height="44px">
               {`${fields.length}명 완료`}
             </Button>
           </Footer>
@@ -106,12 +110,15 @@ const Info = styled.p`
 `;
 
 const Header = styled.header`
-  margin: 8px 0px;
+  margin-bottom: 16px;
 `;
 
 const Container = styled.ul`
   flex-grow: 1;
   overflow-y: scroll;
+  padding: 0;
+  margin: 0;
+  list-style: none;
 `;
 
 const Footer = styled.footer`

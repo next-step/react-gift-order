@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useEffect } from 'react';
+import { useEffect, forwardRef } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/common/Button';
@@ -9,12 +9,14 @@ import { ReceiverModal } from '@/components/ReceiverModal';
 import { useModal } from '@/contexts/ModalContext';
 import { OrderFormModel, type OrderFormModelType } from '@/models/OrderFormModel';
 import { useOrderStore } from '@/stores/orderStore';
+import { ReceiverList } from '@/components/ReceiverList';
+import type { CardTemplate } from '@/types/order';
 
 interface OrderFormProps {
-  totalPrice: number;
+  selectedCard?: CardTemplate;
 }
 
-export function OrderForm({ totalPrice }: OrderFormProps) {
+export const OrderForm = forwardRef<HTMLFormElement, OrderFormProps>(({ selectedCard }, ref) => {
   const { receivers, setReceivers } = useOrderStore();
   const { open } = useModal();
 
@@ -31,6 +33,12 @@ export function OrderForm({ totalPrice }: OrderFormProps) {
     methods.reset({ receivers: { receivers } });
   }, [receivers, methods]);
 
+  useEffect(() => {
+    if (selectedCard) {
+      methods.setValue('message', selectedCard.defaultTextMessage);
+    }
+  }, [selectedCard, methods]);
+
   const onSubmit = (data: OrderFormModelType) => {
     console.log(data);
     setReceivers(data.receivers.receivers);
@@ -43,7 +51,7 @@ export function OrderForm({ totalPrice }: OrderFormProps) {
 
   return (
     <FormProvider {...methods}>
-      <Form onSubmit={methods.handleSubmit(onSubmit)}>
+      <Form ref={ref} onSubmit={methods.handleSubmit(onSubmit)}>
         <FieldSet>
           <TextArea
             placeholder="메시지를 입력해주세요."
@@ -52,7 +60,8 @@ export function OrderForm({ totalPrice }: OrderFormProps) {
           />
         </FieldSet>
 
-        <Divider />
+        <VerticalSpacing size="32px" />
+        <VerticalSpacing size="8px" backgroundColor="#f3f4f5" />
 
         <FieldSet>
           <Legend>보내는 사람</Legend>
@@ -63,57 +72,41 @@ export function OrderForm({ totalPrice }: OrderFormProps) {
           />
         </FieldSet>
 
-        <Divider />
+        <VerticalSpacing size="32px" />
+        <VerticalSpacing size="8px" backgroundColor="#f3f4f5" />
 
         <FieldSet>
-          <Legend>받는 사람</Legend>
-          <ReceiverInfo>
-            {receivers.length > 0
-              ? `총 ${receivers.length}명`
-              : '받는 사람을 추가해주세요.'}
-          </ReceiverInfo>
-          <Button type="button" onClick={handleOpenReceiverModal} variant="secondary">
-            추가하기
-          </Button>
-        </FieldSet>
+          <ReceiverLabel>
+            <Legend>받는 사람</Legend>
+            <Button
+              type="button"
+              variant="secondary"
+              width="56px"
+              height="35px"
+              onClick={handleOpenReceiverModal}
+            >
+              {receivers.length !== 0 ? '수정' : '추가'}
+            </Button>
+          </ReceiverLabel>
 
-        <SubmitButton type="submit">{`${totalPrice.toLocaleString()}원 주문하기`}</SubmitButton>
+          <ReceiverList />
+        </FieldSet>
       </Form>
     </FormProvider>
   );
-}
+});
 
 const Form = styled.form`
-  padding: 20px;
+  padding: 0 16px;
 `;
 
-const FieldSet = styled.fieldset`
-  border: none;
-  padding: 0;
-  margin: 0;
+import { FieldSet, Legend } from '@/components/common/FieldSet';
+
+const ReceiverLabel = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 16px;
+  justify-content: space-between;
+  align-items: center;
+  margin: 4px 0px;
 `;
 
-const Legend = styled.legend`
-  ${({ theme }) => theme.typography.body.body1Bold};
-  margin-bottom: 8px;
-`;
-
-const ReceiverInfo = styled.div`
-  ${({ theme }) => theme.typography.body.body2Regular};
-  color: ${({ theme }) => theme.colors.gray.gray700};
-  margin-bottom: 8px;
-`;
-
-const Divider = styled.div`
-  height: 8px;
-  background-color: ${({ theme }) => theme.colors.gray.gray100};
-  margin: 24px -20px;
-`;
-
-const SubmitButton = styled(Button)`
-  width: 100%;
-  margin-top: 24px;
-`;
+import { VerticalSpacing } from '@/components/common/VerticalSpacing';
