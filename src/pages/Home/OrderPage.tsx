@@ -20,6 +20,13 @@ type FormValues = {
 const MAX_RECEIVERS = 10;
 const DEFAULT_RECEIVER = { name: "", phone: "", quantity: 1 };
 
+const templateListStyle: React.CSSProperties = {
+  display: "flex",
+  overflowX: "auto",
+  gap: 8,
+  padding: "8px 0",
+};
+
 export default function OrderPage() {
   const params = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
@@ -72,8 +79,7 @@ export default function OrderPage() {
 
   return (
     <div style={{ padding: 20 }}>
-      <div style={{ display: "flex", overflowX: "auto", gap: 8, padding: "8px 0" }}>
-
+    <div style={templateListStyle}>
         {templates.map((t) => (
           <img
             key={t.id}
