@@ -6,17 +6,9 @@ import { MOCK_RANKING_PRODUCT_DATA_LIST } from "@/pages/Home/components/ProductR
 import { templates } from "@/resources/mock/templates";
 import styles from "./OrderPage.module.css";
 
+type Receiver = { name: string; phone: string; quantity: number };
 
-type Receiver = {
-  name: string;
-  phone: string;
-  quantity: number;
-};
-
-type FormValues = {
-  sender: string;
-  receivers: Receiver[];
-};
+type FormValues = { sender: string; receivers: Receiver[] };
 
 const MAX_RECEIVERS = 10;
 const DEFAULT_RECEIVER = { name: "", phone: "", quantity: 1 };
@@ -35,7 +27,7 @@ export default function OrderPage() {
   const navigate = useNavigate();
   const { token } = useContext(AuthContext)!;
 
-  // 리액트 훅 폼 훅은 최상단에서 호출
+  // React Hook Form 훅은 최상단에서 호출
   const {
     control,
     register,
@@ -44,36 +36,27 @@ export default function OrderPage() {
     formState: { errors },
     trigger,
   } = useForm<FormValues>({
-    defaultValues: {
-      sender: "",
-      receivers: [DEFAULT_RECEIVER],
-    },
+    defaultValues: { sender: "", receivers: [DEFAULT_RECEIVER] },
     mode: "onChange",
   });
   const receivers = watch("receivers");
   const { fields, append, remove } = useFieldArray({ control, name: "receivers" });
 
-  // 템플릿 및 메시지 상태
-  const initialTemplateId =
-    Number(searchParams.get("template")) || templates[0].id;
-  const [selectedTemplateId, setSelectedTemplateId] =
-    useState<number>(initialTemplateId);
+  // 템플릿 & 메시지 상태
+  const initialTemplateId = Number(searchParams.get("template")) || templates[0].id;
+  const [selectedTemplateId, setSelectedTemplateId] = useState<number>(initialTemplateId);
   const selectedTemplate =
     templates.find((t) => t.id === selectedTemplateId) || templates[0];
-  const [messageText, setMessageText] =
-    useState(selectedTemplate.defaultTextMessage);
+  const [messageText, setMessageText] = useState(selectedTemplate.defaultTextMessage);
   useEffect(() => {
     setMessageText(selectedTemplate.defaultTextMessage);
   }, [selectedTemplateId]);
 
-  // 로그인 체크 & 리다이렉트
+  // 로그인 체크 및 리다이렉트
   useEffect(() => {
     if (!token) {
       const redirectTo = `${location.pathname}${location.search}`;
-      navigate(
-        `/login?redirect=${encodeURIComponent(redirectTo)}`,
-        { replace: true }
-      );
+      navigate(`/login?redirect=${encodeURIComponent(redirectTo)}`, { replace: true });
     }
   }, [token, navigate]);
   if (!token) return null;
@@ -81,13 +64,8 @@ export default function OrderPage() {
   // 상품 조회
   const id = params.id;
   if (!id) return <div>잘못된 주문 경로입니다.</div>;
-  const product = MOCK_RANKING_PRODUCT_DATA_LIST.find(
-    (p) => p.id === Number(id)
-  );
-  if (!product)
-    return (
-      <div>해당 상품을 찾을 수 없습니다. (ID: {id})</div>
-    );
+  const product = MOCK_RANKING_PRODUCT_DATA_LIST.find((p) => p.id === Number(id));
+  if (!product) return <div>해당 상품을 찾을 수 없습니다. (ID: {id})</div>;
 
   // 제출 핸들러
   const onSubmit = (data: FormValues) => {
@@ -126,9 +104,7 @@ export default function OrderPage() {
         alt="선택된 템플릿 메시지 카드 미리보기"
         style={{ width: "100%", borderRadius: 8, marginBottom: 16 }}
       />
-      <label style={{ display: "block", marginBottom: 8 }}>
-        메시지 내용:
-      </label>
+      <label style={{ display: "block", marginBottom: 8 }}>메시지 내용:</label>
       <textarea
         value={messageText}
         onChange={(e) => setMessageText(e.target.value)}
@@ -142,15 +118,11 @@ export default function OrderPage() {
         <div style={{ marginBottom: 16 }}>
           <label>보내는 사람</label>
           <input
-            {...register("sender", {
-              required: "보내는 사람 이름을 입력하세요.",
-            })}
+            {...register("sender", { required: "보내는 사람 이름을 입력하세요." })}
             className="w-full p-2 border rounded"
           />
           {errors.sender && (
-            <p className="text-red-500 text-sm">
-              {errors.sender.message}
-            </p>
+            <p className="text-red-500 text-sm">{errors.sender.message}</p>
           )}
         </div>
 
@@ -161,8 +133,7 @@ export default function OrderPage() {
         <button
           type="button"
           onClick={() => {
-            if (fields.length < MAX_RECEIVERS)
-              append(DEFAULT_RECEIVER);
+            if (fields.length < MAX_RECEIVERS) append(DEFAULT_RECEIVER);
             trigger();
           }}
           className="mb-4 px-3 py-1 bg-gray-100 rounded"
@@ -174,11 +145,7 @@ export default function OrderPage() {
           <div key={field.id}>
             <div>
               <h3>받는 사람 {idx + 1}</h3>
-              <button
-                type="button"
-                onClick={() => remove(idx)}
-                className="text-red-500"
-              >
+              <button type="button" onClick={() => remove(idx)} className="text-red-500">
                 ✕
               </button>
             </div>
@@ -186,15 +153,11 @@ export default function OrderPage() {
             <div className="mb-2">
               <label>이름</label>
               <input
-                {...register(`receivers.${idx}.name`, {
-                  required: "이름을 입력하세요.",
-                })}
+                {...register(`receivers.${idx}.name`, { required: "이름을 입력하세요." })}
                 className="w-full p-2 border rounded"
               />
               {errors.receivers?.[idx]?.name && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.receivers[idx]?.name?.message}
-                </p>
+                <p className="text-red-500 text-sm mt-1">{errors.receivers[idx]?.name?.message}</p>
               )}
             </div>
 
@@ -203,22 +166,16 @@ export default function OrderPage() {
               <input
                 {...register(`receivers.${idx}.phone`, {
                   required: "전화번호를 입력하세요.",
-                  pattern: {
-                    $1message: "01012345678 형식이어야 해요.",
-                  },
+                  pattern: { value: /^010\d{8}$/, message: "01012345678 형식이어야 해요." },
                   validate: (val) => {
-                    const count = receivers.filter((r) => r.phone === val)
-                      .length;
-                    return count === 1 ||
-                      "중복된 전화번호가 있습니다.";
+                    const count = receivers.filter((r) => r.phone === val).length;
+                    return count === 1 || "중복된 전화번호가 있습니다.";
                   },
                 })}
                 className="w-full p-2 border rounded"
               />
               {errors.receivers?.[idx]?.phone && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.receivers[idx]?.phone?.message}
-                </p>
+                <p className="text-red-500 text-sm mt-1">{errors.receivers[idx]?.phone?.message}</p>
               )}
             </div>
 
@@ -226,25 +183,18 @@ export default function OrderPage() {
               <label>수량</label>
               <input
                 type="number"
-                {...register(`receivers.${idx}.quantity`, {
-                  min: { value: 1, message: "1개 이상 입력하세요." },
-                })}
+                {...register(`receivers.${idx}.quantity`, { min: { value: 1, message: "1개 이상 입력하세요." } })}
                 className="w-full p-2 border rounded"
                 min={1}
               />
               {errors.receivers?.[idx]?.quantity && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.receivers[idx]?.quantity?.message}
-                </p>
+                <p className="text-red-500 text-sm mt-1">{errors.receivers[idx]?.quantity?.message}</p>
               )}
             </div>
           </div>
         ))}
 
-        <button
-          type="submit"
-          className="px-4 py-2 bg-yellow-400 rounded w-full"
-        >
+        <button type="submit" className="px-4 py-2 bg-yellow-400 rounded w-full">
           {fields.length}명 완료
         </button>
       </form>
