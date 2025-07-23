@@ -130,8 +130,8 @@ export default function OrderPage() {
         </button>
 
         {fields.map((field, idx) => (
-          <div key={field.id} className="mb-6 p-4 border rounded">
-            <div className="flex justify-between items-center mb-2">
+          <div key={field.id}>
+            <div>
               <h3>받는 사람 {idx + 1}</h3>
               <button type="button" onClick={() => remove(idx)} className="text-red-500">
                 ✕
