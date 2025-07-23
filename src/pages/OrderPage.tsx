@@ -1,5 +1,4 @@
-import { useMemo, useState, useRef } from 'react';
-import { createPortal } from 'react-dom';
+import { useMemo, useState, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
 
@@ -9,8 +8,10 @@ import { ProductInfo } from '@/components/ProductInfo';
 import { cardTemplates } from '@/data/cardTemplateMock';
 import { productListMock } from '@/data/productListMock';
 import { NotFoundPage } from '@/pages/NotFoundPage';
-import { useOrderStore } from '@/stores/orderStore';
 import { Button } from '@/components/common/Button';
+import { useOrderStore } from '@/stores/orderStore';
+import { FieldSet, Legend } from '@/components/common/FieldSet';
+import { VerticalSpacing } from '@/components/common/VerticalSpacing';
 
 export default function OrderPage() {
   const { productId } = useParams();
@@ -22,19 +23,22 @@ export default function OrderPage() {
     [selectedCardId]
   );
 
-  const { receivers } = useOrderStore();
-
-  const totalQuantity = useMemo(() => {
-    return receivers.reduce((total, receiver) => total + (receiver.quantity || 0), 0);
-  }, [receivers]);
-
   const formRef = useRef<HTMLFormElement>(null);
+  const { setReceivers } = useOrderStore();
+
+  useEffect(() => {
+    return () => {
+      setReceivers([]);
+    };
+  }, [setReceivers]);
 
   if (!product) {
     return <NotFoundPage />;
   }
 
-  const totalPrice = product.price.sellingPrice * totalQuantity;
+  const handleSelectCard = (id: number) => {
+    setSelectedCardId(id);
+  };
 
   const handleOrderSubmit = () => {
     formRef.current?.requestSubmit();
@@ -46,7 +50,7 @@ export default function OrderPage() {
         <LetterCardSelector
           templates={cardTemplates}
           selectedId={selectedCardId}
-          onSelect={setSelectedCardId}
+          onSelect={handleSelectCard}
         />
       </LetterCardContainer>
 
@@ -71,12 +75,7 @@ export default function OrderPage() {
 
       <VerticalSpacing size="60px" />
 
-      {createPortal(
-        <OrderButton onClick={handleOrderSubmit}>
-          {totalPrice.toLocaleString()}원 주문하기
-        </OrderButton>,
-        document.body as HTMLElement
-      )}
+      <OrderButton onClick={handleOrderSubmit}>주문하기</OrderButton>
     </Container>
   );
 }
@@ -110,8 +109,6 @@ const Preview = styled.img`
   object-fit: cover;
 `;
 
-import { FieldSet, Legend } from '@/components/common/FieldSet';
-
 const OrderButton = styled(Button)`
   position: fixed;
   left: 0;
@@ -124,5 +121,3 @@ const OrderButton = styled(Button)`
   font-weight: ${({ theme }) => theme.typography.label.label1Bold.fontWeight};
   background-color: ${({ theme }) => theme.semanticColors.brand.kakaoYellow};
 `;
-
-import { VerticalSpacing } from '@/components/common/VerticalSpacing';

@@ -12,24 +12,14 @@ export function LoginPage() {
   const from = location.state?.from?.pathname || '/';
   const { login } = useAuthStore();
 
-  const { emailInput, passwordInput, isFormValid } = useLoginForm();
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (isFormValid) {
-      // TODO: 실제 API 연동 시에는 응답으로 받은 토큰과 사용자 정보를 저장해야 함
-      const mockUser = { nickname: '김대영', email: emailInput.bind.value };
-      login('mock_access_token', mockUser);
-      navigate(from, { replace: true });
-    }
-  };
+  const { emailInput, passwordInput, isFormValid, handleSubmit } = useLoginForm();
 
   return (
     <>
       <Navbar />
       <Container>
         <Logo>kakao</Logo>
-        <Form onSubmit={handleLogin}>
+        <Form onSubmit={(e) => handleSubmit(e, login, navigate, from)}>
           <Input
             type="email"
             placeholder="이메일"

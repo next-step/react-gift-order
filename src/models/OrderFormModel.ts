@@ -14,7 +14,10 @@ export const ReceiverModel = z.object({
 
 export const ReceiversModel = z
   .object({
-    receivers: z.array(ReceiverModel).max(10, '최대 10명까지 추가할 수 있어요.'),
+    receivers: z
+      .array(ReceiverModel)
+      .min(1, '받는 사람을 추가해주세요.')
+      .max(10, '최대 10명까지 추가할 수 있어요.'),
   })
   .refine(
     (data) => {

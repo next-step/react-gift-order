@@ -1,34 +1,13 @@
 import styled from '@emotion/styled';
-import { useForm, useFieldArray, FormProvider } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { FormProvider } from 'react-hook-form';
 import { Button } from '@/components/common/Button';
 import { ReceiverFieldSet } from '@/components/ReceiverFieldSet';
 import { useModal } from '@/contexts/ModalContext';
-import { ReceiversModel, type ReceiversModelType } from '@/models/OrderFormModel';
-import { useOrderStore } from '@/stores/orderStore';
+import { useReceiverForm } from '@/hooks/useReceiverForm';
 
 export function ReceiverModal() {
   const { close } = useModal();
-  const { receivers, setReceivers } = useOrderStore();
-
-  const methods = useForm<ReceiversModelType>({
-    resolver: zodResolver(ReceiversModel),
-    defaultValues: {
-      receivers,
-    },
-    mode: 'onSubmit',
-    reValidateMode: 'onSubmit',
-  });
-
-  const { fields, append, remove } = useFieldArray({
-    control: methods.control,
-    name: 'receivers',
-  });
-
-  const onSubmit = (data: ReceiversModelType) => {
-    setReceivers(data.receivers);
-    close();
-  };
+  const { methods, fields, append, remove, onSubmit } = useReceiverForm();
 
   return (
     <BackDrop>
@@ -104,7 +83,7 @@ const Title = styled.h1`
 `;
 
 const Info = styled.p`
-  margin: 8px 0px;
+  margin: 8px 0;
   ${({ theme }) => theme.typography.label.label2Regular};
   color: ${({ theme }) => theme.colors.gray.gray800};
 `;

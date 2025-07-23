@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useEffect, forwardRef } from 'react';
+import { forwardRef, useEffect } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/common/Button';
@@ -8,30 +8,28 @@ import { TextArea } from '@/components/common/TextArea';
 import { ReceiverModal } from '@/components/ReceiverModal';
 import { useModal } from '@/contexts/ModalContext';
 import { OrderFormModel, type OrderFormModelType } from '@/models/OrderFormModel';
-import { useOrderStore } from '@/stores/orderStore';
 import { ReceiverList } from '@/components/ReceiverList';
 import type { CardTemplate } from '@/types/order';
+import { useOrderStore } from '@/stores/orderStore';
 
 interface OrderFormProps {
   selectedCard?: CardTemplate;
 }
 
 export const OrderForm = forwardRef<HTMLFormElement, OrderFormProps>(({ selectedCard }, ref) => {
-  const { receivers, setReceivers } = useOrderStore();
   const { open } = useModal();
+  const { receivers: receiversFromStore } = useOrderStore();
 
   const methods = useForm<OrderFormModelType>({
     resolver: zodResolver(OrderFormModel),
     defaultValues: {
-      message: '',
+      message: selectedCard?.defaultTextMessage || '',
       senderName: '',
-      receivers: { receivers },
+      receivers: { receivers: receiversFromStore },
     },
   });
 
-  useEffect(() => {
-    methods.reset({ receivers: { receivers } });
-  }, [receivers, methods]);
+  const receivers = methods.watch('receivers.receivers');
 
   useEffect(() => {
     if (selectedCard) {
@@ -39,9 +37,12 @@ export const OrderForm = forwardRef<HTMLFormElement, OrderFormProps>(({ selected
     }
   }, [selectedCard, methods]);
 
+  useEffect(() => {
+    methods.setValue('receivers.receivers', receiversFromStore);
+  }, [receiversFromStore, methods]);
+
   const onSubmit = (data: OrderFormModelType) => {
     console.log(data);
-    setReceivers(data.receivers.receivers);
     alert('주문이 완료되었습니다.');
   };
 
@@ -106,7 +107,7 @@ const ReceiverLabel = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 4px 0px;
+  margin: 4px 0;
 `;
 
 import { VerticalSpacing } from '@/components/common/VerticalSpacing';
