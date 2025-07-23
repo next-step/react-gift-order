@@ -1,3 +1,6 @@
+export type OrderFormKey = keyof OrderForm;
+export type OrderFormErrors = Partial<Record<OrderFormKey, string>>;
+
 export interface OrderForm {
   message: string;
   senderName: string;

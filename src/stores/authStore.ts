@@ -6,7 +6,7 @@ type User = {
   email: string;
 };
 
-type AuthState = {
+export type AuthState = {
   accessToken: string | null;
   user: User | null;
   isAuthenticated: boolean;

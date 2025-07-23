@@ -7,16 +7,20 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "preview": "vite preview"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "@hookform/resolvers": "^5.1.1",
     "material-icons": "^1.13.14",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-hook-form": "^7.60.0",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.6.3",
+    "zod": "^4.0.5",
     "zustand": "^5.0.6"
   },
   "devDependencies": {

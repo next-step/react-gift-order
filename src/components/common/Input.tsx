@@ -8,7 +8,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 export function Input({ error, ...props }: InputProps) {
   return (
     <InputWrapper>
-      <StyledInput {...props} />
+      <StyledInput {...props} min={props.type === 'number' ? 1 : undefined} />
       {error && <ErrorMessage>{error}</ErrorMessage>}
     </InputWrapper>
   );

@@ -14,7 +14,7 @@ export function LetterCardSelector({ templates, selectedId, onSelect }: LetterCa
         <Card
           key={template.id}
           src={template.thumbUrl}
-          alt={`${template.id}`}
+          alt={`카드 템플릿 ${template.id}`}
           isSelected={template.id === selectedId}
           onClick={() => onSelect(template.id)}
         />

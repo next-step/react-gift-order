@@ -1,11 +1,14 @@
 import styled from '@emotion/styled';
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
 
-type ButtonVariant = 'primary' | 'secondary';
+type ButtonVariant = 'primary' | 'secondary' | 'disabled' | 'ghost';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
   variant?: ButtonVariant;
+  width?: string;
+  height?: string;
+  rounded?: 'full' | boolean;
 }
 
 export function Button({ children, variant = 'primary', ...props }: ButtonProps) {
@@ -16,37 +19,53 @@ export function Button({ children, variant = 'primary', ...props }: ButtonProps)
   );
 }
 
-const StyledButton = styled.button<{ variant: ButtonVariant }>`
-  padding: 12px;
-  font-size: 14px;
+const StyledButton = styled.button<Omit<ButtonProps, 'children'>>`
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: ${({ width }) => width || 'auto'};
+  height: ${({ height }) => height || 'auto'};
+  margin: 0;
+  padding: 0;
   border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-
-  ${({ theme, variant, disabled }) => {
-    if (variant === 'primary') {
-      return `
-        background-color: ${theme.semanticColors.brand.kakaoYellow};
-        color: ${theme.semanticColors.text.default};
-        cursor: ${disabled ? 'not-allowed' : 'pointer'};
-        opacity: ${disabled ? 0.5 : 1};
-
-        &:hover {
-          background-color: ${disabled ? theme.semanticColors.brand.kakaoYellow : theme.semanticColors.brand.kakaoYellowHover};
-        }
-      `;
+  border-radius: ${({ rounded }) => {
+    switch (rounded) {
+      case 'full':
+        return '9999px';
+      case true:
+        return '4px';
+      case false:
+        return '0px';
+      default:
+        return '4px';
     }
-    if (variant === 'secondary') {
-      return `
-        background-color: #fff;
-        border: 1px solid ${theme.semanticColors.border.default};
-        color: ${theme.semanticColors.text.default};
-        width: 100%;
-        margin: ${theme.spacing.spacing6} auto ${theme.spacing.spacing6};
-        padding: ${theme.spacing.spacing3} 0;
-        ${theme.typography.body.body2Bold};
-      `;
+  }};
+  background-color: ${({ variant, theme }) => {
+    switch (variant) {
+      case 'primary':
+        return theme.semanticColors.brand.kakaoYellow;
+      case 'secondary':
+        return theme.colors.gray.gray300;
+      case 'ghost':
+        return 'transparent';
+      default:
+        return theme.semanticColors.brand.kakaoYellow;
     }
-  }}
+  }};
+  color: ${({ variant, theme }) => {
+    switch (variant) {
+      case 'primary':
+        return theme.colors.gray.gray900;
+      default:
+        return theme.colors.gray.gray900;
+    }
+  }};
+  opacity: ${({ variant }) => {
+    switch (variant) {
+      case 'disabled':
+        return 0.5;
+      default:
+        return 1;
+    }
+  }};
 `;

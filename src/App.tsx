@@ -8,31 +8,32 @@ import RootLayout from '@/layout/RootLayout';
 import MyPage from '@/pages/MyPage';
 import PrivateRoute from '@/components/PrivateRoute';
 import OrderPage from '@/pages/OrderPage';
+import { ModalProvider } from '@/contexts/ModalContext';
 
 function App() {
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={
-          <RootLayout>
-            <Navbar />
-            <main>
-              <CategorySection />
-              <ProductListSection />
-            </main>
-          </RootLayout>
-        }
-      />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/my" element={<PrivateRoute />}>
-        <Route path="/my" element={<MyPage />} />
-      </Route>
-      <Route path="/order/:productId" element={<PrivateRoute />}>
-        <Route path="/order/:productId" element={<OrderPage />} />
-      </Route>
-      <Route path="*" element={<NotFoundPage />} />
-    </Routes>
+    <ModalProvider>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <RootLayout>
+              <Navbar />
+              <main>
+                <CategorySection />
+                <ProductListSection />
+              </main>
+            </RootLayout>
+          }
+        />
+        <Route path="/login" element={<LoginPage />} />
+        <Route element={<PrivateRoute />}>
+          <Route path="/my" element={<MyPage />} />
+          <Route path="/order/:productId" element={<OrderPage />} />
+        </Route>
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </ModalProvider>
   );
 }
 
