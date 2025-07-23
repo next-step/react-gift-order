@@ -17,6 +17,8 @@ type FormValues = {
   receivers: Receiver[];
 };
 
+const MAX_RECEIVERS = 10;
+
 export default function OrderPage() {
   const params = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
@@ -118,7 +120,7 @@ export default function OrderPage() {
         <button
           type="button"
           onClick={() => {
-            if (fields.length < 10) append({ name: "", phone: "", quantity: 1 });
+            if (fields.length < MAX_RECEIVERS) append({ name: "", phone: "", quantity: 1 });
             trigger();
           }}
           className="mb-4 px-3 py-1 bg-gray-100 rounded"
