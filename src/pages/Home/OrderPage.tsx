@@ -4,8 +4,6 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { AuthContext } from "@/context/AuthContext";
 import { MOCK_RANKING_PRODUCT_DATA_LIST } from "@/pages/Home/components/ProductRankingListSection/mock";
 import { templates } from "@/resources/mock/templates";
-import styles from "./OrderPage.module.css";
-
 type Receiver = { name: string; phone: string; quantity: number };
 
 type FormValues = { sender: string; receivers: Receiver[] };
@@ -136,7 +134,7 @@ export default function OrderPage() {
             if (fields.length < MAX_RECEIVERS) append(DEFAULT_RECEIVER);
             trigger();
           }}
-          className="mb-4 px-3 py-1 bg-gray-100 rounded"
+          style={{ marginBottom: 16, padding: "4px 12px", backgroundColor: "#f3f4f6", borderRadius: 4, border: "none", cursor: "pointer" }}
         >
           추가하기
         </button>
