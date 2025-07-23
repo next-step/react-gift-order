@@ -78,7 +78,7 @@ export default function OrderPage() {
           <img
             key={t.id}
             src={t.thumbUrl}
-            alt=""
+            alt={t.defaultTextMessage}
             onClick={() => setSelectedTemplateId(t.id)}
             style={{
               width: 80,
@@ -93,7 +93,7 @@ export default function OrderPage() {
       </div>
       <img
         src={selectedTemplate.imageUrl}
-        alt=""
+        alt="선택된 템플릿 메시지 카드 미리보기"
         style={{ width: "100%", borderRadius: 8, marginBottom: 16 }}
       />
       <label style={{ display: "block", marginBottom: 8 }}>메시지 내용:</label>
