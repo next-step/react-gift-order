@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { products } from '@/data/product';
 import type { Product } from '@/data/product';
 import * as S from '@components/TrendRankingStyle';
@@ -18,6 +19,7 @@ type GenderLabel = (typeof genderList)[number]['label'];
 type TypeLabel = (typeof typeList)[number];
 
 const TrendRanking = () => {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const getInitialGender = (): GenderLabel => {
@@ -57,6 +59,7 @@ const TrendRanking = () => {
 
   const handleProductSelect = (product: Product) => {
     setSelectedProduct(product);
+    navigate(`/order?productId=${product.id}`);
   };
 
   const handleToggleView = () => {
