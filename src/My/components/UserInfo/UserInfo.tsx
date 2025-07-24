@@ -9,7 +9,7 @@ const UserInfo = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/login', { replace: true });
+    navigate('/Login', { replace: true });
   };
 
   return (
