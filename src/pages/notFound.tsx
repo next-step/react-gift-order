@@ -5,7 +5,7 @@ import {
   NotFoundImg,
   HomeButton,
   ErrorContainer,
-} from './notFound.styles';
+} from './NotFound.styles';
 import { useNavigate } from 'react-router-dom';
 import notFoundImg from '@/assets/img_not_found.png';
 

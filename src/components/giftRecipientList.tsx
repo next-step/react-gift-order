@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css, useTheme } from '@emotion/react';
 import type { ThemeType } from '@/styles/theme';
+import { useUserContext } from '@/contexts/UserContext';
 
 const containerStyle = (theme: ThemeType) => css`
   display: flex;
@@ -32,13 +33,18 @@ const textStyle = (theme: ThemeType) => css`
 
 function GiftRecipientList() {
   const theme = useTheme();
+  const { isLoggedIn, user } = useUserContext();
 
   return (
     <div css={containerStyle(theme)}>
       <button css={plusButtonStyle(theme)} aria-label="받는 사람 추가">
         ＋
       </button>
-      <span css={textStyle(theme)}>선물할 친구를 선택해 주세요.</span>
+      <span css={textStyle(theme)}>
+        {isLoggedIn
+          ? `${user?.nickname}님! 선물할 친구를 선택해 주세요.`
+          : '선물할 친구를 선택해 주세요.'}
+      </span>
     </div>
   );
 }
