@@ -22,14 +22,22 @@ const OrderPage = () => {
   const selectedCard = cards.find((card) => card.id === selectedCardId);
   const defaultMessage = selectedCard?.defaultTextMessage ?? '';
 
-  const { register, onSubmit, errors, totalPrice, fields, append } =
-    useOrderForm({
-      defaultMessage,
-      productName: product?.name ?? '',
-      sellingPrice: product?.price.sellingPrice ?? 0,
-      selectedCardId,
-      selectedCardMessage: selectedCard?.defaultTextMessage ?? '',
-    });
+  const {
+    register,
+    onSubmit,
+    errors,
+    totalPrice,
+    fields,
+    append,
+    remove,
+    getValues,
+  } = useOrderForm({
+    defaultMessage,
+    productName: product?.name ?? '',
+    sellingPrice: product?.price.sellingPrice ?? 0,
+    selectedCardId,
+    selectedCardMessage: selectedCard?.defaultTextMessage ?? '',
+  });
 
   if (!product) return <div>상품 정보를 찾을 수 없습니다.</div>;
 
@@ -58,7 +66,9 @@ const OrderPage = () => {
           key={field.id}
           index={index}
           register={register}
-          errors={errors.receivers?.[index]}
+          error={errors.receivers?.[index]}
+          onRemove={() => remove(index)}
+          getValues={getValues}
         />
       ))}
 

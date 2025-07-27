@@ -2,6 +2,7 @@
 import { css, useTheme } from '@emotion/react';
 import type { ThemeType } from '@/styles/theme';
 import { useUserContext } from '@/contexts/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 const containerStyle = (theme: ThemeType) => css`
   display: flex;
@@ -34,10 +35,20 @@ const textStyle = (theme: ThemeType) => css`
 function GiftRecipientList() {
   const theme = useTheme();
   const { isLoggedIn, user } = useUserContext();
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    const productId = 1;
+    navigate(`/order?productId=${productId}`);
+  };
 
   return (
     <div css={containerStyle(theme)}>
-      <button css={plusButtonStyle(theme)} aria-label="받는 사람 추가">
+      <button
+        css={plusButtonStyle(theme)}
+        aria-label="받는 사람 추가"
+        onClick={handleClick}
+      >
         ＋
       </button>
       <span css={textStyle(theme)}>

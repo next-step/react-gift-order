@@ -1,11 +1,11 @@
 import { createBrowserRouter } from 'react-router-dom';
 
-import GiftPage from '@/components/GiftRecipientList';
-import LoginPage from '@/Login/pages/LoginPage';
-import NotFoundPage from '@/pages/NotFound';
-import Nav from '@/components/Nav';
-import MyPage from '@/My/pages/MyPage';
-import OrderPage from '@/Order/pages/OrderPage';
+import GiftRecipientList from '@/components/GiftRecipientList';
+import LoginPage from '@/features/Login/pages/LoginPage';
+import NotFoundPage from '@/features/NotFound/NotFound';
+import Layout from '@/components/Layout';
+import MyPage from '@/features/My/pages/MyPage';
+import OrderPage from '@/features/Order/pages/OrderPage';
 import PrivateRoute from '@/routes/PrivateRoute';
 
 export const ROUTE_PATH = {
@@ -19,12 +19,12 @@ export const ROUTE_PATH = {
 const Router = createBrowserRouter([
   {
     path: ROUTE_PATH.GIFT,
-    element: <Nav />,
+    element: <Layout />,
     errorElement: <NotFoundPage />,
     children: [
       {
         index: true,
-        element: <GiftPage />,
+        element: <GiftRecipientList />,
       },
       {
         path: ROUTE_PATH.LOGIN.slice(1),

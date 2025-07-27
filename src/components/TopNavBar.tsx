@@ -33,7 +33,7 @@ const iconStyle = css`
   }
 `;
 
-export default function Nav() {
+export default function TopNavBar() {
   const navigate = useNavigate();
 
   return (
