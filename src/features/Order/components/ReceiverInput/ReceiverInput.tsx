@@ -4,8 +4,20 @@ import type {
   UseFormRegister,
   UseFormGetValues,
 } from 'react-hook-form';
-import type { Order } from '@/Order/hooks/useOrderForm';
+import type { Order } from '../../hooks/useOrderForm';
 import MyButton from '@/components/button/button';
+
+interface ReceiverInputProps {
+  index: number;
+  register: UseFormRegister<Order>;
+  getValues: UseFormGetValues<Order>;
+  error?: {
+    receiver?: FieldError;
+    phone?: FieldError;
+    quantity?: FieldError;
+  };
+  onRemove: () => void;
+}
 
 interface ReceiverInputProps {
   index: number;

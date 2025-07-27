@@ -31,31 +31,24 @@ export const InputContainer = styled.div`
 `;
 
 export const InputLabel = styled.p`
-  color: ${theme.colors.semanticColor.stateColor.critical};
   ${theme.typography.label2Regular};
-  margin-top: ${theme.spacing[1]};
-  margin-bottom: ${theme.spacing[0]};
+  margin-bottom: ${theme.spacing[1]};
 `;
 
 export const InputText = styled.input<{ isError?: boolean }>`
-  width: 100%;
-  padding: ${theme.spacing[2]};
   border: 1px solid
-    ${({ isError, theme }) =>
+    ${({ isError }) =>
       isError
         ? theme.colors.semanticColor.stateColor.critical
-        : theme.colors.colorScale.gray[500]};
-  border-radius: ${theme.spacing[0]};
-  ${theme.typography.body2Regular};
-
-  &:focus {
-    border-color: ${theme.colors.colorScale.blue[500]};
-    outline: none;
-  }
+        : theme.colors.colorScale.gray[300]};
+  padding: ${theme.spacing[2]};
+  border-radius: 8px;
+  font-size: 14px;
 `;
 
 export const ErrorText = styled.p`
   color: ${theme.colors.semanticColor.stateColor.critical};
   ${theme.typography.label2Regular};
   margin-top: ${theme.spacing[1]};
+  margin-bottom: ${theme.spacing[0]};
 `;
