@@ -6,11 +6,15 @@ export const Container = styled.div`
   padding: ${theme.spacing[3]};
 `;
 
-export const TextArea = styled.textarea`
+interface TextAreaProps {
+  isError?: boolean;
+}
+
+export const TextArea = styled.textarea<TextAreaProps>`
   width: 100%;
   min-height: ${theme.spacing[15]};
   margin-top: ${theme.spacing[8]};
-  border: 1px solid ${theme.colors.colorScale.gray[800]};
+  border: 1px solid ${({ isError }) => (isError ? 'red' : '#ccc')};
   border-radius: ${theme.spacing[2]};
   padding: ${theme.spacing[3]};
   font-family: inherit;
