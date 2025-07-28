@@ -1,47 +1,18 @@
-import { Global, css } from '@emotion/react';
-import { useTheme } from '@emotion/react';
-import { Routes, Route } from 'react-router-dom';
+import { Global } from '@emotion/react';
 import { globalStyle } from '@/styles/GlobalStyle';
-import { PATHS } from '@/constants/paths';
+import { RouterProvider } from 'react-router-dom';
+import { UserProvider } from '@/contexts/UserContext';
+import Router from '@/routes/Router';
 
-import reset from '@/styles/Reset';
-import Layout from '@/components/Layout';
-import CategorySection from '@components/CategorySection';
-import MessageSection from '@components/MessageSection';
-import GiftRecipientList from '@components/GiftRecipientList';
-import TrendRanking from '@components/TrendRanking';
-import LoginPage from '@/Login/pages/LoginPage';
-import NotFound from '@/pages/NotFound';
-
-const MainPage = () => (
-  <>
-    <GiftRecipientList />
-    <CategorySection />
-    <MessageSection />
-    <TrendRanking />
-  </>
-);
-
-function App() {
-  const theme = useTheme();
-
+const App = () => {
   return (
     <>
-      <Global
-        styles={css`
-          ${reset};
-          ${globalStyle(theme)};
-        `}
-      />
-      <Routes>
-        <Route element={<Layout />}>
-          <Route path={PATHS.LOGIN} element={<LoginPage />} />
-          <Route path={PATHS.ROOT} element={<MainPage />} />
-          <Route path={PATHS.NOT_FOUND} element={<NotFound />} />
-        </Route>
-      </Routes>
+      <Global styles={globalStyle} />
+      <UserProvider>
+        <RouterProvider router={Router} />
+      </UserProvider>
     </>
   );
-}
+};
 
 export default App;
